@@ -1,0 +1,1158 @@
+# S1 - Arquitectura Backend REST Profesional
+
+## 1. Introducción
+
+Tiempo: 20 min.
+
+### 1.1 Contexto
+
+La arquitectura de un backend decide qué tan fácil es mantenerlo y hacerlo crecer sin romperse. Esta sesión instala Java 21, crea el proyecto backend como monolito modular conectado a Oracle, y define su contrato REST inicial (`Categoria`, `Producto`, versionado, OpenAPI).
+
+### 1.2 Índice
+
+1. Estructura del proyecto backend y dependencias.
+2. Configuración por ambientes, ORM, driver y conexión a Oracle.
+3. Endpoint de verificación, recurso REST inicial y DTO.
+4. Contrato, versionado básico de API y documentación OpenAPI.
+
+### 1.3 Propósito de aprendizaje
+
+Al concluir la clase, estarás en condiciones de:
+
+- **Crear y entregar** un proyecto backend ejecutable y reproducible, sobre Java 21 LTS, con conexión a Oracle verificada mediante ORM, endpoint de salud, listados de `Categoria` y `Producto`, módulos de negocio, DTO de salida, contrato y versionado básico de API, y documentación OpenAPI inicial.
+
+### 1.4 Producto de sesión
+
+Proyecto backend ejecutable y reproducible, sobre Java 21 LTS, organizado como monolito modular y conectado a Oracle con su conexión verificada mediante ORM, con endpoint de salud, contrato y versionado básico de API definidos, y los listados de `Categoria` y `Producto` documentados mediante OpenAPI.
+
+### 1.5 Metodología
+
+| Fase | Actividades | Orientaciones | Material |
+|---|---|---|---|
+| Revisión previa individual | Instalar y verificar Java 21 LTS; leer [ADR-001](../adr/ADR-001-arquitectura-backend.md) y [ADR-002](../adr/ADR-002-spring-modulith.md). | Trabajo individual, antes de clase; traer evidencia de `java -version` funcionando. | ADR-001, ADR-002, guía de instalación Java 21. |
+| Clase presencial | Explicación guiada de conceptos (REST, DTO, versionado, ambientes) y creación del proyecto backend conectado a Oracle; delimitación de los endpoints del módulo `catalogo`. | Trabajo individual en la propia laptop, siguiendo al docente paso a paso; consulta inmediata ante errores de dependencias o conexión. | `pom.xml` de referencia, `application-local.yml`, Docker Compose de Oracle, cliente REST para verificar endpoints. |
+| Evaluación formativa | Verificación en clase de `mvn test` (incluye `ModularityTests`) y de la respuesta del endpoint de salud y los listados; inicio de la plantilla de evidencia individual. | La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.2. | Plantilla de evidencia individual (4.1), rúbrica de evaluación (5.4). |
+
+### 1.6 Motivación de la sesión
+
+#### 1.6.1 Caso: API de productos
+
+El sistema `BomERP` continúa el dominio comercial desarrollado desde POO y LP1. En esta sesión se crea una base backend que arranca de forma reproducible, comprueba su conexión a Oracle y expone los listados iniciales del módulo `catalogo`: `Categoria` y `Producto`. La estructura toma como referencia técnica `producto-ms` del curso de Aplicaciones Distribuidas, adaptada como monolito modular para LP2.
+
+Preguntas para los estudiantes:
+
+1. ¿Por qué `Categoria` y `Producto` pertenecen al mismo módulo de catálogo?
+2. ¿Qué diferencia existe entre una entidad y su DTO de respuesta?
+3. ¿Cómo demuestran los listados que Controller, Service, Repository y Oracle están conectados?
+4. ¿Qué operaciones se reservarán para completar el CRUD en S2?
+5. ¿Qué decisión de ADS condiciona la estructura del backend?
+
+### 1.7 Ubicación en el curso
+
+- Unidad: U1 - Backend REST empresarial.
+- Producto de unidad: backend REST empresarial conectado a la base de datos, con CRUD, transacciones, consultas, reglas de negocio, CORS, logs y pruebas.
+- Producto del curso: base Full-Stack modular de BomERP, integrada, optimizada, monitoreada, estabilizada y preparada académicamente para producción.
+- Avance del producto en esta sesión: proyecto backend creado, configurado, conectado y verificable.
+
+Roadmap del producto de la unidad:
+
+```mermaid
+flowchart TB
+    S1["S1<br/>Proyecto backend,<br/>BD, REST y OpenAPI"]
+    S2["S2<br/>CRUD maestro,<br/>validaciones y pruebas"]
+    S3["S3<br/>Objetos relacionados<br/>Categoria-Producto"]
+    S4["S4<br/>Cabecera-detalle<br/>y transacciones"]
+    S5["S5<br/>Consultas, reportes<br/>y CORS"]
+    S6["S6<br/>Producto U1"]
+
+    S1 --> S2 --> S3 --> S4 --> S5 --> S6
+
+    classDef today fill:#ffe08a,stroke:#9a6b00,stroke-width:2px,color:#111;
+    class S1 today;
+```
+
+## 2. Explica
+
+Tiempo: 25 min.
+
+### 2.1 Arquitectura de la sesión
+
+```mermaid
+flowchart LR
+    APP[BomErpApplication]
+
+    subgraph CAT[Módulo catalogo]
+        API[Controllers y DTO]
+        USE[Services]
+        DOM[Entities]
+        INF[Repositories JPA]
+        API --> USE
+        USE --> DOM
+        USE --> INF
+    end
+
+    subgraph FUTUROS["Módulos futuros, aún sin crear *"]
+        VEN["ventas (S4)"]
+        COM["compras (opcional)"]
+        SEG["seguridad (S10)"]
+    end
+
+    DB[(Oracle)]
+    APP --> CAT
+    APP -. se agregan como paquetes .-> FUTUROS
+    INF --> DB
+```
+
+<small>*Ningún paquete de `FUTUROS` (`ventas`, `compras`, `seguridad`) existe todavía en el código; se crean recién cuando su sesión les da contenido real (ver [ADR-001](../adr/ADR-001-arquitectura-backend.md)).</small>
+
+Lectura del diagrama:
+
+- El backend organiza primero por módulo de negocio y luego por responsabilidades internas (controller, service, repository, entity). **Error frecuente**: concentrar toda la lógica en el controller sin separar service y repository — pierde la separación de responsabilidades que muestra el diagrama.
+- `Categoria` y `Producto` pertenecen a `catalogo`; `Venta–DetalleVenta` pertenece a `ventas` y `Compra–DetalleCompra` a `compras`.
+- Un módulo no debe acceder directamente al repositorio de otro módulo; la interacción se realiza mediante servicios públicos.
+- Integración (referencia, no requisito para esta sesión): si el equipo también lleva ADS, esos componentes y decisiones son los que ADS documenta primero; si lleva BD2, ese es el curso que aporta los procedimientos, tablas y reglas transaccionales que el backend consume. **Errores frecuentes**: diseñar el endpoint sin vincularlo a ninguna tabla, paquete o procedimiento del motor transaccional (BD2); o dejar las decisiones de ADS solo en teoría, sin relacionarlas con un componente real de su vista C3.
+
+Este diagrama es el mapa que guía el resto de la explicación: cada apartado siguiente desarrolla uno de sus componentes, en el mismo orden del Índice (1.2).
+
+### 2.2 Estructura del proyecto backend y dependencias
+
+El proyecto se organiza como monolito modular: un único paquete raíz (`BomErpApplication`) y, dentro de él, un paquete por módulo de negocio (ver 2.1). Esa estructura se sostiene únicamente sobre las dependencias que la sesión necesita:
+
+| Dependencia | Decisión para S1 |
+|---|---|
+| Spring Web | Se conserva para publicar el recurso REST. |
+| Spring Data JPA y driver Oracle | Se conservan para dejar lista y comprobar la persistencia ORM. |
+| Validation | Se incorpora al esqueleto; se aplica al CRUD desde S2. |
+| Actuator | Se conserva para verificar aplicación y conexión. |
+| Springdoc OpenAPI | Se conserva para publicar el contrato inicial. |
+| DevTools | Se agrega para reinicio automático y LiveReload durante el desarrollo; Spring Boot la excluye automáticamente del `.jar` empaquetado, así que no afecta producción. |
+| Security y OAuth2 Resource Server | Se posponen hasta S10. |
+| Config Server, Eureka, Feign y Resilience4j | No corresponden al backend monolítico de LP2; se estudian en Aplicaciones Distribuidas. |
+| Prometheus, Flyway y Docker | No son necesarios para alcanzar el producto de S1. |
+
+**Error frecuente**: copiar todas las dependencias de `producto-ms` sin filtrarlas — confunde un monolito inicial con una arquitectura distribuida. Solo se conservan las de la tabla anterior.
+
+Alcance metodológico de S1:
+
+```text
+En S1 se crea solamente el proyecto backend y se comprueba
+su ejecución y conexión a Oracle mediante Actuator y el listado
+de Producto. No se crea frontend. El CRUD completo, las relaciones,
+las transacciones y la seguridad se implementan progresivamente.
+```
+
+### 2.3 Configuración por ambientes, ORM, driver y conexión a Oracle
+
+Un **ambiente** es el conjunto de configuración (variables, credenciales,
+infraestructura) que corresponde a un contexto de uso concreto: **local**
+(tu laptop, para desarrollar) y **producción** (el sistema real ya en
+funcionamiento) son dos ambientes distintos; algunos proyectos agregan
+ambientes intermedios (pruebas, staging). No se les llama "ambientes de
+desarrollo" en general — ese nombre describe únicamente al ambiente de
+desarrollo compartido de un equipo, no al concepto completo.
+
+En BomERP, hoy existe el **ambiente local**, identificado siempre con el
+sufijo `-local`:
+
+- `application-local.yml`: configuración de Spring Boot para tu laptop, incluida la conexión ORM/JPA y el driver Oracle hacia `localhost`.
+- `compose-local.yml`: el contenedor Docker de Oracle para desarrollo local.
+
+El ambiente de **producción** (`application-prod.yml` y las decisiones de
+despliegue) se incorpora recién en S13, cuando el sílabo trata
+"buenas prácticas de despliegue" — no se adelanta antes porque todavía no
+hay nada real que desplegar.
+
+### 2.4 Endpoint de verificación, recurso REST inicial y DTO
+
+REST permite organizar un backend alrededor de recursos, métodos HTTP y representaciones. El endpoint de verificación (Actuator) confirma que la aplicación arrancó y está conectada a Oracle; el recurso REST inicial (`Categoria`, `Producto`) expone los primeros listados del módulo `catalogo`, y el DTO de salida separa ese contrato de la entidad persistida — la API responde lo que el cliente necesita, no la tabla tal cual.
+
+**Errores frecuentes**: nombrar endpoints con verbos en vez de sustantivos (no se entiende el recurso REST) y diseñar el DTO igual a la tabla de persistencia (mezcla el contrato de API con el modelo de datos) — el DTO se define según lo que necesita el cliente, no según la entidad.
+
+### 2.5 Contrato, versionado básico de API y documentación OpenAPI
+
+En un sistema empresarial, el contrato de API debe ser claro porque luego será consumido por una SPA y deberá estar conectado con persistencia, seguridad, transacciones y reglas del negocio.
+
+**Versionado básico de API**: BomERP versiona su contrato en la propia URL (`/api/v1/...`). Es la forma más simple de versionado: si en el futuro un cambio rompe compatibilidad, se publica `/api/v2/...` sin obligar a los consumidores existentes (la SPA desde S7, o cualquier integración externa) a migrar de inmediato. En S1 basta con fijar el prefijo `v1`; no se implementa todavía coexistencia de versiones.
+
+**Error frecuente**: dejar el contrato sin códigos de error documentados. Un contrato verificable incluye 400, 401, 404, 409 y 500, no solo el camino feliz.
+
+Springdoc OpenAPI (ver 2.2) publica este contrato como documentación viva y siempre sincronizada con el código; la trazabilidad entre API, base de datos y arquitectura se verifica contra esa documentación, no contra un documento aparte.
+
+## 3. Aplica: actividad práctica guiada
+
+Tiempo: 2h.
+
+Hoja de ruta de la sesión práctica:
+
+- **3.1** Instalar y verificar Java 21 LTS.
+- **3.2** Crear y verificar el proyecto backend.
+- **3.3** Delimitar los endpoints del módulo Catálogo.
+- **3.4** Reconocer el DTO de entrada reservado para S2.
+- **3.5** Diseñar DTO de salida.
+- **3.6** Documentar errores.
+- **3.7** Bosquejar estructura del backend modular (Spring Modulith).
+- **3.8** Trazar LP2 con ADS y BD2.
+
+### 3.1 Instalar y verificar Java 21 LTS
+
+**Producto del paso:** entorno de desarrollo configurado con Java 21.
+
+Se recomienda Eclipse Temurin 21, una distribución OpenJDK de soporte
+prolongado, instalada con el gestor de paquetes nativo de cada sistema
+operativo (evita instaladores manuales y mantiene el JDK actualizable).
+
+**Windows** — PowerShell como usuario normal:
+
+```powershell
+winget install --id EclipseAdoptium.Temurin.21.JDK --exact
+```
+
+**macOS** (Homebrew no viene preinstalado en ningún Mac; una vez instalado,
+el comando de Temurin es el mismo para Intel y para Apple Silicon
+M1/M2/M3/M4 — Homebrew detecta la arquitectura automáticamente):
+
+```bash
+# 1. Instalar Homebrew (si no lo tiene)
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# 2. Solo en Apple Silicon (M1/M2/M3/M4): agregar Homebrew al PATH.
+#    Se instala en /opt/homebrew (no en /usr/local como en Intel), y el
+#    propio instalador lo pide como paso obligatorio, no opcional.
+echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# 3. Instalar Temurin 21
+brew install --cask temurin@21
+```
+
+**Linux (Ubuntu/Debian)** — repositorio oficial de Adoptium vía `apt`:
+
+```bash
+sudo apt install -y wget apt-transport-https gpg
+wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/adoptium.gpg > /dev/null
+echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | sudo tee /etc/apt/sources.list.d/adoptium.list
+sudo apt update
+sudo apt install -y temurin-21-jdk
+```
+
+**Linux (Fedora/RHEL)** — repositorio oficial de Adoptium vía `dnf`:
+
+```bash
+sudo tee /etc/yum.repos.d/adoptium.repo > /dev/null <<'EOF'
+[Adoptium]
+name=Adoptium
+baseurl=https://packages.adoptium.net/artifactory/rpm/$(. /etc/os-release; echo $ID)/$releasever/$basearch
+enabled=1
+gpgcheck=1
+gpgkey=https://packages.adoptium.net/artifactory/api/gpg/key/public
+EOF
+sudo dnf install -y temurin-21-jdk
+```
+
+Al finalizar, cierre y vuelva a abrir la terminal. Verifique la instalación:
+
+```powershell
+java --version
+javac --version
+mvn --version
+```
+
+Las tres comprobaciones deben mostrar Java 21. Maven también debe indicar que se está ejecutando con Java 21. Si conserva una versión anterior, configure `JAVA_HOME` con la ruta del JDK 21 desde las variables de entorno de Windows, actualice `Path` para que `%JAVA_HOME%\bin` tenga prioridad y abra una terminal nueva.
+
+Evidencia requerida:
+
+```text
+java --version  -> 21
+javac --version -> 21
+mvn --version   -> Java version: 21
+```
+
+El proyecto declara Java 21 mediante la propiedad `<java.version>21</java.version>` del `pom.xml` padre. No se debe modificar individualmente la versión de cada módulo.
+
+### 3.2 Crear y verificar el proyecto backend
+
+**Producto del paso:** proyecto backend ejecutable y conectado.
+
+El starter de referencia está en `lp2/bomerp-backend`. No es la solución de S2: contiene únicamente los listados de categorías y productos que permiten recorrer todas las capas y comprobar la conexión real. El proyecto ya viene creado con la configuración de 3.2.1; esos pasos son la receta que lo generó, y son los mismos que tu equipo usará en la actividad autónoma (sección 4) para crear el proyecto de su propio dominio.
+
+#### 3.2.1 Crear el proyecto con Spring Initializr desde VS Code
+
+Requiere la extensión **Spring Initializr Java Support** (`vscjava.vscode-spring-initializr`, incluida en el Extension Pack for Java). Si no la tienes, instálala desde la vista de Extensiones de VS Code antes de continuar.
+
+Desde la raíz del monorepo `bomerp`, abre VS Code y abre la **paleta de comandos**:
+
+- Windows/Linux: `Ctrl+Shift+P`
+- macOS: `Cmd+Shift+P`
+
+(No es `Ctrl+P` — ese atajo abre "Ir a archivo", un comando distinto.)
+
+Escribe `Spring Initializr` y selecciona:
+
+```text
+Spring Initializr: Create a Maven Project
+```
+
+Usa la siguiente configuración:
+
+| Campo | Valor |
+|---|---|
+| Project | Maven Project |
+| Spring Boot | **4.0.7** |
+| Language | Java |
+| Java | 21 |
+| Group Id | `pe.edu.upeu` |
+| Artifact Id | `bomerp-backend` |
+| Package name | `pe.edu.upeu.bomerp` |
+| Packaging | Jar |
+| Ubicación | `lp2/bomerp-backend` |
+
+**Por qué 4.0.7 y no otra versión.** Verificado directo en `start.spring.io` (con `4.1.0` seleccionado, el propio buscador de dependencias muestra en rojo, al escribir "springd": *"Requires Spring Boot >= 4.0.0 and < 4.1.0-M1"*). Es una restricción real de compatibilidad de SpringDoc OpenAPI, no una limitación del buscador ni de la extensión de VS Code. El generador tampoco ofrece ya ninguna versión 3.x (Spring Boot 3.5.x sigue funcionando vía Maven normalmente, pero el asistente de creación de proyectos ya no la lista). Por eso el proyecto usa **4.0.7**, dentro del rango compatible.
+
+Dependencias a seleccionar:
+
+| Grupo | Dependencias | Propósito |
+|---|---|---|
+| API REST base | Spring Web, Validation | Exponer endpoints HTTP y validar entradas |
+| Persistencia | Spring Data JPA, Oracle Driver | Acceso a datos y conexión a Oracle |
+| Documentación y operación | SpringDoc OpenAPI, Spring Boot Actuator | Documentar la API con Swagger y verificar salud |
+| Arquitectura modular | Spring Modulith | Verificar y documentar los límites entre módulos de negocio (ver ADR-002) |
+| Productividad | Lombok, Spring Boot DevTools | Reducir código repetitivo y reiniciar automáticamente al guardar cambios |
+
+Referencia visual (selección real en VS Code con Spring Boot 4.0.7, las 9 dependencias de la tabla):
+
+![Selección de dependencias en Spring Initializr (1/2): Spring Web, Validation, Spring Data JPA, Oracle Driver, SpringDoc OpenAPI](img/s01-3.2.1-dependencias-1.png)
+
+![Selección de dependencias en Spring Initializr (2/2): SpringDoc OpenAPI, Spring Boot Actuator, Spring Modulith, Lombok, Spring Boot DevTools](img/s01-3.2.1-dependencias-2.png)
+
+Antes de presionar `Enter` para continuar, la lista debe mostrar exactamente:
+
+```text
+Selected 9 dependencies
+✓ Spring Web
+✓ Validation
+✓ Spring Data JPA
+✓ Oracle Driver
+✓ SpringDoc OpenAPI
+✓ Spring Boot Actuator
+✓ Spring Modulith
+✓ Lombok
+✓ Spring Boot DevTools
+```
+
+Después de `Enter`, el asistente pide dónde guardar el proyecto. Navega hasta la carpeta y da clic en **"Generate into this folder"** — no escribas nada en el campo "Carpeta":
+
+![Selector de carpeta de VS Code navegado hasta lp2, con el botón "Generate into this folder" resaltado y el campo Carpeta vacío](img/s01-3.2.1-guardar.png)
+
+**Sobre dónde queda el proyecto.** La extensión crea, dentro de la carpeta donde diste clic en "Generate into this folder", una **subcarpeta nueva con el nombre del Artifact Id**. Da clic estando parado en `lp2/`: el proyecto queda en `lp2/bomerp-backend/`, que es exactamente la carpeta que usa el resto de esta guía — no hace falta renombrar nada.
+
+Si el contador dice un número distinto de 9, revisa qué falta o qué sobra antes de continuar — no sigas a ciegas.
+
+Nota sobre lo que el Initializr agrega solo por combinar dependencias, sin que hayas marcado nada extra (revisa el `pom.xml` generado, no hace falta editarlo a mano):
+
+- `spring-modulith-starter-core` (compile) y `spring-modulith-starter-test`
+  (test) — este último **sí se agrega automáticamente** al seleccionar
+  "Spring Modulith", nada que agregar a mano.
+- En runtime, `spring-modulith-actuator` y `spring-modulith-observability`
+  — Initializr los suma porque también seleccionaste Actuator; exponen
+  información de módulos vía Actuator y trazas de observabilidad. Se
+  conservan tal cual.
+- **`spring-modulith-starter-jpa` (compile) — elimínala del `pom.xml`.**
+  Initializr la agrega porque también seleccionaste Spring Data JPA, pero
+  trae el registro de eventos de Modulith respaldado por JPA, que exige su
+  propia tabla (`event_publication`). Como los módulos de esta ADR se
+  comunican por servicios Java, no por eventos, esa tabla no se usa —y con
+  `ddl-auto: validate` (3.2.3), Hibernate falla al arrancar porque la tabla
+  no existe en Oracle. Detalle completo: [ADR-002](../adr/ADR-002-spring-modulith.md).
+- El checkbox "Spring Web" genera el artefacto `spring-boot-starter-webmvc`,
+  no `spring-boot-starter-web` — en Spring Boot 4.0.7 el segundo queda
+  deprecado a favor del primero.
+- En vez de un único `spring-boot-starter-test`, el `pom.xml` trae un
+  starter de test granular por cada starter de producción seleccionado
+  (`spring-boot-starter-actuator-test`, `-data-jpa-test`,
+  `-validation-test`, `-webmvc-test`) — es el patrón de Boot 4.x, no un
+  error del generador.
+
+Detalle completo de por qué estas versiones y no otras: [ADR-002](../adr/ADR-002-spring-modulith.md) y [ADR-003](../adr/ADR-003-spring-boot-4.md).
+
+El Initializr deriva el nombre de la clase `@SpringBootApplication` del Artifact Id, así que la genera como `BomerpBackendApplication.java`. Renómbrala a `BomErpApplication` (archivo y clase, mismo paquete raíz `pe.edu.upeu.bomerp`) para que coincida con el resto de esta guía y con `ModularityTests` (3.2.8):
+
+```java
+package pe.edu.upeu.bomerp;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class BomErpApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(BomErpApplication.class, args);
+    }
+}
+```
+
+#### 3.2.2 Configurar Oracle en Docker
+
+**Producto del paso:** Oracle disponible en `localhost`, con el esquema de BD2 cargado.
+
+Crea `compose-local.yml` en la raíz de `lp2/bomerp-backend` — levanta **únicamente** Oracle, para tu laptop, con las credenciales en texto plano que también usará `application-local.yml` en el paso siguiente (mismo criterio: sin `.env`):
+
+```yaml
+services:
+  oracle:
+    image: gvenzl/oracle-free:23-slim
+    container_name: bomerp-oracle
+    restart: unless-stopped
+    ports:
+      - "1521:1521"
+    environment:
+      ORACLE_PASSWORD: 123456
+      APP_USER: BOMERP_APP
+      APP_USER_PASSWORD: 123456
+    volumes:
+      - oracle-data:/opt/oracle/oradata
+    healthcheck:
+      test: ["CMD", "healthcheck.sh"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+
+volumes:
+  oracle-data:
+```
+
+**Nota sobre versión y edición:** esta imagen (`gvenzl/oracle-free:23-slim`)
+es Oracle Database 23ai **Free** — no Oracle 19c ni Enterprise Edition.
+Alcanza para conectar el backend y para BD2 U1 (que en el sílabo pide
+Oracle XE). BD2 U2-U3 exige explícitamente Oracle 19c EE + Oracle Linux
+para temas exclusivos de Enterprise Edition (AWR, particionamiento) que
+este contenedor no soporta — ese ambiente todavía no está operacionalizado
+en el repo (ver `bd2/README.md`, sección sobre U2-U3).
+
+Levanta Oracle:
+
+```powershell
+docker compose -f compose-local.yml up -d
+```
+
+Luego crea el esquema y las tablas del catálogo ejecutando, en orden, [`S01_01_esquemas.sql`](../../proyecto-integrador/u1/oracle/S01_01_esquemas.sql) y [`S01_02_tablas.sql`](../../proyecto-integrador/u1/oracle/S01_02_tablas.sql) contra esta misma Oracle (scripts de BD2, listos para ejecutar — no hace falta revisar la guía de esa sesión, solo si quieres el detalle: [BD2 S1](../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio.md)).
+
+##### Conectarse a Oracle desde un cliente gráfico
+
+Para ejecutar esos scripts y revisar las tablas sin depender de la consola, usa un cliente de base de datos con soporte Oracle (por ejemplo la extensión de VS Code **Database Client**, `cweijan.vscode-postgresql-client2`, a pesar del nombre soporta varios motores incluido Oracle). Datos de conexión:
+
+| Campo | Valor |
+|---|---|
+| Host | `127.0.0.1` |
+| Port | `1521` |
+| Username | `system` |
+| Password | `123456` |
+| Database | `FREEPDB1` (**no** `XE`, ese es el valor por defecto del cliente y no es nuestra base) |
+
+![Conexión exitosa a Oracle vía Database Client, mostrando el árbol de esquemas y tablas de SYSTEM](img/s01-3.2.2-database-client.png)
+
+Usa `system` (no `BOMERP_APP`) porque `S01_01_esquemas.sql` necesita privilegios de DBA para crear los usuarios `BOM_CATALOGO` y `BOMERP_APP`, y `S01_02_tablas.sql` necesita privilegios sobre ese esquema para crear las tablas. Una vez creado el esquema, puedes agregar una segunda conexión con `Username: BOMERP_APP` / misma contraseña y base, para verificar los permisos con los que realmente corre el backend (`application-local.yml` usa ese usuario, no `system`).
+
+##### Reiniciar Docker desde cero (opcional, solo si algo quedó en mal estado)
+
+**Advertencia: esto borra *todo* lo que tengas en Docker, no solo el contenedor de BomERP** — cualquier contenedor, imagen, volumen o red de cualquier otro curso o proyecto en tu máquina. Úsalo solo si necesitas dejar Docker como recién instalado, no como parte normal del flujo de S1.
+
+```powershell
+docker ps -aq | ForEach-Object { docker stop $_ }
+docker ps -aq | ForEach-Object { docker rm -f $_ }
+docker images -aq | Sort-Object -Unique | ForEach-Object { docker rmi -f $_ }
+
+# Eliminar todos los volúmenes
+docker volume ls -q | ForEach-Object { docker volume rm $_ }
+
+docker network prune -f
+
+# Limpiar recursos no utilizados (opcional)
+docker system prune -a --volumes -f
+
+# Limpiar caché de compilación (opcional)
+docker builder prune -a -f
+```
+
+Después de esto, `compose-local.yml` vuelve a levantar Oracle desde cero (descarga la imagen de nuevo) con `docker compose -f compose-local.yml up -d`.
+
+##### Eliminar solo lo de BomERP (sin tocar otros proyectos en Docker)
+
+Si tienes otros cursos o proyectos corriendo en Docker en la misma máquina, no uses el reinicio total de arriba. La forma correcta es dejar que el propio `compose-local.yml` borre exactamente lo que él mismo creó (contenedor, red y volumen), sin adivinar nombres:
+
+```powershell
+cd C:\262\262ciclo4\bomerp\lp2\bomerp-backend
+docker compose -f compose-local.yml down -v
+```
+
+Ojo con un detalle real: Docker Compose nombra el volumen y la red a partir de la **carpeta** donde corres el comando, no del nombre del contenedor — el contenedor se llama `bomerp-oracle`, pero el volumen queda como `bomerp-backend_oracle-data` y la red como `bomerp-backend_default` (por la carpeta `lp2/bomerp-backend`). `docker compose down -v` ya lo resuelve solo porque usa su propio registro interno, no un filtro de texto.
+
+Si el contenedor quedó suelto (por ejemplo, lo creaste fuera de `docker compose`) y `down -v` no lo encuentra, bórralo manualmente con los nombres reales:
+
+```powershell
+docker ps -aq --filter "name=bomerp" | ForEach-Object { docker rm -f $_ }
+docker volume ls -q --filter "name=bomerp-backend_oracle-data" | ForEach-Object { docker volume rm -f $_ }
+```
+
+#### 3.2.3 Configurar el ambiente local
+
+**Producto del paso:** Spring Boot configurado para conectarse a la Oracle de Docker recién levantada.
+
+El Initializr genera `src/main/resources/application.properties` (vacío). En vez de crear el YAML a mano, clic derecho sobre `application.properties` en el explorador de VS Code → **"Convert .properties to .yaml"**.
+
+Esto genera `application.yaml` **junto al** `application.properties` original — la conversión no borra el archivo viejo. Renombra `application.yaml` a `application.yml` (la extensión que usa el resto del proyecto: `application-local.yml`, `compose-local.yml`), **elimina `application.properties`** (si quedan los dos, Spring Boot carga ambos y puede confundir cuál valor gana) y reemplaza el contenido de `application.yml` por el siguiente:
+
+En `src/main/resources/application.yml` (configuración base, sin datos de ambiente):
+
+```yaml
+spring:
+  application:
+    name: bomerp-backend
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+```
+
+En `src/main/resources/application-local.yml` (ambiente **local**, ver 2.3). El ambiente local **no usa `.env`**: las credenciales van directo en texto plano, porque son valores de laptop, no secretos — `.env` se reserva para cuando exista un ambiente de producción real (S13):
+
+```yaml
+spring:
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1521/FREEPDB1
+    username: BOMERP_APP
+    password: 123456
+    driver-class-name: oracle.jdbc.OracleDriver
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: true
+
+logging:
+  level:
+    pe.edu.upeu.bomerp: DEBUG
+```
+
+`ddl-auto: validate` (no `none`): Hibernate no crea ni altera nada —el esquema sigue siendo responsabilidad de BD2— pero sí compara las entidades JPA contra las tablas reales de Oracle al arrancar, avisando temprano si algo quedó desalineado. `devtools` habilita reinicio automático y LiveReload al guardar cambios; Spring Boot lo excluye solo del `.jar` empaquetado, no hace falta desactivarlo a mano para producción.
+
+#### 3.2.4 Configurar OpenAPI
+
+**Producto del paso:** documentación interactiva de la API vía Swagger UI.
+
+Crea `OpenApiConfig.java` junto a `BomErpApplication.java` (paquete raíz, compartido para todos los módulos):
+
+```java
+package pe.edu.upeu.bomerp;
+
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class OpenApiConfig {
+
+    @Bean
+    OpenAPI bomErpOpenApi() {
+        return new OpenAPI().info(new Info()
+                .title("BomERP API")
+                .version("v1")
+                .description("Contrato REST del backend unico de LP2"));
+    }
+}
+```
+
+El path de Swagger UI (`/swagger-ui.html`) ya quedó definido en el bloque `springdoc` de `application.yml` (paso anterior); `OpenApiConfig` solo agrega el título, la versión y la descripción del contrato.
+
+#### 3.2.5 Probar el ciclo completo con un endpoint "Hola mundo"
+
+**Producto del paso:** confirmar que el ciclo HTTP → `Controller` → respuesta funciona, antes de sumarle JPA y Oracle con el módulo `catalogo`.
+
+Crea `HelloController.java` en el paquete raíz (`pe.edu.upeu.bomerp`, compartido, junto a `OpenApiConfig`):
+
+```java
+package pe.edu.upeu.bomerp;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class HelloController {
+
+    @GetMapping("/api/v1/hello")
+    public String holaMundo() {
+        return "Hola BomERP";
+    }
+}
+```
+
+Levanta el proyecto (detalle completo del wrapper en 3.2.7) y visita `http://localhost:8080/api/v1/hello`:
+
+```powershell
+.\mvnw.cmd spring-boot:run
+```
+
+Debe responder `Hola BomERP` en texto plano. Si este paso falla, el problema está en el arranque de Spring Boot (dependencias, puerto, configuración) — más simple de diagnosticar aquí, sin JPA ni Oracle todavía de por medio, que después de sumar el módulo `catalogo`.
+
+`HelloController` es solo un paso de verificación: una vez que `catalogo` expone sus propios endpoints reales (paso siguiente), puedes eliminarlo — no forma parte del contrato final de la API.
+
+#### 3.2.6 Implementar el módulo `catalogo`: `Categoria` y `Producto`
+
+**Producto del paso:** listados REST de `Categoria` y `Producto` funcionando de punta a punta (controller → service → repository → Oracle).
+
+**Requisito antes de continuar:** las tablas `BOM_CATALOGO.categoria` y `BOM_CATALOGO.producto` deben existir en Oracle *antes* de compilar este paso. Con `ddl-auto: validate` (3.2.3), Hibernate valida el esquema al arrancar — si las tablas no existen, falla igual que pasó con `event_publication` (ADR-002). Se crean ejecutando [`S01_01_esquemas.sql`](../../proyecto-integrador/u1/oracle/S01_01_esquemas.sql) y [`S01_02_tablas.sql`](../../proyecto-integrador/u1/oracle/S01_02_tablas.sql) — si ya lo hiciste en 3.2.2, no hace falta repetirlo aquí. Detalle opcional, solo si quieres entender el porqué de cada bloque: [BD2 S1](../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio.md).
+
+Crea el paquete `pe.edu.upeu.bomerp.catalogo` con `package-info.java`:
+
+```java
+/**
+ * Modulo Catalogo: propietario de Categoria y Producto.
+ * Modulo Spring Modulith (paquete directo bajo el paquete raiz de la aplicacion).
+ */
+package pe.edu.upeu.bomerp.catalogo;
+```
+
+**`catalogo/categoria/entity/Categoria.java`**
+
+```java
+package pe.edu.upeu.bomerp.catalogo.categoria.entity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+@Table(name = "CATEGORIA", schema = "BOM_CATALOGO")
+@Getter
+@Setter
+@NoArgsConstructor
+public class Categoria {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID_CATEGORIA")
+    private Long id;
+
+    @Column(name = "NOMBRE", nullable = false, unique = true, length = 80)
+    private String nombre;
+
+    @Column(name = "DESCRIPCION", length = 200)
+    private String descripcion;
+}
+```
+
+**`catalogo/categoria/repository/CategoriaRepository.java`**
+
+```java
+package pe.edu.upeu.bomerp.catalogo.categoria.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import pe.edu.upeu.bomerp.catalogo.categoria.entity.Categoria;
+
+public interface CategoriaRepository extends JpaRepository<Categoria, Long> {
+}
+```
+
+**`catalogo/categoria/dto/CategoriaResponse.java`**
+
+```java
+package pe.edu.upeu.bomerp.catalogo.categoria.dto;
+
+public record CategoriaResponse(Long id, String nombre, String descripcion) {
+}
+```
+
+**`catalogo/categoria/service/CategoriaService.java`**
+
+```java
+package pe.edu.upeu.bomerp.catalogo.categoria.service;
+
+import pe.edu.upeu.bomerp.catalogo.categoria.dto.CategoriaResponse;
+import java.util.List;
+
+public interface CategoriaService {
+    List<CategoriaResponse> listar();
+}
+```
+
+**`catalogo/categoria/service/CategoriaServiceImpl.java`**
+
+```java
+package pe.edu.upeu.bomerp.catalogo.categoria.service;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import pe.edu.upeu.bomerp.catalogo.categoria.dto.CategoriaResponse;
+import pe.edu.upeu.bomerp.catalogo.categoria.entity.Categoria;
+import pe.edu.upeu.bomerp.catalogo.categoria.repository.CategoriaRepository;
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class CategoriaServiceImpl implements CategoriaService {
+    private final CategoriaRepository categoriaRepository;
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<CategoriaResponse> listar() {
+        return categoriaRepository.findAll().stream().map(this::toResponse).toList();
+    }
+
+    private CategoriaResponse toResponse(Categoria categoria) {
+        return new CategoriaResponse(categoria.getId(), categoria.getNombre(), categoria.getDescripcion());
+    }
+}
+```
+
+**`catalogo/categoria/controller/CategoriaController.java`**
+
+```java
+package pe.edu.upeu.bomerp.catalogo.categoria.controller;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import pe.edu.upeu.bomerp.catalogo.categoria.dto.CategoriaResponse;
+import pe.edu.upeu.bomerp.catalogo.categoria.service.CategoriaService;
+import java.util.List;
+
+@Tag(name = "Categorías")
+@RestController
+@RequestMapping("/api/v1/categorias")
+@RequiredArgsConstructor
+public class CategoriaController {
+    private final CategoriaService categoriaService;
+
+    @Operation(summary = "Lista las categorías registradas")
+    @GetMapping
+    public ResponseEntity<List<CategoriaResponse>> listar() {
+        return ResponseEntity.ok(categoriaService.listar());
+    }
+}
+```
+
+`Producto` sigue exactamente el mismo patrón, cambiando `Categoria`→`Producto`, `CATEGORIA`→`PRODUCTO` y agregando los campos propios:
+
+**`catalogo/producto/entity/Producto.java`**
+
+```java
+package pe.edu.upeu.bomerp.catalogo.producto.entity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import java.math.BigDecimal;
+
+@Entity
+@Table(name = "PRODUCTO", schema = "BOM_CATALOGO")
+@Getter
+@Setter
+@NoArgsConstructor
+public class Producto {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID_PRODUCTO")
+    private Long id;
+
+    @Column(name = "NOMBRE", nullable = false, length = 120)
+    private String nombre;
+
+    @Column(name = "PRECIO", nullable = false, precision = 10, scale = 2)
+    private BigDecimal precio;
+
+    @Column(name = "STOCK", nullable = false)
+    private Integer stock;
+}
+```
+
+**`catalogo/producto/repository/ProductoRepository.java`**
+
+```java
+package pe.edu.upeu.bomerp.catalogo.producto.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import pe.edu.upeu.bomerp.catalogo.producto.entity.Producto;
+
+public interface ProductoRepository extends JpaRepository<Producto, Long> {
+}
+```
+
+**`catalogo/producto/dto/ProductoResponse.java`**
+
+```java
+package pe.edu.upeu.bomerp.catalogo.producto.dto;
+
+import java.math.BigDecimal;
+
+public record ProductoResponse(Long id, String nombre, BigDecimal precio, Integer stock) {
+}
+```
+
+**`catalogo/producto/service/ProductoService.java`**
+
+```java
+package pe.edu.upeu.bomerp.catalogo.producto.service;
+
+import pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoResponse;
+import java.util.List;
+
+public interface ProductoService {
+    List<ProductoResponse> listar();
+}
+```
+
+**`catalogo/producto/service/ProductoServiceImpl.java`**
+
+```java
+package pe.edu.upeu.bomerp.catalogo.producto.service;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoResponse;
+import pe.edu.upeu.bomerp.catalogo.producto.entity.Producto;
+import pe.edu.upeu.bomerp.catalogo.producto.repository.ProductoRepository;
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class ProductoServiceImpl implements ProductoService {
+    private final ProductoRepository productoRepository;
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ProductoResponse> listar() {
+        return productoRepository.findAll().stream().map(this::toResponse).toList();
+    }
+
+    private ProductoResponse toResponse(Producto producto) {
+        return new ProductoResponse(producto.getId(), producto.getNombre(), producto.getPrecio(), producto.getStock());
+    }
+}
+```
+
+**`catalogo/producto/controller/ProductoController.java`**
+
+```java
+package pe.edu.upeu.bomerp.catalogo.producto.controller;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoResponse;
+import pe.edu.upeu.bomerp.catalogo.producto.service.ProductoService;
+import java.util.List;
+
+@Tag(name = "Productos")
+@RestController
+@RequestMapping("/api/v1/productos")
+@RequiredArgsConstructor
+public class ProductoController {
+    private final ProductoService productoService;
+
+    @Operation(summary = "Lista los productos registrados")
+    @GetMapping
+    public ResponseEntity<List<ProductoResponse>> listar() {
+        return ResponseEntity.ok(productoService.listar());
+    }
+}
+```
+
+#### 3.2.7 Ejecutar el proyecto con Maven Wrapper
+
+El proyecto trae Maven Wrapper (`mvnw`/`mvnw.cmd`): no requiere tener Maven
+instalado aparte, solo Java 21. Ejecute siempre el wrapper, nunca `mvn` a
+secas, para que todos usen la misma versión de Maven:
+
+```powershell
+# Windows (PowerShell o cmd)
+.\mvnw.cmd spring-boot:run
+```
+
+```bash
+# macOS / Linux
+./mvnw spring-boot:run
+```
+
+Si abres `http://localhost:8080/` en el navegador vas a ver una **Whitelabel Error Page** con `404` y el mensaje *"No static resource ."* — es lo esperado: este backend es una API REST, no sirve una página en `/`. No es un error que arreglar. Abre en cambio `http://localhost:8080/swagger-ui/index.html` (la ruta `/swagger-ui.html` configurada en `springdoc.swagger-ui.path` redirige ahí) para ver el contrato interactivo, o revisa directamente `/api/v1/productos` y `/actuator/health` (ver 3.2.8).
+
+Configuración de variables de entorno y detalle de la base de datos en
+[`lp2/bomerp-backend/README.md`](../../../lp2/bomerp-backend/README.md).
+
+#### 3.2.8 Verificar el proyecto backend
+
+Antes de verificar, crea `src/test/java/pe/edu/upeu/bomerp/ModularityTests.java` (verifica automáticamente los límites entre módulos, ver [ADR-002](../adr/ADR-002-spring-modulith.md)):
+
+```java
+package pe.edu.upeu.bomerp;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.modulith.core.ApplicationModules;
+
+class ModularityTests {
+
+    ApplicationModules modules = ApplicationModules.of(BomErpApplication.class);
+
+    @Test
+    void verifiesModularStructure() {
+        modules.verify();
+    }
+
+    @Test
+    void writesModuleDocumentation() {
+        new org.springframework.modulith.docs.Documenter(modules)
+                .writeDocumentation();
+    }
+}
+```
+
+| Verificación | Evidencia esperada |
+|---|---|
+| Entorno Java | `java`, `javac` y Maven reportan Java 21. |
+| Dependencias mínimas | `pom.xml` con Web, JPA, Validation, Oracle, Actuator, OpenAPI y Spring Modulith. |
+| Configuración por ambiente | Perfil local sin secretos incluidos en el repositorio. |
+| Conexión a base de datos | Inicio correcto y componente `db` activo en Actuator. |
+| Endpoint de verificación | Respuesta `UP` en `/actuator/health`. |
+| Recursos iniciales | Los GET de categorías y productos devuelven datos persistidos o listas vacías. |
+| Estructura modular | `.\mvnw.cmd test` / `./mvnw test` ejecuta `ModularityTests` sin errores. |
+
+### 3.3 Delimitar los endpoints del módulo Catálogo
+
+**Producto del paso:** contrato base.
+
+| Método | Endpoint | Propósito | Implementación en el curso |
+|---|---|---|---|
+| `GET` | `/api/v1/categorias` | Listar categorías desde Oracle | S1 |
+| `GET` | `/api/v1/productos` | Listar productos desde Oracle | S1 |
+| `POST`, `PUT`, `DELETE` | `/api/v1/categorias` | Completar operaciones de categoría | S2-S3 |
+| `GET` | `/api/v1/productos/{id}` | Consultar un producto | S2 |
+| `POST` | `/api/v1/productos` | Registrar un producto | S2 |
+| `PUT` | `/api/v1/productos/{id}` | Actualizar un producto | S2 |
+| `DELETE` | `/api/v1/productos/{id}` | Eliminar un producto | S2 |
+
+### 3.4 Reconocer el DTO de entrada reservado para S2
+
+**Producto del paso:** request DTO.
+
+```json
+{
+  "nombre": "Teclado mecánico",
+  "precio": 180.50,
+  "stock": 25
+}
+```
+
+En S1 este contrato se documenta, pero no se implementa todavía el registro.
+
+### 3.5 Diseñar DTO de salida
+
+**Producto del paso:** response DTO.
+
+```json
+{
+  "id": 1,
+  "nombre": "Teclado mecánico",
+  "precio": 180.50,
+  "stock": 25
+}
+```
+
+### 3.6 Documentar errores
+
+**Producto del paso:** contrato de errores.
+
+| Código HTTP | Caso | Respuesta esperada |
+|---:|---|---|
+| 400 | Datos inválidos | Mensaje de validación |
+| 404 | Producto inexistente | Recurso no encontrado |
+| 409 | Producto referenciado en una venta | Conflicto de negocio |
+| 500 | Error no controlado | Respuesta técnica sin exponer secretos |
+
+Los códigos 400, 404 y 409 se implementan en S2; 401 y 403 se incorporan con la seguridad de U2.
+
+### 3.7 Bosquejar estructura del backend modular (Spring Modulith)
+
+**Producto del paso:** estructura base.
+
+```text
+lp2/bomerp-backend/
+├── pom.xml                          # un solo proyecto Maven, sin reactor
+└── src/main/java/pe/edu/upeu/bomerp/
+    ├── BomErpApplication.java
+    ├── OpenApiConfig.java           # compartido, en el paquete raíz
+    └── catalogo/                    # módulo Modulith, funcional desde S1
+        ├── categoria/{controller,dto,entity,repository,service}
+        └── producto/{controller,dto,entity,repository,service}
+```
+
+Un solo `pom.xml` y un solo `.jar` ejecutable. `ventas`, `inventario`, `compras` y `seguridad` no se crean como paquetes vacíos "por si acaso" — se agregan como paquetes directos bajo `pe.edu.upeu.bomerp` recién cuando su sesión (S4, S10...) les da contenido real. Spring Modulith detecta cada paquete directo como un módulo y verifica sus límites automáticamente (`ModularityTests`); el detalle de esta decisión está en [ADR-001](../adr/ADR-001-arquitectura-backend.md) y [ADR-002](../adr/ADR-002-spring-modulith.md).
+
+### 3.8 Trazar LP2 con ADS y BD2
+
+**Producto del paso:** matriz de integración inicial.
+
+| Endpoint LP2 | Componente ADS | Objeto BD2 futuro |
+|---|---|---|
+| `GET /api/v1/categorias` | Módulo Catalogo / CategoriaService | Tabla `CATEGORIA` |
+| `GET /api/v1/productos` | ProductoController / ProductoService | Tabla `PRODUCTO` |
+| `POST /api/v1/productos` | ProductoController / ProductoService | Restricciones de precio y stock |
+| `POST /api/v1/ventas` | VentaController / VentaService | `pkg_venta.registrar_venta` |
+
+Sesión equivalente en los otros dos cursos, misma semana: [ADS - S1 Fundamentos de Arquitectura de Software](../../ads/sesiones/S01_Fundamentos_Arquitectura_Software.md) y [BD2 - S1 PL/SQL Aplicado al Negocio](../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio.md).
+
+## 4. Crea: actividad autónoma
+
+Tiempo: 2h fuera del aula.
+
+Cada estudiante documenta la API base del dominio elegido por su equipo.
+
+### 4.1 Plantilla de evidencia individual
+
+Entrega un PDF con el siguiente nombre:
+
+```text
+S01_LP2_Equipo##_ApellidoNombre.pdf
+```
+
+#### 4.1.1 Datos del estudiante
+
+- Nombre:
+- Equipo:
+- Sesión: S01 - Arquitectura Backend REST Profesional
+- Rol o aporte realizado:
+- Link de GitHub:
+
+#### 4.1.2 Trabajo autónomo realizado
+
+Completa y evidencia estas tareas:
+
+1. Evidenciar la creación y ejecución del proyecto backend.
+2. Documentar dependencias y configuración por ambiente.
+3. Demostrar la conexión a la base de datos sin publicar secretos.
+4. Publicar y probar el endpoint de verificación.
+5. Implementar los listados iniciales del módulo `catalogo`.
+6. Generar la documentación OpenAPI.
+
+#### 4.1.3 Evidencia técnica
+
+Incluye:
+
+- Evidencia de ejecución y endpoint de verificación.
+- Evidencia de conexión a la base de datos.
+- Configuración por ambiente sin secretos.
+- Respuesta de los listados de `Categoria` y `Producto`, tabla de endpoints y consultas ejecutadas en Oracle.
+- DTO de salida en JSON y documentación OpenAPI.
+- Estructura base del backend.
+
+#### 4.1.4 Error o hallazgo
+
+Describe un error o hallazgo: endpoint mal definido, DTO acoplado a tabla, falta de seguridad, recurso ambiguo o regla no contemplada.
+
+#### 4.1.5 Reflexión técnica breve
+
+Responde en 5 a 8 líneas:
+
+```text
+¿Qué decisiones permiten que el proyecto backend pueda ejecutarse de forma reproducible en diferentes ambientes?
+```
+
+### 4.2 Criterios mínimos de aceptación
+
+La evidencia individual se considera completa si:
+
+- El archivo respeta el nombre solicitado.
+- El entorno utiliza Java 21 y Maven reconoce el mismo JDK.
+- El backend inicia correctamente y comprueba la conexión a la base de datos.
+- La configuración por ambiente no expone secretos.
+- El endpoint de verificación responde correctamente.
+- Define recursos, endpoints y DTO coherentes.
+- Publica documentación OpenAPI.
+
+## 5. Cierre evaluativo
+
+Tiempo: 20 min.
+
+### 5.1 Resultados esperados
+
+Al finalizar la sesión, el estudiante debe demostrar que:
+
+- Crea y ejecuta el proyecto backend de forma reproducible, sobre Java 21 LTS.
+- Explica y reproduce la configuración del backend por ambiente.
+- Demuestra la conexión a la base de datos, verificada mediante ORM, y el endpoint de verificación.
+- Identifica recursos y endpoints iniciales, y su contrato y versionado básico (`/api/v1/...`).
+- Diseña DTO y publica documentación OpenAPI.
+- Organiza el backend por responsabilidades y verifica sus límites de módulo con Spring Modulith (`ModularityTests`).
+
+### 5.2 Evidencia del producto de sesión
+
+Cada estudiante entrega un PDF individual siguiendo la plantilla de la sección 4.1.
+
+Nombre del archivo:
+
+```text
+S01_LP2_Equipo##_ApellidoNombre.pdf
+```
+
+### 5.3 Preguntas de defensa y reflexión
+
+1. ¿Cómo se reproduce la ejecución del backend en otro equipo?
+2. ¿Cómo se configura la conexión sin publicar credenciales?
+3. ¿Qué comprueba el endpoint de verificación?
+4. ¿Qué diferencia hay entre DTO y entidad persistente?
+5. ¿Por qué `/api/v1/...` cuenta como versionado de API, aunque todavía no exista una `v2`?
+6. ¿Qué pasaría si `ventas` importara directamente el `Repository` de `catalogo`? ¿Qué lo impide?
+
+### 5.4 Rúbrica de evaluación
+
+| Dimensión | Peso | 3 - Logro destacado | 2 - Logro | 1 - Proceso | 0 - Inicio | Puntuación obtenida |
+|---|---:|---|---|---|---|---:|
+| 1. Ejecución y configuración | 2 | Backend reproducible, perfiles claros y secretos protegidos. | Backend ejecutable con configuración suficiente. | Ejecución o configuración incompleta. | El proyecto no ejecuta. | |
+| 2. Conexión y verificación | 2 | Conexión a BD y endpoint de salud comprobados. | Ambas evidencias funcionan con detalles menores. | Solo una evidencia es funcional. | No demuestra conexión ni salud. | |
+| 3. Recursos, endpoints y DTO | 2 | Contratos claros, coherentes y desacoplados. | Contratos funcionales. | Contratos incompletos. | No presenta contratos. | |
+| 4. OpenAPI, versionado y estructura modular | 2 | Documentación navegable, versionado `/api/v1` explicado, estructura por responsabilidades y `ModularityTests` en verde. | Documentación, versionado y estructura básicos. | Evidencia parcial o confusa. | No documenta ni organiza. | |
+| 5. Orden y reflexión | 1 | Evidencia ordenada y reflexión técnica clara. | Evidencia suficiente y reflexión comprensible. | Evidencia incompleta o reflexión superficial. | Evidencia desordenada o sin reflexión. | |
+
+Puntuación acumulada = suma de (`Peso` * `Puntuación obtenida`) = ____.
+
+Nota final = (`Puntuación acumulada` / 27) * 20 = ____.
