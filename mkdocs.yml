@@ -33,17 +33,17 @@ nav:
   - Inicio: index.md
   - Proyecto Integrador:
       - Alineamiento: proyecto-integrador/index.md
-      - Unidad 1:
+      - 1. Diseño técnico, motor transaccional y backend inicial:
           - Producto integrado U1: proyecto-integrador/u1/index.md
           - ADS Producto U1: proyecto-integrador/u1/ads-producto.md
           - BD2 Producto U1: proyecto-integrador/u1/bd2-producto.md
           - LP2 Demo U1: proyecto-integrador/u1/lp2-demo.md
-      - Unidad 2:
+      - 2. Modelado UML, administración Oracle y SPA segura:
           - Producto integrado U2: proyecto-integrador/u2/index.md
           - ADS Producto U2: proyecto-integrador/u2/ads-producto.md
           - BD2 Producto U2: proyecto-integrador/u2/bd2-producto.md
           - LP2 Demo U2: proyecto-integrador/u2/lp2-demo.md
-      - Unidad 3:
+      - 3. Diseño consolidado, operación Oracle y Full-Stack integrado:
           - Producto integrado U3: proyecto-integrador/u3/index.md
           - ADS Producto U3: proyecto-integrador/u3/ads-producto.md
           - BD2 Producto U3: proyecto-integrador/u3/bd2-producto.md
@@ -56,7 +56,7 @@ nav:
       - Silabos:
           - Silabo 2026-1: ads/silabo_ads_2026_1.md
           - Silabo 2026-2: ads/silabo_ads_2026_2.md
-      - Unidad 1:
+      - 1. Arquitectura y Diseño Estructural:
           - S1 - Fundamentos de arquitectura de software: ads/sesiones/S01_Fundamentos_Arquitectura_Software.md
   - BD2:
       - Inicio: bd2/index.md
@@ -64,7 +64,7 @@ nav:
       - Silabos:
           - Silabo 2026-1: bd2/silabo_bd2_2026_1.md
           - Silabo 2026-2: bd2/silabo_bd2_2026_2.md
-      - Unidad 1:
+      - 1. Programación y optimización (Oracle XE):
           - S1 - PL/SQL aplicado al negocio: bd2/sesiones/S01_PLSQL_Aplicado_Negocio.md
   - LP2:
       - Inicio: lp2/index.md
@@ -76,5 +76,5 @@ nav:
           - ADR-001 - Arquitectura del backend: lp2/adr/ADR-001-arquitectura-backend.md
           - ADR-002 - Spring Modulith: lp2/adr/ADR-002-spring-modulith.md
           - ADR-003 - Versión exacta de Spring Boot 4.0.7: lp2/adr/ADR-003-spring-boot-4.md
-      - Unidad 1:
+      - 1. Base backend REST modular de BomERP:
           - S1 - Arquitectura backend REST profesional: lp2/sesiones/S01_Arquitectura_Backend_REST_Profesional.md
