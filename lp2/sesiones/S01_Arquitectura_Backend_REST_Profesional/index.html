@@ -2378,10 +2378,32 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#ejecutar-los-scripts-desde-powershell-alternativa-al-cliente-grafico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejecutar los scripts desde PowerShell (alternativa al cliente gráfico)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#conectarse-a-oracle-desde-un-cliente-grafico" class="md-nav__link">
     <span class="md-ellipsis">
       
         Conectarse a Oracle desde un cliente gráfico
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verificar-esquemas-tablas-y-registros-por-sql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verificar esquemas, tablas y registros por SQL
       
     </span>
   </a>
@@ -3010,10 +3032,32 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#ejecutar-los-scripts-desde-powershell-alternativa-al-cliente-grafico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejecutar los scripts desde PowerShell (alternativa al cliente gráfico)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#conectarse-a-oracle-desde-un-cliente-grafico" class="md-nav__link">
     <span class="md-ellipsis">
       
         Conectarse a Oracle desde un cliente gráfico
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verificar-esquemas-tablas-y-registros-por-sql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verificar esquemas, tablas y registros por SQL
       
     </span>
   </a>
@@ -3751,7 +3795,23 @@ mvn --version   -&gt; Java version: 21
 <p><img alt="Selector de carpeta de VS Code navegado hasta lp2, con el botón &quot;Generate into this folder&quot; resaltado y el campo Carpeta vacío" src="../img/s01-3.2.1-guardar.png" /></p>
 <p><strong>Sobre dónde queda el proyecto.</strong> La extensión crea, dentro de la carpeta donde diste clic en "Generate into this folder", una <strong>subcarpeta nueva con el nombre del Artifact Id</strong>. Da clic estando parado en <code>lp2/</code>: el proyecto queda en <code>lp2/bomerp-backend/</code>, que es exactamente la carpeta que usa el resto de esta guía — no hace falta renombrar nada.</p>
 <p>Si el contador dice un número distinto de 9, revisa qué falta o qué sobra antes de continuar — no sigas a ciegas.</p>
-<p>Nota sobre lo que el Initializr agrega solo por combinar dependencias, sin que hayas marcado nada extra (revisa el <code>pom.xml</code> generado, no hace falta editarlo a mano):</p>
+<div class="admonition danger">
+<p class="admonition-title">Paso obligatorio: elimina <code>spring-modulith-starter-jpa</code> del <code>pom.xml</code></p>
+<p>El Initializr agrega automáticamente <code>spring-modulith-starter-jpa</code>
+(scope <code>compile</code>) porque también seleccionaste Spring Data JPA. <strong>Ábrelo
+y bórralo del <code>pom.xml</code> ahora mismo, antes de continuar</strong> — si lo dejas,
+el proyecto no arranca.</p>
+<p>Por qué: esa dependencia trae el registro de eventos de Modulith
+respaldado por JPA, que exige su propia tabla (<code>event_publication</code>).
+Como los módulos de esta ADR se comunican por servicios Java, no por
+eventos, esa tabla no se usa — y con <code>ddl-auto: validate</code> (3.2.3),
+Hibernate falla al arrancar porque la tabla no existe en Oracle
+(<code>Schema-validation: missing table [event_publication]</code>). Detalle
+completo: <a href="../../adr/ADR-002-spring-modulith/">ADR-002</a>.</p>
+<p>Verifica que quedó eliminada buscando <code>spring-modulith-starter-jpa</code> en
+el <code>pom.xml</code>: la búsqueda no debe encontrar ninguna coincidencia.</p>
+</div>
+<p>Nota sobre el resto de lo que el Initializr agrega solo por combinar dependencias, sin que hayas marcado nada extra (revisa el <code>pom.xml</code> generado, no hace falta editarlo a mano, salvo el punto anterior):</p>
 <ul>
 <li><code>spring-modulith-starter-core</code> (compile) y <code>spring-modulith-starter-test</code>
   (test) — este último <strong>sí se agrega automáticamente</strong> al seleccionar
@@ -3760,13 +3820,6 @@ mvn --version   -&gt; Java version: 21
   — Initializr los suma porque también seleccionaste Actuator; exponen
   información de módulos vía Actuator y trazas de observabilidad. Se
   conservan tal cual.</li>
-<li><strong><code>spring-modulith-starter-jpa</code> (compile) — elimínala del <code>pom.xml</code>.</strong>
-  Initializr la agrega porque también seleccionaste Spring Data JPA, pero
-  trae el registro de eventos de Modulith respaldado por JPA, que exige su
-  propia tabla (<code>event_publication</code>). Como los módulos de esta ADR se
-  comunican por servicios Java, no por eventos, esa tabla no se usa —y con
-  <code>ddl-auto: validate</code> (3.2.3), Hibernate falla al arrancar porque la tabla
-  no existe en Oracle. Detalle completo: <a href="../../adr/ADR-002-spring-modulith/">ADR-002</a>.</li>
 <li>El checkbox "Spring Web" genera el artefacto <code>spring-boot-starter-webmvc</code>,
   no <code>spring-boot-starter-web</code> — en Spring Boot 4.0.7 el segundo queda
   deprecado a favor del primero.</li>
@@ -3828,6 +3881,35 @@ en el repo (ver <code>bd2/README.md</code>, sección sobre U2-U3).</p>
 <div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">compose</span> <span class="o">-f</span> <span class="n">compose-local</span><span class="p">.</span><span class="n">yml</span> <span class="n">up</span> <span class="n">-d</span>
 </code></pre></div>
 <p>Luego crea el esquema y las tablas del catálogo ejecutando, en orden, <a href="../../../proyecto-integrador/u1/oracle/S01_01_esquemas.sql"><code>S01_01_esquemas.sql</code></a> y <a href="../../../proyecto-integrador/u1/oracle/S01_02_tablas.sql"><code>S01_02_tablas.sql</code></a> contra esta misma Oracle (scripts de BD2, listos para ejecutar — no hace falta revisar la guía de esa sesión, solo si quieres el detalle: <a href="../../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio/">BD2 S1</a>).</p>
+<div class="admonition danger">
+<p class="admonition-title">Ejecuta los dos scripts conectado como <code>system</code>, nunca como <code>BOM_CATALOGO</code></p>
+<p>Es tentador conectarte como <code>BOM_CATALOGO</code> para <code>S01_02_tablas.sql</code>,
+porque ese script crea <em>sus</em> tablas. <strong>No lo hagas: falla.</strong> El script
+califica el esquema explícitamente (<code>CREATE TABLE BOM_CATALOGO.categoria</code>,
+no <code>CREATE TABLE categoria</code>), y en Oracle calificar el esquema —incluso
+el propio— exige el privilegio <code>CREATE ANY TABLE</code>, que <code>BOM_CATALOGO</code> no
+tiene (solo tiene <code>CREATE TABLE</code>, otorgado en <code>S01_01_esquemas.sql</code>).
+Conectado como <code>BOM_CATALOGO</code> verás:</p>
+<div class="highlight"><pre><span></span><code>CREATE TABLE BOM_CATALOGO.categoria (
+*
+ERROR at line 1:
+ORA-01031: insufficient privileges
+</code></pre></div>
+<p><code>system</code> sí tiene <code>CREATE ANY TABLE</code> (rol DBA), por eso ambos scripts se
+ejecutan conectado como <code>system</code> de principio a fin — nunca cambies de
+usuario entre <code>S01_01_esquemas.sql</code> y <code>S01_02_tablas.sql</code>.</p>
+</div>
+<h5 id="ejecutar-los-scripts-desde-powershell-alternativa-al-cliente-grafico">Ejecutar los scripts desde PowerShell (alternativa al cliente gráfico)<a class="headerlink" href="#ejecutar-los-scripts-desde-powershell-alternativa-al-cliente-grafico" title="Permanent link">&para;</a></h5>
+<p>Si prefieres no instalar un cliente gráfico, copia los scripts dentro del
+contenedor y ejecútalos con <code>sqlplus</code> vía <code>docker exec</code>, siempre conectado
+como <code>system</code>. Desde <code>lp2/bomerp-backend</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="nb">cp </span><span class="p">..\..\</span><span class="n">docs</span><span class="p">\</span><span class="n">proyecto-integrador</span><span class="p">\</span><span class="n">u1</span><span class="p">\</span><span class="n">oracle</span><span class="p">\</span><span class="n">S01_01_esquemas</span><span class="p">.</span><span class="n">sql</span> <span class="n">bomerp-oracle</span><span class="p">:/</span><span class="n">tmp</span><span class="p">/</span><span class="n">S01_01_esquemas</span><span class="p">.</span><span class="n">sql</span>
+<span class="n">docker</span> <span class="nb">cp </span><span class="p">..\..\</span><span class="n">docs</span><span class="p">\</span><span class="n">proyecto-integrador</span><span class="p">\</span><span class="n">u1</span><span class="p">\</span><span class="n">oracle</span><span class="p">\</span><span class="n">S01_02_tablas</span><span class="p">.</span><span class="n">sql</span> <span class="n">bomerp-oracle</span><span class="p">:/</span><span class="n">tmp</span><span class="p">/</span><span class="n">S01_02_tablas</span><span class="p">.</span><span class="n">sql</span>
+
+<span class="n">docker</span> <span class="n">exec</span> <span class="n">bomerp-oracle</span> <span class="n">sqlplus</span> <span class="n">-s</span> <span class="n">system</span><span class="p">/</span><span class="n">123456</span><span class="nv">@localhost</span><span class="p">:</span><span class="n">1521</span><span class="p">/</span><span class="n">FREEPDB1</span> <span class="p">@/</span><span class="n">tmp</span><span class="p">/</span><span class="n">S01_01_esquemas</span><span class="p">.</span><span class="n">sql</span>
+<span class="n">docker</span> <span class="n">exec</span> <span class="n">bomerp-oracle</span> <span class="n">sqlplus</span> <span class="n">-s</span> <span class="n">system</span><span class="p">/</span><span class="n">123456</span><span class="nv">@localhost</span><span class="p">:</span><span class="n">1521</span><span class="p">/</span><span class="n">FREEPDB1</span> <span class="p">@/</span><span class="n">tmp</span><span class="p">/</span><span class="n">S01_02_tablas</span><span class="p">.</span><span class="n">sql</span>
+</code></pre></div>
+<p>Salida esperada del segundo comando: <code>Table created.</code> dos veces y <code>Grant succeeded.</code> dos veces. Si en cambio ves <code>ORA-01031: insufficient privileges</code>, revisaste el usuario del segundo comando — debe decir <code>system</code>, no <code>BOM_CATALOGO</code> (ver el bloque de arriba).</p>
 <h5 id="conectarse-a-oracle-desde-un-cliente-grafico">Conectarse a Oracle desde un cliente gráfico<a class="headerlink" href="#conectarse-a-oracle-desde-un-cliente-grafico" title="Permanent link">&para;</a></h5>
 <p>Para ejecutar esos scripts y revisar las tablas sin depender de la consola, usa un cliente de base de datos con soporte Oracle (por ejemplo la extensión de VS Code <strong>Database Client</strong>, <code>cweijan.vscode-postgresql-client2</code>, a pesar del nombre soporta varios motores incluido Oracle). Datos de conexión:</p>
 <table>
@@ -3861,7 +3943,79 @@ en el repo (ver <code>bd2/README.md</code>, sección sobre U2-U3).</p>
 </tbody>
 </table>
 <p><img alt="Conexión exitosa a Oracle vía Database Client, mostrando el árbol de esquemas y tablas de SYSTEM" src="../img/s01-3.2.2-database-client.png" /></p>
-<p>Usa <code>system</code> (no <code>BOMERP_APP</code>) porque <code>S01_01_esquemas.sql</code> necesita privilegios de DBA para crear los usuarios <code>BOM_CATALOGO</code> y <code>BOMERP_APP</code>, y <code>S01_02_tablas.sql</code> necesita privilegios sobre ese esquema para crear las tablas. Una vez creado el esquema, puedes agregar una segunda conexión con <code>Username: BOMERP_APP</code> / misma contraseña y base, para verificar los permisos con los que realmente corre el backend (<code>application-local.yml</code> usa ese usuario, no <code>system</code>).</p>
+<p>Usa <code>system</code> para ejecutar ambos scripts, por la razón explicada arriba. Una vez creadas las tablas, agrega una <strong>segunda conexión</strong> para revisarlas — las tablas pertenecen a <code>BOM_CATALOGO</code>, no a <code>system</code>, así que conectado como <code>system</code> tu cliente gráfico no las muestra en su árbol por defecto (solo muestra el propio esquema del usuario conectado):</p>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Username</td>
+<td><code>BOM_CATALOGO</code></td>
+</tr>
+<tr>
+<td>Password</td>
+<td><code>123456</code></td>
+</tr>
+<tr>
+<td>Host / Port / Database</td>
+<td>igual que arriba</td>
+</tr>
+</tbody>
+</table>
+<p>Con esa segunda conexión, <code>categoria</code> y <code>producto</code> aparecen directamente en el árbol de esquemas. Puedes agregar además una tercera conexión con <code>Username: BOMERP_APP</code> (misma contraseña y base) para verificar los permisos con los que realmente corre el backend (<code>application-local.yml</code> usa ese usuario, no <code>system</code> ni <code>BOM_CATALOGO</code>) — <code>BOMERP_APP</code> no es dueño de las tablas, solo tiene <code>SELECT</code>/<code>INSERT</code>/<code>UPDATE</code>/<code>DELETE</code> sobre ellas.</p>
+<h5 id="verificar-esquemas-tablas-y-registros-por-sql">Verificar esquemas, tablas y registros por SQL<a class="headerlink" href="#verificar-esquemas-tablas-y-registros-por-sql" title="Permanent link">&para;</a></h5>
+<p>Si prefieres no depender del árbol del cliente gráfico (o quieres confirmar
+exactamente qué existe antes de seguir), verifica entrando directamente al
+contenedor con una sesión interactiva de <code>sqlplus</code>, conectado como <code>system</code>
+(sin necesidad de cambiar de usuario):</p>
+<div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">exec</span> <span class="n">-it</span> <span class="n">bomerp-oracle</span> <span class="n">sqlplus</span> <span class="n">system</span><span class="p">/</span><span class="n">123456</span><span class="nv">@localhost</span><span class="p">:</span><span class="n">1521</span><span class="p">/</span><span class="n">FREEPDB1</span>
+</code></pre></div>
+<p>Ya dentro del prompt <code>SQL&gt;</code>, pega estas consultas una por una (o todas juntas):</p>
+<div class="highlight"><pre><span></span><code><span class="c1">-- ¿Existen los usuarios/esquemas?</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">dba_users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;BOM_CATALOGO&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;BOMERP_APP&#39;</span><span class="p">);</span>
+
+<span class="c1">-- ¿Qué tablas tiene BOM_CATALOGO?</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">all_tables</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="k">owner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;BOM_CATALOGO&#39;</span><span class="p">;</span>
+
+<span class="c1">-- ¿Qué privilegios tiene BOM_CATALOGO?</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">privilege</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">dba_sys_privs</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">grantee</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;BOM_CATALOGO&#39;</span><span class="p">;</span>
+
+<span class="c1">-- Ver los registros de cada tabla</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">categoria</span><span class="p">;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">producto</span><span class="p">;</span>
+</code></pre></div>
+<p>Para salir de la sesión:</p>
+<div class="highlight"><pre><span></span><code><span class="n">EXIT</span><span class="p">;</span>
+</code></pre></div>
+<p>Si conectas como <code>BOM_CATALOGO</code> en vez de <code>system</code> (<code>docker exec -it bomerp-oracle sqlplus BOM_CATALOGO/123456@localhost:1521/FREEPDB1</code>), usa <code>user_tables</code> en lugar de <code>all_tables</code> (no necesitas filtrar por <code>owner</code>, ya estás dentro de ese esquema):</p>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">user_tables</span><span class="p">;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">categoria</span><span class="p">;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">producto</span><span class="p">;</span>
+</code></pre></div>
+<p><strong>Alternativa sin entrar al contenedor, una consulta por línea</strong> (como
+<code>docker exec -it &lt;contenedor&gt; psql -U &lt;user&gt; -d &lt;db&gt; -c "&lt;consulta&gt;"</code>, pero
+<code>sqlplus</code> no tiene un flag <code>-c</code> propio — el equivalente es envolver la
+consulta con <code>bash -c</code> dentro del contenedor):</p>
+<div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">exec</span> <span class="n">bomerp-oracle</span> <span class="n">bash</span> <span class="n">-c</span> <span class="s2">&quot;echo \&quot;</span><span class="nb">SELECT </span><span class="n">username</span> <span class="n">FROM</span> <span class="n">dba_users</span> <span class="nb">WHERE </span><span class="n">username</span> <span class="k">IN</span> <span class="p">(</span><span class="s1">&#39;BOM_CATALOGO&#39;</span><span class="p">,</span> <span class="s1">&#39;BOMERP_APP&#39;</span><span class="p">);\</span><span class="s2">&quot; | sqlplus -s system/123456@localhost:1521/FREEPDB1&quot;</span>
+<span class="n">docker</span> <span class="n">exec</span> <span class="n">bomerp-oracle</span> <span class="n">bash</span> <span class="n">-c</span> <span class="s2">&quot;echo \&quot;</span><span class="nb">SELECT </span><span class="n">table_name</span> <span class="n">FROM</span> <span class="n">all_tables</span> <span class="nb">WHERE </span><span class="n">owner</span> <span class="p">=</span> <span class="s1">&#39;BOM_CATALOGO&#39;</span><span class="p">;\</span><span class="s2">&quot; | sqlplus -s system/123456@localhost:1521/FREEPDB1&quot;</span>
+<span class="n">docker</span> <span class="n">exec</span> <span class="n">bomerp-oracle</span> <span class="n">bash</span> <span class="n">-c</span> <span class="s2">&quot;echo \&quot;</span><span class="nb">SELECT </span><span class="n">privilege</span> <span class="n">FROM</span> <span class="n">dba_sys_privs</span> <span class="nb">WHERE </span><span class="n">grantee</span> <span class="p">=</span> <span class="s1">&#39;BOM_CATALOGO&#39;</span><span class="p">;\</span><span class="s2">&quot; | sqlplus -s system/123456@localhost:1521/FREEPDB1&quot;</span>
+<span class="n">docker</span> <span class="n">exec</span> <span class="n">bomerp-oracle</span> <span class="n">bash</span> <span class="n">-c</span> <span class="s2">&quot;echo \&quot;</span><span class="nb">SELECT </span><span class="p">*</span> <span class="n">FROM</span> <span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">categoria</span><span class="p">;\</span><span class="s2">&quot; | sqlplus -s system/123456@localhost:1521/FREEPDB1&quot;</span>
+<span class="n">docker</span> <span class="n">exec</span> <span class="n">bomerp-oracle</span> <span class="n">bash</span> <span class="n">-c</span> <span class="s2">&quot;echo \&quot;</span><span class="nb">SELECT </span><span class="p">*</span> <span class="n">FROM</span> <span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">producto</span><span class="p">;\</span><span class="s2">&quot; | sqlplus -s system/123456@localhost:1521/FREEPDB1&quot;</span>
+</code></pre></div>
+<p><strong>Alternativa con todas las consultas en un solo comando</strong> (here-string de PowerShell, útil para pegar todo de una vez sin repetir <code>docker exec</code> por cada línea):</p>
+<div class="highlight"><pre><span></span><code><span class="sh">@&quot;</span>
+<span class="sh">SELECT username FROM dba_users WHERE username IN (&#39;BOM_CATALOGO&#39;, &#39;BOMERP_APP&#39;);</span>
+<span class="sh">SELECT table_name FROM all_tables WHERE owner = &#39;BOM_CATALOGO&#39;;</span>
+<span class="sh">SELECT privilege FROM dba_sys_privs WHERE grantee = &#39;BOM_CATALOGO&#39;;</span>
+<span class="sh">SELECT * FROM BOM_CATALOGO.categoria;</span>
+<span class="sh">SELECT * FROM BOM_CATALOGO.producto;</span>
+<span class="sh">&quot;@</span> <span class="p">|</span> <span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="n">bomerp-oracle</span> <span class="n">sqlplus</span> <span class="n">-s</span> <span class="n">system</span><span class="p">/</span><span class="n">123456</span><span class="nv">@localhost</span><span class="p">:</span><span class="n">1521</span><span class="p">/</span><span class="n">FREEPDB1</span>
+</code></pre></div>
+<p>Evidencia esperada tras ejecutar ambos scripts: <code>BOM_CATALOGO</code> y <code>BOMERP_APP</code> existen, <code>BOM_CATALOGO</code> tiene <code>CATEGORIA</code> y <code>PRODUCTO</code>, y ambas consultas <code>SELECT *</code> responden (vacías está bien — todavía no se insertó nada; los datos de ejemplo llegan en 3.2.6).</p>
 <h5 id="reiniciar-docker-desde-cero-opcional-solo-si-algo-quedo-en-mal-estado">Reiniciar Docker desde cero (opcional, solo si algo quedó en mal estado)<a class="headerlink" href="#reiniciar-docker-desde-cero-opcional-solo-si-algo-quedo-en-mal-estado" title="Permanent link">&para;</a></h5>
 <p><strong>Advertencia: esto borra <em>todo</em> lo que tengas en Docker, no solo el contenedor de BomERP</strong> — cualquier contenedor, imagen, volumen o red de cualquier otro curso o proyecto en tu máquina. Úsalo solo si necesitas dejar Docker como recién instalado, no como parte normal del flujo de S1.</p>
 <div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="nb">ps </span><span class="n">-aq</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="n">docker</span> <span class="n">stop</span> <span class="nv">$_</span> <span class="p">}</span>
