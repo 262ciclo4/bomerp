@@ -1,8 +1,8 @@
-﻿# Proyecto Integrador del Ciclo 4
+﻿# Guía del Proyecto Integrador del Ciclo 4
 
 ## 1. Propósito
 
-El Proyecto Integrador del Ciclo 4 articula **Análisis y Diseño de Sistemas de Información (ADS)**, **Base de Datos II (BD2)** y **Lenguaje de Programación II (LP2)** alrededor de un mismo sistema empresarial.
+El Proyecto Integrador del Ciclo 4 articula **Análisis y Diseño de Sistemas de Información (ADS)**, **Administración de Base de Datos II (BD2)** y **Lenguaje de Programación II (LP2)** alrededor de un mismo sistema empresarial.
 
 ```text
 Diseño técnico -> Base Oracle administrada -> Backend REST -> Frontend SPA -> Integración -> Sustentación
@@ -30,6 +30,8 @@ Al finalizar el Proyecto Integrador, el equipo demuestra que puede diseñar, imp
 | CE022 | BD2 | Ingeniería de la Información | Evidencia base Oracle administrada, segura, optimizada, auditada y resiliente. |
 | CE023 | LP2 | Programación | Evidencia backend REST, frontend SPA e integración full-stack empresarial. |
 | CE024 | Transversal | Calidad de Software | Evidencia pruebas, operación, documentación, repositorio, estándares, reproducibilidad y sustentación integral. |
+
+Fuente oficial de los códigos: [Transcripción de evidencias por competencia — Ingeniería de Software](https://upeuoficial.github.io/planb/transcripcion/#c-area-de-ingenieria-de-software).
 
 ## 2. El Proyecto
 

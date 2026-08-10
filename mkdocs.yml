@@ -31,7 +31,7 @@ markdown_extensions:
 
 nav:
   - Inicio: index.md
-  - Proyecto Integrador:
+  - Guía del Proyecto Integrador:
       - Alineamiento: proyecto-integrador/index.md
       - 1. Diseño técnico, motor transaccional y backend inicial:
           - Producto integrado U1: proyecto-integrador/u1/index.md

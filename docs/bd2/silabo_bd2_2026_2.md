@@ -1,6 +1,6 @@
 # Sílabo BD2 2026-2
 
-# Base de Datos II
+# Administración de Base de Datos II
 
 ## I. Información General de Asignatura
 
