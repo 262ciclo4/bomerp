@@ -1,0 +1,3575 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Entorno integrado de desarrollo academico para construir modulos ERP con ADS, BD2 y LP2.">
+      
+      
+        <meta name="author" content="UPeU">
+      
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="u1/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Alineamiento - BOM ERP</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#proyecto-integrador-del-ciclo-4" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href=".." title="BOM ERP" class="md-header__button md-logo" aria-label="BOM ERP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            BOM ERP
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Alineamiento
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/262ciclo4/bomerp" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    262ciclo4/bomerp
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Pestañas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Inicio
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Proyecto Integrador
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../ads/" class="md-tabs__link">
+          
+  
+  
+  ADS
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../bd2/" class="md-tabs__link">
+          
+  
+  
+  BD2
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../lp2/" class="md-tabs__link">
+          
+  
+  
+  LP2
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="BOM ERP" class="md-nav__button md-logo" aria-label="BOM ERP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    BOM ERP
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/262ciclo4/bomerp" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    262ciclo4/bomerp
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Proyecto Integrador
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Proyecto Integrador
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Alineamiento
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Alineamiento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-proposito" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Propósito
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Propósito">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#composicion-de-equipos-e-integracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Composición de equipos e integración
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#competencia-o-capacidad-del-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Competencia o capacidad del proyecto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#competencias-relacionadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Competencias relacionadas
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-el-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. El Proyecto
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-evolucion-del-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Evolución del Proyecto
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Evolución del Proyecto">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#alineamiento-por-sesiones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alineamiento por sesiones
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-cronograma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Cronograma
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Cronograma">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#entregables-de-unidad-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entregables de Unidad 1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#entregables-de-unidad-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entregables de Unidad 2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#entregables-de-unidad-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entregables de Unidad 3
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-producto-final" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Producto Final
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Producto Final">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#repositorio-academico-y-topics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Repositorio académico y topics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-evaluacion-por-competencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Evaluación por competencias
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Evaluación por competencias">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rubrica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rúbrica
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#subaspectos-de-la-sustentacion-integral" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Subaspectos de la sustentación integral
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-sustentacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Sustentación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-resultado-esperado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Resultado Esperado
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anexo-secuencia-sugerida-de-presentacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anexo. Secuencia sugerida de presentación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anexo-plantilla-minima-de-documentacion-mkdocs-o-equivalente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anexo. Plantilla mínima de documentación MkDocs o equivalente
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anexo-plantilla-sugerida-de-informe-del-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anexo. Plantilla sugerida de informe del proyecto
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidad 1
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidad 1
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="u1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="u1/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="u1/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="u1/lp2-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Demo U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidad 2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidad 2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="u2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="u2/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="u2/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="u2/lp2-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Demo U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidad 3
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidad 3
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="u3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="u3/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="u3/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="u3/lp2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="u3/checklist-final/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Checklist final
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="u3/guia-sustentacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guía de sustentación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ADS
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ads/plan-trabajo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plan de trabajo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ads/silabo_ads_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ads/silabo_ads_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidad 1
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidad 1
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ads/sesiones/S01_Fundamentos_Arquitectura_Software/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - Fundamentos de arquitectura de software
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    BD2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bd2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bd2/plan-trabajo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plan de trabajo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bd2/silabo_bd2_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bd2/silabo_bd2_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidad 1
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidad 1
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bd2/sesiones/S01_PLSQL_Aplicado_Negocio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - PL/SQL aplicado al negocio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    LP2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lp2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lp2/plan-trabajo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plan de trabajo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lp2/silabo_lp2_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lp2/silabo_lp2_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Decisiones de arquitectura
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Decisiones de arquitectura
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lp2/adr/ADR-001-arquitectura-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-001 - Arquitectura del backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lp2/adr/ADR-002-spring-modulith/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-002 - Spring Modulith
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lp2/adr/ADR-003-spring-boot-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-003 - Versión exacta de Spring Boot 4.0.7
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidad 1
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidad 1
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lp2/sesiones/S01_Arquitectura_Backend_REST_Profesional/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - Arquitectura backend REST profesional
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-proposito" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Propósito
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Propósito">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#composicion-de-equipos-e-integracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Composición de equipos e integración
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#competencia-o-capacidad-del-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Competencia o capacidad del proyecto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#competencias-relacionadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Competencias relacionadas
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-el-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. El Proyecto
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-evolucion-del-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Evolución del Proyecto
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Evolución del Proyecto">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#alineamiento-por-sesiones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alineamiento por sesiones
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-cronograma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Cronograma
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Cronograma">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#entregables-de-unidad-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entregables de Unidad 1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#entregables-de-unidad-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entregables de Unidad 2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#entregables-de-unidad-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entregables de Unidad 3
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-producto-final" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Producto Final
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Producto Final">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#repositorio-academico-y-topics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Repositorio académico y topics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-evaluacion-por-competencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Evaluación por competencias
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Evaluación por competencias">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rubrica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rúbrica
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#subaspectos-de-la-sustentacion-integral" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Subaspectos de la sustentación integral
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-sustentacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Sustentación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-resultado-esperado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Resultado Esperado
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anexo-secuencia-sugerida-de-presentacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anexo. Secuencia sugerida de presentación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anexo-plantilla-minima-de-documentacion-mkdocs-o-equivalente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anexo. Plantilla mínima de documentación MkDocs o equivalente
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anexo-plantilla-sugerida-de-informe-del-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anexo. Plantilla sugerida de informe del proyecto
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="proyecto-integrador-del-ciclo-4">Proyecto Integrador del Ciclo 4<a class="headerlink" href="#proyecto-integrador-del-ciclo-4" title="Permanent link">&para;</a></h1>
+<h2 id="1-proposito">1. Propósito<a class="headerlink" href="#1-proposito" title="Permanent link">&para;</a></h2>
+<p>El Proyecto Integrador del Ciclo 4 articula <strong>Análisis y Diseño de Sistemas de Información (ADS)</strong>, <strong>Base de Datos II (BD2)</strong> y <strong>Lenguaje de Programación II (LP2)</strong> alrededor de un mismo sistema empresarial.</p>
+<div class="highlight"><pre><span></span><code>Diseño técnico -&gt; Base Oracle administrada -&gt; Backend REST -&gt; Frontend SPA -&gt; Integración -&gt; Sustentación
+</code></pre></div>
+<p>ADS define el diseño técnico profesional. BD2 administra y fortalece la base Oracle que soporta el sistema. LP2 implementa la aplicación full-stack empresarial usando el diseño técnico y la base de datos operativa.</p>
+<h3 id="composicion-de-equipos-e-integracion">Composición de equipos e integración<a class="headerlink" href="#composicion-de-equipos-e-integracion" title="Permanent link">&para;</a></h3>
+<p>No todos los integrantes de un equipo llevan necesariamente los 3 cursos (hay estudiantes irregulares que solo cursan ADS, solo BD2, solo LP2, o 2 de los 3). Por eso:</p>
+<ul>
+<li><strong>Cada sesión de cada curso se evalúa de forma autónoma</strong>, sin depender de que el estudiante lleve los otros dos cursos en paralelo — la integración entre ADS, BD2 y LP2 nunca es requisito para aprobar la rúbrica de una sesión individual.</li>
+<li><strong>La integración se evalúa únicamente a nivel del Proyecto Integrador</strong> (dimensión 6 de la rúbrica de la sección 6, "Integración del producto y calidad técnica"), y se aplica sobre el <strong>equipo como conjunto</strong>, no sobre cada estudiante individual: si el equipo tiene integrantes en los 3 cursos, esa evidencia de integración existe naturalmente porque cada uno construyó su parte; si el equipo no cubre los 3 cursos, esa dimensión se evalúa sobre lo que el equipo sí integró (por ejemplo, solo ADS+LP2, o solo BD2), sin penalizar la ausencia de un curso que ningún integrante lleva.</li>
+<li>La sustentación (sección 7) se reparte igual: cada integrante defiende la parte que efectivamente construyó, según los cursos que lleva.</li>
+</ul>
+<h3 id="competencia-o-capacidad-del-proyecto">Competencia o capacidad del proyecto<a class="headerlink" href="#competencia-o-capacidad-del-proyecto" title="Permanent link">&para;</a></h3>
+<p>Al finalizar el Proyecto Integrador, el equipo demuestra que puede diseñar, implementar, operar y defender una aplicación full-stack empresarial, integrando arquitectura técnica, base Oracle administrada, backend REST, frontend SPA, seguridad, operación, validación, documentación y sustentación integral del producto.</p>
+<h3 id="competencias-relacionadas">Competencias relacionadas<a class="headerlink" href="#competencias-relacionadas" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Código</th>
+<th>Curso asociado</th>
+<th>Competencia</th>
+<th>Relación con el proyecto</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CE021</td>
+<td>ADS</td>
+<td>Ingeniería de Requerimientos</td>
+<td>Evidencia diseño técnico, arquitectura, UML, decisiones y trazabilidad.</td>
+</tr>
+<tr>
+<td>CE022</td>
+<td>BD2</td>
+<td>Ingeniería de la Información</td>
+<td>Evidencia base Oracle administrada, segura, optimizada, auditada y resiliente.</td>
+</tr>
+<tr>
+<td>CE023</td>
+<td>LP2</td>
+<td>Programación</td>
+<td>Evidencia backend REST, frontend SPA e integración full-stack empresarial.</td>
+</tr>
+<tr>
+<td>CE024</td>
+<td>Transversal</td>
+<td>Calidad de Software</td>
+<td>Evidencia pruebas, operación, documentación, repositorio, estándares, reproducibilidad y sustentación integral.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2-el-proyecto">2. El Proyecto<a class="headerlink" href="#2-el-proyecto" title="Permanent link">&para;</a></h2>
+<p>El producto integrador es una <strong>Aplicación Full-Stack Empresarial con Diseño Técnico Profesional y Base de Datos Oracle Administrada</strong>.</p>
+<p>El caso de referencia continúa el producto final de Ciclo 3: <code>Producto</code>, <code>Categoria</code>, <code>Venta</code>, <code>DetalleVenta</code> y <code>Usuario</code>. Ciclo 4 no reinicia el dominio; transforma el sistema Web MVC en una base Full-Stack modular de BomERP con una aplicación Spring Boot, una SPA, seguridad JWT, operación Oracle y preparación académica para producción. No pretende cubrir todos los procesos de un ERP comercial. Catálogo y Ventas forman el flujo funcional obligatorio; Inventario y Compras se delimitan como módulos de evolución sin ampliar artificialmente la evaluación.</p>
+<p>BD2 no se integra como curso de diseño inicial de base de datos. Ese rol se trabajó en BD1. En ciclo 4, BD2 se integra como administración empresarial de la base que sostiene la aplicación: operación, rendimiento, seguridad, auditoría, respaldo, recuperación y monitoreo.</p>
+<p>No se considera proyecto integrador:</p>
+<ul>
+<li>Diseño técnico que no se refleja en la aplicación.</li>
+<li>Base Oracle trabajada como ejercicios aislados.</li>
+<li>Backend y frontend sin trazabilidad con ADS.</li>
+<li>Evidencias de BD2 que no correspondan al sistema empresarial.</li>
+<li>Tres productos separados sin integración técnica.</li>
+</ul>
+<h2 id="3-evolucion-del-proyecto">3. Evolución del Proyecto<a class="headerlink" href="#3-evolucion-del-proyecto" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Curso</th>
+<th>Aporte principal</th>
+<th>Producto</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ADS</td>
+<td>Arquitectura, vistas, modelo de dominio, UML, patrones, APIs, integraciones, ADRs y trazabilidad.</td>
+<td>Diseño Técnico Profesional Documentado.</td>
+</tr>
+<tr>
+<td>BD2</td>
+<td>PL/SQL, administración Oracle, seguridad, auditoría, optimización, backup, recovery y monitoreo.</td>
+<td>Base Oracle operativa, administrada, optimizada, auditada y resiliente.</td>
+</tr>
+<tr>
+<td>LP2</td>
+<td>Una aplicación Spring Boot única organizada en módulos verificados con Spring Modulith, una SPA modular, seguridad, persistencia, optimización, monitoreo, pruebas y estabilización.</td>
+<td>Base Full-Stack modular de BomERP integrada, optimizada, monitoreada y estabilizada.</td>
+</tr>
+</tbody>
+</table>
+<pre class="mermaid"><code>flowchart TB
+    A[ADS: arquitectura y diseño técnico] --&gt; B[BD2: base Oracle administrada]
+    A --&gt; C[LP2: una aplicación Spring Boot modular]
+    B --&gt; C
+    C --&gt; D[LP2: frontend SPA seguro]
+    D --&gt; E[Aplicación full-stack integrada]
+    B --&gt; E
+    A --&gt; E
+    E --&gt; F[Proyecto integrador sustentado]</code></pre>
+<h3 id="alineamiento-por-sesiones">Alineamiento por sesiones<a class="headerlink" href="#alineamiento-por-sesiones" title="Permanent link">&para;</a></h3>
+<p>Este alineamiento sirve como referencia metodológica para coordinar los avances de los tres cursos sin convertir el documento principal en una lista extensa de sesiones.</p>
+<table>
+<thead>
+<tr>
+<th>Sesiones</th>
+<th>ADS</th>
+<th>BD2</th>
+<th>LP2</th>
+<th>Integración esperada</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S1-S2</td>
+<td>Fundamentos de arquitectura, stakeholders, atributos de calidad, modelo C4 y vistas arquitectónicas.</td>
+<td>PL/SQL aplicado al negocio y triggers DML con auditoría básica.</td>
+<td>Un Spring Boot ejecutable, módulos delimitados, conexión, verificación, DTO, OpenAPI y CRUD REST de <code>Producto</code>.</td>
+<td>El diseño de ADS orienta el monolito modular; BD2 soporta la persistencia y LP2 expone por REST el primer recurso heredado de Ciclo 3.</td>
+</tr>
+<tr>
+<td>S3-S4</td>
+<td>Diseño estructural, principios SOLID y arquitecturas modernas.</td>
+<td>Excepciones, robustez y optimización de consultas con CBO, Explain Plan y DBMS_STATS.</td>
+<td>Asociación <code>Categoria–Producto</code> y operación transaccional <code>Venta–DetalleVenta</code>.</td>
+<td>Las decisiones de diseño se convierten en objetos relacionados y en el proceso transaccional de la base de BomERP.</td>
+</tr>
+<tr>
+<td>S5-S6</td>
+<td>Evaluación U1 de arquitectura documentada.</td>
+<td>Índices y evaluación U1 del motor transaccional Oracle optimizado.</td>
+<td>Consultas y reportes REST, reglas, trazabilidad, CORS y evaluación del backend.</td>
+<td>Primer corte integrado: arquitectura, motor transaccional y backend preparado para el consumo frontend.</td>
+</tr>
+<tr>
+<td>S7-S8</td>
+<td>Modelado del dominio y diseño de clases.</td>
+<td>Arquitectura Oracle, instancia, usuarios, roles y privilegios.</td>
+<td>Una SPA con <code>core</code>, <code>shared</code>, módulos funcionales, layout, menú, rutas, servicios y CRUD.</td>
+<td>La SPA modular implementa el diseño y consume recursos reales sobre la base administrada.</td>
+</tr>
+<tr>
+<td>S9-S10</td>
+<td>Diagramas dinámicos, patrones de diseño y arquitectura empresarial.</td>
+<td>Almacenamiento, auditoría, optimización de rendimiento, AWR e índices.</td>
+<td>Formularios cabecera-detalle, consultas/reportes y seguridad backend con JWT, roles y permisos.</td>
+<td>Los flujos empresariales se implementan y se protegen en el backend.</td>
+</tr>
+<tr>
+<td>S11-S12</td>
+<td>Integración empresarial y evaluación U2 del catálogo UML con patrones e integración.</td>
+<td>Particionamiento, escalabilidad y evaluación U2 de la base administrada, optimizada y asegurada.</td>
+<td>Seguridad frontend con guards e interceptores y evaluación de la SPA segura integrada.</td>
+<td>Segundo corte integrado: diseño de integración, base administrada y aplicación full-stack segura y funcional.</td>
+</tr>
+<tr>
+<td>S13-S15</td>
+<td>Integración del diseño técnico, ADRs, trazabilidad y sustentación.</td>
+<td>Backup, recovery, monitoreo, diagnóstico y sustentación del producto final BD2.</td>
+<td>Lazy Loading, Code Splitting, caché, Redis cuando corresponda, logging, monitoreo, paginación de alto volumen, auditoría, pruebas end-to-end, estabilización y sustentación.</td>
+<td>Consolidación final de la base de BomERP con evidencias técnicas de diseño, datos, aplicación y operación.</td>
+</tr>
+<tr>
+<td>S16</td>
+<td>Evaluación final.</td>
+<td>Evaluación final individual.</td>
+<td>Evaluación final individual teórico-práctica.</td>
+<td>Cierre académico y verificación individual de competencias.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="4-cronograma">4. Cronograma<a class="headerlink" href="#4-cronograma" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Hito</th>
+<th>Momento</th>
+<th>Producto esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S2</td>
+<td>Brief técnico</td>
+<td>Dominio, arquitectura inicial, recursos REST, objetos Oracle iniciales y alcance full-stack.</td>
+</tr>
+<tr>
+<td>S6</td>
+<td>Primer corte integrado</td>
+<td>Arquitectura base, motor transaccional Oracle optimizado y backend REST preparado para la SPA.</td>
+</tr>
+<tr>
+<td>S12</td>
+<td>Producto intermedio</td>
+<td>Catálogo UML, base Oracle administrada y SPA segura integrada al backend.</td>
+</tr>
+<tr>
+<td>S15</td>
+<td>Producto final</td>
+<td>Diseño técnico, base Oracle resiliente y base Full-Stack de BomERP optimizada, monitoreada y sustentada.</td>
+</tr>
+<tr>
+<td>S16</td>
+<td>Cierre individual</td>
+<td>Evaluación final individual teórico-práctica, separada de la sustentación del producto.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="entregables-de-unidad-1">Entregables de Unidad 1<a class="headerlink" href="#entregables-de-unidad-1" title="Permanent link">&para;</a></h3>
+<p>La Unidad 1 debe cerrar con un backend empresarial funcional y preparado para la SPA, sustentado por arquitectura y motor transaccional Oracle. La autenticación JWT se incorpora en U2; no es requisito de este primer corte.</p>
+<p>Los artefactos desarrollados como ejemplo base se encuentran en <a href="u1/">Unidad 1 - Producto integrado</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Curso</th>
+<th>Producto U1 del curso</th>
+<th>Artefactos mínimos</th>
+<th>Evidencia de integración</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ADS</td>
+<td><strong>Arquitectura documentada mediante vistas arquitectónicas y principios de diseño aplicados.</strong></td>
+<td>Contexto técnico, atributos de calidad, C4, componentes, principios SOLID y ADRs iniciales.</td>
+<td>La arquitectura define endpoints, componentes y decisiones que LP2 implementa y BD2 soporta.</td>
+</tr>
+<tr>
+<td>BD2</td>
+<td><strong>Motor transaccional Oracle optimizado.</strong></td>
+<td>Tablas, paquetes PL/SQL, triggers, excepciones, auditoría básica, consultas optimizadas e índices.</td>
+<td>Los objetos Oracle sostienen reglas, transacciones y consultas del backend.</td>
+</tr>
+<tr>
+<td>LP2</td>
+<td><strong>Aplicación Spring Boot REST modular para Categoria–Producto y Venta–DetalleVenta.</strong></td>
+<td>Un ejecutable, módulos delimitados, DTO, OpenAPI, CRUD maestro, proceso cabecera–detalle, consultas, CORS, logs, pruebas y demo API.</td>
+<td>La API conserva el dominio de Ciclo 3, respeta límites ADS, consume estructuras Oracle alineadas con BD2 y queda preparada para una SPA.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="entregables-de-unidad-2">Entregables de Unidad 2<a class="headerlink" href="#entregables-de-unidad-2" title="Permanent link">&para;</a></h3>
+<p>La Unidad 2 debe cerrar con una aplicación full-stack funcional, donde el diseño UML, la administración Oracle y la SPA segura ya se evidencian como un solo sistema empresarial.</p>
+<p>Los artefactos desarrollados como ejemplo base se encuentran en <a href="u2/">Unidad 2 - Producto integrado</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Curso</th>
+<th>Producto U2 del curso</th>
+<th>Artefactos mínimos</th>
+<th>Evidencia de integración</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ADS</td>
+<td><strong>Catálogo UML con patrones de diseño e integración aplicados.</strong></td>
+<td>Modelo de dominio, clases, secuencia, actividad, patrones y diseño de integración.</td>
+<td>Los modelos orientan servicios, DTO, endpoints, tablas y flujos SPA.</td>
+</tr>
+<tr>
+<td>BD2</td>
+<td><strong>Base de datos empresarial administrada, optimizada y asegurada.</strong></td>
+<td>Usuarios, roles, privilegios, almacenamiento, auditoría, rendimiento, particionamiento y scripts.</td>
+<td>Oracle sostiene seguridad, rendimiento y operación de la aplicación.</td>
+</tr>
+<tr>
+<td>LP2</td>
+<td><strong>Una SPA empresarial modular y segura, conectada a la aplicación Spring Boot.</strong></td>
+<td><code>core</code>, <code>shared</code>, módulos funcionales, layout, menú, rutas, CRUD, cabecera–detalle, consultas, JWT, roles, guards e interceptores.</td>
+<td>La SPA única consume endpoints y evidencia flujos funcionales y protegidos con datos consistentes.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="entregables-de-unidad-3">Entregables de Unidad 3<a class="headerlink" href="#entregables-de-unidad-3" title="Permanent link">&para;</a></h3>
+<p>La Unidad 3 cierra el producto final del ciclo. No repite la funcionalidad de U2; agrega optimización, caché, observabilidad, paginación de alto volumen, auditoría, pruebas end-to-end, resiliencia, estabilización y defensa técnica del producto.</p>
+<p>Los artefactos desarrollados como ejemplo base se encuentran en <a href="u3/">Unidad 3 - Producto integrado</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Curso</th>
+<th>Producto U3 del curso</th>
+<th>Artefactos mínimos</th>
+<th>Evidencia de integración</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ADS</td>
+<td><strong>Diseño Técnico Profesional Documentado.</strong></td>
+<td>Arquitectura final, UML, patrones, ADRs y matriz de trazabilidad.</td>
+<td>El diseño explica y justifica la aplicación, la base Oracle y las decisiones finales.</td>
+</tr>
+<tr>
+<td>BD2</td>
+<td><strong>Base Oracle operativa, administrada, optimizada, auditada y resiliente.</strong></td>
+<td>Backup, recovery, monitoreo, diagnóstico, seguridad, auditoría y rendimiento.</td>
+<td>Oracle se muestra como soporte operable y recuperable del sistema.</td>
+</tr>
+<tr>
+<td>LP2</td>
+<td><strong>Base Full-Stack modular de BomERP integrada, optimizada, monitoreada y estabilizada.</strong></td>
+<td>Una SPA, una aplicación Spring Boot única con módulos verificados por Spring Modulith, esquemas funcionales Oracle, optimización, caché, logging, monitoreo, paginación, auditoría, E2E y guía de ejecución.</td>
+<td>La aplicación ejecuta el flujo final respetando límites modulares (verificados con <code>ModularityTests</code>) y se sustenta en S15.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="5-producto-final">5. Producto Final<a class="headerlink" href="#5-producto-final" title="Permanent link">&para;</a></h2>
+<h3 id="repositorio-academico-y-topics">Repositorio académico y topics<a class="headerlink" href="#repositorio-academico-y-topics" title="Permanent link">&para;</a></h3>
+<p>Desde la primera presentación del proyecto, el repositorio debe estar creado y configurado con los topics académicos mínimos. Esta configuración es obligatoria porque permite identificar campus, semestre, línea, tipo de proyecto, cursos participantes, sección y grupo.</p>
+<p>El detalle oficial del estándar se encuentra en <a href="https://upeuoficial.github.io/planb/anexos/estandar-topics-repositorios/">Estándar transversal de topics para repositorios académicos</a>.</p>
+<p>Ejemplo base para el Proyecto Integrador del Ciclo 4:</p>
+<div class="highlight"><pre><span></span><code>campus-juliaca
+semestre-2026-2
+linea-software
+tipo-pi
+ads
+bd2
+lp2
+seccion-g1
+grupo-&lt;numero&gt;-&lt;nombre-proyecto&gt;
+</code></pre></div>
+<p>Componentes mínimos:</p>
+<ul>
+<li>Diseño técnico profesional con arquitectura, vistas, UML, patrones, APIs conceptuales y ADRs.</li>
+<li>Trazabilidad entre diseño, endpoints, base de datos, vistas SPA y pruebas.</li>
+<li>Base Oracle con PL/SQL, triggers, excepciones, índices y optimización.</li>
+<li>Administración de usuarios, roles, privilegios, almacenamiento y auditoría.</li>
+<li>Evidencias de backup, recovery, monitoreo y diagnóstico.</li>
+<li>Un backend Spring Boot único que organiza módulos de negocio (verificados con Spring Modulith) con repositorios propios, DTO, CRUD maestro, transacciones cabecera–detalle, consultas, reglas y seguridad JWT.</li>
+<li>Una SPA con <code>core</code>, <code>shared</code>, módulos funcionales, CRUD, formularios transaccionales, consultas, reportes, guards e interceptores.</li>
+<li>Lazy Loading, Code Splitting, caché del navegador, Redis cuando corresponda, logging y monitoreo básico.</li>
+<li>Paginación de alto volumen, auditoría, pruebas end-to-end, corrección de errores y estabilización.</li>
+<li>Evidencias comparativas de optimización, pruebas de regresión y estabilización final.</li>
+</ul>
+<h2 id="6-evaluacion-por-competencias">6. Evaluación por competencias<a class="headerlink" href="#6-evaluacion-por-competencias" title="Permanent link">&para;</a></h2>
+<p>Los criterios se organizan según una matriz común de evaluación de proyectos académicos: problema, diseño técnico, datos, implementación, integración y calidad, operación, validación y sustentación. El PI se evalúa con una sola rúbrica integrada; cada dimensión indica el curso que aporta principalmente al criterio, sin separar el producto en entregas inconexas.</p>
+<table>
+<thead>
+<tr>
+<th>Dimensión común</th>
+<th>Criterio del PI</th>
+<th>Curso asociado</th>
+<th>Capacidad evaluada</th>
+<th>Evidencias esperadas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Problema y alcance</td>
+<td>Alcance y diseño técnico del sistema</td>
+<td>ADS</td>
+<td>Analiza el contexto del sistema y define alcance, restricciones y atributos de calidad.</td>
+<td>Problema, alcance, stakeholders, atributos de calidad, restricciones y decisiones.</td>
+</tr>
+<tr>
+<td>2. Requerimientos o funcionalidad esperada</td>
+<td>Funcionalidad full-stack esperada</td>
+<td>ADS + LP2</td>
+<td>Traduce necesidades y diseño en funcionalidades empresariales verificables.</td>
+<td>Flujos, casos, pantallas, endpoints, criterios de aceptación y experiencia esperada.</td>
+</tr>
+<tr>
+<td>3. Diseño, modelo o arquitectura</td>
+<td>Arquitectura y diseño técnico</td>
+<td>ADS</td>
+<td>Diseña una arquitectura trazable, aplicable y justificable para el sistema.</td>
+<td>C4, UML, patrones, ADRs, componentes, integración, decisiones técnicas y, cuando el módulo lo amerite por sus invariantes de negocio, diseño estratégico/táctico de Domain-Driven Design (agregado, lenguaje ubicuo).</td>
+</tr>
+<tr>
+<td>4. Implementación técnica</td>
+<td>Backend REST modular y una SPA modular</td>
+<td>LP2</td>
+<td>Implementa una base Full-Stack empresarial segura, transaccional, modular y funcional.</td>
+<td>Un ejecutable backend, módulos cohesionados, APIs, DTO, CRUD, cabecera–detalle, seguridad, navegación, formularios y reportes.</td>
+</tr>
+<tr>
+<td>5. Datos, persistencia o procesamiento</td>
+<td>Administración Oracle</td>
+<td>BD2</td>
+<td>Administra datos empresariales con seguridad, rendimiento, auditoría y continuidad.</td>
+<td>Usuarios, roles, privilegios, tablespaces, auditoría, optimización, backup/recovery y monitoreo.</td>
+</tr>
+<tr>
+<td>6. Integración del producto y calidad técnica</td>
+<td>Integración full-stack y calidad técnica</td>
+<td>ADS + BD2 + LP2</td>
+<td>Integra diseño, base Oracle, backend y frontend como un sistema empresarial verificable y reproducible.</td>
+<td>Demo end-to-end, trazabilidad diseño-BD-API-SPA, repositorio, estructura, documentación, estándares, pruebas, scripts y forma de ejecución.</td>
+</tr>
+<tr>
+<td>7. Validación, pruebas o resultados</td>
+<td>Operación, resiliencia y validación</td>
+<td>BD2 + LP2</td>
+<td>Verifica funcionamiento, seguridad, operación, recuperación y resultados del sistema.</td>
+<td>Pruebas end-to-end, monitoreo, auditoría, paginación, backup/recovery, fallos controlados y resultados verificables.</td>
+</tr>
+<tr>
+<td>8. Sustentación técnica y profesional</td>
+<td>Sustentación integral</td>
+<td>ADS + BD2 + LP2</td>
+<td>Defiende técnica y profesionalmente el PI, evidenciando autoría, integración y responsabilidad académica.</td>
+<td>Pitch, demo, defensa técnica, aporte individual, repositorio, topics y MkDocs o equivalente.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="rubrica">Rúbrica<a class="headerlink" href="#rubrica" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Criterios</th>
+<th style="text-align: right;">%</th>
+<th>A (20)</th>
+<th>B (15)</th>
+<th>C (10)</th>
+<th>D (5)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Problema y alcance</td>
+<td style="text-align: right;">10%</td>
+<td>Problema claro, viable y bien delimitado; el alcance responde al contexto y está justificado.</td>
+<td>Problema y alcance comprensibles, con algunos límites o justificaciones por precisar.</td>
+<td>Problema poco delimitado o alcance parcialmente viable.</td>
+<td>Problema confuso, sin alcance definido o sin relación clara con el producto.</td>
+</tr>
+<tr>
+<td>2. Requerimientos o funcionalidad esperada</td>
+<td style="text-align: right;">10%</td>
+<td>Funcionalidades o requerimientos completos, coherentes y verificables según la necesidad planteada.</td>
+<td>Funcionalidades principales cubiertas, con detalles menores pendientes o poco precisos.</td>
+<td>Funcionalidades incompletas o parcialmente alineadas al problema.</td>
+<td>Funcionalidades ausentes, inconexas o sin relación verificable con la necesidad.</td>
+</tr>
+<tr>
+<td>3. Diseño, modelo o arquitectura</td>
+<td style="text-align: right;">10%</td>
+<td>Diseño, modelo o arquitectura coherente, aplicado y alineado al producto; muestra estructura y decisiones claras.</td>
+<td>Diseño funcional con limitaciones menores o decisiones parcialmente justificadas.</td>
+<td>Diseño poco claro, incompleto o aplicado de forma parcial.</td>
+<td>No presenta diseño, modelo o arquitectura verificable.</td>
+</tr>
+<tr>
+<td>4. Implementación técnica</td>
+<td style="text-align: right;">10%</td>
+<td>Implementación correcta, funcional y alineada a los contenidos centrales del curso.</td>
+<td>Implementación funcional con detalles técnicos menores por corregir.</td>
+<td>Implementación parcial, con errores o uso limitado de los contenidos del curso.</td>
+<td>Implementación insuficiente, no funcional o no relacionada con los contenidos del curso.</td>
+</tr>
+<tr>
+<td>5. Datos, persistencia o procesamiento</td>
+<td style="text-align: right;">10%</td>
+<td>Los datos se gestionan, almacenan, consultan o procesan correctamente según el tipo de proyecto.</td>
+<td>Gestión de datos funcional con detalles menores de consistencia, estructura o procesamiento.</td>
+<td>Gestión de datos parcial, limitada o con errores relevantes.</td>
+<td>No hay manejo de datos verificable o este impide el funcionamiento del producto.</td>
+</tr>
+<tr>
+<td>6. Integración del producto y calidad técnica</td>
+<td style="text-align: right;">10%</td>
+<td>El producto funciona como sistema integrado, ordenado, documentado y reproducible.</td>
+<td>Integración funcional con detalles menores de organización, documentación o reproducibilidad.</td>
+<td>Integración parcial; existen componentes aislados, desorden o evidencias incompletas.</td>
+<td>Componentes desconectados, sin organización técnica ni evidencia reproducible.</td>
+</tr>
+<tr>
+<td>7. Validación, pruebas o resultados</td>
+<td style="text-align: right;">10%</td>
+<td>Presenta pruebas, evidencias o resultados claros que comprueban el funcionamiento y el valor del producto.</td>
+<td>Presenta evidencias suficientes, con algunos casos o resultados por completar.</td>
+<td>Evidencias limitadas, poco claras o con validación parcial.</td>
+<td>No presenta pruebas, evidencias ni resultados verificables.</td>
+</tr>
+<tr>
+<td>8. Sustentación técnica y profesional</td>
+<td style="text-align: right;">30%</td>
+<td>Explica y defiende el producto con solvencia; demuestra aporte individual, dominio técnico, comunicación clara, repositorio, documentación y actitud profesional.</td>
+<td>Sustentación clara y funcional, con detalles menores en defensa técnica, evidencias, comunicación o documentación.</td>
+<td>Sustentación parcial; dominio, evidencias, comunicación o aporte individual insuficientemente demostrados.</td>
+<td>No sustenta adecuadamente, no demuestra autoría o no presenta evidencias mínimas del producto.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="subaspectos-de-la-sustentacion-integral">Subaspectos de la sustentación integral<a class="headerlink" href="#subaspectos-de-la-sustentacion-integral" title="Permanent link">&para;</a></h3>
+<p>La sustentación integral debe representar como mínimo el 30% de la evaluación del proyecto. Se revisa mediante los siguientes subaspectos:</p>
+<table>
+<thead>
+<tr>
+<th>Subaspecto</th>
+<th>Qué observa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Defensa técnica</td>
+<td>Explicación de arquitectura, base de datos, código, decisiones, limitaciones, evidencias y trazabilidad del sistema.</td>
+</tr>
+<tr>
+<td>2. Comunicación y orden</td>
+<td>Claridad, estructura, tiempo y lenguaje técnico.</td>
+</tr>
+<tr>
+<td>3. Presentación personal y actitud</td>
+<td>Puntualidad, vestimenta limpia y adecuada, higiene, cabello ordenado, actitud profesional, respeto, honestidad y coherencia con los valores y principios cristianos de la institución.</td>
+</tr>
+<tr>
+<td>4. Aporte individual</td>
+<td>Cada integrante demuestra lo que hizo.</td>
+</tr>
+<tr>
+<td>5. Repositorio y estándares</td>
+<td>Topics, organización, commits, documentación y reproducibilidad.</td>
+</tr>
+<tr>
+<td>6. MkDocs o equivalente</td>
+<td>Documentación publicada, navegable y alineada al producto.</td>
+</tr>
+<tr>
+<td>7. Pitch/demo ejecutiva</td>
+<td>Introducción clara del problema, solución y valor, seguida de una demo funcional.</td>
+</tr>
+</tbody>
+</table>
+<p>La sustentación profesional forma parte de la evaluación porque el producto final no solo debe funcionar; también debe ser presentado, explicado y defendido con responsabilidad académica, ética, respeto, honestidad y coherencia con los valores y principios cristianos de la institución.</p>
+<h2 id="7-sustentacion">7. Sustentación<a class="headerlink" href="#7-sustentacion" title="Permanent link">&para;</a></h2>
+<p>La sustentación inicia con un video pitch breve o introducción ejecutiva de 1 a 3 minutos para presentar el problema, la solución, el valor del producto y la participación del equipo o estudiante.</p>
+<table>
+<thead>
+<tr>
+<th>Momento</th>
+<th style="text-align: right;">Tiempo sugerido</th>
+<th>Propósito</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Exposición técnica</td>
+<td style="text-align: right;">10 minutos</td>
+<td>Presentar arquitectura, diseño, Oracle, backend, frontend, trazabilidad y evidencias.</td>
+</tr>
+<tr>
+<td>Demostración en vivo</td>
+<td style="text-align: right;">5 minutos</td>
+<td>Ejecutar flujo full-stack, seguridad, transacción, persistencia, monitoreo o recuperación.</td>
+</tr>
+</tbody>
+</table>
+<p>Cada integrante debe defender una parte verificable: diseño ADS, administración BD2, backend LP2, frontend LP2, seguridad, pruebas, observabilidad, integración o documentación. La base Oracle debe mostrarse como soporte real del sistema, no como componente paralelo.</p>
+<h2 id="8-resultado-esperado">8. Resultado Esperado<a class="headerlink" href="#8-resultado-esperado" title="Permanent link">&para;</a></h2>
+<p>Al cierre del ciclo, el estudiante debe demostrar que puede convertir un diseño técnico profesional en una solución full-stack empresarial operativa.</p>
+<div class="highlight"><pre><span></span><code>Diseño técnico -&gt; Oracle administrado -&gt; Backend REST -&gt; Frontend SPA -&gt; Sistema empresarial -&gt; Sustentación
+</code></pre></div>
+<p>El valor del proyecto integrador está en evidenciar que la arquitectura, la base Oracle y la aplicación full-stack pertenecen al mismo sistema y evolucionaron de manera coordinada.</p>
+<h2 id="anexo-secuencia-sugerida-de-presentacion">Anexo. Secuencia sugerida de presentación<a class="headerlink" href="#anexo-secuencia-sugerida-de-presentacion" title="Permanent link">&para;</a></h2>
+<p>La presentación puede organizarse con una secuencia breve de apoyo visual. El video pitch o introducción ejecutiva abre la sustentación y no reemplaza la demo ni la defensa técnica.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Orden</th>
+<th>Slide o momento</th>
+<th>Propósito</th>
+<th>Competencia evidenciada</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>Título del proyecto y equipo</td>
+<td>Identificar el proyecto, integrantes y dominio elegido.</td>
+<td>CE024</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>Video pitch o introducción ejecutiva</td>
+<td>Presentar problema, solución, valor y participación del equipo.</td>
+<td>CE024</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>Alcance y diseño técnico</td>
+<td>Explicar necesidad, restricciones, atributos de calidad y decisiones.</td>
+<td>CE021</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>Arquitectura</td>
+<td>Mostrar C4, UML, patrones, componentes y trazabilidad.</td>
+<td>CE021</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>Base Oracle</td>
+<td>Presentar administración, seguridad, rendimiento, auditoría, respaldo y recuperación.</td>
+<td>CE022</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td>Backend REST</td>
+<td>Explicar conexión, CRUD, DTO, transacciones, consultas, reglas y seguridad.</td>
+<td>CE023</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td>Frontend SPA</td>
+<td>Mostrar navegación, CRUD, cabecera–detalle, consultas, guards, interceptores y control de acceso.</td>
+<td>CE023</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td>Integración full-stack</td>
+<td>Evidenciar relación entre diseño, base, API, frontend y pruebas.</td>
+<td>CE021 + CE022 + CE023</td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td>Operación y resiliencia</td>
+<td>Mostrar monitoreo, recuperación, auditoría, fallos y resultados.</td>
+<td>CE022 + CE024</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td>Demo en vivo</td>
+<td>Ejecutar un flujo empresarial completo.</td>
+<td>CE023 + CE024</td>
+</tr>
+<tr>
+<td style="text-align: right;">11</td>
+<td>4. Aporte individual</td>
+<td>Indicar qué hizo cada integrante por curso o componente.</td>
+<td>CE024</td>
+</tr>
+<tr>
+<td style="text-align: right;">12</td>
+<td>Repositorio, estándares y mejoras</td>
+<td>Mostrar topics, documentación publicada en MkDocs o equivalente, reproducibilidad, límites y mejora.</td>
+<td>CE024</td>
+</tr>
+</tbody>
+</table>
+<h2 id="anexo-plantilla-minima-de-documentacion-mkdocs-o-equivalente">Anexo. Plantilla mínima de documentación MkDocs o equivalente<a class="headerlink" href="#anexo-plantilla-minima-de-documentacion-mkdocs-o-equivalente" title="Permanent link">&para;</a></h2>
+<p>La documentación publicada no reemplaza al informe. Su función es permitir que otra persona comprenda, ejecute, revise y verifique el producto desde el repositorio.</p>
+<table>
+<thead>
+<tr>
+<th>Página o sección</th>
+<th>Contenido mínimo</th>
+<th>Evidencia esperada</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Inicio</td>
+<td>Nombre del proyecto, problema, solución, curso o cursos, integrantes y enlace al repositorio.</td>
+<td>Presentación clara del producto.</td>
+</tr>
+<tr>
+<td>Instalación o ejecución</td>
+<td>Requisitos, dependencias, configuración y comandos para ejecutar el proyecto.</td>
+<td>Instrucciones reproducibles.</td>
+</tr>
+<tr>
+<td>Uso del sistema</td>
+<td>Flujo principal, pantallas, comandos, endpoints, notebooks o casos de uso según corresponda.</td>
+<td>Guía breve para probar el producto.</td>
+</tr>
+<tr>
+<td>Arquitectura o estructura</td>
+<td>Diagrama, componentes, carpetas principales y decisiones técnicas.</td>
+<td>Vista técnica comprensible.</td>
+</tr>
+<tr>
+<td>Módulos o funcionalidades</td>
+<td>Descripción de las funciones principales del producto.</td>
+<td>Relación entre funcionalidades y problema.</td>
+</tr>
+<tr>
+<td>Datos</td>
+<td>Modelo, archivos, base de datos, datasets, fuentes o estructura de almacenamiento según el curso.</td>
+<td>Evidencia de gestión de datos.</td>
+</tr>
+<tr>
+<td>Pruebas y evidencias</td>
+<td>Casos de prueba, capturas, resultados, métricas, validaciones o salidas generadas.</td>
+<td>Verificación del funcionamiento.</td>
+</tr>
+<tr>
+<td>Equipo y aporte individual</td>
+<td>Integrantes, responsabilidades, aportes y evidencias de participación.</td>
+<td>Autoría verificable.</td>
+</tr>
+<tr>
+<td>5. Repositorio y estándares</td>
+<td>Topics académicos, estructura, commits, ramas si aplica y criterios de reproducibilidad.</td>
+<td>Cumplimiento de estándares técnicos.</td>
+</tr>
+<tr>
+<td>Limitaciones y mejoras</td>
+<td>Restricciones del producto y mejoras futuras priorizadas.</td>
+<td>Cierre reflexivo y realista.</td>
+</tr>
+</tbody>
+</table>
+<p>La documentación debe estar disponible desde las primeras presentaciones y crecer con el proyecto. Para FP puede ser una documentación sencilla; para proyectos integradores y cursos avanzados debe ser más completa y técnica.</p>
+<h2 id="anexo-plantilla-sugerida-de-informe-del-proyecto">Anexo. Plantilla sugerida de informe del proyecto<a class="headerlink" href="#anexo-plantilla-sugerida-de-informe-del-proyecto" title="Permanent link">&para;</a></h2>
+<p>El informe debe documentar el producto integrador como un solo sistema empresarial, no como tres entregables separados. Debe evidenciar la trazabilidad entre ADS, BD2 y LP2.</p>
+<table>
+<thead>
+<tr>
+<th>Sección</th>
+<th>Contenido mínimo</th>
+<th>Evidencia esperada</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Portada</td>
+<td>Nombre del proyecto, cursos, sección, integrantes, docentes y semestre.</td>
+<td>Datos completos del equipo.</td>
+</tr>
+<tr>
+<td>Resumen ejecutivo</td>
+<td>Problema, solución full-stack y valor para el negocio.</td>
+<td>Síntesis de 10 a 15 líneas.</td>
+</tr>
+<tr>
+<td>Competencia y trazabilidad</td>
+<td>Competencia/capacidad del PI y competencias relacionadas.</td>
+<td>CE021, CE022, CE023 y CE024 vinculadas al producto.</td>
+</tr>
+<tr>
+<td>Alcance y diseño técnico</td>
+<td>Contexto, restricciones, atributos de calidad y decisiones.</td>
+<td>Documento de diseño, ADRs o diagramas.</td>
+</tr>
+<tr>
+<td>Arquitectura</td>
+<td>C4, UML, patrones, componentes e integración.</td>
+<td>Diagramas y explicación técnica.</td>
+</tr>
+<tr>
+<td>Base Oracle</td>
+<td>Administración, seguridad, auditoría, rendimiento, backup y recovery.</td>
+<td>Scripts, capturas, planes, evidencias y monitoreo.</td>
+</tr>
+<tr>
+<td>Backend REST</td>
+<td>Conexión, APIs, DTO, CRUD, transacciones, consultas, reglas y seguridad.</td>
+<td>Código, endpoints, pruebas y documentación.</td>
+</tr>
+<tr>
+<td>Frontend SPA</td>
+<td>Navegación, CRUD, formularios cabecera–detalle, consultas, guards, interceptores y UX.</td>
+<td>Capturas, componentes y demo funcional.</td>
+</tr>
+<tr>
+<td>Integración y operación</td>
+<td>Relación diseño-BD-API-SPA, optimización, monitoreo, auditoría y validación.</td>
+<td>Demo end-to-end, paginación, pruebas, logs, métricas y evidencias.</td>
+</tr>
+<tr>
+<td>Repositorio y documentación</td>
+<td>Repositorio, topics, estructura, instrucciones y documentación publicada.</td>
+<td>URL del repositorio y MkDocs o equivalente.</td>
+</tr>
+<tr>
+<td>4. Aporte individual</td>
+<td>Responsabilidad de cada integrante por curso o componente.</td>
+<td>Tabla de tareas, commits o evidencias por integrante.</td>
+</tr>
+<tr>
+<td>Limitaciones y mejoras</td>
+<td>Límites del sistema y mejoras posibles.</td>
+<td>Lista priorizada y realista.</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Angel Sullon @asullom - UPeU 2026
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.top", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

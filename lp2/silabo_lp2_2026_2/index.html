@@ -1,0 +1,2680 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Entorno integrado de desarrollo academico para construir modulos ERP con ADS, BD2 y LP2.">
+      
+      
+        <meta name="author" content="UPeU">
+      
+      
+      
+        <link rel="prev" href="../silabo_lp2_2026_1/">
+      
+      
+        <link rel="next" href="../adr/ADR-001-arquitectura-backend/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Silabo 2026-2 - BOM ERP</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#silabo-lp2-2026-2" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../.." title="BOM ERP" class="md-header__button md-logo" aria-label="BOM ERP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            BOM ERP
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Silabo 2026-2
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/262ciclo4/bomerp" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    262ciclo4/bomerp
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Pestañas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Inicio
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../proyecto-integrador/" class="md-tabs__link">
+          
+  
+  
+  Proyecto Integrador
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../ads/" class="md-tabs__link">
+          
+  
+  
+  ADS
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../bd2/" class="md-tabs__link">
+          
+  
+  
+  BD2
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+  LP2
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="BOM ERP" class="md-nav__button md-logo" aria-label="BOM ERP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    BOM ERP
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/262ciclo4/bomerp" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    262ciclo4/bomerp
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Proyecto Integrador
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Proyecto Integrador
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Alineamiento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidad 1
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidad 1
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u1/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u1/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u1/lp2-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Demo U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidad 2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidad 2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u2/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u2/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u2/lp2-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Demo U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidad 3
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidad 3
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u3/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u3/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u3/lp2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u3/checklist-final/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Checklist final
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u3/guia-sustentacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guía de sustentación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ADS
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ads/plan-trabajo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plan de trabajo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ads/silabo_ads_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ads/silabo_ads_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidad 1
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidad 1
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ads/sesiones/S01_Fundamentos_Arquitectura_Software/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - Fundamentos de arquitectura de software
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    BD2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bd2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bd2/plan-trabajo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plan de trabajo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bd2/silabo_bd2_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bd2/silabo_bd2_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidad 1
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidad 1
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - PL/SQL aplicado al negocio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    LP2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plan-trabajo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plan de trabajo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../silabo_lp2_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Decisiones de arquitectura
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Decisiones de arquitectura
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/ADR-001-arquitectura-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-001 - Arquitectura del backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/ADR-002-spring-modulith/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-002 - Spring Modulith
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/ADR-003-spring-boot-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-003 - Versión exacta de Spring Boot 4.0.7
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidad 1
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidad 1
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sesiones/S01_Arquitectura_Backend_REST_Profesional/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - Arquitectura backend REST profesional
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="silabo-lp2-2026-2">Sílabo LP2 2026-2<a class="headerlink" href="#silabo-lp2-2026-2" title="Permanent link">&para;</a></h1>
+<h1 id="lenguaje-de-programacion-ii">Lenguaje de Programación II<a class="headerlink" href="#lenguaje-de-programacion-ii" title="Permanent link">&para;</a></h1>
+<h2 id="i-informacion-general-de-asignatura">I. Información General de Asignatura<a class="headerlink" href="#i-informacion-general-de-asignatura" title="Permanent link">&para;</a></h2>
+<table>
+  <tr>
+    <td>01</td>
+    <td>Facultad/EGP</td>
+    <td>Facultad de Ingeniería y Arquitectura</td>
+    <td>09</td>
+    <td>Año de plan de estudio</td>
+    <td>2024-1</td>
+  </tr>
+  <tr>
+    <td>02</td>
+    <td>Programa de estudio</td>
+    <td>EP Ingeniería de Sistemas</td>
+    <td>10</td>
+    <td>Ciclo de estudio</td>
+    <td>4</td>
+  </tr>
+  <tr>
+    <td>03</td>
+    <td>Tipo de estudio</td>
+    <td>Especialidad</td>
+    <td>11</td>
+    <td>Código de asignatura</td>
+    <td>2024-1</td>
+  </tr>
+  <tr>
+    <td>04</td>
+    <td>Nombre de asignatura</td>
+    <td>Lenguaje de Programación II</td>
+    <td>12</td>
+    <td>Número de créditos</td>
+    <td>3</td>
+  </tr>
+  <tr>
+    <td>05</td>
+    <td>Duración</td>
+    <td></td>
+    <td>13</td>
+    <td>Nota mínima probatoria</td>
+    <td>13</td>
+  </tr>
+  <tr>
+    <td>06</td>
+    <td>Horas de la asignatura</td>
+    <td>H. Te. Pract 2 H. Prc. Pres 2 H. Te. On. Sin H. Te. On. Asin H. Pr. On. Sin H. Pr. On. Asin</td>
+    <td>14</td>
+    <td>Año y semestre académico</td>
+    <td>2026-2</td>
+  </tr>
+  <tr>
+    <td>07</td>
+    <td>Docente</td>
+    <td>Reyna Barreto Benjamin David</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>08</td>
+    <td>Pre requisito</td>
+    <td>Lenguaje de Programación I</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+</table>
+
+<h2 id="ii-sumilla">II. Sumilla<a class="headerlink" href="#ii-sumilla" title="Permanent link">&para;</a></h2>
+<p>La asignatura es de naturaleza teórico-práctica, pertenece al Área de Estudios Específicos y Especialidad y sub área de Ingeniería de Software, tiene el propósito de proporcionar a los estudiantes, Tiene como propósito entrenar al estudiante en el desarrollo de aplicaciones Web con frameworks backend y frontend. Los temas a tratar son: Frameworks backend, Frameworks frontend, interfaz de programación de aplicaciones y seguridad</p>
+<h2 id="iii-competencia-del-perfil-de-egreso-en-relacion-a-la-asignatura">III. Competencia del perfil de egreso en relación a la asignatura<a class="headerlink" href="#iii-competencia-del-perfil-de-egreso-en-relacion-a-la-asignatura" title="Permanent link">&para;</a></h2>
+<table>
+  <tr><td colspan="2">General</td></tr>
+  <tr><td colspan="2">Desarrolla y aplica habilidades de investigación científica y formativa, así como la capacidad de innovar de manera ética y basada en principios bíblico-cristianos, para contribuir al avance del conocimiento y la solución de problemas en la sociedad.</td></tr>
+  <tr><td colspan="2">Dimensiones</td></tr>
+  <tr><td>N° 1.1</td><td>INNOVACIÓN Y SOLUCIÓN DE PROBLEMAS</td></tr>
+  <tr><td colspan="2">Específica</td></tr>
+  <tr><td colspan="2">Gestiona y desarrolla software de manera eficiente y efectiva, basándose en estándares internacionales de calidad a fin de lograr el control y aseguramiento de la calidad según el contexto de la organización.</td></tr>
+  <tr><td colspan="2">Dimensiones</td></tr>
+  <tr><td>N° 1.1</td><td>PROGRAMACIÓN</td></tr>
+</table>
+
+<h2 id="iv-resultado-de-aprendizaje-de-la-asignatura">IV. Resultado de aprendizaje de la asignatura<a class="headerlink" href="#iv-resultado-de-aprendizaje-de-la-asignatura" title="Permanent link">&para;</a></h2>
+<table>
+  <tr>
+    <td>Resultado de aprendizaje</td>
+    <td>Producto Académico</td>
+  </tr>
+  <tr>
+    <td>Al finalizar el curso, el estudiante desarrolla una aplicación Full-Stack empresarial integrada, articulando backend REST, frontend SPA, seguridad, persistencia, optimización, monitoreo, pruebas, estabilización y sustentación técnica.</td>
+    <td>Nombre: Aplicación Full-Stack empresarial integrada, optimizada, monitoreada, estabilizada y preparada para producción, con evidencias y sustentación técnica.</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td>Descripción: Backend REST + Frontend SPA + Seguridad + Persistencia + Optimización + Monitoreo + Pruebas + Estabilización.</td>
+  </tr>
+</table>
+
+<h2 id="v-unidades-de-aprendizaje">V. Unidades de aprendizaje<a class="headerlink" href="#v-unidades-de-aprendizaje" title="Permanent link">&para;</a></h2>
+<h3 id="unidad-1-backend-rest-empresarial">Unidad 1: Backend REST empresarial<a class="headerlink" href="#unidad-1-backend-rest-empresarial" title="Permanent link">&para;</a></h3>
+<table>
+  <tr>
+    <td colspan="4">Resultado de aprendizaje</td>
+    <td colspan="3">Producto</td>
+  </tr>
+  <tr>
+    <td colspan="4">Desarrolla un backend REST empresarial ejecutable, conectado a la base de datos y organizado por capas, con ORM, recursos, DTO, documentación de API, CRUD, objetos relacionados, operaciones del dominio con cabecera–detalle, consultas, reportes, CORS, logs y pruebas de API.</td>
+    <td colspan="3">Nombre: Backend REST empresarial con ORM, CRUD, objetos relacionados, operación cabecera–detalle, consultas, reportes, CORS, logs y pruebas.</td>
+  </tr>
+  <tr>
+    <td colspan="4">Criterios de evaluación del producto</td>
+    <td colspan="3">Descripción del producto</td>
+  </tr>
+  <tr>
+    <td colspan="4">1 Crea y configura el proyecto backend con ORM, conexión a la base de datos, recurso REST inicial, DTO y documentación OpenAPI.<br>2 Implementa un CRUD REST completo mediante entidades, repositorios, servicios y controladores; aplica transversalmente validaciones, excepciones, logs y pruebas.<br>3 Gestiona objetos relacionados mediante ORM, DTO y reglas de asociación.<br>4 Implementa una operación cabecera–detalle con registro atómico, cálculos, estados, consistencia, commit y rollback.<br>5 Implementa consultas, filtros, ordenamiento, agregaciones, reportes y configuración CORS para el futuro frontend, sin paginación.</td>
+    <td colspan="3">Backend REST empresarial con ORM, CRUD validado, objetos relacionados, operación cabecera–detalle, consultas, reportes, CORS, logs y pruebas de API.</td>
+  </tr>
+  <tr>
+    <td colspan="7">Sesiones de aprendizaje</td>
+  </tr>
+  <tr>
+    <td>N°</td>
+    <td>Fecha</td>
+    <td>Contenido</td>
+    <td>HT</td>
+    <td>HP</td>
+    <td>Actividad práctica</td>
+    <td>Actividad autónoma</td>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>10/08/2026  15/08/2026</td>
+    <td>Arquitectura backend REST profesional: estructura, dependencias, configuración por ambientes, ORM, driver de base de datos, conexión, endpoint de verificación, recurso REST inicial, DTO, contrato y versionado básico de API y documentación OpenAPI.</td>
+    <td>2</td>
+    <td>2</td>
+    <td>Crear el proyecto backend, verificar su conexión mediante ORM y publicar el endpoint de salud y el contrato REST inicial.</td>
+    <td>Documentar la configuración reproducible del backend, sus perfiles de ejecución y contratos de API.</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>16/08/2026  22/08/2026</td>
+    <td>CRUD REST completo de una entidad principal: entidad ORM, repositorio, servicio, controlador, DTO, mapeo, validaciones, manejo global de excepciones, logs y pruebas de API.</td>
+    <td>2</td>
+    <td>2</td>
+    <td>Implementar y probar el CRUD REST completo de una entidad principal.</td>
+    <td>Verificar reglas de validación, respuestas de error, trazas de log y separación de responsabilidades.</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>23/08/2026  29/08/2026</td>
+    <td>Gestión de objetos relacionados mediante REST y ORM: asociaciones entre entidades, repositorios, servicios, DTO relacionados, navegación controlada, validación de referencias y prevención de ciclos de serialización.</td>
+    <td>2</td>
+    <td>2</td>
+    <td>Implementar y probar recursos REST que gestionen una entidad principal y su entidad de clasificación relacionada.</td>
+    <td>Verificar asociaciones válidas e inválidas, carga de datos, DTO y respuestas sin referencias circulares.</td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>30/08/2026  05/09/2026</td>
+    <td>Procesamiento de operaciones del dominio con cabecera–detalle: DTO compuesto, colección de detalles, cálculos, estados, actualización de existencias, registro atómico, commit y rollback mediante transacciones ORM.</td>
+    <td>2</td>
+    <td>2</td>
+    <td>Implementar y probar un recurso REST cabecera–detalle que conserve las invariantes de la operación.</td>
+    <td>Probar detalles vacíos, cantidades inválidas, existencias insuficientes, cálculos, cambios de estado y rollback.</td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td>06/09/2026  12/09/2026</td>
+    <td>Consultas empresariales, reportes REST e integración con el futuro frontend: búsquedas, filtros combinados, ordenamiento, proyecciones, agregaciones, DTO de reporte, trazabilidad, logs y configuración CORS. Sin paginación.</td>
+    <td>2</td>
+    <td>2</td>
+    <td>Implementar consultas y reportes REST sobre la información generada por la operación cabecera–detalle y configurar CORS para el futuro frontend.</td>
+    <td>Probar filtros, ordenamiento, agregaciones, casos sin resultados, trazabilidad y acceso desde el origen autorizado.</td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td>13/09/2026  19/09/2026</td>
+    <td>Integración del backend REST: CRUD, objetos relacionados, operación cabecera–detalle, consultas, reportes, CORS, logs y pruebas.</td>
+    <td>2</td>
+    <td>2</td>
+    <td><strong>Evaluación de la Unidad I:</strong><br>1. Resolver la evaluación teórico-práctica de los temas de la Unidad I.<br>2. Presentar y sustentar el Backend REST empresarial.</td>
+    <td>Registrar observaciones para la integración con frontend.</td>
+  </tr>
+</table>
+
+<h3 id="unidad-2-frontend-spa-empresarial-seguro">Unidad 2: Frontend SPA empresarial seguro<a class="headerlink" href="#unidad-2-frontend-spa-empresarial-seguro" title="Permanent link">&para;</a></h3>
+<table>
+  <tr>
+    <td colspan="4">Resultado de aprendizaje</td>
+    <td colspan="3">Producto</td>
+  </tr>
+  <tr>
+    <td colspan="4">Construye una SPA empresarial conectada al backend REST, con layout y navegación, CRUD de tablas independientes y dependientes, formularios cabecera-detalle, consultas y reportes; integra seguridad mediante JWT en el backend y gestión de sesión, guards e interceptores en el frontend.</td>
+    <td colspan="3">Nombre: Frontend SPA empresarial seguro, conectado al backend, con navegación modular, CRUD de tablas independientes y dependientes, formularios transaccionales, consultas, reportes y control de acceso.</td>
+  </tr>
+  <tr>
+    <td colspan="4">Criterios de evaluación del producto</td>
+    <td colspan="3">Descripción del producto</td>
+  </tr>
+  <tr>
+    <td colspan="4">1 Crea la SPA con proyecto frontend, layout, menú bar, sidebar, encabezado, módulos, componentes, rutas, navegación, servicios HTTP y CRUD de una tabla independiente.<br>2 Implementa CRUD de tablas dependientes mediante selección de datos relacionados, listas desplegables y validación de dependencias.<br>3 Implementa formularios transaccionales con cabecera–detalle, cálculos, validaciones, confirmación, consultas y reportes.<br>4 Protege el backend con usuarios, hash de contraseñas, autenticación JWT, roles, permisos y endpoints protegidos.<br>5 Implementa login, sesión, almacenamiento y expiración del token, guards, interceptores, menú por permisos, rutas protegidas y manejo de respuestas 401/403.</td>
+    <td colspan="3">Frontend SPA empresarial seguro, conectado al backend, con navegación modular, CRUD de tablas independientes y dependientes, formularios transaccionales, consultas, reportes y control de acceso.</td>
+  </tr>
+  <tr>
+    <td colspan="7">Sesiones de aprendizaje</td>
+  </tr>
+  <tr>
+    <td>N°</td>
+    <td>Fecha</td>
+    <td>Contenido</td>
+    <td>HT</td>
+    <td>HP</td>
+    <td>Actividad práctica</td>
+    <td>Actividad autónoma</td>
+  </tr>
+  <tr>
+    <td>7</td>
+    <td>20/09/2026  26/09/2026</td>
+    <td>Creación y arquitectura de la SPA: proyecto frontend, layout, menú bar, sidebar, encabezado, módulos, componentes, rutas, navegación, servicios HTTP y CRUD de una tabla independiente.</td>
+    <td>2</td>
+    <td>2</td>
+    <td>Crear el proyecto frontend, construir su navegación principal y completar un CRUD conectado al backend.</td>
+    <td>Revisar la organización de módulos, rutas, menú y responsabilidades de componentes y servicios.</td>
+  </tr>
+  <tr>
+    <td>8</td>
+    <td>27/09/2026  03/10/2026</td>
+    <td>CRUD de tablas dependientes: selección de datos relacionados, listas desplegables, validación de dependencias y presentación de información relacionada.</td>
+    <td>2</td>
+    <td>2</td>
+    <td>Implementar un CRUD dependiente conectado al backend y resolver la selección de sus datos relacionados.</td>
+    <td>Probar altas, cambios y eliminaciones válidas e inválidas según las dependencias existentes.</td>
+  </tr>
+  <tr>
+    <td>9</td>
+    <td>04/10/2026  10/10/2026</td>
+    <td>Formularios transaccionales con cabecera–detalle: detalle dinámico, cálculos, validaciones, confirmación de la operación, consultas y reportes.</td>
+    <td>2</td>
+    <td>2</td>
+    <td>Implementar una operación cabecera-detalle y una vista de consulta o reporte que consuman el backend.</td>
+    <td>Probar cálculos, validaciones, confirmaciones, mensajes y consistencia de la experiencia de usuario.</td>
+  </tr>
+  <tr>
+    <td>10</td>
+    <td>11/10/2026  17/10/2026</td>
+    <td>Seguridad backend: usuarios, hash de contraseñas, autenticación JWT, roles, permisos y protección de endpoints.</td>
+    <td>2</td>
+    <td>2</td>
+    <td>Implementar autenticación JWT y autorización por roles o permisos sobre los endpoints de la aplicación.</td>
+    <td>Probar credenciales válidas e inválidas, emisión y expiración de tokens, y accesos permitidos y denegados.</td>
+  </tr>
+  <tr>
+    <td>11</td>
+    <td>18/10/2026  24/10/2026</td>
+    <td>Seguridad frontend: login, sesión, almacenamiento y expiración del token, guards, interceptores, menú por permisos, rutas protegidas y manejo de 401/403.</td>
+    <td>2</td>
+    <td>2</td>
+    <td>Integrar la SPA con el backend seguro y proteger la navegación y las acciones según los permisos del usuario.</td>
+    <td>Probar inicio y cierre de sesión, expiración de token, acceso directo a rutas y respuestas 401/403.</td>
+  </tr>
+  <tr>
+    <td>12</td>
+    <td>25/10/2026  31/10/2026</td>
+    <td>Integración de la SPA segura: autenticación, persistencia, consultas, navegación y control de acceso.</td>
+    <td>2</td>
+    <td>2</td>
+    <td><strong>Evaluación de la Unidad II:</strong><br>1. Resolver la evaluación teórico-práctica de los temas de la Unidad II.<br>2. Presentar y sustentar el Frontend SPA seguro integrado al backend.</td>
+    <td>Registrar mejoras para la integración final.</td>
+  </tr>
+</table>
+
+<h3 id="unidad-3-proyecto-integrador-full-stack">Unidad 3: Proyecto Integrador Full-Stack<a class="headerlink" href="#unidad-3-proyecto-integrador-full-stack" title="Permanent link">&para;</a></h3>
+<table>
+  <tr>
+    <td colspan="4">Resultado de aprendizaje</td>
+    <td colspan="3">Producto</td>
+  </tr>
+  <tr>
+    <td colspan="4">Optimiza, integra y estabiliza la aplicación Full-Stack empresarial mediante carga diferida, división de código, caché, logging, monitoreo, paginación de listados de alto volumen, auditoría y pruebas de extremo a extremo; finalmente sustenta el Proyecto Integrador.</td>
+    <td colspan="3">Nombre: Aplicación Full-Stack empresarial integrada, optimizada, monitoreada, estabilizada y preparada para producción, con evidencias y sustentación técnica.</td>
+  </tr>
+  <tr>
+    <td colspan="4">Criterios de evaluación del producto</td>
+    <td colspan="3">Descripción del producto</td>
+  </tr>
+  <tr>
+    <td colspan="4">1 Aplica Lazy Loading, Code Splitting, caché del navegador y Redis cuando corresponda, logging, monitoreo básico y buenas prácticas de despliegue.<br>2 Implementa paginación en listados de alto volumen e integra funcionalmente los módulos de la aplicación.<br>3 Incorpora auditoría y ejecuta pruebas end-to-end, corrige errores y estabiliza el sistema.<br>4 Sustenta exclusivamente el Proyecto Integrador mediante una demostración funcional y defensa técnica.</td>
+    <td colspan="3">Aplicación Full-Stack empresarial integrada, optimizada, monitoreada, estabilizada y preparada para producción, con evidencias y sustentación técnica.</td>
+  </tr>
+  <tr>
+    <td colspan="7">Sesiones de aprendizaje</td>
+  </tr>
+  <tr>
+    <td>N°</td>
+    <td>Fecha</td>
+    <td>Contenido</td>
+    <td>HT</td>
+    <td>HP</td>
+    <td>Actividad práctica</td>
+    <td>Actividad autónoma</td>
+  </tr>
+  <tr>
+    <td>13</td>
+    <td>01/11/2026  07/11/2026</td>
+    <td>Optimización y preparación para producción: Lazy Loading, Code Splitting, caché del navegador, caché con Redis, logging, monitoreo básico y buenas prácticas de despliegue.</td>
+    <td>2</td>
+    <td>2</td>
+    <td>Optimizar la aplicación y preparar su configuración básica de producción con evidencias antes y después.</td>
+    <td>Revisar carga diferida, tamaño de entrega, políticas de caché, Redis, logs, monitoreo y recomendaciones de despliegue.</td>
+  </tr>
+  <tr>
+    <td>14</td>
+    <td>08/11/2026  14/11/2026</td>
+    <td>Integración y estabilización: paginación de listados con alto volumen, integración funcional de módulos, auditoría, pruebas end-to-end, corrección de errores y estabilización.</td>
+    <td>2</td>
+    <td>2</td>
+    <td>Incorporar paginación donde el volumen la justifique, integrar los módulos y ejecutar pruebas end-to-end hasta estabilizar el flujo principal.</td>
+    <td>Documentar auditoría, incidencias y resultados de pruebas; preparar el guion de demostración, verificar el flujo principal, organizar las evidencias y preparar la defensa técnica.</td>
+  </tr>
+  <tr>
+    <td>15</td>
+    <td>15/11/2026  21/11/2026</td>
+    <td>Integración de la aplicación Full-Stack: backend REST, SPA, seguridad, persistencia, módulos funcionales, optimización, monitoreo y pruebas.</td>
+    <td>2</td>
+    <td>2</td>
+    <td><strong>Evaluación de la Unidad III:</strong><br>Presentar la demostración funcional y sustentar técnicamente el Proyecto Integrador Full-Stack.</td>
+    <td>Registrar las observaciones del docente y actualizar las evidencias y la entrega final del producto.</td>
+  </tr>
+  <tr>
+    <td>16</td>
+    <td>22/11/2026  28/11/2026</td>
+    <td>Integración del desarrollo Full-Stack: servicios REST, persistencia, SPA, seguridad, operaciones empresariales, optimización, monitoreo y pruebas.</td>
+    <td>2</td>
+    <td>2</td>
+    <td><strong>Continuación de la evaluación de la Unidad III:</strong><br>Realizar, según corresponda, la evaluación final individual o las presentaciones y sustentaciones pendientes mediante demostración, preguntas técnicas y revisión de evidencias.</td>
+    <td>Actualizar la entrega final y reflexionar sobre los logros y oportunidades de mejora.</td>
+  </tr>
+</table>
+
+<h2 id="vi-estrategias-metodologicas">VI. Estrategias metodológicas<a class="headerlink" href="#vi-estrategias-metodologicas" title="Permanent link">&para;</a></h2>
+<table>
+  <tr>
+    <td colspan="2">Estrategias de enseñanza y de aprendizaje que se aplicarán en la asignatura</td>
+  </tr>
+  <tr>
+    <td>1.1</td>
+    <td>Aprendizaje Basado en Problemas: centra el aprendizaje en la resolución de problemas reales mediante desarrollo progresivo del producto.</td>
+  </tr>
+  <tr>
+    <td>1.2</td>
+    <td>Estudios de caso: permite analizar situaciones empresariales y traducirlas en funcionalidades backend, frontend y seguridad.</td>
+  </tr>
+  <tr>
+    <td>1.3</td>
+    <td>Proyectos: organiza el aprendizaje alrededor de una aplicación Full-Stack empresarial integrada.</td>
+  </tr>
+</table>
+
+<h2 id="vii-recursos-medios-y-materiales">VII. Recursos, medios y materiales<a class="headerlink" href="#vii-recursos-medios-y-materiales" title="Permanent link">&para;</a></h2>
+<table>
+  <tr><td>N°</td><td>Recursos medios y materiales</td></tr>
+  <tr><td>1</td><td>Guías de sesión y tutoriales</td></tr>
+  <tr><td>2</td><td>Laboratorios</td></tr>
+  <tr><td>3</td><td>Repositorio académico del curso</td></tr>
+  <tr><td>4</td><td>Framework backend y frontend definidos para el curso</td></tr>
+  <tr><td>5</td><td>Internet y recursos virtuales</td></tr>
+</table>
+
+<h2 id="viii-evaluacion">VIII. Evaluación<a class="headerlink" href="#viii-evaluacion" title="Permanent link">&para;</a></h2>
+<table>
+  <tr>
+    <td>Fecha</td>
+    <td>Unidad</td>
+    <td>Producto</td>
+    <td>Evaluación de proceso y de resultado</td>
+    <td>Pesos</td>
+  </tr>
+  <tr>
+    <td>18/09/2026</td>
+    <td>Unidad 1: Backend REST empresarial</td>
+    <td>Backend REST empresarial con ORM, CRUD validado, objetos relacionados, operación cabecera–detalle, consultas, reportes, CORS, logs y pruebas.</td>
+    <td>Evaluación del producto</td>
+    <td>20%</td>
+  </tr>
+  <tr><td></td><td></td><td></td><td>Evaluación de sesiones</td><td>5%</td></tr>
+  <tr>
+    <td>30/10/2026</td>
+    <td>Unidad 2: Frontend SPA empresarial seguro</td>
+    <td>Frontend SPA empresarial seguro, conectado al backend, con navegación modular, CRUD de tablas independientes y dependientes, formularios transaccionales, consultas, reportes y control de acceso.</td>
+    <td>Evaluación del producto</td>
+    <td>20%</td>
+  </tr>
+  <tr><td></td><td></td><td></td><td>Evaluación de sesiones</td><td>5%</td></tr>
+  <tr>
+    <td>20/11/2026</td>
+    <td>Unidad 3: Proyecto Integrador Full-Stack</td>
+    <td>Aplicación Full-Stack empresarial integrada, optimizada, monitoreada, estabilizada y preparada para producción, con evidencias y sustentación técnica.</td>
+    <td>Evaluación del producto</td>
+    <td>30%</td>
+  </tr>
+  <tr><td>27/11/2026</td><td>Unidad 3: Proyecto Integrador Full-Stack</td><td>Evaluación final individual teórico-práctica.</td><td>Evaluación individual</td><td>10%</td></tr>
+  <tr>
+    <td>20/11/2026</td>
+    <td>Competencia General</td>
+    <td>Innovación y solución de problemas.</td>
+    <td>Competencia General</td>
+    <td>10%</td>
+  </tr>
+</table>
+
+<h2 id="ix-referencias">IX. Referencias<a class="headerlink" href="#ix-referencias" title="Permanent link">&para;</a></h2>
+<h3 id="basica-fuentes-primarias">Básica (Fuentes primarias)<a class="headerlink" href="#basica-fuentes-primarias" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Larsson, M. (2024). <em>Microservices with Spring Boot 3 and Spring Cloud</em> (3.ª ed.). Packt Publishing.</li>
+<li>Prasad, K. (2024). <em>Beginning Spring Boot 3: Build Dynamic Cloud-Native Java Applications and Microservices</em> (2.ª ed.). Apress.</li>
+<li>Tudose, C. (2023). <em>Java Persistence with Spring Data and Hibernate</em>. Manning.</li>
+<li>Turnquist, D. &amp; Mark, J. (2022). <em>Learning Spring Boot 3.0: Simplify the development of production-grade applications using Java and Spring</em> (3.ª ed.). Packt Publishing.</li>
+<li>Hinkula, J. (2023). <em>Full Stack Development with Spring Boot 3 and React: Build modern web applications using the power of Java, React, and TypeScript</em>. Packt Publishing.</li>
+<li>Bampakos, A. &amp; Deeleman, P. (2023). <em>Learning Angular</em> (4.ª ed.). Packt Publishing Ltd.</li>
+<li>Leonard, A. (2020). <em>Spring Boot Persistence Best Practices: Optimize Java Persistence Performance in Spring Boot Applications</em>. Apress.</li>
+<li>Richardson, L., &amp; Amundsen, M. <em>RESTful Web APIs</em>.</li>
+<li>Newman, S. <em>Building Microservices</em>.</li>
+<li>Fowler, M. <em>Patterns of Enterprise Application Architecture</em>.</li>
+<li>Documentación oficial del framework backend utilizado en el curso.</li>
+<li>Documentación oficial del framework frontend utilizado en el curso.</li>
+<li>OWASP Foundation. <em>OWASP Top 10</em>.</li>
+<li>Álvarez Caules, C. (2024). <em>Arquitectura Java sólida y patrones</em>. Arquitectura Java. <a href="https://www.arquitecturajava.com/wp-content/uploads/LibroArquitecturaJavaSolidayPatronesV2.pdf">PDF</a>.</li>
+<li>Reina Valera. (1960). <em>La Santa Biblia</em>. Sociedades Bíblicas Unidas.</li>
+</ol>
+<h3 id="complementaria-fuentes-secundarias">Complementaria (Fuentes secundarias)<a class="headerlink" href="#complementaria-fuentes-secundarias" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Selvaraj, S. (2024). <em>Building Real-Time Marvels with Laravel: Create Dynamic and Interactive Web Applications</em>. Apress.</li>
+<li>Griffin, J. (2022). <em>Learn to implement Domain-Driven Laravel</em>. Apress.</li>
+<li>Correa, D. &amp; Vallejo, P. (2023). <em>Practical Laravel</em>. Practical Books.</li>
+<li>Butti, R. (2022). <em>High Performance with Laravel Octane</em>. Packt Publishing.</li>
+<li>Sham, B., Guest, C., Badhwar, S. &amp; Chandra, B. (2023). <em>Web development with Django</em>. Packt Publishing.</li>
+</ol>
+<h3 id="enlaces-de-internet">Enlaces de internet<a class="headerlink" href="#enlaces-de-internet" title="Permanent link">&para;</a></h3>
+<ol>
+<li><a href="https://bsoftgroup.com/educate/">https://bsoftgroup.com/educate/</a></li>
+<li><a href="https://codearti.com/">https://codearti.com/</a></li>
+<li><a href="https://docs.spring.io/spring-framework/reference/index.html">https://docs.spring.io/spring-framework/reference/index.html</a></li>
+<li><a href="https://angular.dev/overview">https://angular.dev/overview</a></li>
+<li><a href="https://devdocs.io/react/">https://devdocs.io/react/</a></li>
+<li><a href="https://www.typescriptlang.org/docs/">https://www.typescriptlang.org/docs/</a></li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Angel Sullon @asullom - UPeU 2026
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.top", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,4662 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Entorno integrado de desarrollo academico para construir modulos ERP con ADS, BD2 y LP2.">
+      
+      
+        <meta name="author" content="UPeU">
+      
+      
+      
+        <link rel="prev" href="../../adr/ADR-003-spring-boot-4/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>S1 - Arquitectura backend REST profesional - BOM ERP</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#s1-arquitectura-backend-rest-profesional" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../../.." title="BOM ERP" class="md-header__button md-logo" aria-label="BOM ERP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            BOM ERP
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              S1 - Arquitectura backend REST profesional
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/262ciclo4/bomerp" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    262ciclo4/bomerp
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Pestañas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Inicio
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../proyecto-integrador/" class="md-tabs__link">
+          
+  
+  
+  Proyecto Integrador
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../ads/" class="md-tabs__link">
+          
+  
+  
+  ADS
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../bd2/" class="md-tabs__link">
+          
+  
+  
+  BD2
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../" class="md-tabs__link">
+          
+  
+  
+  LP2
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="BOM ERP" class="md-nav__button md-logo" aria-label="BOM ERP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    BOM ERP
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/262ciclo4/bomerp" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    262ciclo4/bomerp
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Proyecto Integrador
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Proyecto Integrador
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Alineamiento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidad 1
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidad 1
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/lp2-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Demo U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidad 2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidad 2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/lp2-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Demo U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidad 3
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidad 3
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/lp2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/checklist-final/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Checklist final
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/guia-sustentacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guía de sustentación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ADS
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/plan-trabajo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plan de trabajo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/silabo_ads_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/silabo_ads_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidad 1
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidad 1
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S01_Fundamentos_Arquitectura_Software/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - Fundamentos de arquitectura de software
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    BD2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/plan-trabajo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plan de trabajo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/silabo_bd2_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/silabo_bd2_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidad 1
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidad 1
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - PL/SQL aplicado al negocio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    LP2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plan-trabajo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plan de trabajo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../silabo_lp2_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../silabo_lp2_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Decisiones de arquitectura
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Decisiones de arquitectura
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/ADR-001-arquitectura-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-001 - Arquitectura del backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/ADR-002-spring-modulith/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-002 - Spring Modulith
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/ADR-003-spring-boot-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-003 - Versión exacta de Spring Boot 4.0.7
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidad 1
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidad 1
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - Arquitectura backend REST profesional
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - Arquitectura backend REST profesional
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-introduccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Introducción
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Introducción">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-contexto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Contexto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-indice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Índice
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-proposito-de-aprendizaje" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Propósito de aprendizaje
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-producto-de-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Producto de sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-metodologia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Metodología
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16-motivacion-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6 Motivación de la sesión
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.6 Motivación de la sesión">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#161-caso-api-de-productos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6.1 Caso: API de productos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#17-ubicacion-en-el-curso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.7 Ubicación en el curso
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-explica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Explica
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Explica">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-arquitectura-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Arquitectura de la sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-estructura-del-proyecto-backend-y-dependencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Estructura del proyecto backend y dependencias
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-configuracion-por-ambientes-orm-driver-y-conexion-a-oracle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Configuración por ambientes, ORM, driver y conexión a Oracle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-endpoint-de-verificacion-recurso-rest-inicial-y-dto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Endpoint de verificación, recurso REST inicial y DTO
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-contrato-versionado-basico-de-api-y-documentacion-openapi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Contrato, versionado básico de API y documentación OpenAPI
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-aplica-actividad-practica-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Aplica: actividad práctica guiada
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Aplica: actividad práctica guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-instalar-y-verificar-java-21-lts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Instalar y verificar Java 21 LTS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-crear-y-verificar-el-proyecto-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Crear y verificar el proyecto backend
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.2 Crear y verificar el proyecto backend">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#321-crear-el-proyecto-con-spring-initializr-desde-vs-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2.1 Crear el proyecto con Spring Initializr desde VS Code
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#322-configurar-oracle-en-docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2.2 Configurar Oracle en Docker
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.2.2 Configurar Oracle en Docker">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#conectarse-a-oracle-desde-un-cliente-grafico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conectarse a Oracle desde un cliente gráfico
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reiniciar-docker-desde-cero-opcional-solo-si-algo-quedo-en-mal-estado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reiniciar Docker desde cero (opcional, solo si algo quedó en mal estado)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#eliminar-solo-lo-de-bomerp-sin-tocar-otros-proyectos-en-docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Eliminar solo lo de BomERP (sin tocar otros proyectos en Docker)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#323-configurar-el-ambiente-local" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2.3 Configurar el ambiente local
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#324-configurar-openapi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2.4 Configurar OpenAPI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#325-probar-el-ciclo-completo-con-un-endpoint-hola-mundo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2.5 Probar el ciclo completo con un endpoint "Hola mundo"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#326-implementar-el-modulo-catalogo-categoria-y-producto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2.6 Implementar el módulo catalogo: Categoria y Producto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#327-ejecutar-el-proyecto-con-maven-wrapper" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2.7 Ejecutar el proyecto con Maven Wrapper
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#328-verificar-el-proyecto-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2.8 Verificar el proyecto backend
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-delimitar-los-endpoints-del-modulo-catalogo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Delimitar los endpoints del módulo Catálogo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-reconocer-el-dto-de-entrada-reservado-para-s2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Reconocer el DTO de entrada reservado para S2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-disenar-dto-de-salida" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Diseñar DTO de salida
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-documentar-errores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Documentar errores
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37-bosquejar-estructura-del-backend-modular-spring-modulith" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 Bosquejar estructura del backend modular (Spring Modulith)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#38-trazar-lp2-con-ads-y-bd2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 Trazar LP2 con ADS y BD2
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-crea-actividad-autonoma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Crea: actividad autónoma
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Crea: actividad autónoma">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-plantilla-de-evidencia-individual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Plantilla de evidencia individual
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.1 Plantilla de evidencia individual">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#411-datos-del-estudiante" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1.1 Datos del estudiante
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#412-trabajo-autonomo-realizado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1.2 Trabajo autónomo realizado
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#413-evidencia-tecnica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1.3 Evidencia técnica
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#414-error-o-hallazgo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1.4 Error o hallazgo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#415-reflexion-tecnica-breve" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1.5 Reflexión técnica breve
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-criterios-minimos-de-aceptacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Criterios mínimos de aceptación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-cierre-evaluativo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Cierre evaluativo
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Cierre evaluativo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-resultados-esperados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Resultados esperados
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-evidencia-del-producto-de-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Evidencia del producto de sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-preguntas-de-defensa-y-reflexion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Preguntas de defensa y reflexión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-rubrica-de-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Rúbrica de evaluación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-introduccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Introducción
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Introducción">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-contexto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Contexto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-indice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Índice
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-proposito-de-aprendizaje" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Propósito de aprendizaje
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-producto-de-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Producto de sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-metodologia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Metodología
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16-motivacion-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6 Motivación de la sesión
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.6 Motivación de la sesión">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#161-caso-api-de-productos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6.1 Caso: API de productos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#17-ubicacion-en-el-curso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.7 Ubicación en el curso
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-explica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Explica
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Explica">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-arquitectura-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Arquitectura de la sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-estructura-del-proyecto-backend-y-dependencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Estructura del proyecto backend y dependencias
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-configuracion-por-ambientes-orm-driver-y-conexion-a-oracle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Configuración por ambientes, ORM, driver y conexión a Oracle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-endpoint-de-verificacion-recurso-rest-inicial-y-dto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Endpoint de verificación, recurso REST inicial y DTO
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-contrato-versionado-basico-de-api-y-documentacion-openapi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Contrato, versionado básico de API y documentación OpenAPI
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-aplica-actividad-practica-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Aplica: actividad práctica guiada
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Aplica: actividad práctica guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-instalar-y-verificar-java-21-lts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Instalar y verificar Java 21 LTS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-crear-y-verificar-el-proyecto-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Crear y verificar el proyecto backend
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.2 Crear y verificar el proyecto backend">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#321-crear-el-proyecto-con-spring-initializr-desde-vs-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2.1 Crear el proyecto con Spring Initializr desde VS Code
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#322-configurar-oracle-en-docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2.2 Configurar Oracle en Docker
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.2.2 Configurar Oracle en Docker">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#conectarse-a-oracle-desde-un-cliente-grafico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conectarse a Oracle desde un cliente gráfico
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reiniciar-docker-desde-cero-opcional-solo-si-algo-quedo-en-mal-estado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reiniciar Docker desde cero (opcional, solo si algo quedó en mal estado)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#eliminar-solo-lo-de-bomerp-sin-tocar-otros-proyectos-en-docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Eliminar solo lo de BomERP (sin tocar otros proyectos en Docker)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#323-configurar-el-ambiente-local" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2.3 Configurar el ambiente local
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#324-configurar-openapi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2.4 Configurar OpenAPI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#325-probar-el-ciclo-completo-con-un-endpoint-hola-mundo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2.5 Probar el ciclo completo con un endpoint "Hola mundo"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#326-implementar-el-modulo-catalogo-categoria-y-producto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2.6 Implementar el módulo catalogo: Categoria y Producto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#327-ejecutar-el-proyecto-con-maven-wrapper" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2.7 Ejecutar el proyecto con Maven Wrapper
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#328-verificar-el-proyecto-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2.8 Verificar el proyecto backend
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-delimitar-los-endpoints-del-modulo-catalogo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Delimitar los endpoints del módulo Catálogo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-reconocer-el-dto-de-entrada-reservado-para-s2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Reconocer el DTO de entrada reservado para S2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-disenar-dto-de-salida" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Diseñar DTO de salida
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-documentar-errores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Documentar errores
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37-bosquejar-estructura-del-backend-modular-spring-modulith" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 Bosquejar estructura del backend modular (Spring Modulith)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#38-trazar-lp2-con-ads-y-bd2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 Trazar LP2 con ADS y BD2
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-crea-actividad-autonoma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Crea: actividad autónoma
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Crea: actividad autónoma">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-plantilla-de-evidencia-individual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Plantilla de evidencia individual
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.1 Plantilla de evidencia individual">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#411-datos-del-estudiante" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1.1 Datos del estudiante
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#412-trabajo-autonomo-realizado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1.2 Trabajo autónomo realizado
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#413-evidencia-tecnica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1.3 Evidencia técnica
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#414-error-o-hallazgo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1.4 Error o hallazgo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#415-reflexion-tecnica-breve" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1.5 Reflexión técnica breve
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-criterios-minimos-de-aceptacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Criterios mínimos de aceptación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-cierre-evaluativo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Cierre evaluativo
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Cierre evaluativo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-resultados-esperados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Resultados esperados
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-evidencia-del-producto-de-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Evidencia del producto de sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-preguntas-de-defensa-y-reflexion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Preguntas de defensa y reflexión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-rubrica-de-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Rúbrica de evaluación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="s1-arquitectura-backend-rest-profesional">S1 - Arquitectura Backend REST Profesional<a class="headerlink" href="#s1-arquitectura-backend-rest-profesional" title="Permanent link">&para;</a></h1>
+<h2 id="1-introduccion">1. Introducción<a class="headerlink" href="#1-introduccion" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 20 min.</p>
+<h3 id="11-contexto">1.1 Contexto<a class="headerlink" href="#11-contexto" title="Permanent link">&para;</a></h3>
+<p>La arquitectura de un backend decide qué tan fácil es mantenerlo y hacerlo crecer sin romperse. Esta sesión instala Java 21, crea el proyecto backend como monolito modular conectado a Oracle, y define su contrato REST inicial (<code>Categoria</code>, <code>Producto</code>, versionado, OpenAPI).</p>
+<h3 id="12-indice">1.2 Índice<a class="headerlink" href="#12-indice" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Estructura del proyecto backend y dependencias.</li>
+<li>Configuración por ambientes, ORM, driver y conexión a Oracle.</li>
+<li>Endpoint de verificación, recurso REST inicial y DTO.</li>
+<li>Contrato, versionado básico de API y documentación OpenAPI.</li>
+</ol>
+<h3 id="13-proposito-de-aprendizaje">1.3 Propósito de aprendizaje<a class="headerlink" href="#13-proposito-de-aprendizaje" title="Permanent link">&para;</a></h3>
+<p>Al concluir la clase, estarás en condiciones de:</p>
+<ul>
+<li><strong>Crear y entregar</strong> un proyecto backend ejecutable y reproducible, sobre Java 21 LTS, con conexión a Oracle verificada mediante ORM, endpoint de salud, listados de <code>Categoria</code> y <code>Producto</code>, módulos de negocio, DTO de salida, contrato y versionado básico de API, y documentación OpenAPI inicial.</li>
+</ul>
+<h3 id="14-producto-de-sesion">1.4 Producto de sesión<a class="headerlink" href="#14-producto-de-sesion" title="Permanent link">&para;</a></h3>
+<p>Proyecto backend ejecutable y reproducible, sobre Java 21 LTS, organizado como monolito modular y conectado a Oracle con su conexión verificada mediante ORM, con endpoint de salud, contrato y versionado básico de API definidos, y los listados de <code>Categoria</code> y <code>Producto</code> documentados mediante OpenAPI.</p>
+<h3 id="15-metodologia">1.5 Metodología<a class="headerlink" href="#15-metodologia" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Fase</th>
+<th>Actividades</th>
+<th>Orientaciones</th>
+<th>Material</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Revisión previa individual</td>
+<td>Instalar y verificar Java 21 LTS; leer <a href="../../adr/ADR-001-arquitectura-backend/">ADR-001</a> y <a href="../../adr/ADR-002-spring-modulith/">ADR-002</a>.</td>
+<td>Trabajo individual, antes de clase; traer evidencia de <code>java -version</code> funcionando.</td>
+<td>ADR-001, ADR-002, guía de instalación Java 21.</td>
+</tr>
+<tr>
+<td>Clase presencial</td>
+<td>Explicación guiada de conceptos (REST, DTO, versionado, ambientes) y creación del proyecto backend conectado a Oracle; delimitación de los endpoints del módulo <code>catalogo</code>.</td>
+<td>Trabajo individual en la propia laptop, siguiendo al docente paso a paso; consulta inmediata ante errores de dependencias o conexión.</td>
+<td><code>pom.xml</code> de referencia, <code>application-local.yml</code>, Docker Compose de Oracle, cliente REST para verificar endpoints.</td>
+</tr>
+<tr>
+<td>Evaluación formativa</td>
+<td>Verificación en clase de <code>mvn test</code> (incluye <code>ModularityTests</code>) y de la respuesta del endpoint de salud y los listados; inicio de la plantilla de evidencia individual.</td>
+<td>La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.2.</td>
+<td>Plantilla de evidencia individual (4.1), rúbrica de evaluación (5.4).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="16-motivacion-de-la-sesion">1.6 Motivación de la sesión<a class="headerlink" href="#16-motivacion-de-la-sesion" title="Permanent link">&para;</a></h3>
+<h4 id="161-caso-api-de-productos">1.6.1 Caso: API de productos<a class="headerlink" href="#161-caso-api-de-productos" title="Permanent link">&para;</a></h4>
+<p>El sistema <code>BomERP</code> continúa el dominio comercial desarrollado desde POO y LP1. En esta sesión se crea una base backend que arranca de forma reproducible, comprueba su conexión a Oracle y expone los listados iniciales del módulo <code>catalogo</code>: <code>Categoria</code> y <code>Producto</code>. La estructura toma como referencia técnica <code>producto-ms</code> del curso de Aplicaciones Distribuidas, adaptada como monolito modular para LP2.</p>
+<p>Preguntas para los estudiantes:</p>
+<ol>
+<li>¿Por qué <code>Categoria</code> y <code>Producto</code> pertenecen al mismo módulo de catálogo?</li>
+<li>¿Qué diferencia existe entre una entidad y su DTO de respuesta?</li>
+<li>¿Cómo demuestran los listados que Controller, Service, Repository y Oracle están conectados?</li>
+<li>¿Qué operaciones se reservarán para completar el CRUD en S2?</li>
+<li>¿Qué decisión de ADS condiciona la estructura del backend?</li>
+</ol>
+<h3 id="17-ubicacion-en-el-curso">1.7 Ubicación en el curso<a class="headerlink" href="#17-ubicacion-en-el-curso" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Unidad: U1 - Backend REST empresarial.</li>
+<li>Producto de unidad: backend REST empresarial conectado a la base de datos, con CRUD, transacciones, consultas, reglas de negocio, CORS, logs y pruebas.</li>
+<li>Producto del curso: base Full-Stack modular de BomERP, integrada, optimizada, monitoreada, estabilizada y preparada académicamente para producción.</li>
+<li>Avance del producto en esta sesión: proyecto backend creado, configurado, conectado y verificable.</li>
+</ul>
+<p>Roadmap del producto de la unidad:</p>
+<pre class="mermaid"><code>flowchart TB
+    S1["S1&lt;br/&gt;Proyecto backend,&lt;br/&gt;BD, REST y OpenAPI"]
+    S2["S2&lt;br/&gt;CRUD maestro,&lt;br/&gt;validaciones y pruebas"]
+    S3["S3&lt;br/&gt;Objetos relacionados&lt;br/&gt;Categoria-Producto"]
+    S4["S4&lt;br/&gt;Cabecera-detalle&lt;br/&gt;y transacciones"]
+    S5["S5&lt;br/&gt;Consultas, reportes&lt;br/&gt;y CORS"]
+    S6["S6&lt;br/&gt;Producto U1"]
+
+    S1 --&gt; S2 --&gt; S3 --&gt; S4 --&gt; S5 --&gt; S6
+
+    classDef today fill:#ffe08a,stroke:#9a6b00,stroke-width:2px,color:#111;
+    class S1 today;</code></pre>
+<h2 id="2-explica">2. Explica<a class="headerlink" href="#2-explica" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 25 min.</p>
+<h3 id="21-arquitectura-de-la-sesion">2.1 Arquitectura de la sesión<a class="headerlink" href="#21-arquitectura-de-la-sesion" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart LR
+    APP[BomErpApplication]
+
+    subgraph CAT[Módulo catalogo]
+        API[Controllers y DTO]
+        USE[Services]
+        DOM[Entities]
+        INF[Repositories JPA]
+        API --&gt; USE
+        USE --&gt; DOM
+        USE --&gt; INF
+    end
+
+    subgraph FUTUROS["Módulos futuros, aún sin crear *"]
+        VEN["ventas (S4)"]
+        COM["compras (opcional)"]
+        SEG["seguridad (S10)"]
+    end
+
+    DB[(Oracle)]
+    APP --&gt; CAT
+    APP -. se agregan como paquetes .-&gt; FUTUROS
+    INF --&gt; DB</code></pre>
+<p><small>*Ningún paquete de <code>FUTUROS</code> (<code>ventas</code>, <code>compras</code>, <code>seguridad</code>) existe todavía en el código; se crean recién cuando su sesión les da contenido real (ver <a href="../../adr/ADR-001-arquitectura-backend/">ADR-001</a>).</small></p>
+<p>Lectura del diagrama:</p>
+<ul>
+<li>El backend organiza primero por módulo de negocio y luego por responsabilidades internas (controller, service, repository, entity). <strong>Error frecuente</strong>: concentrar toda la lógica en el controller sin separar service y repository — pierde la separación de responsabilidades que muestra el diagrama.</li>
+<li><code>Categoria</code> y <code>Producto</code> pertenecen a <code>catalogo</code>; <code>Venta–DetalleVenta</code> pertenece a <code>ventas</code> y <code>Compra–DetalleCompra</code> a <code>compras</code>.</li>
+<li>Un módulo no debe acceder directamente al repositorio de otro módulo; la interacción se realiza mediante servicios públicos.</li>
+<li>Integración (referencia, no requisito para esta sesión): si el equipo también lleva ADS, esos componentes y decisiones son los que ADS documenta primero; si lleva BD2, ese es el curso que aporta los procedimientos, tablas y reglas transaccionales que el backend consume. <strong>Errores frecuentes</strong>: diseñar el endpoint sin vincularlo a ninguna tabla, paquete o procedimiento del motor transaccional (BD2); o dejar las decisiones de ADS solo en teoría, sin relacionarlas con un componente real de su vista C3.</li>
+</ul>
+<p>Este diagrama es el mapa que guía el resto de la explicación: cada apartado siguiente desarrolla uno de sus componentes, en el mismo orden del Índice (1.2).</p>
+<h3 id="22-estructura-del-proyecto-backend-y-dependencias">2.2 Estructura del proyecto backend y dependencias<a class="headerlink" href="#22-estructura-del-proyecto-backend-y-dependencias" title="Permanent link">&para;</a></h3>
+<p>El proyecto se organiza como monolito modular: un único paquete raíz (<code>BomErpApplication</code>) y, dentro de él, un paquete por módulo de negocio (ver 2.1). Esa estructura se sostiene únicamente sobre las dependencias que la sesión necesita:</p>
+<table>
+<thead>
+<tr>
+<th>Dependencia</th>
+<th>Decisión para S1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Spring Web</td>
+<td>Se conserva para publicar el recurso REST.</td>
+</tr>
+<tr>
+<td>Spring Data JPA y driver Oracle</td>
+<td>Se conservan para dejar lista y comprobar la persistencia ORM.</td>
+</tr>
+<tr>
+<td>Validation</td>
+<td>Se incorpora al esqueleto; se aplica al CRUD desde S2.</td>
+</tr>
+<tr>
+<td>Actuator</td>
+<td>Se conserva para verificar aplicación y conexión.</td>
+</tr>
+<tr>
+<td>Springdoc OpenAPI</td>
+<td>Se conserva para publicar el contrato inicial.</td>
+</tr>
+<tr>
+<td>DevTools</td>
+<td>Se agrega para reinicio automático y LiveReload durante el desarrollo; Spring Boot la excluye automáticamente del <code>.jar</code> empaquetado, así que no afecta producción.</td>
+</tr>
+<tr>
+<td>Security y OAuth2 Resource Server</td>
+<td>Se posponen hasta S10.</td>
+</tr>
+<tr>
+<td>Config Server, Eureka, Feign y Resilience4j</td>
+<td>No corresponden al backend monolítico de LP2; se estudian en Aplicaciones Distribuidas.</td>
+</tr>
+<tr>
+<td>Prometheus, Flyway y Docker</td>
+<td>No son necesarios para alcanzar el producto de S1.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Error frecuente</strong>: copiar todas las dependencias de <code>producto-ms</code> sin filtrarlas — confunde un monolito inicial con una arquitectura distribuida. Solo se conservan las de la tabla anterior.</p>
+<p>Alcance metodológico de S1:</p>
+<div class="highlight"><pre><span></span><code>En S1 se crea solamente el proyecto backend y se comprueba
+su ejecución y conexión a Oracle mediante Actuator y el listado
+de Producto. No se crea frontend. El CRUD completo, las relaciones,
+las transacciones y la seguridad se implementan progresivamente.
+</code></pre></div>
+<h3 id="23-configuracion-por-ambientes-orm-driver-y-conexion-a-oracle">2.3 Configuración por ambientes, ORM, driver y conexión a Oracle<a class="headerlink" href="#23-configuracion-por-ambientes-orm-driver-y-conexion-a-oracle" title="Permanent link">&para;</a></h3>
+<p>Un <strong>ambiente</strong> es el conjunto de configuración (variables, credenciales,
+infraestructura) que corresponde a un contexto de uso concreto: <strong>local</strong>
+(tu laptop, para desarrollar) y <strong>producción</strong> (el sistema real ya en
+funcionamiento) son dos ambientes distintos; algunos proyectos agregan
+ambientes intermedios (pruebas, staging). No se les llama "ambientes de
+desarrollo" en general — ese nombre describe únicamente al ambiente de
+desarrollo compartido de un equipo, no al concepto completo.</p>
+<p>En BomERP, hoy existe el <strong>ambiente local</strong>, identificado siempre con el
+sufijo <code>-local</code>:</p>
+<ul>
+<li><code>application-local.yml</code>: configuración de Spring Boot para tu laptop, incluida la conexión ORM/JPA y el driver Oracle hacia <code>localhost</code>.</li>
+<li><code>compose-local.yml</code>: el contenedor Docker de Oracle para desarrollo local.</li>
+</ul>
+<p>El ambiente de <strong>producción</strong> (<code>application-prod.yml</code> y las decisiones de
+despliegue) se incorpora recién en S13, cuando el sílabo trata
+"buenas prácticas de despliegue" — no se adelanta antes porque todavía no
+hay nada real que desplegar.</p>
+<h3 id="24-endpoint-de-verificacion-recurso-rest-inicial-y-dto">2.4 Endpoint de verificación, recurso REST inicial y DTO<a class="headerlink" href="#24-endpoint-de-verificacion-recurso-rest-inicial-y-dto" title="Permanent link">&para;</a></h3>
+<p>REST permite organizar un backend alrededor de recursos, métodos HTTP y representaciones. El endpoint de verificación (Actuator) confirma que la aplicación arrancó y está conectada a Oracle; el recurso REST inicial (<code>Categoria</code>, <code>Producto</code>) expone los primeros listados del módulo <code>catalogo</code>, y el DTO de salida separa ese contrato de la entidad persistida — la API responde lo que el cliente necesita, no la tabla tal cual.</p>
+<p><strong>Errores frecuentes</strong>: nombrar endpoints con verbos en vez de sustantivos (no se entiende el recurso REST) y diseñar el DTO igual a la tabla de persistencia (mezcla el contrato de API con el modelo de datos) — el DTO se define según lo que necesita el cliente, no según la entidad.</p>
+<h3 id="25-contrato-versionado-basico-de-api-y-documentacion-openapi">2.5 Contrato, versionado básico de API y documentación OpenAPI<a class="headerlink" href="#25-contrato-versionado-basico-de-api-y-documentacion-openapi" title="Permanent link">&para;</a></h3>
+<p>En un sistema empresarial, el contrato de API debe ser claro porque luego será consumido por una SPA y deberá estar conectado con persistencia, seguridad, transacciones y reglas del negocio.</p>
+<p><strong>Versionado básico de API</strong>: BomERP versiona su contrato en la propia URL (<code>/api/v1/...</code>). Es la forma más simple de versionado: si en el futuro un cambio rompe compatibilidad, se publica <code>/api/v2/...</code> sin obligar a los consumidores existentes (la SPA desde S7, o cualquier integración externa) a migrar de inmediato. En S1 basta con fijar el prefijo <code>v1</code>; no se implementa todavía coexistencia de versiones.</p>
+<p><strong>Error frecuente</strong>: dejar el contrato sin códigos de error documentados. Un contrato verificable incluye 400, 401, 404, 409 y 500, no solo el camino feliz.</p>
+<p>Springdoc OpenAPI (ver 2.2) publica este contrato como documentación viva y siempre sincronizada con el código; la trazabilidad entre API, base de datos y arquitectura se verifica contra esa documentación, no contra un documento aparte.</p>
+<h2 id="3-aplica-actividad-practica-guiada">3. Aplica: actividad práctica guiada<a class="headerlink" href="#3-aplica-actividad-practica-guiada" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 2h.</p>
+<p>Hoja de ruta de la sesión práctica:</p>
+<ul>
+<li><strong>3.1</strong> Instalar y verificar Java 21 LTS.</li>
+<li><strong>3.2</strong> Crear y verificar el proyecto backend.</li>
+<li><strong>3.3</strong> Delimitar los endpoints del módulo Catálogo.</li>
+<li><strong>3.4</strong> Reconocer el DTO de entrada reservado para S2.</li>
+<li><strong>3.5</strong> Diseñar DTO de salida.</li>
+<li><strong>3.6</strong> Documentar errores.</li>
+<li><strong>3.7</strong> Bosquejar estructura del backend modular (Spring Modulith).</li>
+<li><strong>3.8</strong> Trazar LP2 con ADS y BD2.</li>
+</ul>
+<h3 id="31-instalar-y-verificar-java-21-lts">3.1 Instalar y verificar Java 21 LTS<a class="headerlink" href="#31-instalar-y-verificar-java-21-lts" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> entorno de desarrollo configurado con Java 21.</p>
+<p>Se recomienda Eclipse Temurin 21, una distribución OpenJDK de soporte
+prolongado, instalada con el gestor de paquetes nativo de cada sistema
+operativo (evita instaladores manuales y mantiene el JDK actualizable).</p>
+<p><strong>Windows</strong> — PowerShell como usuario normal:</p>
+<div class="highlight"><pre><span></span><code><span class="n">winget</span> <span class="n">install</span> <span class="p">-</span><span class="n">-id</span> <span class="n">EclipseAdoptium</span><span class="p">.</span><span class="n">Temurin</span><span class="p">.</span><span class="n">21</span><span class="p">.</span><span class="n">JDK</span> <span class="p">-</span><span class="o">-exact</span>
+</code></pre></div>
+<p><strong>macOS</strong> (Homebrew no viene preinstalado en ningún Mac; una vez instalado,
+el comando de Temurin es el mismo para Intel y para Apple Silicon
+M1/M2/M3/M4 — Homebrew detecta la arquitectura automáticamente):</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># 1. Instalar Homebrew (si no lo tiene)</span>
+/bin/bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh<span class="k">)</span><span class="s2">&quot;</span>
+
+<span class="c1"># 2. Solo en Apple Silicon (M1/M2/M3/M4): agregar Homebrew al PATH.</span>
+<span class="c1">#    Se instala en /opt/homebrew (no en /usr/local como en Intel), y el</span>
+<span class="c1">#    propio instalador lo pide como paso obligatorio, no opcional.</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;eval &quot;$(/opt/homebrew/bin/brew shellenv)&quot;&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.zprofile
+<span class="nb">eval</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>/opt/homebrew/bin/brew<span class="w"> </span>shellenv<span class="k">)</span><span class="s2">&quot;</span>
+
+<span class="c1"># 3. Instalar Temurin 21</span>
+brew<span class="w"> </span>install<span class="w"> </span>--cask<span class="w"> </span>temurin@21
+</code></pre></div>
+<p><strong>Linux (Ubuntu/Debian)</strong> — repositorio oficial de Adoptium vía <code>apt</code>:</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>wget<span class="w"> </span>apt-transport-https<span class="w"> </span>gpg
+wget<span class="w"> </span>-qO<span class="w"> </span>-<span class="w"> </span>https://packages.adoptium.net/artifactory/api/gpg/key/public<span class="w"> </span><span class="p">|</span><span class="w"> </span>gpg<span class="w"> </span>--dearmor<span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/apt/trusted.gpg.d/adoptium.gpg<span class="w"> </span>&gt;<span class="w"> </span>/dev/null
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;deb https://packages.adoptium.net/artifactory/deb </span><span class="k">$(</span>awk<span class="w"> </span>-F<span class="o">=</span><span class="w"> </span><span class="s1">&#39;/^VERSION_CODENAME/{print$2}&#39;</span><span class="w"> </span>/etc/os-release<span class="k">)</span><span class="s2"> main&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/apt/sources.list.d/adoptium.list
+sudo<span class="w"> </span>apt<span class="w"> </span>update
+sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>temurin-21-jdk
+</code></pre></div>
+<p><strong>Linux (Fedora/RHEL)</strong> — repositorio oficial de Adoptium vía <code>dnf</code>:</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/yum.repos.d/adoptium.repo<span class="w"> </span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
+<span class="s">[Adoptium]</span>
+<span class="s">name=Adoptium</span>
+<span class="s">baseurl=https://packages.adoptium.net/artifactory/rpm/$(. /etc/os-release; echo $ID)/$releasever/$basearch</span>
+<span class="s">enabled=1</span>
+<span class="s">gpgcheck=1</span>
+<span class="s">gpgkey=https://packages.adoptium.net/artifactory/api/gpg/key/public</span>
+<span class="s">EOF</span>
+sudo<span class="w"> </span>dnf<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>temurin-21-jdk
+</code></pre></div>
+<p>Al finalizar, cierre y vuelva a abrir la terminal. Verifique la instalación:</p>
+<div class="highlight"><pre><span></span><code><span class="n">java</span> <span class="p">-</span><span class="n">-version</span>
+<span class="n">javac</span> <span class="p">-</span><span class="n">-version</span>
+<span class="n">mvn</span> <span class="p">-</span><span class="n">-version</span>
+</code></pre></div>
+<p>Las tres comprobaciones deben mostrar Java 21. Maven también debe indicar que se está ejecutando con Java 21. Si conserva una versión anterior, configure <code>JAVA_HOME</code> con la ruta del JDK 21 desde las variables de entorno de Windows, actualice <code>Path</code> para que <code>%JAVA_HOME%\bin</code> tenga prioridad y abra una terminal nueva.</p>
+<p>Evidencia requerida:</p>
+<div class="highlight"><pre><span></span><code>java --version  -&gt; 21
+javac --version -&gt; 21
+mvn --version   -&gt; Java version: 21
+</code></pre></div>
+<p>El proyecto declara Java 21 mediante la propiedad <code>&lt;java.version&gt;21&lt;/java.version&gt;</code> del <code>pom.xml</code> padre. No se debe modificar individualmente la versión de cada módulo.</p>
+<h3 id="32-crear-y-verificar-el-proyecto-backend">3.2 Crear y verificar el proyecto backend<a class="headerlink" href="#32-crear-y-verificar-el-proyecto-backend" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> proyecto backend ejecutable y conectado.</p>
+<p>El starter de referencia está en <code>lp2/bomerp-backend</code>. No es la solución de S2: contiene únicamente los listados de categorías y productos que permiten recorrer todas las capas y comprobar la conexión real. El proyecto ya viene creado con la configuración de 3.2.1; esos pasos son la receta que lo generó, y son los mismos que tu equipo usará en la actividad autónoma (sección 4) para crear el proyecto de su propio dominio.</p>
+<h4 id="321-crear-el-proyecto-con-spring-initializr-desde-vs-code">3.2.1 Crear el proyecto con Spring Initializr desde VS Code<a class="headerlink" href="#321-crear-el-proyecto-con-spring-initializr-desde-vs-code" title="Permanent link">&para;</a></h4>
+<p>Requiere la extensión <strong>Spring Initializr Java Support</strong> (<code>vscjava.vscode-spring-initializr</code>, incluida en el Extension Pack for Java). Si no la tienes, instálala desde la vista de Extensiones de VS Code antes de continuar.</p>
+<p>Desde la raíz del monorepo <code>bomerp</code>, abre VS Code y abre la <strong>paleta de comandos</strong>:</p>
+<ul>
+<li>Windows/Linux: <code>Ctrl+Shift+P</code></li>
+<li>macOS: <code>Cmd+Shift+P</code></li>
+</ul>
+<p>(No es <code>Ctrl+P</code> — ese atajo abre "Ir a archivo", un comando distinto.)</p>
+<p>Escribe <code>Spring Initializr</code> y selecciona:</p>
+<div class="highlight"><pre><span></span><code>Spring Initializr: Create a Maven Project
+</code></pre></div>
+<p>Usa la siguiente configuración:</p>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Project</td>
+<td>Maven Project</td>
+</tr>
+<tr>
+<td>Spring Boot</td>
+<td><strong>4.0.7</strong></td>
+</tr>
+<tr>
+<td>Language</td>
+<td>Java</td>
+</tr>
+<tr>
+<td>Java</td>
+<td>21</td>
+</tr>
+<tr>
+<td>Group Id</td>
+<td><code>pe.edu.upeu</code></td>
+</tr>
+<tr>
+<td>Artifact Id</td>
+<td><code>bomerp-backend</code></td>
+</tr>
+<tr>
+<td>Package name</td>
+<td><code>pe.edu.upeu.bomerp</code></td>
+</tr>
+<tr>
+<td>Packaging</td>
+<td>Jar</td>
+</tr>
+<tr>
+<td>Ubicación</td>
+<td><code>lp2/bomerp-backend</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Por qué 4.0.7 y no otra versión.</strong> Verificado directo en <code>start.spring.io</code> (con <code>4.1.0</code> seleccionado, el propio buscador de dependencias muestra en rojo, al escribir "springd": <em>"Requires Spring Boot &gt;= 4.0.0 and &lt; 4.1.0-M1"</em>). Es una restricción real de compatibilidad de SpringDoc OpenAPI, no una limitación del buscador ni de la extensión de VS Code. El generador tampoco ofrece ya ninguna versión 3.x (Spring Boot 3.5.x sigue funcionando vía Maven normalmente, pero el asistente de creación de proyectos ya no la lista). Por eso el proyecto usa <strong>4.0.7</strong>, dentro del rango compatible.</p>
+<p>Dependencias a seleccionar:</p>
+<table>
+<thead>
+<tr>
+<th>Grupo</th>
+<th>Dependencias</th>
+<th>Propósito</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>API REST base</td>
+<td>Spring Web, Validation</td>
+<td>Exponer endpoints HTTP y validar entradas</td>
+</tr>
+<tr>
+<td>Persistencia</td>
+<td>Spring Data JPA, Oracle Driver</td>
+<td>Acceso a datos y conexión a Oracle</td>
+</tr>
+<tr>
+<td>Documentación y operación</td>
+<td>SpringDoc OpenAPI, Spring Boot Actuator</td>
+<td>Documentar la API con Swagger y verificar salud</td>
+</tr>
+<tr>
+<td>Arquitectura modular</td>
+<td>Spring Modulith</td>
+<td>Verificar y documentar los límites entre módulos de negocio (ver ADR-002)</td>
+</tr>
+<tr>
+<td>Productividad</td>
+<td>Lombok, Spring Boot DevTools</td>
+<td>Reducir código repetitivo y reiniciar automáticamente al guardar cambios</td>
+</tr>
+</tbody>
+</table>
+<p>Referencia visual (selección real en VS Code con Spring Boot 4.0.7, las 9 dependencias de la tabla):</p>
+<p><img alt="Selección de dependencias en Spring Initializr (1/2): Spring Web, Validation, Spring Data JPA, Oracle Driver, SpringDoc OpenAPI" src="../img/s01-3.2.1-dependencias-1.png" /></p>
+<p><img alt="Selección de dependencias en Spring Initializr (2/2): SpringDoc OpenAPI, Spring Boot Actuator, Spring Modulith, Lombok, Spring Boot DevTools" src="../img/s01-3.2.1-dependencias-2.png" /></p>
+<p>Antes de presionar <code>Enter</code> para continuar, la lista debe mostrar exactamente:</p>
+<div class="highlight"><pre><span></span><code>Selected 9 dependencies
+✓ Spring Web
+✓ Validation
+✓ Spring Data JPA
+✓ Oracle Driver
+✓ SpringDoc OpenAPI
+✓ Spring Boot Actuator
+✓ Spring Modulith
+✓ Lombok
+✓ Spring Boot DevTools
+</code></pre></div>
+<p>Después de <code>Enter</code>, el asistente pide dónde guardar el proyecto. Navega hasta la carpeta y da clic en <strong>"Generate into this folder"</strong> — no escribas nada en el campo "Carpeta":</p>
+<p><img alt="Selector de carpeta de VS Code navegado hasta lp2, con el botón &quot;Generate into this folder&quot; resaltado y el campo Carpeta vacío" src="../img/s01-3.2.1-guardar.png" /></p>
+<p><strong>Sobre dónde queda el proyecto.</strong> La extensión crea, dentro de la carpeta donde diste clic en "Generate into this folder", una <strong>subcarpeta nueva con el nombre del Artifact Id</strong>. Da clic estando parado en <code>lp2/</code>: el proyecto queda en <code>lp2/bomerp-backend/</code>, que es exactamente la carpeta que usa el resto de esta guía — no hace falta renombrar nada.</p>
+<p>Si el contador dice un número distinto de 9, revisa qué falta o qué sobra antes de continuar — no sigas a ciegas.</p>
+<p>Nota sobre lo que el Initializr agrega solo por combinar dependencias, sin que hayas marcado nada extra (revisa el <code>pom.xml</code> generado, no hace falta editarlo a mano):</p>
+<ul>
+<li><code>spring-modulith-starter-core</code> (compile) y <code>spring-modulith-starter-test</code>
+  (test) — este último <strong>sí se agrega automáticamente</strong> al seleccionar
+  "Spring Modulith", nada que agregar a mano.</li>
+<li>En runtime, <code>spring-modulith-actuator</code> y <code>spring-modulith-observability</code>
+  — Initializr los suma porque también seleccionaste Actuator; exponen
+  información de módulos vía Actuator y trazas de observabilidad. Se
+  conservan tal cual.</li>
+<li><strong><code>spring-modulith-starter-jpa</code> (compile) — elimínala del <code>pom.xml</code>.</strong>
+  Initializr la agrega porque también seleccionaste Spring Data JPA, pero
+  trae el registro de eventos de Modulith respaldado por JPA, que exige su
+  propia tabla (<code>event_publication</code>). Como los módulos de esta ADR se
+  comunican por servicios Java, no por eventos, esa tabla no se usa —y con
+  <code>ddl-auto: validate</code> (3.2.3), Hibernate falla al arrancar porque la tabla
+  no existe en Oracle. Detalle completo: <a href="../../adr/ADR-002-spring-modulith/">ADR-002</a>.</li>
+<li>El checkbox "Spring Web" genera el artefacto <code>spring-boot-starter-webmvc</code>,
+  no <code>spring-boot-starter-web</code> — en Spring Boot 4.0.7 el segundo queda
+  deprecado a favor del primero.</li>
+<li>En vez de un único <code>spring-boot-starter-test</code>, el <code>pom.xml</code> trae un
+  starter de test granular por cada starter de producción seleccionado
+  (<code>spring-boot-starter-actuator-test</code>, <code>-data-jpa-test</code>,
+  <code>-validation-test</code>, <code>-webmvc-test</code>) — es el patrón de Boot 4.x, no un
+  error del generador.</li>
+</ul>
+<p>Detalle completo de por qué estas versiones y no otras: <a href="../../adr/ADR-002-spring-modulith/">ADR-002</a> y <a href="../../adr/ADR-003-spring-boot-4/">ADR-003</a>.</p>
+<p>El Initializr deriva el nombre de la clase <code>@SpringBootApplication</code> del Artifact Id, así que la genera como <code>BomerpBackendApplication.java</code>. Renómbrala a <code>BomErpApplication</code> (archivo y clase, mismo paquete raíz <code>pe.edu.upeu.bomerp</code>) para que coincida con el resto de esta guía y con <code>ModularityTests</code> (3.2.8):</p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.boot.SpringApplication</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.boot.autoconfigure.SpringBootApplication</span><span class="p">;</span>
+
+<span class="nd">@SpringBootApplication</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">BomErpApplication</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">SpringApplication</span><span class="p">.</span><span class="na">run</span><span class="p">(</span><span class="n">BomErpApplication</span><span class="p">.</span><span class="na">class</span><span class="p">,</span><span class="w"> </span><span class="n">args</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h4 id="322-configurar-oracle-en-docker">3.2.2 Configurar Oracle en Docker<a class="headerlink" href="#322-configurar-oracle-en-docker" title="Permanent link">&para;</a></h4>
+<p><strong>Producto del paso:</strong> Oracle disponible en <code>localhost</code>, con el esquema de BD2 cargado.</p>
+<p>Crea <code>compose-local.yml</code> en la raíz de <code>lp2/bomerp-backend</code> — levanta <strong>únicamente</strong> Oracle, para tu laptop, con las credenciales en texto plano que también usará <code>application-local.yml</code> en el paso siguiente (mismo criterio: sin <code>.env</code>):</p>
+<div class="highlight"><pre><span></span><code><span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">oracle</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gvenzl/oracle-free:23-slim</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bomerp-oracle</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;1521:1521&quot;</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">ORACLE_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">123456</span>
+<span class="w">      </span><span class="nt">APP_USER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BOMERP_APP</span>
+<span class="w">      </span><span class="nt">APP_USER_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">123456</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">oracle-data:/opt/oracle/oradata</span>
+<span class="w">    </span><span class="nt">healthcheck</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;CMD&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;healthcheck.sh&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10s</span>
+<span class="w">      </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5s</span>
+<span class="w">      </span><span class="nt">retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">      </span><span class="nt">start_period</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60s</span>
+
+<span class="nt">volumes</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">oracle-data</span><span class="p">:</span>
+</code></pre></div>
+<p><strong>Nota sobre versión y edición:</strong> esta imagen (<code>gvenzl/oracle-free:23-slim</code>)
+es Oracle Database 23ai <strong>Free</strong> — no Oracle 19c ni Enterprise Edition.
+Alcanza para conectar el backend y para BD2 U1 (que en el sílabo pide
+Oracle XE). BD2 U2-U3 exige explícitamente Oracle 19c EE + Oracle Linux
+para temas exclusivos de Enterprise Edition (AWR, particionamiento) que
+este contenedor no soporta — ese ambiente todavía no está operacionalizado
+en el repo (ver <code>bd2/README.md</code>, sección sobre U2-U3).</p>
+<p>Levanta Oracle:</p>
+<div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">compose</span> <span class="o">-f</span> <span class="n">compose-local</span><span class="p">.</span><span class="n">yml</span> <span class="n">up</span> <span class="n">-d</span>
+</code></pre></div>
+<p>Luego crea el esquema y las tablas del catálogo ejecutando, en orden, <a href="../../../proyecto-integrador/u1/oracle/S01_01_esquemas.sql"><code>S01_01_esquemas.sql</code></a> y <a href="../../../proyecto-integrador/u1/oracle/S01_02_tablas.sql"><code>S01_02_tablas.sql</code></a> contra esta misma Oracle (scripts de BD2, listos para ejecutar — no hace falta revisar la guía de esa sesión, solo si quieres el detalle: <a href="../../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio/">BD2 S1</a>).</p>
+<h5 id="conectarse-a-oracle-desde-un-cliente-grafico">Conectarse a Oracle desde un cliente gráfico<a class="headerlink" href="#conectarse-a-oracle-desde-un-cliente-grafico" title="Permanent link">&para;</a></h5>
+<p>Para ejecutar esos scripts y revisar las tablas sin depender de la consola, usa un cliente de base de datos con soporte Oracle (por ejemplo la extensión de VS Code <strong>Database Client</strong>, <code>cweijan.vscode-postgresql-client2</code>, a pesar del nombre soporta varios motores incluido Oracle). Datos de conexión:</p>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Host</td>
+<td><code>127.0.0.1</code></td>
+</tr>
+<tr>
+<td>Port</td>
+<td><code>1521</code></td>
+</tr>
+<tr>
+<td>Username</td>
+<td><code>system</code></td>
+</tr>
+<tr>
+<td>Password</td>
+<td><code>123456</code></td>
+</tr>
+<tr>
+<td>Database</td>
+<td><code>FREEPDB1</code> (<strong>no</strong> <code>XE</code>, ese es el valor por defecto del cliente y no es nuestra base)</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Conexión exitosa a Oracle vía Database Client, mostrando el árbol de esquemas y tablas de SYSTEM" src="../img/s01-3.2.2-database-client.png" /></p>
+<p>Usa <code>system</code> (no <code>BOMERP_APP</code>) porque <code>S01_01_esquemas.sql</code> necesita privilegios de DBA para crear los usuarios <code>BOM_CATALOGO</code> y <code>BOMERP_APP</code>, y <code>S01_02_tablas.sql</code> necesita privilegios sobre ese esquema para crear las tablas. Una vez creado el esquema, puedes agregar una segunda conexión con <code>Username: BOMERP_APP</code> / misma contraseña y base, para verificar los permisos con los que realmente corre el backend (<code>application-local.yml</code> usa ese usuario, no <code>system</code>).</p>
+<h5 id="reiniciar-docker-desde-cero-opcional-solo-si-algo-quedo-en-mal-estado">Reiniciar Docker desde cero (opcional, solo si algo quedó en mal estado)<a class="headerlink" href="#reiniciar-docker-desde-cero-opcional-solo-si-algo-quedo-en-mal-estado" title="Permanent link">&para;</a></h5>
+<p><strong>Advertencia: esto borra <em>todo</em> lo que tengas en Docker, no solo el contenedor de BomERP</strong> — cualquier contenedor, imagen, volumen o red de cualquier otro curso o proyecto en tu máquina. Úsalo solo si necesitas dejar Docker como recién instalado, no como parte normal del flujo de S1.</p>
+<div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="nb">ps </span><span class="n">-aq</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="n">docker</span> <span class="n">stop</span> <span class="nv">$_</span> <span class="p">}</span>
+<span class="n">docker</span> <span class="nb">ps </span><span class="n">-aq</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="n">docker</span> <span class="nb">rm </span><span class="o">-f</span> <span class="nv">$_</span> <span class="p">}</span>
+<span class="n">docker</span> <span class="n">images</span> <span class="n">-aq</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">-Unique</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="n">docker</span> <span class="n">rmi</span> <span class="o">-f</span> <span class="nv">$_</span> <span class="p">}</span>
+
+<span class="c"># Eliminar todos los volúmenes</span>
+<span class="n">docker</span> <span class="n">volume</span> <span class="nb">ls </span><span class="n">-q</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="n">docker</span> <span class="n">volume</span> <span class="nb">rm </span><span class="nv">$_</span> <span class="p">}</span>
+
+<span class="n">docker</span> <span class="n">network</span> <span class="n">prune</span> <span class="o">-f</span>
+
+<span class="c"># Limpiar recursos no utilizados (opcional)</span>
+<span class="n">docker</span> <span class="n">system</span> <span class="n">prune</span> <span class="n">-a</span> <span class="p">-</span><span class="n">-volumes</span> <span class="o">-f</span>
+
+<span class="c"># Limpiar caché de compilación (opcional)</span>
+<span class="n">docker</span> <span class="n">builder</span> <span class="n">prune</span> <span class="n">-a</span> <span class="o">-f</span>
+</code></pre></div>
+<p>Después de esto, <code>compose-local.yml</code> vuelve a levantar Oracle desde cero (descarga la imagen de nuevo) con <code>docker compose -f compose-local.yml up -d</code>.</p>
+<h5 id="eliminar-solo-lo-de-bomerp-sin-tocar-otros-proyectos-en-docker">Eliminar solo lo de BomERP (sin tocar otros proyectos en Docker)<a class="headerlink" href="#eliminar-solo-lo-de-bomerp-sin-tocar-otros-proyectos-en-docker" title="Permanent link">&para;</a></h5>
+<p>Si tienes otros cursos o proyectos corriendo en Docker en la misma máquina, no uses el reinicio total de arriba. La forma correcta es dejar que el propio <code>compose-local.yml</code> borre exactamente lo que él mismo creó (contenedor, red y volumen), sin adivinar nombres:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd </span><span class="n">C</span><span class="p">:\</span><span class="n">262</span><span class="p">\</span><span class="n">262ciclo4</span><span class="p">\</span><span class="n">bomerp</span><span class="p">\</span><span class="n">lp2</span><span class="p">\</span><span class="n">bomerp-backend</span>
+<span class="n">docker</span> <span class="n">compose</span> <span class="o">-f</span> <span class="n">compose-local</span><span class="p">.</span><span class="n">yml</span> <span class="n">down</span> <span class="n">-v</span>
+</code></pre></div>
+<p>Ojo con un detalle real: Docker Compose nombra el volumen y la red a partir de la <strong>carpeta</strong> donde corres el comando, no del nombre del contenedor — el contenedor se llama <code>bomerp-oracle</code>, pero el volumen queda como <code>bomerp-backend_oracle-data</code> y la red como <code>bomerp-backend_default</code> (por la carpeta <code>lp2/bomerp-backend</code>). <code>docker compose down -v</code> ya lo resuelve solo porque usa su propio registro interno, no un filtro de texto.</p>
+<p>Si el contenedor quedó suelto (por ejemplo, lo creaste fuera de <code>docker compose</code>) y <code>down -v</code> no lo encuentra, bórralo manualmente con los nombres reales:</p>
+<div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="nb">ps </span><span class="n">-aq</span> <span class="p">-</span><span class="n">-filter</span> <span class="s2">&quot;name=bomerp&quot;</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="n">docker</span> <span class="nb">rm </span><span class="o">-f</span> <span class="nv">$_</span> <span class="p">}</span>
+<span class="n">docker</span> <span class="n">volume</span> <span class="nb">ls </span><span class="n">-q</span> <span class="p">-</span><span class="n">-filter</span> <span class="s2">&quot;name=bomerp-backend_oracle-data&quot;</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="n">docker</span> <span class="n">volume</span> <span class="nb">rm </span><span class="o">-f</span> <span class="nv">$_</span> <span class="p">}</span>
+</code></pre></div>
+<h4 id="323-configurar-el-ambiente-local">3.2.3 Configurar el ambiente local<a class="headerlink" href="#323-configurar-el-ambiente-local" title="Permanent link">&para;</a></h4>
+<p><strong>Producto del paso:</strong> Spring Boot configurado para conectarse a la Oracle de Docker recién levantada.</p>
+<p>El Initializr genera <code>src/main/resources/application.properties</code> (vacío). En vez de crear el YAML a mano, clic derecho sobre <code>application.properties</code> en el explorador de VS Code → <strong>"Convert .properties to .yaml"</strong>.</p>
+<p>Esto genera <code>application.yaml</code> <strong>junto al</strong> <code>application.properties</code> original — la conversión no borra el archivo viejo. Renombra <code>application.yaml</code> a <code>application.yml</code> (la extensión que usa el resto del proyecto: <code>application-local.yml</code>, <code>compose-local.yml</code>), <strong>elimina <code>application.properties</code></strong> (si quedan los dos, Spring Boot carga ambos y puede confundir cuál valor gana) y reemplaza el contenido de <code>application.yml</code> por el siguiente:</p>
+<p>En <code>src/main/resources/application.yml</code> (configuración base, sin datos de ambiente):</p>
+<div class="highlight"><pre><span></span><code><span class="nt">spring</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">application</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bomerp-backend</span>
+<span class="w">  </span><span class="nt">profiles</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">active</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${SPRING_PROFILES_ACTIVE:local}</span>
+
+<span class="nt">management</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">endpoints</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">web</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">exposure</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">include</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">health,info</span>
+<span class="w">  </span><span class="nt">endpoint</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">health</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">show-details</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span>
+
+<span class="nt">springdoc</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">swagger-ui</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/swagger-ui.html</span>
+</code></pre></div>
+<p>En <code>src/main/resources/application-local.yml</code> (ambiente <strong>local</strong>, ver 2.3). El ambiente local <strong>no usa <code>.env</code></strong>: las credenciales van directo en texto plano, porque son valores de laptop, no secretos — <code>.env</code> se reserva para cuando exista un ambiente de producción real (S13):</p>
+<div class="highlight"><pre><span></span><code><span class="nt">spring</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">datasource</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jdbc:oracle:thin:@localhost:1521/FREEPDB1</span>
+<span class="w">    </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BOMERP_APP</span>
+<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">123456</span>
+<span class="w">    </span><span class="nt">driver-class-name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">oracle.jdbc.OracleDriver</span>
+<span class="w">  </span><span class="nt">jpa</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">open-in-view</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">    </span><span class="nt">hibernate</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">ddl-auto</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">validate</span>
+<span class="w">    </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">hibernate</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">format_sql</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">show-sql</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">devtools</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">livereload</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="nt">logging</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">level</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">pe.edu.upeu.bomerp</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEBUG</span>
+</code></pre></div>
+<p><code>ddl-auto: validate</code> (no <code>none</code>): Hibernate no crea ni altera nada —el esquema sigue siendo responsabilidad de BD2— pero sí compara las entidades JPA contra las tablas reales de Oracle al arrancar, avisando temprano si algo quedó desalineado. <code>devtools</code> habilita reinicio automático y LiveReload al guardar cambios; Spring Boot lo excluye solo del <code>.jar</code> empaquetado, no hace falta desactivarlo a mano para producción.</p>
+<h4 id="324-configurar-openapi">3.2.4 Configurar OpenAPI<a class="headerlink" href="#324-configurar-openapi" title="Permanent link">&para;</a></h4>
+<p><strong>Producto del paso:</strong> documentación interactiva de la API vía Swagger UI.</p>
+<p>Crea <code>OpenApiConfig.java</code> junto a <code>BomErpApplication.java</code> (paquete raíz, compartido para todos los módulos):</p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">io.swagger.v3.oas.models.OpenAPI</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io.swagger.v3.oas.models.info.Info</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.context.annotation.Bean</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.context.annotation.Configuration</span><span class="p">;</span>
+
+<span class="nd">@Configuration</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">OpenApiConfig</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@Bean</span>
+<span class="w">    </span><span class="n">OpenAPI</span><span class="w"> </span><span class="nf">bomErpOpenApi</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">OpenAPI</span><span class="p">().</span><span class="na">info</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">Info</span><span class="p">()</span>
+<span class="w">                </span><span class="p">.</span><span class="na">title</span><span class="p">(</span><span class="s">&quot;BomERP API&quot;</span><span class="p">)</span>
+<span class="w">                </span><span class="p">.</span><span class="na">version</span><span class="p">(</span><span class="s">&quot;v1&quot;</span><span class="p">)</span>
+<span class="w">                </span><span class="p">.</span><span class="na">description</span><span class="p">(</span><span class="s">&quot;Contrato REST del backend unico de LP2&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>El path de Swagger UI (<code>/swagger-ui.html</code>) ya quedó definido en el bloque <code>springdoc</code> de <code>application.yml</code> (paso anterior); <code>OpenApiConfig</code> solo agrega el título, la versión y la descripción del contrato.</p>
+<h4 id="325-probar-el-ciclo-completo-con-un-endpoint-hola-mundo">3.2.5 Probar el ciclo completo con un endpoint "Hola mundo"<a class="headerlink" href="#325-probar-el-ciclo-completo-con-un-endpoint-hola-mundo" title="Permanent link">&para;</a></h4>
+<p><strong>Producto del paso:</strong> confirmar que el ciclo HTTP → <code>Controller</code> → respuesta funciona, antes de sumarle JPA y Oracle con el módulo <code>catalogo</code>.</p>
+<p>Crea <code>HelloController.java</code> en el paquete raíz (<code>pe.edu.upeu.bomerp</code>, compartido, junto a <code>OpenApiConfig</code>):</p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.bind.annotation.GetMapping</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.bind.annotation.RestController</span><span class="p">;</span>
+
+<span class="nd">@RestController</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">HelloController</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@GetMapping</span><span class="p">(</span><span class="s">&quot;/api/v1/hello&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">holaMundo</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;Hola BomERP&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Levanta el proyecto (detalle completo del wrapper en 3.2.7) y visita <code>http://localhost:8080/api/v1/hello</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="p">.\</span><span class="n">mvnw</span><span class="p">.</span><span class="n">cmd</span> <span class="n">spring-boot</span><span class="p">:</span><span class="n">run</span>
+</code></pre></div>
+<p>Debe responder <code>Hola BomERP</code> en texto plano. Si este paso falla, el problema está en el arranque de Spring Boot (dependencias, puerto, configuración) — más simple de diagnosticar aquí, sin JPA ni Oracle todavía de por medio, que después de sumar el módulo <code>catalogo</code>.</p>
+<p><code>HelloController</code> es solo un paso de verificación: una vez que <code>catalogo</code> expone sus propios endpoints reales (paso siguiente), puedes eliminarlo — no forma parte del contrato final de la API.</p>
+<h4 id="326-implementar-el-modulo-catalogo-categoria-y-producto">3.2.6 Implementar el módulo <code>catalogo</code>: <code>Categoria</code> y <code>Producto</code><a class="headerlink" href="#326-implementar-el-modulo-catalogo-categoria-y-producto" title="Permanent link">&para;</a></h4>
+<p><strong>Producto del paso:</strong> listados REST de <code>Categoria</code> y <code>Producto</code> funcionando de punta a punta (controller → service → repository → Oracle).</p>
+<p><strong>Requisito antes de continuar:</strong> las tablas <code>BOM_CATALOGO.categoria</code> y <code>BOM_CATALOGO.producto</code> deben existir en Oracle <em>antes</em> de compilar este paso. Con <code>ddl-auto: validate</code> (3.2.3), Hibernate valida el esquema al arrancar — si las tablas no existen, falla igual que pasó con <code>event_publication</code> (ADR-002). Se crean ejecutando <a href="../../../proyecto-integrador/u1/oracle/S01_01_esquemas.sql"><code>S01_01_esquemas.sql</code></a> y <a href="../../../proyecto-integrador/u1/oracle/S01_02_tablas.sql"><code>S01_02_tablas.sql</code></a> — si ya lo hiciste en 3.2.2, no hace falta repetirlo aquí. Detalle opcional, solo si quieres entender el porqué de cada bloque: <a href="../../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio/">BD2 S1</a>.</p>
+<p>Crea el paquete <code>pe.edu.upeu.bomerp.catalogo</code> con <code>package-info.java</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="cm">/**</span>
+<span class="cm"> * Modulo Catalogo: propietario de Categoria y Producto.</span>
+<span class="cm"> * Modulo Spring Modulith (paquete directo bajo el paquete raiz de la aplicacion).</span>
+<span class="cm"> */</span>
+<span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo</span><span class="p">;</span>
+</code></pre></div>
+<p><strong><code>catalogo/categoria/entity/Categoria.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.categoria.entity</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.Column</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.Entity</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.GeneratedValue</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.GenerationType</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.Id</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.Table</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Getter</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.NoArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Setter</span><span class="p">;</span>
+
+<span class="nd">@Entity</span>
+<span class="nd">@Table</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;CATEGORIA&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;BOM_CATALOGO&quot;</span><span class="p">)</span>
+<span class="nd">@Getter</span>
+<span class="nd">@Setter</span>
+<span class="nd">@NoArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Categoria</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nd">@Id</span>
+<span class="w">    </span><span class="nd">@GeneratedValue</span><span class="p">(</span><span class="n">strategy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GenerationType</span><span class="p">.</span><span class="na">IDENTITY</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;ID_CATEGORIA&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;NOMBRE&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="n">unique</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">80</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">nombre</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;DESCRIPCION&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">200</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">descripcion</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong><code>catalogo/categoria/repository/CategoriaRepository.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.categoria.repository</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.data.jpa.repository.JpaRepository</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.categoria.entity.Categoria</span><span class="p">;</span>
+
+<span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">CategoriaRepository</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">JpaRepository</span><span class="o">&lt;</span><span class="n">Categoria</span><span class="p">,</span><span class="w"> </span><span class="n">Long</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong><code>catalogo/categoria/dto/CategoriaResponse.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.categoria.dto</span><span class="p">;</span>
+
+<span class="kd">public</span><span class="w"> </span><span class="kd">record</span> <span class="nc">CategoriaResponse</span><span class="p">(</span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">nombre</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">descripcion</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong><code>catalogo/categoria/service/CategoriaService.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.categoria.service</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.categoria.dto.CategoriaResponse</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+
+<span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">CategoriaService</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">CategoriaResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">listar</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong><code>catalogo/categoria/service/CategoriaServiceImpl.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.categoria.service</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.RequiredArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.stereotype.Service</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.transaction.annotation.Transactional</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.categoria.dto.CategoriaResponse</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.categoria.entity.Categoria</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.categoria.repository.CategoriaRepository</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+
+<span class="nd">@Service</span>
+<span class="nd">@RequiredArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">CategoriaServiceImpl</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">CategoriaService</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">CategoriaRepository</span><span class="w"> </span><span class="n">categoriaRepository</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="nd">@Transactional</span><span class="p">(</span><span class="n">readOnly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">CategoriaResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">listar</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">categoriaRepository</span><span class="p">.</span><span class="na">findAll</span><span class="p">().</span><span class="na">stream</span><span class="p">().</span><span class="na">map</span><span class="p">(</span><span class="k">this</span><span class="p">::</span><span class="n">toResponse</span><span class="p">).</span><span class="na">toList</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">CategoriaResponse</span><span class="w"> </span><span class="nf">toResponse</span><span class="p">(</span><span class="n">Categoria</span><span class="w"> </span><span class="n">categoria</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">CategoriaResponse</span><span class="p">(</span><span class="n">categoria</span><span class="p">.</span><span class="na">getId</span><span class="p">(),</span><span class="w"> </span><span class="n">categoria</span><span class="p">.</span><span class="na">getNombre</span><span class="p">(),</span><span class="w"> </span><span class="n">categoria</span><span class="p">.</span><span class="na">getDescripcion</span><span class="p">());</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong><code>catalogo/categoria/controller/CategoriaController.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.categoria.controller</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">io.swagger.v3.oas.annotations.Operation</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io.swagger.v3.oas.annotations.tags.Tag</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.RequiredArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.http.ResponseEntity</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.bind.annotation.GetMapping</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.bind.annotation.RequestMapping</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.bind.annotation.RestController</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.categoria.dto.CategoriaResponse</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.categoria.service.CategoriaService</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+
+<span class="nd">@Tag</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Categorías&quot;</span><span class="p">)</span>
+<span class="nd">@RestController</span>
+<span class="nd">@RequestMapping</span><span class="p">(</span><span class="s">&quot;/api/v1/categorias&quot;</span><span class="p">)</span>
+<span class="nd">@RequiredArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">CategoriaController</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">CategoriaService</span><span class="w"> </span><span class="n">categoriaService</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Operation</span><span class="p">(</span><span class="n">summary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Lista las categorías registradas&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@GetMapping</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">CategoriaResponse</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="nf">listar</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">ok</span><span class="p">(</span><span class="n">categoriaService</span><span class="p">.</span><span class="na">listar</span><span class="p">());</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>Producto</code> sigue exactamente el mismo patrón, cambiando <code>Categoria</code>→<code>Producto</code>, <code>CATEGORIA</code>→<code>PRODUCTO</code> y agregando los campos propios:</p>
+<p><strong><code>catalogo/producto/entity/Producto.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.entity</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.Column</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.Entity</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.GeneratedValue</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.GenerationType</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.Id</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.Table</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Getter</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.NoArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Setter</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.math.BigDecimal</span><span class="p">;</span>
+
+<span class="nd">@Entity</span>
+<span class="nd">@Table</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;PRODUCTO&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;BOM_CATALOGO&quot;</span><span class="p">)</span>
+<span class="nd">@Getter</span>
+<span class="nd">@Setter</span>
+<span class="nd">@NoArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Producto</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nd">@Id</span>
+<span class="w">    </span><span class="nd">@GeneratedValue</span><span class="p">(</span><span class="n">strategy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GenerationType</span><span class="p">.</span><span class="na">IDENTITY</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;ID_PRODUCTO&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;NOMBRE&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">120</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">nombre</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;PRECIO&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="n">precision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">precio</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;STOCK&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Integer</span><span class="w"> </span><span class="n">stock</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong><code>catalogo/producto/repository/ProductoRepository.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.repository</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.data.jpa.repository.JpaRepository</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.entity.Producto</span><span class="p">;</span>
+
+<span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">ProductoRepository</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">JpaRepository</span><span class="o">&lt;</span><span class="n">Producto</span><span class="p">,</span><span class="w"> </span><span class="n">Long</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong><code>catalogo/producto/dto/ProductoResponse.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.dto</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.math.BigDecimal</span><span class="p">;</span>
+
+<span class="kd">public</span><span class="w"> </span><span class="kd">record</span> <span class="nc">ProductoResponse</span><span class="p">(</span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">nombre</span><span class="p">,</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">precio</span><span class="p">,</span><span class="w"> </span><span class="n">Integer</span><span class="w"> </span><span class="n">stock</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong><code>catalogo/producto/service/ProductoService.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.service</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoResponse</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+
+<span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">ProductoService</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">ProductoResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">listar</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong><code>catalogo/producto/service/ProductoServiceImpl.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.service</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.RequiredArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.stereotype.Service</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.transaction.annotation.Transactional</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoResponse</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.entity.Producto</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.repository.ProductoRepository</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+
+<span class="nd">@Service</span>
+<span class="nd">@RequiredArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ProductoServiceImpl</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">ProductoService</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">ProductoRepository</span><span class="w"> </span><span class="n">productoRepository</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="nd">@Transactional</span><span class="p">(</span><span class="n">readOnly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">ProductoResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">listar</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">productoRepository</span><span class="p">.</span><span class="na">findAll</span><span class="p">().</span><span class="na">stream</span><span class="p">().</span><span class="na">map</span><span class="p">(</span><span class="k">this</span><span class="p">::</span><span class="n">toResponse</span><span class="p">).</span><span class="na">toList</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">ProductoResponse</span><span class="w"> </span><span class="nf">toResponse</span><span class="p">(</span><span class="n">Producto</span><span class="w"> </span><span class="n">producto</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ProductoResponse</span><span class="p">(</span><span class="n">producto</span><span class="p">.</span><span class="na">getId</span><span class="p">(),</span><span class="w"> </span><span class="n">producto</span><span class="p">.</span><span class="na">getNombre</span><span class="p">(),</span><span class="w"> </span><span class="n">producto</span><span class="p">.</span><span class="na">getPrecio</span><span class="p">(),</span><span class="w"> </span><span class="n">producto</span><span class="p">.</span><span class="na">getStock</span><span class="p">());</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong><code>catalogo/producto/controller/ProductoController.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.controller</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">io.swagger.v3.oas.annotations.Operation</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io.swagger.v3.oas.annotations.tags.Tag</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.RequiredArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.http.ResponseEntity</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.bind.annotation.GetMapping</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.bind.annotation.RequestMapping</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.bind.annotation.RestController</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoResponse</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.service.ProductoService</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+
+<span class="nd">@Tag</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Productos&quot;</span><span class="p">)</span>
+<span class="nd">@RestController</span>
+<span class="nd">@RequestMapping</span><span class="p">(</span><span class="s">&quot;/api/v1/productos&quot;</span><span class="p">)</span>
+<span class="nd">@RequiredArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ProductoController</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">ProductoService</span><span class="w"> </span><span class="n">productoService</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Operation</span><span class="p">(</span><span class="n">summary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Lista los productos registrados&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@GetMapping</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">ProductoResponse</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="nf">listar</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">ok</span><span class="p">(</span><span class="n">productoService</span><span class="p">.</span><span class="na">listar</span><span class="p">());</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h4 id="327-ejecutar-el-proyecto-con-maven-wrapper">3.2.7 Ejecutar el proyecto con Maven Wrapper<a class="headerlink" href="#327-ejecutar-el-proyecto-con-maven-wrapper" title="Permanent link">&para;</a></h4>
+<p>El proyecto trae Maven Wrapper (<code>mvnw</code>/<code>mvnw.cmd</code>): no requiere tener Maven
+instalado aparte, solo Java 21. Ejecute siempre el wrapper, nunca <code>mvn</code> a
+secas, para que todos usen la misma versión de Maven:</p>
+<div class="highlight"><pre><span></span><code><span class="c"># Windows (PowerShell o cmd)</span>
+<span class="p">.\</span><span class="n">mvnw</span><span class="p">.</span><span class="n">cmd</span> <span class="n">spring-boot</span><span class="p">:</span><span class="n">run</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># macOS / Linux</span>
+./mvnw<span class="w"> </span>spring-boot:run
+</code></pre></div>
+<p>Si abres <code>http://localhost:8080/</code> en el navegador vas a ver una <strong>Whitelabel Error Page</strong> con <code>404</code> y el mensaje <em>"No static resource ."</em> — es lo esperado: este backend es una API REST, no sirve una página en <code>/</code>. No es un error que arreglar. Abre en cambio <code>http://localhost:8080/swagger-ui/index.html</code> (la ruta <code>/swagger-ui.html</code> configurada en <code>springdoc.swagger-ui.path</code> redirige ahí) para ver el contrato interactivo, o revisa directamente <code>/api/v1/productos</code> y <code>/actuator/health</code> (ver 3.2.8).</p>
+<p>Configuración de variables de entorno y detalle de la base de datos en
+<a href="../../../lp2/bomerp-backend/README.md"><code>lp2/bomerp-backend/README.md</code></a>.</p>
+<h4 id="328-verificar-el-proyecto-backend">3.2.8 Verificar el proyecto backend<a class="headerlink" href="#328-verificar-el-proyecto-backend" title="Permanent link">&para;</a></h4>
+<p>Antes de verificar, crea <code>src/test/java/pe/edu/upeu/bomerp/ModularityTests.java</code> (verifica automáticamente los límites entre módulos, ver <a href="../../adr/ADR-002-spring-modulith/">ADR-002</a>):</p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.junit.jupiter.api.Test</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.modulith.core.ApplicationModules</span><span class="p">;</span>
+
+<span class="kd">class</span> <span class="nc">ModularityTests</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="n">ApplicationModules</span><span class="w"> </span><span class="n">modules</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ApplicationModules</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">BomErpApplication</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+
+<span class="w">    </span><span class="nd">@Test</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">verifiesModularStructure</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">modules</span><span class="p">.</span><span class="na">verify</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Test</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">writesModuleDocumentation</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="n">org</span><span class="p">.</span><span class="na">springframework</span><span class="p">.</span><span class="na">modulith</span><span class="p">.</span><span class="na">docs</span><span class="p">.</span><span class="na">Documenter</span><span class="p">(</span><span class="n">modules</span><span class="p">)</span>
+<span class="w">                </span><span class="p">.</span><span class="na">writeDocumentation</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Verificación</th>
+<th>Evidencia esperada</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Entorno Java</td>
+<td><code>java</code>, <code>javac</code> y Maven reportan Java 21.</td>
+</tr>
+<tr>
+<td>Dependencias mínimas</td>
+<td><code>pom.xml</code> con Web, JPA, Validation, Oracle, Actuator, OpenAPI y Spring Modulith.</td>
+</tr>
+<tr>
+<td>Configuración por ambiente</td>
+<td>Perfil local sin secretos incluidos en el repositorio.</td>
+</tr>
+<tr>
+<td>Conexión a base de datos</td>
+<td>Inicio correcto y componente <code>db</code> activo en Actuator.</td>
+</tr>
+<tr>
+<td>Endpoint de verificación</td>
+<td>Respuesta <code>UP</code> en <code>/actuator/health</code>.</td>
+</tr>
+<tr>
+<td>Recursos iniciales</td>
+<td>Los GET de categorías y productos devuelven datos persistidos o listas vacías.</td>
+</tr>
+<tr>
+<td>Estructura modular</td>
+<td><code>.\mvnw.cmd test</code> / <code>./mvnw test</code> ejecuta <code>ModularityTests</code> sin errores.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="33-delimitar-los-endpoints-del-modulo-catalogo">3.3 Delimitar los endpoints del módulo Catálogo<a class="headerlink" href="#33-delimitar-los-endpoints-del-modulo-catalogo" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> contrato base.</p>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Endpoint</th>
+<th>Propósito</th>
+<th>Implementación en el curso</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/v1/categorias</code></td>
+<td>Listar categorías desde Oracle</td>
+<td>S1</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/v1/productos</code></td>
+<td>Listar productos desde Oracle</td>
+<td>S1</td>
+</tr>
+<tr>
+<td><code>POST</code>, <code>PUT</code>, <code>DELETE</code></td>
+<td><code>/api/v1/categorias</code></td>
+<td>Completar operaciones de categoría</td>
+<td>S2-S3</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/v1/productos/{id}</code></td>
+<td>Consultar un producto</td>
+<td>S2</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/v1/productos</code></td>
+<td>Registrar un producto</td>
+<td>S2</td>
+</tr>
+<tr>
+<td><code>PUT</code></td>
+<td><code>/api/v1/productos/{id}</code></td>
+<td>Actualizar un producto</td>
+<td>S2</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/api/v1/productos/{id}</code></td>
+<td>Eliminar un producto</td>
+<td>S2</td>
+</tr>
+</tbody>
+</table>
+<h3 id="34-reconocer-el-dto-de-entrada-reservado-para-s2">3.4 Reconocer el DTO de entrada reservado para S2<a class="headerlink" href="#34-reconocer-el-dto-de-entrada-reservado-para-s2" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> request DTO.</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;nombre&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Teclado mecánico&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;precio&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">180.50</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;stock&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>En S1 este contrato se documenta, pero no se implementa todavía el registro.</p>
+<h3 id="35-disenar-dto-de-salida">3.5 Diseñar DTO de salida<a class="headerlink" href="#35-disenar-dto-de-salida" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> response DTO.</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;nombre&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Teclado mecánico&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;precio&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">180.50</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;stock&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="36-documentar-errores">3.6 Documentar errores<a class="headerlink" href="#36-documentar-errores" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> contrato de errores.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Código HTTP</th>
+<th>Caso</th>
+<th>Respuesta esperada</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">400</td>
+<td>Datos inválidos</td>
+<td>Mensaje de validación</td>
+</tr>
+<tr>
+<td style="text-align: right;">404</td>
+<td>Producto inexistente</td>
+<td>Recurso no encontrado</td>
+</tr>
+<tr>
+<td style="text-align: right;">409</td>
+<td>Producto referenciado en una venta</td>
+<td>Conflicto de negocio</td>
+</tr>
+<tr>
+<td style="text-align: right;">500</td>
+<td>Error no controlado</td>
+<td>Respuesta técnica sin exponer secretos</td>
+</tr>
+</tbody>
+</table>
+<p>Los códigos 400, 404 y 409 se implementan en S2; 401 y 403 se incorporan con la seguridad de U2.</p>
+<h3 id="37-bosquejar-estructura-del-backend-modular-spring-modulith">3.7 Bosquejar estructura del backend modular (Spring Modulith)<a class="headerlink" href="#37-bosquejar-estructura-del-backend-modular-spring-modulith" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> estructura base.</p>
+<div class="highlight"><pre><span></span><code>lp2/bomerp-backend/
+├── pom.xml                          # un solo proyecto Maven, sin reactor
+└── src/main/java/pe/edu/upeu/bomerp/
+    ├── BomErpApplication.java
+    ├── OpenApiConfig.java           # compartido, en el paquete raíz
+    └── catalogo/                    # módulo Modulith, funcional desde S1
+        ├── categoria/{controller,dto,entity,repository,service}
+        └── producto/{controller,dto,entity,repository,service}
+</code></pre></div>
+<p>Un solo <code>pom.xml</code> y un solo <code>.jar</code> ejecutable. <code>ventas</code>, <code>inventario</code>, <code>compras</code> y <code>seguridad</code> no se crean como paquetes vacíos "por si acaso" — se agregan como paquetes directos bajo <code>pe.edu.upeu.bomerp</code> recién cuando su sesión (S4, S10...) les da contenido real. Spring Modulith detecta cada paquete directo como un módulo y verifica sus límites automáticamente (<code>ModularityTests</code>); el detalle de esta decisión está en <a href="../../adr/ADR-001-arquitectura-backend/">ADR-001</a> y <a href="../../adr/ADR-002-spring-modulith/">ADR-002</a>.</p>
+<h3 id="38-trazar-lp2-con-ads-y-bd2">3.8 Trazar LP2 con ADS y BD2<a class="headerlink" href="#38-trazar-lp2-con-ads-y-bd2" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> matriz de integración inicial.</p>
+<table>
+<thead>
+<tr>
+<th>Endpoint LP2</th>
+<th>Componente ADS</th>
+<th>Objeto BD2 futuro</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET /api/v1/categorias</code></td>
+<td>Módulo Catalogo / CategoriaService</td>
+<td>Tabla <code>CATEGORIA</code></td>
+</tr>
+<tr>
+<td><code>GET /api/v1/productos</code></td>
+<td>ProductoController / ProductoService</td>
+<td>Tabla <code>PRODUCTO</code></td>
+</tr>
+<tr>
+<td><code>POST /api/v1/productos</code></td>
+<td>ProductoController / ProductoService</td>
+<td>Restricciones de precio y stock</td>
+</tr>
+<tr>
+<td><code>POST /api/v1/ventas</code></td>
+<td>VentaController / VentaService</td>
+<td><code>pkg_venta.registrar_venta</code></td>
+</tr>
+</tbody>
+</table>
+<p>Sesión equivalente en los otros dos cursos, misma semana: <a href="../../../ads/sesiones/S01_Fundamentos_Arquitectura_Software/">ADS - S1 Fundamentos de Arquitectura de Software</a> y <a href="../../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio/">BD2 - S1 PL/SQL Aplicado al Negocio</a>.</p>
+<h2 id="4-crea-actividad-autonoma">4. Crea: actividad autónoma<a class="headerlink" href="#4-crea-actividad-autonoma" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 2h fuera del aula.</p>
+<p>Cada estudiante documenta la API base del dominio elegido por su equipo.</p>
+<h3 id="41-plantilla-de-evidencia-individual">4.1 Plantilla de evidencia individual<a class="headerlink" href="#41-plantilla-de-evidencia-individual" title="Permanent link">&para;</a></h3>
+<p>Entrega un PDF con el siguiente nombre:</p>
+<div class="highlight"><pre><span></span><code>S01_LP2_Equipo##_ApellidoNombre.pdf
+</code></pre></div>
+<h4 id="411-datos-del-estudiante">4.1.1 Datos del estudiante<a class="headerlink" href="#411-datos-del-estudiante" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Nombre:</li>
+<li>Equipo:</li>
+<li>Sesión: S01 - Arquitectura Backend REST Profesional</li>
+<li>Rol o aporte realizado:</li>
+<li>Link de GitHub:</li>
+</ul>
+<h4 id="412-trabajo-autonomo-realizado">4.1.2 Trabajo autónomo realizado<a class="headerlink" href="#412-trabajo-autonomo-realizado" title="Permanent link">&para;</a></h4>
+<p>Completa y evidencia estas tareas:</p>
+<ol>
+<li>Evidenciar la creación y ejecución del proyecto backend.</li>
+<li>Documentar dependencias y configuración por ambiente.</li>
+<li>Demostrar la conexión a la base de datos sin publicar secretos.</li>
+<li>Publicar y probar el endpoint de verificación.</li>
+<li>Implementar los listados iniciales del módulo <code>catalogo</code>.</li>
+<li>Generar la documentación OpenAPI.</li>
+</ol>
+<h4 id="413-evidencia-tecnica">4.1.3 Evidencia técnica<a class="headerlink" href="#413-evidencia-tecnica" title="Permanent link">&para;</a></h4>
+<p>Incluye:</p>
+<ul>
+<li>Evidencia de ejecución y endpoint de verificación.</li>
+<li>Evidencia de conexión a la base de datos.</li>
+<li>Configuración por ambiente sin secretos.</li>
+<li>Respuesta de los listados de <code>Categoria</code> y <code>Producto</code>, tabla de endpoints y consultas ejecutadas en Oracle.</li>
+<li>DTO de salida en JSON y documentación OpenAPI.</li>
+<li>Estructura base del backend.</li>
+</ul>
+<h4 id="414-error-o-hallazgo">4.1.4 Error o hallazgo<a class="headerlink" href="#414-error-o-hallazgo" title="Permanent link">&para;</a></h4>
+<p>Describe un error o hallazgo: endpoint mal definido, DTO acoplado a tabla, falta de seguridad, recurso ambiguo o regla no contemplada.</p>
+<h4 id="415-reflexion-tecnica-breve">4.1.5 Reflexión técnica breve<a class="headerlink" href="#415-reflexion-tecnica-breve" title="Permanent link">&para;</a></h4>
+<p>Responde en 5 a 8 líneas:</p>
+<div class="highlight"><pre><span></span><code>¿Qué decisiones permiten que el proyecto backend pueda ejecutarse de forma reproducible en diferentes ambientes?
+</code></pre></div>
+<h3 id="42-criterios-minimos-de-aceptacion">4.2 Criterios mínimos de aceptación<a class="headerlink" href="#42-criterios-minimos-de-aceptacion" title="Permanent link">&para;</a></h3>
+<p>La evidencia individual se considera completa si:</p>
+<ul>
+<li>El archivo respeta el nombre solicitado.</li>
+<li>El entorno utiliza Java 21 y Maven reconoce el mismo JDK.</li>
+<li>El backend inicia correctamente y comprueba la conexión a la base de datos.</li>
+<li>La configuración por ambiente no expone secretos.</li>
+<li>El endpoint de verificación responde correctamente.</li>
+<li>Define recursos, endpoints y DTO coherentes.</li>
+<li>Publica documentación OpenAPI.</li>
+</ul>
+<h2 id="5-cierre-evaluativo">5. Cierre evaluativo<a class="headerlink" href="#5-cierre-evaluativo" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 20 min.</p>
+<h3 id="51-resultados-esperados">5.1 Resultados esperados<a class="headerlink" href="#51-resultados-esperados" title="Permanent link">&para;</a></h3>
+<p>Al finalizar la sesión, el estudiante debe demostrar que:</p>
+<ul>
+<li>Crea y ejecuta el proyecto backend de forma reproducible, sobre Java 21 LTS.</li>
+<li>Explica y reproduce la configuración del backend por ambiente.</li>
+<li>Demuestra la conexión a la base de datos, verificada mediante ORM, y el endpoint de verificación.</li>
+<li>Identifica recursos y endpoints iniciales, y su contrato y versionado básico (<code>/api/v1/...</code>).</li>
+<li>Diseña DTO y publica documentación OpenAPI.</li>
+<li>Organiza el backend por responsabilidades y verifica sus límites de módulo con Spring Modulith (<code>ModularityTests</code>).</li>
+</ul>
+<h3 id="52-evidencia-del-producto-de-sesion">5.2 Evidencia del producto de sesión<a class="headerlink" href="#52-evidencia-del-producto-de-sesion" title="Permanent link">&para;</a></h3>
+<p>Cada estudiante entrega un PDF individual siguiendo la plantilla de la sección 4.1.</p>
+<p>Nombre del archivo:</p>
+<div class="highlight"><pre><span></span><code>S01_LP2_Equipo##_ApellidoNombre.pdf
+</code></pre></div>
+<h3 id="53-preguntas-de-defensa-y-reflexion">5.3 Preguntas de defensa y reflexión<a class="headerlink" href="#53-preguntas-de-defensa-y-reflexion" title="Permanent link">&para;</a></h3>
+<ol>
+<li>¿Cómo se reproduce la ejecución del backend en otro equipo?</li>
+<li>¿Cómo se configura la conexión sin publicar credenciales?</li>
+<li>¿Qué comprueba el endpoint de verificación?</li>
+<li>¿Qué diferencia hay entre DTO y entidad persistente?</li>
+<li>¿Por qué <code>/api/v1/...</code> cuenta como versionado de API, aunque todavía no exista una <code>v2</code>?</li>
+<li>¿Qué pasaría si <code>ventas</code> importara directamente el <code>Repository</code> de <code>catalogo</code>? ¿Qué lo impide?</li>
+</ol>
+<h3 id="54-rubrica-de-evaluacion">5.4 Rúbrica de evaluación<a class="headerlink" href="#54-rubrica-de-evaluacion" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Dimensión</th>
+<th style="text-align: right;">Peso</th>
+<th>3 - Logro destacado</th>
+<th>2 - Logro</th>
+<th>1 - Proceso</th>
+<th>0 - Inicio</th>
+<th style="text-align: right;">Puntuación obtenida</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Ejecución y configuración</td>
+<td style="text-align: right;">2</td>
+<td>Backend reproducible, perfiles claros y secretos protegidos.</td>
+<td>Backend ejecutable con configuración suficiente.</td>
+<td>Ejecución o configuración incompleta.</td>
+<td>El proyecto no ejecuta.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>2. Conexión y verificación</td>
+<td style="text-align: right;">2</td>
+<td>Conexión a BD y endpoint de salud comprobados.</td>
+<td>Ambas evidencias funcionan con detalles menores.</td>
+<td>Solo una evidencia es funcional.</td>
+<td>No demuestra conexión ni salud.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>3. Recursos, endpoints y DTO</td>
+<td style="text-align: right;">2</td>
+<td>Contratos claros, coherentes y desacoplados.</td>
+<td>Contratos funcionales.</td>
+<td>Contratos incompletos.</td>
+<td>No presenta contratos.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>4. OpenAPI, versionado y estructura modular</td>
+<td style="text-align: right;">2</td>
+<td>Documentación navegable, versionado <code>/api/v1</code> explicado, estructura por responsabilidades y <code>ModularityTests</code> en verde.</td>
+<td>Documentación, versionado y estructura básicos.</td>
+<td>Evidencia parcial o confusa.</td>
+<td>No documenta ni organiza.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>5. Orden y reflexión</td>
+<td style="text-align: right;">1</td>
+<td>Evidencia ordenada y reflexión técnica clara.</td>
+<td>Evidencia suficiente y reflexión comprensible.</td>
+<td>Evidencia incompleta o reflexión superficial.</td>
+<td>Evidencia desordenada o sin reflexión.</td>
+<td style="text-align: right;"></td>
+</tr>
+</tbody>
+</table>
+<p>Puntuación acumulada = suma de (<code>Peso</code> * <code>Puntuación obtenida</code>) = ____.</p>
+<p>Nota final = (<code>Puntuación acumulada</code> / 27) * 20 = ____.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Angel Sullon @asullom - UPeU 2026
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.top", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
