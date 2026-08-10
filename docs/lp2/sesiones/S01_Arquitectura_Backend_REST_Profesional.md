@@ -347,7 +347,24 @@ Después de `Enter`, el asistente pide dónde guardar el proyecto. Navega hasta 
 
 Si el contador dice un número distinto de 9, revisa qué falta o qué sobra antes de continuar — no sigas a ciegas.
 
-Nota sobre lo que el Initializr agrega solo por combinar dependencias, sin que hayas marcado nada extra (revisa el `pom.xml` generado, no hace falta editarlo a mano):
+!!! danger "Paso obligatorio: elimina `spring-modulith-starter-jpa` del `pom.xml`"
+    El Initializr agrega automáticamente `spring-modulith-starter-jpa`
+    (scope `compile`) porque también seleccionaste Spring Data JPA. **Ábrelo
+    y bórralo del `pom.xml` ahora mismo, antes de continuar** — si lo dejas,
+    el proyecto no arranca.
+
+    Por qué: esa dependencia trae el registro de eventos de Modulith
+    respaldado por JPA, que exige su propia tabla (`event_publication`).
+    Como los módulos de esta ADR se comunican por servicios Java, no por
+    eventos, esa tabla no se usa — y con `ddl-auto: validate` (3.2.3),
+    Hibernate falla al arrancar porque la tabla no existe en Oracle
+    (`Schema-validation: missing table [event_publication]`). Detalle
+    completo: [ADR-002](../adr/ADR-002-spring-modulith.md).
+
+    Verifica que quedó eliminada buscando `spring-modulith-starter-jpa` en
+    el `pom.xml`: la búsqueda no debe encontrar ninguna coincidencia.
+
+Nota sobre el resto de lo que el Initializr agrega solo por combinar dependencias, sin que hayas marcado nada extra (revisa el `pom.xml` generado, no hace falta editarlo a mano, salvo el punto anterior):
 
 - `spring-modulith-starter-core` (compile) y `spring-modulith-starter-test`
   (test) — este último **sí se agrega automáticamente** al seleccionar
@@ -356,13 +373,6 @@ Nota sobre lo que el Initializr agrega solo por combinar dependencias, sin que h
   — Initializr los suma porque también seleccionaste Actuator; exponen
   información de módulos vía Actuator y trazas de observabilidad. Se
   conservan tal cual.
-- **`spring-modulith-starter-jpa` (compile) — elimínala del `pom.xml`.**
-  Initializr la agrega porque también seleccionaste Spring Data JPA, pero
-  trae el registro de eventos de Modulith respaldado por JPA, que exige su
-  propia tabla (`event_publication`). Como los módulos de esta ADR se
-  comunican por servicios Java, no por eventos, esa tabla no se usa —y con
-  `ddl-auto: validate` (3.2.3), Hibernate falla al arrancar porque la tabla
-  no existe en Oracle. Detalle completo: [ADR-002](../adr/ADR-002-spring-modulith.md).
 - El checkbox "Spring Web" genera el artefacto `spring-boot-starter-webmvc`,
   no `spring-boot-starter-web` — en Spring Boot 4.0.7 el segundo queda
   deprecado a favor del primero.
@@ -438,6 +448,42 @@ docker compose -f compose-local.yml up -d
 
 Luego crea el esquema y las tablas del catálogo ejecutando, en orden, [`S01_01_esquemas.sql`](../../proyecto-integrador/u1/oracle/S01_01_esquemas.sql) y [`S01_02_tablas.sql`](../../proyecto-integrador/u1/oracle/S01_02_tablas.sql) contra esta misma Oracle (scripts de BD2, listos para ejecutar — no hace falta revisar la guía de esa sesión, solo si quieres el detalle: [BD2 S1](../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio.md)).
 
+!!! danger "Ejecuta los dos scripts conectado como `system`, nunca como `BOM_CATALOGO`"
+    Es tentador conectarte como `BOM_CATALOGO` para `S01_02_tablas.sql`,
+    porque ese script crea *sus* tablas. **No lo hagas: falla.** El script
+    califica el esquema explícitamente (`CREATE TABLE BOM_CATALOGO.categoria`,
+    no `CREATE TABLE categoria`), y en Oracle calificar el esquema —incluso
+    el propio— exige el privilegio `CREATE ANY TABLE`, que `BOM_CATALOGO` no
+    tiene (solo tiene `CREATE TABLE`, otorgado en `S01_01_esquemas.sql`).
+    Conectado como `BOM_CATALOGO` verás:
+
+    ```text
+    CREATE TABLE BOM_CATALOGO.categoria (
+    *
+    ERROR at line 1:
+    ORA-01031: insufficient privileges
+    ```
+
+    `system` sí tiene `CREATE ANY TABLE` (rol DBA), por eso ambos scripts se
+    ejecutan conectado como `system` de principio a fin — nunca cambies de
+    usuario entre `S01_01_esquemas.sql` y `S01_02_tablas.sql`.
+
+##### Ejecutar los scripts desde PowerShell (alternativa al cliente gráfico)
+
+Si prefieres no instalar un cliente gráfico, copia los scripts dentro del
+contenedor y ejecútalos con `sqlplus` vía `docker exec`, siempre conectado
+como `system`. Desde `lp2/bomerp-backend`:
+
+```powershell
+docker cp ..\..\docs\proyecto-integrador\u1\oracle\S01_01_esquemas.sql bomerp-oracle:/tmp/S01_01_esquemas.sql
+docker cp ..\..\docs\proyecto-integrador\u1\oracle\S01_02_tablas.sql bomerp-oracle:/tmp/S01_02_tablas.sql
+
+docker exec bomerp-oracle sqlplus -s system/123456@localhost:1521/FREEPDB1 @/tmp/S01_01_esquemas.sql
+docker exec bomerp-oracle sqlplus -s system/123456@localhost:1521/FREEPDB1 @/tmp/S01_02_tablas.sql
+```
+
+Salida esperada del segundo comando: `Table created.` dos veces y `Grant succeeded.` dos veces. Si en cambio ves `ORA-01031: insufficient privileges`, revisaste el usuario del segundo comando — debe decir `system`, no `BOM_CATALOGO` (ver el bloque de arriba).
+
 ##### Conectarse a Oracle desde un cliente gráfico
 
 Para ejecutar esos scripts y revisar las tablas sin depender de la consola, usa un cliente de base de datos con soporte Oracle (por ejemplo la extensión de VS Code **Database Client**, `cweijan.vscode-postgresql-client2`, a pesar del nombre soporta varios motores incluido Oracle). Datos de conexión:
@@ -452,7 +498,84 @@ Para ejecutar esos scripts y revisar las tablas sin depender de la consola, usa 
 
 ![Conexión exitosa a Oracle vía Database Client, mostrando el árbol de esquemas y tablas de SYSTEM](img/s01-3.2.2-database-client.png)
 
-Usa `system` (no `BOMERP_APP`) porque `S01_01_esquemas.sql` necesita privilegios de DBA para crear los usuarios `BOM_CATALOGO` y `BOMERP_APP`, y `S01_02_tablas.sql` necesita privilegios sobre ese esquema para crear las tablas. Una vez creado el esquema, puedes agregar una segunda conexión con `Username: BOMERP_APP` / misma contraseña y base, para verificar los permisos con los que realmente corre el backend (`application-local.yml` usa ese usuario, no `system`).
+Usa `system` para ejecutar ambos scripts, por la razón explicada arriba. Una vez creadas las tablas, agrega una **segunda conexión** para revisarlas — las tablas pertenecen a `BOM_CATALOGO`, no a `system`, así que conectado como `system` tu cliente gráfico no las muestra en su árbol por defecto (solo muestra el propio esquema del usuario conectado):
+
+| Campo | Valor |
+|---|---|
+| Username | `BOM_CATALOGO` |
+| Password | `123456` |
+| Host / Port / Database | igual que arriba |
+
+Con esa segunda conexión, `categoria` y `producto` aparecen directamente en el árbol de esquemas. Puedes agregar además una tercera conexión con `Username: BOMERP_APP` (misma contraseña y base) para verificar los permisos con los que realmente corre el backend (`application-local.yml` usa ese usuario, no `system` ni `BOM_CATALOGO`) — `BOMERP_APP` no es dueño de las tablas, solo tiene `SELECT`/`INSERT`/`UPDATE`/`DELETE` sobre ellas.
+
+##### Verificar esquemas, tablas y registros por SQL
+
+Si prefieres no depender del árbol del cliente gráfico (o quieres confirmar
+exactamente qué existe antes de seguir), verifica entrando directamente al
+contenedor con una sesión interactiva de `sqlplus`, conectado como `system`
+(sin necesidad de cambiar de usuario):
+
+```powershell
+docker exec -it bomerp-oracle sqlplus system/123456@localhost:1521/FREEPDB1
+```
+
+Ya dentro del prompt `SQL>`, pega estas consultas una por una (o todas juntas):
+
+```sql
+-- ¿Existen los usuarios/esquemas?
+SELECT username FROM dba_users WHERE username IN ('BOM_CATALOGO', 'BOMERP_APP');
+
+-- ¿Qué tablas tiene BOM_CATALOGO?
+SELECT table_name FROM all_tables WHERE owner = 'BOM_CATALOGO';
+
+-- ¿Qué privilegios tiene BOM_CATALOGO?
+SELECT privilege FROM dba_sys_privs WHERE grantee = 'BOM_CATALOGO';
+
+-- Ver los registros de cada tabla
+SELECT * FROM BOM_CATALOGO.categoria;
+SELECT * FROM BOM_CATALOGO.producto;
+```
+
+Para salir de la sesión:
+
+```sql
+EXIT;
+```
+
+Si conectas como `BOM_CATALOGO` en vez de `system` (`docker exec -it bomerp-oracle sqlplus BOM_CATALOGO/123456@localhost:1521/FREEPDB1`), usa `user_tables` en lugar de `all_tables` (no necesitas filtrar por `owner`, ya estás dentro de ese esquema):
+
+```sql
+SELECT table_name FROM user_tables;
+SELECT * FROM categoria;
+SELECT * FROM producto;
+```
+
+**Alternativa sin entrar al contenedor, una consulta por línea** (como
+`docker exec -it <contenedor> psql -U <user> -d <db> -c "<consulta>"`, pero
+`sqlplus` no tiene un flag `-c` propio — el equivalente es envolver la
+consulta con `bash -c` dentro del contenedor):
+
+```powershell
+docker exec bomerp-oracle bash -c "echo \"SELECT username FROM dba_users WHERE username IN ('BOM_CATALOGO', 'BOMERP_APP');\" | sqlplus -s system/123456@localhost:1521/FREEPDB1"
+docker exec bomerp-oracle bash -c "echo \"SELECT table_name FROM all_tables WHERE owner = 'BOM_CATALOGO';\" | sqlplus -s system/123456@localhost:1521/FREEPDB1"
+docker exec bomerp-oracle bash -c "echo \"SELECT privilege FROM dba_sys_privs WHERE grantee = 'BOM_CATALOGO';\" | sqlplus -s system/123456@localhost:1521/FREEPDB1"
+docker exec bomerp-oracle bash -c "echo \"SELECT * FROM BOM_CATALOGO.categoria;\" | sqlplus -s system/123456@localhost:1521/FREEPDB1"
+docker exec bomerp-oracle bash -c "echo \"SELECT * FROM BOM_CATALOGO.producto;\" | sqlplus -s system/123456@localhost:1521/FREEPDB1"
+```
+
+**Alternativa con todas las consultas en un solo comando** (here-string de PowerShell, útil para pegar todo de una vez sin repetir `docker exec` por cada línea):
+
+```powershell
+@"
+SELECT username FROM dba_users WHERE username IN ('BOM_CATALOGO', 'BOMERP_APP');
+SELECT table_name FROM all_tables WHERE owner = 'BOM_CATALOGO';
+SELECT privilege FROM dba_sys_privs WHERE grantee = 'BOM_CATALOGO';
+SELECT * FROM BOM_CATALOGO.categoria;
+SELECT * FROM BOM_CATALOGO.producto;
+"@ | docker exec -i bomerp-oracle sqlplus -s system/123456@localhost:1521/FREEPDB1
+```
+
+Evidencia esperada tras ejecutar ambos scripts: `BOM_CATALOGO` y `BOMERP_APP` existen, `BOM_CATALOGO` tiene `CATEGORIA` y `PRODUCTO`, y ambas consultas `SELECT *` responden (vacías está bien — todavía no se insertó nada; los datos de ejemplo llegan en 3.2.6).
 
 ##### Reiniciar Docker desde cero (opcional, solo si algo quedó en mal estado)
 
