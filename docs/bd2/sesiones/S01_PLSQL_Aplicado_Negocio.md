@@ -58,12 +58,12 @@ Roadmap del producto de la unidad:
 
 ```mermaid
 flowchart TB
-    S1["S1<br/>PL/SQL aplicado<br/>al negocio"]
-    S2["S2<br/>Triggers DML<br/>y auditoría"]
-    S3["S3<br/>Excepciones<br/>y robustez"]
-    S4["S4<br/>Optimización<br/>de consultas"]
-    S5["S5<br/>Índices"]
-    S6["S6<br/>Producto U1"]
+    S1["`**S1:** PL/SQL aplicado al negocio`"]
+    S2["`**S2:** Triggers DML y auditoría`"]
+    S3["`**S3:** Excepciones y robustez`"]
+    S4["`**S4:** Optimización de consultas`"]
+    S5["`**S5:** Índices`"]
+    S6["`**S6:** Producto U1`"]
 
     S1 --> S2 --> S3 --> S4 --> S5 --> S6
 
@@ -90,7 +90,7 @@ flowchart TB
         FN -.->|lee valores para calcular| T
     end
 
-    APP["Aplicación cliente<br/>(cualquiera: backend, otro script, SQL directo)"]
+    APP["`Aplicación cliente (cualquiera: backend, otro script, SQL directo)`"]
     APP --> SP1
     APP --> FN
     APP --> SP2

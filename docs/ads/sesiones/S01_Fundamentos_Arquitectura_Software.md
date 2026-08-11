@@ -58,11 +58,11 @@ Roadmap del producto de la unidad:
 
 ```mermaid
 flowchart TB
-    S1["S1<br/>Fundamentos de arquitectura"]
-    S2["S2<br/>Modelo C4 y vistas"]
-    S3["S3<br/>Diseño estructural<br/>y SOLID"]
-    S4["S4<br/>Arquitecturas modernas"]
-    S5["S5<br/>Producto U1"]
+    S1["`**S1:** Fundamentos de arquitectura`"]
+    S2["`**S2:** Modelo C4 y vistas`"]
+    S3["`**S3:** Diseño estructural y SOLID`"]
+    S4["`**S4:** Arquitecturas modernas`"]
+    S5["`**S5:** Producto U1`"]
 
     S1 --> S2 --> S3 --> S4 --> S5
 
@@ -194,10 +194,10 @@ Ejemplo resuelto con BomERP — cada equipo completa la misma tabla para el domi
 ```mermaid
 flowchart TB
     U[Usuario administrativo]
-    SPA[Frontend SPA<br/>desde U2]
-    API[Backend REST<br/>bomerp-backend]
-    DB[(Oracle<br/>esquemas funcionales)]
-    EXT[Servicio externo<br/>notificación]
+    SPA[Frontend SPA - desde U2]
+    API[Backend REST - bomerp-backend]
+    DB[(Oracle - esquemas funcionales)]
+    EXT[Servicio externo - notificación]
 
     U --> SPA
     SPA --> API
