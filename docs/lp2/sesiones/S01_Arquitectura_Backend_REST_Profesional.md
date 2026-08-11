@@ -37,15 +37,15 @@ Proyecto backend ejecutable y reproducible, sobre Java 21 LTS, organizado como m
 
 #### 1.6.1 Caso: API de productos
 
-El sistema `BomERP` continúa el dominio comercial desarrollado desde POO y LP1. En esta sesión se crea una base backend que arranca de forma reproducible, comprueba su conexión a Oracle y expone los listados iniciales del módulo `catalogo`: `Categoria` y `Producto`. La estructura toma como referencia técnica `producto-ms` del curso de Aplicaciones Distribuidas, adaptada como monolito modular para LP2.
+En esta sesión se crea una base backend que arranca de forma reproducible, comprueba su conexión a Oracle y expone los listados iniciales del módulo `catalogo`: `Categoria` y `Producto`. 
 
 Preguntas para los estudiantes:
 
 1. ¿Por qué `Categoria` y `Producto` pertenecen al mismo módulo de catálogo?
 2. ¿Qué diferencia existe entre una entidad y su DTO de respuesta?
 3. ¿Cómo demuestran los listados que Controller, Service, Repository y Oracle están conectados?
-4. ¿Qué operaciones se reservarán para completar el CRUD en S2?
-5. ¿Qué decisión de ADS condiciona la estructura del backend?
+4. ¿Qué decisión de ADS condiciona la estructura del backend?
+5. ¿Es posible que la aplicación web para este curso (`BomERP`) continúe el dominio comercial desarrollado desde POO (`CoMarket`) y LP1 (`BomStart`)?. 
 
 ### 1.7 Ubicación en el curso
 
