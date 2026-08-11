@@ -2503,6 +2503,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#329-simular-escalamiento-horizontal-multiples-instancias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2.9 Simular escalamiento horizontal (múltiples instancias)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3157,6 +3168,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#329-simular-escalamiento-horizontal-multiples-instancias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2.9 Simular escalamiento horizontal (múltiples instancias)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3498,29 +3520,30 @@
 <h2 id="2-explica">2. Explica<a class="headerlink" href="#2-explica" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 25 min.</p>
 <h3 id="21-arquitectura-de-la-sesion">2.1 Arquitectura de la sesión<a class="headerlink" href="#21-arquitectura-de-la-sesion" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>flowchart TB
     APP[BomErpApplication]
 
-    subgraph CAT[Módulo catalogo]
-        API[Controllers y DTO]
-        USE[Services]
-        DOM[Entities]
-        INF[Repositories JPA]
-        API --&gt; USE
-        USE --&gt; DOM
-        USE --&gt; INF
+    subgraph CAT["Módulo catalogo"]
+        direction TB
+        API[Controllers y DTO] --&gt; USE[Services]
+        USE --&gt; DOM[Entities]
+        USE --&gt; INF[Repositories JPA]
     end
 
     subgraph FUTUROS["Módulos futuros, aún sin crear *"]
+        direction TB
         VEN["ventas (S4)"]
         COM["compras (opcional)"]
         SEG["seguridad (S10)"]
     end
 
     DB[(Oracle)]
+
     APP --&gt; CAT
-    APP -. se agregan como paquetes .-&gt; FUTUROS
-    INF --&gt; DB</code></pre>
+    APP -.-&gt;|se agregan como paquetes| FUTUROS
+    INF --&gt; DB
+
+    CAT ~~~ FUTUROS</code></pre>
 <p><small>*Ningún paquete de <code>FUTUROS</code> (<code>ventas</code>, <code>compras</code>, <code>seguridad</code>) existe todavía en el código; se crean recién cuando su sesión les da contenido real (ver <a href="../../adr/ADR-001-arquitectura-backend/">ADR-001</a>).</small></p>
 <p>Lectura del diagrama:</p>
 <ul>
@@ -3569,16 +3592,11 @@
 <td>Se posponen hasta S10.</td>
 </tr>
 <tr>
-<td>Config Server, Eureka, Feign y Resilience4j</td>
-<td>No corresponden al backend monolítico de LP2; se estudian en Aplicaciones Distribuidas.</td>
-</tr>
-<tr>
 <td>Prometheus, Flyway y Docker</td>
 <td>No son necesarios para alcanzar el producto de S1.</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Error frecuente</strong>: copiar todas las dependencias de <code>producto-ms</code> sin filtrarlas — confunde un monolito inicial con una arquitectura distribuida. Solo se conservan las de la tabla anterior.</p>
 <p>Alcance metodológico de S1:</p>
 <div class="highlight"><pre><span></span><code>En S1 se crea solamente el proyecto backend y se comprueba
 su ejecución y conexión a Oracle mediante Actuator y el listado
@@ -3733,12 +3751,12 @@ mvn --version   -&gt; Java version: 21
 <td>Jar</td>
 </tr>
 <tr>
-<td>Ubicación</td>
-<td><code>lp2/bomerp-backend</code></td>
+<td>Ubicación (carpeta donde haces clic en "Generate into this folder")</td>
+<td><code>lp2/</code></td>
 </tr>
 </tbody>
 </table>
-<p><strong>Por qué 4.0.7 y no otra versión.</strong> Verificado directo en <code>start.spring.io</code> (con <code>4.1.0</code> seleccionado, el propio buscador de dependencias muestra en rojo, al escribir "springd": <em>"Requires Spring Boot &gt;= 4.0.0 and &lt; 4.1.0-M1"</em>). Es una restricción real de compatibilidad de SpringDoc OpenAPI, no una limitación del buscador ni de la extensión de VS Code. El generador tampoco ofrece ya ninguna versión 3.x (Spring Boot 3.5.x sigue funcionando vía Maven normalmente, pero el asistente de creación de proyectos ya no la lista). Por eso el proyecto usa <strong>4.0.7</strong>, dentro del rango compatible.</p>
+<p><strong>Por qué 4.0.7 y no otra versión.</strong> Verificado directo en <code>start.spring.io</code> (con <code>4.1.0</code> seleccionado, el propio buscador de dependencias muestra en rojo, al escribir "springd": <em>"Requires Spring Boot &gt;= 4.0.0 and &lt; 4.1.0-M1"</em>). </p>
 <p>Dependencias a seleccionar:</p>
 <table>
 <thead>
@@ -3912,6 +3930,16 @@ como <code>system</code>. Desde <code>lp2/bomerp-backend</code>:</p>
 <p>Salida esperada del segundo comando: <code>Table created.</code> dos veces y <code>Grant succeeded.</code> dos veces. Si en cambio ves <code>ORA-01031: insufficient privileges</code>, revisaste el usuario del segundo comando — debe decir <code>system</code>, no <code>BOM_CATALOGO</code> (ver el bloque de arriba).</p>
 <h5 id="conectarse-a-oracle-desde-un-cliente-grafico">Conectarse a Oracle desde un cliente gráfico<a class="headerlink" href="#conectarse-a-oracle-desde-un-cliente-grafico" title="Permanent link">&para;</a></h5>
 <p>Para ejecutar esos scripts y revisar las tablas sin depender de la consola, usa un cliente de base de datos con soporte Oracle (por ejemplo la extensión de VS Code <strong>Database Client</strong>, <code>cweijan.vscode-postgresql-client2</code>, a pesar del nombre soporta varios motores incluido Oracle). Datos de conexión:</p>
+<div class="admonition danger">
+<p class="admonition-title">El campo Database DEBE decir <code>FREEPDB1</code>, nunca en blanco</p>
+<p>Si dejas el campo <strong>Database</strong> vacío o con el valor por defecto del
+cliente (<code>XE</code>), la conexión no apunta a nuestra base — y desde ahí
+<code>S01_01_esquemas.sql</code> <strong>no logra crear <code>BOMERP_APP</code> bajo ninguna
+circunstancia</strong>, sin importar cuántas veces lo intentes. Escribe
+<code>FREEPDB1</code> explícitamente en ese campo antes de conectar, en las tres
+conexiones que uses en esta sección (<code>system</code>, <code>BOM_CATALOGO</code> y
+<code>BOMERP_APP</code>).</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -3953,6 +3981,14 @@ como <code>system</code>. Desde <code>lp2/bomerp-backend</code>:</p>
 </thead>
 <tbody>
 <tr>
+<td>Host</td>
+<td><code>127.0.0.1</code></td>
+</tr>
+<tr>
+<td>Port</td>
+<td><code>1521</code></td>
+</tr>
+<tr>
 <td>Username</td>
 <td><code>BOM_CATALOGO</code></td>
 </tr>
@@ -3961,8 +3997,8 @@ como <code>system</code>. Desde <code>lp2/bomerp-backend</code>:</p>
 <td><code>123456</code></td>
 </tr>
 <tr>
-<td>Host / Port / Database</td>
-<td>igual que arriba</td>
+<td>Database</td>
+<td><code>FREEPDB1</code></td>
 </tr>
 </tbody>
 </table>
@@ -4452,6 +4488,29 @@ secas, para que todos usen la misma versión de Maven:</p>
 </tr>
 </tbody>
 </table>
+<h4 id="329-simular-escalamiento-horizontal-multiples-instancias">3.2.9 Simular escalamiento horizontal (múltiples instancias)<a class="headerlink" href="#329-simular-escalamiento-horizontal-multiples-instancias" title="Permanent link">&para;</a></h4>
+<p><strong>Producto del paso:</strong> dos instancias del backend corriendo al mismo tiempo, cada una en un puerto distinto, ambas conectadas a la misma Oracle.</p>
+<p>Un backend reproducible también debe poder escalar horizontalmente: correr varias copias idénticas a la vez, cada una en su propio puerto, sin configuración fija que las haga chocar. Con <code>server.port</code> fijo en <code>8080</code> (el que usa el resto de esta guía), una segunda instancia no puede arrancar en la misma máquina — el puerto ya está ocupado.</p>
+<p><strong>Sin modificar <code>application-local.yml</code></strong> (para no romper el puerto 8080 que usan los pasos anteriores de esta guía), pasa el puerto como argumento de línea de comandos, en dos terminales distintas, desde <code>lp2/bomerp-backend</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="c"># Terminal 1</span>
+<span class="p">.\</span><span class="n">mvnw</span><span class="p">.</span><span class="n">cmd</span> <span class="n">spring-boot</span><span class="p">:</span><span class="n">run</span> <span class="s2">&quot;-Dspring-boot.run.arguments=--server.port=0&quot;</span>
+
+<span class="c"># Terminal 2 (simultánea, con Oracle y la Terminal 1 ya corriendo)</span>
+<span class="p">.\</span><span class="n">mvnw</span><span class="p">.</span><span class="n">cmd</span> <span class="n">spring-boot</span><span class="p">:</span><span class="n">run</span> <span class="s2">&quot;-Dspring-boot.run.arguments=--server.port=0&quot;</span>
+</code></pre></div>
+<p><code>--server.port=0</code> le indica a Spring Boot que pida al sistema operativo un puerto libre cualquiera, en vez de uno fijo. Cada terminal imprime el suyo al arrancar:</p>
+<div class="highlight"><pre><span></span><code>Tomcat started on port 58251 (http) with context path &#39;/&#39;
+</code></pre></div>
+<p>Verificado con dos instancias reales corriendo en paralelo — la primera tomó el puerto <code>58251</code> y la segunda el <code>58252</code>, cada una respondiendo por su cuenta:</p>
+<div class="highlight"><pre><span></span><code>GET http://localhost:58251/api/v1/hello -&gt; Hola BomERP
+GET http://localhost:58252/api/v1/hello -&gt; Hola BomERP
+</code></pre></div>
+<p>Y ambas con <code>/actuator/health</code> en <code>UP</code>, conectadas de forma independiente a la misma Oracle (<code>db.status: UP</code> en las dos).</p>
+<p><strong>Alternativa fija en la configuración.</strong> Si en vez de un argumento de línea de comandos prefieres verlo declarado en el YAML, agrega esto a <code>application-local.yml</code> — pero ten en cuenta que entonces <em>todas</em> las ejecuciones normales de este proyecto (incluidas las de los pasos anteriores) también arrancarán en un puerto aleatorio, no en 8080:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">server</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+</code></pre></div>
+<p><strong>Por qué importa esto en S1.</strong> LP2 es un monolito, no un sistema distribuido — no hay Gateway ni balanceador de carga todavía (eso pertenece a Aplicaciones Distribuidas). Pero la capacidad de correr múltiples instancias sin puerto fijo es la base técnica que un balanceador necesita para repartir tráfico entre copias del mismo backend; practicarla desde S1 deja esa evidencia lista para cuando el proyecto integre esa pieza.</p>
 <h3 id="33-delimitar-los-endpoints-del-modulo-catalogo">3.3 Delimitar los endpoints del módulo Catálogo<a class="headerlink" href="#33-delimitar-los-endpoints-del-modulo-catalogo" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> contrato base.</p>
 <table>
