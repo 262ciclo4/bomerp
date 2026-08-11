@@ -3618,27 +3618,15 @@ flowchart TB
 <td>Security y OAuth2 Resource Server</td>
 <td>Se posponen hasta S10.</td>
 </tr>
-<tr>
-<td>Prometheus, Flyway y Docker</td>
-<td>No son necesarios para alcanzar el producto de S1.</td>
-</tr>
 </tbody>
 </table>
-<p>Alcance metodológico de S1:</p>
-<div class="highlight"><pre><span></span><code>En S1 se crea solamente el proyecto backend y se comprueba
-su ejecución y conexión a Oracle mediante Actuator y el listado
-de Producto. No se crea frontend. El CRUD completo, las relaciones,
-las transacciones y la seguridad se implementan progresivamente.
-</code></pre></div>
 <h3 id="23-configuracion-por-ambientes-orm-driver-y-conexion-a-oracle">2.3 Configuración por ambientes, ORM, driver y conexión a Oracle<a class="headerlink" href="#23-configuracion-por-ambientes-orm-driver-y-conexion-a-oracle" title="Permanent link">&para;</a></h3>
 <p>Un <strong>ambiente</strong> es el conjunto de configuración (variables, credenciales,
 infraestructura) que corresponde a un contexto de uso concreto: <strong>local</strong>
 (tu laptop, para desarrollar) y <strong>producción</strong> (el sistema real ya en
 funcionamiento) son dos ambientes distintos; algunos proyectos agregan
-ambientes intermedios (pruebas, staging). No se les llama "ambientes de
-desarrollo" en general — ese nombre describe únicamente al ambiente de
-desarrollo compartido de un equipo, no al concepto completo.</p>
-<p>En BomERP, hoy existe el <strong>ambiente local</strong>, identificado siempre con el
+ambientes intermedios (pruebas o QA, staging).</p>
+<p>En BomERP, definimos el <strong>ambiente local</strong> identificado con el
 sufijo <code>-local</code>:</p>
 <ul>
 <li><code>application-local.yml</code>: configuración de Spring Boot para tu laptop, incluida la conexión ORM/JPA y el driver Oracle hacia <code>localhost</code>.</li>
@@ -3649,8 +3637,34 @@ despliegue) se incorpora recién en S13, cuando el sílabo trata
 "buenas prácticas de despliegue" — no se adelanta antes porque todavía no
 hay nada real que desplegar.</p>
 <h3 id="24-endpoint-de-verificacion-recurso-rest-inicial-y-dto">2.4 Endpoint de verificación, recurso REST inicial y DTO<a class="headerlink" href="#24-endpoint-de-verificacion-recurso-rest-inicial-y-dto" title="Permanent link">&para;</a></h3>
-<p>REST permite organizar un backend alrededor de recursos, métodos HTTP y representaciones. El endpoint de verificación (Actuator) confirma que la aplicación arrancó y está conectada a Oracle; el recurso REST inicial (<code>Categoria</code>, <code>Producto</code>) expone los primeros listados del módulo <code>catalogo</code>, y el DTO de salida separa ese contrato de la entidad persistida — la API responde lo que el cliente necesita, no la tabla tal cual.</p>
-<p><strong>Errores frecuentes</strong>: nombrar endpoints con verbos en vez de sustantivos (no se entiende el recurso REST) y diseñar el DTO igual a la tabla de persistencia (mezcla el contrato de API con el modelo de datos) — el DTO se define según lo que necesita el cliente, no según la entidad.</p>
+<p>REST permite organizar un backend alrededor de recursos, métodos HTTP y representaciones. Cada método HTTP tiene un propósito definido sobre un recurso:</p>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Para qué sirve</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET</code></td>
+<td>Consultar o listar un recurso, sin modificarlo.</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td>Crear un nuevo recurso.</td>
+</tr>
+<tr>
+<td><code>PUT</code></td>
+<td>Actualizar/reemplazar por completo un recurso existente.</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td>Eliminar un recurso.</td>
+</tr>
+</tbody>
+</table>
+<p>El endpoint de verificación (Actuator) confirma que la aplicación arrancó y está conectada a Oracle; el recurso REST inicial (<code>Categoria</code>, <code>Producto</code>) expone los primeros listados del módulo <code>catalogo</code>, y el DTO de salida separa ese contrato de la entidad persistida — la API responde lo que el cliente necesita, no la tabla tal cual.</p>
 <h3 id="25-contrato-versionado-basico-de-api-y-documentacion-openapi">2.5 Contrato, versionado básico de API y documentación OpenAPI<a class="headerlink" href="#25-contrato-versionado-basico-de-api-y-documentacion-openapi" title="Permanent link">&para;</a></h3>
 <p>En un sistema empresarial, el contrato de API debe ser claro porque luego será consumido por una SPA y deberá estar conectado con persistencia, seguridad, transacciones y reglas del negocio.</p>
 <p><strong>Versionado básico de API</strong>: BomERP versiona su contrato en la propia URL (<code>/api/v1/...</code>). Es la forma más simple de versionado: si en el futuro un cambio rompe compatibilidad, se publica <code>/api/v2/...</code> sin obligar a los consumidores existentes (la SPA desde S7, o cualquier integración externa) a migrar de inmediato. En S1 basta con fijar el prefijo <code>v1</code>; no se implementa todavía coexistencia de versiones.</p>
