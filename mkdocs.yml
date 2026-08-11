@@ -6,6 +6,7 @@ repo_url: https://github.com/262ciclo4/bomerp
 repo_name: 262ciclo4/bomerp
 theme:
   name: material
+  custom_dir: overrides
   language: es
   features:
     - navigation.tabs
