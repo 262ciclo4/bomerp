@@ -2510,10 +2510,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#328-verificar-el-proyecto-backend" class="md-nav__link">
+  <a href="#328-verificar-el-proyecto-backend-arranque-conexion-a-oracle-y-limites-de-modulos" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.2.8 Verificar el proyecto backend
+        3.2.8 Verificar el proyecto backend: arranque, conexión a Oracle y límites de módulos
       
     </span>
   </a>
@@ -3203,10 +3203,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#328-verificar-el-proyecto-backend" class="md-nav__link">
+  <a href="#328-verificar-el-proyecto-backend-arranque-conexion-a-oracle-y-limites-de-modulos" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.2.8 Verificar el proyecto backend
+        3.2.8 Verificar el proyecto backend: arranque, conexión a Oracle y límites de módulos
       
     </span>
   </a>
@@ -4480,8 +4480,8 @@ secas, para que todos usen la misma versión de Maven:</p>
 </code></pre></div>
 <p>Si abres <code>http://localhost:8080/</code> en el navegador vas a ver una <strong>Whitelabel Error Page</strong> con <code>404</code> y el mensaje <em>"No static resource ."</em> — es lo esperado: este backend es una API REST, no sirve una página en <code>/</code>. No es un error que arreglar. Abre en cambio <code>http://localhost:8080/swagger-ui/index.html</code> (la ruta <code>/swagger-ui.html</code> configurada en <code>springdoc.swagger-ui.path</code> redirige ahí) para ver el contrato interactivo, o revisa directamente <code>/api/v1/productos</code> y <code>/actuator/health</code> (ver 3.2.8).</p>
 <p>Configuración de variables de entorno y detalle de la base de datos en
-<a href="../../../lp2/bomerp-backend/README.md"><code>lp2/bomerp-backend/README.md</code></a>.</p>
-<h4 id="328-verificar-el-proyecto-backend">3.2.8 Verificar el proyecto backend<a class="headerlink" href="#328-verificar-el-proyecto-backend" title="Permanent link">&para;</a></h4>
+<a href="https://github.com/262ciclo4/bomerp/blob/main/lp2/bomerp-backend/README.md"><code>lp2/bomerp-backend/README.md</code></a>.</p>
+<h4 id="328-verificar-el-proyecto-backend-arranque-conexion-a-oracle-y-limites-de-modulos">3.2.8 Verificar el proyecto backend: arranque, conexión a Oracle y límites de módulos<a class="headerlink" href="#328-verificar-el-proyecto-backend-arranque-conexion-a-oracle-y-limites-de-modulos" title="Permanent link">&para;</a></h4>
 <p>Antes de verificar, crea <code>src/test/java/pe/edu/upeu/bomerp/ModularityTests.java</code> (verifica automáticamente los límites entre módulos, ver <a href="../../adr/ADR-002-spring-modulith/">ADR-002</a>):</p>
 <div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp</span><span class="p">;</span>
 
