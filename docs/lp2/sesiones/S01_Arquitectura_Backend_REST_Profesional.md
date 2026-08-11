@@ -50,8 +50,8 @@ Preguntas para los estudiantes:
 ### 1.7 Ubicación en el curso
 
 - Unidad: U1 - Backend REST empresarial.
-- Producto de unidad: backend REST empresarial conectado a la base de datos, con CRUD, transacciones, consultas, reglas de negocio, CORS, logs y pruebas.
 - Producto del curso: base Full-Stack modular de BomERP, integrada, optimizada, monitoreada, estabilizada y preparada académicamente para producción.
+- Producto de unidad: backend REST empresarial conectado a la base de datos, con CRUD, transacciones, consultas, reglas de negocio, CORS, logs y pruebas.
 - Avance del producto en esta sesión: proyecto backend creado, configurado, conectado y verificable.
 
 Roadmap del producto de la unidad:
@@ -79,7 +79,7 @@ Tiempo: 25 min.
 
 ```mermaid
 flowchart TB
-    APP[BomErpApplication] --> CAT
+    APP[BomerpBackendApplication] --> CAT
     APP -.->|se agregan como paquetes| FUTUROS
 
     subgraph CAT["Módulo catalogo"]
@@ -108,7 +108,7 @@ Este diagrama es el mapa que guía el resto de la explicación, en el mismo orde
 
 ### 2.2 Estructura del proyecto backend y dependencias
 
-El proyecto se organiza como monolito modular: un único paquete raíz (`BomErpApplication`) y, dentro de él, un paquete por módulo de negocio (ver 2.1). Esa estructura se sostiene únicamente sobre las dependencias que la sesión necesita:
+El proyecto se organiza como monolito modular: un único paquete raíz (`BomerpBackendApplication`) y, dentro de él, un paquete por módulo de negocio (ver 2.1). Esa estructura se sostiene únicamente sobre las dependencias que la sesión necesita:
 
 | Dependencia | Decisión para S1 |
 |---|---|
@@ -171,9 +171,6 @@ Springdoc OpenAPI (ver 2.2) publica este contrato como documentación viva y sie
 
 Tiempo: 2h.
 
-!!! danger "Todos los comandos de Windows en esta guía son PowerShell, no CMD"
-    Cada vez que veas un bloque de código con la etiqueta `powershell`, ábrelo en la terminal integrada de VS Code (que en Windows abre PowerShell por defecto) o en **"Windows PowerShell"** 
-
 Hoja de ruta de la sesión práctica:
 
 - **3.1** Instalar y verificar Java 21 LTS, VS Code y sus extensiones.
@@ -189,11 +186,7 @@ Hoja de ruta de la sesión práctica:
 
 **Producto del paso:** entorno de desarrollo configurado con Java 21.
 
-Se recomienda Eclipse Temurin 21, una distribución OpenJDK de soporte
-prolongado, instalada con el gestor de paquetes nativo de cada sistema
-operativo (evita instaladores manuales y mantiene el JDK actualizable).
-
-**Windows** — PowerShell como usuario normal:
+**Windows** — **PowerShell** como usuario normal:
 
 ```powershell
 winget install --id EclipseAdoptium.Temurin.21.JDK --exact
@@ -248,16 +241,7 @@ java --version
 javac --version
 ```
 
-Ambas comprobaciones deben mostrar Java 21. Si conserva una versión anterior, configure `JAVA_HOME` con la ruta del JDK 21 desde las variables de entorno de Windows, actualice `Path` para que `%JAVA_HOME%\bin` tenga prioridad y abra una terminal nueva.
-
-Evidencia requerida:
-
-```text
-java --version  -> 21
-javac --version -> 21
-```
-
-El proyecto declara Java 21 mediante la propiedad `<java.version>21</java.version>` del `pom.xml` padre. No se debe modificar individualmente la versión de cada módulo.
+**NOTA:** Ambas comprobaciones deben mostrar Java 21. Si conserva una versión anterior, configure `JAVA_HOME` con la ruta del JDK 21 desde las variables de entorno de Windows, actualice `Path` para que `%JAVA_HOME%\bin` tenga prioridad y abra una terminal nueva.
 
 #### 3.1.1 Instalar VS Code y extensiones
 
@@ -265,19 +249,19 @@ El proyecto declara Java 21 mediante la propiedad `<java.version>21</java.versio
 
 El curso usa **VS Code** como editor por defecto.
 
-**Windows** — con `winget` (viene instalado en Windows 10/11):
+**Windows** `PS`:
 
 ```powershell
 winget install -e --id Microsoft.VisualStudioCode
 ```
 
-**macOS** (con Homebrew, ya instalado en el paso anterior):
+**macOS** :
 
 ```bash
 brew install --cask visual-studio-code
 ```
 
-**Linux (Ubuntu/Debian)** — con `snap` (viene instalado en Ubuntu):
+**Linux (Ubuntu/Debian)** :
 
 ```bash
 sudo snap install --classic code
@@ -290,7 +274,11 @@ Al finalizar, instala las extensiones desde la terminal:
 ```bash
 code --install-extension vscjava.vscode-java-pack
 code --install-extension vmware.vscode-boot-dev-pack
+```
+```bash
 code --install-extension cweijan.vscode-database-client2
+```
+```bash
 code --install-extension Oracle.sql-developer
 ```
 
@@ -298,20 +286,19 @@ code --install-extension Oracle.sql-developer
 |---|---|---|
 | Extension Pack for Java | `vscjava.vscode-java-pack` | Soporte base de Java (autocompletado, debug, Maven); incluye Spring Initializr Java Support, usado en 3.2.1. |
 | Spring Boot Extension Pack | `vmware.vscode-boot-dev-pack` | Herramientas específicas de Spring Boot: navegación de beans, Spring Boot Dashboard, soporte de `application.yml`. |
-| Database Client | `cweijan.vscode-database-client2` | Cliente gráfico multi-motor: MySQL, PostgreSQL, SQLite, SQL Server, entre otros. **No incluye Oracle** — su descripción es genérica, pero ni el marketplace ni su documentación listan soporte de Oracle. |
+| Database Client | `cweijan.vscode-database-client2` | Cliente gráfico multi-motor: MySQL, PostgreSQL, SQLite, SQL Server, entre otros. **No incluye Oracle** — su descripción es genérica, pero puedes usar `cweijan.vscode-mysql-client2`. |
 | Oracle SQL Developer for VS Code | `Oracle.sql-developer` | Extensión oficial de Oracle, gratuita, para conectarse a la Oracle de este proyecto (ver 3.2.2). |
 
 ### 3.2 Crear y verificar el proyecto backend
 
-**Producto del paso:** proyecto backend ejecutable y conectado.
+**Producto del paso:** proyecto `bomerp-backend` ejecutable y conectado.
 
-El starter de referencia está en `lp2/bomerp-backend`. No es la solución de S2: contiene únicamente los listados de categorías y productos que permiten recorrer todas las capas y comprobar la conexión real. El proyecto ya viene creado con la configuración de 3.2.1; esos pasos son la receta que lo generó, y son los mismos que tu equipo usará en la actividad autónoma (sección 4) para crear el proyecto de su propio dominio.
 
 #### 3.2.1 Crear el proyecto con Spring Initializr desde VS Code
 
 Usa la extensión **Spring Initializr Java Support** (`vscjava.vscode-spring-initializr`), incluida en el Extension Pack for Java instalado en 3.1.1.
 
-Desde la raíz del monorepo `bomerp`, abre VS Code y abre la **paleta de comandos**:
+Desde la raíz del monorepo `bomerp-backend`, abre VS Code y abre la **paleta de comandos de vscode**:
 
 - Windows/Linux: `Ctrl+Shift+P`
 - macOS: `Cmd+Shift+P`
@@ -331,12 +318,12 @@ Usa la siguiente configuración:
 | Project | Maven Project |
 | Spring Boot | **4.0.7** |
 | Language | Java |
-| Java | 21 |
 | Group Id | `pe.edu.upeu` |
 | Artifact Id | `bomerp-backend` |
 | Package name | `pe.edu.upeu.bomerp` |
 | Packaging | Jar |
-| Ubicación | `lp2/` (carpeta donde haces clic en "Generate into this folder") |
+| Java | 21 |
+| Ubicación | carpeta donde haces clic en "Generate into this folder", deja vacío |
 
 **Por qué 4.0.7 y no otra versión.** Verificado directo en `start.spring.io` (con `4.1.0` seleccionado, el propio buscador de dependencias muestra en rojo, al escribir "springd": *"Requires Spring Boot >= 4.0.0 and < 4.1.0-M1"*). 
 
@@ -375,9 +362,7 @@ Después de `Enter`, el asistente pide dónde guardar el proyecto. Navega hasta 
 
 ![Selector de carpeta de VS Code navegado hasta lp2, con el botón "Generate into this folder" resaltado y el campo Carpeta vacío](img/s01-3.2.1-guardar.png)
 
-**Sobre dónde queda el proyecto.** La extensión crea, dentro de la carpeta donde diste clic en "Generate into this folder", una **subcarpeta nueva con el nombre del Artifact Id**. Da clic estando parado en `lp2/`: el proyecto queda en `lp2/bomerp-backend/`, que es exactamente la carpeta que usa el resto de esta guía — no hace falta renombrar nada.
-
-Si el contador dice un número distinto de 9, revisa qué falta o qué sobra antes de continuar — no sigas a ciegas.
+**Sobre dónde queda el proyecto.** Se crea dentro de la carpeta donde diste clic en "Generate into this folder", una **subcarpeta nueva con el nombre del Artifact Id**. Da clic estando parado en `lp2/`: el proyecto queda en `lp2/bomerp-backend/`, que es exactamente la carpeta que usa el resto de esta guía — no hace falta renombrar nada.
 
 !!! danger "Paso obligatorio: elimina `spring-modulith-starter-jpa` del `pom.xml`"
     El Initializr agrega automáticamente `spring-modulith-starter-jpa`
@@ -396,7 +381,7 @@ Si el contador dice un número distinto de 9, revisa qué falta o qué sobra ant
     Verifica que quedó eliminada buscando `spring-modulith-starter-jpa` en
     el `pom.xml`: la búsqueda no debe encontrar ninguna coincidencia.
 
-El Initializr deriva el nombre de la clase `@SpringBootApplication` del Artifact Id, así que la genera como `BomerpBackendApplication.java`. Renómbrala a `BomErpApplication` (archivo y clase, mismo paquete raíz `pe.edu.upeu.bomerp`) para que coincida con el resto de esta guía y con `ModularityTests` (3.2.8):
+El Initializr deriva el nombre de la clase `@SpringBootApplication` del Artifact Id, así que la genera como `BomerpBackendApplication.java` — se mantiene ese nombre por defecto, sin renombrar (mismo paquete raíz `pe.edu.upeu.bomerp`):
 
 ```java
 package pe.edu.upeu.bomerp;
@@ -405,10 +390,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BomErpApplication {
+public class BomerpBackendApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(BomErpApplication.class, args);
+        SpringApplication.run(BomerpBackendApplication.class, args);
     }
 }
 ```
@@ -668,7 +653,7 @@ logging:
 
 **Producto del paso:** documentación interactiva de la API vía Swagger UI.
 
-Crea `OpenApiConfig.java` junto a `BomErpApplication.java` (paquete raíz, compartido para todos los módulos):
+Crea `OpenApiConfig.java` junto a `BomerpBackendApplication.java` (paquete raíz, compartido para todos los módulos):
 
 ```java
 package pe.edu.upeu.bomerp;
@@ -1032,7 +1017,7 @@ import org.springframework.modulith.core.ApplicationModules;
 
 class ModularityTests {
 
-    ApplicationModules modules = ApplicationModules.of(BomErpApplication.class);
+    ApplicationModules modules = ApplicationModules.of(BomerpBackendApplication.class);
 
     @Test
     void verifiesModularStructure() {
@@ -1159,7 +1144,7 @@ Los códigos 400, 404 y 409 se implementan en S2; 401 y 403 se incorporan con la
 lp2/bomerp-backend/
 ├── pom.xml                          # un solo proyecto Maven, sin reactor
 └── src/main/java/pe/edu/upeu/bomerp/
-    ├── BomErpApplication.java
+    ├── BomerpBackendApplication.java
     ├── OpenApiConfig.java           # compartido, en el paquete raíz
     └── catalogo/                    # módulo Modulith, funcional desde S1
         ├── categoria/{controller,dto,entity,repository,service}
