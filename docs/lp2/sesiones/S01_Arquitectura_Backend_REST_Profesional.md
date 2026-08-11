@@ -1003,9 +1003,9 @@ secas, para que todos usen la misma versión de Maven:
 Si abres `http://localhost:8080/` en el navegador vas a ver una **Whitelabel Error Page** con `404` y el mensaje *"No static resource ."* — es lo esperado: este backend es una API REST, no sirve una página en `/`. No es un error que arreglar. Abre en cambio `http://localhost:8080/swagger-ui/index.html` (la ruta `/swagger-ui.html` configurada en `springdoc.swagger-ui.path` redirige ahí) para ver el contrato interactivo, o revisa directamente `/api/v1/productos` y `/actuator/health` (ver 3.2.8).
 
 Configuración de variables de entorno y detalle de la base de datos en
-[`lp2/bomerp-backend/README.md`](../../../lp2/bomerp-backend/README.md).
+[`lp2/bomerp-backend/README.md`](https://github.com/262ciclo4/bomerp/blob/main/lp2/bomerp-backend/README.md).
 
-#### 3.2.8 Verificar el proyecto backend
+#### 3.2.8 Verificar el proyecto backend: arranque, conexión a Oracle y límites de módulos
 
 Antes de verificar, crea `src/test/java/pe/edu/upeu/bomerp/ModularityTests.java` (verifica automáticamente los límites entre módulos, ver [ADR-002](../adr/ADR-002-spring-modulith.md)):
 
