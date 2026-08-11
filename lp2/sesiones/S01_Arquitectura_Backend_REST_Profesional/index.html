@@ -3990,7 +3990,8 @@ en el repo (ver <code>bd2/README.md</code>, sección sobre U2-U3).</p>
 </tbody>
 </table>
 <p><img alt="Conexión exitosa a Oracle vía Oracle SQL Developer for VS Code, mostrando el árbol de esquemas y tablas de SYSTEM" src="../img/s01-3.2.2-database-client.png" /></p>
-<p>Ejecuta los dos scripts con esta conexión. Salida esperada: <code>Table created.</code> ×2, <code>Grant succeeded.</code> ×2.</p>
+<p>Ejecuta los dos scripts con esta conexión.</p>
+<p>Salida esperada: <code>Table created.</code> ×2, <code>Grant succeeded.</code> ×2.</p>
 <p>Las tablas quedan en el esquema <code>BOM_CATALOGO</code>, no en <code>system</code> — para verlas en el árbol del cliente, agrega una <strong>segunda conexión</strong>:</p>
 <table>
 <thead>
@@ -4191,10 +4192,11 @@ contenedor con una sesión interactiva de <code>sqlplus</code>, conectado como <
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>Levanta el proyecto (detalle completo del wrapper en 3.2.7) y visita <code>http://localhost:8080/api/v1/hello</code>:</p>
+<p>Levanta el proyecto</p>
 <div class="highlight"><pre><span></span><code><span class="p">.\</span><span class="n">mvnw</span><span class="p">.</span><span class="n">cmd</span> <span class="n">spring-boot</span><span class="p">:</span><span class="n">run</span>
 </code></pre></div>
-<p>Debe responder <code>Hola BomERP</code> en texto plano. Si este paso falla, el problema está en el arranque de Spring Boot (dependencias, puerto, configuración) — más simple de diagnosticar aquí, sin JPA ni Oracle todavía de por medio, que después de sumar el módulo <code>catalogo</code>.</p>
+<p>Visita http://localhost:8080/api/v1/hello
+o http://localhost:8080/swagger-ui.html:</p>
 <p><code>HelloController</code> es solo un paso de verificación: una vez que <code>catalogo</code> expone sus propios endpoints reales (paso siguiente), puedes eliminarlo — no forma parte del contrato final de la API.</p>
 <h4 id="326-implementar-el-modulo-catalogo-categoria-y-producto">3.2.6 Implementar el módulo <code>catalogo</code>: <code>Categoria</code> y <code>Producto</code><a class="headerlink" href="#326-implementar-el-modulo-catalogo-categoria-y-producto" title="Permanent link">&para;</a></h4>
 <p><strong>Producto del paso:</strong> listados REST de <code>Categoria</code> y <code>Producto</code> funcionando de punta a punta (controller → service → repository → Oracle).</p>
