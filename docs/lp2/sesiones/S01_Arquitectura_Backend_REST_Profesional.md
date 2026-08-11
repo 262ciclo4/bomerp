@@ -78,31 +78,32 @@ Tiempo: 25 min.
 ### 2.1 Arquitectura de la sesión
 
 ```mermaid
-flowchart LR
+flowchart TB
     APP[BomErpApplication]
 
-    subgraph CAT[Módulo catalogo]
-        API[Controllers y DTO]
-        USE[Services]
-        DOM[Entities]
-        INF[Repositories JPA]
-        API --> USE
-        USE --> DOM
-        USE --> INF
+    subgraph CAT["Módulo catalogo"]
+        direction TB
+        API[Controllers y DTO] --> USE[Services]
+        USE --> DOM[Entities]
+        USE --> INF[Repositories JPA]
     end
 
     subgraph FUTUROS["Módulos futuros, aún sin crear *"]
+        direction TB
         VEN["ventas (S4)"]
         COM["compras (opcional)"]
         SEG["seguridad (S10)"]
     end
 
     DB[(Oracle)]
-    APP --> CAT
-    APP -. se agregan como paquetes .-> FUTUROS
-    INF --> DB
-```
 
+    APP --> CAT
+    APP -.->|se agregan como paquetes| FUTUROS
+    INF --> DB
+
+    CAT ~~~ FUTUROS
+```
+ 
 <small>*Ningún paquete de `FUTUROS` (`ventas`, `compras`, `seguridad`) existe todavía en el código; se crean recién cuando su sesión les da contenido real (ver [ADR-001](../adr/ADR-001-arquitectura-backend.md)).</small>
 
 Lectura del diagrama:
@@ -127,10 +128,7 @@ El proyecto se organiza como monolito modular: un único paquete raíz (`BomErpA
 | Springdoc OpenAPI | Se conserva para publicar el contrato inicial. |
 | DevTools | Se agrega para reinicio automático y LiveReload durante el desarrollo; Spring Boot la excluye automáticamente del `.jar` empaquetado, así que no afecta producción. |
 | Security y OAuth2 Resource Server | Se posponen hasta S10. |
-| Config Server, Eureka, Feign y Resilience4j | No corresponden al backend monolítico de LP2; se estudian en Aplicaciones Distribuidas. |
 | Prometheus, Flyway y Docker | No son necesarios para alcanzar el producto de S1. |
-
-**Error frecuente**: copiar todas las dependencias de `producto-ms` sin filtrarlas — confunde un monolito inicial con una arquitectura distribuida. Solo se conservan las de la tabla anterior.
 
 Alcance metodológico de S1:
 
@@ -304,9 +302,9 @@ Usa la siguiente configuración:
 | Artifact Id | `bomerp-backend` |
 | Package name | `pe.edu.upeu.bomerp` |
 | Packaging | Jar |
-| Ubicación | `lp2/bomerp-backend` |
+| Ubicación (carpeta donde haces clic en "Generate into this folder") | `lp2/` |
 
-**Por qué 4.0.7 y no otra versión.** Verificado directo en `start.spring.io` (con `4.1.0` seleccionado, el propio buscador de dependencias muestra en rojo, al escribir "springd": *"Requires Spring Boot >= 4.0.0 and < 4.1.0-M1"*). Es una restricción real de compatibilidad de SpringDoc OpenAPI, no una limitación del buscador ni de la extensión de VS Code. El generador tampoco ofrece ya ninguna versión 3.x (Spring Boot 3.5.x sigue funcionando vía Maven normalmente, pero el asistente de creación de proyectos ya no la lista). Por eso el proyecto usa **4.0.7**, dentro del rango compatible.
+**Por qué 4.0.7 y no otra versión.** Verificado directo en `start.spring.io` (con `4.1.0` seleccionado, el propio buscador de dependencias muestra en rojo, al escribir "springd": *"Requires Spring Boot >= 4.0.0 and < 4.1.0-M1"*). 
 
 Dependencias a seleccionar:
 
@@ -488,6 +486,15 @@ Salida esperada del segundo comando: `Table created.` dos veces y `Grant succeed
 
 Para ejecutar esos scripts y revisar las tablas sin depender de la consola, usa un cliente de base de datos con soporte Oracle (por ejemplo la extensión de VS Code **Database Client**, `cweijan.vscode-postgresql-client2`, a pesar del nombre soporta varios motores incluido Oracle). Datos de conexión:
 
+!!! danger "El campo Database DEBE decir `FREEPDB1`, nunca en blanco"
+    Si dejas el campo **Database** vacío o con el valor por defecto del
+    cliente (`XE`), la conexión no apunta a nuestra base — y desde ahí
+    `S01_01_esquemas.sql` **no logra crear `BOMERP_APP` bajo ninguna
+    circunstancia**, sin importar cuántas veces lo intentes. Escribe
+    `FREEPDB1` explícitamente en ese campo antes de conectar, en las tres
+    conexiones que uses en esta sección (`system`, `BOM_CATALOGO` y
+    `BOMERP_APP`).
+
 | Campo | Valor |
 |---|---|
 | Host | `127.0.0.1` |
@@ -502,9 +509,11 @@ Usa `system` para ejecutar ambos scripts, por la razón explicada arriba. Una ve
 
 | Campo | Valor |
 |---|---|
+| Host | `127.0.0.1` |
+| Port | `1521` |
 | Username | `BOM_CATALOGO` |
 | Password | `123456` |
-| Host / Port / Database | igual que arriba |
+| Database | `FREEPDB1` |
 
 Con esa segunda conexión, `categoria` y `producto` aparecen directamente en el árbol de esquemas. Puedes agregar además una tercera conexión con `Username: BOMERP_APP` (misma contraseña y base) para verificar los permisos con los que realmente corre el backend (`application-local.yml` usa ese usuario, no `system` ni `BOM_CATALOGO`) — `BOMERP_APP` no es dueño de las tablas, solo tiene `SELECT`/`INSERT`/`UPDATE`/`DELETE` sobre ellas.
 
@@ -1079,6 +1088,46 @@ class ModularityTests {
 | Endpoint de verificación | Respuesta `UP` en `/actuator/health`. |
 | Recursos iniciales | Los GET de categorías y productos devuelven datos persistidos o listas vacías. |
 | Estructura modular | `.\mvnw.cmd test` / `./mvnw test` ejecuta `ModularityTests` sin errores. |
+
+#### 3.2.9 Simular escalamiento horizontal (múltiples instancias)
+
+**Producto del paso:** dos instancias del backend corriendo al mismo tiempo, cada una en un puerto distinto, ambas conectadas a la misma Oracle.
+
+Un backend reproducible también debe poder escalar horizontalmente: correr varias copias idénticas a la vez, cada una en su propio puerto, sin configuración fija que las haga chocar. Con `server.port` fijo en `8080` (el que usa el resto de esta guía), una segunda instancia no puede arrancar en la misma máquina — el puerto ya está ocupado.
+
+**Sin modificar `application-local.yml`** (para no romper el puerto 8080 que usan los pasos anteriores de esta guía), pasa el puerto como argumento de línea de comandos, en dos terminales distintas, desde `lp2/bomerp-backend`:
+
+```powershell
+# Terminal 1
+.\mvnw.cmd spring-boot:run "-Dspring-boot.run.arguments=--server.port=0"
+
+# Terminal 2 (simultánea, con Oracle y la Terminal 1 ya corriendo)
+.\mvnw.cmd spring-boot:run "-Dspring-boot.run.arguments=--server.port=0"
+```
+
+`--server.port=0` le indica a Spring Boot que pida al sistema operativo un puerto libre cualquiera, en vez de uno fijo. Cada terminal imprime el suyo al arrancar:
+
+```text
+Tomcat started on port 58251 (http) with context path '/'
+```
+
+Verificado con dos instancias reales corriendo en paralelo — la primera tomó el puerto `58251` y la segunda el `58252`, cada una respondiendo por su cuenta:
+
+```text
+GET http://localhost:58251/api/v1/hello -> Hola BomERP
+GET http://localhost:58252/api/v1/hello -> Hola BomERP
+```
+
+Y ambas con `/actuator/health` en `UP`, conectadas de forma independiente a la misma Oracle (`db.status: UP` en las dos).
+
+**Alternativa fija en la configuración.** Si en vez de un argumento de línea de comandos prefieres verlo declarado en el YAML, agrega esto a `application-local.yml` — pero ten en cuenta que entonces *todas* las ejecuciones normales de este proyecto (incluidas las de los pasos anteriores) también arrancarán en un puerto aleatorio, no en 8080:
+
+```yaml
+server:
+  port: 0
+```
+
+**Por qué importa esto en S1.** LP2 es un monolito, no un sistema distribuido — no hay Gateway ni balanceador de carga todavía (eso pertenece a Aplicaciones Distribuidas). Pero la capacidad de correr múltiples instancias sin puerto fijo es la base técnica que un balanceador necesita para repartir tráfico entre copias del mismo backend; practicarla desde S1 deja esa evidencia lista para cuando el proyecto integre esa pieza.
 
 ### 3.3 Delimitar los endpoints del módulo Catálogo
 
