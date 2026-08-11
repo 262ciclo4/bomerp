@@ -325,7 +325,7 @@ Usa la siguiente configuración:
 | Java | 21 |
 | Ubicación | carpeta donde haces clic en "Generate into this folder", deja vacío |
 
-**Por qué 4.0.7 y no otra versión.** Verificado directo en `start.spring.io` (con `4.1.0` seleccionado, el propio buscador de dependencias muestra en rojo, al escribir "springd": *"Requires Spring Boot >= 4.0.0 and < 4.1.0-M1"*). 
+**Por qué 4.0.7 y no otra versión.** Verificado directo en [start.spring.io](https://start.spring.io/) (con `4.1.0` seleccionado, el propio buscador de dependencias muestra en rojo, al escribir "springd": *"Requires Spring Boot >= 4.0.0 and < 4.1.0-M1"*). 
 
 Dependencias a seleccionar:
 
