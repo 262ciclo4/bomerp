@@ -120,16 +120,7 @@ El proyecto se organiza como monolito modular: un único paquete raíz (`BomerpB
 | Springdoc OpenAPI | Se conserva para publicar el contrato inicial. |
 | DevTools | Se agrega para reinicio automático y LiveReload durante el desarrollo; Spring Boot la excluye automáticamente del `.jar` empaquetado, así que no afecta producción. |
 | Security y OAuth2 Resource Server | Se posponen hasta S10. |
-| Prometheus, Flyway y Docker | No son necesarios para alcanzar el producto de S1. |
 
-Alcance metodológico de S1:
-
-```text
-En S1 se crea solamente el proyecto backend y se comprueba
-su ejecución y conexión a Oracle mediante Actuator y el listado
-de Producto. No se crea frontend. El CRUD completo, las relaciones,
-las transacciones y la seguridad se implementan progresivamente.
-```
 
 ### 2.3 Configuración por ambientes, ORM, driver y conexión a Oracle
 
@@ -137,11 +128,9 @@ Un **ambiente** es el conjunto de configuración (variables, credenciales,
 infraestructura) que corresponde a un contexto de uso concreto: **local**
 (tu laptop, para desarrollar) y **producción** (el sistema real ya en
 funcionamiento) son dos ambientes distintos; algunos proyectos agregan
-ambientes intermedios (pruebas, staging). No se les llama "ambientes de
-desarrollo" en general — ese nombre describe únicamente al ambiente de
-desarrollo compartido de un equipo, no al concepto completo.
+ambientes intermedios (pruebas o QA, staging).
 
-En BomERP, hoy existe el **ambiente local**, identificado siempre con el
+En BomERP, definimos el **ambiente local** identificado con el
 sufijo `-local`:
 
 - `application-local.yml`: configuración de Spring Boot para tu laptop, incluida la conexión ORM/JPA y el driver Oracle hacia `localhost`.
@@ -154,9 +143,16 @@ hay nada real que desplegar.
 
 ### 2.4 Endpoint de verificación, recurso REST inicial y DTO
 
-REST permite organizar un backend alrededor de recursos, métodos HTTP y representaciones. El endpoint de verificación (Actuator) confirma que la aplicación arrancó y está conectada a Oracle; el recurso REST inicial (`Categoria`, `Producto`) expone los primeros listados del módulo `catalogo`, y el DTO de salida separa ese contrato de la entidad persistida — la API responde lo que el cliente necesita, no la tabla tal cual.
+REST permite organizar un backend alrededor de recursos, métodos HTTP y representaciones. Cada método HTTP tiene un propósito definido sobre un recurso:
 
-**Errores frecuentes**: nombrar endpoints con verbos en vez de sustantivos (no se entiende el recurso REST) y diseñar el DTO igual a la tabla de persistencia (mezcla el contrato de API con el modelo de datos) — el DTO se define según lo que necesita el cliente, no según la entidad.
+| Método | Para qué sirve |
+|---|---|
+| `GET` | Consultar o listar un recurso, sin modificarlo. |
+| `POST` | Crear un nuevo recurso. |
+| `PUT` | Actualizar/reemplazar por completo un recurso existente. |
+| `DELETE` | Eliminar un recurso. |
+
+El endpoint de verificación (Actuator) confirma que la aplicación arrancó y está conectada a Oracle; el recurso REST inicial (`Categoria`, `Producto`) expone los primeros listados del módulo `catalogo`, y el DTO de salida separa ese contrato de la entidad persistida — la API responde lo que el cliente necesita, no la tabla tal cual.
 
 ### 2.5 Contrato, versionado básico de API y documentación OpenAPI
 
