@@ -336,7 +336,7 @@ Usa la siguiente configuración:
 | Artifact Id | `bomerp-backend` |
 | Package name | `pe.edu.upeu.bomerp` |
 | Packaging | Jar |
-| Ubicación (carpeta donde haces clic en "Generate into this folder") | `lp2/` |
+| Ubicación | `lp2/` (carpeta donde haces clic en "Generate into this folder") |
 
 **Por qué 4.0.7 y no otra versión.** Verificado directo en `start.spring.io` (con `4.1.0` seleccionado, el propio buscador de dependencias muestra en rojo, al escribir "springd": *"Requires Spring Boot >= 4.0.0 and < 4.1.0-M1"*). 
 
@@ -1211,7 +1211,7 @@ Completa y evidencia estas tareas:
 2. Documentar dependencias y configuración por ambiente.
 3. Demostrar la conexión a la base de datos sin publicar secretos.
 4. Publicar y probar el endpoint de verificación.
-5. Implementar los listados iniciales del módulo `catalogo`.
+5. Implementar los listados iniciales del módulo principal de tu dominio (equivalente a `catalogo` en el caso guiado).
 6. Generar la documentación OpenAPI.
 
 #### 4.1.3 Evidencia técnica
@@ -1221,7 +1221,7 @@ Incluye:
 - Evidencia de ejecución y endpoint de verificación.
 - Evidencia de conexión a la base de datos.
 - Configuración por ambiente sin secretos.
-- Respuesta de los listados de `Categoria` y `Producto`, tabla de endpoints y consultas ejecutadas en Oracle.
+- Respuesta de los listados de las entidades principales de tu dominio (equivalentes a `Categoria` y `Producto` en el caso guiado), tabla de endpoints y consultas ejecutadas en Oracle.
 - DTO de salida en JSON y documentación OpenAPI.
 - Estructura base del backend.
 
