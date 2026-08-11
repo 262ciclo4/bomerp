@@ -3254,12 +3254,12 @@
 </ul>
 <p>Roadmap del producto de la unidad:</p>
 <pre class="mermaid"><code>flowchart TB
-    S1["S1&lt;br/&gt;PL/SQL aplicado&lt;br/&gt;al negocio"]
-    S2["S2&lt;br/&gt;Triggers DML&lt;br/&gt;y auditoría"]
-    S3["S3&lt;br/&gt;Excepciones&lt;br/&gt;y robustez"]
-    S4["S4&lt;br/&gt;Optimización&lt;br/&gt;de consultas"]
-    S5["S5&lt;br/&gt;Índices"]
-    S6["S6&lt;br/&gt;Producto U1"]
+    S1["`**S1:** PL/SQL aplicado al negocio`"]
+    S2["`**S2:** Triggers DML y auditoría`"]
+    S3["`**S3:** Excepciones y robustez`"]
+    S4["`**S4:** Optimización de consultas`"]
+    S5["`**S5:** Índices`"]
+    S6["`**S6:** Producto U1`"]
 
     S1 --&gt; S2 --&gt; S3 --&gt; S4 --&gt; S5 --&gt; S6
 
@@ -3280,7 +3280,7 @@
         FN -.-&gt;|lee valores para calcular| T
     end
 
-    APP["Aplicación cliente&lt;br/&gt;(cualquiera: backend, otro script, SQL directo)"]
+    APP["`Aplicación cliente (cualquiera: backend, otro script, SQL directo)`"]
     APP --&gt; SP1
     APP --&gt; FN
     APP --&gt; SP2</code></pre>
