@@ -78,6 +78,7 @@ Tiempo: 25 min.
 ### 2.1 Arquitectura de la sesión
 
 ```mermaid
+%%{init: {"flowchart": {"rankSpacing": 25, "nodeSpacing": 20}} }%%
 flowchart TB
     APP[BomerpBackendApplication] --> CAT
     APP -.->|se agregan como paquetes| FUTUROS
