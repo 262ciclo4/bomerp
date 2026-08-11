@@ -1,5 +1,7 @@
 # S1 - Arquitectura Backend REST Profesional
 
+*Por: Angel Sullon Macalupu @asullom - 2026*
+
 ## 1. Introducción
 
 Tiempo: 20 min.
