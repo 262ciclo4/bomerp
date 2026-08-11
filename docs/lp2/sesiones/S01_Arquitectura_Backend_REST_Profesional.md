@@ -172,9 +172,7 @@ Springdoc OpenAPI (ver 2.2) publica este contrato como documentación viva y sie
 Tiempo: 2h.
 
 !!! danger "Todos los comandos de Windows en esta guía son PowerShell, no CMD"
-    Cada vez que veas un bloque de código con la etiqueta `powershell`, ábrelo en la terminal integrada de VS Code (que en Windows abre PowerShell por defecto) o en **"Windows PowerShell"** desde el menú Inicio — nunca en **"Símbolo del sistema" / "cmd.exe"**. Se reconoce el prompt correcto porque empieza con `PS`, por ejemplo `PS C:\262\...>`; si el tuyo dice solo `C:\262\...>` sin `PS`, estás en CMD.
-
-    Varios comandos de esta guía (here-strings `@"..."@`, comillas alrededor de `'@/tmp/archivo.sql'`, rutas relativas con `..\..\`) son sintaxis de PowerShell y **fallan o no hacen nada en CMD**, sin un error claro que lo explique. Si un comando "no corre" sin mensaje útil, lo primero a revisar es si estás en la terminal correcta.
+    Cada vez que veas un bloque de código con la etiqueta `powershell`, ábrelo en la terminal integrada de VS Code (que en Windows abre PowerShell por defecto) o en **"Windows PowerShell"** 
 
 Hoja de ruta de la sesión práctica:
 
