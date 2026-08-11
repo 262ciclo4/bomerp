@@ -79,32 +79,22 @@ Tiempo: 25 min.
 
 ```mermaid
 flowchart TB
-    APP[BomErpApplication]
+    APP[BomErpApplication] --> CAT
+    APP -.->|se agregan como paquetes| FUTUROS
 
-    subgraph ROW[" "]
-        direction LR
-        subgraph CAT["Módulo catalogo"]
-            direction TB
-            API[Controllers y DTO] --> USE[Services]
-            USE --> DOM[Entities]
-            USE --> INF[Repositories JPA]
-        end
-
-        subgraph FUTUROS["Módulos futuros, aún sin crear"]
-            direction TB
-            VEN["ventas (S4)"]
-            COM["compras (opcional)"]
-            SEG["seguridad (S10)"]
-        end
+    subgraph CAT["Módulo catalogo"]
+        API[Controllers y DTO] --> USE[Services]
+        USE --> DOM[Entities]
+        USE --> INF[Repositories JPA]
     end
 
-    DB[(Oracle)]
+    INF --> DB[(Oracle)]
 
-    APP --> CAT
-    APP -.->|se agregan como paquetes| FUTUROS
-    INF --> DB
-
-    style ROW fill:none,stroke:none
+    subgraph FUTUROS["Módulos futuros, aún sin crear"]
+        VEN["ventas (S4)"]
+        COM["compras (opcional)"]
+        SEG["seguridad (S10)"]
+    end
 ```
 
 Lectura del diagrama:
