@@ -58,11 +58,11 @@ Roadmap del producto de la unidad:
 
 ```mermaid
 flowchart TB
-    S1["S1: Proyecto backend, BD, REST y OpenAPI"]
-    S2["S2: CRUD maestro, validaciones y pruebas"]
-    S3["S3: Objetos relacionados Categoria-Producto"]
-    S4["S4: Cabecera-detalle y transacciones"]
-    S5["S5: Consultas, reportes y CORS"]
+    S1["S1: Proyecto backend"]
+    S2["S2: CRUD maestro"]
+    S3["S3: Objetos relacionados"]
+    S4["S4: Cabecera-detalle"]
+    S5["S5: Consultas y reportes"]
     S6["S6: Producto U1"]
 
     S1 --> S2 --> S3 --> S4 --> S5 --> S6
