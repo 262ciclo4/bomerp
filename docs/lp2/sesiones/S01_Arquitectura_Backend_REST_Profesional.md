@@ -29,7 +29,7 @@ Proyecto backend ejecutable y reproducible, sobre Java 21 LTS, organizado como m
 
 | Fase | Actividades | Orientaciones | Material |
 |---|---|---|---|
-| Revisión previa individual | Instalar y verificar Java 21 LTS; leer [ADR-001](../adr/ADR-001-arquitectura-backend.md) y [ADR-002](../adr/ADR-002-spring-modulith.md). | Trabajo individual, antes de clase; traer evidencia de `java -version` funcionando. | ADR-001, ADR-002, guía de instalación Java 21. |
+| Revisión previa individual | Instalar y verificar Java 21 LTS, VS Code y sus extensiones; leer [ADR-001](../adr/ADR-001-arquitectura-backend.md) y [ADR-002](../adr/ADR-002-spring-modulith.md). | Trabajo individual, antes de clase; traer evidencia de `java -version` funcionando. | ADR-001, ADR-002, guía de instalación Java 21. |
 | Clase presencial | Explicación guiada de conceptos (REST, DTO, versionado, ambientes) y creación del proyecto backend conectado a Oracle; delimitación de los endpoints del módulo `catalogo`. | Trabajo individual en la propia laptop, siguiendo al docente paso a paso; consulta inmediata ante errores de dependencias o conexión. | `pom.xml` de referencia, `application-local.yml`, Docker Compose de Oracle, cliente REST para verificar endpoints. |
 | Evaluación formativa | Verificación en clase de `mvn test` (incluye `ModularityTests`) y de la respuesta del endpoint de salud y los listados; inicio de la plantilla de evidencia individual. | La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.2. | Plantilla de evidencia individual (4.1), rúbrica de evaluación (5.4). |
 
@@ -81,18 +81,21 @@ Tiempo: 25 min.
 flowchart TB
     APP[BomErpApplication]
 
-    subgraph CAT["Módulo catalogo"]
-        direction TB
-        API[Controllers y DTO] --> USE[Services]
-        USE --> DOM[Entities]
-        USE --> INF[Repositories JPA]
-    end
+    subgraph ROW[" "]
+        direction LR
+        subgraph CAT["Módulo catalogo"]
+            direction TB
+            API[Controllers y DTO] --> USE[Services]
+            USE --> DOM[Entities]
+            USE --> INF[Repositories JPA]
+        end
 
-    subgraph FUTUROS["Módulos futuros, aún sin crear *"]
-        direction TB
-        VEN["ventas (S4)"]
-        COM["compras (opcional)"]
-        SEG["seguridad (S10)"]
+        subgraph FUTUROS["Módulos futuros, aún sin crear"]
+            direction TB
+            VEN["ventas (S4)"]
+            COM["compras (opcional)"]
+            SEG["seguridad (S10)"]
+        end
     end
 
     DB[(Oracle)]
@@ -101,19 +104,17 @@ flowchart TB
     APP -.->|se agregan como paquetes| FUTUROS
     INF --> DB
 
-    CAT ~~~ FUTUROS
+    style ROW fill:none,stroke:none
 ```
- 
-<small>*Ningún paquete de `FUTUROS` (`ventas`, `compras`, `seguridad`) existe todavía en el código; se crean recién cuando su sesión les da contenido real (ver [ADR-001](../adr/ADR-001-arquitectura-backend.md)).</small>
 
 Lectura del diagrama:
 
-- El backend organiza primero por módulo de negocio y luego por responsabilidades internas (controller, service, repository, entity). **Error frecuente**: concentrar toda la lógica en el controller sin separar service y repository — pierde la separación de responsabilidades que muestra el diagrama.
-- `Categoria` y `Producto` pertenecen a `catalogo`; `Venta–DetalleVenta` pertenece a `ventas` y `Compra–DetalleCompra` a `compras`.
-- Un módulo no debe acceder directamente al repositorio de otro módulo; la interacción se realiza mediante servicios públicos.
-- Integración (referencia, no requisito para esta sesión): si el equipo también lleva ADS, esos componentes y decisiones son los que ADS documenta primero; si lleva BD2, ese es el curso que aporta los procedimientos, tablas y reglas transaccionales que el backend consume. **Errores frecuentes**: diseñar el endpoint sin vincularlo a ninguna tabla, paquete o procedimiento del motor transaccional (BD2); o dejar las decisiones de ADS solo en teoría, sin relacionarlas con un componente real de su vista C3.
+- Organización: primero por módulo de negocio, luego por capa (controller, service, repository, entity).
+- `Categoria`/`Producto` → `catalogo`; `Venta–DetalleVenta` → `ventas`; `Compra–DetalleCompra` → `compras`.
+- Un módulo no accede al repositorio de otro: solo mediante servicios públicos.
+- Integración (no exigida en S1): ADS diseña esos componentes; BD2 aporta los objetos que el backend consume.
 
-Este diagrama es el mapa que guía el resto de la explicación: cada apartado siguiente desarrolla uno de sus componentes, en el mismo orden del Índice (1.2).
+Este diagrama es el mapa que guía el resto de la explicación, en el mismo orden del Índice (1.2).
 
 ### 2.2 Estructura del proyecto backend y dependencias
 
@@ -180,9 +181,14 @@ Springdoc OpenAPI (ver 2.2) publica este contrato como documentación viva y sie
 
 Tiempo: 2h.
 
+!!! danger "Todos los comandos de Windows en esta guía son PowerShell, no CMD"
+    Cada vez que veas un bloque de código con la etiqueta `powershell`, ábrelo en la terminal integrada de VS Code (que en Windows abre PowerShell por defecto) o en **"Windows PowerShell"** desde el menú Inicio — nunca en **"Símbolo del sistema" / "cmd.exe"**. Se reconoce el prompt correcto porque empieza con `PS`, por ejemplo `PS C:\262\...>`; si el tuyo dice solo `C:\262\...>` sin `PS`, estás en CMD.
+
+    Varios comandos de esta guía (here-strings `@"..."@`, comillas alrededor de `'@/tmp/archivo.sql'`, rutas relativas con `..\..\`) son sintaxis de PowerShell y **fallan o no hacen nada en CMD**, sin un error claro que lo explique. Si un comando "no corre" sin mensaje útil, lo primero a revisar es si estás en la terminal correcta.
+
 Hoja de ruta de la sesión práctica:
 
-- **3.1** Instalar y verificar Java 21 LTS.
+- **3.1** Instalar y verificar Java 21 LTS, VS Code y sus extensiones.
 - **3.2** Crear y verificar el proyecto backend.
 - **3.3** Delimitar los endpoints del módulo Catálogo.
 - **3.4** Reconocer el DTO de entrada reservado para S2.
@@ -191,7 +197,7 @@ Hoja de ruta de la sesión práctica:
 - **3.7** Bosquejar estructura del backend modular (Spring Modulith).
 - **3.8** Trazar LP2 con ADS y BD2.
 
-### 3.1 Instalar y verificar Java 21 LTS
+### 3.1 Instalar y verificar Java 21 LTS, VS Code y sus extensiones
 
 **Producto del paso:** entorno de desarrollo configurado con Java 21.
 
@@ -252,20 +258,60 @@ Al finalizar, cierre y vuelva a abrir la terminal. Verifique la instalación:
 ```powershell
 java --version
 javac --version
-mvn --version
 ```
 
-Las tres comprobaciones deben mostrar Java 21. Maven también debe indicar que se está ejecutando con Java 21. Si conserva una versión anterior, configure `JAVA_HOME` con la ruta del JDK 21 desde las variables de entorno de Windows, actualice `Path` para que `%JAVA_HOME%\bin` tenga prioridad y abra una terminal nueva.
+Ambas comprobaciones deben mostrar Java 21. Si conserva una versión anterior, configure `JAVA_HOME` con la ruta del JDK 21 desde las variables de entorno de Windows, actualice `Path` para que `%JAVA_HOME%\bin` tenga prioridad y abra una terminal nueva.
 
 Evidencia requerida:
 
 ```text
 java --version  -> 21
 javac --version -> 21
-mvn --version   -> Java version: 21
 ```
 
 El proyecto declara Java 21 mediante la propiedad `<java.version>21</java.version>` del `pom.xml` padre. No se debe modificar individualmente la versión de cada módulo.
+
+#### 3.1.1 Instalar VS Code y extensiones
+
+**Producto del paso:** VS Code instalado con las extensiones necesarias para el resto de la sesión.
+
+El curso usa **VS Code** como editor por defecto.
+
+**Windows** — con `winget` (viene instalado en Windows 10/11):
+
+```powershell
+winget install -e --id Microsoft.VisualStudioCode
+```
+
+**macOS** (con Homebrew, ya instalado en el paso anterior):
+
+```bash
+brew install --cask visual-studio-code
+```
+
+**Linux (Ubuntu/Debian)** — con `snap` (viene instalado en Ubuntu):
+
+```bash
+sudo snap install --classic code
+```
+
+En cualquier sistema también puede descargarse el instalador desde <https://code.visualstudio.com/download>.
+
+Al finalizar, instala las extensiones desde la terminal:
+
+```bash
+code --install-extension vscjava.vscode-java-pack
+code --install-extension vmware.vscode-boot-dev-pack
+code --install-extension cweijan.vscode-database-client2
+code --install-extension Oracle.sql-developer
+```
+
+| Extensión | ID | Para qué sirve |
+|---|---|---|
+| Extension Pack for Java | `vscjava.vscode-java-pack` | Soporte base de Java (autocompletado, debug, Maven); incluye Spring Initializr Java Support, usado en 3.2.1. |
+| Spring Boot Extension Pack | `vmware.vscode-boot-dev-pack` | Herramientas específicas de Spring Boot: navegación de beans, Spring Boot Dashboard, soporte de `application.yml`. |
+| Database Client | `cweijan.vscode-database-client2` | Cliente gráfico multi-motor: MySQL, PostgreSQL, SQLite, SQL Server, entre otros. **No incluye Oracle** — su descripción es genérica, pero ni el marketplace ni su documentación listan soporte de Oracle. |
+| Oracle SQL Developer for VS Code | `Oracle.sql-developer` | Extensión oficial de Oracle, gratuita, para conectarse a la Oracle de este proyecto (ver 3.2.2). |
 
 ### 3.2 Crear y verificar el proyecto backend
 
@@ -275,7 +321,7 @@ El starter de referencia está en `lp2/bomerp-backend`. No es la solución de S2
 
 #### 3.2.1 Crear el proyecto con Spring Initializr desde VS Code
 
-Requiere la extensión **Spring Initializr Java Support** (`vscjava.vscode-spring-initializr`, incluida en el Extension Pack for Java). Si no la tienes, instálala desde la vista de Extensiones de VS Code antes de continuar.
+Usa la extensión **Spring Initializr Java Support** (`vscjava.vscode-spring-initializr`), incluida en el Extension Pack for Java instalado en 3.1.1.
 
 Desde la raíz del monorepo `bomerp`, abre VS Code y abre la **paleta de comandos**:
 
@@ -362,26 +408,6 @@ Si el contador dice un número distinto de 9, revisa qué falta o qué sobra ant
     Verifica que quedó eliminada buscando `spring-modulith-starter-jpa` en
     el `pom.xml`: la búsqueda no debe encontrar ninguna coincidencia.
 
-Nota sobre el resto de lo que el Initializr agrega solo por combinar dependencias, sin que hayas marcado nada extra (revisa el `pom.xml` generado, no hace falta editarlo a mano, salvo el punto anterior):
-
-- `spring-modulith-starter-core` (compile) y `spring-modulith-starter-test`
-  (test) — este último **sí se agrega automáticamente** al seleccionar
-  "Spring Modulith", nada que agregar a mano.
-- En runtime, `spring-modulith-actuator` y `spring-modulith-observability`
-  — Initializr los suma porque también seleccionaste Actuator; exponen
-  información de módulos vía Actuator y trazas de observabilidad. Se
-  conservan tal cual.
-- El checkbox "Spring Web" genera el artefacto `spring-boot-starter-webmvc`,
-  no `spring-boot-starter-web` — en Spring Boot 4.0.7 el segundo queda
-  deprecado a favor del primero.
-- En vez de un único `spring-boot-starter-test`, el `pom.xml` trae un
-  starter de test granular por cada starter de producción seleccionado
-  (`spring-boot-starter-actuator-test`, `-data-jpa-test`,
-  `-validation-test`, `-webmvc-test`) — es el patrón de Boot 4.x, no un
-  error del generador.
-
-Detalle completo de por qué estas versiones y no otras: [ADR-002](../adr/ADR-002-spring-modulith.md) y [ADR-003](../adr/ADR-003-spring-boot-4.md).
-
 El Initializr deriva el nombre de la clase `@SpringBootApplication` del Artifact Id, así que la genera como `BomerpBackendApplication.java`. Renómbrala a `BomErpApplication` (archivo y clase, mismo paquete raíz `pe.edu.upeu.bomerp`) para que coincida con el resto de esta guía y con `ModularityTests` (3.2.8):
 
 ```java
@@ -444,78 +470,53 @@ Levanta Oracle:
 docker compose -f compose-local.yml up -d
 ```
 
-Luego crea el esquema y las tablas del catálogo ejecutando, en orden, [`S01_01_esquemas.sql`](../../proyecto-integrador/u1/oracle/S01_01_esquemas.sql) y [`S01_02_tablas.sql`](../../proyecto-integrador/u1/oracle/S01_02_tablas.sql) contra esta misma Oracle (scripts de BD2, listos para ejecutar — no hace falta revisar la guía de esa sesión, solo si quieres el detalle: [BD2 S1](../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio.md)).
+Crea el esquema y las tablas del catálogo ejecutando, en orden, [`S01_01_esquemas.sql`](../../proyecto-integrador/u1/oracle/S01_01_esquemas.sql) y [`S01_02_tablas.sql`](../../proyecto-integrador/u1/oracle/S01_02_tablas.sql) (scripts de BD2 — detalle completo si lo necesitas: [BD2 S1](../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio.md)), por cualquiera de estas dos vías. Ambas terminan en "Verificar esquemas, tablas y registros por SQL" más abajo.
 
-!!! danger "Ejecuta los dos scripts conectado como `system`, nunca como `BOM_CATALOGO`"
-    Es tentador conectarte como `BOM_CATALOGO` para `S01_02_tablas.sql`,
-    porque ese script crea *sus* tablas. **No lo hagas: falla.** El script
-    califica el esquema explícitamente (`CREATE TABLE BOM_CATALOGO.categoria`,
-    no `CREATE TABLE categoria`), y en Oracle calificar el esquema —incluso
-    el propio— exige el privilegio `CREATE ANY TABLE`, que `BOM_CATALOGO` no
-    tiene (solo tiene `CREATE TABLE`, otorgado en `S01_01_esquemas.sql`).
-    Conectado como `BOM_CATALOGO` verás:
+!!! danger "Service Name = `FREEPDB1`, usuario `system` — sin excepciones (aplica a las dos opciones)"
+    - **Service Name vacío o distinto de `FREEPDB1`**: la conexión no apunta a nuestra base y `S01_01_esquemas.sql` nunca logra crear `BOMERP_APP`.
+    - **Conectarte como `BOM_CATALOGO` para `S01_02_tablas.sql`** (parece lo lógico, es su propio esquema) falla con `ORA-01031: insufficient privileges`: el script califica el esquema explícitamente (`CREATE TABLE BOM_CATALOGO.categoria`), y eso exige `CREATE ANY TABLE` — privilegio que solo tiene `system` (rol DBA). `BOM_CATALOGO` solo tiene `CREATE TABLE`, insuficiente cuando el esquema se califica, incluso el propio.
 
-    ```text
-    CREATE TABLE BOM_CATALOGO.categoria (
-    *
-    ERROR at line 1:
-    ORA-01031: insufficient privileges
-    ```
+    Ejecuta ambos scripts conectado como `system`, de principio a fin.
 
-    `system` sí tiene `CREATE ANY TABLE` (rol DBA), por eso ambos scripts se
-    ejecutan conectado como `system` de principio a fin — nunca cambies de
-    usuario entre `S01_01_esquemas.sql` y `S01_02_tablas.sql`.
+##### Opción A: cliente gráfico
 
-##### Ejecutar los scripts desde PowerShell (alternativa al cliente gráfico)
+| Campo | Valor |
+|---|---|
+| Connection Type | `Basic` |
+| Hostname | `127.0.0.1` |
+| Port Number | `1521` |
+| Service Name | `FREEPDB1` |
+| Username | `system` |
+| Password | `123456` |
 
-Si prefieres no instalar un cliente gráfico, copia los scripts dentro del
-contenedor y ejecútalos con `sqlplus` vía `docker exec`, siempre conectado
-como `system`. Desde `lp2/bomerp-backend`:
+![Conexión exitosa a Oracle vía Oracle SQL Developer for VS Code, mostrando el árbol de esquemas y tablas de SYSTEM](img/s01-3.2.2-database-client.png)
+
+Ejecuta los dos scripts con esta conexión. Salida esperada: `Table created.` ×2, `Grant succeeded.` ×2.
+
+Las tablas quedan en el esquema `BOM_CATALOGO`, no en `system` — para verlas en el árbol del cliente, agrega una **segunda conexión**:
+
+| Campo | Valor |
+|---|---|
+| Connection Type | `Basic` |
+| Hostname | `127.0.0.1` |
+| Port Number | `1521` |
+| Service Name | `FREEPDB1` |
+| Username | `BOM_CATALOGO` |
+| Password | `123456` |
+
+Opcional: una **tercera conexión** con `Username: BOMERP_APP` (misma contraseña y Service Name) para revisar los permisos con los que realmente corre el backend — no es dueño de las tablas, solo tiene `SELECT`/`INSERT`/`UPDATE`/`DELETE`.
+
+##### Opción B: PowerShell
+
+Si prefieres no instalar un cliente gráfico, copia los scripts dentro del contenedor y ejecútalos con `sqlplus` vía `docker exec`, siempre conectado como `system`. Desde `lp2/bomerp-backend`:
 
 ```powershell
 docker cp ..\..\docs\proyecto-integrador\u1\oracle\S01_01_esquemas.sql bomerp-oracle:/tmp/S01_01_esquemas.sql
 docker cp ..\..\docs\proyecto-integrador\u1\oracle\S01_02_tablas.sql bomerp-oracle:/tmp/S01_02_tablas.sql
 
-docker exec bomerp-oracle sqlplus -s system/123456@localhost:1521/FREEPDB1 @/tmp/S01_01_esquemas.sql
-docker exec bomerp-oracle sqlplus -s system/123456@localhost:1521/FREEPDB1 @/tmp/S01_02_tablas.sql
+docker exec bomerp-oracle sqlplus -s system/123456@localhost:1521/FREEPDB1 '@/tmp/S01_01_esquemas.sql'
+docker exec bomerp-oracle sqlplus -s system/123456@localhost:1521/FREEPDB1 '@/tmp/S01_02_tablas.sql'
 ```
-
-Salida esperada del segundo comando: `Table created.` dos veces y `Grant succeeded.` dos veces. Si en cambio ves `ORA-01031: insufficient privileges`, revisaste el usuario del segundo comando — debe decir `system`, no `BOM_CATALOGO` (ver el bloque de arriba).
-
-##### Conectarse a Oracle desde un cliente gráfico
-
-Para ejecutar esos scripts y revisar las tablas sin depender de la consola, usa un cliente de base de datos con soporte Oracle (por ejemplo la extensión de VS Code **Database Client**, `cweijan.vscode-postgresql-client2`, a pesar del nombre soporta varios motores incluido Oracle). Datos de conexión:
-
-!!! danger "El campo Database DEBE decir `FREEPDB1`, nunca en blanco"
-    Si dejas el campo **Database** vacío o con el valor por defecto del
-    cliente (`XE`), la conexión no apunta a nuestra base — y desde ahí
-    `S01_01_esquemas.sql` **no logra crear `BOMERP_APP` bajo ninguna
-    circunstancia**, sin importar cuántas veces lo intentes. Escribe
-    `FREEPDB1` explícitamente en ese campo antes de conectar, en las tres
-    conexiones que uses en esta sección (`system`, `BOM_CATALOGO` y
-    `BOMERP_APP`).
-
-| Campo | Valor |
-|---|---|
-| Host | `127.0.0.1` |
-| Port | `1521` |
-| Username | `system` |
-| Password | `123456` |
-| Database | `FREEPDB1` (**no** `XE`, ese es el valor por defecto del cliente y no es nuestra base) |
-
-![Conexión exitosa a Oracle vía Database Client, mostrando el árbol de esquemas y tablas de SYSTEM](img/s01-3.2.2-database-client.png)
-
-Usa `system` para ejecutar ambos scripts, por la razón explicada arriba. Una vez creadas las tablas, agrega una **segunda conexión** para revisarlas — las tablas pertenecen a `BOM_CATALOGO`, no a `system`, así que conectado como `system` tu cliente gráfico no las muestra en su árbol por defecto (solo muestra el propio esquema del usuario conectado):
-
-| Campo | Valor |
-|---|---|
-| Host | `127.0.0.1` |
-| Port | `1521` |
-| Username | `BOM_CATALOGO` |
-| Password | `123456` |
-| Database | `FREEPDB1` |
-
-Con esa segunda conexión, `categoria` y `producto` aparecen directamente en el árbol de esquemas. Puedes agregar además una tercera conexión con `Username: BOMERP_APP` (misma contraseña y base) para verificar los permisos con los que realmente corre el backend (`application-local.yml` usa ese usuario, no `system` ni `BOM_CATALOGO`) — `BOMERP_APP` no es dueño de las tablas, solo tiene `SELECT`/`INSERT`/`UPDATE`/`DELETE` sobre ellas.
 
 ##### Verificar esquemas, tablas y registros por SQL
 
@@ -551,28 +552,15 @@ Para salir de la sesión:
 EXIT;
 ```
 
-Si conectas como `BOM_CATALOGO` en vez de `system` (`docker exec -it bomerp-oracle sqlplus BOM_CATALOGO/123456@localhost:1521/FREEPDB1`), usa `user_tables` en lugar de `all_tables` (no necesitas filtrar por `owner`, ya estás dentro de ese esquema):
+Si conectas como `BOM_CATALOGO` en vez de `system`, usa `user_tables` en lugar de `all_tables` (sin filtrar por `owner`) y quita el prefijo `BOM_CATALOGO.` de los `SELECT *`.
 
-```sql
-SELECT table_name FROM user_tables;
-SELECT * FROM categoria;
-SELECT * FROM producto;
-```
-
-**Alternativa sin entrar al contenedor, una consulta por línea** (como
-`docker exec -it <contenedor> psql -U <user> -d <db> -c "<consulta>"`, pero
-`sqlplus` no tiene un flag `-c` propio — el equivalente es envolver la
-consulta con `bash -c` dentro del contenedor):
+**Sin entrar al contenedor**: envuelve cada consulta con `bash -c` (equivalente al flag `-c` de `psql`, que `sqlplus` no tiene):
 
 ```powershell
-docker exec bomerp-oracle bash -c "echo \"SELECT username FROM dba_users WHERE username IN ('BOM_CATALOGO', 'BOMERP_APP');\" | sqlplus -s system/123456@localhost:1521/FREEPDB1"
 docker exec bomerp-oracle bash -c "echo \"SELECT table_name FROM all_tables WHERE owner = 'BOM_CATALOGO';\" | sqlplus -s system/123456@localhost:1521/FREEPDB1"
-docker exec bomerp-oracle bash -c "echo \"SELECT privilege FROM dba_sys_privs WHERE grantee = 'BOM_CATALOGO';\" | sqlplus -s system/123456@localhost:1521/FREEPDB1"
-docker exec bomerp-oracle bash -c "echo \"SELECT * FROM BOM_CATALOGO.categoria;\" | sqlplus -s system/123456@localhost:1521/FREEPDB1"
-docker exec bomerp-oracle bash -c "echo \"SELECT * FROM BOM_CATALOGO.producto;\" | sqlplus -s system/123456@localhost:1521/FREEPDB1"
 ```
 
-**Alternativa con todas las consultas en un solo comando** (here-string de PowerShell, útil para pegar todo de una vez sin repetir `docker exec` por cada línea):
+O las 5 consultas juntas en un solo comando (here-string de PowerShell):
 
 ```powershell
 @"
@@ -755,15 +743,7 @@ Debe responder `Hola BomERP` en texto plano. Si este paso falla, el problema est
 
 **Requisito antes de continuar:** las tablas `BOM_CATALOGO.categoria` y `BOM_CATALOGO.producto` deben existir en Oracle *antes* de compilar este paso. Con `ddl-auto: validate` (3.2.3), Hibernate valida el esquema al arrancar — si las tablas no existen, falla igual que pasó con `event_publication` (ADR-002). Se crean ejecutando [`S01_01_esquemas.sql`](../../proyecto-integrador/u1/oracle/S01_01_esquemas.sql) y [`S01_02_tablas.sql`](../../proyecto-integrador/u1/oracle/S01_02_tablas.sql) — si ya lo hiciste en 3.2.2, no hace falta repetirlo aquí. Detalle opcional, solo si quieres entender el porqué de cada bloque: [BD2 S1](../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio.md).
 
-Crea el paquete `pe.edu.upeu.bomerp.catalogo` con `package-info.java`:
-
-```java
-/**
- * Modulo Catalogo: propietario de Categoria y Producto.
- * Modulo Spring Modulith (paquete directo bajo el paquete raiz de la aplicacion).
- */
-package pe.edu.upeu.bomerp.catalogo;
-```
+Crea el paquete `pe.edu.upeu.bomerp.catalogo` (Spring Modulith lo detecta automáticamente como módulo por ser un paquete directo bajo el paquete raíz, sin configuración adicional).
 
 **`catalogo/categoria/entity/Categoria.java`**
 
@@ -1081,7 +1061,7 @@ class ModularityTests {
 
 | Verificación | Evidencia esperada |
 |---|---|
-| Entorno Java | `java`, `javac` y Maven reportan Java 21. |
+| Entorno Java | `java` y `javac` reportan Java 21; el Maven Wrapper del proyecto (`mvnw`) también se ejecuta con Java 21. |
 | Dependencias mínimas | `pom.xml` con Web, JPA, Validation, Oracle, Actuator, OpenAPI y Spring Modulith. |
 | Configuración por ambiente | Perfil local sin secretos incluidos en el repositorio. |
 | Conexión a base de datos | Inicio correcto y componente `db` activo en Actuator. |
@@ -1274,7 +1254,7 @@ Responde en 5 a 8 líneas:
 La evidencia individual se considera completa si:
 
 - El archivo respeta el nombre solicitado.
-- El entorno utiliza Java 21 y Maven reconoce el mismo JDK.
+- El entorno utiliza Java 21 y el Maven Wrapper del proyecto reconoce el mismo JDK.
 - El backend inicia correctamente y comprueba la conexión a la base de datos.
 - La configuración por ambiente no expone secretos.
 - El endpoint de verificación responde correctamente.
