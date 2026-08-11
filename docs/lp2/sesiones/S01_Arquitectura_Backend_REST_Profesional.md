@@ -464,7 +464,9 @@ Crea el esquema y las tablas del catálogo ejecutando, en orden, [`S01_01_esquem
 
 ![Conexión exitosa a Oracle vía Oracle SQL Developer for VS Code, mostrando el árbol de esquemas y tablas de SYSTEM](img/s01-3.2.2-database-client.png)
 
-Ejecuta los dos scripts con esta conexión. Salida esperada: `Table created.` ×2, `Grant succeeded.` ×2.
+Ejecuta los dos scripts con esta conexión.
+
+Salida esperada: `Table created.` ×2, `Grant succeeded.` ×2.
 
 Las tablas quedan en el esquema `BOM_CATALOGO`, no en `system` — para verlas en el árbol del cliente, agrega una **segunda conexión**:
 
@@ -700,13 +702,14 @@ public class HelloController {
 }
 ```
 
-Levanta el proyecto (detalle completo del wrapper en 3.2.7) y visita `http://localhost:8080/api/v1/hello`:
+Levanta el proyecto
 
 ```powershell
 .\mvnw.cmd spring-boot:run
 ```
 
-Debe responder `Hola BomERP` en texto plano. Si este paso falla, el problema está en el arranque de Spring Boot (dependencias, puerto, configuración) — más simple de diagnosticar aquí, sin JPA ni Oracle todavía de por medio, que después de sumar el módulo `catalogo`.
+Visita http://localhost:8080/api/v1/hello
+o http://localhost:8080/swagger-ui.html:
 
 `HelloController` es solo un paso de verificación: una vez que `catalogo` expone sus propios endpoints reales (paso siguiente), puedes eliminarlo — no forma parte del contrato final de la API.
 
