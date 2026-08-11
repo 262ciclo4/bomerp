@@ -3555,32 +3555,22 @@
 <p>Tiempo: 25 min.</p>
 <h3 id="21-arquitectura-de-la-sesion">2.1 Arquitectura de la sesión<a class="headerlink" href="#21-arquitectura-de-la-sesion" title="Permanent link">&para;</a></h3>
 <pre class="mermaid"><code>flowchart TB
-    APP[BomErpApplication]
+    APP[BomErpApplication] --&gt; CAT
+    APP -.-&gt;|se agregan como paquetes| FUTUROS
 
-    subgraph ROW[" "]
-        direction LR
-        subgraph CAT["Módulo catalogo"]
-            direction TB
-            API[Controllers y DTO] --&gt; USE[Services]
-            USE --&gt; DOM[Entities]
-            USE --&gt; INF[Repositories JPA]
-        end
-
-        subgraph FUTUROS["Módulos futuros, aún sin crear"]
-            direction TB
-            VEN["ventas (S4)"]
-            COM["compras (opcional)"]
-            SEG["seguridad (S10)"]
-        end
+    subgraph CAT["Módulo catalogo"]
+        API[Controllers y DTO] --&gt; USE[Services]
+        USE --&gt; DOM[Entities]
+        USE --&gt; INF[Repositories JPA]
     end
 
-    DB[(Oracle)]
+    INF --&gt; DB[(Oracle)]
 
-    APP --&gt; CAT
-    APP -.-&gt;|se agregan como paquetes| FUTUROS
-    INF --&gt; DB
-
-    style ROW fill:none,stroke:none</code></pre>
+    subgraph FUTUROS["Módulos futuros, aún sin crear"]
+        VEN["ventas (S4)"]
+        COM["compras (opcional)"]
+        SEG["seguridad (S10)"]
+    end</code></pre>
 <p>Lectura del diagrama:</p>
 <ul>
 <li>Organización: primero por módulo de negocio, luego por capa (controller, service, repository, entity).</li>
