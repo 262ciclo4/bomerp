@@ -2361,6 +2361,13 @@ reactor Maven multi-módulo:</p>
   como fuera de alcance (ver <code>docs/proyecto-integrador/u3/lp2-producto.md</code>).</li>
 <li>La verificación mecánica de esta regla de dependencia se resuelve con
   Spring Modulith — ver <a href="../ADR-002-spring-modulith/">ADR-002</a>.</li>
+<li>Dentro de cada módulo, las capas siguen un flujo único:
+  <code>controller</code> → <code>service</code> → <code>repository</code> → <code>entity</code>. Cada capa solo conoce
+  la inmediatamente inferior; el controller nunca accede directo al
+  repository, ni el service expone entidades JPA como respuesta HTTP (para
+  eso existe el DTO). Esta separación simple, sin interfaces ni capas de
+  indirección adicionales, alcanza para lo que pide el sílabo de LP2 en
+  esta unidad.</li>
 </ul>
 <h2 id="alternativas-consideradas">Alternativas consideradas<a class="headerlink" href="#alternativas-consideradas" title="Permanent link">&para;</a></h2>
 <table>

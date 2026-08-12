@@ -3236,14 +3236,14 @@
 </table>
 <h3 id="16-motivacion-de-la-sesion">1.6 Motivación de la sesión<a class="headerlink" href="#16-motivacion-de-la-sesion" title="Permanent link">&para;</a></h3>
 <h4 id="161-caso-catalogo-de-bomerp-categoriaproducto">1.6.1 Caso: catálogo de BomERP (<code>Categoria</code>–<code>Producto</code>)<a class="headerlink" href="#161-caso-catalogo-de-bomerp-categoriaproducto" title="Permanent link">&para;</a></h4>
-<p>LP2 ya expone <code>GET /api/v1/productos</code> y <code>GET /api/v1/categorias</code> (S1) y está completando su CRUD (S2) sobre las tablas <code>BOM_CATALOGO.categoria</code> y <code>BOM_CATALOGO.producto</code> — esta misma sesión crea el esquema <code>BOM_CATALOGO</code> y esas dos tablas (3.2) antes de construir PL/SQL sobre ellas. El backend puede validar datos, pero ciertos cálculos y reglas del negocio conviene poder resolverlos también del lado de Oracle: el valor de inventario de un producto, el registro de un producto nuevo y el ajuste de su precio son operaciones que un procedimiento o función PL/SQL puede centralizar.</p>
+<p>¿Dónde debería vivir la regla que calcula el valor de inventario de un producto, o la que ajusta su precio: en el backend de la aplicación, o en la propia base de datos? El backend puede validar datos, pero hay cálculos y reglas del negocio que conviene resolver también del lado de Oracle — centralizados en un procedimiento o función PL/SQL, disponibles sin importar qué cliente los invoque.</p>
 <p>Preguntas para los estudiantes:</p>
 <ol>
-<li>¿Qué diferencia hay entre calcular <code>precio * stock</code> en Java y calcularlo en una función PL/SQL?</li>
+<li>¿Qué diferencia hay entre calcular <code>precio * stock</code> en el backend Java y calcularlo en una función PL/SQL?</li>
 <li>¿Qué procedimiento podría invocar (o replicar) un backend REST como el de LP2?</li>
 <li>¿Qué función permite centralizar un cálculo del negocio sin repetirlo en cada consulta?</li>
 <li>¿Por qué un parámetro <code>IN OUT</code> es distinto de tener un <code>IN</code> y un <code>OUT</code> por separado?</li>
-<li>¿Cómo se evidencia que BD2 no es un ejercicio aislado, sino el motor transaccional detrás del catálogo del negocio?</li>
+<li>¿Cómo se evidencia que los productos de esta sesión no son ejercicios aislados, sino el motor transaccional detrás del esquema <code>BOM_CATALOGO</code>?</li>
 </ol>
 <h3 id="17-ubicacion-en-el-curso">1.7 Ubicación en el curso<a class="headerlink" href="#17-ubicacion-en-el-curso" title="Permanent link">&para;</a></h3>
 <ul>

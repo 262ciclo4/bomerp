@@ -2216,10 +2216,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#161-caso-api-de-productos" class="md-nav__link">
+  <a href="#161-caso-catalogo-de-bomerp-categoriaproducto" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1.6.1 Caso: API de productos
+        1.6.1 Caso: catálogo de BomERP (Categoria–Producto)
       
     </span>
   </a>
@@ -2909,10 +2909,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#161-caso-api-de-productos" class="md-nav__link">
+  <a href="#161-caso-catalogo-de-bomerp-categoriaproducto" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1.6.1 Caso: API de productos
+        1.6.1 Caso: catálogo de BomERP (Categoria–Producto)
       
     </span>
   </a>
@@ -3544,15 +3544,15 @@
 </tbody>
 </table>
 <h3 id="16-motivacion-de-la-sesion">1.6 Motivación de la sesión<a class="headerlink" href="#16-motivacion-de-la-sesion" title="Permanent link">&para;</a></h3>
-<h4 id="161-caso-api-de-productos">1.6.1 Caso: API de productos<a class="headerlink" href="#161-caso-api-de-productos" title="Permanent link">&para;</a></h4>
-<p>En esta sesión se crea una base backend que arranca de forma reproducible, comprueba su conexión a Oracle y expone los listados iniciales del módulo <code>catalogo</code>: <code>Categoria</code> y <code>Producto</code>. </p>
+<h4 id="161-caso-catalogo-de-bomerp-categoriaproducto">1.6.1 Caso: catálogo de BomERP (<code>Categoria</code>–<code>Producto</code>)<a class="headerlink" href="#161-caso-catalogo-de-bomerp-categoriaproducto" title="Permanent link">&para;</a></h4>
+<p>Antes de escribir el primer endpoint, hay algo más urgente que resolver: ¿este backend arranca de forma reproducible y realmente conecta a Oracle, o solo "funciona en mi máquina"? Esa pregunta no es solo de LP2 — <strong>BomERP</strong> (<em>Business Operations Management – Enterprise Resource Planning</em>), el proyecto integrador evolutivo de ADS, BD2 y LP2 en este ciclo, depende de que esta base funcione: ADS define en paralelo, en su propia S1, la primera visión arquitectónica del sistema (monolito modular verificado con Spring Modulith), y BD2 crea el esquema <code>BOM_CATALOGO</code> sobre el que este backend se conecta. Si el backend no arranca de forma confiable, ninguna de esas dos decisiones tiene dónde apoyarse. Esta sesión construye esa primera pieza concreta: la base backend que arranca de forma reproducible, comprueba su conexión a Oracle y expone los listados iniciales del módulo <code>catalogo</code>: <code>Categoria</code> y <code>Producto</code>.</p>
 <p>Preguntas para los estudiantes:</p>
 <ol>
 <li>¿Por qué <code>Categoria</code> y <code>Producto</code> pertenecen al mismo módulo de catálogo?</li>
 <li>¿Qué diferencia existe entre una entidad y su DTO de respuesta?</li>
 <li>¿Cómo demuestran los listados que Controller, Service, Repository y Oracle están conectados?</li>
 <li>¿Qué decisión de ADS condiciona la estructura del backend?</li>
-<li>¿Es posible que la aplicación web para este curso (<code>BomERP</code>) continúe el dominio comercial desarrollado desde POO (<code>CoMarket</code>) y LP1 (<code>BomStart</code>)?. </li>
+<li>¿Cómo se evidencia que este backend no es un proyecto aislado, sino la capa que expone las decisiones de ADS y los datos que crea BD2?</li>
 </ol>
 <h3 id="17-ubicacion-en-el-curso">1.7 Ubicación en el curso<a class="headerlink" href="#17-ubicacion-en-el-curso" title="Permanent link">&para;</a></h3>
 <ul>
@@ -3698,7 +3698,18 @@ hay nada real que desplegar.</p>
 <p>Hoja de ruta de la sesión práctica:</p>
 <ul>
 <li><strong>3.1</strong> Instalar y verificar Java 21 LTS, VS Code y sus extensiones.</li>
-<li><strong>3.2</strong> Crear y verificar el proyecto backend.</li>
+<li><strong>3.2</strong> Crear y verificar el proyecto backend.<ul>
+<li><strong>3.2.1</strong> Crear el proyecto con Spring Initializr desde VS Code.</li>
+<li><strong>3.2.2</strong> Configurar Oracle en Docker.</li>
+<li><strong>3.2.3</strong> Configurar el ambiente local.</li>
+<li><strong>3.2.4</strong> Configurar OpenAPI.</li>
+<li><strong>3.2.5</strong> Probar el ciclo completo con un endpoint "Hola mundo".</li>
+<li><strong>3.2.6</strong> Implementar el módulo <code>catalogo</code>: <code>Categoria</code> y <code>Producto</code>.</li>
+<li><strong>3.2.7</strong> Ejecutar el proyecto con Maven Wrapper.</li>
+<li><strong>3.2.8</strong> Verificar el proyecto backend: arranque, conexión a Oracle y límites de módulos.</li>
+<li><strong>3.2.9</strong> Simular escalamiento horizontal (múltiples instancias).</li>
+</ul>
+</li>
 <li><strong>3.3</strong> Delimitar los endpoints del módulo Catálogo.</li>
 <li><strong>3.4</strong> Reconocer el DTO de entrada reservado para S2.</li>
 <li><strong>3.5</strong> Diseñar DTO de salida.</li>
@@ -4691,6 +4702,7 @@ GET http://localhost:58252/api/v1/hello -&gt; Hola BomERP
         └── producto/{controller,dto,entity,repository,service}
 </code></pre></div>
 <p>Un solo <code>pom.xml</code> y un solo <code>.jar</code> ejecutable. <code>ventas</code>, <code>inventario</code>, <code>compras</code> y <code>seguridad</code> no se crean como paquetes vacíos "por si acaso" — se agregan como paquetes directos bajo <code>pe.edu.upeu.bomerp</code> recién cuando su sesión (S4, S10...) les da contenido real. Spring Modulith detecta cada paquete directo como un módulo y verifica sus límites automáticamente (<code>ModularityTests</code>); el detalle de esta decisión está en <a href="../../adr/ADR-001-arquitectura-backend/">ADR-001</a> y <a href="../../adr/ADR-002-spring-modulith/">ADR-002</a>.</p>
+<p>Dentro de cada módulo, <code>{controller,dto,entity,repository,service}</code> es la arquitectura en capas: cada carpeta representa una capa, y cada capa solo conoce la inmediatamente inferior (el controller nunca accede directo al repository). Justificación completa de esta decisión: <a href="../../adr/ADR-001-arquitectura-backend/">ADR-001</a>.</p>
 <h3 id="38-trazar-lp2-con-ads-y-bd2">3.8 Trazar LP2 con ADS y BD2<a class="headerlink" href="#38-trazar-lp2-con-ads-y-bd2" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> matriz de integración inicial.</p>
 <table>
