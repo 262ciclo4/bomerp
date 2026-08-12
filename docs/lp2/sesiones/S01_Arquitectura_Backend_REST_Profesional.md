@@ -121,7 +121,7 @@ El proyecto se organiza como monolito modular: un único paquete raíz (`BomerpB
 | Actuator | Se conserva para verificar aplicación y conexión. |
 | Springdoc OpenAPI | Se conserva para publicar el contrato inicial. |
 | DevTools | Se agrega para reinicio automático y LiveReload durante el desarrollo; Spring Boot la excluye automáticamente del `.jar` empaquetado, así que no afecta producción. |
-| Security y OAuth2 Resource Server | Se posponen hasta S10. |
+| Security y OAuth2 Resource Server | Se posponen hasta S10 — ver [ADR-004](../adr/ADR-004-jwt-diferido.md). |
 
 
 ### 2.3 Configuración por ambientes, ORM, driver y conexión a Oracle

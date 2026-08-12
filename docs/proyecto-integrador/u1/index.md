@@ -22,6 +22,14 @@ El sistema MVC de Ciclo 3 ya gestiona `Producto`, `Categoria`, `Venta`, `Detalle
 | BD2 | Motor transaccional Oracle optimizado. | [Producto BD2 U1](bd2-producto.md) |
 | LP2 | Backend REST modular ensamblado como una sola aplicación Spring Boot, con Catálogo y Ventas funcionales, límites de Inventario y Compras, persistencia, consultas, CORS, logs y pruebas. | [Producto LP2 U1](lp2-demo.md) |
 
+## Alcance relativo de cada curso
+
+Los tres cursos no tienen el mismo alcance de visión sobre BomERP:
+
+- **ADS** ve todo el sistema: arquitectura completa de la empresa, incluyendo infraestructura y sistemas externos con los que BomERP se integra (notificaciones, servicios de IA, etc.), no solo lo que BD2 o LP2 construyen.
+- **BD2** también ve el sistema completo, pero acotado a la base de datos empresarial: motor transaccional, optimización, auditoría y resiliencia de Oracle.
+- **LP2** no alcanza a construir todo el ERP: su producto es una porción concreta — Catálogo y Ventas (2 módulos) —, con Inventario, Compras y Seguridad delimitados para sesiones futuras.
+
 ## Integracion esperada
 
 ```mermaid

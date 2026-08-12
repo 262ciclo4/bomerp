@@ -6,7 +6,7 @@ Tiempo: 20 min.
 
 ### 1.1 Contexto
 
-La arquitectura de un sistema decide qué tan bien resiste el crecimiento del proyecto y el paso del tiempo. Esta sesión identifica stakeholders y atributos de calidad, y define la primera visión arquitectónica del sistema empresarial (base de datos, backend y frontend).
+La arquitectura de un sistema decide qué tan bien resiste el crecimiento del proyecto y el paso del tiempo. A diferencia de BD2 (acotado a la base de datos) o LP2 (que construye solo una porción del backend), ADS mira el sistema empresarial completo: infraestructura, servicios externos e integraciones, además de base de datos, backend y frontend. Esta sesión identifica stakeholders y atributos de calidad, y define la primera visión arquitectónica inicial.
 
 ### 1.2 Índice
 
@@ -215,9 +215,9 @@ Este esquema es intencionalmente simple: el modelo C4 completo (C1-C3) se constr
 |---|---|---|---|
 | ADR-001 | Un solo proyecto Spring Boot, sin reactor Maven multi-módulo | El sílabo de LP2 pide organización por capas, no distribución; menos fricción de build | El backend se despliega como un único `.jar` |
 | ADR-002 | Módulos de negocio como paquetes verificados con Spring Modulith, no como artefactos Maven | Verifica límites de dependencia automáticamente en vez de solo documentarlos | Un test (`ModularityTests`) falla si un módulo viola el límite de otro |
-| ADR-003 | JWT se implementa recién en S10 | Evita construir seguridad antes de tener recursos que proteger | U1 expone endpoints sin autenticación; no es el estado final |
+| ADR-004 | JWT se implementa recién en S10 | Evita construir seguridad antes de tener recursos que proteger | U1 expone endpoints sin autenticación; no es el estado final |
 
-Detalle completo de ADR-001 y ADR-002: `docs/lp2/adr/`. Estas decisiones se retoman y amplían en S14 (ADRs y trazabilidad técnica).
+Detalle completo: [ADR-001](../../lp2/adr/ADR-001-arquitectura-backend.md), [ADR-002](../../lp2/adr/ADR-002-spring-modulith.md), [ADR-003](../../lp2/adr/ADR-003-spring-boot-4.md) y [ADR-004](../../lp2/adr/ADR-004-jwt-diferido.md). Estas decisiones se retoman y amplían en S14 (ADRs y trazabilidad técnica).
 
 ### 3.7 Trazar ADS con BD2 y LP2
 
