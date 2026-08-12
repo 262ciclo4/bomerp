@@ -37,15 +37,15 @@ Esquema `BOM_CATALOGO` con sus tablas base, más procedimientos y funciones inic
 
 #### 1.6.1 Caso: catálogo de BomERP (`Categoria`–`Producto`)
 
-LP2 ya expone `GET /api/v1/productos` y `GET /api/v1/categorias` (S1) y está completando su CRUD (S2) sobre las tablas `BOM_CATALOGO.categoria` y `BOM_CATALOGO.producto` — esta misma sesión crea el esquema `BOM_CATALOGO` y esas dos tablas (3.2) antes de construir PL/SQL sobre ellas. El backend puede validar datos, pero ciertos cálculos y reglas del negocio conviene poder resolverlos también del lado de Oracle: el valor de inventario de un producto, el registro de un producto nuevo y el ajuste de su precio son operaciones que un procedimiento o función PL/SQL puede centralizar.
+¿Dónde debería vivir la regla que calcula el valor de inventario de un producto, o la que ajusta su precio: en el backend de la aplicación, o en la propia base de datos? El backend puede validar datos, pero hay cálculos y reglas del negocio que conviene resolver también del lado de Oracle — centralizados en un procedimiento o función PL/SQL, disponibles sin importar qué cliente los invoque.
 
 Preguntas para los estudiantes:
 
-1. ¿Qué diferencia hay entre calcular `precio * stock` en Java y calcularlo en una función PL/SQL?
+1. ¿Qué diferencia hay entre calcular `precio * stock` en el backend Java y calcularlo en una función PL/SQL?
 2. ¿Qué procedimiento podría invocar (o replicar) un backend REST como el de LP2?
 3. ¿Qué función permite centralizar un cálculo del negocio sin repetirlo en cada consulta?
 4. ¿Por qué un parámetro `IN OUT` es distinto de tener un `IN` y un `OUT` por separado?
-5. ¿Cómo se evidencia que BD2 no es un ejercicio aislado, sino el motor transaccional detrás del catálogo del negocio?
+5. ¿Cómo se evidencia que los productos de esta sesión no son ejercicios aislados, sino el motor transaccional detrás del esquema `BOM_CATALOGO`?
 
 ### 1.7 Ubicación en el curso
 

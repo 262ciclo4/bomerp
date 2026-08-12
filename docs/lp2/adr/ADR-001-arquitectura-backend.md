@@ -50,6 +50,13 @@ lp2/bomerp-backend/
   como fuera de alcance (ver `docs/proyecto-integrador/u3/lp2-producto.md`).
 - La verificación mecánica de esta regla de dependencia se resuelve con
   Spring Modulith — ver [ADR-002](ADR-002-spring-modulith.md).
+- Dentro de cada módulo, las capas siguen un flujo único:
+  `controller` → `service` → `repository` → `entity`. Cada capa solo conoce
+  la inmediatamente inferior; el controller nunca accede directo al
+  repository, ni el service expone entidades JPA como respuesta HTTP (para
+  eso existe el DTO). Esta separación simple, sin interfaces ni capas de
+  indirección adicionales, alcanza para lo que pide el sílabo de LP2 en
+  esta unidad.
 
 ## Alternativas consideradas
 

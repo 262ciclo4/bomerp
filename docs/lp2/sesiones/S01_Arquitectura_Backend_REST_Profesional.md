@@ -37,9 +37,9 @@ Proyecto backend ejecutable y reproducible, sobre Java 21 LTS, organizado como m
 
 ### 1.6 Motivación de la sesión
 
-#### 1.6.1 Caso: API de productos
+#### 1.6.1 Caso: catálogo de BomERP (`Categoria`–`Producto`)
 
-En esta sesión se crea una base backend que arranca de forma reproducible, comprueba su conexión a Oracle y expone los listados iniciales del módulo `catalogo`: `Categoria` y `Producto`. 
+Antes de escribir el primer endpoint, hay algo más urgente que resolver: ¿este backend arranca de forma reproducible y realmente conecta a Oracle, o solo "funciona en mi máquina"? Esa pregunta no es solo de LP2 — **BomERP** (*Business Operations Management – Enterprise Resource Planning*), el proyecto integrador evolutivo de ADS, BD2 y LP2 en este ciclo, depende de que esta base funcione: ADS define en paralelo, en su propia S1, la primera visión arquitectónica del sistema (monolito modular verificado con Spring Modulith), y BD2 crea el esquema `BOM_CATALOGO` sobre el que este backend se conecta. Si el backend no arranca de forma confiable, ninguna de esas dos decisiones tiene dónde apoyarse. Esta sesión construye esa primera pieza concreta: la base backend que arranca de forma reproducible, comprueba su conexión a Oracle y expone los listados iniciales del módulo `catalogo`: `Categoria` y `Producto`.
 
 Preguntas para los estudiantes:
 
@@ -47,7 +47,7 @@ Preguntas para los estudiantes:
 2. ¿Qué diferencia existe entre una entidad y su DTO de respuesta?
 3. ¿Cómo demuestran los listados que Controller, Service, Repository y Oracle están conectados?
 4. ¿Qué decisión de ADS condiciona la estructura del backend?
-5. ¿Es posible que la aplicación web para este curso (`BomERP`) continúe el dominio comercial desarrollado desde POO (`CoMarket`) y LP1 (`BomStart`)?. 
+5. ¿Cómo se evidencia que este backend no es un proyecto aislado, sino la capa que expone las decisiones de ADS y los datos que crea BD2?
 
 ### 1.7 Ubicación en el curso
 
@@ -174,6 +174,15 @@ Hoja de ruta de la sesión práctica:
 
 - **3.1** Instalar y verificar Java 21 LTS, VS Code y sus extensiones.
 - **3.2** Crear y verificar el proyecto backend.
+    - **3.2.1** Crear el proyecto con Spring Initializr desde VS Code.
+    - **3.2.2** Configurar Oracle en Docker.
+    - **3.2.3** Configurar el ambiente local.
+    - **3.2.4** Configurar OpenAPI.
+    - **3.2.5** Probar el ciclo completo con un endpoint "Hola mundo".
+    - **3.2.6** Implementar el módulo `catalogo`: `Categoria` y `Producto`.
+    - **3.2.7** Ejecutar el proyecto con Maven Wrapper.
+    - **3.2.8** Verificar el proyecto backend: arranque, conexión a Oracle y límites de módulos.
+    - **3.2.9** Simular escalamiento horizontal (múltiples instancias).
 - **3.3** Delimitar los endpoints del módulo Catálogo.
 - **3.4** Reconocer el DTO de entrada reservado para S2.
 - **3.5** Diseñar DTO de salida.
@@ -1159,6 +1168,8 @@ lp2/bomerp-backend/
 ```
 
 Un solo `pom.xml` y un solo `.jar` ejecutable. `ventas`, `inventario`, `compras` y `seguridad` no se crean como paquetes vacíos "por si acaso" — se agregan como paquetes directos bajo `pe.edu.upeu.bomerp` recién cuando su sesión (S4, S10...) les da contenido real. Spring Modulith detecta cada paquete directo como un módulo y verifica sus límites automáticamente (`ModularityTests`); el detalle de esta decisión está en [ADR-001](../adr/ADR-001-arquitectura-backend.md) y [ADR-002](../adr/ADR-002-spring-modulith.md).
+
+Dentro de cada módulo, `{controller,dto,entity,repository,service}` es la arquitectura en capas: cada carpeta representa una capa, y cada capa solo conoce la inmediatamente inferior (el controller nunca accede directo al repository). Justificación completa de esta decisión: [ADR-001](../adr/ADR-001-arquitectura-backend.md).
 
 ### 3.8 Trazar LP2 con ADS y BD2
 
