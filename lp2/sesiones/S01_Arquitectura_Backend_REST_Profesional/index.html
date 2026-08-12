@@ -3792,7 +3792,7 @@ code<span class="w"> </span>--install-extension<span class="w"> </span>vmware.vs
 <tr>
 <td>Database Client</td>
 <td><code>cweijan.vscode-database-client2</code></td>
-<td>Cliente gráfico multi-motor: MySQL, PostgreSQL, SQLite, SQL Server, entre otros. <strong>No incluye Oracle</strong> — su descripción es genérica, pero puedes usar <code>cweijan.vscode-mysql-client2</code>.</td>
+<td>Cliente gráfico multi-motor: MySQL, PostgreSQL, SQLite, SQL Server, Oracle, entre otros.</td>
 </tr>
 <tr>
 <td>Oracle SQL Developer for VS Code</td>
@@ -3801,6 +3801,11 @@ code<span class="w"> </span>--install-extension<span class="w"> </span>vmware.vs
 </tr>
 </tbody>
 </table>
+<div class="admonition tip">
+<p class="admonition-title">Si instalaste todo pero <code>Ctrl+Shift+P</code> → \"Spring\" no muestra ningún comando</p>
+<p>El Spring Boot Extension Pack puede quedar <strong>instalado pero deshabilitado</strong>. Reiniciar VS Code (o toda la PC) no lo arregla si quedó en ese estado.</p>
+<p>Verifica en el panel de extensiones (<code>Ctrl+Shift+X</code>, buscar "Spring"): si el botón dice <strong>Enable</strong> en vez de <strong>Disable</strong>, está deshabilitado — actívalo. Recién ahí aparecen los comandos de Spring en la paleta de comandos.</p>
+</div>
 <h3 id="32-crear-y-verificar-el-proyecto-backend">3.2 Crear y verificar el proyecto backend<a class="headerlink" href="#32-crear-y-verificar-el-proyecto-backend" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> proyecto <code>bomerp-backend</code> ejecutable y conectado.</p>
 <h4 id="321-crear-el-proyecto-con-spring-initializr-desde-vs-code">3.2.1 Crear el proyecto con Spring Initializr desde VS Code<a class="headerlink" href="#321-crear-el-proyecto-con-spring-initializr-desde-vs-code" title="Permanent link">&para;</a></h4>
