@@ -1237,14 +1237,14 @@ Pega esta página como la última hoja del PDF, con tus respuestas.
 2. ¿Qué punto de la clase te resultó más confuso o te dejó con dudas?
 3. ¿Tienes alguna pregunta que te gustaría que sea respondida la siguiente clase?
 4. Sobre tu nivel de comprensión de la clase de hoy, marca una opción:
-   - ¡Entendido! - Lo domino y podría explicarlo.
-   - Más o menos. - Entendí la idea general, pero tengo dudas.
-   - Necesito ayuda. - Me siento perdido/a con este tema.
+    - ¡Entendido! - Lo domino y podría explicarlo.
+    - Más o menos. - Entendí la idea general, pero tengo dudas.
+    - Necesito ayuda. - Me siento perdido/a con este tema.
 5. ¿Cómo puedo ayudarte a comprender mejor el tema?
 6. Pensando en tu participación y esfuerzo en la clase de hoy, ¿cómo te autoevaluarías? Marca una opción:
-   - Muy Comprometido/a: Me esforcé al máximo.
-   - Comprometido/a: Sé que podría haberme esforzado un poco más.
-   - Poco Comprometido/a: Hoy no di mi mejor esfuerzo.
+    - Muy Comprometido/a: Me esforcé al máximo.
+    - Comprometido/a: Sé que podría haberme esforzado un poco más.
+    - Poco Comprometido/a: Hoy no di mi mejor esfuerzo.
 7. Mi satisfacción con la clase fue... (califica del 1 al 10, donde 1 es insatisfecho y 10 es muy satisfecho).
 
 ### 4.2 Criterios mínimos de aceptación
