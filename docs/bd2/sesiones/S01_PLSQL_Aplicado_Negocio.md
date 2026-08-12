@@ -50,8 +50,8 @@ Preguntas para los estudiantes:
 ### 1.7 Ubicación en el curso
 
 - Unidad: U1 - Programación y optimización (Oracle XE).
-- Producto de unidad: motor transaccional Oracle optimizado.
 - Producto del curso: base de datos empresarial Oracle operativa, administrada, optimizada, auditada y resiliente.
+- Producto de unidad: motor transaccional Oracle optimizado.
 - Avance del producto en esta sesión: procedimientos, funciones y reglas iniciales del motor transaccional.
 
 Roadmap del producto de la unidad:

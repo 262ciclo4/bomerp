@@ -50,8 +50,8 @@ Preguntas para los estudiantes:
 ### 1.7 Ubicación en el curso
 
 - Unidad: U1 - Arquitectura y Diseño Estructural.
-- Producto de unidad: arquitectura documentada mediante vistas arquitectónicas y principios de diseño aplicados.
 - Producto del curso: Diseño Técnico Profesional Documentado.
+- Producto de unidad: arquitectura documentada mediante vistas arquitectónicas y principios de diseño aplicados.
 - Avance del producto en esta sesión: visión inicial, stakeholders, atributos de calidad y decisiones base para el sistema.
 
 Roadmap del producto de la unidad:
