@@ -34,10 +34,10 @@ Los tres cursos no tienen el mismo alcance de visión sobre BomERP:
 
 ```mermaid
 flowchart TB
-    A[ADS U1<br/>C4, atributos de calidad, decisiones y componentes]
-    B[BD2 U1<br/>PL/SQL, triggers, excepciones, optimizacion e indices]
-    C[LP2 U1<br/>Un Spring Boot modular<br/>Catálogo y Ventas funcionales]
-    D[Producto integrado U1<br/>Backend empresarial funcional y sustentado]
+    A["`**ADS U1:** C4, atributos de calidad, decisiones y componentes`"]
+    B["`**BD2 U1:** PL/SQL, triggers, excepciones, optimizacion e indices`"]
+    C["`**LP2 U1:** Un Spring Boot modular, Catálogo y Ventas funcionales`"]
+    D["`**Producto integrado U1:** Backend empresarial funcional y sustentado`"]
 
     A --> C
     A --> D

@@ -77,5 +77,6 @@ nav:
           - ADR-001 - Arquitectura del backend: lp2/adr/ADR-001-arquitectura-backend.md
           - ADR-002 - Spring Modulith: lp2/adr/ADR-002-spring-modulith.md
           - ADR-003 - Versión exacta de Spring Boot 4.0.7: lp2/adr/ADR-003-spring-boot-4.md
+          - ADR-004 - JWT diferido a S10: lp2/adr/ADR-004-jwt-diferido.md
       - 1. Base backend REST modular de BomERP:
           - S1 - Arquitectura backend REST profesional: lp2/sesiones/S01_Arquitectura_Backend_REST_Profesional.md
