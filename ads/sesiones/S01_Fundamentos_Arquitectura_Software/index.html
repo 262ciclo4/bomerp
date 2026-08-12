@@ -3088,7 +3088,7 @@
 <h2 id="1-introduccion">1. Introducción<a class="headerlink" href="#1-introduccion" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 20 min.</p>
 <h3 id="11-contexto">1.1 Contexto<a class="headerlink" href="#11-contexto" title="Permanent link">&para;</a></h3>
-<p>La arquitectura de un sistema decide qué tan bien resiste el crecimiento del proyecto y el paso del tiempo. Esta sesión identifica stakeholders y atributos de calidad, y define la primera visión arquitectónica del sistema empresarial (base de datos, backend y frontend).</p>
+<p>La arquitectura de un sistema decide qué tan bien resiste el crecimiento del proyecto y el paso del tiempo. A diferencia de BD2 (acotado a la base de datos) o LP2 (que construye solo una porción del backend), ADS mira el sistema empresarial completo: infraestructura, servicios externos e integraciones, además de base de datos, backend y frontend. Esta sesión identifica stakeholders y atributos de calidad, y define la primera visión arquitectónica inicial.</p>
 <h3 id="12-indice">1.2 Índice<a class="headerlink" href="#12-indice" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Rol de la arquitectura de software.</li>
@@ -3395,14 +3395,14 @@ en las siguientes sesiones.
 <td>Un test (<code>ModularityTests</code>) falla si un módulo viola el límite de otro</td>
 </tr>
 <tr>
-<td>ADR-003</td>
+<td>ADR-004</td>
 <td>JWT se implementa recién en S10</td>
 <td>Evita construir seguridad antes de tener recursos que proteger</td>
 <td>U1 expone endpoints sin autenticación; no es el estado final</td>
 </tr>
 </tbody>
 </table>
-<p>Detalle completo de ADR-001 y ADR-002: <code>docs/lp2/adr/</code>. Estas decisiones se retoman y amplían en S14 (ADRs y trazabilidad técnica).</p>
+<p>Detalle completo: <a href="../../../lp2/adr/ADR-001-arquitectura-backend/">ADR-001</a>, <a href="../../../lp2/adr/ADR-002-spring-modulith/">ADR-002</a>, <a href="../../../lp2/adr/ADR-003-spring-boot-4/">ADR-003</a> y <a href="../../../lp2/adr/ADR-004-jwt-diferido/">ADR-004</a>. Estas decisiones se retoman y amplían en S14 (ADRs y trazabilidad técnica).</p>
 <h3 id="37-trazar-ads-con-bd2-y-lp2">3.7 Trazar ADS con BD2 y LP2<a class="headerlink" href="#37-trazar-ads-con-bd2-y-lp2" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> matriz de integración inicial.</p>
 <table>
