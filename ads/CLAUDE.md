@@ -40,9 +40,10 @@ a esa distinción es el **formato del artefacto**:
     (S01 a S16).
   - `docs/ads/index.md` — alcance por unidad/sesión, con enlaces a los
     productos de referencia en `docs/proyecto-integrador/`.
-  - **No existen** `docs/ads/adr/` ni `docs/ads/plan-trabajo.md` (a
-    diferencia de `docs/lp2/adr/` y `docs/lp2/plan-trabajo.md`) — ver
-    "Fuera de alcance" más abajo sobre cómo tratar ese hueco.
+  - **No existe** `docs/ads/adr/` (a diferencia de `docs/lp2/adr/`) — ver
+    "Fuera de alcance" más abajo sobre cómo tratar ese hueco. Ningún curso
+    del ciclo usa ya `plan-trabajo.md` (se retiró de los tres, el estado de
+    avance vive en `index.md` de cada curso y en este mismo archivo).
 - **`docs/proyecto-integrador/{index.md, u1,u2,u3}/ads-producto.md`**: no
   son la plantilla de tu entrega, son el **ejemplo de referencia** que ata
   las decisiones de ADS al código real ya versionado en
@@ -91,9 +92,10 @@ sus ADR "aún no formalizadas").
 2. Verificar completitud contra la rúbrica de la sesión (ver sección
    "Verificación" del skill `ads-sesion`) — ADS no tiene tests
    automatizados, la verificación es una revisión manual de checklist.
-3. No existe hoy `docs/ads/plan-trabajo.md`: si se quiere llevar estado de
-   avance sesión a sesión como en LP2, créalo solo si el usuario lo pide
-   explícitamente — no por iniciativa propia (ver "Fuera de alcance").
+3. No existe `docs/ads/plan-trabajo.md` ni en ningún otro curso del ciclo:
+   si se quiere llevar estado de avance sesión a sesión, créalo solo si el
+   usuario lo pide explícitamente — no por iniciativa propia (ver "Fuera de
+   alcance").
 4. Si la sesión formaliza una decisión arquitectónica del módulo asignado
    (no solo completar una plantilla), regístrala como ADR nueva en
    `ads/05-adrs/ADR-000X-titulo-de-la-decision.md`, con el formato de
@@ -108,7 +110,8 @@ sus ADR "aún no formalizadas").
 - No adelantar alcance de sesiones futuras (p. ej. no diseñar integración
   con IA en S2; eso es S11-S14).
 - No crear `docs/ads/adr/` ni `docs/ads/plan-trabajo.md` por iniciativa
-  propia — hoy no existen (a diferencia de LP2). Si el usuario los pide,
-  seguir la misma convención de `docs/lp2/`.
+  propia — hoy no existen, y `plan-trabajo.md` ya no existe en ningún curso
+  del ciclo. Si el usuario los pide, seguir la misma convención de
+  `docs/lp2/adr/`.
 - No generar código de aplicación dentro de `ads/` — eso corresponde a
   `lp2/`.

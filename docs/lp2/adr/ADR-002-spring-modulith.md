@@ -72,8 +72,8 @@ propósito real de esta ADR) sin exigir ninguna tabla adicional.
 
 > **Pendiente explícito (no perder de vista):** cuando una sesión futura
 > adopte eventos de aplicación entre módulos (candidato: S14,
-> auditoría/integración — ver `plan-trabajo.md`, sección "Pendiente
-> explícito"), hay que **reincorporar `spring-modulith-starter-jpa`** al
+> auditoría/integración — ver `lp2/CLAUDE.md`, sección "Arquitectura del
+> backend"), hay que **reincorporar `spring-modulith-starter-jpa`** al
 > `pom.xml` junto con la migración de BD2 que cree la tabla
 > `event_publication`. No antes: agregarla hoy vuelve a romper el arranque
 > de la app, como ya se comprobó.

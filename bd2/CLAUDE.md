@@ -66,13 +66,14 @@ consume vía JPA (convención `BOM_<MODULO>` en `@Table(schema = ...)`, ver
   - `docs/bd2/index.md` — visión de producto del curso y roadmap de las 3
     unidades (equivalente a `docs/lp2/index.md`, no una tabla granular
     adicional distinta a la del sílabo).
-  - **No existe** `docs/bd2/adr/` ni `docs/bd2/plan-trabajo.md` (a
-    diferencia de LP2). Las decisiones de arquitectura que sí afectan a
-    BD2 (p. ej. un esquema por módulo `BOM_<MODULO>`) están registradas del
-    lado de LP2, en `docs/lp2/adr/ADR-002-spring-modulith.md`. Si se
-    necesita una ADR propia de BD2, hay que crearla explícitamente
-    siguiendo el mismo patrón (`docs/lp2/adr/ADR-NNN-*.md`) — no asumir que
-    ya existe una carpeta `docs/bd2/adr/`.
+  - **No existe** `docs/bd2/adr/` (a diferencia de `docs/lp2/adr/`). Las
+    decisiones de arquitectura que sí afectan a BD2 (p. ej. un esquema por
+    módulo `BOM_<MODULO>`) están registradas del lado de LP2, en
+    `docs/lp2/adr/ADR-002-spring-modulith.md`. Si se necesita una ADR
+    propia de BD2, hay que crearla explícitamente siguiendo el mismo
+    patrón (`docs/lp2/adr/ADR-NNN-*.md`) — no asumir que ya existe una
+    carpeta `docs/bd2/adr/`. Tampoco existe `docs/bd2/plan-trabajo.md` —
+    ningún curso del ciclo usa ya ese archivo.
 - **Skills**: `bd2/.claude/skills/` (`bd2-sesion`, scoped a este
   directorio).
 
@@ -147,9 +148,9 @@ que la guía de sesión ya trae el mismo nivel de detalle que S01.
    evidencia, o el checklist manual de
    `docs/proyecto-integrador/u3/oracle/04_operational_checklist.md` para
    temas de U3.
-5. No hay `docs/bd2/plan-trabajo.md` que actualizar. Si se necesita un
-   rastreador de avance análogo al de LP2, hay que proponerlo y crearlo
-   explícitamente — no asumir su existencia.
+5. No hay `docs/bd2/plan-trabajo.md` que actualizar, ni lo hay ya en ningún
+   otro curso del ciclo. Si se necesita un rastreador de avance, hay que
+   proponerlo y crearlo explícitamente — no asumir su existencia.
 6. Si la sesión implica una decisión de arquitectura propia de BD2 (no ya
    cubierta por las ADR de LP2), usar modo plan antes de escribir SQL y
    proponer registrar la decisión como ADR nueva (no existe todavía

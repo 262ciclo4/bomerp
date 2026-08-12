@@ -1,261 +1,101 @@
-# Análisis y Diseño de Sistemas de Información
+# ADS - Análisis y Diseño de Sistemas de Información
 
 **Repositorio:** [262ciclo4/bomerp](https://github.com/262ciclo4/bomerp)
 
-## Propósito del Curso
+Diseña técnicamente sistemas de información empresariales definiendo arquitectura, modelos estructurales y dinámicos, mecanismos de integración y decisiones arquitectónicas, aplicando principios de diseño, patrones de software y buenas prácticas de ingeniería, garantizando mantenibilidad, escalabilidad, interoperabilidad y trazabilidad entre requerimientos, diseño e implementación. A diferencia de BD2 (acotado a la base de datos) o LP2 (que construye solo una porción del backend), ADS mira el sistema empresarial completo: infraestructura, servicios externos e integraciones, además de base de datos, backend y frontend.
 
-Diseñar técnicamente sistemas de información empresariales definiendo arquitectura, modelos estructurales y dinámicos, mecanismos de integración y decisiones arquitectónicas, aplicando principios de diseño, patrones de software y buenas prácticas de ingeniería, garantizando mantenibilidad, escalabilidad, interoperabilidad y trazabilidad entre requerimientos, diseño e implementación.
+## Producto del curso
 
-## Producto Final del Curso
+Producto del curso = Producto U3:
 
-**Diseño Técnico Profesional Documentado (Producto Final del Curso)**
+```text
+Diseño Técnico Profesional Documentado.
+```
 
-Artefacto de referencia para el Proyecto Integrador: [ADS - Producto de Unidad 3](../proyecto-integrador/u3/ads-producto.md).
+Resultado esperado del curso:
 
-Incluye:
+Al finalizar el curso, el estudiante integra arquitectura, modelo de dominio, catálogo UML, patrones de diseño, mecanismos de integración y ADRs en un diseño técnico profesional trazable, listo como insumo directo para BD2 y LP2. El producto se presenta en equipo, pero cada estudiante evidencia y defiende su aporte individual.
 
-* Arquitectura modelada mediante C4 o equivalente.
-* Diseño estructural aplicando principios SOLID.
-* Modelo de dominio documentado.
-* Catálogo UML estructural y dinámico.
-* Diseño conceptual de APIs REST.
-* Diseño de integración con servicios externos.
-* Diseño de integración con servicios de IA.
-* Aplicación justificada de patrones de diseño.
-* Registro de decisiones arquitectónicas (ADRs).
-* Trazabilidad entre requerimientos, arquitectura y diseño.
-* Base técnica para implementación en BD2 y LP2.
+## Contenido
 
----
+### U1: Arquitectura y Diseño Estructural
 
-# Unidad 1: Arquitectura y Diseño Estructural
+Producto U1: arquitectura documentada mediante vistas arquitectónicas y principios de diseño aplicados.
 
-## Propósito
-
-Definir la arquitectura del sistema aplicando principios de diseño estructural, modelando mediante C4 u otro enfoque arquitectónico y justificando decisiones técnicas alineadas a los requerimientos del negocio.
-
-## Producto
-
-**Arquitectura documentada mediante vistas arquitectónicas y principios de diseño aplicados.**
+Resultado esperado U1: el estudiante define la arquitectura del sistema aplicando principios de diseño estructural, modelando mediante C4 u otro enfoque arquitectónico y justificando decisiones técnicas alineadas a los requerimientos del negocio.
 
 Artefacto de referencia para el Proyecto Integrador: [ADS - Producto de Unidad 1](../proyecto-integrador/u1/ads-producto.md).
 
-## Sesiones
+| Sesión | Tema (sílabo) | Artefacto | Trabajo principal |
+|---|---|---|---|
+| [S1](sesiones/S01_Fundamentos_Arquitectura_Software.md) | Fundamentos de Arquitectura de Software: rol de la arquitectura, stakeholders, atributos de calidad, relación entre arquitectura y requerimientos, estándar IEEE 42010 opcional. | Mapa arquitectónico inicial | Identificar stakeholders, atributos de calidad y decisiones arquitectónicas iniciales del sistema. |
+| S2 | Modelo C4 y Vistas Arquitectónicas: C1 contexto, C2 contenedores, C3 componentes, C4 código, vista de despliegue y relación con UML. | Vistas C1-C4 | Elaborar vistas C1 y C2 del sistema. |
+| S3 | Diseño Estructural y Principios SOLID: SOLID, cohesión, acoplamiento, modularidad y abstracción. | Evaluación de módulos | Evaluar módulos y responsabilidades de LP2 según principios de diseño. |
+| S4 | Arquitecturas Modernas: monolito modular, arquitectura en capas, arquitectura hexagonal, trade-offs, microservicios, clean architecture, escalabilidad horizontal, stateless y cuándo Domain-Driven Design (DDD) orienta la elección hacia arquitectura hexagonal o Clean Architecture. | Estilo arquitectónico elegido | Comparar estilos arquitectónicos y justificar la elección para el proyecto (monolito modular con Spring Modulith, ver ADR-001 de LP2). |
+| S5 | Integración del diseño arquitectónico: vistas arquitectónicas, límites, responsabilidades, principios de diseño, estilos arquitectónicos y decisiones técnicas. | — | **Producto U1:** arquitectura documentada mediante vistas arquitectónicas y principios de diseño aplicados. |
 
-### Sesión 1. Fundamentos de Arquitectura de Software
+### U2: Diseño Dinámico, Modelado UML y Patrones
 
-* Rol de la arquitectura.
-* Stakeholders.
-* Atributos de calidad.
-* Relación entre arquitectura y requerimientos.
-* Estándar IEEE 42010 (opcional).
+Producto U2: catálogo UML con patrones de diseño e integración aplicados.
 
-### Sesión 2. Modelo C4 y Vistas Arquitectónicas
-
-* C1: Vista de contexto.
-* C2: Vista de contenedores.
-* C3: Vista de componentes.
-* C4: Vista de código.
-* Vista de despliegue (opcional).
-* Relación entre C4 y UML (opcional).
-
-### Sesión 3. Diseño Estructural y Principios SOLID
-
-* Principios SOLID.
-* Cohesión.
-* Acoplamiento.
-* Modularidad.
-* Abstracción.
-
-### Sesión 4. Arquitecturas Modernas
-
-* Monolito modular.
-* Arquitectura en capas.
-* Arquitectura hexagonal.
-* Trade-offs arquitectónicos.
-* Microservicios (opcional).
-* Clean Architecture (opcional).
-* Escalabilidad horizontal (opcional).
-* Principio Stateless (opcional).
-* Cuándo Domain-Driven Design (DDD) orienta la elección hacia arquitectura hexagonal o Clean Architecture.
-
-### Sesión 5. Evaluación Unidad 1
-
-**Producto U1:** Arquitectura documentada mediante vistas arquitectónicas y principios de diseño aplicados.
-
----
-
-# Unidad 2: Diseño Dinámico, Modelado UML y Patrones
-
-## Propósito
-
-Modelar la estructura y comportamiento del sistema utilizando UML, aplicando principios de diseño orientado a objetos, patrones de software y mecanismos de integración propios de sistemas empresariales.
-
-## Producto
-
-**Catálogo UML con patrones de diseño e integración aplicados.**
+Resultado esperado U2: el estudiante modela la estructura y comportamiento del sistema utilizando UML, aplicando principios de diseño orientado a objetos, patrones de software y mecanismos de integración propios de sistemas empresariales.
 
 Artefacto de referencia para el Proyecto Integrador: [ADS - Producto de Unidad 2](../proyecto-integrador/u2/ads-producto.md).
 
-## Sesiones
+| Sesión | Tema (sílabo) | Artefacto | Trabajo principal |
+|---|---|---|---|
+| S6 | Descubrimiento y Modelado del Dominio: identificación de entidades, reglas de negocio, agrupación funcional, delimitación de módulos, casos de uso relevantes, objetos de valor y diseño estratégico de Domain-Driven Design (lenguaje ubicuo, agregado como límite de consistencia). | Modelo de dominio | Modelar el dominio inicial a partir del SRS y reglas de negocio. |
+| S7 | Diseño de Clases del Dominio: entidades persistentes, atributos, operaciones, relaciones, multiplicidades, agregación, composición, herencia y restricciones. | Diagrama de clases | Elaborar el diagrama de clases del dominio. |
+| S8 | Diseño de Clases Avanzado y Transformación Objeto-Relacional: refinamiento del modelo de clases, transformación UML a modelo relacional, clases, tablas, claves, asociaciones, claves foráneas y trazabilidad dominio-clases-base de datos. | Modelo relacional trazado | Relacionar clases del dominio con tablas, claves y asociaciones persistentes (insumo directo para BD2). |
+| S9 | Diagramas Dinámicos UML: diagramas de secuencia, actividades, ciclo de vida de objetos, interacción entre componentes, comunicación y estados opcionales. | Diagramas de secuencia/actividades | Modelar escenarios críticos mediante diagramas dinámicos. |
+| S10 | Patrones de Diseño y Arquitectura Empresarial: Controller, Service Layer, Repository, DTO, APIs REST, contratos request-response, Mapper, Dependency Injection y Repository/agregado como patrones tácticos de Domain-Driven Design frente al Service Layer clásico. | Contratos REST | Aplicar patrones empresariales al diseño del sistema (insumo directo para LP2). |
+| S11 | Integración y Sistemas Empresariales: APIs externas, servicios de terceros, eventos de dominio, publicación/suscripción, integración entre servicios, IA, mensajería asíncrona y patrones de integración. | Diseño de integraciones | Diseñar mecanismos de integración empresarial del proyecto. |
+| S12 | Integración del diseño dinámico: modelado UML, patrones de diseño, mecanismos de integración y decisiones técnicas aplicadas. | — | **Producto U2:** catálogo UML con patrones de diseño e integración aplicados. |
 
-### Sesión 6. Descubrimiento y Modelado del Dominio
+### U3: Proyecto de Diseño Técnico Profesional
 
-* Identificación de entidades.
-* Reglas de negocio.
-* Agrupación funcional.
-* Delimitación de módulos.
-* Casos de uso relevantes.
-* Objetos de valor (opcional).
-* Preparación del modelo conceptual (opcional).
-* Diseño estratégico de Domain-Driven Design: lenguaje ubicuo, agregado como límite de consistencia.
+Producto U3 / producto del curso: diseño técnico profesional documentado, con arquitectura completa, modelo de dominio, UML, APIs, integraciones, patrones, ADRs y trazabilidad.
 
-### Sesión 7. Diseño de Clases del Dominio
+Resultado esperado U3: el estudiante integra arquitectura, modelos UML, patrones de diseño, mecanismos de integración y decisiones arquitectónicas en un diseño técnico profesional listo para ser implementado en cursos posteriores.
 
-* Entidades persistentes.
-* Atributos y operaciones.
-* Relaciones y multiplicidades.
-* Agregación y composición.
-* Herencia.
-* Restricciones del modelo (opcional).
+Artefacto de referencia para el Proyecto Integrador: [ADS - Producto de Unidad 3](../proyecto-integrador/u3/ads-producto.md).
 
-### Sesión 8. Diseño de Clases Avanzado y Transformación Objeto-Relacional
+| Sesión | Tema (sílabo) | Artefacto | Trabajo principal |
+|---|---|---|---|
+| S13 | Integración del Diseño Técnico: consolidación de arquitectura, modelo de dominio, UML, patrones e integraciones. | Dossier consolidado | Integrar artefactos técnicos en un solo dossier. |
+| S14 | Decisiones Arquitectónicas y Trazabilidad: ADRs, atributos de calidad, justificación técnica de decisiones y trazabilidad entre requerimientos, arquitectura y diseño. | ADRs | Elaborar ADRs formales y matriz de trazabilidad técnica. |
+| S15 | Integración del diseño técnico profesional: arquitectura, modelo de dominio, UML, patrones, ADRs, atributos de calidad, integraciones y trazabilidad. | Dossier técnico | Exposición, defensa técnica y justificación arquitectónica. **Producto U3 = Producto Final del Curso.** |
+| S16 | Integración de arquitectura y diseño de sistemas: vistas arquitectónicas, principios de diseño, modelado UML, patrones, decisiones arquitectónicas y trazabilidad. | — | Evaluación individual, recuperación de sustentaciones pendientes, cierre académico. |
 
-* Refinamiento del modelo de clases.
-* Transformación UML a modelo relacional.
-* Clases, tablas y claves.
-* Asociaciones y claves foráneas.
-* Trazabilidad dominio, clases y base de datos.
-* Estrategias de persistencia de herencia (opcional).
+## Arquitectura de referencia (trazabilidad con LP2 y BD2)
 
-### Sesión 9. Diagramas Dinámicos UML
+```mermaid
+flowchart TB
+    ADS[ADS - arquitectura, dominio, UML, patrones]
+    LP2[LP2 - bomerp-backend + SPA]
+    BD2[BD2 - esquemas Oracle]
 
-* Diagramas de secuencia.
-* Diagramas de actividades.
-* Ciclo de vida de objetos.
-* Interacción entre componentes.
-* Diagramas de comunicación (opcional).
-* Diagramas de estados (opcional).
+    ADS -->|decisiones de arquitectura ADR-001/002/004| LP2
+    ADS -->|modelo de dominio y trazabilidad clases-tablas| BD2
+    LP2 -->|módulos catalogo/ventas/seguridad ya implementados| ADS
+    BD2 -->|esquemas BOM_CATALOGO/BOM_VENTAS ya creados| ADS
+```
 
-### Sesión 10. Patrones de Diseño y Arquitectura Empresarial
+- ADS documenta las decisiones; LP2 y BD2 las verifican contra código real (`mvnw test`, esquemas Oracle), no solo las describen.
+- Si el módulo asignado al grupo ya tiene código en `lp2/bomerp-backend`, los diagramas y ADR de ADS deben usar los mismos nombres de paquete/servicio que el backend ya implementa.
+- Si el backend todavía no llegó a esa parte, se documenta explícitamente como "previsto para S0X", no como si ya existiera.
 
-* Controller Pattern.
-* Service Layer Pattern.
-* Repository Pattern.
-* DTO Pattern.
-* Diseño conceptual de APIs REST.
-* Contratos Request-Response.
-* Mapper Pattern (opcional).
-* Dependency Injection (opcional).
-* Repository/agregado como patrones tácticos de Domain-Driven Design frente al Service Layer clásico.
+## Flujo de trabajo
 
-### Sesión 11. Integración y Sistemas Empresariales
+1. El estudiante define la arquitectura inicial (stakeholders, atributos de calidad, estilo arquitectónico) antes de que LP2 o BD2 implementen nada.
+2. El modelo de dominio (entidades, reglas de negocio, módulos) se construye en U2 y se traza directamente a las clases y tablas que BD2 y LP2 ya implementaron o van a implementar.
+3. Los contratos REST diseñados en S10 son el insumo directo del contrato que LP2 expone.
+4. Cada decisión arquitectónica relevante se registra como ADR, con contexto, decisión, alternativas consideradas y consecuencias — mismo formato que las ADR reales de LP2 en `docs/lp2/adr/`.
+5. El producto final (U3) consolida arquitectura, dominio, UML, patrones e integraciones en un dossier técnico defendido individualmente.
 
-* Consumo de APIs externas.
-* Integración con servicios de terceros.
-* Eventos de dominio.
-* Publicación y suscripción.
-* Integración entre servicios.
-* Integración con servicios de IA (opcional).
-* Mensajería asíncrona (opcional).
-* Introducción a sistemas distribuidos (opcional).
-* Patrones de integración empresarial (opcional).
+## Enlaces
 
-### Sesión 12. Evaluación Unidad 2
-
-**Producto U2:** Catálogo UML con patrones de diseño e integración aplicados.
-
----
-
-# Unidad 3: Proyecto de Diseño Técnico Profesional
-
-## Propósito
-
-Integrar arquitectura, modelos UML, patrones de diseño, mecanismos de integración y decisiones arquitectónicas en un diseño técnico profesional listo para ser implementado en cursos posteriores.
-
-## Producto
-
-**Diseño Técnico Profesional Documentado (Producto Final del Curso)**
-
-Incluye:
-
-* Arquitectura completa del sistema.
-* Modelo de dominio.
-* Catálogo UML estructural y dinámico.
-* Diseño conceptual de APIs.
-* Diseño de integración con servicios externos.
-* Diseño de integración con servicios de IA.
-* Patrones aplicados.
-* ADRs.
-* Trazabilidad entre requerimientos, arquitectura, base de datos y diseño.
-
-## Sesiones
-
-### Sesión 13. Integración del Diseño Técnico
-
-* Consolidación de arquitectura.
-* Consolidación del modelo de dominio.
-* Consolidación de UML.
-* Consolidación de patrones.
-* Consolidación de integraciones.
-
-### Sesión 14. Decisiones Arquitectónicas y Trazabilidad
-
-* Architectural Decision Records (ADRs).
-* Atributos de calidad.
-* Justificación técnica de decisiones.
-* Trazabilidad entre requerimientos, arquitectura y diseño.
-
-### Sesión 15. Sustentación del Diseño Técnico Profesional
-
-* Exposición del diseño.
-* Defensa técnica.
-* Justificación arquitectónica.
-* Presentación del dossier técnico.
-
-**Producto U3 = Producto Final del Curso**
-
-### Sesión 16. Evaluación Final
-
-* Evaluación individual.
-* Recuperación de sustentaciones pendientes.
-* Levantamiento de observaciones.
-* Cierre académico del proyecto.
-
----
-
-# Integración Curricular
-
-## Producto Unidad 1
-
-**Arquitectura documentada mediante vistas arquitectónicas y principios de diseño aplicados.**
-
-## Producto Unidad 2
-
-**Catálogo UML con patrones de diseño e integración aplicados.**
-
-## Producto Unidad 3 = Producto Final del Curso
-
-**Diseño Técnico Profesional Documentado**
-
-Este producto servirá como insumo directo para:
-
-## Base de Datos II
-
-* Modelo lógico.
-* Modelo físico.
-* Procedimientos almacenados.
-* Restricciones e integridad.
-* Seguridad de datos.
-* Optimización y administración.
-
-## Lenguaje de Programación II
-
-* Backend.
-* Frontend.
-* APIs REST.
-* DTOs.
-* Servicios.
-* Repositorios.
-* Integración con servicios externos.
-* Integración con servicios de IA.
+- [Sílabo 2026-2](silabo_ads_2026_2.md)
+- [ADR-001 de LP2 - Arquitectura del backend](../lp2/adr/ADR-001-arquitectura-backend.md)
+- [ADR-002 de LP2 - Spring Modulith](../lp2/adr/ADR-002-spring-modulith.md)
+- [ADR-004 de LP2 - JWT diferido a S10](../lp2/adr/ADR-004-jwt-diferido.md)

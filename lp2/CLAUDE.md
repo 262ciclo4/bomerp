@@ -41,7 +41,6 @@ quedar fuera del repositorio — no se crean antes.
   - `docs/lp2/sesiones/S0X_*.md` — rúbrica y plantilla genérica por sesión.
   - `docs/lp2/index.md` — alcance **concreto** de BomERP por sesión (más específico que el `.md` de la sesión).
   - `docs/lp2/adr/` — decisiones de arquitectura (ADR-001: proyecto único vs. reactor Maven; ADR-002: Spring Modulith; ADR-003: Spring Boot 4.0.7, no 3.5.x ni 4.1.x — ver más abajo).
-  - `docs/lp2/plan-trabajo.md` — hoja de ruta viva S1→S16, con estado de avance.
 - **Skills**: `lp2/.claude/skills/` (p. ej. `lp2-sesion`, scoped a este directorio).
 
 ## Arquitectura del backend (ver ADR-001, ADR-002 y ADR-003)
@@ -81,6 +80,18 @@ quedar fuera del repositorio — no se crean antes.
 - **No se crean paquetes de módulo vacíos "por si acaso"** (p. ej.
   `inventario`, `compras`, `seguridad` antes de S10). Se agregan recién
   cuando una sesión concreta les da contenido real.
+- **`spring-modulith-starter-jpa` está removido a propósito desde S1** (el
+  Initializr la agrega automáticamente al combinar Spring Modulith + Spring
+  Data JPA): trae el registro de eventos de Modulith respaldado por JPA,
+  que exige la tabla `event_publication` — con `ddl-auto: validate` y sin
+  esa tabla en Oracle, la app no arranca. Los módulos de S1-S13 se
+  comunican solo por servicios Java, no por eventos, así que no hace
+  falta. **Cuando una sesión adopte comunicación por eventos entre módulos**
+  (candidato: S14, auditoría/integración — ver ADR-002), hay que
+  reincorporarla al `pom.xml`, crear la tabla `event_publication` en Oracle
+  (migración de BD2 para esa sesión, no antes) y verificar con
+  `mvnw clean test` + arranque real contra Oracle. No agregarla de vuelta
+  "por si acaso" en una sesión anterior a la que realmente la necesite.
 - Sin Feign ni llamadas HTTP internas entre módulos: un solo datasource,
   comunicación por servicios Java dentro de la misma JVM.
 
@@ -133,8 +144,7 @@ sentido, se reserva para S13-S14.
    (Windows) o `lp2/bomerp-backend/mvnw -f lp2/bomerp-backend/pom.xml test`
    (macOS/Linux) — compila y corre `ModularityTests`; no requiere Oracle
    para ese chequeo estructural.
-3. Actualizar el estado de la sesión en `docs/lp2/plan-trabajo.md`.
-4. Si la sesión implica una decisión de arquitectura (no solo una
+3. Si la sesión implica una decisión de arquitectura (no solo una
    implementación dentro de lo ya decidido), usar modo plan antes de tocar
    código y registrar la decisión como una ADR nueva en `docs/lp2/adr/`.
 
