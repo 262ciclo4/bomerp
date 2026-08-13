@@ -6,7 +6,7 @@
 
 Tiempo: 20 min.
 
-### 1.1 Contexto
+### 1.1 Presentación de la sesión
 
 La arquitectura de un backend decide qué tan fácil es mantenerlo y hacerlo crecer sin romperse. Esta sesión instala Java 21, crea el proyecto backend como monolito modular conectado a Oracle, y define su contrato REST inicial (`Categoria`, `Producto`, versionado, OpenAPI).
 
@@ -29,11 +29,13 @@ Proyecto backend ejecutable y reproducible, sobre Java 21 LTS, organizado como m
 
 ### 1.5 Metodología
 
-| Fase | Actividades | Orientaciones | Material |
-|---|---|---|---|
-| Revisión previa individual | Instalar y verificar Java 21 LTS, VS Code y sus extensiones; leer [ADR-001](../adr/ADR-001-arquitectura-backend.md) y [ADR-002](../adr/ADR-002-spring-modulith.md). | Trabajo individual, antes de clase; traer evidencia de `java -version` funcionando. | ADR-001, ADR-002, guía de instalación Java 21. |
-| Clase presencial | Explicación guiada de conceptos (REST, DTO, versionado, ambientes) y creación del proyecto backend conectado a Oracle; delimitación de los endpoints del módulo `catalogo`. | Trabajo individual en la propia laptop, siguiendo al docente paso a paso; consulta inmediata ante errores de dependencias o conexión. | `pom.xml` de referencia, `application-local.yml`, Docker Compose de Oracle, cliente REST para verificar endpoints. |
-| Evaluación formativa | Verificación en clase de `mvn test` (incluye `ModularityTests`) y de la respuesta del endpoint de salud y los listados; inicio de la plantilla de evidencia individual. | La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.2. | Plantilla de evidencia individual (4.1), rúbrica de evaluación (5.4). |
+**Tabla 1. Metodología de la sesión**
+
+| Actividades a Realizar en el Periodo | Orientaciones generales (Orientaciones Metodológicas) | Material de estudio recomendado |
+|---|---|---|
+| Revisión previa individual | Instalar y verificar Java 21 LTS, VS Code y sus extensiones; leer [ADR-001](../adr/ADR-001-arquitectura-backend.md) y [ADR-002](../adr/ADR-002-spring-modulith.md). Trabajo individual, antes de clase; traer evidencia de `java -version` funcionando. | ADR-001, ADR-002, guía de instalación Java 21. |
+| Clase presencial | Explicación guiada de conceptos (REST, DTO, versionado, ambientes) y creación del proyecto backend conectado a Oracle; delimitación de los endpoints del módulo `catalogo`. Trabajo individual en la propia laptop, siguiendo al docente paso a paso; consulta inmediata ante errores de dependencias o conexión. | `pom.xml` de referencia, `application-local.yml`, Docker Compose de Oracle, cliente REST para verificar endpoints. |
+| Evaluación formativa | Verificación en clase de `mvn test` (incluye `ModularityTests`) y de la respuesta del endpoint de salud y los listados; inicio de la evidencia individual. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4. | Indicaciones de entrega (4.3), rúbrica de evaluación (4.6). |
 
 ### 1.6 Motivación de la sesión
 
@@ -41,13 +43,18 @@ Proyecto backend ejecutable y reproducible, sobre Java 21 LTS, organizado como m
 
 Antes de escribir el primer endpoint, hay algo más urgente que resolver: ¿este backend arranca de forma reproducible y realmente conecta a Oracle, o solo "funciona en mi máquina"? Esa pregunta no es solo de LP2 — **BomERP** (*Business Operations Management – Enterprise Resource Planning*), el proyecto integrador evolutivo de ADS, BD2 y LP2 en este ciclo, depende de que esta base funcione: ADS define en paralelo, en su propia S1, la primera visión arquitectónica del sistema (monolito modular verificado con Spring Modulith), y BD2 crea el esquema `BOM_CATALOGO` sobre el que este backend se conecta. Si el backend no arranca de forma confiable, ninguna de esas dos decisiones tiene dónde apoyarse. Esta sesión construye esa primera pieza concreta: la base backend que arranca de forma reproducible, comprueba su conexión a Oracle y expone los listados iniciales del módulo `catalogo`: `Categoria` y `Producto`.
 
-Preguntas para los estudiantes:
+**Preguntas de análisis**
+
+**Activación de conocimientos previos**
+
+1. ¿Qué decisión de ADS condiciona la estructura del backend?
+2. ¿Cómo se evidencia que este backend no es un proyecto aislado, sino la capa que expone las decisiones de ADS y los datos que crea BD2?
+
+**Comprensión de arquitectura backend**
 
 1. ¿Por qué `Categoria` y `Producto` pertenecen al mismo módulo de catálogo?
 2. ¿Qué diferencia existe entre una entidad y su DTO de respuesta?
 3. ¿Cómo demuestran los listados que Controller, Service, Repository y Oracle están conectados?
-4. ¿Qué decisión de ADS condiciona la estructura del backend?
-5. ¿Cómo se evidencia que este backend no es un proyecto aislado, sino la capa que expone las decisiones de ADS y los datos que crea BD2?
 
 ### 1.7 Ubicación en el curso
 
@@ -57,6 +64,8 @@ Preguntas para los estudiantes:
 - Avance del producto en esta sesión: proyecto backend creado, configurado, conectado y verificable.
 
 Roadmap del producto de la unidad:
+
+**Figura 1. Roadmap del producto de la unidad**
 
 ```mermaid
 flowchart TB
@@ -78,6 +87,8 @@ flowchart TB
 Tiempo: 25 min.
 
 ### 2.1 Arquitectura de la sesión
+
+**Figura 2. Arquitectura del módulo `catalogo` en el backend BomERP**
 
 ```mermaid
 %%{init: {"flowchart": {"rankSpacing": 25, "nodeSpacing": 20}} }%%
@@ -113,6 +124,8 @@ Este diagrama es el mapa que guía el resto de la explicación, en el mismo orde
 
 El proyecto se organiza como monolito modular: un único paquete raíz (`BomerpBackendApplication`) y, dentro de él, un paquete por módulo de negocio (ver 2.1). Esa estructura se sostiene únicamente sobre las dependencias que la sesión necesita:
 
+**Tabla 2. Dependencias del proyecto backend**
+
 | Dependencia | Decisión para S1 |
 |---|---|
 | Spring Web | Se conserva para publicar el recurso REST. |
@@ -147,6 +160,8 @@ hay nada real que desplegar.
 
 REST permite organizar un backend alrededor de recursos, métodos HTTP y representaciones. Cada método HTTP tiene un propósito definido sobre un recurso:
 
+**Tabla 3. Métodos HTTP y su propósito**
+
 | Método | Para qué sirve |
 |---|---|
 | `GET` | Consultar o listar un recurso, sin modificarlo. |
@@ -170,7 +185,13 @@ Springdoc OpenAPI (ver 2.2) publica este contrato como documentación viva y sie
 
 Tiempo: 2h.
 
-Hoja de ruta de la sesión práctica:
+**Actividad:** creación guiada del proyecto backend `bomerp-backend`, conectado a Oracle, con los listados iniciales de `Categoria` y `Producto` (Producto de la sesión en 1.4).
+
+**Propósito de la actividad:** construir el proyecto backend de punta a punta — desde el Spring Initializr hasta los listados de `Categoria` y `Producto` ejecutando conectados a Oracle, con contrato REST y documentación OpenAPI inicial — verificando cada incremento antes de continuar al siguiente.
+
+**Orientaciones metodológicas:** en el laboratorio, el docente guía la creación del proyecto backend paso a paso frente a la clase, y los estudiantes replican cada paso en su propia laptop, verificando el resultado con `mvn test` y las consultas REST antes de avanzar al siguiente paso.
+
+**Actividades para realizar:**
 
 - **3.1** Instalar y verificar Java 21 LTS, VS Code y sus extensiones.
 - **3.2** Crear y verificar el proyecto backend.
@@ -290,6 +311,8 @@ code --install-extension cweijan.vscode-database-client2
 code --install-extension Oracle.sql-developer
 ```
 
+**Tabla 4. Extensiones de VS Code requeridas**
+
 | Extensión | ID | Para qué sirve |
 |---|---|---|
 | Extension Pack for Java | `vscjava.vscode-java-pack` | Soporte base de Java (autocompletado, debug, Maven); incluye Spring Initializr Java Support, usado en 3.2.1. |
@@ -326,6 +349,8 @@ Spring Initializr: Create a Maven Project
 
 Usa la siguiente configuración:
 
+**Tabla 5. Configuración del proyecto en Spring Initializr**
+
 | Campo | Valor |
 |---|---|
 | Project | Maven Project |
@@ -341,6 +366,8 @@ Usa la siguiente configuración:
 **Por qué 4.0.7 y no otra versión.** Verificado directo en [start.spring.io](https://start.spring.io/) (con `4.1.0` seleccionado, el propio buscador de dependencias muestra en rojo, al escribir "springd": *"Requires Spring Boot >= 4.0.0 and < 4.1.0-M1"*). 
 
 Dependencias a seleccionar:
+
+**Tabla 6. Dependencias seleccionadas en Spring Initializr**
 
 | Grupo | Dependencias | Propósito |
 |---|---|---|
@@ -466,6 +493,8 @@ Crea el esquema y las tablas del catálogo ejecutando, en orden, [`S01_01_esquem
 
 ##### Opción A: cliente gráfico
 
+**Tabla 7. Conexión a Oracle como `system`**
+
 | Campo | Valor |
 |---|---|
 | Connection Type | `Basic` |
@@ -482,6 +511,8 @@ Ejecuta los dos scripts con esta conexión.
 Salida esperada: `Table created.` ×2, `Grant succeeded.` ×2.
 
 Las tablas quedan en el esquema `BOM_CATALOGO`, no en `system` — para verlas en el árbol del cliente, agrega una **segunda conexión**:
+
+**Tabla 8. Conexión a Oracle como `BOM_CATALOGO`**
 
 | Campo | Valor |
 |---|---|
@@ -1048,6 +1079,8 @@ class ModularityTests {
 }
 ```
 
+**Tabla 9. Verificación del backend antes de continuar**
+
 | Verificación | Evidencia esperada |
 |---|---|
 | Entorno Java | `java` y `javac` reportan Java 21; el Maven Wrapper del proyecto (`mvnw`) también se ejecuta con Java 21. |
@@ -1102,6 +1135,8 @@ server:
 
 **Producto del paso:** contrato base.
 
+**Tabla 10. Endpoints del módulo Catálogo**
+
 | Método | Endpoint | Propósito | Implementación en el curso |
 |---|---|---|---|
 | `GET` | `/api/v1/categorias` | Listar categorías desde Oracle | S1 |
@@ -1143,6 +1178,8 @@ En S1 este contrato se documenta, pero no se implementa todavía el registro.
 
 **Producto del paso:** contrato de errores.
 
+**Tabla 11. Contrato de errores HTTP**
+
 | Código HTTP | Caso | Respuesta esperada |
 |---:|---|---|
 | 400 | Datos inválidos | Mensaje de validación |
@@ -1175,6 +1212,8 @@ Dentro de cada módulo, `{controller,dto,entity,repository,service}` es la arqui
 
 **Producto del paso:** matriz de integración inicial.
 
+**Tabla 12. Matriz de integración LP2-ADS-BD2**
+
 | Endpoint LP2 | Componente ADS | Objeto BD2 futuro |
 |---|---|---|
 | `GET /api/v1/categorias` | Módulo Catalogo / CategoriaService | Tabla `CATEGORIA` |
@@ -1188,25 +1227,9 @@ Sesión equivalente en los otros dos cursos, misma semana: [ADS - S1 Fundamentos
 
 Tiempo: 2h fuera del aula.
 
-Cada estudiante documenta la API base del dominio elegido por su equipo.
+### 4.1 Actividad
 
-### 4.1 Plantilla de evidencia individual
-
-Entrega un PDF con el siguiente nombre:
-
-```text
-S01_LP2_Equipo##_ApellidoNombre.pdf
-```
-
-#### 4.1.1 Datos del estudiante
-
-- Nombre:
-- Equipo:
-- Sesión: S01 - Arquitectura Backend REST Profesional
-- Rol o aporte realizado:
-- Link de GitHub:
-
-#### 4.1.2 Trabajo autónomo realizado
+Replicación autónoma del patrón del backend en el dominio elegido por el equipo, documentada en evidencia individual.
 
 Completa y evidencia estas tareas:
 
@@ -1217,22 +1240,56 @@ Completa y evidencia estas tareas:
 5. Implementar los listados iniciales del módulo principal de tu dominio (equivalente a `catalogo` en el caso guiado).
 6. Generar la documentación OpenAPI.
 
-#### 4.1.3 Evidencia técnica
+### 4.2 Propósito
 
-Incluye:
+Que cada estudiante demuestre, de forma individual y fuera del aula, que puede reproducir el patrón construido en clase sin el acompañamiento del docente.
 
-- Evidencia de ejecución y endpoint de verificación.
-- Evidencia de conexión a la base de datos.
-- Configuración por ambiente sin secretos.
-- Respuesta de los listados de las entidades principales de tu dominio (equivalentes a `Categoria` y `Producto` en el caso guiado), tabla de endpoints y consultas ejecutadas en Oracle.
-- DTO de salida en JSON y documentación OpenAPI.
-- Estructura base del backend.
+Cada estudiante documenta la API base del dominio elegido por su equipo.
 
-#### 4.1.4 Error o hallazgo
+### 4.3 Indicaciones
+
+Entrega un PDF con el siguiente nombre:
+
+```text
+S01_LP2_Equipo##_ApellidoNombre.pdf
+```
+
+Cada captura de pantalla del informe debe mostrar, sin recortar, el reloj del sistema (fecha y hora) y tu usuario o foto de perfil (Windows, VS Code o navegador) visibles en pantalla — es lo que permite verificar que la evidencia es tuya y que corresponde al momento real de tu trabajo.
+
+#### 4.3.1 Estructura del informe
+
+**Datos del estudiante**
+
+- Nombre:
+- Equipo:
+- Sesión: S01 - Arquitectura Backend REST Profesional
+- Rol o aporte realizado:
+- Link de GitHub:
+
+**Evidencia técnica**
+
+Incluye capturas o salidas de consola con una breve explicación debajo de cada una, organizadas en los mismos 5 bloques de la rúbrica (4.6) — así queda claro qué evidencia corresponde a cada criterio evaluado:
+
+1. *Ejecución y configuración reproducible*
+    - Evidencia de ejecución del backend y del endpoint de verificación.
+    - Configuración por ambiente sin secretos expuestos.
+2. *Conexión a base de datos verificada*
+    - Evidencia de conexión a Oracle y consultas ejecutadas.
+3. *Recursos, endpoints y DTO coherentes*
+    - Respuesta de los listados de las entidades principales de tu dominio (equivalentes a `Categoria` y `Producto` en el caso guiado), con tabla de endpoints.
+    - DTO de salida en JSON.
+4. *Documentación OpenAPI y versionado*
+    - Documentación OpenAPI navegable.
+    - Evidencia del contrato versionado (`/api/v1/...`).
+5. *Estructura modular verificada con Spring Modulith*
+    - Estructura del backend organizada por responsabilidades.
+    - Resultado en verde de `ModularityTests` (captura de la ejecución).
+
+**Error o hallazgo**
 
 Describe un error o hallazgo: endpoint mal definido, DTO acoplado a tabla, falta de seguridad, recurso ambiguo o regla no contemplada.
 
-#### 4.1.5 Reflexión técnica breve
+**Reflexión técnica breve**
 
 Responde en 5 a 8 líneas:
 
@@ -1240,9 +1297,9 @@ Responde en 5 a 8 líneas:
 ¿Qué decisiones permiten que el proyecto backend pueda ejecutarse de forma reproducible en diferentes ambientes?
 ```
 
-#### Anexo: Feedback de la sesión
+**Anexo: Feedback de la sesión**
 
-Pega esta página como la última hoja del PDF, con tus respuestas. 
+Pega esta página como la última hoja del PDF, con tus respuestas.
 
 1. ¿Cuál es el aprendizaje más importante que te llevas de la clase de hoy?
 2. ¿Qué punto de la clase te resultó más confuso o te dejó con dudas?
@@ -1258,7 +1315,7 @@ Pega esta página como la última hoja del PDF, con tus respuestas.
     - Poco Comprometido/a: Hoy no di mi mejor esfuerzo.
 7. Mi satisfacción con la clase fue... (califica del 1 al 10, donde 1 es insatisfecho y 10 es muy satisfecho).
 
-### 4.2 Criterios mínimos de aceptación
+### 4.4 Criterios mínimos de aceptación
 
 La evidencia individual se considera completa si:
 
@@ -1269,34 +1326,14 @@ La evidencia individual se considera completa si:
 - El endpoint de verificación responde correctamente.
 - Define recursos, endpoints y DTO coherentes.
 - Publica documentación OpenAPI.
+- Organiza el backend por responsabilidades y verifica sus límites de módulo con Spring Modulith (`ModularityTests`).
+- Cada captura de la evidencia técnica muestra el reloj del sistema y el usuario/perfil visible, sin recortar.
+- Las fechas y horas de las capturas son coherentes con el historial de commits de su repositorio en GitHub.
+- Incluye un error o hallazgo técnico diagnosticado.
+- Incluye la reflexión técnica breve solicitada.
 - Incluye el Anexo de feedback de la sesión respondido, como última página del PDF.
 
-## 5. Cierre evaluativo
-
-Tiempo: 20 min.
-
-### 5.1 Resultados esperados
-
-Al finalizar la sesión, el estudiante debe demostrar que:
-
-- Crea y ejecuta el proyecto backend de forma reproducible, sobre Java 21 LTS.
-- Explica y reproduce la configuración del backend por ambiente.
-- Demuestra la conexión a la base de datos, verificada mediante ORM, y el endpoint de verificación.
-- Identifica recursos y endpoints iniciales, y su contrato y versionado básico (`/api/v1/...`).
-- Diseña DTO y publica documentación OpenAPI.
-- Organiza el backend por responsabilidades y verifica sus límites de módulo con Spring Modulith (`ModularityTests`).
-
-### 5.2 Evidencia del producto de sesión
-
-Cada estudiante entrega un PDF individual siguiendo la plantilla de la sección 4.1.
-
-Nombre del archivo:
-
-```text
-S01_LP2_Equipo##_ApellidoNombre.pdf
-```
-
-### 5.3 Preguntas de defensa y reflexión
+### 4.5 Preguntas de defensa
 
 1. ¿Cómo se reproduce la ejecución del backend en otro equipo?
 2. ¿Cómo se configura la conexión sin publicar credenciales?
@@ -1305,16 +1342,50 @@ S01_LP2_Equipo##_ApellidoNombre.pdf
 5. ¿Por qué `/api/v1/...` cuenta como versionado de API, aunque todavía no exista una `v2`?
 6. ¿Qué pasaría si `ventas` importara directamente el `Repository` de `catalogo`? ¿Qué lo impide?
 
-### 5.4 Rúbrica de evaluación
+### 4.6 Rúbrica de evaluación
 
-| Dimensión | Peso | 3 - Logro destacado | 2 - Logro | 1 - Proceso | 0 - Inicio | Puntuación obtenida |
+**Tabla 13. Rúbrica de evaluación**
+
+| Criterio | Peso (%) | A (20 pts) | B (15 pts) | C (10 pts) | D (5 pts) | Nivel obtenido |
 |---|---:|---|---|---|---|---:|
-| 1. Ejecución y configuración | 2 | Backend reproducible, perfiles claros y secretos protegidos. | Backend ejecutable con configuración suficiente. | Ejecución o configuración incompleta. | El proyecto no ejecuta. | |
-| 2. Conexión y verificación | 2 | Conexión a BD y endpoint de salud comprobados. | Ambas evidencias funcionan con detalles menores. | Solo una evidencia es funcional. | No demuestra conexión ni salud. | |
-| 3. Recursos, endpoints y DTO | 2 | Contratos claros, coherentes y desacoplados. | Contratos funcionales. | Contratos incompletos. | No presenta contratos. | |
-| 4. OpenAPI, versionado y estructura modular | 2 | Documentación navegable, versionado `/api/v1` explicado, estructura por responsabilidades y `ModularityTests` en verde. | Documentación, versionado y estructura básicos. | Evidencia parcial o confusa. | No documenta ni organiza. | |
-| 5. Orden y reflexión | 1 | Evidencia ordenada y reflexión técnica clara. | Evidencia suficiente y reflexión comprensible. | Evidencia incompleta o reflexión superficial. | Evidencia desordenada o sin reflexión. | |
+| 1. Ejecución y configuración reproducible* | 20 | Backend ejecuta de forma reproducible, con perfiles por ambiente claros y sin secretos expuestos. | Backend ejecuta con configuración suficiente, con detalles menores pendientes. | Ejecución o configuración incompleta. | El proyecto no ejecuta. | |
+| 2. Conexión a base de datos verificada* | 20 | Conexión a Oracle y endpoint de verificación comprobados con evidencia clara. | Ambas evidencias funcionan, con detalles menores. | Solo una de las dos evidencias es funcional. | No demuestra conexión ni verificación. | |
+| 3. Recursos, endpoints y DTO coherentes* | 20 | Contratos (recursos, endpoints, DTO) claros, coherentes y desacoplados de la entidad persistente. | Contratos funcionales, con acoplamiento o inconsistencias menores. | Contratos incompletos o inconsistentes. | No presenta contratos funcionales. | |
+| 4. Documentación OpenAPI y versionado* | 20 | Documentación OpenAPI navegable y completa; versionado `/api/v1` evidenciado y explicado. | Documentación y versionado presentes, con vacíos menores. | Documentación parcial o versionado no explicado. | No documenta ni versiona. | |
+| 5. Estructura modular verificada con Spring Modulith* | 20 | Backend organizado por responsabilidades; `ModularityTests` en verde, evidenciado. | Estructura por responsabilidades presente, `ModularityTests` con advertencias menores. | Estructura confusa o `ModularityTests` no evidenciado. | No organiza el backend por responsabilidades. | |
 
-Puntuación acumulada = suma de (`Peso` * `Puntuación obtenida`) = ____.
+\* Agregado manual.
 
-Nota final = (`Puntuación acumulada` / 27) * 20 = ____.
+Nota final = suma de (`Peso` / 100 × `Puntos del nivel obtenido`) = ____ / 20.
+
+Para usar la rúbrica con IA, solicita:
+
+```text
+Evalúa el PDF usando la rúbrica de la sesión.
+Para cada criterio selecciona el nivel obtenido usando la escala A=20, B=15, C=10, D=5 puntos.
+Justifica brevemente cada nivel asignado.
+Verifica que cada captura muestre reloj del sistema y usuario/perfil visible, y que las fechas sean coherentes con el historial de commits de GitHub. Si falta esta evidencia o hay inconsistencias, indícalo explícitamente antes de calificar.
+Calcula la nota final con la fórmula: suma de (Peso/100 × Puntos del nivel obtenido), directamente sobre 20.
+Indica 2 fortalezas y 2 recomendaciones.
+```
+
+## 5. Cierre
+
+Tiempo: 5 min.
+
+**Resumen breve:** hoy el proyecto backend pasó de no existir a ejecutar de forma reproducible, conectado a Oracle, con los listados iniciales de `Categoria` y `Producto`, contrato versionado y documentación OpenAPI publicada — la base sobre la que se construye el resto del curso.
+
+**Dinámica participativa:** en una ronda rápida (o con una herramienta digital tipo formulario o encuesta en vivo), cada estudiante comparte en una frase qué endpoint logró ver funcionando en Swagger.
+
+**Metacognición:** cada estudiante responde el Anexo de feedback de la sesión, incluido en su evidencia individual (ver 4.3.1). El docente analiza esas respuestas con IA para identificar temas recurrentes o dudas comunes del equipo, y con esos indicadores construye el cierre real de la sesión — que se entrega al inicio de S2, no al final de esta clase. Que esté documentado aquí, en la sección 5 de esta guía, es solo un arreglo interno: no implica que se ejecute en los últimos minutos de esta sesión.
+
+**Proyección:** la estructura por módulos verificada con Spring Modulith hoy se repite en cada sesión siguiente del curso, cuando se agreguen `ventas`, `seguridad` y los demás módulos de negocio — y en cualquier proyecto profesional donde debas mantener límites claros entre partes del sistema.
+
+## Bibliografía
+
+1. Eclipse Adoptium. (2024). *Temurin releases*. Eclipse Foundation. https://adoptium.net/
+2. Oracle Corporation. (2024). *Oracle Database Free 23ai documentation*. https://docs.oracle.com/en/database/oracle/oracle-database/23/
+3. Spring. (2024). *Spring Boot reference documentation* (versión 4.0.7). VMware. https://docs.spring.io/spring-boot/
+4. Spring. (2024). *Spring Data JPA reference documentation*. VMware. https://docs.spring.io/spring-data/jpa/reference/
+5. Spring. (2024). *Spring Modulith reference documentation*. VMware. https://docs.spring.io/spring-modulith/reference/
+6. Springdoc. (2024). *SpringDoc OpenAPI documentation*. https://springdoc.org/

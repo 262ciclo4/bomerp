@@ -4,7 +4,7 @@
 
 Tiempo: 20 min.
 
-### 1.1 Contexto
+### 1.1 Presentación de la sesión
 
 La arquitectura de un sistema decide qué tan bien resiste el crecimiento del proyecto y el paso del tiempo. A diferencia de BD2 (acotado a la base de datos) o LP2 (que construye solo una porción del backend), ADS mira el sistema empresarial completo: infraestructura, servicios externos e integraciones, además de base de datos, backend y frontend. Esta sesión identifica stakeholders y atributos de calidad, y define la primera visión arquitectónica inicial.
 
@@ -27,11 +27,13 @@ Mapa arquitectónico inicial del sistema: contexto, stakeholders, atributos de c
 
 ### 1.5 Metodología
 
-| Fase | Actividades | Orientaciones | Material |
-|---|---|---|---|
-| Revisión previa individual | Leer el sílabo de la Unidad 1 y el caso BomERP (ver 1.6). | Trabajo individual, antes de clase; identificar de antemano el dominio y proceso principal del propio proyecto. | Sílabo ADS U1. |
-| Clase presencial | Identificación guiada de stakeholders, atributos de calidad y primer estilo arquitectónico para BomERP. | Trabajo individual, siguiendo al docente paso a paso; consulta inmediata ante dudas de priorización. | Plantillas de las tablas de 3.1-3.6. |
-| Evaluación formativa | Revisión en clase del mapa arquitectónico inicial (dominio, stakeholders, atributos, estilo). | La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.2. | Plantilla de evidencia individual (4.1), rúbrica de evaluación (5.4). |
+**Tabla 1. Metodología de la sesión**
+
+| Actividades a Realizar en el Periodo | Orientaciones generales (Orientaciones Metodológicas) | Material de estudio recomendado |
+|---|---|---|
+| Revisión previa individual | Leer el sílabo de la Unidad 1 y el caso BomERP (ver 1.6). Trabajo individual, antes de clase; identificar de antemano el dominio y proceso principal del propio proyecto. | Sílabo ADS U1. |
+| Clase presencial | Identificación guiada de stakeholders, atributos de calidad y primer estilo arquitectónico para BomERP. Trabajo individual, siguiendo al docente paso a paso; consulta inmediata ante dudas de priorización. | Plantillas de las tablas de 3.1-3.6. |
+| Evaluación formativa | Revisión en clase del mapa arquitectónico inicial (dominio, stakeholders, atributos, estilo). La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4. | Indicaciones de entrega (4.3), rúbrica de evaluación (4.6). |
 
 ### 1.6 Motivación de la sesión
 
@@ -39,13 +41,18 @@ Mapa arquitectónico inicial del sistema: contexto, stakeholders, atributos de c
 
 BomERP necesita gestionar un catálogo de productos, registrar ventas con su detalle, mantener el stock consistente y dejar evidencia técnica de seguridad, rendimiento y auditoría. El equipo no debe empezar solo creando endpoints o tablas; primero debe decidir cómo se organizará el sistema y qué cualidades debe cumplir. LP2 ya avanzó con el backend (listados de `Categoria`/`Producto` en S1, CRUD completo en S2); esta sesión define la arquitectura que justifica esas decisiones y las que siguen.
 
-Preguntas para los estudiantes:
+**Preguntas de análisis**
+
+**Activación de conocimientos previos**
 
 1. ¿Qué partes tendrá el sistema empresarial?
-2. ¿Qué usuarios o áreas se ven afectadas?
-3. ¿Qué atributos de calidad son críticos: seguridad, rendimiento, auditabilidad, mantenibilidad, disponibilidad?
-4. ¿Qué decisiones debe tomar ADS antes de que LP2 implemente la API?
-5. ¿Qué necesita BD2 para que Oracle no sea un componente aislado?
+2. ¿Qué decisiones debe tomar ADS antes de que LP2 implemente la API?
+3. ¿Qué necesita BD2 para que Oracle no sea un componente aislado?
+
+**Comprensión arquitectónica**
+
+1. ¿Qué usuarios o áreas se ven afectadas?
+2. ¿Qué atributos de calidad son críticos: seguridad, rendimiento, auditabilidad, mantenibilidad, disponibilidad?
 
 ### 1.7 Ubicación en el curso
 
@@ -55,6 +62,8 @@ Preguntas para los estudiantes:
 - Avance del producto en esta sesión: visión inicial, stakeholders, atributos de calidad y decisiones base para el sistema.
 
 Roadmap del producto de la unidad:
+
+**Figura 1. Roadmap del producto de la unidad**
 
 ```mermaid
 flowchart TB
@@ -75,6 +84,8 @@ flowchart TB
 Tiempo: 25 min.
 
 ### 2.1 Arquitectura de la sesión
+
+**Figura 2. Panorama arquitectónico del sistema BomERP**
 
 ```mermaid
 flowchart TB
@@ -127,7 +138,13 @@ Una **decisión arquitectónica** conecta un requerimiento con una elección té
 
 Tiempo: 2h.
 
-Hoja de ruta de la sesión práctica:
+**Actividad:** elaboración guiada de la primera visión arquitectónica de BomERP: dominio, stakeholders, atributos de calidad y estilo arquitectónico inicial (Producto de la sesión en 1.4).
+
+**Propósito de la actividad:** construir la primera visión arquitectónica de BomERP — dominio, stakeholders, atributos de calidad priorizados, estilo arquitectónico y decisiones iniciales documentadas — que justifique las decisiones que ADS, LP2 y BD2 tomarán en las sesiones siguientes.
+
+**Orientaciones metodológicas:** en el laboratorio, el docente guía la identificación de stakeholders, atributos de calidad y el primer estilo arquitectónico para BomERP paso a paso frente a la clase; los estudiantes completan las mismas tablas para el dominio de su propio proyecto de equipo (ver sección 4).
+
+**Actividades para realizar:**
 
 - **3.1** Definir el dominio técnico.
 - **3.2** Identificar stakeholders.
@@ -143,6 +160,8 @@ Hoja de ruta de la sesión práctica:
 
 Ejemplo resuelto con BomERP — cada equipo completa la misma tabla para el dominio de su propio proyecto (ver sección 4):
 
+**Tabla 2. Dominio técnico del proyecto BomERP**
+
 | Elemento | Respuesta (BomERP) |
 |---|---|
 | Dominio del proyecto | Catálogo y ventas de un ERP comercial (continuidad de Ciclo 3) |
@@ -154,6 +173,8 @@ Ejemplo resuelto con BomERP — cada equipo completa la misma tabla para el domi
 ### 3.2 Identificar stakeholders
 
 **Producto del paso:** mapa de stakeholders.
+
+**Tabla 3. Mapa de stakeholders**
 
 | Stakeholder | Interés | Atributo de calidad asociado |
 |---|---|---|
@@ -167,6 +188,8 @@ Ejemplo resuelto con BomERP — cada equipo completa la misma tabla para el domi
 
 **Producto del paso:** atributos de calidad priorizados.
 
+**Tabla 4. Atributos de calidad priorizados**
+
 | Atributo | Por qué importa | Evidencia esperada en el proyecto |
 |---|---|---|
 | Integridad | El total de una venta y el stock de un producto no pueden quedar inconsistentes | Transacción JPA en `Venta–DetalleVenta` (S4) y restricciones Oracle |
@@ -179,6 +202,8 @@ Ejemplo resuelto con BomERP — cada equipo completa la misma tabla para el domi
 
 **Producto del paso:** decisión arquitectónica inicial.
 
+**Tabla 5. Evaluación de estilos arquitectónicos**
+
 | Opción | ¿Aplica a BomERP? | Justificación |
 |---|---|---|
 | Monolito modular | Sí | Un solo ejecutable, equipo pequeño, módulos por dominio (`catalogo`, `ventas`, ...) verificados con Spring Modulith |
@@ -190,6 +215,8 @@ Ejemplo resuelto con BomERP — cada equipo completa la misma tabla para el domi
 ### 3.5 Bosquejar arquitectura inicial
 
 **Producto del paso:** primer esquema arquitectónico.
+
+**Figura 3. Primer esquema arquitectónico de BomERP**
 
 ```mermaid
 flowchart TB
@@ -211,6 +238,8 @@ Este esquema es intencionalmente simple: el modelo C4 completo (C1-C3) se constr
 
 **Producto del paso:** primeras ADR resumidas.
 
+**Tabla 6. Decisiones arquitectónicas iniciales (ADR resumidas)**
+
 | Código | Decisión | Justificación | Consecuencia |
 |---|---|---|---|
 | ADR-001 | Un solo proyecto Spring Boot, sin reactor Maven multi-módulo | El sílabo de LP2 pide organización por capas, no distribución; menos fricción de build | El backend se despliega como un único `.jar` |
@@ -222,6 +251,8 @@ Detalle completo: [ADR-001](../../lp2/adr/ADR-001-arquitectura-backend.md), [ADR
 ### 3.7 Trazar ADS con BD2 y LP2
 
 **Producto del paso:** matriz de integración inicial.
+
+**Tabla 7. Matriz de integración ADS-BD2-LP2**
 
 | Decisión ADS | Evidencia esperada en BD2 | Evidencia esperada en LP2 |
 |---|---|---|
@@ -237,25 +268,9 @@ Sesión equivalente en los otros dos cursos, misma semana: [BD2 - S1 PL/SQL Apli
 
 Tiempo: 2h fuera del aula.
 
-Cada estudiante consolida la visión arquitectónica inicial del proyecto.
+### 4.1 Actividad
 
-### 4.1 Plantilla de evidencia individual
-
-Entrega un PDF con el siguiente nombre:
-
-```text
-S01_ADS_Equipo##_ApellidoNombre.pdf
-```
-
-#### 4.1.1 Datos del estudiante
-
-- Nombre:
-- Equipo:
-- Sesión: S01 - Fundamentos de Arquitectura de Software
-- Rol o aporte realizado:
-- Link de GitHub:
-
-#### 4.1.2 Trabajo autónomo realizado
+Elaboración autónoma de la visión arquitectónica inicial del proyecto propio del equipo, documentada en evidencia individual.
 
 Completa y evidencia estas tareas:
 
@@ -266,21 +281,51 @@ Completa y evidencia estas tareas:
 5. Elaborar un diagrama inicial del sistema.
 6. Registrar tres decisiones arquitectónicas iniciales.
 
-#### 4.1.3 Evidencia técnica
+### 4.2 Propósito
 
-Incluye:
+Que cada estudiante demuestre, de forma individual y fuera del aula, que puede reproducir el patrón de análisis construido en clase sin el acompañamiento del docente.
 
-- Tabla de dominio técnico.
-- Mapa de stakeholders.
-- Tabla de atributos de calidad.
-- Diagrama arquitectónico inicial.
-- ADR resumidas.
+Cada estudiante consolida la visión arquitectónica inicial del proyecto.
 
-#### 4.1.4 Error o hallazgo
+### 4.3 Indicaciones
+
+Entrega un PDF con el siguiente nombre:
+
+```text
+S01_ADS_Equipo##_ApellidoNombre.pdf
+```
+
+Cada captura de pantalla del informe debe mostrar, sin recortar, el reloj del sistema (fecha y hora) y tu usuario o foto de perfil (Windows, VS Code o navegador) visibles en pantalla — es lo que permite verificar que la evidencia es tuya y que corresponde al momento real de tu trabajo.
+
+#### 4.3.1 Estructura del informe
+
+**Datos del estudiante**
+
+- Nombre:
+- Equipo:
+- Sesión: S01 - Fundamentos de Arquitectura de Software
+- Rol o aporte realizado:
+- Link de GitHub:
+
+**Evidencia técnica**
+
+Incluye capturas o salidas con una breve explicación debajo de cada una, organizadas en los mismos 4 bloques de la rúbrica (4.6) — así queda claro qué evidencia corresponde a cada criterio evaluado:
+
+1. *Dominio y stakeholders*
+    - Tabla de dominio técnico.
+    - Mapa de stakeholders.
+2. *Atributos de calidad*
+    - Tabla de atributos de calidad.
+3. *Decisiones arquitectónicas*
+    - ADR resumidas.
+4. *Diagrama arquitectónico inicial*
+    - Diagrama arquitectónico inicial.
+
+**Error o hallazgo**
 
 Describe al menos un error o hallazgo: qué decisión parecía obvia, qué riesgo técnico detectaste, qué ajuste hiciste y qué aprendiste sobre arquitectura.
 
-#### 4.1.5 Reflexión técnica breve
+**Reflexión técnica breve**
 
 Responde en 5 a 8 líneas:
 
@@ -288,7 +333,7 @@ Responde en 5 a 8 líneas:
 ¿Por qué una arquitectura debe justificar decisiones y no solo mostrar componentes?
 ```
 
-### 4.2 Criterios mínimos de aceptación
+### 4.4 Criterios mínimos de aceptación
 
 La evidencia individual se considera completa si:
 
@@ -297,48 +342,58 @@ La evidencia individual se considera completa si:
 - Prioriza atributos de calidad.
 - Presenta un diagrama inicial comprensible.
 - Incluye decisiones arquitectónicas justificadas.
+- Cada captura de la evidencia técnica muestra el reloj del sistema y el usuario/perfil visible, sin recortar.
+- Las fechas y horas de las capturas son coherentes con el historial de commits de su repositorio en GitHub.
+- Incluye un error o hallazgo técnico diagnosticado.
+- Incluye la reflexión técnica breve solicitada.
 
-## 5. Cierre evaluativo
-
-Tiempo: 20 min.
-
-### 5.1 Resultados esperados
-
-Al finalizar la sesión, el estudiante debe demostrar que:
-
-- Explica el rol de la arquitectura.
-- Identifica stakeholders técnicos y de negocio.
-- Prioriza atributos de calidad.
-- Propone un estilo arquitectónico inicial.
-- Reconoce decisiones que deberán verificarse en el producto U1.
-
-### 5.2 Evidencia del producto de sesión
-
-Cada estudiante entrega un PDF individual siguiendo la plantilla de la sección 4.1.
-
-Nombre del archivo:
-
-```text
-S01_ADS_Equipo##_ApellidoNombre.pdf
-```
-
-### 5.3 Preguntas de defensa y reflexión
+### 4.5 Preguntas de defensa
 
 1. ¿Qué problema técnico atiende la arquitectura propuesta?
 2. ¿Qué stakeholder condiciona más las decisiones?
 3. ¿Qué atributo de calidad es más crítico y por qué?
 4. ¿Por qué elegiste ese estilo arquitectónico?
 
-### 5.4 Rúbrica de evaluación
+### 4.6 Rúbrica de evaluación
 
-| Dimensión | Peso | 3 - Logro destacado | 2 - Logro | 1 - Proceso | 0 - Inicio | Puntuación obtenida |
+**Tabla 8. Rúbrica de evaluación**
+
+| Criterio | Peso (%) | A (20 pts) | B (15 pts) | C (10 pts) | D (5 pts) | Nivel obtenido |
 |---|---:|---|---|---|---|---:|
-| 1. Dominio y stakeholders | 2 | Define dominio, proceso y stakeholders con claridad técnica. | Define dominio y stakeholders principales. | Presenta dominio o stakeholders incompletos. | No define contexto verificable. | |
-| 2. Atributos de calidad | 2 | Prioriza atributos y evidencia cómo se verificarán. | Identifica atributos relevantes. | Lista atributos sin justificación suficiente. | No identifica atributos. | |
-| 3. Decisiones arquitectónicas | 2 | Registra decisiones justificadas y consecuencias. | Presenta decisiones comprensibles. | Presenta decisiones débiles o genéricas. | No presenta decisiones. | |
-| 4. Diagrama inicial | 2 | Diagrama claro, coherente y conectado con el sistema. | Diagrama comprensible. | Diagrama incompleto o poco conectado. | No presenta diagrama. | |
-| 5. Orden y reflexión | 1 | Evidencia ordenada y reflexión técnica clara. | Evidencia suficiente y reflexión comprensible. | Evidencia incompleta o reflexión superficial. | Evidencia desordenada o sin reflexión. | |
+| 1. Dominio y stakeholders* | 25 | Define dominio, proceso y stakeholders con claridad técnica y trazabilidad al proyecto real del equipo. | Define dominio y stakeholders principales, con detalles menores. | Presenta dominio o stakeholders incompletos. | No define contexto verificable. | |
+| 2. Atributos de calidad* | 25 | Prioriza atributos de calidad y evidencia cómo se verificarán. | Identifica atributos relevantes, con justificación parcial. | Lista atributos sin justificación suficiente. | No identifica atributos. | |
+| 3. Decisiones arquitectónicas* | 25 | Registra decisiones justificadas, con consecuencias y alternativas consideradas. | Presenta decisiones comprensibles y justificadas. | Presenta decisiones débiles o genéricas. | No presenta decisiones. | |
+| 4. Diagrama arquitectónico inicial* | 25 | Diagrama claro, coherente y conectado con el dominio y las decisiones registradas. | Diagrama comprensible, con inconsistencias menores. | Diagrama incompleto o poco conectado con el resto del informe. | No presenta diagrama. | |
 
-Puntuación acumulada = suma de (`Peso` * `Puntuación obtenida`) = ____.
+\* Agregado manual.
 
-Nota final = (`Puntuación acumulada` / 27) * 20 = ____.
+Nota final = suma de (`Peso` / 100 × `Puntos del nivel obtenido`) = ____ / 20.
+
+Para usar la rúbrica con IA, solicita:
+
+```text
+Evalúa el PDF usando la rúbrica de la sesión.
+Para cada criterio selecciona el nivel obtenido usando la escala A=20, B=15, C=10, D=5 puntos.
+Justifica brevemente cada nivel asignado.
+Verifica que cada captura muestre reloj del sistema y usuario/perfil visible, y que las fechas sean coherentes con el historial de commits de GitHub. Si falta esta evidencia o hay inconsistencias, indícalo explícitamente antes de calificar.
+Calcula la nota final con la fórmula: suma de (Peso/100 × Puntos del nivel obtenido), directamente sobre 20.
+Indica 2 fortalezas y 2 recomendaciones.
+```
+
+## 5. Cierre
+
+Tiempo: 5 min.
+
+**Resumen breve:** hoy BomERP pasó de no tener arquitectura declarada a tener dominio, stakeholders, atributos de calidad priorizados, un estilo arquitectónico inicial y las primeras decisiones registradas — la base que LP2 y BD2 usan desde su propia S1.
+
+**Dinámica participativa:** en una ronda rápida (o con una herramienta digital tipo formulario o encuesta en vivo), cada estudiante comparte en una frase el atributo de calidad que priorizó y por qué.
+
+**Metacognición:** cada estudiante responde en voz alta o por escrito: ¿qué parte de la sesión te costó más entender, y cómo la resolviste?
+
+**Proyección:** el mapa arquitectónico de hoy se retoma y se hace más preciso en S2 (modelo C4), y las decisiones registradas hoy se verifican contra lo que LP2 y BD2 vayan construyendo — igual que en cualquier proyecto profesional, donde la arquitectura se revisa y ajusta a medida que el sistema crece.
+
+## Bibliografía
+
+1. Brown, S. (2024). *The C4 model for visualising software architecture*. https://c4model.com/
+2. International Organization for Standardization. (2022). *ISO/IEC/IEEE 42010:2022 — Software, systems and enterprise — Architecture description*. https://www.iso.org/standard/74393.html
+3. Spring. (2024). *Spring Modulith reference documentation*. VMware. https://docs.spring.io/spring-modulith/reference/

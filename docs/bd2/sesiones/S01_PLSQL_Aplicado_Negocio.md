@@ -4,9 +4,9 @@
 
 Tiempo: 20 min.
 
-### 1.1 Contexto
+### 1.1 Presentación de la sesión
 
-PL/SQL decide qué reglas del negocio quedan protegidas dentro de Oracle, sin importar quién intente saltárselas. Esta sesión crea el esquema y las tablas base del caso empresarial, e inicia el motor transaccional con procedimientos y funciones PL/SQL.
+Esta sesión abre la Unidad 1: crea el esquema y las tablas base del caso empresarial en Oracle, e inicia el motor transaccional con procedimientos y funciones PL/SQL. El porqué de resolver reglas de negocio también del lado de la base de datos, y no solo en el backend, se desarrolla en 1.6, a partir del caso del cálculo de inventario y precio.
 
 ### 1.2 Índice
 
@@ -27,11 +27,13 @@ Esquema `BOM_CATALOGO` con sus tablas base, más procedimientos y funciones inic
 
 ### 1.5 Metodología
 
-| Fase | Actividades | Orientaciones | Material |
-|---|---|---|---|
-| Revisión previa individual | Instalar/verificar acceso a Oracle XE y revisar el caso BomERP (ver 1.6). | Trabajo individual, antes de clase. | Acceso a Oracle, sílabo BD2 U1. |
-| Clase presencial | Creación guiada del esquema y tablas del catálogo, seguida de la función y los procedimientos PL/SQL. | Trabajo individual en la propia laptop, siguiendo al docente paso a paso; consulta inmediata ante errores de compilación. | Scripts `S01_01_esquemas.sql`, `S01_02_tablas.sql`, `S01_03_plsql.sql`. |
-| Evaluación formativa | Verificación en clase de la ejecución de la función y los procedimientos con datos válidos. | La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.2. | Plantilla de evidencia individual (4.1), rúbrica de evaluación (5.4). |
+**Tabla 1. Metodología de la sesión**
+
+| Actividades a Realizar en el Periodo | Orientaciones generales (Orientaciones Metodológicas) | Material de estudio recomendado |
+|---|---|---|
+| Revisión previa individual | Instalar/verificar acceso a Oracle XE y revisar el caso BomERP (ver 1.6). Trabajo individual, antes de clase. | Acceso a Oracle, sílabo BD2 U1. |
+| Clase presencial | Creación guiada del esquema y tablas del catálogo, seguida de la función y los procedimientos PL/SQL. Trabajo individual en la propia laptop, siguiendo al docente paso a paso; consulta inmediata ante errores de compilación. | Scripts `S01_01_esquemas.sql`, `S01_02_tablas.sql`, `S01_03_plsql.sql`. |
+| Evaluación formativa | Verificación en clase de la ejecución de la función y los procedimientos con datos válidos. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4. | Indicaciones de entrega (4.3), rúbrica de evaluación (4.6). |
 
 ### 1.6 Motivación de la sesión
 
@@ -39,13 +41,18 @@ Esquema `BOM_CATALOGO` con sus tablas base, más procedimientos y funciones inic
 
 ¿Dónde debería vivir la regla que calcula el valor de inventario de un producto, o la que ajusta su precio: en el backend de la aplicación, o en la propia base de datos? El backend puede validar datos, pero hay cálculos y reglas del negocio que conviene resolver también del lado de Oracle — centralizados en un procedimiento o función PL/SQL, disponibles sin importar qué cliente los invoque.
 
-Preguntas para los estudiantes:
+**Preguntas de análisis**
+
+**Activación de conocimientos previos**
 
 1. ¿Qué diferencia hay entre calcular `precio * stock` en el backend Java y calcularlo en una función PL/SQL?
-2. ¿Qué procedimiento podría invocar (o replicar) un backend REST como el de LP2?
-3. ¿Qué función permite centralizar un cálculo del negocio sin repetirlo en cada consulta?
-4. ¿Por qué un parámetro `IN OUT` es distinto de tener un `IN` y un `OUT` por separado?
-5. ¿Cómo se evidencia que los productos de esta sesión no son ejercicios aislados, sino el motor transaccional detrás del esquema `BOM_CATALOGO`?
+2. ¿Cómo se evidencia que los productos de esta sesión no son ejercicios aislados, sino el motor transaccional detrás del esquema `BOM_CATALOGO`?
+
+**Comprensión de PL/SQL**
+
+1. ¿Qué procedimiento podría invocar (o replicar) un backend REST como el de LP2?
+2. ¿Qué función permite centralizar un cálculo del negocio sin repetirlo en cada consulta?
+3. ¿Por qué un parámetro `IN OUT` es distinto de tener un `IN` y un `OUT` por separado?
 
 ### 1.7 Ubicación en el curso
 
@@ -55,6 +62,8 @@ Preguntas para los estudiantes:
 - Avance del producto en esta sesión: procedimientos, funciones y reglas iniciales del motor transaccional.
 
 Roadmap del producto de la unidad:
+
+**Figura 1. Roadmap del producto de la unidad**
 
 ```mermaid
 flowchart TB
@@ -76,6 +85,8 @@ flowchart TB
 Tiempo: 25 min.
 
 ### 2.1 Arquitectura de la sesión
+
+**Figura 2. Arquitectura del esquema `BOM_CATALOGO` y su motor transaccional PL/SQL**
 
 ```mermaid
 flowchart TB
@@ -142,7 +153,13 @@ Un parámetro `IN` recibe un valor sin modificarlo, un `OUT` devuelve un resulta
 
 Tiempo: 2h.
 
-Hoja de ruta de la sesión práctica:
+**Actividad:** creación guiada del esquema `BOM_CATALOGO` y su primer motor transaccional con procedimientos y funciones PL/SQL (Producto de la sesión en 1.4).
+
+**Propósito de la actividad:** construir el esquema `BOM_CATALOGO` con sus tablas base y el primer motor transaccional del negocio — una función y dos procedimientos PL/SQL que validan reglas del negocio con parámetros `IN`, `OUT` e `IN OUT` — verificando cada incremento antes de continuar al siguiente.
+
+**Orientaciones metodológicas:** en el laboratorio, el docente guía la creación del esquema y las tablas del catálogo, seguida de la función y los procedimientos PL/SQL, paso a paso frente a la clase; los estudiantes replican cada paso en su propio equipo, verificando la compilación y la ejecución antes de avanzar al siguiente.
+
+**Actividades para realizar:**
 
 - **3.1** Definir operación transaccional.
 - **3.2** Crear el esquema y las tablas del catálogo.
@@ -161,6 +178,8 @@ Hoja de ruta de la sesión práctica:
 ### 3.1 Definir operación transaccional
 
 **Producto del paso:** operación principal del motor Oracle.
+
+**Tabla 2. Operación transaccional del motor Oracle**
 
 | Elemento | Respuesta |
 |---|---|
@@ -212,6 +231,8 @@ La contraseña de `BOMERP_APP` debe coincidir exactamente con la de `application
 #### Ver el esquema `BOM_CATALOGO` desde el cliente gráfico
 
 Con la conexión de `system` (ver LP2 S1, 3.2.2) normalmente solo ves los objetos de `SYSTEM`, no los de `BOM_CATALOGO`, aunque ya exista. Agrega una segunda conexión, igual que ya hiciste con `BOMERP_APP`:
+
+**Tabla 3. Conexión al esquema `BOM_CATALOGO`**
 
 | Campo | Valor |
 |---|---|
@@ -402,6 +423,8 @@ Resultado esperado: `Producto registrado: <id>`, `Valor de inventario: 4512.5`, 
 
 **Producto del paso:** matriz de integración.
 
+**Tabla 4. Matriz de integración BD2-ADS-LP2**
+
 | Objeto BD2 | Decisión ADS | Endpoint o servicio LP2 |
 |---|---|---|
 | `sp_registrar_producto` | Integridad: reglas transaccionales en servicio y Oracle | `POST /api/v1/productos` (S2), regla equivalente |
@@ -414,25 +437,9 @@ Sesión equivalente en los otros dos cursos, misma semana: [ADS - S1 Fundamentos
 
 Tiempo: 2h fuera del aula.
 
-Cada estudiante adapta el ejemplo a la entidad transaccional de su equipo.
+### 4.1 Actividad
 
-### 4.1 Plantilla de evidencia individual
-
-Entrega un PDF con el siguiente nombre:
-
-```text
-S01_BD2_Equipo##_ApellidoNombre.pdf
-```
-
-#### 4.1.1 Datos del estudiante
-
-- Nombre:
-- Equipo:
-- Sesión: S01 - PL/SQL Aplicado al Negocio
-- Rol o aporte realizado:
-- Link de GitHub:
-
-#### 4.1.2 Trabajo autónomo realizado
+Creación autónoma del esquema y el motor transaccional PL/SQL para la entidad transaccional del proyecto propio del equipo, documentada en evidencia individual.
 
 Completa y evidencia estas tareas:
 
@@ -443,20 +450,53 @@ Completa y evidencia estas tareas:
 5. Ejecutar al menos un caso válido.
 6. Registrar una mejora que se implementará en S2 o S3.
 
-#### 4.1.3 Evidencia técnica
+### 4.2 Propósito
 
-Incluye:
+Que cada estudiante demuestre, de forma individual y fuera del aula, que puede reproducir el patrón construido en clase sin el acompañamiento del docente.
 
-- Script SQL.
-- Captura o salida de ejecución.
-- Resultado de consulta a la tabla.
-- Breve explicación del procedimiento.
+Cada estudiante adapta el ejemplo a la entidad transaccional de su equipo.
 
-#### 4.1.4 Error o hallazgo
+### 4.3 Indicaciones
+
+Entrega un PDF con el siguiente nombre:
+
+```text
+S01_BD2_Equipo##_ApellidoNombre.pdf
+```
+
+Cada captura de pantalla del informe debe mostrar, sin recortar, el reloj del sistema (fecha y hora) y tu usuario o foto de perfil (Windows, VS Code o navegador) visibles en pantalla — es lo que permite verificar que la evidencia es tuya y que corresponde al momento real de tu trabajo.
+
+#### 4.3.1 Estructura del informe
+
+**Datos del estudiante**
+
+- Nombre:
+- Equipo:
+- Sesión: S01 - PL/SQL Aplicado al Negocio
+- Rol o aporte realizado:
+- Link de GitHub:
+
+**Evidencia técnica**
+
+Incluye capturas o salidas con una breve explicación debajo de cada una, organizadas en los mismos 5 bloques de la rúbrica (4.6) — así queda claro qué evidencia corresponde a cada criterio evaluado:
+
+1. *Esquema y tablas del proyecto propio*
+    - Script SQL de creación del esquema y las tablas base.
+2. *Operación transaccional*
+    - Breve explicación de la operación transaccional definida para el proyecto.
+3. *Función PL/SQL*
+    - Script de la función PL/SQL.
+4. *Procedimiento PL/SQL*
+    - Script del procedimiento PL/SQL, con breve explicación.
+5. *Evidencia de ejecución*
+    - Captura o salida de ejecución.
+    - Resultado de consulta a la tabla.
+
+**Error o hallazgo**
 
 Describe un error técnico encontrado: compilación, tipos, parámetros, claves, reglas o pruebas.
 
-#### 4.1.5 Reflexión técnica breve
+**Reflexión técnica breve**
 
 Responde en 5 a 8 líneas:
 
@@ -464,7 +504,7 @@ Responde en 5 a 8 líneas:
 ¿Qué regla del negocio conviene proteger en Oracle y por qué no debería quedar solo en el backend?
 ```
 
-### 4.2 Criterios mínimos de aceptación
+### 4.4 Criterios mínimos de aceptación
 
 La evidencia individual se considera completa si:
 
@@ -474,50 +514,58 @@ La evidencia individual se considera completa si:
 - Usa parámetros `IN` y `OUT`.
 - Ejecuta un caso válido.
 - Incluye evidencia de ejecución.
+- Cada captura de la evidencia técnica muestra el reloj del sistema y el usuario/perfil visible, sin recortar.
+- Las fechas y horas de las capturas son coherentes con el historial de commits de su repositorio en GitHub.
+- Incluye un error o hallazgo técnico diagnosticado.
+- Incluye la reflexión técnica breve solicitada.
 
-## 5. Cierre evaluativo
-
-Tiempo: 20 min.
-
-### 5.1 Resultados esperados
-
-Al finalizar la sesión, el estudiante debe demostrar que:
-
-- Explica el rol de PL/SQL en un sistema empresarial.
-- Crea el esquema/usuario propietario y las tablas base de su dominio.
-- Crea funciones y procedimientos.
-- Usa parámetros `IN` y `OUT`.
-- Implementa reglas iniciales del negocio.
-- Prueba la lógica creada.
-
-### 5.2 Evidencia del producto de sesión
-
-Cada estudiante entrega un PDF individual siguiendo la plantilla de la sección 4.1.
-
-Nombre del archivo:
-
-```text
-S01_BD2_Equipo##_ApellidoNombre.pdf
-```
-
-### 5.3 Preguntas de defensa y reflexión
+### 4.5 Preguntas de defensa
 
 1. ¿Qué operación transaccional implementaste?
 2. ¿Por qué creaste una función y no solo un procedimiento?
 3. ¿Qué parámetro `OUT` devuelve tu procedimiento?
 4. ¿Qué validación falta mejorar en S2 o S3?
 
-### 5.4 Rúbrica de evaluación
+### 4.6 Rúbrica de evaluación
 
-| Dimensión | Peso | 3 - Logro destacado | 2 - Logro | 1 - Proceso | 0 - Inicio | Puntuación obtenida |
+**Tabla 5. Rúbrica de evaluación**
+
+| Criterio | Peso (%) | A (20 pts) | B (15 pts) | C (10 pts) | D (5 pts) | Nivel obtenido |
 |---|---:|---|---|---|---|---:|
-| 1. Esquema y tablas del catálogo | 2 | Esquema y tablas creados correctamente, con permisos mínimos para `BOMERP_APP`. | Esquema y tablas funcionales con detalles menores. | Esquema o tablas incompletos. | No crea esquema ni tablas. | |
-| 2. Operación transaccional | 2 | Define una operación clara y alineada al proyecto. | Define una operación comprensible. | Operación parcial o poco conectada. | No define operación. | |
-| 3. Función PL/SQL | 2 | Función correcta, reutilizable y probada. | Función funcional con detalles menores. | Función incompleta o poco probada. | No presenta función. | |
-| 4. Procedimiento PL/SQL | 2 | Procedimiento correcto con parámetros y registro exitoso. | Procedimiento funcional con detalles menores. | Procedimiento parcial o con errores. | No presenta procedimiento. | |
-| 5. Evidencia de ejecución | 2 | Presenta ejecución y consulta verificable. | Presenta evidencia suficiente. | Evidencia incompleta. | No evidencia ejecución. | |
-| 6. Orden y reflexión | 1 | Evidencia ordenada y reflexión técnica clara. | Evidencia suficiente y reflexión comprensible. | Evidencia incompleta o reflexión superficial. | Evidencia desordenada o sin reflexión. | |
+| 1. Esquema y tablas del proyecto propio* | 20 | Esquema y tablas propias creados correctamente, con permisos mínimos definidos para el usuario de aplicación. | Esquema y tablas funcionales, con detalles menores. | Esquema o tablas incompletos. | No crea esquema ni tablas. | |
+| 2. Operación transaccional* | 20 | Define una operación transaccional clara y alineada al proyecto propio del equipo. | Define una operación comprensible. | Operación parcial o poco conectada. | No define operación. | |
+| 3. Función PL/SQL* | 20 | Función correcta, reutilizable y probada. | Función funcional con detalles menores. | Función incompleta o poco probada. | No presenta función. | |
+| 4. Procedimiento PL/SQL* | 20 | Procedimiento correcto con parámetros `IN`/`OUT` y registro exitoso. | Procedimiento funcional con detalles menores. | Procedimiento parcial o con errores. | No presenta procedimiento. | |
+| 5. Evidencia de ejecución* | 20 | Presenta ejecución y consulta verificable del caso de prueba. | Presenta evidencia suficiente. | Evidencia incompleta. | No evidencia ejecución. | |
 
-Puntuación acumulada = suma de (`Peso` * `Puntuación obtenida`) = ____.
+\* Agregado manual.
 
-Nota final = (`Puntuación acumulada` / 33) * 20 = ____.
+Nota final = suma de (`Peso` / 100 × `Puntos del nivel obtenido`) = ____ / 20.
+
+Para usar la rúbrica con IA, solicita:
+
+```text
+Evalúa el PDF usando la rúbrica de la sesión.
+Para cada criterio selecciona el nivel obtenido usando la escala A=20, B=15, C=10, D=5 puntos.
+Justifica brevemente cada nivel asignado.
+Verifica que cada captura muestre reloj del sistema y usuario/perfil visible, y que las fechas sean coherentes con el historial de commits de GitHub. Si falta esta evidencia o hay inconsistencias, indícalo explícitamente antes de calificar.
+Calcula la nota final con la fórmula: suma de (Peso/100 × Puntos del nivel obtenido), directamente sobre 20.
+Indica 2 fortalezas y 2 recomendaciones.
+```
+
+## 5. Cierre
+
+Tiempo: 5 min.
+
+**Resumen breve:** hoy el esquema `BOM_CATALOGO` pasó de no existir a tener tablas base y su primer motor transaccional: una función y un procedimiento PL/SQL que validan reglas del negocio con parámetros `IN` y `OUT` — la base sobre la que LP2 conecta su backend.
+
+**Dinámica participativa:** en una ronda rápida (o con una herramienta digital tipo formulario o encuesta en vivo), cada estudiante comparte en una frase qué validación implementó en su función o procedimiento.
+
+**Metacognición:** cada estudiante responde en voz alta o por escrito: ¿qué parte de la sesión te costó más entender, y cómo la resolviste?
+
+**Proyección:** el motor transaccional de hoy se amplía en S2 con triggers y auditoría, y el hábito de proteger reglas de negocio en la base de datos aplica a cualquier sistema profesional donde varios clientes (no solo un backend) necesiten confiar en los mismos datos.
+
+## Bibliografía
+
+1. Oracle Corporation. (2024). *Oracle Database Free 23ai documentation*. https://docs.oracle.com/en/database/oracle/oracle-database/23/
+2. Oracle Corporation. (2024). *Database PL/SQL language reference*. https://docs.oracle.com/en/database/oracle/oracle-database/23/lnpls/
