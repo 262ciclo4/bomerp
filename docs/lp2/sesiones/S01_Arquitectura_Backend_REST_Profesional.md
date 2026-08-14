@@ -1223,6 +1223,12 @@ Dentro de cada módulo, `{controller,dto,entity,repository,service}` es la arqui
 
 Sesión equivalente en los otros dos cursos, misma semana: [ADS - S1 Fundamentos de Arquitectura de Software](../../ads/sesiones/S01_Fundamentos_Arquitectura_Software.md) y [BD2 - S1 PL/SQL Aplicado al Negocio](../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio.md).
 
+**Evidencia de aprendizaje:**
+
+- Backend `bomerp-backend` ejecutable y reproducible (Java 21 LTS, proyecto único Spring Modulith), conectado a Oracle con conexión verificada vía ORM y endpoint de salud respondiendo.
+- Endpoints del módulo Catálogo delimitados, con DTOs de entrada/salida, manejo de errores y contrato documentado en OpenAPI.
+- Bosquejo de la estructura modular del backend y matriz de integración inicial con ADS y BD2.
+
 ## 4. Crea: actividad autónoma
 
 Tiempo: 2h fuera del aula.

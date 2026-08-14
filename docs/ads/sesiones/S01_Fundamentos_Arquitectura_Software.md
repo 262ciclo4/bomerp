@@ -264,6 +264,12 @@ Detalle completo: [ADR-001](../../lp2/adr/ADR-001-arquitectura-backend.md), [ADR
 
 Sesión equivalente en los otros dos cursos, misma semana: [BD2 - S1 PL/SQL Aplicado al Negocio](../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio.md) y [LP2 - S1 Arquitectura Backend REST Profesional](../../lp2/sesiones/S01_Arquitectura_Backend_REST_Profesional.md).
 
+**Evidencia de aprendizaje:**
+
+- Dominio técnico, stakeholders y atributos de calidad priorizados de BomERP.
+- Estilo arquitectónico y bosquejo de arquitectura inicial, con las decisiones (ADR) registradas.
+- Matriz de integración inicial con BD2 y LP2.
+
 ## 4. Crea: actividad autónoma
 
 Tiempo: 2h fuera del aula.

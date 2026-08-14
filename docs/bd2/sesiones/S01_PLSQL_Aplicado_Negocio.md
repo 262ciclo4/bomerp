@@ -433,6 +433,12 @@ Resultado esperado: `Producto registrado: <id>`, `Valor de inventario: 4512.5`, 
 
 Sesión equivalente en los otros dos cursos, misma semana: [ADS - S1 Fundamentos de Arquitectura de Software](../../ads/sesiones/S01_Fundamentos_Arquitectura_Software.md) y [LP2 - S1 Arquitectura Backend REST Profesional](../../lp2/sesiones/S01_Arquitectura_Backend_REST_Profesional.md).
 
+**Evidencia de aprendizaje:**
+
+- Esquema y tablas del catálogo (`categoria`, `producto`) creados en Oracle.
+- Función y procedimientos PL/SQL (`IN`, `IN`/`OUT`, `IN OUT`) probados con resultados correctos.
+- Matriz de integración con ADS y LP2.
+
 ## 4. Crea: actividad autónoma
 
 Tiempo: 2h fuera del aula.
