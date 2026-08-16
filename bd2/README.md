@@ -18,8 +18,8 @@ criterio de "no crear por si acaso" que usa LP2 con sus módulos, ver
 `docs/proyecto-integrador/`**, uno por unidad:
 
 - `docs/proyecto-integrador/u1/oracle/`: `S01_01_esquemas.sql`,
-  `S01_02_tablas.sql`, `S01_03_plsql.sql` (S02 en preparación, todavía no
-  se sube al repo).
+  `S01_02_tablas.sql`, `S01_03_plsql.sql`,
+  `S02_triggers_dml_auditoria.sql`.
 - `docs/proyecto-integrador/u2/oracle/`: `01_security.sql`,
   `02_storage_audit.sql`, `03_partition_perf.sql`.
 - `docs/proyecto-integrador/u3/oracle/`: `01_rman_backup.md`,
@@ -30,10 +30,11 @@ La numeración **no es uniforme** entre unidades: U1 usa
 `S0X_NN_tema.sql` (un archivo por sesión), U2/U3 usan `NN_tema.{sql,md}`
 sin prefijo de sesión, agrupando varias sesiones por archivo temático.
 
-Las guías de sesión están en `docs/bd2/sesiones/S0X_*.md`. Solo `S01`
-trae el caso BomERP completamente desarrollado (esquema `BOM_CATALOGO`);
-el resto son plantillas genéricas o sesiones de evaluación. Detalle
-completo del estado real de cada sesión en [`CLAUDE.md`](./CLAUDE.md).
+Las guías de sesión están en `docs/bd2/sesiones/S0X_*.md`. Solo `S01` y
+`S02` traen el caso BomERP completamente desarrollado (esquema
+`BOM_CATALOGO`); el resto son plantillas genéricas o sesiones de
+evaluación. Detalle completo del estado real de cada sesión en
+[`CLAUDE.md`](./CLAUDE.md).
 
 ## Requisitos previos
 
@@ -102,12 +103,13 @@ exactamente entre ambos.
 ### Ejecutar y verificar los scripts de U1
 
 Ejecuta en orden `S01_01_esquemas.sql` → `S01_02_tablas.sql` →
-`S01_03_plsql.sql` (con `system`, que tiene privilegios de DBA para crear
-los usuarios `BOM_CATALOGO` y `BOMERP_APP`; los scripts siguientes ya
-pueden ejecutarse contra el esquema `BOM_CATALOGO`). No hay suite
-automatizada tipo `mvn test`: la verificación es la evidencia de
-`DBMS_OUTPUT.PUT_LINE` documentada en `docs/bd2/sesiones/S01_*.md`, más
-una consulta `SELECT`/`DESC` posterior que confirme el estado final.
+`S01_03_plsql.sql` → `S02_triggers_dml_auditoria.sql` (con `system`, que
+tiene privilegios de DBA para crear los usuarios `BOM_CATALOGO` y
+`BOMERP_APP`; los scripts siguientes ya pueden ejecutarse contra el
+esquema `BOM_CATALOGO`). No hay suite automatizada tipo `mvn test`: la
+verificación es la evidencia de `DBMS_OUTPUT.PUT_LINE` documentada en
+`docs/bd2/sesiones/S01_*.md`/`S02_*.md`, más una consulta `SELECT`/`DESC`
+posterior que confirme el estado final.
 
 ## Ambiente U2-U3 (S7-S16): Oracle 19c EE + Oracle Linux — no operacionalizado
 
