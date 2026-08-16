@@ -13,19 +13,18 @@ Los scripts se agregan **por sesión de BD2**, a medida que cada una les da cont
 | Script | Sesión BD2 | Uso |
 |---|---|---|
 | [S01_01_esquemas.sql](oracle/S01_01_esquemas.sql) | [S1](../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio.md) | Usuarios `BOM_CATALOGO` (propietario) y `BOMERP_APP` (técnico de LP2). |
-| [S01_02_tablas.sql](oracle/S01_02_tablas.sql) | [S1](../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio.md) | Tablas `categoria`/`producto` y permisos de `BOMERP_APP` sobre ellas. |
+| [S01_02_tablas.sql](oracle/S01_02_tablas.sql) | [S1](../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio.md) | Tablas `CATEGORIAS`/`PRODUCTOS` y permisos de `BOMERP_APP` sobre ellas. |
 | [S01_03_plsql.sql](oracle/S01_03_plsql.sql) | [S1](../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio.md) | Función y procedimientos PL/SQL del catálogo. |
-| [S02_triggers_dml_auditoria.sql](oracle/S02_triggers_dml_auditoria.sql) | [S2](../../bd2/sesiones/S02_Triggers_DML_Auditoria.md) | Tabla y trigger de auditoría de cambios de precio/stock en `producto`. |
 
-Pendientes (se agregan cuando esas sesiones de BD2 se documenten): esquema `BOM_VENTAS` y tablas `venta`/`detalle_venta` (S3-S4 de LP2), paquete `pkg_venta` y trigger `trg_venta_estado_audit`, índice `idx_venta_estado_fecha`, esquema `BOM_SEGURIDAD` (S10 de LP2).
+Pendientes (se agregan cuando esas sesiones de BD2 se documenten): `producto_auditoria` y trigger de auditoría (S2), esquema `BOM_VENTAS` y tablas `venta`/`detalle_venta` (S3-S4 de LP2), paquete `pkg_venta` y trigger `trg_venta_estado_audit`, índice `idx_venta_estado_fecha`, esquema `BOM_SEGURIDAD` (S10 de LP2).
 
 ## 2. Objetos Oracle U1
 
-**Estado al cierre de la Unidad 1 (S6), no al día de hoy** (S1-S2 solo tienen creados `BOM_CATALOGO.categoria`/`producto`, ver sección 1): las filas de `BOM_VENTAS` y `BOM_SEGURIDAD.usuario_app` son el objetivo de esta unidad, que se completa progresivamente en S3-S6.
+**Estado al cierre de la Unidad 1 (S6), no al día de hoy** (S1-S2 solo tienen creados `BOM_CATALOGO.CATEGORIAS`/`PRODUCTOS`, ver sección 1): las filas de `BOM_VENTAS` y `BOM_SEGURIDAD.usuario_app` son el objetivo de esta unidad, que se completa progresivamente en S3-S6.
 
 | Objeto | Proposito | Relacion con LP2 |
 |---|---|---|
-| `BOM_CATALOGO.categoria` y `producto` | Catálogo heredado de Ciclo 3. | Recursos `/api/v1/categorias` y `/api/v1/productos`. |
+| `BOM_CATALOGO.CATEGORIAS` y `PRODUCTOS` | Catálogo heredado de Ciclo 3. | Recursos `/api/v1/categorias` y `/api/v1/productos`. |
 | `BOM_VENTAS.venta` y `detalle_venta` | Operación transaccional principal. | Recurso `/api/v1/ventas`. |
 | `BOM_SEGURIDAD.usuario_app` | Soporte para JWT, roles y trazabilidad. | Identidad autenticada desde S10. |
 | `BOM_VENTAS.venta_audit` | Auditoría de cambios de estado. | Evidencia de anulación. |

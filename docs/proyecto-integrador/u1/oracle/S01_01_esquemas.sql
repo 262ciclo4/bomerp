@@ -2,10 +2,10 @@
 -- Paso 1: esquemas (usuarios propietarios). Ejecutar con una cuenta DBA
 -- (ej. system).
 --
--- Contraseñas en texto plano (123456): ambiente local, sin secretos que
--- proteger, mismo criterio que application-local.yml/compose-local.yml
+-- Contraseñas en texto plano (123456): ambiente DEV, sin secretos que
+-- proteger, mismo criterio que application-dev.yml/compose-dev.yml
 -- de LP2 (ver lp2/CLAUDE.md, seccion "Ambientes"). La de BOMERP_APP debe
--- coincidir exactamente con la de application-local.yml. Ver la
+-- coincidir exactamente con la de application-dev.yml. Ver la
 -- explicacion del enfoque alternativo (ACCEPT/HIDE, contraseña
 -- interactiva por persona) en docs/bd2/sesiones/S01_PLSQL_Aplicado_Negocio.md,
 -- seccion 3.2.

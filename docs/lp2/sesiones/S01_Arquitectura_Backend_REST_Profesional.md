@@ -535,7 +535,7 @@ Crea el esquema y las tablas del catálogo ejecutando, en orden, [`S01_01_esquem
 
 !!! danger "Service Name = `FREEPDB1`, usuario `system` — sin excepciones (aplica a las dos opciones)"
     - **Service Name vacío o distinto de `FREEPDB1`**: la conexión no apunta a nuestra base y `S01_01_esquemas.sql` nunca logra crear `BOMERP_APP`.
-    - **Conectarte como `BOM_CATALOGO` para `S01_02_tablas.sql`** (parece lo lógico, es su propio esquema) falla con `ORA-01031: insufficient privileges`: el script califica el esquema explícitamente (`CREATE TABLE BOM_CATALOGO.categoria`), y eso exige `CREATE ANY TABLE` — privilegio que solo tiene `system` (rol DBA). `BOM_CATALOGO` solo tiene `CREATE TABLE`, insuficiente cuando el esquema se califica, incluso el propio.
+    - **Conectarte como `BOM_CATALOGO` para `S01_02_tablas.sql`** (parece lo lógico, es su propio esquema) falla con `ORA-01031: insufficient privileges`: el script califica el esquema explícitamente (`CREATE TABLE BOM_CATALOGO.CATEGORIAS`), y eso exige `CREATE ANY TABLE` — privilegio que solo tiene `system` (rol DBA). `BOM_CATALOGO` solo tiene `CREATE TABLE`, insuficiente cuando el esquema se califica, incluso el propio.
 
     Ejecuta ambos scripts conectado como `system`, de principio a fin.
 
@@ -611,8 +611,8 @@ SELECT table_name FROM all_tables WHERE owner = 'BOM_CATALOGO';
 SELECT privilege FROM dba_sys_privs WHERE grantee = 'BOM_CATALOGO';
 
 -- Ver los registros de cada tabla
-SELECT * FROM BOM_CATALOGO.categoria;
-SELECT * FROM BOM_CATALOGO.producto;
+SELECT * FROM BOM_CATALOGO.CATEGORIAS;
+SELECT * FROM BOM_CATALOGO.PRODUCTOS;
 ```
 
 Para salir de la sesión:
@@ -636,12 +636,12 @@ O las 5 consultas juntas en un solo comando (here-string de PowerShell):
 SELECT username FROM dba_users WHERE username IN ('BOM_CATALOGO', 'BOMERP_APP');
 SELECT table_name FROM all_tables WHERE owner = 'BOM_CATALOGO';
 SELECT privilege FROM dba_sys_privs WHERE grantee = 'BOM_CATALOGO';
-SELECT * FROM BOM_CATALOGO.categoria;
-SELECT * FROM BOM_CATALOGO.producto;
+SELECT * FROM BOM_CATALOGO.CATEGORIAS;
+SELECT * FROM BOM_CATALOGO.PRODUCTOS;
 "@ | docker exec -i bomerp-oracle sqlplus -s system/123456@localhost:1521/FREEPDB1
 ```
 
-Evidencia esperada tras ejecutar ambos scripts: `BOM_CATALOGO` y `BOMERP_APP` existen, `BOM_CATALOGO` tiene `CATEGORIA` y `PRODUCTO`, y ambas consultas `SELECT *` responden (vacías está bien — todavía no se insertó nada; los datos de ejemplo llegan en 3.5).
+Evidencia esperada tras ejecutar ambos scripts: `BOM_CATALOGO` y `BOMERP_APP` existen, `BOM_CATALOGO` tiene `CATEGORIAS` y `PRODUCTOS`, y ambas consultas `SELECT *` responden (vacías está bien — todavía no se insertó nada; los datos de ejemplo llegan en 3.5).
 
 ##### Reiniciar Docker desde cero (opcional, solo si algo quedó en mal estado)
 
@@ -1082,7 +1082,7 @@ Resultado esperado: ambas responden `Hola BomERP` y `{"status":"UP"}` (con `db.s
 
 **Producto del paso:** listado REST de `Categoria` funcionando de punta a punta (controller → service → repository → Oracle), con la estructura modular verificada. `Producto` (3.5.2) es opcional en S1.
 
-**Requisito antes de continuar:** las tablas `BOM_CATALOGO.categoria` y `BOM_CATALOGO.producto` deben existir en Oracle *antes* de compilar este paso. A diferencia de Distribuidas (que usa Flyway y ejecuta sus migraciones solo al arrancar), LP2 no usa Flyway: nadie las crea automáticamente. Con `ddl-auto: validate` (3.2.3), Hibernate solo valida el esquema al arrancar, nunca lo crea — si las tablas no existen, falla igual que pasó con `event_publication` (ADR-002). Se crean ejecutando manualmente [`S01_01_esquemas.sql`](../../proyecto-integrador/u1/oracle/S01_01_esquemas.sql) y [`S01_02_tablas.sql`](../../proyecto-integrador/u1/oracle/S01_02_tablas.sql) — si ya lo hiciste en 3.2.3, no hace falta repetirlo aquí. Detalle opcional, solo si quieres entender el porqué de cada bloque: [BD2 S1](../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio.md).
+**Requisito antes de continuar:** las tablas `BOM_CATALOGO.CATEGORIAS` y `BOM_CATALOGO.PRODUCTOS` deben existir en Oracle *antes* de compilar este paso. A diferencia de Distribuidas (que usa Flyway y ejecuta sus migraciones solo al arrancar), LP2 no usa Flyway: nadie las crea automáticamente. Con `ddl-auto: validate` (3.2.3), Hibernate solo valida el esquema al arrancar, nunca lo crea — si las tablas no existen, falla igual que pasó con `event_publication` (ADR-002). Se crean ejecutando manualmente [`S01_01_esquemas.sql`](../../proyecto-integrador/u1/oracle/S01_01_esquemas.sql) y [`S01_02_tablas.sql`](../../proyecto-integrador/u1/oracle/S01_02_tablas.sql) — si ya lo hiciste en 3.2.3, no hace falta repetirlo aquí. Detalle opcional, solo si quieres entender el porqué de cada bloque: [BD2 S1](../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio.md).
 
 Crea el paquete `pe.edu.upeu.bomerp.catalogo` (Spring Modulith lo detecta automáticamente como módulo por ser un paquete directo bajo el paquete raíz, sin configuración adicional).
 
@@ -1104,14 +1104,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "CATEGORIA", schema = "BOM_CATALOGO")
+@Table(name = "CATEGORIAS", schema = "BOM_CATALOGO")
 @Getter
 @Setter
 @NoArgsConstructor
 public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID_CATEGORIA")
+    @Column(name = "ID")
     private Long id;
 
     @Column(name = "NOMBRE", nullable = false, unique = true, length = 80)
@@ -1222,7 +1222,7 @@ public class CategoriaController {
 !!! note "3.5.2 es opcional"
     Lo obligatorio para cerrar S1 es `Categoria` (3.5.1). `Producto` sigue exactamente el mismo patrón — es la misma práctica repetida sin conceptos nuevos — y en S2 de todas formas se reconstruye por completo con CRUD (`crear`, `actualizar`, `eliminar`), no solo `listar()`. Si te queda tiempo en clase o quieres practicar el patrón una vez más antes de S2, complétalo; si no, continúa en 3.5.3 usando solo `Categoria`.
 
-`Producto` sigue exactamente el mismo patrón que `Categoria` (3.5.1), cambiando `Categoria`→`Producto`, `CATEGORIA`→`PRODUCTO` y agregando los campos propios:
+`Producto` sigue exactamente el mismo patrón que `Categoria` (3.5.1), cambiando `Categoria`→`Producto`, `CATEGORIAS`→`PRODUCTOS` y agregando los campos propios:
 
 **`catalogo/producto/entity/Producto.java`**
 
@@ -1241,14 +1241,14 @@ import lombok.Setter;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "PRODUCTO", schema = "BOM_CATALOGO")
+@Table(name = "PRODUCTOS", schema = "BOM_CATALOGO")
 @Getter
 @Setter
 @NoArgsConstructor
 public class Producto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID_PRODUCTO")
+    @Column(name = "ID")
     private Long id;
 
     @Column(name = "NOMBRE", nullable = false, length = 120)
@@ -1509,8 +1509,8 @@ Dentro de cada módulo, `{controller,dto,entity,repository,service}` es la arqui
 
 | Endpoint LP2 | Componente ADS | Objeto BD2 futuro |
 |---|---|---|
-| `GET /api/v1/categorias` | Módulo Catalogo / CategoriaService | Tabla `CATEGORIA` |
-| `GET /api/v1/productos` | ProductoController / ProductoService | Tabla `PRODUCTO` |
+| `GET /api/v1/categorias` | Módulo Catalogo / CategoriaService | Tabla `CATEGORIAS` |
+| `GET /api/v1/productos` | ProductoController / ProductoService | Tabla `PRODUCTOS` |
 | `POST /api/v1/productos` | ProductoController / ProductoService | Restricciones de precio y stock |
 | `POST /api/v1/ventas` | VentaController / VentaService | `pkg_venta.registrar_venta` |
 
