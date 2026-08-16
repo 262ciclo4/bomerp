@@ -15,14 +15,14 @@ ejecutar la sesión S1 (ver skill `lp2-sesion`).
 - **Java 21** — único requisito local. No instalar Maven aparte: el
   proyecto trae Maven Wrapper (`mvnw` / `mvnw.cmd`), que descarga y cachea
   la versión exacta de Maven (3.9.9) sola.
-- **Docker** (para el contenedor Oracle local — ver más abajo).
+- **Docker** (para el contenedor Oracle de DEV — ver más abajo).
 
-## Levantar el ambiente local
+## Levantar el ambiente DEV
 
 1. Levantar la base de datos Oracle:
 
    ```bash
-   docker compose -f compose-local.yml up -d
+   docker compose -f compose-dev.yml up -d
    ```
 
    Crea el contenedor `bomerp-oracle` (`gvenzl/oracle-free:23-slim`), puerto
@@ -40,7 +40,7 @@ ejecutar la sesión S1 (ver skill `lp2-sesion`).
    ./mvnw spring-boot:run
    ```
 
-   Usa el perfil `local` (`application-local.yml`) por defecto — conecta a
+   Usa el perfil `dev` (`application-dev.yml`) por defecto — conecta a
    `jdbc:oracle:thin:@localhost:1521/FREEPDB1`.
 
 ## Verificar

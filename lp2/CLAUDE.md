@@ -7,16 +7,18 @@ otras asignaturas del ciclo). Este archivo aplica solo a lo que está bajo
 
 ## Ambientes
 
-Se les llama **"ambientes"** (no "ambientes de desarrollo" — ese nombre
-describe solo a uno de ellos). Cada archivo de configuración específico a
-un ambiente lleva ese ambiente como sufijo: `application-local.yml`,
-`compose-local.yml`. Hoy solo existe el ambiente **local**; el de
+Se les llama **"ambientes"**. Cada archivo de configuración específico a
+un ambiente lleva ese ambiente como sufijo: `application-dev.yml`,
+`compose-dev.yml`. Hoy solo existe el ambiente **DEV**; el de
 **producción** (`application-prod.yml` y decisiones de despliegue) se
 agrega recién en S13 — no antes, ver "Eficiencia continua vs. preparación
-para producción" más abajo.
+para producción" más abajo. Se usa `dev` (no `local`) para que el nombre
+sea consistente con el resto de cursos del ciclo (DIST usa el mismo
+sufijo) — como todavía no existe un ambiente de producción real, no hay
+ambigüedad posible con "DEV" en esta etapa del curso.
 
-**El ambiente local no usa `.env`.** Las credenciales van directo en texto
-plano en `application-local.yml` y `compose-local.yml`, porque son valores
+**El ambiente DEV no usa `.env`.** Las credenciales van directo en texto
+plano en `application-dev.yml` y `compose-dev.yml`, porque son valores
 de laptop, no secretos. `.env`/`.env.example` se reservan para cuando
 exista un ambiente de producción real (S13) con credenciales que sí deban
 quedar fuera del repositorio — no se crean antes.
@@ -24,13 +26,13 @@ quedar fuera del repositorio — no se crean antes.
 ## Dónde está cada cosa
 
 - **Código**: `lp2/bomerp-backend` (Spring Boot), `lp2/frontend` (SPA, arranca en
-  S7). No hay carpeta `lp2/docker`: `lp2/bomerp-backend/compose-local.yml` levanta
+  S7). No hay carpeta `lp2/docker`: `lp2/bomerp-backend/compose-dev.yml` levanta
   únicamente el contenedor Oracle para desarrollo en laptop (de ahí el
-  sufijo `-local`, mismo criterio que `application-local.yml`), con las
+  sufijo `-dev`, mismo criterio que `application-dev.yml`), con las
   mismas credenciales en texto plano que usa el backend. Java 21, Node.js
   y Angular 21 corren directamente en la máquina de desarrollo, sin
   contenedores.
-- **Requisito local del backend: solo Java 21.** No instalar Maven aparte
+- **Requisito del backend en DEV: solo Java 21.** No instalar Maven aparte
   — `lp2/bomerp-backend` trae Maven Wrapper (`mvnw`/`mvnw.cmd`), que descarga y
   cachea la versión exacta de Maven (3.9.9) sola. Cualquier comando Maven
   se ejecuta con el wrapper, nunca con `mvn` a secas (ver sección

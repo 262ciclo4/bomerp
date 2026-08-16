@@ -82,7 +82,7 @@ por el salto a Jakarta EE 11 / Jackson 3 que trae Spring Framework 7.
 
 ## Consecuencias
 
-- El código, los tests y `compose-local.yml` de S1 no requieren ningún
+- El código, los tests y `compose-dev.yml` de S1 no requieren ningún
   ajuste por esta versión: solo se fijan las versiones exactas en el
   `pom.xml`.
 - Las sesiones futuras (S2 en adelante) parten de Spring Boot 4.0.7.

@@ -61,7 +61,7 @@ Hibernate valida el esquema completo al arrancar y **falla el arranque**
 con `SchemaManagementException: Schema validation: missing table
 [event_publication]`, porque la tabla no existe en Oracle y no hay ninguna
 sesión de BD2 que la cree. Se comprobó agregando la dependencia contra la
-Oracle real de `compose-local.yml`: el `SessionFactory` no llega a
+Oracle real de `compose-dev.yml`: el `SessionFactory` no llega a
 construirse y la aplicación no levanta.
 
 La corrección no es crear esa tabla a mano — eso adelantaría alcance de

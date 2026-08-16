@@ -34,7 +34,7 @@ Proyecto backend ejecutable y reproducible, sobre Java 21 LTS, organizado como m
 | Actividades a Realizar en el Periodo | Orientaciones generales (Orientaciones Metodológicas) | Material de estudio recomendado |
 |---|---|---|
 | Revisión previa individual | Instalar y verificar Java 21 LTS, VS Code y sus extensiones; leer [ADR-001](../adr/ADR-001-arquitectura-backend.md) y [ADR-002](../adr/ADR-002-spring-modulith.md). Trabajo individual, antes de clase; traer evidencia de `java -version` funcionando. | ADR-001, ADR-002, guía de instalación Java 21. |
-| Clase presencial | Explicación guiada de conceptos (REST, DTO, versionado, ambientes) y creación del proyecto backend conectado a Oracle; delimitación de los endpoints del módulo `catalogo`. Trabajo individual en la propia laptop, siguiendo al docente paso a paso; consulta inmediata ante errores de dependencias o conexión. | `pom.xml` de referencia, `application-dev.yml`, Docker Compose de Oracle, cliente REST para verificar endpoints. |
+| Clase presencial | Explicación guiada de conceptos (REST, DTO, versionado, ambientes) y creación del proyecto backend conectado a Oracle; delimitación de los endpoints del módulo `catalogo`. Trabajo individual en la propia laptop, siguiendo al docente paso a paso; consulta inmediata ante errores de dependencias o conexión. | `pom.xml` de referencia, `application-local.yml`, Docker Compose de Oracle, cliente REST para verificar endpoints. |
 | Evaluación formativa | Verificación en clase de `mvn test` (incluye `ModularityTests`) y de la respuesta del endpoint de salud y los listados; inicio de la evidencia individual. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4. | Indicaciones de entrega (4.3), rúbrica de evaluación (4.6). |
 
 ### 1.6 Motivación de la sesión
@@ -140,16 +140,16 @@ El proyecto se organiza como monolito modular: un único paquete raíz (`BomerpB
 ### 2.3 Configuración por ambientes, ORM, driver y conexión a Oracle
 
 Un **ambiente** es el conjunto de configuración (variables, credenciales,
-infraestructura) que corresponde a un contexto de uso concreto: **DEV**
+infraestructura) que corresponde a un contexto de uso concreto: **local**
 (tu laptop, para desarrollar) y **producción** (el sistema real ya en
 funcionamiento) son dos ambientes distintos; algunos proyectos agregan
 ambientes intermedios (pruebas o QA, staging).
 
-En BomERP, definimos el **ambiente DEV** identificado con el
-sufijo `-dev`:
+En BomERP, definimos el **ambiente local** identificado con el
+sufijo `-local`:
 
-- `application-dev.yml`: configuración de Spring Boot para tu laptop, incluida la conexión ORM/JPA y el driver Oracle hacia `localhost`.
-- `compose-dev.yml`: el contenedor Docker de Oracle para DEV.
+- `application-local.yml`: configuración de Spring Boot para tu laptop, incluida la conexión ORM/JPA y el driver Oracle hacia `localhost`.
+- `compose-local.yml`: el contenedor Docker de Oracle para desarrollo local.
 
 El ambiente de **producción** (`application-prod.yml` y las decisiones de
 despliegue) se incorpora recién en S13, cuando el sílabo trata
@@ -194,22 +194,22 @@ Tiempo: 2h.
 **Actividades para realizar:**
 
 - **3.1** Instalar y verificar Java 21 LTS, VS Code y sus extensiones.
-- **3.2** Crear el proyecto Spring Boot con las dependencias base y conexión a la base de datos.
+- **3.2** Crear y verificar el proyecto backend.
     - **3.2.1** Crear el proyecto con Spring Initializr desde VS Code.
-    - **3.2.2** Ejecutar una primera vez y reconocer el fallo esperado.
-    - **3.2.3** Configurar el ambiente de desarrollo (dev).
-    - **3.2.4** Ejecutar y comprobar que ya no falla.
-    - **3.2.5** Configurar OpenAPI.
-    - **3.2.6** Crear un endpoint temporal de "Hola mundo".
-- **3.3** Crear las excepciones y el filtro de trazabilidad.
-- **3.4** Simular escalamiento horizontal (múltiples instancias).
-- **3.5** Implementar el módulo `catalogo`: `Categoria` y `Producto`.
-- **3.6** Delimitar los endpoints del módulo Catálogo.
-- **3.7** Reconocer el DTO de entrada reservado para S2.
-- **3.8** Diseñar DTO de salida.
-- **3.9** Documentar errores.
-- **3.10** Bosquejar estructura del backend modular (Spring Modulith).
-- **3.11** Trazar LP2 con ADS y BD2.
+    - **3.2.2** Configurar Oracle en Docker.
+    - **3.2.3** Configurar el ambiente local.
+    - **3.2.4** Configurar OpenAPI.
+    - **3.2.5** Probar el ciclo completo con un endpoint "Hola mundo".
+    - **3.2.6** Implementar el módulo `catalogo`: `Categoria` y `Producto`.
+    - **3.2.7** Ejecutar el proyecto con Maven Wrapper.
+    - **3.2.8** Verificar el proyecto backend: arranque, conexión a Oracle y límites de módulos.
+    - **3.2.9** Simular escalamiento horizontal (múltiples instancias).
+- **3.3** Delimitar los endpoints del módulo Catálogo.
+- **3.4** Reconocer el DTO de entrada reservado para S2.
+- **3.5** Diseñar DTO de salida.
+- **3.6** Documentar errores.
+- **3.7** Bosquejar estructura del backend modular (Spring Modulith).
+- **3.8** Trazar LP2 con ADS y BD2.
 
 ### 3.1 Instalar y verificar Java 21 LTS, VS Code y sus extensiones
 
@@ -318,16 +318,17 @@ code --install-extension Oracle.sql-developer
 | Extension Pack for Java | `vscjava.vscode-java-pack` | Soporte base de Java (autocompletado, debug, Maven); incluye Spring Initializr Java Support, usado en 3.2.1. |
 | Spring Boot Extension Pack | `vmware.vscode-boot-dev-pack` | Herramientas específicas de Spring Boot: navegación de beans, Spring Boot Dashboard, soporte de `application.yml`. |
 | Database Client | `cweijan.vscode-database-client2` | Cliente gráfico multi-motor: MySQL, PostgreSQL, SQLite, SQL Server, Oracle, entre otros. |
-| Oracle SQL Developer for VS Code | `Oracle.sql-developer` | Extensión oficial de Oracle, gratuita, para conectarse a la Oracle de este proyecto (ver 3.2.3). |
+| Oracle SQL Developer for VS Code | `Oracle.sql-developer` | Extensión oficial de Oracle, gratuita, para conectarse a la Oracle de este proyecto (ver 3.2.2). |
 
 !!! tip "Si instalaste todo pero `Ctrl+Shift+P` → \"Spring\" no muestra ningún comando"
     El Spring Boot Extension Pack puede quedar **instalado pero deshabilitado**. Reiniciar VS Code (o toda la PC) no lo arregla si quedó en ese estado.
 
     Verifica en el panel de extensiones (`Ctrl+Shift+X`, buscar "Spring"): si el botón dice **Enable** en vez de **Disable**, está deshabilitado — actívalo. Recién ahí aparecen los comandos de Spring en la paleta de comandos.
 
-### 3.2 Crear el proyecto Spring Boot con las dependencias base y conexión a la base de datos
+### 3.2 Crear y verificar el proyecto backend
 
-**Producto del paso:** proyecto `bomerp-backend` ejecutable y conectado a Oracle.
+**Producto del paso:** proyecto `bomerp-backend` ejecutable y conectado.
+
 
 #### 3.2.1 Crear el proyecto con Spring Initializr desde VS Code
 
@@ -360,7 +361,6 @@ Usa la siguiente configuración:
 | Package name | `pe.edu.upeu.bomerp` |
 | Packaging | Jar |
 | Java | 21 |
-| Dependencias | Seleccionar dependencias del proyecto |
 | Ubicación | carpeta donde haces clic en "Generate into this folder", deja vacío |
 
 **Por qué 4.0.7 y no otra versión.** Verificado directo en [start.spring.io](https://start.spring.io/) (con `4.1.0` seleccionado, el propio buscador de dependencias muestra en rojo, al escribir "springd": *"Requires Spring Boot >= 4.0.0 and < 4.1.0-M1"*). 
@@ -379,11 +379,7 @@ Dependencias a seleccionar:
 
 Referencia visual (selección real en VS Code con Spring Boot 4.0.7, las 9 dependencias de la tabla):
 
-**Figura 3. Selección de dependencias en Spring Initializr (1/2)**
-
 ![Selección de dependencias en Spring Initializr (1/2): Spring Web, Validation, Spring Data JPA, Oracle Driver, SpringDoc OpenAPI](img/s01-3.2.1-dependencias-1.png)
-
-**Figura 4. Selección de dependencias en Spring Initializr (2/2)**
 
 ![Selección de dependencias en Spring Initializr (2/2): SpringDoc OpenAPI, Spring Boot Actuator, Spring Modulith, Lombok, Spring Boot DevTools](img/s01-3.2.1-dependencias-2.png)
 
@@ -403,8 +399,6 @@ Selected 9 dependencies
 ```
 
 Después de `Enter`, el asistente pide dónde guardar el proyecto. Navega hasta la carpeta y da clic en **"Generate into this folder"** — no escribas nada en el campo "Carpeta":
-
-**Figura 5. Selector de carpeta de VS Code para generar el proyecto**
 
 ![Selector de carpeta de VS Code navegado hasta lp2, con el botón "Generate into this folder" resaltado y el campo Carpeta vacío](img/s01-3.2.1-guardar.png)
 
@@ -444,47 +438,13 @@ public class BomerpBackendApplication {
 }
 ```
 
-#### 3.2.2 Ejecutar una primera vez y reconocer el fallo esperado
+#### 3.2.2 Configurar Oracle en Docker
 
-**Producto del paso:** confirmar, de primera mano, que el proyecto necesita una base de datos configurada para arrancar.
+**Producto del paso:** Oracle disponible en `localhost`, con el esquema de BD2 cargado.
 
-Con `Spring Data JPA` y `Oracle Driver` ya en el `pom.xml` (3.2.1) pero sin ninguna conexión configurada todavía, ejecuta el proyecto tal cual:
-
-```powershell
-# Windows (PowerShell o cmd)
-.\mvnw.cmd spring-boot:run
-```
-
-```bash
-# macOS / Linux
-./mvnw spring-boot:run
-```
-
-El arranque falla:
-
-```text
-***************************
-APPLICATION FAILED TO START
-***************************
-
-Description:
-
-Failed to configure a DataSource: 'url' attribute is not specified and no embedded datasource could be configured.
-
-Reason: Failed to determine a suitable driver class
-```
-
-Es el fallo esperado: Spring Boot detectó `Spring Data JPA` + el driver de Oracle en el classpath y trató de autoconfigurar una conexión, pero no hay `url`, usuario ni contraseña en ningún lado todavía. No se corrige quitando JPA ni usando una base embebida — se corrige levantando Oracle y declarando la conexión real, en el paso siguiente.
-
-#### 3.2.3 Configurar el ambiente de desarrollo (dev)
-
-**Producto del paso:** ambiente de desarrollo (dev) completo — Oracle en Docker (con el esquema de BD2 cargado) y la aplicación configurada para conectarse a él.
-
-Crea `compose-dev.yml` en la raíz de `lp2/bomerp-backend` — levanta **únicamente** Oracle, para tu laptop, con las credenciales en texto plano que también usará `application-dev.yml` en el paso siguiente (mismo criterio: sin `.env`):
+Crea `compose-local.yml` en la raíz de `lp2/bomerp-backend` — levanta **únicamente** Oracle, para tu laptop, con las credenciales en texto plano que también usará `application-local.yml` en el paso siguiente (mismo criterio: sin `.env`):
 
 ```yaml
-name: bomerp-backend-dev
-
 services:
   oracle:
     image: gvenzl/oracle-free:23-slim
@@ -509,8 +469,6 @@ volumes:
   oracle-data:
 ```
 
-`ORACLE_PASSWORD` es la contraseña del usuario administrador (`SYS`/`SYSTEM`, el equivalente a `root`) — no lo usa el backend. `APP_USER`/`APP_USER_PASSWORD` crean el usuario `BOMERP_APP`, acotado a su propio esquema — la aplicación se conecta como `BOMERP_APP`, nunca como `SYSTEM`. Mismo principio que `MYSQL_USER`/`MYSQL_PASSWORD` frente a `MYSQL_ROOT_PASSWORD`, o `POSTGRES_USER` frente al superusuario por defecto de Postgres.
-
 **Nota sobre versión y edición:** esta imagen (`gvenzl/oracle-free:23-slim`)
 es Oracle Database 23ai **Free** — no Oracle 19c ni Enterprise Edition.
 Alcanza para conectar el backend y para BD2 U1 (que en el sílabo pide
@@ -519,12 +477,10 @@ para temas exclusivos de Enterprise Edition (AWR, particionamiento) que
 este contenedor no soporta — ese ambiente todavía no está operacionalizado
 en el repo (ver `bd2/README.md`, sección sobre U2-U3).
 
-**Nota sobre motor de base de datos:** en LP2 el motor es **Oracle**, sin alternativa — es el mismo motor que usa BD2 (PL/SQL, paquetes, triggers), y el objetivo de esta integración es justamente compartir una sola base de datos real entre ambos cursos. A diferencia de DIST (que sí acepta MySQL como alternativa porque no depende de otro curso), aquí cambiar de motor rompería la integración con BD2. El equivalente con MySQL, solo como referencia (no se usa en el proyecto real de LP2), está en el Anexo al final de esta guía.
-
 Levanta Oracle:
 
 ```powershell
-docker compose -f compose-dev.yml up -d
+docker compose -f compose-local.yml up -d
 ```
 
 Crea el esquema y las tablas del catálogo ejecutando, en orden, [`S01_01_esquemas.sql`](../../proyecto-integrador/u1/oracle/S01_01_esquemas.sql) y [`S01_02_tablas.sql`](../../proyecto-integrador/u1/oracle/S01_02_tablas.sql) (scripts de BD2 — detalle completo si lo necesitas: [BD2 S1](../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio.md)), por cualquiera de estas dos vías. Ambas terminan en "Verificar esquemas, tablas y registros por SQL" más abajo.
@@ -548,9 +504,7 @@ Crea el esquema y las tablas del catálogo ejecutando, en orden, [`S01_01_esquem
 | Username | `system` |
 | Password | `123456` |
 
-**Figura 6. Conexión exitosa a Oracle vía Oracle SQL Developer for VS Code**
-
-![Conexión exitosa a Oracle vía Oracle SQL Developer for VS Code, mostrando el árbol de esquemas y tablas de SYSTEM](img/s01-3.2.3-database-client.png)
+![Conexión exitosa a Oracle vía Oracle SQL Developer for VS Code, mostrando el árbol de esquemas y tablas de SYSTEM](img/s01-3.2.2-database-client.png)
 
 Ejecuta los dos scripts con esta conexión.
 
@@ -637,7 +591,7 @@ SELECT * FROM BOM_CATALOGO.producto;
 "@ | docker exec -i bomerp-oracle sqlplus -s system/123456@localhost:1521/FREEPDB1
 ```
 
-Evidencia esperada tras ejecutar ambos scripts: `BOM_CATALOGO` y `BOMERP_APP` existen, `BOM_CATALOGO` tiene `CATEGORIA` y `PRODUCTO`, y ambas consultas `SELECT *` responden (vacías está bien — todavía no se insertó nada; los datos de ejemplo llegan en 3.5).
+Evidencia esperada tras ejecutar ambos scripts: `BOM_CATALOGO` y `BOMERP_APP` existen, `BOM_CATALOGO` tiene `CATEGORIA` y `PRODUCTO`, y ambas consultas `SELECT *` responden (vacías está bien — todavía no se insertó nada; los datos de ejemplo llegan en 3.2.6).
 
 ##### Reiniciar Docker desde cero (opcional, solo si algo quedó en mal estado)
 
@@ -660,33 +614,33 @@ docker system prune -a --volumes -f
 docker builder prune -a -f
 ```
 
-Después de esto, `compose-dev.yml` vuelve a levantar Oracle desde cero (descarga la imagen de nuevo) con `docker compose -f compose-dev.yml up -d`.
+Después de esto, `compose-local.yml` vuelve a levantar Oracle desde cero (descarga la imagen de nuevo) con `docker compose -f compose-local.yml up -d`.
 
 ##### Eliminar solo lo de BomERP (sin tocar otros proyectos en Docker)
 
-Si tienes otros cursos o proyectos corriendo en Docker en la misma máquina, no uses el reinicio total de arriba. La forma correcta es dejar que el propio `compose-dev.yml` borre exactamente lo que él mismo creó (contenedor, red y volumen), sin adivinar nombres:
+Si tienes otros cursos o proyectos corriendo en Docker en la misma máquina, no uses el reinicio total de arriba. La forma correcta es dejar que el propio `compose-local.yml` borre exactamente lo que él mismo creó (contenedor, red y volumen), sin adivinar nombres:
 
 ```powershell
 cd C:\262\262ciclo4\bomerp\lp2\bomerp-backend
-docker compose -f compose-dev.yml down -v
+docker compose -f compose-local.yml down -v
 ```
 
-Ojo con un detalle real: Docker Compose nombra el volumen y la red a partir del `name:` declarado en `compose-dev.yml` (`bomerp-backend-dev`), no del nombre del contenedor — el contenedor se llama `bomerp-oracle`, pero el volumen queda como `bomerp-backend-dev_oracle-data` y la red como `bomerp-backend-dev_default`. Sin ese `name:` explícito, Compose usaría en su lugar el nombre de la **carpeta** donde corres el comando (`bomerp-backend`) — por eso conviene declararlo, para que el nombre no dependa de dónde clonaste el repositorio. `docker compose down -v` ya lo resuelve solo porque usa su propio registro interno, no un filtro de texto.
+Ojo con un detalle real: Docker Compose nombra el volumen y la red a partir de la **carpeta** donde corres el comando, no del nombre del contenedor — el contenedor se llama `bomerp-oracle`, pero el volumen queda como `bomerp-backend_oracle-data` y la red como `bomerp-backend_default` (por la carpeta `lp2/bomerp-backend`). `docker compose down -v` ya lo resuelve solo porque usa su propio registro interno, no un filtro de texto.
 
 Si el contenedor quedó suelto (por ejemplo, lo creaste fuera de `docker compose`) y `down -v` no lo encuentra, bórralo manualmente con los nombres reales:
 
 ```powershell
 docker ps -aq --filter "name=bomerp" | ForEach-Object { docker rm -f $_ }
-docker volume ls -q --filter "name=bomerp-backend-dev_oracle-data" | ForEach-Object { docker volume rm -f $_ }
+docker volume ls -q --filter "name=bomerp-backend_oracle-data" | ForEach-Object { docker volume rm -f $_ }
 ```
 
-##### Configurar Spring Boot para conectarse a Oracle
+#### 3.2.3 Configurar el ambiente local
 
-Con Oracle levantado y el esquema creado, falta que Spring Boot sepa cómo conectarse.
+**Producto del paso:** Spring Boot configurado para conectarse a la Oracle de Docker recién levantada.
 
 El Initializr genera `src/main/resources/application.properties` (vacío). En vez de crear el YAML a mano, clic derecho sobre `application.properties` en el explorador de VS Code → **"Convert .properties to .yaml"**.
 
-Esto genera `application.yaml` **junto al** `application.properties` original — la conversión no borra el archivo viejo. Renombra `application.yaml` a `application.yml` (la extensión que usa el resto del proyecto: `application-dev.yml`, `compose-dev.yml`), **elimina `application.properties`** (si quedan los dos, Spring Boot carga ambos y puede confundir cuál valor gana) y reemplaza el contenido de `application.yml` por el siguiente:
+Esto genera `application.yaml` **junto al** `application.properties` original — la conversión no borra el archivo viejo. Renombra `application.yaml` a `application.yml` (la extensión que usa el resto del proyecto: `application-local.yml`, `compose-local.yml`), **elimina `application.properties`** (si quedan los dos, Spring Boot carga ambos y puede confundir cuál valor gana) y reemplaza el contenido de `application.yml` por el siguiente:
 
 En `src/main/resources/application.yml` (configuración base, sin datos de ambiente):
 
@@ -695,17 +649,25 @@ spring:
   application:
     name: bomerp-backend
   profiles:
-    active: dev
+    active: ${SPRING_PROFILES_ACTIVE:local}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
 ```
 
-Nada más va en `application.yml`: `management` (Actuator/métricas) y `springdoc` (Swagger) son configuración de **ambiente**, no configuración base — en producción real (S13) probablemente se restrinjan o desactiven, así que no deben aplicar por defecto a todos los ambientes. Van en `application-dev.yml`.
-
-En `src/main/resources/application-dev.yml` (ambiente **DEV**, ver 2.3). El ambiente DEV **no usa `.env`**: las credenciales van directo en texto plano, porque son valores de laptop, no secretos — `.env` se reserva para cuando exista un ambiente de producción real (S13):
+En `src/main/resources/application-local.yml` (ambiente **local**, ver 2.3). El ambiente local **no usa `.env`**: las credenciales van directo en texto plano, porque son valores de laptop, no secretos — `.env` se reserva para cuando exista un ambiente de producción real (S13):
 
 ```yaml
-server:
-  port: 8080
-
 spring:
   datasource:
     url: jdbc:oracle:thin:@localhost:1521/FREEPDB1
@@ -726,63 +688,14 @@ spring:
     livereload:
       enabled: true
 
-springdoc:
-  swagger-ui:
-    path: /swagger-ui.html
-
 logging:
   level:
     pe.edu.upeu.bomerp: DEBUG
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info,metrics
-  endpoint:
-    health:
-      show-details: always
 ```
 
 `ddl-auto: validate` (no `none`): Hibernate no crea ni altera nada —el esquema sigue siendo responsabilidad de BD2— pero sí compara las entidades JPA contra las tablas reales de Oracle al arrancar, avisando temprano si algo quedó desalineado. `devtools` habilita reinicio automático y LiveReload al guardar cambios; Spring Boot lo excluye solo del `.jar` empaquetado, no hace falta desactivarlo a mano para producción.
 
-#### 3.2.4 Ejecutar y comprobar que ya no falla
-
-Con Oracle levantado (3.2.3) y la conexión declarada, ejecuta el proyecto otra vez:
-
-```powershell
-# Windows (PowerShell o cmd)
-.\mvnw.cmd spring-boot:run
-```
-
-```bash
-# macOS / Linux
-./mvnw spring-boot:run
-```
-
-Esta vez arranca sin el error de 3.2.2:
-
-```text
-Tomcat started on port 8080 (http) with context path '/'
-```
-
-Confirma también con `/actuator/health` — ya debe incluir el componente `db` en `UP`, prueba de que la conexión a Oracle quedó activa, no solo declarada:
-
-PowerShell:
-
-```powershell
-Invoke-RestMethod -Method Get -Uri "http://localhost:8080/actuator/health"
-```
-
-bash macOS/Linux:
-
-```bash
-curl http://localhost:8080/actuator/health
-```
-
-Deja la aplicación corriendo — el paso 3.2.6 la modifica en caliente, sin reiniciarla a mano.
-
-#### 3.2.5 Configurar OpenAPI
+#### 3.2.4 Configurar OpenAPI
 
 **Producto del paso:** documentación interactiva de la API vía Swagger UI.
 
@@ -811,11 +724,11 @@ public class OpenApiConfig {
 
 El path de Swagger UI (`/swagger-ui.html`) ya quedó definido en el bloque `springdoc` de `application.yml` (paso anterior); `OpenApiConfig` solo agrega el título, la versión y la descripción del contrato.
 
-#### 3.2.6 Crear un endpoint temporal de "Hola mundo"
+#### 3.2.5 Probar el ciclo completo con un endpoint "Hola mundo"
 
-**Producto del paso:** confirmar que el ciclo HTTP → `Controller` → respuesta funciona, antes de sumarle el módulo `catalogo` — esto también sirve para comprobar que Spring Boot DevTools recarga en caliente (*hot reload*) sin que vuelvas a ejecutar `spring-boot:run`.
+**Producto del paso:** confirmar que el ciclo HTTP → `Controller` → respuesta funciona, antes de sumarle JPA y Oracle con el módulo `catalogo`.
 
-Con la aplicación todavía corriendo (3.2.4), crea `HelloController.java` en el paquete raíz (`pe.edu.upeu.bomerp`, compartido, junto a `OpenApiConfig`):
+Crea `HelloController.java` en el paquete raíz (`pe.edu.upeu.bomerp`, compartido, junto a `OpenApiConfig`):
 
 ```java
 package pe.edu.upeu.bomerp;
@@ -833,10 +746,10 @@ public class HelloController {
 }
 ```
 
-Al guardar el archivo, la misma terminal donde sigue corriendo `spring-boot:run` (3.2.4) debe mostrar que DevTools detectó el cambio y reinició sola, sin que la detengas ni la vuelvas a lanzar:
+Levanta el proyecto
 
-```text
-Restarting due to 1 class path change (1 addition, 0 deletions, 0 modifications)
+```powershell
+.\mvnw.cmd spring-boot:run
 ```
 
 Visita http://localhost:8080/api/v1/hello
@@ -844,245 +757,13 @@ o http://localhost:8080/swagger-ui.html:
 
 `HelloController` es solo un paso de verificación: una vez que `catalogo` expone sus propios endpoints reales (paso siguiente), puedes eliminarlo — no forma parte del contrato final de la API.
 
-### 3.3 Crear las excepciones y el filtro de trazabilidad
+#### 3.2.6 Implementar el módulo `catalogo`: `Categoria` y `Producto`
 
-**Producto del paso:** manejo de errores centralizado y filtro de trazabilidad (`traceId` en cada log) funcionando en `bomerp-backend`, antes de construir el módulo `catalogo`.
+**Producto del paso:** listados REST de `Categoria` y `Producto` funcionando de punta a punta (controller → service → repository → Oracle).
 
-Antes de construir `catalogo` (3.5), se crean dos piezas **compartidas** que usará todo el backend, no un módulo en particular: el manejo de errores y el filtro de trazabilidad. Por eso viven en el paquete raíz (`pe.edu.upeu.bomerp`), no dentro de `catalogo` — cualquier módulo futuro (`ventas`, `inventario`, `compras`, `seguridad`) las reutiliza tal cual.
-
-#### 3.3.1 Crear las excepciones y el manejador global de errores
-
-**`exception/ResourceNotFoundException.java`**
-
-```java
-package pe.edu.upeu.bomerp.exception;
-
-public class ResourceNotFoundException extends RuntimeException {
-    public ResourceNotFoundException(String mensaje) {
-        super(mensaje);
-    }
-}
-```
-
-**`exception/GlobalExceptionHandler.java`**
-
-```java
-package pe.edu.upeu.bomerp.exception;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
-
-@RestControllerAdvice
-public class GlobalExceptionHandler {
-
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleNotFound(ResourceNotFoundException ex) {
-        Map<String, Object> body = new HashMap<>();
-        body.put("timestamp", Instant.now().toString());
-        body.put("status", HttpStatus.NOT_FOUND.value());
-        body.put("error", "Not Found");
-        body.put("message", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, Object>> handleValidation(MethodArgumentNotValidException ex) {
-        Map<String, Object> body = new HashMap<>();
-        body.put("timestamp", Instant.now().toString());
-        body.put("status", HttpStatus.BAD_REQUEST.value());
-        body.put("error", "Bad Request");
-        body.put("message", "Error de validación en los datos enviados");
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
-    }
-}
-```
-
-En S1, `catalogo` solo lista (`GET`), así que `ResourceNotFoundException` todavía no se lanza desde ningún service — queda lista para cuando el DTO de entrada (3.7) y las operaciones `POST`/`PUT`/`DELETE` se implementen en S2.
-
-#### 3.3.2 Crear el filtro de trazabilidad `CorrelationIdFilter` y configurar logs
-
-Este filtro agrega un identificador de trazabilidad a cada request usando el header `X-Trace-ID`. Si el cliente no lo envía, el filtro genera un UUID. En S1 la trazabilidad es interna al backend:
-
-```text
-Cliente Swagger / navegador -> Controller -> Service -> Repository -> Oracle
-```
-
-Todos los logs producidos durante esa petición pueden compartir el mismo `traceId`.
-
-**`filter/CorrelationIdFilter.java`**
-
-```java
-package pe.edu.upeu.bomerp.filter;
-
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import org.slf4j.MDC;
-import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
-
-import java.io.IOException;
-import java.util.UUID;
-
-@Component
-public class CorrelationIdFilter extends OncePerRequestFilter {
-
-    public static final String TRACE_ID_HEADER = "X-Trace-ID";
-    public static final String MDC_KEY = "traceId";
-
-    @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                     HttpServletResponse response,
-                                     FilterChain filterChain) throws ServletException, IOException {
-        String traceId = request.getHeader(TRACE_ID_HEADER);
-        if (traceId == null || traceId.isBlank()) {
-            traceId = UUID.randomUUID().toString();
-        }
-        try {
-            MDC.put(MDC_KEY, traceId);
-            response.setHeader(TRACE_ID_HEADER, traceId);
-            filterChain.doFilter(request, response);
-        } finally {
-            MDC.remove(MDC_KEY);
-        }
-    }
-}
-```
-
-Crea también `src/main/resources/logback-spring.xml`. Este archivo define el formato de logs e incluye el `traceId` en cada línea (`[%X{traceId}]`), con salida por consola y por archivo en `logs/bomerp.log`:
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<configuration>
-    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
-
-    <property name="LOG_PATTERN"
-              value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{traceId}] %-5level %logger{36} - %msg%n"/>
-
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>${LOG_PATTERN}</pattern>
-        </encoder>
-    </appender>
-
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logs/bomerp.log</file>
-        <encoder>
-            <pattern>${LOG_PATTERN}</pattern>
-        </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/bomerp-%d{yyyy-MM-dd}.log</fileNamePattern>
-            <maxHistory>7</maxHistory>
-        </rollingPolicy>
-    </appender>
-
-    <root level="INFO">
-        <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="FILE"/>
-    </root>
-</configuration>
-```
-
-Con este archivo nuevo, el `logging.level.pe.edu.upeu.bomerp: DEBUG` de `application-dev.yml` (3.2.3) queda subsumido por `logback-spring.xml` — puedes dejarlo si quieres mantener DEBUG para tu propio paquete además del patrón de logs completo.
-
-#### 3.3.3 Ejecutar y probar
-
-**Verifica el cambio de formato.** Antes de `logback-spring.xml`, la terminal mostraba el formato por defecto de Spring Boot (timestamp con zona horaria, PID, nombre de la app y del hilo). Después de reiniciar con `logback-spring.xml` en su lugar, el formato cambia al patrón definido (`[%X{traceId}]` en vez de PID/app/hilo):
-
-```text
-2026-08-15 18:53:05.581 [] INFO  o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
-2026-08-15 18:53:17.004 [22deb350-54b4-4dea-a9c6-b09aaae9cea6] INFO  o.s.api.AbstractOpenApiResource - Init duration for springdoc-openapi is: 113 ms
-```
-
-Las primeras líneas (arranque) muestran `[]` vacío: todavía no hay ninguna petición HTTP en curso, así que el `MDC` no tiene `traceId` que mostrar. La línea disparada por una petición real (por ejemplo, al abrir Swagger UI) ya trae un `traceId`: el `CorrelationIdFilter` generó el UUID, lo puso en el `MDC`, y ese log lo heredó automáticamente. Es la prueba de que el filtro de trazabilidad ya funciona de punta a punta.
-
-### 3.4 Simular escalamiento horizontal (múltiples instancias)
-
-**Producto del paso:** dos instancias del backend corriendo al mismo tiempo, cada una en un puerto distinto, ambas conectadas a la misma Oracle.
-
-**Figura 7. Escalamiento horizontal de `bomerp-backend` con dos instancias en paralelo**
-
-```mermaid
-flowchart TB
-    DevClient["Cliente - PowerShell / bash / Swagger"]
-    DevApp1["bomerp-backend - instancia 1 - puerto 8080"]
-    DevApp2["bomerp-backend - instancia 2 - puerto 8081"]
-    subgraph DevDocker["Docker: solo base de datos"]
-        DevDb[("FREEPDB1 - Oracle - localhost:1521")]
-    end
-
-    DevClient -->|"localhost:8080"| DevApp1
-    DevClient -.->|"localhost:8081"| DevApp2
-    DevApp1 -->|"localhost:1521"| DevDb
-    DevApp2 -.->|"localhost:1521"| DevDb
-
-    classDef app fill:#eef6ff,stroke:#2b6cb0,color:#111;
-    classDef db fill:#fff4de,stroke:#b7791f,color:#111;
-    class DevApp1,DevApp2 app;
-    class DevDb db;
-```
-
-Un backend reproducible también debe poder escalar horizontalmente: correr varias copias idénticas a la vez, cada una en su propio puerto, sin configuración fija que las haga chocar. Con `server.port` fijo en `8080` (el que usa el resto de esta guía), una segunda instancia no puede arrancar en la misma máquina — el puerto ya está ocupado.
-
-#### 3.4.1 Levantar una segunda instancia
-
-**Sin modificar `application-dev.yml`** (para no romper el puerto 8080 que usan los pasos anteriores de esta guía), la Terminal 1 sigue corriendo tal cual en `8080` (la que ya tenías abierta desde 3.2.4). Abre una **Terminal 2** nueva y pásale un puerto distinto como argumento de línea de comandos, desde `lp2/bomerp-backend`:
-
-```powershell
-# Windows (PowerShell o cmd) - Terminal 2 (simultánea, con Oracle y la Terminal 1 ya corriendo en 8080)
-.\mvnw.cmd spring-boot:run "-Dspring-boot.run.arguments=--server.port=8081"
-```
-
-```bash
-# macOS / Linux - Terminal 2 (simultánea, con Oracle y la Terminal 1 ya corriendo en 8080)
-./mvnw spring-boot:run -Dspring-boot.run.arguments=--server.port=8081
-```
-
-`--server.port=8081` le indica a Spring Boot que arranque en ese puerto en vez del `8080` fijo. También puedes usar `--server.port=0` si prefieres que el sistema operativo asigne uno libre cualquiera — la diferencia es que con `8081` sabes el puerto de antemano y puedes copiar/pegar los mismos comandos de verificación siempre, sin tener que leerlo de la consola cada vez.
-
-#### 3.4.2 Ejecutar y probar
-
-Verifica que ambas instancias responden por separado, con el endpoint `/api/v1/hello` y con `/actuator/health`:
-
-PowerShell:
-
-```powershell
-Invoke-RestMethod -Method Get -Uri "http://localhost:8080/api/v1/hello"
-Invoke-RestMethod -Method Get -Uri "http://localhost:8081/api/v1/hello"
-Invoke-RestMethod -Method Get -Uri "http://localhost:8080/actuator/health"
-Invoke-RestMethod -Method Get -Uri "http://localhost:8081/actuator/health"
-```
-
-bash macOS/Linux:
-
-```bash
-curl http://localhost:8080/api/v1/hello
-curl http://localhost:8081/api/v1/hello
-curl http://localhost:8080/actuator/health
-curl http://localhost:8081/actuator/health
-```
-
-Resultado esperado: ambas responden `Hola BomERP` y `{"status":"UP"}` (con `db.status: UP`), cada una en su propio puerto, conectadas de forma independiente a la misma Oracle.
-
-**Por qué importa esto en S1.** LP2 es un monolito, no un sistema distribuido — no hay Gateway ni balanceador de carga todavía (eso pertenece a Aplicaciones Distribuidas). Pero la capacidad de correr varias instancias del mismo backend en paralelo, cada una conectada de forma independiente a Oracle, es la base técnica que un balanceador necesita para repartir tráfico entre copias; practicarla desde S1 deja esa evidencia lista para cuando el proyecto integre esa pieza.
-
-### 3.5 Implementar el módulo `catalogo`: `Categoria` y `Producto`
-
-**Producto del paso:** listados REST de `Categoria` y `Producto` funcionando de punta a punta (controller → service → repository → Oracle), con la estructura modular verificada.
-
-**Requisito antes de continuar:** las tablas `BOM_CATALOGO.categoria` y `BOM_CATALOGO.producto` deben existir en Oracle *antes* de compilar este paso. A diferencia de Distribuidas (que usa Flyway y ejecuta sus migraciones solo al arrancar), LP2 no usa Flyway: nadie las crea automáticamente. Con `ddl-auto: validate` (3.2.3), Hibernate solo valida el esquema al arrancar, nunca lo crea — si las tablas no existen, falla igual que pasó con `event_publication` (ADR-002). Se crean ejecutando manualmente [`S01_01_esquemas.sql`](../../proyecto-integrador/u1/oracle/S01_01_esquemas.sql) y [`S01_02_tablas.sql`](../../proyecto-integrador/u1/oracle/S01_02_tablas.sql) — si ya lo hiciste en 3.2.3, no hace falta repetirlo aquí. Detalle opcional, solo si quieres entender el porqué de cada bloque: [BD2 S1](../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio.md).
+**Requisito antes de continuar:** las tablas `BOM_CATALOGO.categoria` y `BOM_CATALOGO.producto` deben existir en Oracle *antes* de compilar este paso. Con `ddl-auto: validate` (3.2.3), Hibernate valida el esquema al arrancar — si las tablas no existen, falla igual que pasó con `event_publication` (ADR-002). Se crean ejecutando [`S01_01_esquemas.sql`](../../proyecto-integrador/u1/oracle/S01_01_esquemas.sql) y [`S01_02_tablas.sql`](../../proyecto-integrador/u1/oracle/S01_02_tablas.sql) — si ya lo hiciste en 3.2.2, no hace falta repetirlo aquí. Detalle opcional, solo si quieres entender el porqué de cada bloque: [BD2 S1](../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio.md).
 
 Crea el paquete `pe.edu.upeu.bomerp.catalogo` (Spring Modulith lo detecta automáticamente como módulo por ser un paquete directo bajo el paquete raíz, sin configuración adicional).
-
-#### 3.5.1 Construir `Categoria`
 
 **`catalogo/categoria/entity/Categoria.java`**
 
@@ -1213,9 +894,7 @@ public class CategoriaController {
 }
 ```
 
-#### 3.5.2 Construir `Producto`
-
-`Producto` sigue exactamente el mismo patrón que `Categoria` (3.5.1), cambiando `Categoria`→`Producto`, `CATEGORIA`→`PRODUCTO` y agregando los campos propios:
+`Producto` sigue exactamente el mismo patrón, cambiando `Categoria`→`Producto`, `CATEGORIA`→`PRODUCTO` y agregando los campos propios:
 
 **`catalogo/producto/entity/Producto.java`**
 
@@ -1352,9 +1031,11 @@ public class ProductoController {
 }
 ```
 
-#### 3.5.3 Ejecutar y verificar el proyecto completo
+#### 3.2.7 Ejecutar el proyecto con Maven Wrapper
 
-El proyecto ya viene corriendo desde 3.2.4 (DevTools lo reinicia solo con cada archivo nuevo). Si lo cerraste, vuelve a levantarlo:
+El proyecto trae Maven Wrapper (`mvnw`/`mvnw.cmd`): no requiere tener Maven
+instalado aparte, solo Java 21. Ejecute siempre el wrapper, nunca `mvn` a
+secas, para que todos usen la misma versión de Maven:
 
 ```powershell
 # Windows (PowerShell o cmd)
@@ -1366,12 +1047,14 @@ El proyecto ya viene corriendo desde 3.2.4 (DevTools lo reinicia solo con cada a
 ./mvnw spring-boot:run
 ```
 
-Si abres `http://localhost:8080/` en el navegador vas a ver una **Whitelabel Error Page** con `404` y el mensaje *"No static resource ."* — es lo esperado: este backend es una API REST, no sirve una página en `/`. No es un error que arreglar. Abre en cambio `http://localhost:8080/swagger-ui/index.html` (la ruta `/swagger-ui.html` configurada en `springdoc.swagger-ui.path` redirige ahí) para ver el contrato interactivo, o revisa directamente `/api/v1/productos` y `/actuator/health`.
+Si abres `http://localhost:8080/` en el navegador vas a ver una **Whitelabel Error Page** con `404` y el mensaje *"No static resource ."* — es lo esperado: este backend es una API REST, no sirve una página en `/`. No es un error que arreglar. Abre en cambio `http://localhost:8080/swagger-ui/index.html` (la ruta `/swagger-ui.html` configurada en `springdoc.swagger-ui.path` redirige ahí) para ver el contrato interactivo, o revisa directamente `/api/v1/productos` y `/actuator/health` (ver 3.2.8).
 
 Configuración de variables de entorno y detalle de la base de datos en
 [`lp2/bomerp-backend/README.md`](https://github.com/262ciclo4/bomerp/blob/main/lp2/bomerp-backend/README.md).
 
-Antes de verificar la estructura modular, crea `src/test/java/pe/edu/upeu/bomerp/ModularityTests.java` (verifica automáticamente los límites entre módulos, ver [ADR-002](../adr/ADR-002-spring-modulith.md)):
+#### 3.2.8 Verificar el proyecto backend: arranque, conexión a Oracle y límites de módulos
+
+Antes de verificar, crea `src/test/java/pe/edu/upeu/bomerp/ModularityTests.java` (verifica automáticamente los límites entre módulos, ver [ADR-002](../adr/ADR-002-spring-modulith.md)):
 
 ```java
 package pe.edu.upeu.bomerp;
@@ -1402,14 +1085,53 @@ class ModularityTests {
 |---|---|
 | Entorno Java | `java` y `javac` reportan Java 21; el Maven Wrapper del proyecto (`mvnw`) también se ejecuta con Java 21. |
 | Dependencias mínimas | `pom.xml` con Web, JPA, Validation, Oracle, Actuator, OpenAPI y Spring Modulith. |
-| Configuración por ambiente | Perfil DEV sin secretos incluidos en el repositorio. |
+| Configuración por ambiente | Perfil local sin secretos incluidos en el repositorio. |
 | Conexión a base de datos | Inicio correcto y componente `db` activo en Actuator. |
 | Endpoint de verificación | Respuesta `UP` en `/actuator/health`. |
 | Recursos iniciales | Los GET de categorías y productos devuelven datos persistidos o listas vacías. |
 | Estructura modular | `.\mvnw.cmd test` / `./mvnw test` ejecuta `ModularityTests` sin errores. |
-| Manejo de errores y trazabilidad | `GlobalExceptionHandler` y `CorrelationIdFilter` (3.3) ya están activos, aunque S1 no los ejercite todavía con `POST`/`PUT`/`DELETE`. |
 
-### 3.6 Delimitar los endpoints del módulo Catálogo
+#### 3.2.9 Simular escalamiento horizontal (múltiples instancias)
+
+**Producto del paso:** dos instancias del backend corriendo al mismo tiempo, cada una en un puerto distinto, ambas conectadas a la misma Oracle.
+
+Un backend reproducible también debe poder escalar horizontalmente: correr varias copias idénticas a la vez, cada una en su propio puerto, sin configuración fija que las haga chocar. Con `server.port` fijo en `8080` (el que usa el resto de esta guía), una segunda instancia no puede arrancar en la misma máquina — el puerto ya está ocupado.
+
+**Sin modificar `application-local.yml`** (para no romper el puerto 8080 que usan los pasos anteriores de esta guía), pasa el puerto como argumento de línea de comandos, en dos terminales distintas, desde `lp2/bomerp-backend`:
+
+```powershell
+# Terminal 1
+.\mvnw.cmd spring-boot:run "-Dspring-boot.run.arguments=--server.port=0"
+
+# Terminal 2 (simultánea, con Oracle y la Terminal 1 ya corriendo)
+.\mvnw.cmd spring-boot:run "-Dspring-boot.run.arguments=--server.port=0"
+```
+
+`--server.port=0` le indica a Spring Boot que pida al sistema operativo un puerto libre cualquiera, en vez de uno fijo. Cada terminal imprime el suyo al arrancar:
+
+```text
+Tomcat started on port 58251 (http) with context path '/'
+```
+
+Verificado con dos instancias reales corriendo en paralelo — la primera tomó el puerto `58251` y la segunda el `58252`, cada una respondiendo por su cuenta:
+
+```text
+GET http://localhost:58251/api/v1/hello -> Hola BomERP
+GET http://localhost:58252/api/v1/hello -> Hola BomERP
+```
+
+Y ambas con `/actuator/health` en `UP`, conectadas de forma independiente a la misma Oracle (`db.status: UP` en las dos).
+
+**Alternativa fija en la configuración.** Si en vez de un argumento de línea de comandos prefieres verlo declarado en el YAML, agrega esto a `application-local.yml` — pero ten en cuenta que entonces *todas* las ejecuciones normales de este proyecto (incluidas las de los pasos anteriores) también arrancarán en un puerto aleatorio, no en 8080:
+
+```yaml
+server:
+  port: 0
+```
+
+**Por qué importa esto en S1.** LP2 es un monolito, no un sistema distribuido — no hay Gateway ni balanceador de carga todavía (eso pertenece a Aplicaciones Distribuidas). Pero la capacidad de correr múltiples instancias sin puerto fijo es la base técnica que un balanceador necesita para repartir tráfico entre copias del mismo backend; practicarla desde S1 deja esa evidencia lista para cuando el proyecto integre esa pieza.
+
+### 3.3 Delimitar los endpoints del módulo Catálogo
 
 **Producto del paso:** contrato base.
 
@@ -1425,7 +1147,7 @@ class ModularityTests {
 | `PUT` | `/api/v1/productos/{id}` | Actualizar un producto | S2 |
 | `DELETE` | `/api/v1/productos/{id}` | Eliminar un producto | S2 |
 
-### 3.7 Reconocer el DTO de entrada reservado para S2
+### 3.4 Reconocer el DTO de entrada reservado para S2
 
 **Producto del paso:** request DTO.
 
@@ -1439,7 +1161,7 @@ class ModularityTests {
 
 En S1 este contrato se documenta, pero no se implementa todavía el registro.
 
-### 3.8 Diseñar DTO de salida
+### 3.5 Diseñar DTO de salida
 
 **Producto del paso:** response DTO.
 
@@ -1452,7 +1174,7 @@ En S1 este contrato se documenta, pero no se implementa todavía el registro.
 }
 ```
 
-### 3.9 Documentar errores
+### 3.6 Documentar errores
 
 **Producto del paso:** contrato de errores.
 
@@ -1465,9 +1187,9 @@ En S1 este contrato se documenta, pero no se implementa todavía el registro.
 | 409 | Producto referenciado en una venta | Conflicto de negocio |
 | 500 | Error no controlado | Respuesta técnica sin exponer secretos |
 
-Los códigos 400, 404 y 409 se implementan en S2; 401 y 403 se incorporan con la seguridad de U2. El `GlobalExceptionHandler` de 3.3.1 ya cubre 400 y 404 a nivel de código — esta tabla documenta el contrato completo, incluidos los códigos que todavía no tienen un caso real que los dispare (409, 401, 403).
+Los códigos 400, 404 y 409 se implementan en S2; 401 y 403 se incorporan con la seguridad de U2.
 
-### 3.10 Bosquejar estructura del backend modular (Spring Modulith)
+### 3.7 Bosquejar estructura del backend modular (Spring Modulith)
 
 **Producto del paso:** estructura base.
 
@@ -1477,22 +1199,16 @@ lp2/bomerp-backend/
 └── src/main/java/pe/edu/upeu/bomerp/
     ├── BomerpBackendApplication.java
     ├── OpenApiConfig.java           # compartido, en el paquete raíz
-    ├── exception/                   # compartido: ResourceNotFoundException, GlobalExceptionHandler
-    ├── filter/                      # compartido: CorrelationIdFilter
     └── catalogo/                    # módulo Modulith, funcional desde S1
         ├── categoria/{controller,dto,entity,repository,service}
         └── producto/{controller,dto,entity,repository,service}
-src/main/resources/
-└── logback-spring.xml               # formato de logs + traceId
 ```
 
 Un solo `pom.xml` y un solo `.jar` ejecutable. `ventas`, `inventario`, `compras` y `seguridad` no se crean como paquetes vacíos "por si acaso" — se agregan como paquetes directos bajo `pe.edu.upeu.bomerp` recién cuando su sesión (S4, S10...) les da contenido real. Spring Modulith detecta cada paquete directo como un módulo y verifica sus límites automáticamente (`ModularityTests`); el detalle de esta decisión está en [ADR-001](../adr/ADR-001-arquitectura-backend.md) y [ADR-002](../adr/ADR-002-spring-modulith.md).
 
-`exception/` y `filter/` quedan fuera de `catalogo/` a propósito: no son un módulo de negocio, son infraestructura compartida que cualquier módulo futuro reutiliza tal cual (3.3).
-
 Dentro de cada módulo, `{controller,dto,entity,repository,service}` es la arquitectura en capas: cada carpeta representa una capa, y cada capa solo conoce la inmediatamente inferior (el controller nunca accede directo al repository). Justificación completa de esta decisión: [ADR-001](../adr/ADR-001-arquitectura-backend.md).
 
-### 3.11 Trazar LP2 con ADS y BD2
+### 3.8 Trazar LP2 con ADS y BD2
 
 **Producto del paso:** matriz de integración inicial.
 
@@ -1670,34 +1386,6 @@ Tiempo: 5 min.
 **Metacognición:** cada estudiante responde el Anexo de feedback de la sesión, incluido en su evidencia individual (ver 4.3.1). El docente analiza esas respuestas con IA para identificar temas recurrentes o dudas comunes del equipo, y con esos indicadores construye el cierre real de la sesión — que se entrega al inicio de S2, no al final de esta clase. Que esté documentado aquí, en la sección 5 de esta guía, es solo un arreglo interno: no implica que se ejecute en los últimos minutos de esta sesión.
 
 **Proyección:** la estructura por módulos verificada con Spring Modulith hoy se repite en cada sesión siguiente del curso, cuando se agreguen `ventas`, `seguridad` y los demás módulos de negocio — y en cualquier proyecto profesional donde debas mantener límites claros entre partes del sistema.
-
-## Anexo: `compose-dev.yml` equivalente con MySQL (referencia, no usar en el proyecto de LP2)
-
-En LP2 el motor es **Oracle**, sin alternativa — es el mismo motor que usa BD2 (PL/SQL, paquetes, triggers), y el objetivo de esta integración es compartir una sola base de datos real entre ambos cursos. Cambiar de motor rompería esa integración. Este anexo solo muestra cómo se vería el mismo `compose-dev.yml` de 3.2.3 con MySQL, a modo de comparación (ver también la nota sobre motores en el `compose-dev.yml` de DIST, que sí acepta MySQL como alternativa real):
-
-```yaml
-name: bomerp-backend-dev
-
-services:
-  mysql:
-    image: mysql:8.4
-    container_name: bomerp-mysql
-    restart: unless-stopped
-    ports:
-      - "13306:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: 123456
-      MYSQL_DATABASE: bom_catalogo
-      MYSQL_USER: bomerp_app
-      MYSQL_PASSWORD: 123456
-    volumes:
-      - mysql-data:/var/lib/mysql
-
-volumes:
-  mysql-data:
-```
-
-`MYSQL_USER`/`MYSQL_PASSWORD` crean el usuario `bomerp_app` con privilegios acotados a `bom_catalogo` — la aplicación se conecta como `bomerp_app`, no como `root`. `MYSQL_ROOT_PASSWORD` sigue siendo obligatorio para que la imagen arranque, pero el backend no lo usa. La URL de conexión equivalente sería `jdbc:mysql://localhost:13306/bom_catalogo`.
 
 ## Bibliografía
 

@@ -1,3 +1,5 @@
+name: bomerp-backend-dev
+
 services:
   oracle:
     image: gvenzl/oracle-free:23-slim
