@@ -1247,7 +1247,7 @@
   <span class="md-ellipsis">
     
   
-    1. Arquitectura y Diseño Estructural
+    I. Arquitectura y Diseño Estructural
   
 
     
@@ -1263,7 +1263,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    1. Arquitectura y Diseño Estructural
+    I. Arquitectura y Diseño Estructural
   
 
           </label>
@@ -1539,7 +1539,7 @@
   <span class="md-ellipsis">
     
   
-    1. Programación y optimización (Oracle XE)
+    I. Programación y optimización (Oracle XE)
   
 
     
@@ -1555,7 +1555,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    1. Programación y optimización (Oracle XE)
+    I. Programación y optimización (Oracle XE)
   
 
           </label>
@@ -2320,7 +2320,7 @@
   <span class="md-ellipsis">
     
   
-    Decisiones de arquitectura
+    I. Decisiones de arquitectura
   
 
     
@@ -2336,7 +2336,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Decisiones de arquitectura
+    I. Decisiones de arquitectura
   
 
           </label>
@@ -3251,14 +3251,14 @@ el repo (ver <code>bd2/README.md</code>).</p>
 <span class="n">UNDEFINE</span><span class="w"> </span><span class="n">pwd_catalogo</span>
 <span class="n">UNDEFINE</span><span class="w"> </span><span class="n">pwd_app</span>
 </code></pre></div>
-<p><code>ACCEPT ... HIDE</code> es útil cuando cada quien pone su propia contraseña. Pero en el ambiente <strong>local</strong> de este proyecto (laptop de desarrollo, sin secretos que proteger) conviene que todos usen exactamente la misma credencial, para que nadie se quede sin poder conectar el backend por una contraseña distinta a la de <code>application-local.yml</code>. Por eso, en el script real (<code>S01_01_esquemas.sql</code>) se usa contraseña fija en texto plano — mismo criterio que <code>application-local.yml</code>/<code>compose-local.yml</code> (ver <code>lp2/CLAUDE.md</code>, sección "Ambientes"):</p>
+<p><code>ACCEPT ... HIDE</code> es útil cuando cada quien pone su propia contraseña. Pero en el ambiente <strong>DEV</strong> de este proyecto (laptop de desarrollo, sin secretos que proteger) conviene que todos usen exactamente la misma credencial, para que nadie se quede sin poder conectar el backend por una contraseña distinta a la de <code>application-dev.yml</code>. Por eso, en el script real (<code>S01_01_esquemas.sql</code>) se usa contraseña fija en texto plano — mismo criterio que <code>application-dev.yml</code>/<code>compose-dev.yml</code> (ver <code>lp2/CLAUDE.md</code>, sección "Ambientes"):</p>
 <div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="w"> </span><span class="n">IDENTIFIED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="ss">&quot;123456&quot;</span><span class="w"> </span><span class="n">QUOTA</span><span class="w"> </span><span class="n">UNLIMITED</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">USERS</span><span class="p">;</span>
 <span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">BOMERP_APP</span><span class="w"> </span><span class="n">IDENTIFIED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="ss">&quot;123456&quot;</span><span class="p">;</span>
 
 <span class="k">GRANT</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">SESSION</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">VIEW</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">PROCEDURE</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">TRIGGER</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">;</span>
 <span class="k">GRANT</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">SESSION</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">BOMERP_APP</span><span class="p">;</span>
 </code></pre></div>
-<p>La contraseña de <code>BOMERP_APP</code> debe coincidir exactamente con la de <code>application-local.yml</code>.</p>
+<p>La contraseña de <code>BOMERP_APP</code> debe coincidir exactamente con la de <code>application-dev.yml</code>.</p>
 <h4 id="ver-el-esquema-bom_catalogo-desde-el-cliente-grafico">Ver el esquema <code>BOM_CATALOGO</code> desde el cliente gráfico<a class="headerlink" href="#ver-el-esquema-bom_catalogo-desde-el-cliente-grafico" title="Permanent link">&para;</a></h4>
 <p>Con la conexión de <code>system</code> (ver LP2 S1, 3.2.2) normalmente solo ves los objetos de <code>SYSTEM</code>, no los de <code>BOM_CATALOGO</code>, aunque ya exista. Agrega una segunda conexión, igual que ya hiciste con <code>BOMERP_APP</code>:</p>
 <p><strong>Tabla 3. Conexión al esquema <code>BOM_CATALOGO</code></strong></p>
@@ -3294,7 +3294,7 @@ el repo (ver <code>bd2/README.md</code>).</p>
 </table>
 <p>Con esa conexión entras directo como ese usuario y ves su propio árbol (<code>categoria</code>, <code>producto</code> una vez creadas), sin depender de que el cliente muestre o no otros esquemas.</p>
 <h4 id="si-necesitas-borrar-y-volver-a-crear-el-esquema">Si necesitas borrar y volver a crear el esquema<a class="headerlink" href="#si-necesitas-borrar-y-volver-a-crear-el-esquema" title="Permanent link">&para;</a></h4>
-<p>Si algo quedó a medio configurar (por ejemplo, corriste <code>S01_01_esquemas.sql</code> dos veces y salió <code>ORA-01920</code>, usuario ya existente), lo más simple en un ambiente local es borrar y recrear desde cero — conectado como <code>system</code>:</p>
+<p>Si algo quedó a medio configurar (por ejemplo, corriste <code>S01_01_esquemas.sql</code> dos veces y salió <code>ORA-01920</code>, usuario ya existente), lo más simple en DEV es borrar y recrear desde cero — conectado como <code>system</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="k">DROP</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
 <span class="k">DROP</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">BOMERP_APP</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
 </code></pre></div>
