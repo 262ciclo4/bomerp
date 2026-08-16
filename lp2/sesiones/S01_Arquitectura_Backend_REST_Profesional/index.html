@@ -2582,10 +2582,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#353-ejecutar-y-verificar-el-proyecto-completo" class="md-nav__link">
+  <a href="#353-ejecutar-y-probar-el-backend" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.5.3 Ejecutar y verificar el proyecto completo
+        3.5.3 Ejecutar y probar el backend
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#354-verificar-la-estructura-modular-con-spring-modulith" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5.4 Verificar la estructura modular con Spring Modulith
       
     </span>
   </a>
@@ -3353,10 +3364,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#353-ejecutar-y-verificar-el-proyecto-completo" class="md-nav__link">
+  <a href="#353-ejecutar-y-probar-el-backend" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.5.3 Ejecutar y verificar el proyecto completo
+        3.5.3 Ejecutar y probar el backend
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#354-verificar-la-estructura-modular-con-spring-modulith" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5.4 Verificar la estructura modular con Spring Modulith
       
     </span>
   </a>
@@ -3817,7 +3839,13 @@ hay nada real que desplegar.</p>
 </li>
 <li><strong>3.3</strong> Crear las excepciones y el filtro de trazabilidad.</li>
 <li><strong>3.4</strong> Simular escalamiento horizontal (múltiples instancias).</li>
-<li><strong>3.5</strong> Implementar el módulo <code>catalogo</code>: <code>Categoria</code> y <code>Producto</code>.</li>
+<li><strong>3.5</strong> Implementar el módulo <code>catalogo</code>: <code>Categoria</code> y <code>Producto</code>.<ul>
+<li><strong>3.5.1</strong> Construir <code>Categoria</code>.</li>
+<li><strong>3.5.2</strong> Construir <code>Producto</code> (opcional).</li>
+<li><strong>3.5.3</strong> Ejecutar y probar el backend.</li>
+<li><strong>3.5.4</strong> Verificar la estructura modular con Spring Modulith.</li>
+</ul>
+</li>
 <li><strong>3.6</strong> Delimitar los endpoints del módulo Catálogo.</li>
 <li><strong>3.7</strong> Reconocer el DTO de entrada reservado para S2.</li>
 <li><strong>3.8</strong> Diseñar DTO de salida.</li>
@@ -4838,7 +4866,7 @@ curl<span class="w"> </span>http://localhost:8081/actuator/health
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<h4 id="353-ejecutar-y-verificar-el-proyecto-completo">3.5.3 Ejecutar y verificar el proyecto completo<a class="headerlink" href="#353-ejecutar-y-verificar-el-proyecto-completo" title="Permanent link">&para;</a></h4>
+<h4 id="353-ejecutar-y-probar-el-backend">3.5.3 Ejecutar y probar el backend<a class="headerlink" href="#353-ejecutar-y-probar-el-backend" title="Permanent link">&para;</a></h4>
 <p>El proyecto ya viene corriendo desde 3.2.4 (DevTools lo reinicia solo con cada archivo nuevo). Si lo cerraste, vuelve a levantarlo:</p>
 <div class="highlight"><pre><span></span><code><span class="c"># Windows (PowerShell o cmd)</span>
 <span class="p">.\</span><span class="n">mvnw</span><span class="p">.</span><span class="n">cmd</span> <span class="n">spring-boot</span><span class="p">:</span><span class="n">run</span>
@@ -4849,7 +4877,8 @@ curl<span class="w"> </span>http://localhost:8081/actuator/health
 <p>Si abres <code>http://localhost:8080/</code> en el navegador vas a ver una <strong>Whitelabel Error Page</strong> con <code>404</code> y el mensaje <em>"No static resource ."</em> — es lo esperado: este backend es una API REST, no sirve una página en <code>/</code>. No es un error que arreglar. Abre en cambio <code>http://localhost:8080/swagger-ui/index.html</code> (la ruta <code>/swagger-ui.html</code> configurada en <code>springdoc.swagger-ui.path</code> redirige ahí) para ver el contrato interactivo, o revisa directamente <code>/api/v1/categorias</code> (y <code>/api/v1/productos</code>, si completaste el 3.5.2 opcional) y <code>/actuator/health</code>.</p>
 <p>Configuración de variables de entorno y detalle de la base de datos en
 <a href="https://github.com/262ciclo4/bomerp/blob/main/lp2/bomerp-backend/README.md"><code>lp2/bomerp-backend/README.md</code></a>.</p>
-<p>Antes de verificar la estructura modular, crea <code>src/test/java/pe/edu/upeu/bomerp/ModularityTests.java</code> (verifica automáticamente los límites entre módulos, ver <a href="../../adr/ADR-002-spring-modulith/">ADR-002</a>):</p>
+<h4 id="354-verificar-la-estructura-modular-con-spring-modulith">3.5.4 Verificar la estructura modular con Spring Modulith<a class="headerlink" href="#354-verificar-la-estructura-modular-con-spring-modulith" title="Permanent link">&para;</a></h4>
+<p>Crea <code>src/test/java/pe/edu/upeu/bomerp/ModularityTests.java</code> (verifica automáticamente los límites entre módulos, ver <a href="../../adr/ADR-002-spring-modulith/">ADR-002</a>):</p>
 <div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp</span><span class="p">;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">org.junit.jupiter.api.Test</span><span class="p">;</span>
