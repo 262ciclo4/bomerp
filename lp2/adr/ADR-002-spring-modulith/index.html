@@ -2351,7 +2351,7 @@ Hibernate valida el esquema completo al arrancar y <strong>falla el arranque</st
 con <code>SchemaManagementException: Schema validation: missing table
 [event_publication]</code>, porque la tabla no existe en Oracle y no hay ninguna
 sesión de BD2 que la cree. Se comprobó agregando la dependencia contra la
-Oracle real de <code>compose-local.yml</code>: el <code>SessionFactory</code> no llega a
+Oracle real de <code>compose-dev.yml</code>: el <code>SessionFactory</code> no llega a
 construirse y la aplicación no levanta.</p>
 <p>La corrección no es crear esa tabla a mano — eso adelantaría alcance de
 comunicación por eventos que ni ADR-002 ni el sílabo piden todavía. La
