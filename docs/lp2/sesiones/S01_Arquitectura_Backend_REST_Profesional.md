@@ -21,11 +21,11 @@ La arquitectura de un backend decide qué tan fácil es mantenerlo y hacerlo cre
 
 Al concluir la clase, estarás en condiciones de:
 
-- **Crear y entregar** un proyecto backend ejecutable y reproducible, sobre Java 21 LTS, con conexión a Oracle verificada mediante ORM, endpoint de salud, listados de `Categoria` y `Producto`, módulos de negocio, DTO de salida, contrato y versionado básico de API, y documentación OpenAPI inicial.
+- **Crear y entregar** un proyecto backend ejecutable y reproducible, sobre Java 21 LTS, con conexión a Oracle verificada mediante ORM, endpoint de salud, listado de `Categoria` (`Producto`, opcional), módulos de negocio, DTO de salida, contrato y versionado básico de API, y documentación OpenAPI inicial.
 
 ### 1.4 Producto de sesión
 
-Proyecto backend ejecutable y reproducible, sobre Java 21 LTS, organizado como monolito modular y conectado a Oracle con su conexión verificada mediante ORM, con endpoint de salud, contrato y versionado básico de API definidos, y los listados de `Categoria` y `Producto` documentados mediante OpenAPI.
+Proyecto backend ejecutable y reproducible, sobre Java 21 LTS, organizado como monolito modular y conectado a Oracle con su conexión verificada mediante ORM, con endpoint de salud, contrato y versionado básico de API definidos, y el listado de `Categoria` documentado mediante OpenAPI. De forma opcional, también el listado de `Producto` (su CRUD completo se construye en S2).
 
 ### 1.5 Metodología
 
@@ -34,7 +34,7 @@ Proyecto backend ejecutable y reproducible, sobre Java 21 LTS, organizado como m
 | Actividades a Realizar en el Periodo | Orientaciones generales (Orientaciones Metodológicas) | Material de estudio recomendado |
 |---|---|---|
 | Revisión previa individual | Instalar y verificar Java 21 LTS, VS Code y sus extensiones; leer [ADR-001](../adr/ADR-001-arquitectura-backend.md) y [ADR-002](../adr/ADR-002-spring-modulith.md). Trabajo individual, antes de clase; traer evidencia de `java -version` funcionando. | ADR-001, ADR-002, guía de instalación Java 21. |
-| Clase presencial | Explicación guiada de conceptos (REST, DTO, versionado, ambientes) y creación del proyecto backend conectado a Oracle; delimitación de los endpoints del módulo `catalogo`. Trabajo individual en la propia laptop, siguiendo al docente paso a paso; consulta inmediata ante errores de dependencias o conexión. | `pom.xml` de referencia, `application-dev.yml`, Docker Compose de Oracle, cliente REST para verificar endpoints. |
+| Clase presencial | Explicación guiada de conceptos (REST, DTO, versionado, ambientes) y creación del proyecto backend conectado a Oracle; delimitación de los endpoints del módulo `catalogo`. Trabajo individual en la propia laptop, siguiendo al docente paso a paso; consulta inmediata ante errores de dependencias o conexión. `Producto` (3.5.2) es alcance opcional: no es necesario completarlo para cerrar la sesión, su CRUD completo se construye en S2. | `pom.xml` de referencia, `application-dev.yml`, Docker Compose de Oracle, cliente REST para verificar endpoints. |
 | Evaluación formativa | Verificación en clase de `mvn test` (incluye `ModularityTests`) y de la respuesta del endpoint de salud y los listados; inicio de la evidencia individual. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4. | Indicaciones de entrega (4.3), rúbrica de evaluación (4.6). |
 
 ### 1.6 Motivación de la sesión
@@ -1076,7 +1076,7 @@ Resultado esperado: ambas responden `Hola BomERP` y `{"status":"UP"}` (con `db.s
 
 ### 3.5 Implementar el módulo `catalogo`: `Categoria` y `Producto`
 
-**Producto del paso:** listados REST de `Categoria` y `Producto` funcionando de punta a punta (controller → service → repository → Oracle), con la estructura modular verificada.
+**Producto del paso:** listado REST de `Categoria` funcionando de punta a punta (controller → service → repository → Oracle), con la estructura modular verificada. `Producto` (3.5.2) es opcional en S1.
 
 **Requisito antes de continuar:** las tablas `BOM_CATALOGO.categoria` y `BOM_CATALOGO.producto` deben existir en Oracle *antes* de compilar este paso. A diferencia de Distribuidas (que usa Flyway y ejecuta sus migraciones solo al arrancar), LP2 no usa Flyway: nadie las crea automáticamente. Con `ddl-auto: validate` (3.2.3), Hibernate solo valida el esquema al arrancar, nunca lo crea — si las tablas no existen, falla igual que pasó con `event_publication` (ADR-002). Se crean ejecutando manualmente [`S01_01_esquemas.sql`](../../proyecto-integrador/u1/oracle/S01_01_esquemas.sql) y [`S01_02_tablas.sql`](../../proyecto-integrador/u1/oracle/S01_02_tablas.sql) — si ya lo hiciste en 3.2.3, no hace falta repetirlo aquí. Detalle opcional, solo si quieres entender el porqué de cada bloque: [BD2 S1](../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio.md).
 
@@ -1213,7 +1213,10 @@ public class CategoriaController {
 }
 ```
 
-#### 3.5.2 Construir `Producto`
+#### 3.5.2 Construir `Producto` (opcional)
+
+!!! note "3.5.2 es opcional"
+    Lo obligatorio para cerrar S1 es `Categoria` (3.5.1). `Producto` sigue exactamente el mismo patrón — es la misma práctica repetida sin conceptos nuevos — y en S2 de todas formas se reconstruye por completo con CRUD (`crear`, `actualizar`, `eliminar`), no solo `listar()`. Si te queda tiempo en clase o quieres practicar el patrón una vez más antes de S2, complétalo; si no, continúa en 3.5.3 usando solo `Categoria`.
 
 `Producto` sigue exactamente el mismo patrón que `Categoria` (3.5.1), cambiando `Categoria`→`Producto`, `CATEGORIA`→`PRODUCTO` y agregando los campos propios:
 
@@ -1366,7 +1369,7 @@ El proyecto ya viene corriendo desde 3.2.4 (DevTools lo reinicia solo con cada a
 ./mvnw spring-boot:run
 ```
 
-Si abres `http://localhost:8080/` en el navegador vas a ver una **Whitelabel Error Page** con `404` y el mensaje *"No static resource ."* — es lo esperado: este backend es una API REST, no sirve una página en `/`. No es un error que arreglar. Abre en cambio `http://localhost:8080/swagger-ui/index.html` (la ruta `/swagger-ui.html` configurada en `springdoc.swagger-ui.path` redirige ahí) para ver el contrato interactivo, o revisa directamente `/api/v1/productos` y `/actuator/health`.
+Si abres `http://localhost:8080/` en el navegador vas a ver una **Whitelabel Error Page** con `404` y el mensaje *"No static resource ."* — es lo esperado: este backend es una API REST, no sirve una página en `/`. No es un error que arreglar. Abre en cambio `http://localhost:8080/swagger-ui/index.html` (la ruta `/swagger-ui.html` configurada en `springdoc.swagger-ui.path` redirige ahí) para ver el contrato interactivo, o revisa directamente `/api/v1/categorias` (y `/api/v1/productos`, si completaste el 3.5.2 opcional) y `/actuator/health`.
 
 Configuración de variables de entorno y detalle de la base de datos en
 [`lp2/bomerp-backend/README.md`](https://github.com/262ciclo4/bomerp/blob/main/lp2/bomerp-backend/README.md).
@@ -1405,7 +1408,7 @@ class ModularityTests {
 | Configuración por ambiente | Perfil DEV sin secretos incluidos en el repositorio. |
 | Conexión a base de datos | Inicio correcto y componente `db` activo en Actuator. |
 | Endpoint de verificación | Respuesta `UP` en `/actuator/health`. |
-| Recursos iniciales | Los GET de categorías y productos devuelven datos persistidos o listas vacías. |
+| Recursos iniciales | El GET de categorías devuelve datos persistidos o lista vacía (y el de productos también, si completaste el 3.5.2 opcional). |
 | Estructura modular | `.\mvnw.cmd test` / `./mvnw test` ejecuta `ModularityTests` sin errores. |
 | Manejo de errores y trazabilidad | `GlobalExceptionHandler` y `CorrelationIdFilter` (3.3) ya están activos, aunque S1 no los ejercite todavía con `POST`/`PUT`/`DELETE`. |
 
@@ -1418,7 +1421,7 @@ class ModularityTests {
 | Método | Endpoint | Propósito | Implementación en el curso |
 |---|---|---|---|
 | `GET` | `/api/v1/categorias` | Listar categorías desde Oracle | S1 |
-| `GET` | `/api/v1/productos` | Listar productos desde Oracle | S1 |
+| `GET` | `/api/v1/productos` | Listar productos desde Oracle | S1 (opcional, ver 3.5.2) |
 | `POST`, `PUT`, `DELETE` | `/api/v1/categorias` | Completar operaciones de categoría | S2-S3 |
 | `GET` | `/api/v1/productos/{id}` | Consultar un producto | S2 |
 | `POST` | `/api/v1/productos` | Registrar un producto | S2 |
@@ -1481,7 +1484,7 @@ lp2/bomerp-backend/
     ├── filter/                      # compartido: CorrelationIdFilter
     └── catalogo/                    # módulo Modulith, funcional desde S1
         ├── categoria/{controller,dto,entity,repository,service}
-        └── producto/{controller,dto,entity,repository,service}
+        └── producto/{controller,dto,entity,repository,service}  # opcional en S1, ver 3.5.2
 src/main/resources/
 └── logback-spring.xml               # formato de logs + traceId
 ```
