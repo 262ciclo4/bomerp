@@ -5,10 +5,11 @@ reactor multi-módulo. Ver [`../CLAUDE.md`](../CLAUDE.md) para las
 convenciones de arquitectura completas y [`../../docs/lp2/adr/`](../../docs/lp2/adr/)
 para las decisiones registradas (ADR-001 a ADR-003).
 
-**Estado actual:** solo el scaffold de Spring Initializr (`BomerpBackendApplication`,
-`HelloController` de ejemplo, `OpenApiConfig`). El módulo `catalogo` de S1
-(categoría/producto) y `ModularityTests` todavía no existen — se crean al
-ejecutar la sesión S1 (ver skill `lp2-sesion`).
+**Estado actual:** S1 completa — scaffold de Spring Initializr
+(`BomerpBackendApplication`, `HelloController`, `OpenApiConfig`), paquete
+compartido `exception`/`filter` (`GlobalExceptionHandler`,
+`CorrelationIdFilter`), módulo `catalogo` (`Categoria`, `Producto`) y
+`ModularityTests` en verde.
 
 ## Prerrequisitos
 
@@ -54,8 +55,8 @@ ejecutar la sesión S1 (ver skill `lp2-sesion`).
 ```
 
 Compila y corre las pruebas, incluida `ModularityTests` (verifica los
-límites entre módulos de Spring Modulith) una vez que exista — no requiere
-Oracle levantado para ese chequeo estructural. Las pruebas que sí requieren
+límites entre módulos de Spring Modulith) — no requiere Oracle levantado
+para ese chequeo estructural. Las pruebas que sí requieren
 datos reales necesitan el contenedor Oracle del paso 1.
 
 ## Documentación de la API

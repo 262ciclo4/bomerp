@@ -33,11 +33,10 @@ bomerp/
 |-- .github/workflows/  - despliegue automatico a GitHub Pages
 |-- ads/                - entregables del curso ADS
 |-- bd2/                - entregables del curso BD2
-|-- contracts/          - contratos OpenAPI y eventos compartidos
 |-- docs/               - documentacion MkDocs para ADS, BD2 y LP2
-|-- infra/              - configuracion base de despliegue e infraestructura
 |-- lp2/                - entregables del curso LP2
-|-- scripts/            - utilidades de validacion o automatizacion
+|-- overrides/          - personalizacion del tema MkDocs (main.html)
+|-- .gitignore
 |-- mkdocs.yml          - configuracion del sitio
 `-- README.md           - onboarding del proyecto
 ```

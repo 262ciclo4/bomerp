@@ -20,7 +20,8 @@ la seguridad JWT; en U3 lo optimiza, integra y estabiliza.
 * Seguridad JWT y control de acceso.
 * Integración, pruebas, optimización y monitoreo.
 
-El proyecto backend vive en [`bomerp-backend/`](bomerp-backend/), hoy solo
-con el scaffold de Spring Initializr (sin el módulo `catalogo` de S1
-todavía). Las decisiones de arquitectura del workspace están en
+El proyecto backend vive en [`bomerp-backend/`](bomerp-backend/): ya tiene
+el módulo `catalogo` de S1 (`Categoria`, `Producto`), el paquete
+compartido `exception`/`filter` y `ModularityTests` en verde. Las
+decisiones de arquitectura del workspace están en
 [`docs/lp2/adr/`](../docs/lp2/adr/).

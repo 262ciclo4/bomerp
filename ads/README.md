@@ -23,17 +23,20 @@ explica — no lo reemplaza.
 
 ## Qué produce cada subcarpeta
 
-Cada una tiene su propio `README.md` con el "Contenido Esperado" completo.
-Hoy todas están **vacías salvo ese README** — son la plantilla que cada
-grupo llena con el diseño del módulo BOM ERP que le fue asignado:
+Cada una tendrá su propio `README.md` con el "Contenido Esperado" completo
+— la plantilla que cada grupo llena con el diseño del módulo BOM ERP que
+le fue asignado. **Hoy estas subcarpetas todavía no existen**: se crean
+recién cuando el grupo empieza a producir el artefacto correspondiente,
+no antes (mismo criterio de "no crear por si acaso" que usa LP2 con sus
+módulos, ver [ADR-002](../docs/lp2/adr/ADR-002-spring-modulith.md)):
 
 | Carpeta | Qué documenta |
 |---|---|
-| [`01-requerimientos/`](01-requerimientos/README.md) | Actores, requerimientos funcionales/no funcionales, reglas de negocio, casos de uso, matriz de trazabilidad. |
-| [`02-arquitectura-c4/`](02-arquitectura-c4/README.md) | Vistas C4 (contexto, contenedores, componentes, despliegue) y justificación de las decisiones arquitectónicas. |
-| [`03-modelo-dominio/`](03-modelo-dominio/README.md) | Entidades, objetos de valor, relaciones, reglas de negocio y glosario del dominio. |
-| [`04-uml/`](04-uml/README.md) | Diagramas de clases, secuencia, actividades y estados. |
-| [`05-adrs/`](05-adrs/README.md) | Decisiones arquitectónicas formales (`ADR-000X-titulo.md`): contexto, decisión, consecuencias, alternativas consideradas. |
+| `01-requerimientos/` | Actores, requerimientos funcionales/no funcionales, reglas de negocio, casos de uso, matriz de trazabilidad. |
+| `02-arquitectura-c4/` | Vistas C4 (contexto, contenedores, componentes, despliegue) y justificación de las decisiones arquitectónicas. |
+| `03-modelo-dominio/` | Entidades, objetos de valor, relaciones, reglas de negocio y glosario del dominio. |
+| `04-uml/` | Diagramas de clases, secuencia, actividades y estados. |
+| `05-adrs/` | Decisiones arquitectónicas formales (`ADR-000X-titulo.md`): contexto, decisión, consecuencias, alternativas consideradas. |
 
 ## Relación de trazabilidad con LP2 (obligatoria, no opcional)
 
