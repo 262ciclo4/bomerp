@@ -2571,10 +2571,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#352-construir-producto" class="md-nav__link">
+  <a href="#352-construir-producto-opcional" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.5.2 Construir Producto
+        3.5.2 Construir Producto (opcional)
       
     </span>
   </a>
@@ -3342,10 +3342,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#352-construir-producto" class="md-nav__link">
+  <a href="#352-construir-producto-opcional" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.5.2 Construir Producto
+        3.5.2 Construir Producto (opcional)
       
     </span>
   </a>
@@ -3608,10 +3608,10 @@
 <h3 id="13-proposito-de-aprendizaje">1.3 Propósito de aprendizaje<a class="headerlink" href="#13-proposito-de-aprendizaje" title="Permanent link">&para;</a></h3>
 <p>Al concluir la clase, estarás en condiciones de:</p>
 <ul>
-<li><strong>Crear y entregar</strong> un proyecto backend ejecutable y reproducible, sobre Java 21 LTS, con conexión a Oracle verificada mediante ORM, endpoint de salud, listados de <code>Categoria</code> y <code>Producto</code>, módulos de negocio, DTO de salida, contrato y versionado básico de API, y documentación OpenAPI inicial.</li>
+<li><strong>Crear y entregar</strong> un proyecto backend ejecutable y reproducible, sobre Java 21 LTS, con conexión a Oracle verificada mediante ORM, endpoint de salud, listado de <code>Categoria</code> (<code>Producto</code>, opcional), módulos de negocio, DTO de salida, contrato y versionado básico de API, y documentación OpenAPI inicial.</li>
 </ul>
 <h3 id="14-producto-de-sesion">1.4 Producto de sesión<a class="headerlink" href="#14-producto-de-sesion" title="Permanent link">&para;</a></h3>
-<p>Proyecto backend ejecutable y reproducible, sobre Java 21 LTS, organizado como monolito modular y conectado a Oracle con su conexión verificada mediante ORM, con endpoint de salud, contrato y versionado básico de API definidos, y los listados de <code>Categoria</code> y <code>Producto</code> documentados mediante OpenAPI.</p>
+<p>Proyecto backend ejecutable y reproducible, sobre Java 21 LTS, organizado como monolito modular y conectado a Oracle con su conexión verificada mediante ORM, con endpoint de salud, contrato y versionado básico de API definidos, y el listado de <code>Categoria</code> documentado mediante OpenAPI. De forma opcional, también el listado de <code>Producto</code> (su CRUD completo se construye en S2).</p>
 <h3 id="15-metodologia">1.5 Metodología<a class="headerlink" href="#15-metodologia" title="Permanent link">&para;</a></h3>
 <p><strong>Tabla 1. Metodología de la sesión</strong></p>
 <table>
@@ -3630,7 +3630,7 @@
 </tr>
 <tr>
 <td>Clase presencial</td>
-<td>Explicación guiada de conceptos (REST, DTO, versionado, ambientes) y creación del proyecto backend conectado a Oracle; delimitación de los endpoints del módulo <code>catalogo</code>. Trabajo individual en la propia laptop, siguiendo al docente paso a paso; consulta inmediata ante errores de dependencias o conexión.</td>
+<td>Explicación guiada de conceptos (REST, DTO, versionado, ambientes) y creación del proyecto backend conectado a Oracle; delimitación de los endpoints del módulo <code>catalogo</code>. Trabajo individual en la propia laptop, siguiendo al docente paso a paso; consulta inmediata ante errores de dependencias o conexión. <code>Producto</code> (3.5.2) es alcance opcional: no es necesario completarlo para cerrar la sesión, su CRUD completo se construye en S2.</td>
 <td><code>pom.xml</code> de referencia, <code>application-dev.yml</code>, Docker Compose de Oracle, cliente REST para verificar endpoints.</td>
 </tr>
 <tr>
@@ -4600,7 +4600,7 @@ curl<span class="w"> </span>http://localhost:8081/actuator/health
 <p>Resultado esperado: ambas responden <code>Hola BomERP</code> y <code>{"status":"UP"}</code> (con <code>db.status: UP</code>), cada una en su propio puerto, conectadas de forma independiente a la misma Oracle.</p>
 <p><strong>Por qué importa esto en S1.</strong> LP2 es un monolito, no un sistema distribuido — no hay Gateway ni balanceador de carga todavía (eso pertenece a Aplicaciones Distribuidas). Pero la capacidad de correr varias instancias del mismo backend en paralelo, cada una conectada de forma independiente a Oracle, es la base técnica que un balanceador necesita para repartir tráfico entre copias; practicarla desde S1 deja esa evidencia lista para cuando el proyecto integre esa pieza.</p>
 <h3 id="35-implementar-el-modulo-catalogo-categoria-y-producto">3.5 Implementar el módulo <code>catalogo</code>: <code>Categoria</code> y <code>Producto</code><a class="headerlink" href="#35-implementar-el-modulo-catalogo-categoria-y-producto" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> listados REST de <code>Categoria</code> y <code>Producto</code> funcionando de punta a punta (controller → service → repository → Oracle), con la estructura modular verificada.</p>
+<p><strong>Producto del paso:</strong> listado REST de <code>Categoria</code> funcionando de punta a punta (controller → service → repository → Oracle), con la estructura modular verificada. <code>Producto</code> (3.5.2) es opcional en S1.</p>
 <p><strong>Requisito antes de continuar:</strong> las tablas <code>BOM_CATALOGO.categoria</code> y <code>BOM_CATALOGO.producto</code> deben existir en Oracle <em>antes</em> de compilar este paso. A diferencia de Distribuidas (que usa Flyway y ejecuta sus migraciones solo al arrancar), LP2 no usa Flyway: nadie las crea automáticamente. Con <code>ddl-auto: validate</code> (3.2.3), Hibernate solo valida el esquema al arrancar, nunca lo crea — si las tablas no existen, falla igual que pasó con <code>event_publication</code> (ADR-002). Se crean ejecutando manualmente <a href="../../../proyecto-integrador/u1/oracle/S01_01_esquemas.sql"><code>S01_01_esquemas.sql</code></a> y <a href="../../../proyecto-integrador/u1/oracle/S01_02_tablas.sql"><code>S01_02_tablas.sql</code></a> — si ya lo hiciste en 3.2.3, no hace falta repetirlo aquí. Detalle opcional, solo si quieres entender el porqué de cada bloque: <a href="../../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio/">BD2 S1</a>.</p>
 <p>Crea el paquete <code>pe.edu.upeu.bomerp.catalogo</code> (Spring Modulith lo detecta automáticamente como módulo por ser un paquete directo bajo el paquete raíz, sin configuración adicional).</p>
 <h4 id="351-construir-categoria">3.5.1 Construir <code>Categoria</code><a class="headerlink" href="#351-construir-categoria" title="Permanent link">&para;</a></h4>
@@ -4715,7 +4715,11 @@ curl<span class="w"> </span>http://localhost:8081/actuator/health
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<h4 id="352-construir-producto">3.5.2 Construir <code>Producto</code><a class="headerlink" href="#352-construir-producto" title="Permanent link">&para;</a></h4>
+<h4 id="352-construir-producto-opcional">3.5.2 Construir <code>Producto</code> (opcional)<a class="headerlink" href="#352-construir-producto-opcional" title="Permanent link">&para;</a></h4>
+<div class="admonition note">
+<p class="admonition-title">3.5.2 es opcional</p>
+<p>Lo obligatorio para cerrar S1 es <code>Categoria</code> (3.5.1). <code>Producto</code> sigue exactamente el mismo patrón — es la misma práctica repetida sin conceptos nuevos — y en S2 de todas formas se reconstruye por completo con CRUD (<code>crear</code>, <code>actualizar</code>, <code>eliminar</code>), no solo <code>listar()</code>. Si te queda tiempo en clase o quieres practicar el patrón una vez más antes de S2, complétalo; si no, continúa en 3.5.3 usando solo <code>Categoria</code>.</p>
+</div>
 <p><code>Producto</code> sigue exactamente el mismo patrón que <code>Categoria</code> (3.5.1), cambiando <code>Categoria</code>→<code>Producto</code>, <code>CATEGORIA</code>→<code>PRODUCTO</code> y agregando los campos propios:</p>
 <p><strong><code>catalogo/producto/entity/Producto.java</code></strong></p>
 <div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.entity</span><span class="p">;</span>
@@ -4842,7 +4846,7 @@ curl<span class="w"> </span>http://localhost:8081/actuator/health
 <div class="highlight"><pre><span></span><code><span class="c1"># macOS / Linux</span>
 ./mvnw<span class="w"> </span>spring-boot:run
 </code></pre></div>
-<p>Si abres <code>http://localhost:8080/</code> en el navegador vas a ver una <strong>Whitelabel Error Page</strong> con <code>404</code> y el mensaje <em>"No static resource ."</em> — es lo esperado: este backend es una API REST, no sirve una página en <code>/</code>. No es un error que arreglar. Abre en cambio <code>http://localhost:8080/swagger-ui/index.html</code> (la ruta <code>/swagger-ui.html</code> configurada en <code>springdoc.swagger-ui.path</code> redirige ahí) para ver el contrato interactivo, o revisa directamente <code>/api/v1/productos</code> y <code>/actuator/health</code>.</p>
+<p>Si abres <code>http://localhost:8080/</code> en el navegador vas a ver una <strong>Whitelabel Error Page</strong> con <code>404</code> y el mensaje <em>"No static resource ."</em> — es lo esperado: este backend es una API REST, no sirve una página en <code>/</code>. No es un error que arreglar. Abre en cambio <code>http://localhost:8080/swagger-ui/index.html</code> (la ruta <code>/swagger-ui.html</code> configurada en <code>springdoc.swagger-ui.path</code> redirige ahí) para ver el contrato interactivo, o revisa directamente <code>/api/v1/categorias</code> (y <code>/api/v1/productos</code>, si completaste el 3.5.2 opcional) y <code>/actuator/health</code>.</p>
 <p>Configuración de variables de entorno y detalle de la base de datos en
 <a href="https://github.com/262ciclo4/bomerp/blob/main/lp2/bomerp-backend/README.md"><code>lp2/bomerp-backend/README.md</code></a>.</p>
 <p>Antes de verificar la estructura modular, crea <code>src/test/java/pe/edu/upeu/bomerp/ModularityTests.java</code> (verifica automáticamente los límites entre módulos, ver <a href="../../adr/ADR-002-spring-modulith/">ADR-002</a>):</p>
@@ -4898,7 +4902,7 @@ curl<span class="w"> </span>http://localhost:8081/actuator/health
 </tr>
 <tr>
 <td>Recursos iniciales</td>
-<td>Los GET de categorías y productos devuelven datos persistidos o listas vacías.</td>
+<td>El GET de categorías devuelve datos persistidos o lista vacía (y el de productos también, si completaste el 3.5.2 opcional).</td>
 </tr>
 <tr>
 <td>Estructura modular</td>
@@ -4933,7 +4937,7 @@ curl<span class="w"> </span>http://localhost:8081/actuator/health
 <td><code>GET</code></td>
 <td><code>/api/v1/productos</code></td>
 <td>Listar productos desde Oracle</td>
-<td>S1</td>
+<td>S1 (opcional, ver 3.5.2)</td>
 </tr>
 <tr>
 <td><code>POST</code>, <code>PUT</code>, <code>DELETE</code></td>
@@ -5031,7 +5035,7 @@ curl<span class="w"> </span>http://localhost:8081/actuator/health
     ├── filter/                      # compartido: CorrelationIdFilter
     └── catalogo/                    # módulo Modulith, funcional desde S1
         ├── categoria/{controller,dto,entity,repository,service}
-        └── producto/{controller,dto,entity,repository,service}
+        └── producto/{controller,dto,entity,repository,service}  # opcional en S1, ver 3.5.2
 src/main/resources/
 └── logback-spring.xml               # formato de logs + traceId
 </code></pre></div>
