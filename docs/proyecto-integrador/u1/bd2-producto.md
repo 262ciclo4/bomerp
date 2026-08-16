@@ -15,9 +15,8 @@ Los scripts se agregan **por sesión de BD2**, a medida que cada una les da cont
 | [S01_01_esquemas.sql](oracle/S01_01_esquemas.sql) | [S1](../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio.md) | Usuarios `BOM_CATALOGO` (propietario) y `BOMERP_APP` (técnico de LP2). |
 | [S01_02_tablas.sql](oracle/S01_02_tablas.sql) | [S1](../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio.md) | Tablas `CATEGORIAS`/`PRODUCTOS` y permisos de `BOMERP_APP` sobre ellas. |
 | [S01_03_plsql.sql](oracle/S01_03_plsql.sql) | [S1](../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio.md) | Función y procedimientos PL/SQL del catálogo. |
-| [S02_triggers_dml_auditoria.sql](oracle/S02_triggers_dml_auditoria.sql) | [S2](../../bd2/sesiones/S02_Triggers_DML_Auditoria.md) | Tabla y trigger de auditoría de cambios de precio/stock en `PRODUCTOS`. |
 
-Pendientes (se agregan cuando esas sesiones de BD2 se documenten): esquema `BOM_VENTAS` y tablas `venta`/`detalle_venta` (S3-S4 de LP2), paquete `pkg_venta` y trigger `trg_venta_estado_audit`, índice `idx_venta_estado_fecha`, esquema `BOM_SEGURIDAD` (S10 de LP2).
+Pendientes (se agregan cuando esas sesiones de BD2 se documenten): `producto_auditoria` y trigger de auditoría (S2), esquema `BOM_VENTAS` y tablas `venta`/`detalle_venta` (S3-S4 de LP2), paquete `pkg_venta` y trigger `trg_venta_estado_audit`, índice `idx_venta_estado_fecha`, esquema `BOM_SEGURIDAD` (S10 de LP2).
 
 ## 2. Objetos Oracle U1
 

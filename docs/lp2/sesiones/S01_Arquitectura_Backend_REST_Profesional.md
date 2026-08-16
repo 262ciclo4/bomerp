@@ -34,7 +34,7 @@ Proyecto backend ejecutable y reproducible, sobre Java 21 LTS, organizado como m
 | Actividades a Realizar en el Periodo | Orientaciones generales (Orientaciones Metodológicas) | Material de estudio recomendado |
 |---|---|---|
 | Revisión previa individual | Instalar y verificar Java 21 LTS, VS Code y sus extensiones; leer [ADR-001](../adr/ADR-001-arquitectura-backend.md) y [ADR-002](../adr/ADR-002-spring-modulith.md). Trabajo individual, antes de clase; traer evidencia de `java -version` funcionando. | ADR-001, ADR-002, guía de instalación Java 21. |
-| Clase presencial | Explicación guiada de conceptos (REST, DTO, versionado, ambientes) y creación del proyecto backend conectado a Oracle; delimitación de los endpoints del módulo `catalogo`. Trabajo individual en la propia laptop, siguiendo al docente paso a paso; consulta inmediata ante errores de dependencias o conexión. `Producto` (3.5.2) es alcance opcional: no es necesario completarlo para cerrar la sesión, su CRUD completo se construye en S2. | `pom.xml` de referencia, `application-dev.yml`, Docker Compose de Oracle, cliente REST para verificar endpoints. |
+| Clase presencial | Explicación guiada de conceptos (REST, DTO, versionado, ambientes) y creación del proyecto backend conectado a Oracle; delimitación de los endpoints del módulo `catalogo`. Trabajo individual en la propia laptop, siguiendo al docente paso a paso; consulta inmediata ante errores de dependencias o conexión. `Producto` (3.4.2) es alcance opcional: no es necesario completarlo para cerrar la sesión, su CRUD completo se construye en S2. | `pom.xml` de referencia, `application-dev.yml`, Docker Compose de Oracle, cliente REST para verificar endpoints. |
 | Evaluación formativa | Verificación en clase de `mvn test` (incluye `ModularityTests`) y de la respuesta del endpoint de salud y los listados; inicio de la evidencia individual. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4. | Indicaciones de entrega (4.3), rúbrica de evaluación (4.6). |
 
 ### 1.6 Motivación de la sesión
@@ -201,19 +201,18 @@ Tiempo: 2h.
     - **3.2.4** Ejecutar y comprobar que ya no falla.
     - **3.2.5** Configurar OpenAPI.
     - **3.2.6** Crear un endpoint temporal de "Hola mundo".
-- **3.3** Crear las excepciones y el filtro de trazabilidad.
-- **3.4** Simular escalamiento horizontal (múltiples instancias).
-- **3.5** Implementar el módulo `catalogo`: `Categoria` y `Producto`.
-    - **3.5.1** Construir `Categoria`.
-    - **3.5.2** Construir `Producto` (opcional).
-    - **3.5.3** Ejecutar y probar el backend.
-    - **3.5.4** Verificar la estructura modular con Spring Modulith.
-- **3.6** Delimitar los endpoints del módulo Catálogo.
-- **3.7** Reconocer el DTO de entrada reservado para S2.
-- **3.8** Diseñar DTO de salida.
-- **3.9** Documentar errores.
-- **3.10** Bosquejar estructura del backend modular (Spring Modulith).
-- **3.11** Trazar LP2 con ADS y BD2.
+- **3.3** Simular escalamiento horizontal (múltiples instancias).
+- **3.4** Implementar el módulo `catalogo`: `Categoria` y `Producto`.
+    - **3.4.1** Construir `Categoria`.
+    - **3.4.2** Construir `Producto` (opcional).
+    - **3.4.3** Ejecutar y probar el backend.
+    - **3.4.4** Verificar la estructura modular con Spring Modulith.
+- **3.5** Delimitar los endpoints del módulo Catálogo.
+- **3.6** Reconocer el DTO de entrada reservado para S2.
+- **3.7** Diseñar DTO de salida.
+- **3.8** Documentar errores.
+- **3.9** Bosquejar estructura del backend modular (Spring Modulith).
+- **3.10** Trazar LP2 con ADS y BD2.
 
 ### 3.1 Instalar y verificar Java 21 LTS, VS Code y sus extensiones
 
@@ -432,8 +431,8 @@ Después de `Enter`, el asistente pide dónde guardar el proyecto. Navega hasta 
     El Initializr también agrega `spring-modulith-observability` (scope
     `runtime`) al seleccionar Spring Modulith. **Bórrala del `pom.xml`
     ahora mismo, junto con la anterior** — si la dejas, el proyecto arranca
-    hasta que creas el primer `Filter` (`CorrelationIdFilter`, 3.3.2), y ahí
-    falla con un `NullPointerException` confuso:
+    hasta que creas el primer `Filter` (`CorrelationIdFilter`, S2 3.2.2), y
+    ahí falla con un `NullPointerException` confuso:
 
     ```text
     WARN  o.s.aop.framework.CglibAopProxy - Unable to proxy interface-implementing
@@ -666,7 +665,7 @@ SELECT * FROM BOM_CATALOGO.PRODUCTOS;
 "@ | docker exec -i bomerp-oracle sqlplus -s system/123456@localhost:1521/FREEPDB1
 ```
 
-Evidencia esperada tras ejecutar ambos scripts: `BOM_CATALOGO` y `BOMERP_APP` existen, `BOM_CATALOGO` tiene `CATEGORIAS` y `PRODUCTOS`, y ambas consultas `SELECT *` responden (vacías está bien — todavía no se insertó nada; los datos de ejemplo llegan en 3.5).
+Evidencia esperada tras ejecutar ambos scripts: `BOM_CATALOGO` y `BOMERP_APP` existen, `BOM_CATALOGO` tiene `CATEGORIAS` y `PRODUCTOS`, y ambas consultas `SELECT *` responden (vacías está bien — todavía no se insertó nada; los datos de ejemplo llegan en 3.4).
 
 ##### Reiniciar Docker desde cero (opcional, solo si algo quedó en mal estado)
 
@@ -873,167 +872,7 @@ o http://localhost:8080/swagger-ui.html:
 
 `HelloController` es solo un paso de verificación: una vez que `catalogo` expone sus propios endpoints reales (paso siguiente), puedes eliminarlo — no forma parte del contrato final de la API.
 
-### 3.3 Crear las excepciones y el filtro de trazabilidad
-
-**Producto del paso:** manejo de errores centralizado y filtro de trazabilidad (`traceId` en cada log) funcionando en `bomerp-backend`, antes de construir el módulo `catalogo`.
-
-Antes de construir `catalogo` (3.5), se crean dos piezas **compartidas** que usará todo el backend, no un módulo en particular: el manejo de errores y el filtro de trazabilidad. Por eso viven en el paquete raíz (`pe.edu.upeu.bomerp`), no dentro de `catalogo` — cualquier módulo futuro (`ventas`, `inventario`, `compras`, `seguridad`) las reutiliza tal cual.
-
-#### 3.3.1 Crear las excepciones y el manejador global de errores
-
-**`exception/ResourceNotFoundException.java`**
-
-```java
-package pe.edu.upeu.bomerp.exception;
-
-public class ResourceNotFoundException extends RuntimeException {
-    public ResourceNotFoundException(String mensaje) {
-        super(mensaje);
-    }
-}
-```
-
-**`exception/GlobalExceptionHandler.java`**
-
-```java
-package pe.edu.upeu.bomerp.exception;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
-
-@RestControllerAdvice
-public class GlobalExceptionHandler {
-
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleNotFound(ResourceNotFoundException ex) {
-        Map<String, Object> body = new HashMap<>();
-        body.put("timestamp", Instant.now().toString());
-        body.put("status", HttpStatus.NOT_FOUND.value());
-        body.put("error", "Not Found");
-        body.put("message", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, Object>> handleValidation(MethodArgumentNotValidException ex) {
-        Map<String, Object> body = new HashMap<>();
-        body.put("timestamp", Instant.now().toString());
-        body.put("status", HttpStatus.BAD_REQUEST.value());
-        body.put("error", "Bad Request");
-        body.put("message", "Error de validación en los datos enviados");
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
-    }
-}
-```
-
-En S1, `catalogo` solo lista (`GET`), así que `ResourceNotFoundException` todavía no se lanza desde ningún service — queda lista para cuando el DTO de entrada (3.7) y las operaciones `POST`/`PUT`/`DELETE` se implementen en S2.
-
-#### 3.3.2 Crear el filtro de trazabilidad `CorrelationIdFilter` y configurar logs
-
-Este filtro agrega un identificador de trazabilidad a cada request usando el header `X-Trace-ID`. Si el cliente no lo envía, el filtro genera un UUID. En S1 la trazabilidad es interna al backend:
-
-```text
-Cliente Swagger / navegador -> Controller -> Service -> Repository -> Oracle
-```
-
-Todos los logs producidos durante esa petición pueden compartir el mismo `traceId`.
-
-**`filter/CorrelationIdFilter.java`**
-
-```java
-package pe.edu.upeu.bomerp.filter;
-
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import org.slf4j.MDC;
-import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
-
-import java.io.IOException;
-import java.util.UUID;
-
-@Component
-public class CorrelationIdFilter extends OncePerRequestFilter {
-
-    public static final String TRACE_ID_HEADER = "X-Trace-ID";
-    public static final String MDC_KEY = "traceId";
-
-    @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                     HttpServletResponse response,
-                                     FilterChain filterChain) throws ServletException, IOException {
-        String traceId = request.getHeader(TRACE_ID_HEADER);
-        if (traceId == null || traceId.isBlank()) {
-            traceId = UUID.randomUUID().toString();
-        }
-        try {
-            MDC.put(MDC_KEY, traceId);
-            response.setHeader(TRACE_ID_HEADER, traceId);
-            filterChain.doFilter(request, response);
-        } finally {
-            MDC.remove(MDC_KEY);
-        }
-    }
-}
-```
-
-Crea también `src/main/resources/logback-spring.xml`. Este archivo define el formato de logs e incluye el `traceId` en cada línea (`[%X{traceId}]`), con salida por consola y por archivo en `logs/bomerp.log`:
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<configuration>
-    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
-
-    <property name="LOG_PATTERN"
-              value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{traceId}] %-5level %logger{36} - %msg%n"/>
-
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>${LOG_PATTERN}</pattern>
-        </encoder>
-    </appender>
-
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logs/bomerp.log</file>
-        <encoder>
-            <pattern>${LOG_PATTERN}</pattern>
-        </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/bomerp-%d{yyyy-MM-dd}.log</fileNamePattern>
-            <maxHistory>7</maxHistory>
-        </rollingPolicy>
-    </appender>
-
-    <root level="INFO">
-        <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="FILE"/>
-    </root>
-</configuration>
-```
-
-Con este archivo nuevo, el `logging.level.pe.edu.upeu.bomerp: DEBUG` de `application-dev.yml` (3.2.3) queda subsumido por `logback-spring.xml` — puedes dejarlo si quieres mantener DEBUG para tu propio paquete además del patrón de logs completo.
-
-#### 3.3.3 Ejecutar y probar
-
-**Verifica el cambio de formato.** Antes de `logback-spring.xml`, la terminal mostraba el formato por defecto de Spring Boot (timestamp con zona horaria, PID, nombre de la app y del hilo). Después de reiniciar con `logback-spring.xml` en su lugar, el formato cambia al patrón definido (`[%X{traceId}]` en vez de PID/app/hilo):
-
-```text
-2026-08-15 18:53:05.581 [] INFO  o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
-2026-08-15 18:53:17.004 [22deb350-54b4-4dea-a9c6-b09aaae9cea6] INFO  o.s.api.AbstractOpenApiResource - Init duration for springdoc-openapi is: 113 ms
-```
-
-Las primeras líneas (arranque) muestran `[]` vacío: todavía no hay ninguna petición HTTP en curso, así que el `MDC` no tiene `traceId` que mostrar. La línea disparada por una petición real (por ejemplo, al abrir Swagger UI) ya trae un `traceId`: el `CorrelationIdFilter` generó el UUID, lo puso en el `MDC`, y ese log lo heredó automáticamente. Es la prueba de que el filtro de trazabilidad ya funciona de punta a punta.
-
-### 3.4 Simular escalamiento horizontal (múltiples instancias)
+### 3.3 Simular escalamiento horizontal (múltiples instancias)
 
 **Producto del paso:** dos instancias del backend corriendo al mismo tiempo, cada una en un puerto distinto, ambas conectadas a la misma Oracle.
 
@@ -1061,7 +900,7 @@ flowchart TB
 
 Un backend reproducible también debe poder escalar horizontalmente: correr varias copias idénticas a la vez, cada una en su propio puerto, sin configuración fija que las haga chocar. Con `server.port` fijo en `8080` (el que usa el resto de esta guía), una segunda instancia no puede arrancar en la misma máquina — el puerto ya está ocupado.
 
-#### 3.4.1 Levantar una segunda instancia
+#### 3.3.1 Levantar una segunda instancia
 
 **Sin modificar `application-dev.yml`** (para no romper el puerto 8080 que usan los pasos anteriores de esta guía), la Terminal 1 sigue corriendo tal cual en `8080` (la que ya tenías abierta desde 3.2.4). Abre una **Terminal 2** nueva y pásale un puerto distinto como argumento de línea de comandos, desde `lp2/bomerp-backend`:
 
@@ -1077,7 +916,7 @@ Un backend reproducible también debe poder escalar horizontalmente: correr vari
 
 `--server.port=8081` le indica a Spring Boot que arranque en ese puerto en vez del `8080` fijo. También puedes usar `--server.port=0` si prefieres que el sistema operativo asigne uno libre cualquiera — la diferencia es que con `8081` sabes el puerto de antemano y puedes copiar/pegar los mismos comandos de verificación siempre, sin tener que leerlo de la consola cada vez.
 
-#### 3.4.2 Ejecutar y probar
+#### 3.3.2 Ejecutar y probar
 
 Verifica que ambas instancias responden por separado, con el endpoint `/api/v1/hello` y con `/actuator/health`:
 
@@ -1103,15 +942,15 @@ Resultado esperado: ambas responden `Hola BomERP` y `{"status":"UP"}` (con `db.s
 
 **Por qué importa esto en S1.** LP2 es un monolito, no un sistema distribuido — no hay Gateway ni balanceador de carga todavía (eso pertenece a Aplicaciones Distribuidas). Pero la capacidad de correr varias instancias del mismo backend en paralelo, cada una conectada de forma independiente a Oracle, es la base técnica que un balanceador necesita para repartir tráfico entre copias; practicarla desde S1 deja esa evidencia lista para cuando el proyecto integre esa pieza.
 
-### 3.5 Implementar el módulo `catalogo`: `Categoria` y `Producto`
+### 3.4 Implementar el módulo `catalogo`: `Categoria` y `Producto`
 
-**Producto del paso:** listado REST de `Categoria` funcionando de punta a punta (controller → service → repository → Oracle), con la estructura modular verificada. `Producto` (3.5.2) es opcional en S1.
+**Producto del paso:** listado REST de `Categoria` funcionando de punta a punta (controller → service → repository → Oracle), con la estructura modular verificada. `Producto` (3.4.2) es opcional en S1.
 
 **Requisito antes de continuar:** las tablas `BOM_CATALOGO.CATEGORIAS` y `BOM_CATALOGO.PRODUCTOS` deben existir en Oracle *antes* de compilar este paso. A diferencia de Distribuidas (que usa Flyway y ejecuta sus migraciones solo al arrancar), LP2 no usa Flyway: nadie las crea automáticamente. Con `ddl-auto: validate` (3.2.3), Hibernate solo valida el esquema al arrancar, nunca lo crea — si las tablas no existen, falla igual que pasó con `event_publication` (ADR-002). Se crean ejecutando manualmente [`S01_01_esquemas.sql`](../../proyecto-integrador/u1/oracle/S01_01_esquemas.sql) y [`S01_02_tablas.sql`](../../proyecto-integrador/u1/oracle/S01_02_tablas.sql) — si ya lo hiciste en 3.2.3, no hace falta repetirlo aquí. Detalle opcional, solo si quieres entender el porqué de cada bloque: [BD2 S1](../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio.md).
 
 Crea el paquete `pe.edu.upeu.bomerp.catalogo` (Spring Modulith lo detecta automáticamente como módulo por ser un paquete directo bajo el paquete raíz, sin configuración adicional).
 
-#### 3.5.1 Construir `Categoria`
+#### 3.4.1 Construir `Categoria`
 
 **`catalogo/categoria/entity/Categoria.java`**
 
@@ -1242,12 +1081,12 @@ public class CategoriaController {
 }
 ```
 
-#### 3.5.2 Construir `Producto` (opcional)
+#### 3.4.2 Construir `Producto` (opcional)
 
-!!! note "3.5.2 es opcional"
-    Lo obligatorio para cerrar S1 es `Categoria` (3.5.1). `Producto` sigue exactamente el mismo patrón — es la misma práctica repetida sin conceptos nuevos — y en S2 de todas formas se reconstruye por completo con CRUD (`crear`, `actualizar`, `eliminar`), no solo `listar()`. Si te queda tiempo en clase o quieres practicar el patrón una vez más antes de S2, complétalo; si no, continúa en 3.5.3 usando solo `Categoria`.
+!!! note "3.4.2 es opcional"
+    Lo obligatorio para cerrar S1 es `Categoria` (3.4.1). `Producto` sigue exactamente el mismo patrón — es la misma práctica repetida sin conceptos nuevos — y en S2 de todas formas se reconstruye por completo con CRUD (`crear`, `actualizar`, `eliminar`), no solo `listar()`. Si te queda tiempo en clase o quieres practicar el patrón una vez más antes de S2, complétalo; si no, continúa en 3.4.3 usando solo `Categoria`.
 
-`Producto` sigue exactamente el mismo patrón que `Categoria` (3.5.1), cambiando `Categoria`→`Producto`, `CATEGORIAS`→`PRODUCTOS` y agregando los campos propios:
+`Producto` sigue exactamente el mismo patrón que `Categoria` (3.4.1), cambiando `Categoria`→`Producto`, `CATEGORIAS`→`PRODUCTOS` y agregando los campos propios:
 
 **`catalogo/producto/entity/Producto.java`**
 
@@ -1384,7 +1223,7 @@ public class ProductoController {
 }
 ```
 
-#### 3.5.3 Ejecutar y probar el backend
+#### 3.4.3 Ejecutar y probar el backend
 
 El proyecto ya viene corriendo desde 3.2.4 (DevTools lo reinicia solo con cada archivo nuevo). Si lo cerraste, vuelve a levantarlo:
 
@@ -1398,12 +1237,12 @@ El proyecto ya viene corriendo desde 3.2.4 (DevTools lo reinicia solo con cada a
 ./mvnw spring-boot:run
 ```
 
-Si abres `http://localhost:8080/` en el navegador vas a ver una **Whitelabel Error Page** con `404` y el mensaje *"No static resource ."* — es lo esperado: este backend es una API REST, no sirve una página en `/`. No es un error que arreglar. Abre en cambio `http://localhost:8080/swagger-ui/index.html` (la ruta `/swagger-ui.html` configurada en `springdoc.swagger-ui.path` redirige ahí) para ver el contrato interactivo, o revisa directamente `/api/v1/categorias` (y `/api/v1/productos`, si completaste el 3.5.2 opcional) y `/actuator/health`.
+Si abres `http://localhost:8080/` en el navegador vas a ver una **Whitelabel Error Page** con `404` y el mensaje *"No static resource ."* — es lo esperado: este backend es una API REST, no sirve una página en `/`. No es un error que arreglar. Abre en cambio `http://localhost:8080/swagger-ui/index.html` (la ruta `/swagger-ui.html` configurada en `springdoc.swagger-ui.path` redirige ahí) para ver el contrato interactivo, o revisa directamente `/api/v1/categorias` (y `/api/v1/productos`, si completaste el 3.4.2 opcional) y `/actuator/health`.
 
 Configuración de variables de entorno y detalle de la base de datos en
 [`lp2/bomerp-backend/README.md`](https://github.com/262ciclo4/bomerp/blob/main/lp2/bomerp-backend/README.md).
 
-#### 3.5.4 Verificar la estructura modular con Spring Modulith
+#### 3.4.4 Verificar la estructura modular con Spring Modulith
 
 Crea `src/test/java/pe/edu/upeu/bomerp/ModularityTests.java` (verifica automáticamente los límites entre módulos, ver [ADR-002](../adr/ADR-002-spring-modulith.md)):
 
@@ -1439,11 +1278,10 @@ class ModularityTests {
 | Configuración por ambiente | Perfil DEV sin secretos incluidos en el repositorio. |
 | Conexión a base de datos | Inicio correcto y componente `db` activo en Actuator. |
 | Endpoint de verificación | Respuesta `UP` en `/actuator/health`. |
-| Recursos iniciales | El GET de categorías devuelve datos persistidos o lista vacía (y el de productos también, si completaste el 3.5.2 opcional). |
+| Recursos iniciales | El GET de categorías devuelve datos persistidos o lista vacía (y el de productos también, si completaste el 3.4.2 opcional). |
 | Estructura modular | `.\mvnw.cmd test` / `./mvnw test` ejecuta `ModularityTests` sin errores. |
-| Manejo de errores y trazabilidad | `GlobalExceptionHandler` y `CorrelationIdFilter` (3.3) ya están activos, aunque S1 no los ejercite todavía con `POST`/`PUT`/`DELETE`. |
 
-### 3.6 Delimitar los endpoints del módulo Catálogo
+### 3.5 Delimitar los endpoints del módulo Catálogo
 
 **Producto del paso:** contrato base.
 
@@ -1452,14 +1290,14 @@ class ModularityTests {
 | Método | Endpoint | Propósito | Implementación en el curso |
 |---|---|---|---|
 | `GET` | `/api/v1/categorias` | Listar categorías desde Oracle | S1 |
-| `GET` | `/api/v1/productos` | Listar productos desde Oracle | S1 (opcional, ver 3.5.2) |
+| `GET` | `/api/v1/productos` | Listar productos desde Oracle | S1 (opcional, ver 3.4.2) |
 | `POST`, `PUT`, `DELETE` | `/api/v1/categorias` | Completar operaciones de categoría | S2-S3 |
 | `GET` | `/api/v1/productos/{id}` | Consultar un producto | S2 |
 | `POST` | `/api/v1/productos` | Registrar un producto | S2 |
 | `PUT` | `/api/v1/productos/{id}` | Actualizar un producto | S2 |
 | `DELETE` | `/api/v1/productos/{id}` | Eliminar un producto | S2 |
 
-### 3.7 Reconocer el DTO de entrada reservado para S2
+### 3.6 Reconocer el DTO de entrada reservado para S2
 
 **Producto del paso:** request DTO.
 
@@ -1473,7 +1311,7 @@ class ModularityTests {
 
 En S1 este contrato se documenta, pero no se implementa todavía el registro.
 
-### 3.8 Diseñar DTO de salida
+### 3.7 Diseñar DTO de salida
 
 **Producto del paso:** response DTO.
 
@@ -1486,7 +1324,7 @@ En S1 este contrato se documenta, pero no se implementa todavía el registro.
 }
 ```
 
-### 3.9 Documentar errores
+### 3.8 Documentar errores
 
 **Producto del paso:** contrato de errores.
 
@@ -1499,9 +1337,9 @@ En S1 este contrato se documenta, pero no se implementa todavía el registro.
 | 409 | Producto referenciado en una venta | Conflicto de negocio |
 | 500 | Error no controlado | Respuesta técnica sin exponer secretos |
 
-Los códigos 400, 404 y 409 se implementan en S2; 401 y 403 se incorporan con la seguridad de U2. El `GlobalExceptionHandler` de 3.3.1 ya cubre 400 y 404 a nivel de código — esta tabla documenta el contrato completo, incluidos los códigos que todavía no tienen un caso real que los dispare (409, 401, 403).
+Los códigos 400, 404 y 409 se implementan en S2 (`GlobalExceptionHandler`, S2 3.2.1); 401 y 403 se incorporan con la seguridad de U2. Esta tabla documenta el contrato completo antes de que exista el código que lo cumple, incluidos los códigos que todavía no tienen un caso real que los dispare (409, 401, 403).
 
-### 3.10 Bosquejar estructura del backend modular (Spring Modulith)
+### 3.9 Bosquejar estructura del backend modular (Spring Modulith)
 
 **Producto del paso:** estructura base.
 
@@ -1511,22 +1349,18 @@ lp2/bomerp-backend/
 └── src/main/java/pe/edu/upeu/bomerp/
     ├── BomerpBackendApplication.java
     ├── OpenApiConfig.java           # compartido, en el paquete raíz
-    ├── exception/                   # compartido: ResourceNotFoundException, GlobalExceptionHandler
-    ├── filter/                      # compartido: CorrelationIdFilter
     └── catalogo/                    # módulo Modulith, funcional desde S1
         ├── categoria/{controller,dto,entity,repository,service}
-        └── producto/{controller,dto,entity,repository,service}  # opcional en S1, ver 3.5.2
-src/main/resources/
-└── logback-spring.xml               # formato de logs + traceId
+        └── producto/{controller,dto,entity,repository,service}  # opcional en S1, ver 3.4.2
 ```
 
 Un solo `pom.xml` y un solo `.jar` ejecutable. `ventas`, `inventario`, `compras` y `seguridad` no se crean como paquetes vacíos "por si acaso" — se agregan como paquetes directos bajo `pe.edu.upeu.bomerp` recién cuando su sesión (S4, S10...) les da contenido real. Spring Modulith detecta cada paquete directo como un módulo y verifica sus límites automáticamente (`ModularityTests`); el detalle de esta decisión está en [ADR-001](../adr/ADR-001-arquitectura-backend.md) y [ADR-002](../adr/ADR-002-spring-modulith.md).
 
-`exception/` y `filter/` quedan fuera de `catalogo/` a propósito: no son un módulo de negocio, son infraestructura compartida que cualquier módulo futuro reutiliza tal cual (3.3).
+Mismo criterio para `exception/`, `filter/` y `logback-spring.xml`: infraestructura compartida que cualquier módulo futuro reutiliza tal cual, pero que S1 no necesita todavía (`catalogo` en S1 solo lista, no hay nada que fallar ni que auditar por trazabilidad) — se crean recién en S2 (3.2), cuando el CRUD completo de `Producto` sí las ejercita de verdad.
 
 Dentro de cada módulo, `{controller,dto,entity,repository,service}` es la arquitectura en capas: cada carpeta representa una capa, y cada capa solo conoce la inmediatamente inferior (el controller nunca accede directo al repository). Justificación completa de esta decisión: [ADR-001](../adr/ADR-001-arquitectura-backend.md).
 
-### 3.11 Trazar LP2 con ADS y BD2
+### 3.10 Trazar LP2 con ADS y BD2
 
 **Producto del paso:** matriz de integración inicial.
 
@@ -1544,7 +1378,7 @@ Sesión equivalente en los otros dos cursos, misma semana: [ADS - S1 Fundamentos
 **Evidencia de aprendizaje:**
 
 - Backend `bomerp-backend` ejecutable y reproducible (Java 21 LTS, proyecto único Spring Modulith), conectado a Oracle con conexión verificada vía ORM y endpoint de salud respondiendo.
-- Endpoints del módulo Catálogo delimitados, con DTOs de entrada/salida, manejo de errores y contrato documentado en OpenAPI.
+- Endpoints del módulo Catálogo delimitados, con DTOs de entrada/salida, contrato de errores documentado (implementación en S2) y contrato en OpenAPI.
 - Bosquejo de la estructura modular del backend y matriz de integración inicial con ADS y BD2.
 
 ## 4. Crea: actividad autónoma
