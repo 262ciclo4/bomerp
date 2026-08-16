@@ -204,6 +204,10 @@ Tiempo: 2h.
 - **3.3** Crear las excepciones y el filtro de trazabilidad.
 - **3.4** Simular escalamiento horizontal (múltiples instancias).
 - **3.5** Implementar el módulo `catalogo`: `Categoria` y `Producto`.
+    - **3.5.1** Construir `Categoria`.
+    - **3.5.2** Construir `Producto` (opcional).
+    - **3.5.3** Ejecutar y probar el backend.
+    - **3.5.4** Verificar la estructura modular con Spring Modulith.
 - **3.6** Delimitar los endpoints del módulo Catálogo.
 - **3.7** Reconocer el DTO de entrada reservado para S2.
 - **3.8** Diseñar DTO de salida.
@@ -1355,7 +1359,7 @@ public class ProductoController {
 }
 ```
 
-#### 3.5.3 Ejecutar y verificar el proyecto completo
+#### 3.5.3 Ejecutar y probar el backend
 
 El proyecto ya viene corriendo desde 3.2.4 (DevTools lo reinicia solo con cada archivo nuevo). Si lo cerraste, vuelve a levantarlo:
 
@@ -1374,7 +1378,9 @@ Si abres `http://localhost:8080/` en el navegador vas a ver una **Whitelabel Err
 Configuración de variables de entorno y detalle de la base de datos en
 [`lp2/bomerp-backend/README.md`](https://github.com/262ciclo4/bomerp/blob/main/lp2/bomerp-backend/README.md).
 
-Antes de verificar la estructura modular, crea `src/test/java/pe/edu/upeu/bomerp/ModularityTests.java` (verifica automáticamente los límites entre módulos, ver [ADR-002](../adr/ADR-002-spring-modulith.md)):
+#### 3.5.4 Verificar la estructura modular con Spring Modulith
+
+Crea `src/test/java/pe/edu/upeu/bomerp/ModularityTests.java` (verifica automáticamente los límites entre módulos, ver [ADR-002](../adr/ADR-002-spring-modulith.md)):
 
 ```java
 package pe.edu.upeu.bomerp;
