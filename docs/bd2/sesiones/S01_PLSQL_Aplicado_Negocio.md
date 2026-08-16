@@ -216,7 +216,7 @@ UNDEFINE pwd_catalogo
 UNDEFINE pwd_app
 ```
 
-`ACCEPT ... HIDE` es útil cuando cada quien pone su propia contraseña. Pero en el ambiente **local** de este proyecto (laptop de desarrollo, sin secretos que proteger) conviene que todos usen exactamente la misma credencial, para que nadie se quede sin poder conectar el backend por una contraseña distinta a la de `application-local.yml`. Por eso, en el script real (`S01_01_esquemas.sql`) se usa contraseña fija en texto plano — mismo criterio que `application-local.yml`/`compose-local.yml` (ver `lp2/CLAUDE.md`, sección "Ambientes"):
+`ACCEPT ... HIDE` es útil cuando cada quien pone su propia contraseña. Pero en el ambiente **DEV** de este proyecto (laptop de desarrollo, sin secretos que proteger) conviene que todos usen exactamente la misma credencial, para que nadie se quede sin poder conectar el backend por una contraseña distinta a la de `application-dev.yml`. Por eso, en el script real (`S01_01_esquemas.sql`) se usa contraseña fija en texto plano — mismo criterio que `application-dev.yml`/`compose-dev.yml` (ver `lp2/CLAUDE.md`, sección "Ambientes"):
 
 ```sql
 CREATE USER BOM_CATALOGO IDENTIFIED BY "123456" QUOTA UNLIMITED ON USERS;
@@ -226,7 +226,7 @@ GRANT CREATE SESSION, CREATE TABLE, CREATE VIEW, CREATE PROCEDURE, CREATE TRIGGE
 GRANT CREATE SESSION TO BOMERP_APP;
 ```
 
-La contraseña de `BOMERP_APP` debe coincidir exactamente con la de `application-local.yml`.
+La contraseña de `BOMERP_APP` debe coincidir exactamente con la de `application-dev.yml`.
 
 #### Ver el esquema `BOM_CATALOGO` desde el cliente gráfico
 
@@ -246,7 +246,7 @@ Con esa conexión entras directo como ese usuario y ves su propio árbol (`categ
 
 #### Si necesitas borrar y volver a crear el esquema
 
-Si algo quedó a medio configurar (por ejemplo, corriste `S01_01_esquemas.sql` dos veces y salió `ORA-01920`, usuario ya existente), lo más simple en un ambiente local es borrar y recrear desde cero — conectado como `system`:
+Si algo quedó a medio configurar (por ejemplo, corriste `S01_01_esquemas.sql` dos veces y salió `ORA-01920`, usuario ya existente), lo más simple en DEV es borrar y recrear desde cero — conectado como `system`:
 
 ```sql
 DROP USER BOM_CATALOGO CASCADE;

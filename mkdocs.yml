@@ -56,21 +56,21 @@ nav:
       - Silabos:
           - Silabo 2026-1: ads/silabo_ads_2026_1.md
           - Silabo 2026-2: ads/silabo_ads_2026_2.md
-      - 1. Arquitectura y Diseño Estructural:
+      - I. Arquitectura y Diseño Estructural:
           - S1 - Fundamentos de arquitectura de software: ads/sesiones/S01_Fundamentos_Arquitectura_Software.md
   - BD2:
       - Inicio: bd2/index.md
       - Silabos:
           - Silabo 2026-1: bd2/silabo_bd2_2026_1.md
           - Silabo 2026-2: bd2/silabo_bd2_2026_2.md
-      - 1. Programación y optimización (Oracle XE):
+      - I. Programación y optimización (Oracle XE):
           - S1 - PL/SQL aplicado al negocio: bd2/sesiones/S01_PLSQL_Aplicado_Negocio.md
   - LP2:
       - Inicio: lp2/index.md
       - Silabos:
           - Silabo 2026-1: lp2/silabo_lp2_2026_1.md
           - Silabo 2026-2: lp2/silabo_lp2_2026_2.md
-      - Decisiones de arquitectura:
+      - I. Decisiones de arquitectura:
           - ADR-001 - Arquitectura del backend: lp2/adr/ADR-001-arquitectura-backend.md
           - ADR-002 - Spring Modulith: lp2/adr/ADR-002-spring-modulith.md
           - ADR-003 - Versión exacta de Spring Boot 4.0.7: lp2/adr/ADR-003-spring-boot-4.md
