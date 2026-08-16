@@ -4175,7 +4175,7 @@ en el repo (ver <code>bd2/README.md</code>, sección sobre U2-U3).</p>
 <p class="admonition-title">Service Name = <code>FREEPDB1</code>, usuario <code>system</code> — sin excepciones (aplica a las dos opciones)</p>
 <ul>
 <li><strong>Service Name vacío o distinto de <code>FREEPDB1</code></strong>: la conexión no apunta a nuestra base y <code>S01_01_esquemas.sql</code> nunca logra crear <code>BOMERP_APP</code>.</li>
-<li><strong>Conectarte como <code>BOM_CATALOGO</code> para <code>S01_02_tablas.sql</code></strong> (parece lo lógico, es su propio esquema) falla con <code>ORA-01031: insufficient privileges</code>: el script califica el esquema explícitamente (<code>CREATE TABLE BOM_CATALOGO.categoria</code>), y eso exige <code>CREATE ANY TABLE</code> — privilegio que solo tiene <code>system</code> (rol DBA). <code>BOM_CATALOGO</code> solo tiene <code>CREATE TABLE</code>, insuficiente cuando el esquema se califica, incluso el propio.</li>
+<li><strong>Conectarte como <code>BOM_CATALOGO</code> para <code>S01_02_tablas.sql</code></strong> (parece lo lógico, es su propio esquema) falla con <code>ORA-01031: insufficient privileges</code>: el script califica el esquema explícitamente (<code>CREATE TABLE BOM_CATALOGO.CATEGORIAS</code>), y eso exige <code>CREATE ANY TABLE</code> — privilegio que solo tiene <code>system</code> (rol DBA). <code>BOM_CATALOGO</code> solo tiene <code>CREATE TABLE</code>, insuficiente cuando el esquema se califica, incluso el propio.</li>
 </ul>
 <p>Ejecuta ambos scripts conectado como <code>system</code>, de principio a fin.</p>
 </div>
@@ -4282,8 +4282,8 @@ contenedor con una sesión interactiva de <code>sqlplus</code>, conectado como <
 <span class="k">SELECT</span><span class="w"> </span><span class="n">privilege</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">dba_sys_privs</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">grantee</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;BOM_CATALOGO&#39;</span><span class="p">;</span>
 
 <span class="c1">-- Ver los registros de cada tabla</span>
-<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">categoria</span><span class="p">;</span>
-<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">producto</span><span class="p">;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">CATEGORIAS</span><span class="p">;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTOS</span><span class="p">;</span>
 </code></pre></div>
 <p>Para salir de la sesión:</p>
 <div class="highlight"><pre><span></span><code><span class="n">EXIT</span><span class="p">;</span>
@@ -4297,11 +4297,11 @@ contenedor con una sesión interactiva de <code>sqlplus</code>, conectado como <
 <span class="sh">SELECT username FROM dba_users WHERE username IN (&#39;BOM_CATALOGO&#39;, &#39;BOMERP_APP&#39;);</span>
 <span class="sh">SELECT table_name FROM all_tables WHERE owner = &#39;BOM_CATALOGO&#39;;</span>
 <span class="sh">SELECT privilege FROM dba_sys_privs WHERE grantee = &#39;BOM_CATALOGO&#39;;</span>
-<span class="sh">SELECT * FROM BOM_CATALOGO.categoria;</span>
-<span class="sh">SELECT * FROM BOM_CATALOGO.producto;</span>
+<span class="sh">SELECT * FROM BOM_CATALOGO.CATEGORIAS;</span>
+<span class="sh">SELECT * FROM BOM_CATALOGO.PRODUCTOS;</span>
 <span class="sh">&quot;@</span> <span class="p">|</span> <span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="n">bomerp-oracle</span> <span class="n">sqlplus</span> <span class="n">-s</span> <span class="n">system</span><span class="p">/</span><span class="n">123456</span><span class="nv">@localhost</span><span class="p">:</span><span class="n">1521</span><span class="p">/</span><span class="n">FREEPDB1</span>
 </code></pre></div>
-<p>Evidencia esperada tras ejecutar ambos scripts: <code>BOM_CATALOGO</code> y <code>BOMERP_APP</code> existen, <code>BOM_CATALOGO</code> tiene <code>CATEGORIA</code> y <code>PRODUCTO</code>, y ambas consultas <code>SELECT *</code> responden (vacías está bien — todavía no se insertó nada; los datos de ejemplo llegan en 3.5).</p>
+<p>Evidencia esperada tras ejecutar ambos scripts: <code>BOM_CATALOGO</code> y <code>BOMERP_APP</code> existen, <code>BOM_CATALOGO</code> tiene <code>CATEGORIAS</code> y <code>PRODUCTOS</code>, y ambas consultas <code>SELECT *</code> responden (vacías está bien — todavía no se insertó nada; los datos de ejemplo llegan en 3.5).</p>
 <h5 id="reiniciar-docker-desde-cero-opcional-solo-si-algo-quedo-en-mal-estado">Reiniciar Docker desde cero (opcional, solo si algo quedó en mal estado)<a class="headerlink" href="#reiniciar-docker-desde-cero-opcional-solo-si-algo-quedo-en-mal-estado" title="Permanent link">&para;</a></h5>
 <p><strong>Advertencia: esto borra <em>todo</em> lo que tengas en Docker, no solo el contenedor de BomERP</strong> — cualquier contenedor, imagen, volumen o red de cualquier otro curso o proyecto en tu máquina. Úsalo solo si necesitas dejar Docker como recién instalado, no como parte normal del flujo de S1.</p>
 <div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="nb">ps </span><span class="n">-aq</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="n">docker</span> <span class="n">stop</span> <span class="nv">$_</span> <span class="p">}</span>
@@ -4629,7 +4629,7 @@ curl<span class="w"> </span>http://localhost:8081/actuator/health
 <p><strong>Por qué importa esto en S1.</strong> LP2 es un monolito, no un sistema distribuido — no hay Gateway ni balanceador de carga todavía (eso pertenece a Aplicaciones Distribuidas). Pero la capacidad de correr varias instancias del mismo backend en paralelo, cada una conectada de forma independiente a Oracle, es la base técnica que un balanceador necesita para repartir tráfico entre copias; practicarla desde S1 deja esa evidencia lista para cuando el proyecto integre esa pieza.</p>
 <h3 id="35-implementar-el-modulo-catalogo-categoria-y-producto">3.5 Implementar el módulo <code>catalogo</code>: <code>Categoria</code> y <code>Producto</code><a class="headerlink" href="#35-implementar-el-modulo-catalogo-categoria-y-producto" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> listado REST de <code>Categoria</code> funcionando de punta a punta (controller → service → repository → Oracle), con la estructura modular verificada. <code>Producto</code> (3.5.2) es opcional en S1.</p>
-<p><strong>Requisito antes de continuar:</strong> las tablas <code>BOM_CATALOGO.categoria</code> y <code>BOM_CATALOGO.producto</code> deben existir en Oracle <em>antes</em> de compilar este paso. A diferencia de Distribuidas (que usa Flyway y ejecuta sus migraciones solo al arrancar), LP2 no usa Flyway: nadie las crea automáticamente. Con <code>ddl-auto: validate</code> (3.2.3), Hibernate solo valida el esquema al arrancar, nunca lo crea — si las tablas no existen, falla igual que pasó con <code>event_publication</code> (ADR-002). Se crean ejecutando manualmente <a href="../../../proyecto-integrador/u1/oracle/S01_01_esquemas.sql"><code>S01_01_esquemas.sql</code></a> y <a href="../../../proyecto-integrador/u1/oracle/S01_02_tablas.sql"><code>S01_02_tablas.sql</code></a> — si ya lo hiciste en 3.2.3, no hace falta repetirlo aquí. Detalle opcional, solo si quieres entender el porqué de cada bloque: <a href="../../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio/">BD2 S1</a>.</p>
+<p><strong>Requisito antes de continuar:</strong> las tablas <code>BOM_CATALOGO.CATEGORIAS</code> y <code>BOM_CATALOGO.PRODUCTOS</code> deben existir en Oracle <em>antes</em> de compilar este paso. A diferencia de Distribuidas (que usa Flyway y ejecuta sus migraciones solo al arrancar), LP2 no usa Flyway: nadie las crea automáticamente. Con <code>ddl-auto: validate</code> (3.2.3), Hibernate solo valida el esquema al arrancar, nunca lo crea — si las tablas no existen, falla igual que pasó con <code>event_publication</code> (ADR-002). Se crean ejecutando manualmente <a href="../../../proyecto-integrador/u1/oracle/S01_01_esquemas.sql"><code>S01_01_esquemas.sql</code></a> y <a href="../../../proyecto-integrador/u1/oracle/S01_02_tablas.sql"><code>S01_02_tablas.sql</code></a> — si ya lo hiciste en 3.2.3, no hace falta repetirlo aquí. Detalle opcional, solo si quieres entender el porqué de cada bloque: <a href="../../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio/">BD2 S1</a>.</p>
 <p>Crea el paquete <code>pe.edu.upeu.bomerp.catalogo</code> (Spring Modulith lo detecta automáticamente como módulo por ser un paquete directo bajo el paquete raíz, sin configuración adicional).</p>
 <h4 id="351-construir-categoria">3.5.1 Construir <code>Categoria</code><a class="headerlink" href="#351-construir-categoria" title="Permanent link">&para;</a></h4>
 <p><strong><code>catalogo/categoria/entity/Categoria.java</code></strong></p>
@@ -4646,14 +4646,14 @@ curl<span class="w"> </span>http://localhost:8081/actuator/health
 <span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Setter</span><span class="p">;</span>
 
 <span class="nd">@Entity</span>
-<span class="nd">@Table</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;CATEGORIA&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;BOM_CATALOGO&quot;</span><span class="p">)</span>
+<span class="nd">@Table</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;CATEGORIAS&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;BOM_CATALOGO&quot;</span><span class="p">)</span>
 <span class="nd">@Getter</span>
 <span class="nd">@Setter</span>
 <span class="nd">@NoArgsConstructor</span>
 <span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Categoria</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nd">@Id</span>
 <span class="w">    </span><span class="nd">@GeneratedValue</span><span class="p">(</span><span class="n">strategy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GenerationType</span><span class="p">.</span><span class="na">IDENTITY</span><span class="p">)</span>
-<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;ID_CATEGORIA&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;ID&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
 
 <span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;NOMBRE&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="n">unique</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">80</span><span class="p">)</span>
@@ -4748,7 +4748,7 @@ curl<span class="w"> </span>http://localhost:8081/actuator/health
 <p class="admonition-title">3.5.2 es opcional</p>
 <p>Lo obligatorio para cerrar S1 es <code>Categoria</code> (3.5.1). <code>Producto</code> sigue exactamente el mismo patrón — es la misma práctica repetida sin conceptos nuevos — y en S2 de todas formas se reconstruye por completo con CRUD (<code>crear</code>, <code>actualizar</code>, <code>eliminar</code>), no solo <code>listar()</code>. Si te queda tiempo en clase o quieres practicar el patrón una vez más antes de S2, complétalo; si no, continúa en 3.5.3 usando solo <code>Categoria</code>.</p>
 </div>
-<p><code>Producto</code> sigue exactamente el mismo patrón que <code>Categoria</code> (3.5.1), cambiando <code>Categoria</code>→<code>Producto</code>, <code>CATEGORIA</code>→<code>PRODUCTO</code> y agregando los campos propios:</p>
+<p><code>Producto</code> sigue exactamente el mismo patrón que <code>Categoria</code> (3.5.1), cambiando <code>Categoria</code>→<code>Producto</code>, <code>CATEGORIAS</code>→<code>PRODUCTOS</code> y agregando los campos propios:</p>
 <p><strong><code>catalogo/producto/entity/Producto.java</code></strong></p>
 <div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.entity</span><span class="p">;</span>
 
@@ -4764,14 +4764,14 @@ curl<span class="w"> </span>http://localhost:8081/actuator/health
 <span class="kn">import</span><span class="w"> </span><span class="nn">java.math.BigDecimal</span><span class="p">;</span>
 
 <span class="nd">@Entity</span>
-<span class="nd">@Table</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;PRODUCTO&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;BOM_CATALOGO&quot;</span><span class="p">)</span>
+<span class="nd">@Table</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;PRODUCTOS&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;BOM_CATALOGO&quot;</span><span class="p">)</span>
 <span class="nd">@Getter</span>
 <span class="nd">@Setter</span>
 <span class="nd">@NoArgsConstructor</span>
 <span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Producto</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nd">@Id</span>
 <span class="w">    </span><span class="nd">@GeneratedValue</span><span class="p">(</span><span class="n">strategy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GenerationType</span><span class="p">.</span><span class="na">IDENTITY</span><span class="p">)</span>
-<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;ID_PRODUCTO&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;ID&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
 
 <span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;NOMBRE&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">120</span><span class="p">)</span>
@@ -5086,12 +5086,12 @@ src/main/resources/
 <tr>
 <td><code>GET /api/v1/categorias</code></td>
 <td>Módulo Catalogo / CategoriaService</td>
-<td>Tabla <code>CATEGORIA</code></td>
+<td>Tabla <code>CATEGORIAS</code></td>
 </tr>
 <tr>
 <td><code>GET /api/v1/productos</code></td>
 <td>ProductoController / ProductoService</td>
-<td>Tabla <code>PRODUCTO</code></td>
+<td>Tabla <code>PRODUCTOS</code></td>
 </tr>
 <tr>
 <td><code>POST /api/v1/productos</code></td>

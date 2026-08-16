@@ -2329,23 +2329,18 @@
 <tr>
 <td><a href="../oracle/S01_02_tablas.sql">S01_02_tablas.sql</a></td>
 <td><a href="../../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio/">S1</a></td>
-<td>Tablas <code>categoria</code>/<code>producto</code> y permisos de <code>BOMERP_APP</code> sobre ellas.</td>
+<td>Tablas <code>CATEGORIAS</code>/<code>PRODUCTOS</code> y permisos de <code>BOMERP_APP</code> sobre ellas.</td>
 </tr>
 <tr>
 <td><a href="../oracle/S01_03_plsql.sql">S01_03_plsql.sql</a></td>
 <td><a href="../../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio/">S1</a></td>
 <td>Función y procedimientos PL/SQL del catálogo.</td>
 </tr>
-<tr>
-<td><a href="../oracle/S02_triggers_dml_auditoria.sql">S02_triggers_dml_auditoria.sql</a></td>
-<td><a href="../../bd2/sesiones/S02_Triggers_DML_Auditoria.md">S2</a></td>
-<td>Tabla y trigger de auditoría de cambios de precio/stock en <code>producto</code>.</td>
-</tr>
 </tbody>
 </table>
-<p>Pendientes (se agregan cuando esas sesiones de BD2 se documenten): esquema <code>BOM_VENTAS</code> y tablas <code>venta</code>/<code>detalle_venta</code> (S3-S4 de LP2), paquete <code>pkg_venta</code> y trigger <code>trg_venta_estado_audit</code>, índice <code>idx_venta_estado_fecha</code>, esquema <code>BOM_SEGURIDAD</code> (S10 de LP2).</p>
+<p>Pendientes (se agregan cuando esas sesiones de BD2 se documenten): <code>producto_auditoria</code> y trigger de auditoría (S2), esquema <code>BOM_VENTAS</code> y tablas <code>venta</code>/<code>detalle_venta</code> (S3-S4 de LP2), paquete <code>pkg_venta</code> y trigger <code>trg_venta_estado_audit</code>, índice <code>idx_venta_estado_fecha</code>, esquema <code>BOM_SEGURIDAD</code> (S10 de LP2).</p>
 <h2 id="2-objetos-oracle-u1">2. Objetos Oracle U1<a class="headerlink" href="#2-objetos-oracle-u1" title="Permanent link">&para;</a></h2>
-<p><strong>Estado al cierre de la Unidad 1 (S6), no al día de hoy</strong> (S1-S2 solo tienen creados <code>BOM_CATALOGO.categoria</code>/<code>producto</code>, ver sección 1): las filas de <code>BOM_VENTAS</code> y <code>BOM_SEGURIDAD.usuario_app</code> son el objetivo de esta unidad, que se completa progresivamente en S3-S6.</p>
+<p><strong>Estado al cierre de la Unidad 1 (S6), no al día de hoy</strong> (S1-S2 solo tienen creados <code>BOM_CATALOGO.CATEGORIAS</code>/<code>PRODUCTOS</code>, ver sección 1): las filas de <code>BOM_VENTAS</code> y <code>BOM_SEGURIDAD.usuario_app</code> son el objetivo de esta unidad, que se completa progresivamente en S3-S6.</p>
 <table>
 <thead>
 <tr>
@@ -2356,7 +2351,7 @@
 </thead>
 <tbody>
 <tr>
-<td><code>BOM_CATALOGO.categoria</code> y <code>producto</code></td>
+<td><code>BOM_CATALOGO.CATEGORIAS</code> y <code>PRODUCTOS</code></td>
 <td>Catálogo heredado de Ciclo 3.</td>
 <td>Recursos <code>/api/v1/categorias</code> y <code>/api/v1/productos</code>.</td>
 </tr>

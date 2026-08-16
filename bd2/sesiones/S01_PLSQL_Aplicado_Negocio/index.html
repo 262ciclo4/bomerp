@@ -3139,9 +3139,9 @@
 <p><strong>Figura 2. Arquitectura del esquema <code>BOM_CATALOGO</code> y su motor transaccional PL/SQL</strong></p>
 <pre class="mermaid"><code>flowchart TB
     subgraph ORA["Motor transaccional Oracle - esquema BOM_CATALOGO"]
-        SP1[sp_registrar_producto]
-        SP2[sp_aplicar_descuento_producto]
-        FN[fn_valor_inventario_producto]
+        SP1[SP_REGISTRAR_PRODUCTO]
+        SP2[SP_APLICAR_DESCUENTO_PRODUCTO]
+        FN[FN_VALOR_INVENTARIO_PRODUCTO]
         T[(producto)]
 
         SP1 --&gt; T
@@ -3155,7 +3155,7 @@
     APP --&gt; SP2</code></pre>
 <p>Lectura del diagrama:</p>
 <ul>
-<li>El procedimiento de registro (<code>sp_registrar_producto</code>) y el de ajuste de precio (<code>sp_aplicar_descuento_producto</code>) escriben sobre <code>producto</code>; la función (<code>fn_valor_inventario_producto</code>) solo lee y calcula, no modifica nada.</li>
+<li>El procedimiento de registro (<code>SP_REGISTRAR_PRODUCTO</code>) y el de ajuste de precio (<code>SP_APLICAR_DESCUENTO_PRODUCTO</code>) escriben sobre <code>PRODUCTOS</code>; la función (<code>FN_VALOR_INVENTARIO_PRODUCTO</code>) solo lee y calcula, no modifica nada.</li>
 <li>Esta lógica vive en Oracle y protege la regla <strong>sin importar quién la invoque</strong>: un backend Java, otro cliente, o alguien ejecutando SQL directo — nadie puede saltarse la validación entrando por otro camino. <strong>Error frecuente</strong>: dejar todo del lado del backend sin definir qué reglas son realmente críticas — esas reglas se mueven a PL/SQL o a restricciones de la tabla.</li>
 <li>Integración (referencia, no requisito para esta sesión): LP2 (S2) ya implementa una regla equivalente en <code>ProductoServiceImpl</code> vía JPA/Hibernate — este procedimiento es la versión Oracle de esa misma regla, útil incluso para quien no esté llevando LP2 en paralelo. ADS documenta esta separación como decisión arquitectónica (atributo "Integridad"). <strong>Error frecuente</strong>: trabajar PL/SQL como ejercicio aislado, sin relacionarlo con la entidad transaccional real del proyecto.</li>
 </ul>
@@ -3197,7 +3197,7 @@ Esos aspectos se desarrollan progresivamente durante la unidad.
 <p><strong>Scripts completos, listos para ejecutar en este orden</strong> (los pasos siguientes explican cada uno):</p>
 <ol>
 <li><a href="../../../proyecto-integrador/u1/oracle/S01_01_esquemas.sql"><code>S01_01_esquemas.sql</code></a> — usuarios <code>BOM_CATALOGO</code> y <code>BOMERP_APP</code>.</li>
-<li><a href="../../../proyecto-integrador/u1/oracle/S01_02_tablas.sql"><code>S01_02_tablas.sql</code></a> — tablas <code>categoria</code> y <code>producto</code>.</li>
+<li><a href="../../../proyecto-integrador/u1/oracle/S01_02_tablas.sql"><code>S01_02_tablas.sql</code></a> — tablas <code>CATEGORIAS</code> y <code>PRODUCTOS</code>.</li>
 <li><a href="../../../proyecto-integrador/u1/oracle/S01_03_plsql.sql"><code>S01_03_plsql.sql</code></a> — la función y los dos procedimientos de esta sesión.</li>
 </ol>
 <h3 id="31-definir-operacion-transaccional">3.1 Definir operación transaccional<a class="headerlink" href="#31-definir-operacion-transaccional" title="Permanent link">&para;</a></h3>
@@ -3217,7 +3217,7 @@ Esos aspectos se desarrollan progresivamente durante la unidad.
 </tr>
 <tr>
 <td>Entidad transaccional</td>
-<td><code>BOM_CATALOGO.producto</code></td>
+<td><code>BOM_CATALOGO.PRODUCTOS</code></td>
 </tr>
 <tr>
 <td>Acción PL/SQL inicial</td>
@@ -3230,7 +3230,7 @@ Esos aspectos se desarrollan progresivamente durante la unidad.
 </tbody>
 </table>
 <h3 id="32-crear-el-esquema-y-las-tablas-del-catalogo">3.2 Crear el esquema y las tablas del catálogo<a class="headerlink" href="#32-crear-el-esquema-y-las-tablas-del-catalogo" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> esquema <code>BOM_CATALOGO</code> y las tablas <code>categoria</code>/<code>producto</code> operativas en Oracle — la base sobre la que esta sesión construye PL/SQL y sobre la que LP2 conecta su backend (S1-S2).</p>
+<p><strong>Producto del paso:</strong> esquema <code>BOM_CATALOGO</code> y las tablas <code>CATEGORIAS</code>/<code>PRODUCTOS</code> operativas en Oracle — la base sobre la que esta sesión construye PL/SQL y sobre la que LP2 conecta su backend (S1-S2).</p>
 <p><strong>Nota sobre versión y edición:</strong> esta unidad (U1) trabaja contra el mismo
 contenedor Oracle que levanta LP2 en su S1 (<code>gvenzl/oracle-free:23-slim</code> —
 Oracle Database 23ai <strong>Free</strong>, no Oracle 19c). Alcanza para lo que pide el
@@ -3292,7 +3292,7 @@ el repo (ver <code>bd2/README.md</code>).</p>
 </tr>
 </tbody>
 </table>
-<p>Con esa conexión entras directo como ese usuario y ves su propio árbol (<code>categoria</code>, <code>producto</code> una vez creadas), sin depender de que el cliente muestre o no otros esquemas.</p>
+<p>Con esa conexión entras directo como ese usuario y ves su propio árbol (<code>CATEGORIAS</code>, <code>PRODUCTOS</code> una vez creadas), sin depender de que el cliente muestre o no otros esquemas.</p>
 <h4 id="si-necesitas-borrar-y-volver-a-crear-el-esquema">Si necesitas borrar y volver a crear el esquema<a class="headerlink" href="#si-necesitas-borrar-y-volver-a-crear-el-esquema" title="Permanent link">&para;</a></h4>
 <p>Si algo quedó a medio configurar (por ejemplo, corriste <code>S01_01_esquemas.sql</code> dos veces y salió <code>ORA-01920</code>, usuario ya existente), lo más simple en DEV es borrar y recrear desde cero — conectado como <code>system</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="k">DROP</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
@@ -3315,32 +3315,33 @@ BOM_CATALOGO                   OPEN             USERS                TEMP       
 </code></pre></div>
 <p>Para salir de la sesión: <code>exit;</code></p>
 <p>Luego las tablas del catálogo, propiedad de <code>BOM_CATALOGO</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">categoria</span><span class="w"> </span><span class="p">(</span>
-<span class="w">    </span><span class="n">id_categoria</span><span class="w"> </span><span class="nb">NUMBER</span><span class="w"> </span><span class="k">GENERATED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">IDENTITY</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
-<span class="w">    </span><span class="n">nombre</span><span class="w"> </span><span class="n">VARCHAR2</span><span class="p">(</span><span class="mi">80</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">UNIQUE</span><span class="p">,</span>
-<span class="w">    </span><span class="n">descripcion</span><span class="w"> </span><span class="n">VARCHAR2</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">CATEGORIAS</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">ID</span><span class="w"> </span><span class="nb">NUMBER</span><span class="w"> </span><span class="k">GENERATED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">IDENTITY</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">    </span><span class="n">NOMBRE</span><span class="w"> </span><span class="n">VARCHAR2</span><span class="p">(</span><span class="mi">80</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">UNIQUE</span><span class="p">,</span>
+<span class="w">    </span><span class="n">DESCRIPCION</span><span class="w"> </span><span class="n">VARCHAR2</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
 <span class="p">);</span>
 
-<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">producto</span><span class="w"> </span><span class="p">(</span>
-<span class="w">    </span><span class="n">id_producto</span><span class="w"> </span><span class="nb">NUMBER</span><span class="w"> </span><span class="k">GENERATED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">IDENTITY</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
-<span class="w">    </span><span class="n">id_categoria</span><span class="w"> </span><span class="nb">NUMBER</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
-<span class="w">    </span><span class="n">nombre</span><span class="w"> </span><span class="n">VARCHAR2</span><span class="p">(</span><span class="mi">120</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
-<span class="w">    </span><span class="n">precio</span><span class="w"> </span><span class="nb">NUMBER</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
-<span class="w">    </span><span class="n">stock</span><span class="w"> </span><span class="nb">NUMBER</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
-<span class="w">    </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">fk_producto_categoria</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">id_categoria</span><span class="p">)</span>
-<span class="w">        </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">categoria</span><span class="p">(</span><span class="n">id_categoria</span><span class="p">),</span>
-<span class="w">    </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">ck_producto_precio</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">precio</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
-<span class="w">    </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">ck_producto_stock</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">stock</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTOS</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">ID</span><span class="w"> </span><span class="nb">NUMBER</span><span class="w"> </span><span class="k">GENERATED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">IDENTITY</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">    </span><span class="n">ID_CATEGORIA</span><span class="w"> </span><span class="nb">NUMBER</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">NOMBRE</span><span class="w"> </span><span class="n">VARCHAR2</span><span class="p">(</span><span class="mi">120</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">PRECIO</span><span class="w"> </span><span class="nb">NUMBER</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">STOCK</span><span class="w"> </span><span class="nb">NUMBER</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">FK_PRODUCTO_CATEGORIA</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">ID_CATEGORIA</span><span class="p">)</span>
+<span class="w">        </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">CATEGORIAS</span><span class="p">(</span><span class="n">ID</span><span class="p">),</span>
+<span class="w">    </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">CK_PRODUCTO_PRECIO</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">PRECIO</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
+<span class="w">    </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">CK_PRODUCTO_STOCK</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">STOCK</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
 <span class="p">);</span>
 
 <span class="c1">-- BOMERP_APP ejecuta el backend de LP2, pero no es propietario de los objetos.</span>
-<span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="p">,</span><span class="w"> </span><span class="k">INSERT</span><span class="p">,</span><span class="w"> </span><span class="k">UPDATE</span><span class="p">,</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">categoria</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">BOMERP_APP</span><span class="p">;</span>
-<span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="p">,</span><span class="w"> </span><span class="k">INSERT</span><span class="p">,</span><span class="w"> </span><span class="k">UPDATE</span><span class="p">,</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">producto</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">BOMERP_APP</span><span class="p">;</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="p">,</span><span class="w"> </span><span class="k">INSERT</span><span class="p">,</span><span class="w"> </span><span class="k">UPDATE</span><span class="p">,</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">CATEGORIAS</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">BOMERP_APP</span><span class="p">;</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="p">,</span><span class="w"> </span><span class="k">INSERT</span><span class="p">,</span><span class="w"> </span><span class="k">UPDATE</span><span class="p">,</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTOS</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">BOMERP_APP</span><span class="p">;</span>
 </code></pre></div>
+<p>Tablas en plural y <code>ID</code> genérico como columna primaria — mismo estándar que usa Distribuidas (<code>categorias</code>, <code>productos</code>, <code>id</code>, aunque Postgres sí distingue mayúsculas/minúsculas por defecto; Oracle no: guarda todo identificador sin comillas en mayúsculas sin importar cómo se escriba, así que aquí se escribe ya en mayúsculas para que el código coincida con lo que Oracle realmente almacena) en su migración Flyway (S1 de DIST, 3.5.1). La columna que sí conserva el prefijo es la llave foránea (<code>ID_CATEGORIA</code> en <code>PRODUCTOS</code>), porque ahí el prefijo identifica a qué tabla apunta.</p>
 <p>Verifica:</p>
-<div class="highlight"><pre><span></span><code><span class="k">DESC</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">producto</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">DESC</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTOS</span><span class="p">;</span>
 
-<span class="k">SELECT</span><span class="w"> </span><span class="n">id_producto</span><span class="p">,</span><span class="w"> </span><span class="n">nombre</span><span class="p">,</span><span class="w"> </span><span class="n">precio</span><span class="p">,</span><span class="w"> </span><span class="n">stock</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">producto</span><span class="p">;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">ID</span><span class="p">,</span><span class="w"> </span><span class="n">NOMBRE</span><span class="p">,</span><span class="w"> </span><span class="n">PRECIO</span><span class="p">,</span><span class="w"> </span><span class="n">STOCK</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTOS</span><span class="p">;</span>
 </code></pre></div>
 <h4 id="ver-la-lista-de-tablas-creadas">Ver la lista de tablas creadas<a class="headerlink" href="#ver-la-lista-de-tablas-creadas" title="Permanent link">&para;</a></h4>
 <p>Si quieres confirmar qué tablas existen (no una en particular, sino la lista completa), la consulta depende de con quién estés conectado:</p>
@@ -3350,11 +3351,11 @@ BOM_CATALOGO                   OPEN             USERS                TEMP       
 <p>Conectado como <code>BOM_CATALOGO</code> (ve solo lo suyo, sin filtrar):</p>
 <div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">user_tables</span><span class="p">;</span>
 </code></pre></div>
-<p>Deberían aparecer <code>CATEGORIA</code> y <code>PRODUCTO</code>. Si prefieres verlas en el <strong>árbol</strong> del cliente gráfico: usa la conexión con <code>Username: BOM_CATALOGO</code> (ver más arriba), refresca esa conexión (botón de reconectar, no solo refresh) y expande el nodo "Tables" — ahí deberían listarse directamente, sin necesitar SQL.</p>
+<p>Deberían aparecer <code>CATEGORIAS</code> y <code>PRODUCTOS</code>. Si prefieres verlas en el <strong>árbol</strong> del cliente gráfico: usa la conexión con <code>Username: BOM_CATALOGO</code> (ver más arriba), refresca esa conexión (botón de reconectar, no solo refresh) y expande el nodo "Tables" — ahí deberían listarse directamente, sin necesitar SQL.</p>
 <p><strong>Nota de alcance:</strong> esta sesión crea únicamente el esquema <code>BOM_CATALOGO</code> y sus dos tablas — lo que LP2 S1-S2 necesitan. Los esquemas <code>BOM_VENTAS</code> y <code>BOM_SEGURIDAD</code> (y sus tablas) se crean recién en las sesiones de BD2 que los necesitan por primera vez (cuando LP2 llegue a <code>Venta</code> en S4, y a seguridad en S10) — mismo criterio de "no crear por si acaso" que ya aplica la arquitectura de LP2 a sus módulos (ver <a href="../../../lp2/adr/ADR-002-spring-modulith/">ADR-002</a>).</p>
 <h3 id="33-crear-la-funcion-de-negocio-parametros-in">3.3 Crear la función de negocio (parámetros <code>IN</code>)<a class="headerlink" href="#33-crear-la-funcion-de-negocio-parametros-in" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> función PL/SQL reutilizable, con dos parámetros <code>IN</code>.</p>
-<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">fn_valor_inventario_producto</span><span class="p">(</span>
+<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">FN_VALOR_INVENTARIO_PRODUCTO</span><span class="p">(</span>
 <span class="w">    </span><span class="n">p_precio</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="nb">NUMBER</span><span class="p">,</span>
 <span class="w">    </span><span class="n">p_stock</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="nb">NUMBER</span>
 <span class="p">)</span><span class="w"> </span><span class="k">RETURN</span><span class="w"> </span><span class="nb">NUMBER</span><span class="w"> </span><span class="k">IS</span>
@@ -3365,7 +3366,7 @@ BOM_CATALOGO                   OPEN             USERS                TEMP       
 </code></pre></div>
 <h3 id="34-crear-el-procedimiento-de-registro-parametros-in-y-out">3.4 Crear el procedimiento de registro (parámetros <code>IN</code> y <code>OUT</code>)<a class="headerlink" href="#34-crear-el-procedimiento-de-registro-parametros-in-y-out" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> procedimiento con parámetros <code>IN</code> y <code>OUT</code>.</p>
-<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">PROCEDURE</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">sp_registrar_producto</span><span class="p">(</span>
+<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">PROCEDURE</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">SP_REGISTRAR_PRODUCTO</span><span class="p">(</span>
 <span class="w">    </span><span class="n">p_id_categoria</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="nb">NUMBER</span><span class="p">,</span>
 <span class="w">    </span><span class="n">p_nombre</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="n">VARCHAR2</span><span class="p">,</span>
 <span class="w">    </span><span class="n">p_precio</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="nb">NUMBER</span><span class="p">,</span>
@@ -3373,15 +3374,15 @@ BOM_CATALOGO                   OPEN             USERS                TEMP       
 <span class="w">    </span><span class="n">p_id_producto</span><span class="w"> </span><span class="k">OUT</span><span class="w"> </span><span class="nb">NUMBER</span>
 <span class="p">)</span><span class="w"> </span><span class="k">IS</span>
 <span class="k">BEGIN</span>
-<span class="w">    </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">producto</span><span class="w"> </span><span class="p">(</span><span class="n">id_categoria</span><span class="p">,</span><span class="w"> </span><span class="n">nombre</span><span class="p">,</span><span class="w"> </span><span class="n">precio</span><span class="p">,</span><span class="w"> </span><span class="n">stock</span><span class="p">)</span>
+<span class="w">    </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTOS</span><span class="w"> </span><span class="p">(</span><span class="n">ID_CATEGORIA</span><span class="p">,</span><span class="w"> </span><span class="n">NOMBRE</span><span class="p">,</span><span class="w"> </span><span class="n">PRECIO</span><span class="p">,</span><span class="w"> </span><span class="n">STOCK</span><span class="p">)</span>
 <span class="w">    </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="n">p_id_categoria</span><span class="p">,</span><span class="w"> </span><span class="n">p_nombre</span><span class="p">,</span><span class="w"> </span><span class="n">p_precio</span><span class="p">,</span><span class="w"> </span><span class="n">p_stock</span><span class="p">)</span>
-<span class="w">    </span><span class="n">RETURNING</span><span class="w"> </span><span class="n">id_producto</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">p_id_producto</span><span class="p">;</span>
+<span class="w">    </span><span class="n">RETURNING</span><span class="w"> </span><span class="n">ID</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">p_id_producto</span><span class="p">;</span>
 <span class="k">END</span><span class="p">;</span>
 <span class="o">/</span>
 </code></pre></div>
 <h3 id="35-crear-el-procedimiento-de-ajuste-de-precio-parametro-in-out">3.5 Crear el procedimiento de ajuste de precio (parámetro <code>IN OUT</code>)<a class="headerlink" href="#35-crear-el-procedimiento-de-ajuste-de-precio-parametro-in-out" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> procedimiento con un parámetro <code>IN OUT</code>, distinto de tener un <code>IN</code> y un <code>OUT</code> separados: el mismo parámetro entra con el precio actual y sale con el precio ya ajustado.</p>
-<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">PROCEDURE</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">sp_aplicar_descuento_producto</span><span class="p">(</span>
+<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">PROCEDURE</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">SP_APLICAR_DESCUENTO_PRODUCTO</span><span class="p">(</span>
 <span class="w">    </span><span class="n">p_precio</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="k">OUT</span><span class="w"> </span><span class="nb">NUMBER</span><span class="p">,</span>
 <span class="w">    </span><span class="n">p_porcentaje_descuento</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="nb">NUMBER</span>
 <span class="p">)</span><span class="w"> </span><span class="k">IS</span>
@@ -3392,8 +3393,8 @@ BOM_CATALOGO                   OPEN             USERS                TEMP       
 </code></pre></div>
 <h3 id="36-probar-funcion-y-procedimientos">3.6 Probar función y procedimientos<a class="headerlink" href="#36-probar-funcion-y-procedimientos" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> evidencia de ejecución.</p>
-<p><code>sp_registrar_producto</code> exige una categoría existente (<code>fk_producto_categoria</code>). Si <code>categoria</code> está vacía todavía (por ejemplo, si solo ejecutaste 3.2-3.5 sin datos de prueba), la prueba siguiente falla con <code>ORA-02291: integrity constraint ... violated - parent key not found</code>. Antes de probar, registra al menos una categoría:</p>
-<div class="highlight"><pre><span></span><code><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">categoria</span><span class="w"> </span><span class="p">(</span><span class="n">nombre</span><span class="p">,</span><span class="w"> </span><span class="n">descripcion</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;Perifericos&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Perifericos de computo&#39;</span><span class="p">);</span>
+<p><code>SP_REGISTRAR_PRODUCTO</code> exige una categoría existente (<code>FK_PRODUCTO_CATEGORIA</code>). Si <code>CATEGORIAS</code> está vacía todavía (por ejemplo, si solo ejecutaste 3.2-3.5 sin datos de prueba), la prueba siguiente falla con <code>ORA-02291: integrity constraint ... violated - parent key not found</code>. Antes de probar, registra al menos una categoría:</p>
+<div class="highlight"><pre><span></span><code><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">CATEGORIAS</span><span class="w"> </span><span class="p">(</span><span class="n">NOMBRE</span><span class="p">,</span><span class="w"> </span><span class="n">DESCRIPCION</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;Perifericos&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Perifericos de computo&#39;</span><span class="p">);</span>
 <span class="k">COMMIT</span><span class="p">;</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="k">DECLARE</span>
@@ -3402,15 +3403,15 @@ BOM_CATALOGO                   OPEN             USERS                TEMP       
 <span class="w">    </span><span class="n">v_valor_inv</span><span class="w">    </span><span class="nb">NUMBER</span><span class="p">;</span>
 <span class="k">BEGIN</span>
 <span class="w">    </span><span class="c1">-- IN + OUT: registrar un producto nuevo</span>
-<span class="w">    </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">sp_registrar_producto</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Teclado mecánico&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">180</span><span class="p">.</span><span class="mi">50</span><span class="p">,</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span><span class="w"> </span><span class="n">v_id_producto</span><span class="p">);</span>
+<span class="w">    </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">SP_REGISTRAR_PRODUCTO</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Teclado mecánico&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">180</span><span class="p">.</span><span class="mi">50</span><span class="p">,</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span><span class="w"> </span><span class="n">v_id_producto</span><span class="p">);</span>
 <span class="w">    </span><span class="n">DBMS_OUTPUT</span><span class="p">.</span><span class="n">PUT_LINE</span><span class="p">(</span><span class="s1">&#39;Producto registrado: &#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">v_id_producto</span><span class="p">);</span>
 
 <span class="w">    </span><span class="c1">-- IN, IN: calcular el valor de inventario</span>
-<span class="w">    </span><span class="n">v_valor_inv</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">fn_valor_inventario_producto</span><span class="p">(</span><span class="mi">180</span><span class="p">.</span><span class="mi">50</span><span class="p">,</span><span class="w"> </span><span class="mi">25</span><span class="p">);</span>
+<span class="w">    </span><span class="n">v_valor_inv</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">FN_VALOR_INVENTARIO_PRODUCTO</span><span class="p">(</span><span class="mi">180</span><span class="p">.</span><span class="mi">50</span><span class="p">,</span><span class="w"> </span><span class="mi">25</span><span class="p">);</span>
 <span class="w">    </span><span class="n">DBMS_OUTPUT</span><span class="p">.</span><span class="n">PUT_LINE</span><span class="p">(</span><span class="s1">&#39;Valor de inventario: &#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">v_valor_inv</span><span class="p">);</span>
 
 <span class="w">    </span><span class="c1">-- IN OUT: ajustar el precio en la misma variable</span>
-<span class="w">    </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">sp_aplicar_descuento_producto</span><span class="p">(</span><span class="n">v_precio</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">);</span>
+<span class="w">    </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">SP_APLICAR_DESCUENTO_PRODUCTO</span><span class="p">(</span><span class="n">v_precio</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">);</span>
 <span class="w">    </span><span class="n">DBMS_OUTPUT</span><span class="p">.</span><span class="n">PUT_LINE</span><span class="p">(</span><span class="s1">&#39;Precio con 10% de descuento: &#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">v_precio</span><span class="p">);</span>
 <span class="k">END</span><span class="p">;</span>
 <span class="o">/</span>
@@ -3429,17 +3430,17 @@ BOM_CATALOGO                   OPEN             USERS                TEMP       
 </thead>
 <tbody>
 <tr>
-<td><code>sp_registrar_producto</code></td>
+<td><code>SP_REGISTRAR_PRODUCTO</code></td>
 <td>Integridad: reglas transaccionales en servicio y Oracle</td>
 <td><code>POST /api/v1/productos</code> (S2), regla equivalente</td>
 </tr>
 <tr>
-<td><code>fn_valor_inventario_producto</code></td>
+<td><code>FN_VALOR_INVENTARIO_PRODUCTO</code></td>
 <td>Centralizar regla de cálculo del negocio</td>
 <td>Cálculo que también podría exponerse en un reporte (S4-S5)</td>
 </tr>
 <tr>
-<td><code>sp_aplicar_descuento_producto</code></td>
+<td><code>SP_APLICAR_DESCUENTO_PRODUCTO</code></td>
 <td>Mantenibilidad: lógica reutilizable, no repetida</td>
 <td><code>PUT /api/v1/productos/{id}</code> (S2), regla equivalente</td>
 </tr>
@@ -3448,7 +3449,7 @@ BOM_CATALOGO                   OPEN             USERS                TEMP       
 <p>Sesión equivalente en los otros dos cursos, misma semana: <a href="../../../ads/sesiones/S01_Fundamentos_Arquitectura_Software/">ADS - S1 Fundamentos de Arquitectura de Software</a> y <a href="../../../lp2/sesiones/S01_Arquitectura_Backend_REST_Profesional/">LP2 - S1 Arquitectura Backend REST Profesional</a>.</p>
 <p><strong>Evidencia de aprendizaje:</strong></p>
 <ul>
-<li>Esquema y tablas del catálogo (<code>categoria</code>, <code>producto</code>) creados en Oracle.</li>
+<li>Esquema y tablas del catálogo (<code>CATEGORIAS</code>, <code>PRODUCTOS</code>) creados en Oracle.</li>
 <li>Función y procedimientos PL/SQL (<code>IN</code>, <code>IN</code>/<code>OUT</code>, <code>IN OUT</code>) probados con resultados correctos.</li>
 <li>Matriz de integración con ADS y LP2.</li>
 </ul>
