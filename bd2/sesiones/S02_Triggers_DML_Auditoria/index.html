@@ -13,10 +13,10 @@
       
       
       
-        <link rel="prev" href="../../silabo_bd2_2026_2/">
+        <link rel="prev" href="../S01_PLSQL_Aplicado_Negocio/">
       
       
-        <link rel="next" href="../S02_Triggers_DML_Auditoria/">
+        <link rel="next" href="../../../lp2/">
       
       
         
@@ -27,7 +27,7 @@
     
     
   
-    <title>BOM ERP - S1 - PL/SQL aplicado al negocio</title>
+    <title>BOM ERP - S2 - Triggers DML y auditoría</title>
   
 
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#s1-plsql-aplicado-al-negocio" class="md-skip">
+        <a href="#s2-triggers-dml-y-auditoria" class="md-skip">
           Saltar a contenido
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              S1 - PL/SQL aplicado al negocio
+              S2 - Triggers DML y auditoría
             
           </span>
         </div>
@@ -1593,6 +1593,34 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../S01_PLSQL_Aplicado_Negocio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - PL/SQL aplicado al negocio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -1612,7 +1640,7 @@
   <span class="md-ellipsis">
     
   
-    S1 - PL/SQL aplicado al negocio
+    S2 - Triggers DML y auditoría
   
 
     
@@ -1630,7 +1658,7 @@
   <span class="md-ellipsis">
     
   
-    S1 - PL/SQL aplicado al negocio
+    S2 - Triggers DML y auditoría
   
 
     
@@ -1735,10 +1763,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#161-caso-catalogo-de-bomerp-categoriaproducto" class="md-nav__link">
+  <a href="#161-caso-catalogo-de-bomerp-auditoria-de-precio" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1.6.1 Caso: catálogo de BomERP (Categoria–Producto)
+        1.6.1 Caso: catálogo de BomERP (auditoría de precio)
       
     </span>
   </a>
@@ -1790,10 +1818,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#22-creacion-del-esquema-y-las-tablas-base-del-caso-empresarial" class="md-nav__link">
+  <a href="#22-triggers-dml-momento-y-evento" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.2 Creación del esquema y las tablas base del caso empresarial
+        2.2 Triggers DML: momento y evento
       
     </span>
   </a>
@@ -1801,10 +1829,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#23-procedimientos-plsql" class="md-nav__link">
+  <a href="#23-pseudo-registros-old-y-new" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.3 Procedimientos PL/SQL
+        2.3 Pseudo-registros :OLD y :NEW
       
     </span>
   </a>
@@ -1812,10 +1840,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#24-funciones-plsql" class="md-nav__link">
+  <a href="#24-reglas-automaticas-de-negocio-con-triggers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.4 Funciones PL/SQL
+        2.4 Reglas automáticas de negocio con triggers
       
     </span>
   </a>
@@ -1823,10 +1851,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#25-parametros-in-out-e-in-out" class="md-nav__link">
+  <a href="#25-auditoria-basica-con-triggers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.5 Parámetros IN, OUT e IN OUT
+        2.5 Auditoría básica con triggers
       
     </span>
   </a>
@@ -1851,10 +1879,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#31-definir-operacion-transaccional" class="md-nav__link">
+  <a href="#31-definir-la-regla-de-negocio-y-el-alcance-de-la-auditoria" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.1 Definir operación transaccional
+        3.1 Definir la regla de negocio y el alcance de la auditoría
       
     </span>
   </a>
@@ -1862,22 +1890,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#32-crear-el-esquema-y-las-tablas-del-catalogo" class="md-nav__link">
+  <a href="#32-crear-la-tabla-producto_auditoria" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.2 Crear el esquema y las tablas del catálogo
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="3.2 Crear el esquema y las tablas del catálogo">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#ver-el-esquema-bom_catalogo-desde-el-cliente-grafico" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Ver el esquema BOM_CATALOGO desde el cliente gráfico
+        3.2 Crear la tabla PRODUCTO_AUDITORIA
       
     </span>
   </a>
@@ -1885,10 +1901,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#si-necesitas-borrar-y-volver-a-crear-el-esquema" class="md-nav__link">
+  <a href="#33-crear-el-trigger-de-regla-de-negocio-before-update" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Si necesitas borrar y volver a crear el esquema
+        3.3 Crear el trigger de regla de negocio (BEFORE UPDATE)
       
     </span>
   </a>
@@ -1896,10 +1912,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#verificar-desde-terminal-sin-depender-del-cliente-grafico" class="md-nav__link">
+  <a href="#34-crear-el-trigger-de-auditoria-after-insert-or-update-or-delete" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Verificar desde terminal, sin depender del cliente gráfico
+        3.4 Crear el trigger de auditoría (AFTER INSERT OR UPDATE OR DELETE)
       
     </span>
   </a>
@@ -1907,26 +1923,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ver-la-lista-de-tablas-creadas" class="md-nav__link">
+  <a href="#35-probar-ambos-triggers-con-casos-validos-e-invalidos" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Ver la lista de tablas creadas
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#33-crear-la-funcion-de-negocio-parametros-in" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3.3 Crear la función de negocio (parámetros IN)
+        3.5 Probar ambos triggers con casos válidos e inválidos
       
     </span>
   </a>
@@ -1934,43 +1934,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#34-crear-el-procedimiento-de-registro-parametros-in-y-out" class="md-nav__link">
+  <a href="#36-relacionar-con-ads-y-lp2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.4 Crear el procedimiento de registro (parámetros IN y OUT)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#35-crear-el-procedimiento-de-ajuste-de-precio-parametro-in-out" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3.5 Crear el procedimiento de ajuste de precio (parámetro IN OUT)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#36-probar-funcion-y-procedimientos" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3.6 Probar función y procedimientos
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#37-relacionar-con-ads-y-lp2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3.7 Relacionar con ADS y LP2
+        3.6 Relacionar con ADS y LP2
       
     </span>
   </a>
@@ -2108,34 +2075,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../S02_Triggers_DML_Auditoria/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    S2 - Triggers DML y auditoría
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -2745,10 +2684,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#161-caso-catalogo-de-bomerp-categoriaproducto" class="md-nav__link">
+  <a href="#161-caso-catalogo-de-bomerp-auditoria-de-precio" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1.6.1 Caso: catálogo de BomERP (Categoria–Producto)
+        1.6.1 Caso: catálogo de BomERP (auditoría de precio)
       
     </span>
   </a>
@@ -2800,10 +2739,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#22-creacion-del-esquema-y-las-tablas-base-del-caso-empresarial" class="md-nav__link">
+  <a href="#22-triggers-dml-momento-y-evento" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.2 Creación del esquema y las tablas base del caso empresarial
+        2.2 Triggers DML: momento y evento
       
     </span>
   </a>
@@ -2811,10 +2750,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#23-procedimientos-plsql" class="md-nav__link">
+  <a href="#23-pseudo-registros-old-y-new" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.3 Procedimientos PL/SQL
+        2.3 Pseudo-registros :OLD y :NEW
       
     </span>
   </a>
@@ -2822,10 +2761,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#24-funciones-plsql" class="md-nav__link">
+  <a href="#24-reglas-automaticas-de-negocio-con-triggers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.4 Funciones PL/SQL
+        2.4 Reglas automáticas de negocio con triggers
       
     </span>
   </a>
@@ -2833,10 +2772,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#25-parametros-in-out-e-in-out" class="md-nav__link">
+  <a href="#25-auditoria-basica-con-triggers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.5 Parámetros IN, OUT e IN OUT
+        2.5 Auditoría básica con triggers
       
     </span>
   </a>
@@ -2861,10 +2800,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#31-definir-operacion-transaccional" class="md-nav__link">
+  <a href="#31-definir-la-regla-de-negocio-y-el-alcance-de-la-auditoria" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.1 Definir operación transaccional
+        3.1 Definir la regla de negocio y el alcance de la auditoría
       
     </span>
   </a>
@@ -2872,22 +2811,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#32-crear-el-esquema-y-las-tablas-del-catalogo" class="md-nav__link">
+  <a href="#32-crear-la-tabla-producto_auditoria" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.2 Crear el esquema y las tablas del catálogo
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="3.2 Crear el esquema y las tablas del catálogo">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#ver-el-esquema-bom_catalogo-desde-el-cliente-grafico" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Ver el esquema BOM_CATALOGO desde el cliente gráfico
+        3.2 Crear la tabla PRODUCTO_AUDITORIA
       
     </span>
   </a>
@@ -2895,10 +2822,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#si-necesitas-borrar-y-volver-a-crear-el-esquema" class="md-nav__link">
+  <a href="#33-crear-el-trigger-de-regla-de-negocio-before-update" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Si necesitas borrar y volver a crear el esquema
+        3.3 Crear el trigger de regla de negocio (BEFORE UPDATE)
       
     </span>
   </a>
@@ -2906,10 +2833,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#verificar-desde-terminal-sin-depender-del-cliente-grafico" class="md-nav__link">
+  <a href="#34-crear-el-trigger-de-auditoria-after-insert-or-update-or-delete" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Verificar desde terminal, sin depender del cliente gráfico
+        3.4 Crear el trigger de auditoría (AFTER INSERT OR UPDATE OR DELETE)
       
     </span>
   </a>
@@ -2917,26 +2844,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ver-la-lista-de-tablas-creadas" class="md-nav__link">
+  <a href="#35-probar-ambos-triggers-con-casos-validos-e-invalidos" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Ver la lista de tablas creadas
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#33-crear-la-funcion-de-negocio-parametros-in" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3.3 Crear la función de negocio (parámetros IN)
+        3.5 Probar ambos triggers con casos válidos e inválidos
       
     </span>
   </a>
@@ -2944,43 +2855,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#34-crear-el-procedimiento-de-registro-parametros-in-y-out" class="md-nav__link">
+  <a href="#36-relacionar-con-ads-y-lp2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.4 Crear el procedimiento de registro (parámetros IN y OUT)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#35-crear-el-procedimiento-de-ajuste-de-precio-parametro-in-out" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3.5 Crear el procedimiento de ajuste de precio (parámetro IN OUT)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#36-probar-funcion-y-procedimientos" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3.6 Probar función y procedimientos
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#37-relacionar-con-ads-y-lp2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3.7 Relacionar con ADS y LP2
+        3.6 Relacionar con ADS y LP2
       
     </span>
   </a>
@@ -3134,25 +3012,25 @@
   
 
 
-<h1 id="s1-plsql-aplicado-al-negocio">S1 - PL/SQL Aplicado al Negocio<a class="headerlink" href="#s1-plsql-aplicado-al-negocio" title="Permanent link">&para;</a></h1>
+<h1 id="s2-triggers-dml-y-auditoria">S2 - Triggers DML y Auditoría<a class="headerlink" href="#s2-triggers-dml-y-auditoria" title="Permanent link">&para;</a></h1>
 <h2 id="1-introduccion">1. Introducción<a class="headerlink" href="#1-introduccion" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 20 min.</p>
 <h3 id="11-presentacion-de-la-sesion">1.1 Presentación de la sesión<a class="headerlink" href="#11-presentacion-de-la-sesion" title="Permanent link">&para;</a></h3>
-<p>Esta sesión abre la Unidad 1: crea el esquema y las tablas base del caso empresarial en Oracle, e inicia el motor transaccional con procedimientos y funciones PL/SQL. El porqué de resolver reglas de negocio también del lado de la base de datos, y no solo en el backend, se desarrolla en 1.6, a partir del caso del cálculo de inventario y precio.</p>
+<p>En S1, <code>SP_APLICAR_DESCUENTO_PRODUCTO</code> ajusta el precio de un producto sin que quede registro de quién lo cambió, ni verificación de que el ajuste sea razonable — cualquier procedimiento, o incluso un <code>UPDATE</code> directo desde otro cliente, puede dejar el precio en cualquier valor sin dejar rastro. Esta sesión resuelve ambos problemas con <strong>triggers DML</strong>: uno que aplica una regla automática de negocio, y otro que registra auditoría básica — ambos disparados por Oracle mismo, sin depender de que el cliente que hizo el cambio se acuerde de invocarlos.</p>
 <h3 id="12-indice">1.2 Índice<a class="headerlink" href="#12-indice" title="Permanent link">&para;</a></h3>
 <ol>
-<li>Creación del esquema y las tablas base del caso empresarial.</li>
-<li>Procedimientos PL/SQL.</li>
-<li>Funciones PL/SQL.</li>
-<li>Parámetros <code>IN</code>, <code>OUT</code> e <code>IN OUT</code>.</li>
+<li>Triggers DML: momento y evento.</li>
+<li>Pseudo-registros <code>:OLD</code> y <code>:NEW</code>.</li>
+<li>Reglas automáticas de negocio con triggers.</li>
+<li>Auditoría básica con triggers.</li>
 </ol>
 <h3 id="13-proposito-de-aprendizaje">1.3 Propósito de aprendizaje<a class="headerlink" href="#13-proposito-de-aprendizaje" title="Permanent link">&para;</a></h3>
 <p>Al concluir la clase, estarás en condiciones de:</p>
 <ul>
-<li><strong>Crear y entregar</strong> el esquema y las tablas base de un caso empresarial en Oracle, con procedimientos y funciones PL/SQL que validan reglas básicas del negocio usando parámetros <code>IN</code>, <code>OUT</code> e <code>IN OUT</code>.</li>
+<li><strong>Implementar y probar</strong> triggers DML que apliquen una regla automática de negocio y registren auditoría básica sobre <code>PRODUCTOS</code>, usando <code>:OLD</code> y <code>:NEW</code> para comparar el estado antes y después de cada operación.</li>
 </ul>
 <h3 id="14-producto-de-sesion">1.4 Producto de sesión<a class="headerlink" href="#14-producto-de-sesion" title="Permanent link">&para;</a></h3>
-<p>Esquema <code>BOM_CATALOGO</code> con sus tablas base, más procedimientos y funciones iniciales para registrar operaciones transaccionales del ERP.</p>
+<p>Dos triggers sobre <code>BOM_CATALOGO.PRODUCTOS</code>: uno que impide un ajuste de precio no razonable (regla de negocio), y otro que registra cada <code>INSERT</code>/<code>UPDATE</code>/<code>DELETE</code> en una tabla de auditoría nueva (<code>PRODUCTO_AUDITORIA</code>).</p>
 <h3 id="15-metodologia">1.5 Metodología<a class="headerlink" href="#15-metodologia" title="Permanent link">&para;</a></h3>
 <p><strong>Tabla 1. Metodología de la sesión</strong></p>
 <table>
@@ -3166,42 +3044,41 @@
 <tbody>
 <tr>
 <td>Revisión previa individual</td>
-<td>Instalar/verificar acceso a Oracle XE y revisar el caso BomERP (ver 1.6). Trabajo individual, antes de clase.</td>
-<td>Acceso a Oracle, sílabo BD2 U1.</td>
+<td>Revisar <code>SP_APLICAR_DESCUENTO_PRODUCTO</code> de S1 y el caso de esta sesión (ver 1.6). Trabajo individual, antes de clase.</td>
+<td>S1 (3.5), sílabo BD2 U1.</td>
 </tr>
 <tr>
 <td>Clase presencial</td>
-<td>Creación guiada del esquema y tablas del catálogo, seguida de la función y los procedimientos PL/SQL. Trabajo individual en la propia laptop, siguiendo al docente paso a paso; consulta inmediata ante errores de compilación.</td>
-<td>Scripts <code>S01_01_esquemas.sql</code>, <code>S01_02_tablas.sql</code>, <code>S01_03_plsql.sql</code>.</td>
+<td>Creación guiada de la tabla de auditoría y los dos triggers DML sobre <code>PRODUCTOS</code>. Trabajo individual en la propia laptop, siguiendo al docente paso a paso; consulta inmediata ante errores de compilación.</td>
+<td>Script <code>S02_triggers_dml_auditoria.sql</code>.</td>
 </tr>
 <tr>
 <td>Evaluación formativa</td>
-<td>Verificación en clase de la ejecución de la función y los procedimientos con datos válidos. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4.</td>
+<td>Verificación en clase de los triggers con casos válidos e inválidos (ajuste de precio razonable y no razonable, <code>INSERT</code>/<code>UPDATE</code>/<code>DELETE</code> auditados). La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4.</td>
 <td>Indicaciones de entrega (4.3), rúbrica de evaluación (4.6).</td>
 </tr>
 </tbody>
 </table>
 <h3 id="16-motivacion-de-la-sesion">1.6 Motivación de la sesión<a class="headerlink" href="#16-motivacion-de-la-sesion" title="Permanent link">&para;</a></h3>
-<h4 id="161-caso-catalogo-de-bomerp-categoriaproducto">1.6.1 Caso: catálogo de BomERP (<code>Categoria</code>–<code>Producto</code>)<a class="headerlink" href="#161-caso-catalogo-de-bomerp-categoriaproducto" title="Permanent link">&para;</a></h4>
-<p>¿Dónde debería vivir la regla que calcula el valor de inventario de un producto, o la que ajusta su precio: en el backend de la aplicación, o en la propia base de datos? El backend puede validar datos, pero hay cálculos y reglas del negocio que conviene resolver también del lado de Oracle — centralizados en un procedimiento o función PL/SQL, disponibles sin importar qué cliente los invoque.</p>
+<h4 id="161-caso-catalogo-de-bomerp-auditoria-de-precio">1.6.1 Caso: catálogo de BomERP (auditoría de precio)<a class="headerlink" href="#161-caso-catalogo-de-bomerp-auditoria-de-precio" title="Permanent link">&para;</a></h4>
+<p><code>SP_APLICAR_DESCUENTO_PRODUCTO</code> (S1) confía en que quien lo invoca pasa un porcentaje razonable — pero nada impide que alguien, por error o directamente con un <code>UPDATE</code>, deje un producto en precio cero. Y si el precio cambia, nadie puede responder después "¿quién lo cambió, cuándo, y de cuánto a cuánto?" sin una auditoría. Un trigger resuelve ambos casos porque se dispara automáticamente ante el evento DML, sin importar qué cliente lo causó — a diferencia de un procedimiento, que solo protege si alguien decide invocarlo.</p>
 <p><strong>Preguntas de análisis</strong></p>
 <p><strong>Activación de conocimientos previos</strong></p>
 <ol>
-<li>¿Qué diferencia hay entre calcular <code>precio * stock</code> en el backend Java y calcularlo en una función PL/SQL?</li>
-<li>¿Cómo se evidencia que los productos de esta sesión no son ejercicios aislados, sino el motor transaccional detrás del esquema <code>BOM_CATALOGO</code>?</li>
+<li><code>SP_APLICAR_DESCUENTO_PRODUCTO</code> (S1) valida el porcentaje de descuento en el procedimiento. ¿Qué pasa si alguien actualiza <code>PRODUCTOS.PRECIO</code> con un <code>UPDATE</code> directo, sin pasar por ese procedimiento?</li>
+<li>¿LP2 (S2) también valida el precio en <code>ProductoRequest</code>? ¿Por qué esta sesión agrega una segunda capa de protección en Oracle?</li>
 </ol>
-<p><strong>Comprensión de PL/SQL</strong></p>
+<p><strong>Comprensión de triggers</strong></p>
 <ol>
-<li>¿Qué procedimiento podría invocar (o replicar) un backend REST como el de LP2?</li>
-<li>¿Qué función permite centralizar un cálculo del negocio sin repetirlo en cada consulta?</li>
-<li>¿Por qué un parámetro <code>IN OUT</code> es distinto de tener un <code>IN</code> y un <code>OUT</code> por separado?</li>
+<li>¿Qué diferencia hay entre un trigger <code>BEFORE UPDATE</code> y uno <code>AFTER UPDATE</code>?</li>
+<li>¿Por qué <code>:OLD</code> no tiene valores en un <code>INSERT</code>, ni <code>:NEW</code> los tiene en un <code>DELETE</code>?</li>
 </ol>
 <h3 id="17-ubicacion-en-el-curso">1.7 Ubicación en el curso<a class="headerlink" href="#17-ubicacion-en-el-curso" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Unidad: U1 - Programación y optimización (Oracle XE).</li>
 <li>Producto del curso: base de datos empresarial Oracle operativa, administrada, optimizada, auditada y resiliente.</li>
 <li>Producto de unidad: motor transaccional Oracle optimizado.</li>
-<li>Avance del producto en esta sesión: procedimientos, funciones y reglas iniciales del motor transaccional.</li>
+<li>Avance del producto en esta sesión: reglas automáticas de negocio y auditoría básica sobre <code>PRODUCTOS</code>.</li>
 </ul>
 <p>Roadmap del producto de la unidad:</p>
 <p><strong>Figura 1. Roadmap del producto de la unidad</strong></p>
@@ -3216,77 +3093,67 @@
     S1 --&gt; S2 --&gt; S3 --&gt; S4 --&gt; S5 --&gt; S6
 
     classDef today fill:#ffe08a,stroke:#9a6b00,stroke-width:2px,color:#111;
-    class S1 today;</code></pre>
+    class S2 today;</code></pre>
 <h2 id="2-explica">2. Explica<a class="headerlink" href="#2-explica" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 25 min.</p>
 <h3 id="21-arquitectura-de-la-sesion">2.1 Arquitectura de la sesión<a class="headerlink" href="#21-arquitectura-de-la-sesion" title="Permanent link">&para;</a></h3>
-<p><strong>Figura 2. Arquitectura del esquema <code>BOM_CATALOGO</code> y su motor transaccional PL/SQL</strong></p>
+<p><strong>Figura 2. Triggers DML sobre <code>PRODUCTOS</code></strong></p>
 <pre class="mermaid"><code>flowchart TB
     subgraph ORA["Motor transaccional Oracle - esquema BOM_CATALOGO"]
-        SP1[SP_REGISTRAR_PRODUCTO]
-        SP2[SP_APLICAR_DESCUENTO_PRODUCTO]
-        FN[FN_VALOR_INVENTARIO_PRODUCTO]
-        T[(producto)]
+        T[(PRODUCTOS)]
+        TRG1[TRG_PRODUCTO_PRECIO_BU - BEFORE UPDATE]
+        TRG2[TRG_PRODUCTO_AUDITORIA - AFTER INSERT/UPDATE/DELETE]
+        AUD[(PRODUCTO_AUDITORIA)]
 
-        SP1 --&gt; T
-        SP2 --&gt; T
-        FN -.-&gt;|lee valores para calcular| T
+        T -.-&gt;|dispara antes de escribir| TRG1
+        TRG1 --&gt;|valida :OLD vs :NEW, o rechaza| T
+        T -.-&gt;|dispara despues de escribir| TRG2
+        TRG2 --&gt;|registra :OLD y :NEW| AUD
     end
 
     APP["`Aplicación cliente (cualquiera: backend, otro script, SQL directo)`"]
-    APP --&gt; SP1
-    APP --&gt; FN
-    APP --&gt; SP2</code></pre>
+    APP --&gt;|"INSERT / UPDATE / DELETE"| T</code></pre>
 <p>Lectura del diagrama:</p>
 <ul>
-<li>El procedimiento de registro (<code>SP_REGISTRAR_PRODUCTO</code>) y el de ajuste de precio (<code>SP_APLICAR_DESCUENTO_PRODUCTO</code>) escriben sobre <code>PRODUCTOS</code>; la función (<code>FN_VALOR_INVENTARIO_PRODUCTO</code>) solo lee y calcula, no modifica nada.</li>
-<li>Esta lógica vive en Oracle y protege la regla <strong>sin importar quién la invoque</strong>: un backend Java, otro cliente, o alguien ejecutando SQL directo — nadie puede saltarse la validación entrando por otro camino. <strong>Error frecuente</strong>: dejar todo del lado del backend sin definir qué reglas son realmente críticas — esas reglas se mueven a PL/SQL o a restricciones de la tabla.</li>
-<li>Integración (referencia, no requisito para esta sesión): LP2 (S2) ya implementa una regla equivalente en <code>ProductoServiceImpl</code> vía JPA/Hibernate — este procedimiento es la versión Oracle de esa misma regla, útil incluso para quien no esté llevando LP2 en paralelo. ADS documenta esta separación como decisión arquitectónica (atributo "Integridad"). <strong>Error frecuente</strong>: trabajar PL/SQL como ejercicio aislado, sin relacionarlo con la entidad transaccional real del proyecto.</li>
+<li>Ningún cliente invoca <code>TRG_PRODUCTO_PRECIO_BU</code> ni <code>TRG_PRODUCTO_AUDITORIA</code> directamente — Oracle los dispara solo, en el momento (<code>BEFORE</code>/<code>AFTER</code>) y evento (<code>INSERT</code>/<code>UPDATE</code>/<code>DELETE</code>) declarados en cada uno.</li>
+<li><code>TRG_PRODUCTO_PRECIO_BU</code> corre <strong>antes</strong> de escribir: puede rechazar la operación (<code>RAISE_APPLICATION_ERROR</code>). <code>TRG_PRODUCTO_AUDITORIA</code> corre <strong>después</strong>: la operación ya ocurrió, solo registra lo que pasó.</li>
+<li>Integración (referencia, no requisito para esta sesión): LP2 (S2) ya valida <code>ProductoRequest</code> en el backend (Bean Validation) antes de llegar a Oracle. Estos triggers son una segunda capa, independiente de si el cliente es el backend de LP2, otro script, o alguien conectado directo con SQL. <strong>Error frecuente</strong>: pensar que la validación del backend hace innecesaria la de Oracle — son capas distintas, protegen contra clientes distintos.</li>
 </ul>
 <p>Este diagrama es el mapa que guía el resto de la explicación: cada apartado siguiente desarrolla uno de sus componentes, en el mismo orden del Índice (1.2).</p>
-<h3 id="22-creacion-del-esquema-y-las-tablas-base-del-caso-empresarial">2.2 Creación del esquema y las tablas base del caso empresarial<a class="headerlink" href="#22-creacion-del-esquema-y-las-tablas-base-del-caso-empresarial" title="Permanent link">&para;</a></h3>
-<p>PL/SQL permite ubicar lógica transaccional cerca de los datos. En un sistema empresarial, esto ayuda a proteger reglas críticas, mejorar consistencia y preparar operaciones que pueden ser consumidas por servicios backend — pero primero necesita un esquema propio y tablas base sobre las cuales operar.</p>
-<p><strong>Error frecuente</strong>: nombrar objetos de forma genérica en vez de usar nombres empresariales que reflejen el proceso real (esquema, tablas, procedimientos y funciones).</p>
-<p>Alcance metodológico de S1:</p>
-<div class="highlight"><pre><span></span><code>En S1 se construye la primera lógica transaccional.
-Todavía no se trabaja auditoría avanzada, excepciones completas,
-optimización ni administración Oracle.
-
-Esos aspectos se desarrollan progresivamente durante la unidad.
+<h3 id="22-triggers-dml-momento-y-evento">2.2 Triggers DML: momento y evento<a class="headerlink" href="#22-triggers-dml-momento-y-evento" title="Permanent link">&para;</a></h3>
+<p>Un <strong>trigger DML</strong> es un bloque PL/SQL que Oracle ejecuta automáticamente ante un evento (<code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>) sobre una tabla, en un momento determinado (<code>BEFORE</code> o <code>AFTER</code>) respecto a ese evento, y con un alcance de fila (<code>FOR EACH ROW</code>) o de sentencia.</p>
+<p>Alcance metodológico de S2:</p>
+<div class="highlight"><pre><span></span><code>En S2 se crean triggers FOR EACH ROW sobre una sola tabla
+(PRODUCTOS). Triggers compuestos, INSTEAD OF (sobre vistas) y
+triggers a nivel de sentencia se dejan fuera de esta sesión.
 </code></pre></div>
-<h3 id="23-procedimientos-plsql">2.3 Procedimientos PL/SQL<a class="headerlink" href="#23-procedimientos-plsql" title="Permanent link">&para;</a></h3>
-<p>Un <strong>procedimiento almacenado</strong> ejecuta una acción (registrar, actualizar) y puede declarar <strong>variables locales</strong> para procesar datos antes de escribirlos, aplicando <strong>validación de reglas</strong> del negocio antes de cualquier <code>INSERT</code> o <code>UPDATE</code>.</p>
-<p><strong>Error frecuente</strong>: no devolver el identificador generado con un parámetro <code>OUT</code> — sin él, el backend u otro cliente no puede continuar su flujo (por ejemplo, no sabe qué producto acaba de registrar).</p>
-<h3 id="24-funciones-plsql">2.4 Funciones PL/SQL<a class="headerlink" href="#24-funciones-plsql" title="Permanent link">&para;</a></h3>
-<p>Una <strong>función</strong> PL/SQL calcula y retorna un valor (por ejemplo, el valor de inventario de un producto) sin modificar datos — a diferencia de un procedimiento, siempre se ejecuta dentro de una expresión y siempre retorna algo.</p>
-<p><strong>Error frecuente</strong>: asumir que el cálculo funciona sin probarlo — toda función se ejecuta con casos válidos e inválidos antes de darla por buena.</p>
-<h3 id="25-parametros-in-out-e-in-out">2.5 Parámetros <code>IN</code>, <code>OUT</code> e <code>IN OUT</code><a class="headerlink" href="#25-parametros-in-out-e-in-out" title="Permanent link">&para;</a></h3>
-<p>Un parámetro <code>IN</code> recibe un valor sin modificarlo, un <code>OUT</code> devuelve un resultado sin necesitar un valor de entrada, y un <code>IN OUT</code> hace ambas cosas sobre la misma variable (por ejemplo, ajustar un precio recibido y devolver el precio ya ajustado en el mismo parámetro).</p>
-<p><strong>Error frecuente</strong>: insertar datos con valores fijos en vez de recibirlos como parámetros — sin <code>IN</code>, <code>OUT</code> e <code>IN OUT</code>, el procedimiento no es reutilizable ni conectable desde otro cliente.</p>
+<p><strong>Error frecuente</strong>: usar <code>AFTER</code> cuando se necesita rechazar la operación — un trigger <code>AFTER</code> ya no puede impedir el <code>INSERT</code>/<code>UPDATE</code>/<code>DELETE</code>, porque el evento ya ocurrió; para bloquear algo, el trigger debe ser <code>BEFORE</code>.</p>
+<h3 id="23-pseudo-registros-old-y-new">2.3 Pseudo-registros <code>:OLD</code> y <code>:NEW</code><a class="headerlink" href="#23-pseudo-registros-old-y-new" title="Permanent link">&para;</a></h3>
+<p>Dentro de un trigger <code>FOR EACH ROW</code>, <code>:OLD</code> representa la fila <strong>antes</strong> del cambio y <code>:NEW</code> la fila <strong>después</strong>. En un <code>INSERT</code>, <code>:OLD</code> no tiene valores (la fila no existía); en un <code>DELETE</code>, <code>:NEW</code> no tiene valores (la fila deja de existir); en un <code>UPDATE</code>, ambos están disponibles y se pueden comparar directamente.</p>
+<p><strong>Error frecuente</strong>: intentar modificar <code>:OLD</code> (es de solo lectura) — solo <code>:NEW</code> puede modificarse, y solo dentro de un trigger <code>BEFORE</code>.</p>
+<h3 id="24-reglas-automaticas-de-negocio-con-triggers">2.4 Reglas automáticas de negocio con triggers<a class="headerlink" href="#24-reglas-automaticas-de-negocio-con-triggers" title="Permanent link">&para;</a></h3>
+<p>Una regla de negocio puesta en un trigger <code>BEFORE</code> se aplica <strong>siempre</strong>, sin importar qué cliente ejecute el <code>INSERT</code>/<code>UPDATE</code>/<code>DELETE</code> — a diferencia de una regla puesta solo en un procedimiento (S1), que protege únicamente a quien decide invocarlo.</p>
+<p><strong>Error frecuente</strong>: duplicar en el trigger una regla que ya garantiza una restricción <code>CHECK</code> de la tabla (por ejemplo, <code>STOCK &gt;= 0</code>, ya cubierto por <code>CK_PRODUCTO_STOCK</code> desde S1) — el trigger debe agregar una regla que el <code>CHECK</code> no puede expresar (como comparar el valor nuevo contra el anterior), no repetir la misma validación dos veces.</p>
+<h3 id="25-auditoria-basica-con-triggers">2.5 Auditoría básica con triggers<a class="headerlink" href="#25-auditoria-basica-con-triggers" title="Permanent link">&para;</a></h3>
+<p>Un trigger de auditoría registra, en una tabla aparte, qué cambió, cuándo y en qué operación — usando <code>:OLD</code> y <code>:NEW</code> para capturar el valor anterior y el nuevo. Como el trigger se ejecuta con los privilegios del dueño del esquema (<code>BOM_CATALOGO</code>), no hace falta otorgarle permisos adicionales a <code>BOMERP_APP</code> sobre la tabla de auditoría.</p>
 <h2 id="3-aplica-actividad-practica-guiada">3. Aplica: actividad práctica guiada<a class="headerlink" href="#3-aplica-actividad-practica-guiada" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 2h.</p>
-<p><strong>Actividad:</strong> creación guiada del esquema <code>BOM_CATALOGO</code> y su primer motor transaccional con procedimientos y funciones PL/SQL (Producto de la sesión en 1.4).</p>
-<p><strong>Propósito de la actividad:</strong> construir el esquema <code>BOM_CATALOGO</code> con sus tablas base y el primer motor transaccional del negocio — una función y dos procedimientos PL/SQL que validan reglas del negocio con parámetros <code>IN</code>, <code>OUT</code> e <code>IN OUT</code> — verificando cada incremento antes de continuar al siguiente.</p>
-<p><strong>Orientaciones metodológicas:</strong> en el laboratorio, el docente guía la creación del esquema y las tablas del catálogo, seguida de la función y los procedimientos PL/SQL, paso a paso frente a la clase; los estudiantes replican cada paso en su propio equipo, verificando la compilación y la ejecución antes de avanzar al siguiente.</p>
+<p><strong>Actividad:</strong> creación guiada de la tabla de auditoría y los dos triggers DML sobre <code>PRODUCTOS</code> (Producto de la sesión en 1.4).</p>
+<p><strong>Propósito de la actividad:</strong> construir <code>PRODUCTO_AUDITORIA</code> y dos triggers — uno que aplica una regla automática de negocio (<code>BEFORE UPDATE</code>) y otro que registra auditoría básica (<code>AFTER INSERT OR UPDATE OR DELETE</code>) — verificando cada incremento con casos válidos e inválidos antes de continuar al siguiente.</p>
+<p><strong>Orientaciones metodológicas:</strong> en el laboratorio, el docente crea la tabla de auditoría y los dos triggers paso a paso frente a la clase, probando cada uno con un caso que lo dispare correctamente y otro que lo haga fallar (para la regla de negocio); los estudiantes replican cada paso en su propio equipo, verificando la compilación y el resultado antes de avanzar.</p>
 <p><strong>Actividades para realizar:</strong></p>
 <ul>
-<li><strong>3.1</strong> Definir operación transaccional.</li>
-<li><strong>3.2</strong> Crear el esquema y las tablas del catálogo.</li>
-<li><strong>3.3</strong> Crear la función de negocio (parámetros <code>IN</code>).</li>
-<li><strong>3.4</strong> Crear el procedimiento de registro (parámetros <code>IN</code> y <code>OUT</code>).</li>
-<li><strong>3.5</strong> Crear el procedimiento de ajuste de precio (parámetro <code>IN OUT</code>).</li>
-<li><strong>3.6</strong> Probar función y procedimientos.</li>
-<li><strong>3.7</strong> Relacionar con ADS y LP2.</li>
+<li><strong>3.1</strong> Definir la regla de negocio y el alcance de la auditoría.</li>
+<li><strong>3.2</strong> Crear la tabla <code>PRODUCTO_AUDITORIA</code>.</li>
+<li><strong>3.3</strong> Crear el trigger de regla de negocio (<code>BEFORE UPDATE</code>).</li>
+<li><strong>3.4</strong> Crear el trigger de auditoría (<code>AFTER INSERT OR UPDATE OR DELETE</code>).</li>
+<li><strong>3.5</strong> Probar ambos triggers con casos válidos e inválidos.</li>
+<li><strong>3.6</strong> Relacionar con ADS y LP2.</li>
 </ul>
-<p><strong>Scripts completos, listos para ejecutar en este orden</strong> (los pasos siguientes explican cada uno):</p>
-<ol>
-<li><a href="../../../proyecto-integrador/u1/oracle/S01_01_esquemas.sql"><code>S01_01_esquemas.sql</code></a> — usuarios <code>BOM_CATALOGO</code> y <code>BOMERP_APP</code>.</li>
-<li><a href="../../../proyecto-integrador/u1/oracle/S01_02_tablas.sql"><code>S01_02_tablas.sql</code></a> — tablas <code>CATEGORIAS</code> y <code>PRODUCTOS</code>.</li>
-<li><a href="../../../proyecto-integrador/u1/oracle/S01_03_plsql.sql"><code>S01_03_plsql.sql</code></a> — la función y los dos procedimientos de esta sesión.</li>
-</ol>
-<h3 id="31-definir-operacion-transaccional">3.1 Definir operación transaccional<a class="headerlink" href="#31-definir-operacion-transaccional" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> operación principal del motor Oracle.</p>
-<p><strong>Tabla 2. Operación transaccional del motor Oracle</strong></p>
+<p><strong>Script completo, listo para ejecutar</strong> (el paso siguiente explica cada bloque): <a href="../../../proyecto-integrador/u1/oracle/S02_triggers_dml_auditoria.sql"><code>S02_triggers_dml_auditoria.sql</code></a>.</p>
+<h3 id="31-definir-la-regla-de-negocio-y-el-alcance-de-la-auditoria">3.1 Definir la regla de negocio y el alcance de la auditoría<a class="headerlink" href="#31-definir-la-regla-de-negocio-y-el-alcance-de-la-auditoria" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> regla de negocio y alcance de auditoría definidos.</p>
+<p><strong>Tabla 2. Regla de negocio y alcance de auditoría</strong></p>
 <table>
 <thead>
 <tr>
@@ -3296,215 +3163,115 @@ Esos aspectos se desarrollan progresivamente durante la unidad.
 </thead>
 <tbody>
 <tr>
-<td>Proceso principal</td>
-<td>Registro y valorización del catálogo de productos</td>
-</tr>
-<tr>
-<td>Entidad transaccional</td>
+<td>Tabla protegida</td>
 <td><code>BOM_CATALOGO.PRODUCTOS</code></td>
 </tr>
 <tr>
-<td>Acción PL/SQL inicial</td>
-<td>Función de cálculo + procedimiento de registro + procedimiento de ajuste de precio</td>
+<td>Regla automática de negocio</td>
+<td>El precio no puede bajar más del 50% en un solo <code>UPDATE</code></td>
 </tr>
 <tr>
-<td>Regla crítica</td>
-<td>El precio y el stock nunca deben quedar negativos</td>
+<td>Operaciones auditadas</td>
+<td><code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code> sobre <code>PRODUCTOS</code></td>
+</tr>
+<tr>
+<td>Dato mínimo por evento auditado</td>
+<td><code>ID_PRODUCTO</code>, acción, precio y stock (<code>:OLD</code>/<code>:NEW</code>), fecha, usuario Oracle</td>
 </tr>
 </tbody>
 </table>
-<h3 id="32-crear-el-esquema-y-las-tablas-del-catalogo">3.2 Crear el esquema y las tablas del catálogo<a class="headerlink" href="#32-crear-el-esquema-y-las-tablas-del-catalogo" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> esquema <code>BOM_CATALOGO</code> y las tablas <code>CATEGORIAS</code>/<code>PRODUCTOS</code> operativas en Oracle — la base sobre la que esta sesión construye PL/SQL y sobre la que LP2 conecta su backend (S1-S2).</p>
-<p><strong>Nota sobre versión y edición:</strong> esta unidad (U1) trabaja contra el mismo
-contenedor Oracle que levanta LP2 en su S1 (<code>gvenzl/oracle-free:23-slim</code> —
-Oracle Database 23ai <strong>Free</strong>, no Oracle 19c). Alcanza para lo que pide el
-sílabo en U1 (Oracle XE). U2-U3 exige Oracle 19c <strong>Enterprise Edition</strong> +
-Oracle Linux para temas exclusivos de EE (AWR, particionamiento) que este
-contenedor no soporta — ese ambiente todavía no está operacionalizado en
-el repo (ver <code>bd2/README.md</code>).</p>
-<p>Con una cuenta DBA, crea el usuario propietario del catálogo (<code>BOM_CATALOGO</code>) y el usuario técnico que usará el backend de LP2 (<code>BOMERP_APP</code>). Las contraseñas se piden en tiempo de ejecución; no se versionan:</p>
-<div class="highlight"><pre><span></span><code><span class="n">ACCEPT</span><span class="w"> </span><span class="n">pwd_catalogo</span><span class="w"> </span><span class="nb">CHAR</span><span class="w"> </span><span class="n">PROMPT</span><span class="w"> </span><span class="s1">&#39;Password BOM_CATALOGO: &#39;</span><span class="w"> </span><span class="n">HIDE</span>
-<span class="n">ACCEPT</span><span class="w"> </span><span class="n">pwd_app</span><span class="w"> </span><span class="nb">CHAR</span><span class="w"> </span><span class="n">PROMPT</span><span class="w"> </span><span class="s1">&#39;Password BOMERP_APP: &#39;</span><span class="w"> </span><span class="n">HIDE</span>
-
-<span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="w"> </span><span class="n">IDENTIFIED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="ss">&quot;&amp;pwd_catalogo&quot;</span><span class="w"> </span><span class="n">QUOTA</span><span class="w"> </span><span class="n">UNLIMITED</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">USERS</span><span class="p">;</span>
-<span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">BOMERP_APP</span><span class="w"> </span><span class="n">IDENTIFIED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="ss">&quot;&amp;pwd_app&quot;</span><span class="p">;</span>
-
-<span class="k">GRANT</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">SESSION</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">VIEW</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">PROCEDURE</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">TRIGGER</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">;</span>
-<span class="k">GRANT</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">SESSION</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">BOMERP_APP</span><span class="p">;</span>
-
-<span class="n">UNDEFINE</span><span class="w"> </span><span class="n">pwd_catalogo</span>
-<span class="n">UNDEFINE</span><span class="w"> </span><span class="n">pwd_app</span>
-</code></pre></div>
-<p><code>ACCEPT ... HIDE</code> es útil cuando cada quien pone su propia contraseña. Pero en el ambiente <strong>DEV</strong> de este proyecto (laptop de desarrollo, sin secretos que proteger) conviene que todos usen exactamente la misma credencial, para que nadie se quede sin poder conectar el backend por una contraseña distinta a la de <code>application-dev.yml</code>. Por eso, en el script real (<code>S01_01_esquemas.sql</code>) se usa contraseña fija en texto plano — mismo criterio que <code>application-dev.yml</code>/<code>compose-dev.yml</code> (ver <code>lp2/CLAUDE.md</code>, sección "Ambientes"):</p>
-<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="w"> </span><span class="n">IDENTIFIED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="ss">&quot;123456&quot;</span><span class="w"> </span><span class="n">QUOTA</span><span class="w"> </span><span class="n">UNLIMITED</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">USERS</span><span class="p">;</span>
-<span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">BOMERP_APP</span><span class="w"> </span><span class="n">IDENTIFIED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="ss">&quot;123456&quot;</span><span class="p">;</span>
-
-<span class="k">GRANT</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">SESSION</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">VIEW</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">PROCEDURE</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">TRIGGER</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">;</span>
-<span class="k">GRANT</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">SESSION</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">BOMERP_APP</span><span class="p">;</span>
-</code></pre></div>
-<p>La contraseña de <code>BOMERP_APP</code> debe coincidir exactamente con la de <code>application-dev.yml</code>.</p>
-<h4 id="ver-el-esquema-bom_catalogo-desde-el-cliente-grafico">Ver el esquema <code>BOM_CATALOGO</code> desde el cliente gráfico<a class="headerlink" href="#ver-el-esquema-bom_catalogo-desde-el-cliente-grafico" title="Permanent link">&para;</a></h4>
-<p>Con la conexión de <code>system</code> (ver LP2 S1, 3.2.2) normalmente solo ves los objetos de <code>SYSTEM</code>, no los de <code>BOM_CATALOGO</code>, aunque ya exista. Agrega una segunda conexión, igual que ya hiciste con <code>BOMERP_APP</code>:</p>
-<p><strong>Tabla 3. Conexión al esquema <code>BOM_CATALOGO</code></strong></p>
-<table>
-<thead>
-<tr>
-<th>Campo</th>
-<th>Valor</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Host</td>
-<td><code>127.0.0.1</code></td>
-</tr>
-<tr>
-<td>Port</td>
-<td><code>1521</code></td>
-</tr>
-<tr>
-<td>Username</td>
-<td><code>BOM_CATALOGO</code></td>
-</tr>
-<tr>
-<td>Password</td>
-<td><code>123456</code></td>
-</tr>
-<tr>
-<td>Database</td>
-<td><code>FREEPDB1</code></td>
-</tr>
-</tbody>
-</table>
-<p>Con esa conexión entras directo como ese usuario y ves su propio árbol (<code>CATEGORIAS</code>, <code>PRODUCTOS</code> una vez creadas), sin depender de que el cliente muestre o no otros esquemas.</p>
-<h4 id="si-necesitas-borrar-y-volver-a-crear-el-esquema">Si necesitas borrar y volver a crear el esquema<a class="headerlink" href="#si-necesitas-borrar-y-volver-a-crear-el-esquema" title="Permanent link">&para;</a></h4>
-<p>Si algo quedó a medio configurar (por ejemplo, corriste <code>S01_01_esquemas.sql</code> dos veces y salió <code>ORA-01920</code>, usuario ya existente), lo más simple en DEV es borrar y recrear desde cero — conectado como <code>system</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">DROP</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
-<span class="k">DROP</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">BOMERP_APP</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
-</code></pre></div>
-<p><code>CASCADE</code> borra también cualquier objeto que ese usuario ya tuviera (tablas, funciones, procedimientos), para no arrastrar nada a medio crear. Después, vuelve a ejecutar <code>S01_01_esquemas.sql</code> completo.</p>
-<h4 id="verificar-desde-terminal-sin-depender-del-cliente-grafico">Verificar desde terminal, sin depender del cliente gráfico<a class="headerlink" href="#verificar-desde-terminal-sin-depender-del-cliente-grafico" title="Permanent link">&para;</a></h4>
-<p>Si el cliente gráfico no muestra un esquema que debería existir (o al revés, quieres confirmar un <code>ORA-01920</code> antes de asumir que ya existe), verifica directo con <code>sqlplus</code> dentro del contenedor — te da la respuesta real de la base, sin caché de ningún cliente de por medio:</p>
-<div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">exec</span> <span class="n">-it</span> <span class="n">bomerp-oracle</span> <span class="n">sqlplus</span> <span class="n">system</span><span class="p">/</span><span class="n">123456</span><span class="nv">@localhost</span><span class="p">:</span><span class="n">1521</span><span class="p">/</span><span class="n">FREEPDB1</span>
-</code></pre></div>
-<p>Eso deja un prompt <code>SQL&gt;</code> dentro del contenedor. Ahí escribes la consulta, terminando con <code>;</code>, y Enter — esta consulta muestra el <strong>usuario en sí</strong>, no sus tablas (que todavía no existen en este punto de la sesión):</p>
-<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="n">username</span><span class="p">,</span><span class="w"> </span><span class="n">account_status</span><span class="p">,</span><span class="w"> </span><span class="n">default_tablespace</span><span class="p">,</span><span class="w"> </span><span class="n">temporary_tablespace</span><span class="p">,</span><span class="w"> </span><span class="n">created</span>
-<span class="k">FROM</span><span class="w"> </span><span class="n">dba_users</span>
-<span class="k">WHERE</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;BOM_CATALOGO&#39;</span><span class="p">;</span>
-</code></pre></div>
-<p>Salida esperada (confirma que el usuario existe, con estado <code>OPEN</code> y tablespace por defecto <code>USERS</code>):</p>
-<div class="highlight"><pre><span></span><code>USERNAME                       ACCOUNT_STATUS   DEFAULT_TABLESPACE   TEMPORARY_TABLESPACE   CREATED
------------------------------- ---------------- -------------------- ---------------------- -----------
-BOM_CATALOGO                   OPEN             USERS                TEMP                   02-AUG-26
-</code></pre></div>
-<p>Para salir de la sesión: <code>exit;</code></p>
-<p>Luego las tablas del catálogo, propiedad de <code>BOM_CATALOGO</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">CATEGORIAS</span><span class="w"> </span><span class="p">(</span>
-<span class="w">    </span><span class="n">ID</span><span class="w"> </span><span class="nb">NUMBER</span><span class="w"> </span><span class="k">GENERATED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">IDENTITY</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
-<span class="w">    </span><span class="n">NOMBRE</span><span class="w"> </span><span class="n">VARCHAR2</span><span class="p">(</span><span class="mi">80</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">UNIQUE</span><span class="p">,</span>
-<span class="w">    </span><span class="n">DESCRIPCION</span><span class="w"> </span><span class="n">VARCHAR2</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
+<h3 id="32-crear-la-tabla-producto_auditoria">3.2 Crear la tabla <code>PRODUCTO_AUDITORIA</code><a class="headerlink" href="#32-crear-la-tabla-producto_auditoria" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> tabla <code>PRODUCTO_AUDITORIA</code> operativa en el esquema <code>BOM_CATALOGO</code>.</p>
+<p><strong>Requisito antes de continuar:</strong> conéctate como <code>BOM_CATALOGO</code> (misma conexión de S1, 3.2) — la tabla y los triggers de esta sesión son objetos de ese esquema, igual que <code>CATEGORIAS</code> y <code>PRODUCTOS</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTO_AUDITORIA</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">ID_AUDITORIA</span><span class="w">     </span><span class="nb">NUMBER</span><span class="w"> </span><span class="k">GENERATED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">IDENTITY</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">    </span><span class="n">ID_PRODUCTO</span><span class="w">      </span><span class="nb">NUMBER</span><span class="p">,</span>
+<span class="w">    </span><span class="n">ACCION</span><span class="w">           </span><span class="n">VARCHAR2</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">PRECIO_ANTERIOR</span><span class="w">  </span><span class="nb">NUMBER</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span>
+<span class="w">    </span><span class="n">PRECIO_NUEVO</span><span class="w">     </span><span class="nb">NUMBER</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span>
+<span class="w">    </span><span class="n">STOCK_ANTERIOR</span><span class="w">   </span><span class="nb">NUMBER</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span>
+<span class="w">    </span><span class="n">STOCK_NUEVO</span><span class="w">      </span><span class="nb">NUMBER</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span>
+<span class="w">    </span><span class="n">FECHA_EVENTO</span><span class="w">     </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">SYSTIMESTAMP</span><span class="p">,</span>
+<span class="w">    </span><span class="n">USUARIO_ORACLE</span><span class="w">   </span><span class="n">VARCHAR2</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">USER</span>
 <span class="p">);</span>
-
-<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTOS</span><span class="w"> </span><span class="p">(</span>
-<span class="w">    </span><span class="n">ID</span><span class="w"> </span><span class="nb">NUMBER</span><span class="w"> </span><span class="k">GENERATED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">IDENTITY</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
-<span class="w">    </span><span class="n">ID_CATEGORIA</span><span class="w"> </span><span class="nb">NUMBER</span><span class="p">,</span>
-<span class="w">    </span><span class="n">NOMBRE</span><span class="w"> </span><span class="n">VARCHAR2</span><span class="p">(</span><span class="mi">120</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
-<span class="w">    </span><span class="n">PRECIO</span><span class="w"> </span><span class="nb">NUMBER</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
-<span class="w">    </span><span class="n">STOCK</span><span class="w"> </span><span class="nb">NUMBER</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
-<span class="w">    </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">FK_PRODUCTO_CATEGORIA</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">ID_CATEGORIA</span><span class="p">)</span>
-<span class="w">        </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">CATEGORIAS</span><span class="p">(</span><span class="n">ID</span><span class="p">),</span>
-<span class="w">    </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">CK_PRODUCTO_PRECIO</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">PRECIO</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
-<span class="w">    </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">CK_PRODUCTO_STOCK</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">STOCK</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
-<span class="p">);</span>
-
-<span class="c1">-- BOMERP_APP ejecuta el backend de LP2, pero no es propietario de los objetos.</span>
-<span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="p">,</span><span class="w"> </span><span class="k">INSERT</span><span class="p">,</span><span class="w"> </span><span class="k">UPDATE</span><span class="p">,</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">CATEGORIAS</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">BOMERP_APP</span><span class="p">;</span>
-<span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="p">,</span><span class="w"> </span><span class="k">INSERT</span><span class="p">,</span><span class="w"> </span><span class="k">UPDATE</span><span class="p">,</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTOS</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">BOMERP_APP</span><span class="p">;</span>
 </code></pre></div>
-<p>Tablas en plural y <code>ID</code> genérico como columna primaria — mismo estándar que usa Distribuidas (<code>categorias</code>, <code>productos</code>, <code>id</code>, aunque Postgres sí distingue mayúsculas/minúsculas por defecto; Oracle no: guarda todo identificador sin comillas en mayúsculas sin importar cómo se escriba, así que aquí se escribe ya en mayúsculas para que el código coincida con lo que Oracle realmente almacena) en su migración Flyway (S1 de DIST, 3.5.1). La columna que sí conserva el prefijo es la llave foránea (<code>ID_CATEGORIA</code> en <code>PRODUCTOS</code>), porque ahí el prefijo identifica a qué tabla apunta.</p>
-<p><strong><code>ID_CATEGORIA</code> queda nullable a propósito, a diferencia de Distribuidas</strong> (donde <code>Producto</code> lleva la relación con <code>Categoria</code> completa desde su propia S1): en LP2 esa relación se construye recién en S3 ("Gestión de objetos relacionados mediante REST y ORM"). Hasta entonces, <code>Producto</code> en LP2 (entidad, DTO y CRUD de S1-S2) no conoce <code>Categoria</code> en absoluto — si la columna fuera <code>NOT NULL</code>, cualquier <code>INSERT</code> sin categoría (incluido el <code>POST</code> que S2 construye) fallaría contra Oracle. En S3, cuando la entidad <code>Producto</code> ya mapee la relación y el DTO la exija, ahí se vuelve a evaluar si conviene forzar <code>NOT NULL</code> a nivel de base de datos — no antes.</p>
-<p>Verifica:</p>
-<div class="highlight"><pre><span></span><code><span class="k">DESC</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTOS</span><span class="p">;</span>
-
-<span class="k">SELECT</span><span class="w"> </span><span class="n">ID</span><span class="p">,</span><span class="w"> </span><span class="n">NOMBRE</span><span class="p">,</span><span class="w"> </span><span class="n">PRECIO</span><span class="p">,</span><span class="w"> </span><span class="n">STOCK</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTOS</span><span class="p">;</span>
-</code></pre></div>
-<h4 id="ver-la-lista-de-tablas-creadas">Ver la lista de tablas creadas<a class="headerlink" href="#ver-la-lista-de-tablas-creadas" title="Permanent link">&para;</a></h4>
-<p>Si quieres confirmar qué tablas existen (no una en particular, sino la lista completa), la consulta depende de con quién estés conectado:</p>
-<p>Conectado como <code>system</code> (ve tablas de cualquier usuario, filtrando por dueño):</p>
-<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">dba_tables</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="k">owner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;BOM_CATALOGO&#39;</span><span class="p">;</span>
-</code></pre></div>
-<p>Conectado como <code>BOM_CATALOGO</code> (ve solo lo suyo, sin filtrar):</p>
-<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">user_tables</span><span class="p">;</span>
-</code></pre></div>
-<p>Deberían aparecer <code>CATEGORIAS</code> y <code>PRODUCTOS</code>. Si prefieres verlas en el <strong>árbol</strong> del cliente gráfico: usa la conexión con <code>Username: BOM_CATALOGO</code> (ver más arriba), refresca esa conexión (botón de reconectar, no solo refresh) y expande el nodo "Tables" — ahí deberían listarse directamente, sin necesitar SQL.</p>
-<p><strong>Nota de alcance:</strong> esta sesión crea únicamente el esquema <code>BOM_CATALOGO</code> y sus dos tablas — lo que LP2 S1-S2 necesitan. Los esquemas <code>BOM_VENTAS</code> y <code>BOM_SEGURIDAD</code> (y sus tablas) se crean recién en las sesiones de BD2 que los necesitan por primera vez (cuando LP2 llegue a <code>Venta</code> en S4, y a seguridad en S10) — mismo criterio de "no crear por si acaso" que ya aplica la arquitectura de LP2 a sus módulos (ver <a href="../../../lp2/adr/ADR-002-spring-modulith/">ADR-002</a>).</p>
-<h3 id="33-crear-la-funcion-de-negocio-parametros-in">3.3 Crear la función de negocio (parámetros <code>IN</code>)<a class="headerlink" href="#33-crear-la-funcion-de-negocio-parametros-in" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> función PL/SQL reutilizable, con dos parámetros <code>IN</code>.</p>
-<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">FN_VALOR_INVENTARIO_PRODUCTO</span><span class="p">(</span>
-<span class="w">    </span><span class="n">p_precio</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="nb">NUMBER</span><span class="p">,</span>
-<span class="w">    </span><span class="n">p_stock</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="nb">NUMBER</span>
-<span class="p">)</span><span class="w"> </span><span class="k">RETURN</span><span class="w"> </span><span class="nb">NUMBER</span><span class="w"> </span><span class="k">IS</span>
+<p><code>ID_PRODUCTO</code> no lleva <code>FOREIGN KEY</code> hacia <code>PRODUCTOS</code>: un registro de auditoría de un <code>DELETE</code> debe sobrevivir aunque el producto ya no exista — si fuera clave foránea, Oracle impediría borrar el producto auditado.</p>
+<h3 id="33-crear-el-trigger-de-regla-de-negocio-before-update">3.3 Crear el trigger de regla de negocio (<code>BEFORE UPDATE</code>)<a class="headerlink" href="#33-crear-el-trigger-de-regla-de-negocio-before-update" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> trigger que rechaza un ajuste de precio mayor al 50% en una sola operación.</p>
+<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">TRIGGER</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">TRG_PRODUCTO_PRECIO_BU</span>
+<span class="k">BEFORE</span><span class="w"> </span><span class="k">UPDATE</span><span class="w"> </span><span class="k">OF</span><span class="w"> </span><span class="n">PRECIO</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTOS</span>
+<span class="k">FOR</span><span class="w"> </span><span class="k">EACH</span><span class="w"> </span><span class="k">ROW</span>
 <span class="k">BEGIN</span>
-<span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="n">p_precio</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">p_stock</span><span class="p">;</span>
+<span class="w">    </span><span class="k">IF</span><span class="w"> </span><span class="p">:</span><span class="k">NEW</span><span class="p">.</span><span class="n">PRECIO</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="p">(:</span><span class="k">OLD</span><span class="p">.</span><span class="n">PRECIO</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="k">THEN</span>
+<span class="w">        </span><span class="n">RAISE_APPLICATION_ERROR</span><span class="p">(</span>
+<span class="w">            </span><span class="o">-</span><span class="mi">20001</span><span class="p">,</span>
+<span class="w">            </span><span class="s1">&#39;El precio no puede bajar mas del 50% en un solo ajuste. Actual: &#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">:</span><span class="k">OLD</span><span class="p">.</span><span class="n">PRECIO</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">&#39;, propuesto: &#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">:</span><span class="k">NEW</span><span class="p">.</span><span class="n">PRECIO</span>
+<span class="w">        </span><span class="p">);</span>
+<span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="k">IF</span><span class="p">;</span>
 <span class="k">END</span><span class="p">;</span>
 <span class="o">/</span>
 </code></pre></div>
-<h3 id="34-crear-el-procedimiento-de-registro-parametros-in-y-out">3.4 Crear el procedimiento de registro (parámetros <code>IN</code> y <code>OUT</code>)<a class="headerlink" href="#34-crear-el-procedimiento-de-registro-parametros-in-y-out" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> procedimiento con parámetros <code>IN</code> y <code>OUT</code>.</p>
-<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">PROCEDURE</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">SP_REGISTRAR_PRODUCTO</span><span class="p">(</span>
-<span class="w">    </span><span class="n">p_id_categoria</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="nb">NUMBER</span><span class="p">,</span>
-<span class="w">    </span><span class="n">p_nombre</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="n">VARCHAR2</span><span class="p">,</span>
-<span class="w">    </span><span class="n">p_precio</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="nb">NUMBER</span><span class="p">,</span>
-<span class="w">    </span><span class="n">p_stock</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="nb">NUMBER</span><span class="p">,</span>
-<span class="w">    </span><span class="n">p_id_producto</span><span class="w"> </span><span class="k">OUT</span><span class="w"> </span><span class="nb">NUMBER</span>
-<span class="p">)</span><span class="w"> </span><span class="k">IS</span>
+<p><code>BEFORE UPDATE OF PRECIO</code> limita el trigger a disparar solo cuando la sentencia toca la columna <code>PRECIO</code> — un <code>UPDATE</code> que solo cambie <code>NOMBRE</code> no lo activa.</p>
+<h3 id="34-crear-el-trigger-de-auditoria-after-insert-or-update-or-delete">3.4 Crear el trigger de auditoría (<code>AFTER INSERT OR UPDATE OR DELETE</code>)<a class="headerlink" href="#34-crear-el-trigger-de-auditoria-after-insert-or-update-or-delete" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> trigger que registra cada operación DML sobre <code>PRODUCTOS</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">TRIGGER</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">TRG_PRODUCTO_AUDITORIA</span>
+<span class="k">AFTER</span><span class="w"> </span><span class="k">INSERT</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">UPDATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTOS</span>
+<span class="k">FOR</span><span class="w"> </span><span class="k">EACH</span><span class="w"> </span><span class="k">ROW</span>
+<span class="k">DECLARE</span>
+<span class="w">    </span><span class="n">v_accion</span><span class="w"> </span><span class="n">VARCHAR2</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
 <span class="k">BEGIN</span>
-<span class="w">    </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTOS</span><span class="w"> </span><span class="p">(</span><span class="n">ID_CATEGORIA</span><span class="p">,</span><span class="w"> </span><span class="n">NOMBRE</span><span class="p">,</span><span class="w"> </span><span class="n">PRECIO</span><span class="p">,</span><span class="w"> </span><span class="n">STOCK</span><span class="p">)</span>
-<span class="w">    </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="n">p_id_categoria</span><span class="p">,</span><span class="w"> </span><span class="n">p_nombre</span><span class="p">,</span><span class="w"> </span><span class="n">p_precio</span><span class="p">,</span><span class="w"> </span><span class="n">p_stock</span><span class="p">)</span>
-<span class="w">    </span><span class="n">RETURNING</span><span class="w"> </span><span class="n">ID</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">p_id_producto</span><span class="p">;</span>
+<span class="w">    </span><span class="k">IF</span><span class="w"> </span><span class="n">INSERTING</span><span class="w"> </span><span class="k">THEN</span>
+<span class="w">        </span><span class="n">v_accion</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;INSERT&#39;</span><span class="p">;</span>
+<span class="w">    </span><span class="k">ELSIF</span><span class="w"> </span><span class="n">UPDATING</span><span class="w"> </span><span class="k">THEN</span>
+<span class="w">        </span><span class="n">v_accion</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;UPDATE&#39;</span><span class="p">;</span>
+<span class="w">    </span><span class="k">ELSE</span>
+<span class="w">        </span><span class="n">v_accion</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;DELETE&#39;</span><span class="p">;</span>
+<span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="k">IF</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTO_AUDITORIA</span><span class="w"> </span><span class="p">(</span>
+<span class="w">        </span><span class="n">ID_PRODUCTO</span><span class="p">,</span><span class="w"> </span><span class="n">ACCION</span><span class="p">,</span><span class="w"> </span><span class="n">PRECIO_ANTERIOR</span><span class="p">,</span><span class="w"> </span><span class="n">PRECIO_NUEVO</span><span class="p">,</span><span class="w"> </span><span class="n">STOCK_ANTERIOR</span><span class="p">,</span><span class="w"> </span><span class="n">STOCK_NUEVO</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span>
+<span class="w">        </span><span class="k">COALESCE</span><span class="p">(:</span><span class="k">NEW</span><span class="p">.</span><span class="n">ID</span><span class="p">,</span><span class="w"> </span><span class="p">:</span><span class="k">OLD</span><span class="p">.</span><span class="n">ID</span><span class="p">),</span>
+<span class="w">        </span><span class="n">v_accion</span><span class="p">,</span>
+<span class="w">        </span><span class="p">:</span><span class="k">OLD</span><span class="p">.</span><span class="n">PRECIO</span><span class="p">,</span><span class="w"> </span><span class="p">:</span><span class="k">NEW</span><span class="p">.</span><span class="n">PRECIO</span><span class="p">,</span>
+<span class="w">        </span><span class="p">:</span><span class="k">OLD</span><span class="p">.</span><span class="n">STOCK</span><span class="p">,</span><span class="w"> </span><span class="p">:</span><span class="k">NEW</span><span class="p">.</span><span class="n">STOCK</span>
+<span class="w">    </span><span class="p">);</span>
 <span class="k">END</span><span class="p">;</span>
 <span class="o">/</span>
 </code></pre></div>
-<h3 id="35-crear-el-procedimiento-de-ajuste-de-precio-parametro-in-out">3.5 Crear el procedimiento de ajuste de precio (parámetro <code>IN OUT</code>)<a class="headerlink" href="#35-crear-el-procedimiento-de-ajuste-de-precio-parametro-in-out" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> procedimiento con un parámetro <code>IN OUT</code>, distinto de tener un <code>IN</code> y un <code>OUT</code> separados: el mismo parámetro entra con el precio actual y sale con el precio ya ajustado.</p>
-<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">PROCEDURE</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">SP_APLICAR_DESCUENTO_PRODUCTO</span><span class="p">(</span>
-<span class="w">    </span><span class="n">p_precio</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="k">OUT</span><span class="w"> </span><span class="nb">NUMBER</span><span class="p">,</span>
-<span class="w">    </span><span class="n">p_porcentaje_descuento</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="nb">NUMBER</span>
-<span class="p">)</span><span class="w"> </span><span class="k">IS</span>
-<span class="k">BEGIN</span>
-<span class="w">    </span><span class="n">p_precio</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">p_precio</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="n">p_precio</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">p_porcentaje_descuento</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">100</span><span class="p">);</span>
-<span class="k">END</span><span class="p">;</span>
-<span class="o">/</span>
-</code></pre></div>
-<h3 id="36-probar-funcion-y-procedimientos">3.6 Probar función y procedimientos<a class="headerlink" href="#36-probar-funcion-y-procedimientos" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> evidencia de ejecución.</p>
-<p><code>SP_REGISTRAR_PRODUCTO</code> exige una categoría existente (<code>FK_PRODUCTO_CATEGORIA</code>). Si <code>CATEGORIAS</code> está vacía todavía (por ejemplo, si solo ejecutaste 3.2-3.5 sin datos de prueba), la prueba siguiente falla con <code>ORA-02291: integrity constraint ... violated - parent key not found</code>. Antes de probar, registra al menos una categoría:</p>
-<div class="highlight"><pre><span></span><code><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">CATEGORIAS</span><span class="w"> </span><span class="p">(</span><span class="n">NOMBRE</span><span class="p">,</span><span class="w"> </span><span class="n">DESCRIPCION</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;Perifericos&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Perifericos de computo&#39;</span><span class="p">);</span>
-<span class="k">COMMIT</span><span class="p">;</span>
-</code></pre></div>
+<p><code>INSERTING</code>/<code>UPDATING</code>/<code>DELETING</code> son funciones condicionales disponibles solo dentro de un trigger — permiten que un mismo trigger cubra los tres eventos sin declarar tres triggers separados. <code>COALESCE(:NEW.ID, :OLD.ID)</code> resuelve el caso <code>DELETE</code> (<code>:NEW</code> vacío) y el caso <code>INSERT</code> (<code>:OLD</code> vacío) con una sola expresión — <code>ID</code> es la clave primaria de <code>PRODUCTOS</code> (genérica, mismo estándar de S1), no <code>ID_PRODUCTO</code>; ese nombre con prefijo se reserva para la columna de <code>PRODUCTO_AUDITORIA</code> que referencia ese id desde otra tabla.</p>
+<h3 id="35-probar-ambos-triggers-con-casos-validos-e-invalidos">3.5 Probar ambos triggers con casos válidos e inválidos<a class="headerlink" href="#35-probar-ambos-triggers-con-casos-validos-e-invalidos" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> evidencia de ejecución de los dos triggers.</p>
+<p>Caso válido — registrar y luego ajustar el precio dentro del límite permitido:</p>
 <div class="highlight"><pre><span></span><code><span class="k">DECLARE</span>
-<span class="w">    </span><span class="n">v_id_producto</span><span class="w">  </span><span class="nb">NUMBER</span><span class="p">;</span>
-<span class="w">    </span><span class="n">v_precio</span><span class="w">       </span><span class="nb">NUMBER</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="mi">180</span><span class="p">.</span><span class="mi">50</span><span class="p">;</span>
-<span class="w">    </span><span class="n">v_valor_inv</span><span class="w">    </span><span class="nb">NUMBER</span><span class="p">;</span>
+<span class="w">    </span><span class="n">v_id_producto</span><span class="w"> </span><span class="nb">NUMBER</span><span class="p">;</span>
 <span class="k">BEGIN</span>
-<span class="w">    </span><span class="c1">-- IN + OUT: registrar un producto nuevo</span>
-<span class="w">    </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">SP_REGISTRAR_PRODUCTO</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Teclado mecánico&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">180</span><span class="p">.</span><span class="mi">50</span><span class="p">,</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span><span class="w"> </span><span class="n">v_id_producto</span><span class="p">);</span>
-<span class="w">    </span><span class="n">DBMS_OUTPUT</span><span class="p">.</span><span class="n">PUT_LINE</span><span class="p">(</span><span class="s1">&#39;Producto registrado: &#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">v_id_producto</span><span class="p">);</span>
-
-<span class="w">    </span><span class="c1">-- IN, IN: calcular el valor de inventario</span>
-<span class="w">    </span><span class="n">v_valor_inv</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">FN_VALOR_INVENTARIO_PRODUCTO</span><span class="p">(</span><span class="mi">180</span><span class="p">.</span><span class="mi">50</span><span class="p">,</span><span class="w"> </span><span class="mi">25</span><span class="p">);</span>
-<span class="w">    </span><span class="n">DBMS_OUTPUT</span><span class="p">.</span><span class="n">PUT_LINE</span><span class="p">(</span><span class="s1">&#39;Valor de inventario: &#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">v_valor_inv</span><span class="p">);</span>
-
-<span class="w">    </span><span class="c1">-- IN OUT: ajustar el precio en la misma variable</span>
-<span class="w">    </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">SP_APLICAR_DESCUENTO_PRODUCTO</span><span class="p">(</span><span class="n">v_precio</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">);</span>
-<span class="w">    </span><span class="n">DBMS_OUTPUT</span><span class="p">.</span><span class="n">PUT_LINE</span><span class="p">(</span><span class="s1">&#39;Precio con 10% de descuento: &#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">v_precio</span><span class="p">);</span>
+<span class="w">    </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">SP_REGISTRAR_PRODUCTO</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Mouse inalambrico&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">80</span><span class="p">.</span><span class="mi">00</span><span class="p">,</span><span class="w"> </span><span class="mi">40</span><span class="p">,</span><span class="w"> </span><span class="n">v_id_producto</span><span class="p">);</span>
+<span class="w">    </span><span class="k">UPDATE</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTOS</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">PRECIO</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">60</span><span class="p">.</span><span class="mi">00</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v_id_producto</span><span class="p">;</span><span class="w"> </span><span class="c1">-- baja 25%, permitido</span>
+<span class="w">    </span><span class="n">DBMS_OUTPUT</span><span class="p">.</span><span class="n">PUT_LINE</span><span class="p">(</span><span class="s1">&#39;Producto de prueba: &#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">v_id_producto</span><span class="p">);</span>
 <span class="k">END</span><span class="p">;</span>
 <span class="o">/</span>
 </code></pre></div>
-<p>Resultado esperado: <code>Producto registrado: &lt;id&gt;</code>, <code>Valor de inventario: 4512.5</code>, <code>Precio con 10% de descuento: 162.45</code>.</p>
-<h3 id="37-relacionar-con-ads-y-lp2">3.7 Relacionar con ADS y LP2<a class="headerlink" href="#37-relacionar-con-ads-y-lp2" title="Permanent link">&para;</a></h3>
+<p>Caso inválido — intentar un ajuste que supera el 50% (debe fallar con <code>ORA-20001</code>):</p>
+<div class="highlight"><pre><span></span><code><span class="k">UPDATE</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTOS</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">PRECIO</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span><span class="p">.</span><span class="mi">00</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">NOMBRE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Mouse inalambrico&#39;</span><span class="p">;</span><span class="w"> </span><span class="c1">-- baja 75% desde 80, rechazado</span>
+</code></pre></div>
+<p>Resultado esperado del caso inválido:</p>
+<div class="highlight"><pre><span></span><code>ORA-20001: El precio no puede bajar mas del 50% en un solo ajuste. Actual: 60, propuesto: 20
+</code></pre></div>
+<p>Verifica la auditoría generada por el caso válido (el <code>INSERT</code> de <code>SP_REGISTRAR_PRODUCTO</code> y el <code>UPDATE</code> exitoso, no el rechazado — un trigger <code>BEFORE</code> que aborta con <code>RAISE_APPLICATION_ERROR</code> nunca deja pasar la operación, así que <code>TRG_PRODUCTO_AUDITORIA</code> no llega a dispararse en el caso inválido):</p>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="n">ID_PRODUCTO</span><span class="p">,</span><span class="w"> </span><span class="n">ACCION</span><span class="p">,</span><span class="w"> </span><span class="n">PRECIO_ANTERIOR</span><span class="p">,</span><span class="w"> </span><span class="n">PRECIO_NUEVO</span><span class="p">,</span><span class="w"> </span><span class="n">FECHA_EVENTO</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTO_AUDITORIA</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ID_AUDITORIA</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
+</code></pre></div>
+<p>Salida esperada (dos filas: el <code>INSERT</code> del registro y el <code>UPDATE</code> que bajó el precio a 60):</p>
+<div class="highlight"><pre><span></span><code>ID_PRODUCTO   ACCION   PRECIO_ANTERIOR   PRECIO_NUEVO   FECHA_EVENTO
+-----------   ------   ---------------   ------------   -------------------------
+&lt;id&gt;          UPDATE   80                60             15-AUG-26 ...
+&lt;id&gt;          INSERT   (null)            80              15-AUG-26 ...
+</code></pre></div>
+<h3 id="36-relacionar-con-ads-y-lp2">3.6 Relacionar con ADS y LP2<a class="headerlink" href="#36-relacionar-con-ads-y-lp2" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> matriz de integración.</p>
-<p><strong>Tabla 4. Matriz de integración BD2-ADS-LP2</strong></p>
+<p><strong>Tabla 3. Matriz de integración BD2-ADS-LP2 (S2)</strong></p>
 <table>
 <thead>
 <tr>
@@ -3515,48 +3282,49 @@ BOM_CATALOGO                   OPEN             USERS                TEMP       
 </thead>
 <tbody>
 <tr>
-<td><code>SP_REGISTRAR_PRODUCTO</code></td>
-<td>Integridad: reglas transaccionales en servicio y Oracle</td>
-<td><code>POST /api/v1/productos</code> (S2), regla equivalente</td>
+<td><code>TRG_PRODUCTO_PRECIO_BU</code></td>
+<td>Integridad: regla protegida sin importar el cliente</td>
+<td><code>PUT /api/v1/productos/{id}</code> (S2), segunda capa de protección</td>
 </tr>
 <tr>
-<td><code>FN_VALOR_INVENTARIO_PRODUCTO</code></td>
-<td>Centralizar regla de cálculo del negocio</td>
-<td>Cálculo que también podría exponerse en un reporte (S4-S5)</td>
+<td><code>TRG_PRODUCTO_AUDITORIA</code></td>
+<td>Auditabilidad (Tabla 4 de ADS S1)</td>
+<td>Ninguno directo — el backend no necesita saber que existe</td>
 </tr>
 <tr>
-<td><code>SP_APLICAR_DESCUENTO_PRODUCTO</code></td>
-<td>Mantenibilidad: lógica reutilizable, no repetida</td>
-<td><code>PUT /api/v1/productos/{id}</code> (S2), regla equivalente</td>
+<td><code>PRODUCTO_AUDITORIA</code></td>
+<td>Trazabilidad de cambios</td>
+<td>Evidencia complementaria a los logs con <code>traceId</code> de LP2 (S1, 3.3.2)</td>
 </tr>
 </tbody>
 </table>
-<p>Sesión equivalente en los otros dos cursos, misma semana: <a href="../../../ads/sesiones/S01_Fundamentos_Arquitectura_Software/">ADS - S1 Fundamentos de Arquitectura de Software</a> y <a href="../../../lp2/sesiones/S01_Arquitectura_Backend_REST_Profesional/">LP2 - S1 Arquitectura Backend REST Profesional</a>.</p>
+<p>Sesión equivalente en los otros dos cursos, misma semana: <a href="../../../ads/sesiones/S02_Modelo_C4_Vistas_Arquitectonicas/">ADS - S2 Modelo C4 y Vistas Arquitectónicas</a> y <a href="../../../lp2/sesiones/S02_CRUD_REST_Completo_Producto/">LP2 - S2 CRUD REST Completo de Producto</a>.</p>
 <p><strong>Evidencia de aprendizaje:</strong></p>
 <ul>
-<li>Esquema y tablas del catálogo (<code>CATEGORIAS</code>, <code>PRODUCTOS</code>) creados en Oracle.</li>
-<li>Función y procedimientos PL/SQL (<code>IN</code>, <code>IN</code>/<code>OUT</code>, <code>IN OUT</code>) probados con resultados correctos.</li>
+<li>Tabla <code>PRODUCTO_AUDITORIA</code> creada en el esquema <code>BOM_CATALOGO</code>.</li>
+<li>Trigger de regla de negocio (<code>TRG_PRODUCTO_PRECIO_BU</code>) probado con un caso válido y uno rechazado.</li>
+<li>Trigger de auditoría (<code>TRG_PRODUCTO_AUDITORIA</code>) probado, con registros verificados mediante <code>SELECT</code>.</li>
 <li>Matriz de integración con ADS y LP2.</li>
 </ul>
 <h2 id="4-crea-actividad-autonoma">4. Crea: actividad autónoma<a class="headerlink" href="#4-crea-actividad-autonoma" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 2h fuera del aula.</p>
 <h3 id="41-actividad">4.1 Actividad<a class="headerlink" href="#41-actividad" title="Permanent link">&para;</a></h3>
-<p>Creación autónoma del esquema y el motor transaccional PL/SQL para la entidad transaccional del proyecto propio del equipo, documentada en evidencia individual.</p>
+<p>Creación autónoma de una tabla de auditoría y dos triggers DML (regla de negocio + auditoría) sobre la entidad transaccional del proyecto propio del equipo, documentada en evidencia individual.</p>
 <p>Completa y evidencia estas tareas:</p>
 <ol>
-<li>Definir la operación transaccional del proyecto.</li>
-<li>Crear el esquema (usuario propietario) y las tablas mínimas de prueba.</li>
-<li>Crear una función PL/SQL de cálculo o validación.</li>
-<li>Crear un procedimiento con parámetros <code>IN</code> y <code>OUT</code>.</li>
-<li>Ejecutar al menos un caso válido.</li>
-<li>Registrar una mejora que se implementará en S2 o S3.</li>
+<li>Definir una regla automática de negocio comparable con <code>:OLD</code> y <code>:NEW</code>.</li>
+<li>Crear la tabla de auditoría del proyecto propio.</li>
+<li>Crear un trigger <code>BEFORE</code> que aplique la regla de negocio.</li>
+<li>Crear un trigger <code>AFTER</code> que registre auditoría.</li>
+<li>Ejecutar un caso válido y uno inválido (rechazado por el trigger de negocio).</li>
+<li>Verificar los registros de auditoría con una consulta.</li>
 </ol>
 <h3 id="42-proposito">4.2 Propósito<a class="headerlink" href="#42-proposito" title="Permanent link">&para;</a></h3>
-<p>Que cada estudiante demuestre, de forma individual y fuera del aula, que puede reproducir el patrón construido en clase sin el acompañamiento del docente.</p>
+<p>Que cada estudiante demuestre, de forma individual y fuera del aula, que puede reproducir el patrón de triggers construido en clase sin el acompañamiento del docente.</p>
 <p>Cada estudiante adapta el ejemplo a la entidad transaccional de su equipo.</p>
 <h3 id="43-indicaciones">4.3 Indicaciones<a class="headerlink" href="#43-indicaciones" title="Permanent link">&para;</a></h3>
 <p>Entrega un PDF con el siguiente nombre:</p>
-<div class="highlight"><pre><span></span><code>S01_BD2_Equipo##_ApellidoNombre.pdf
+<div class="highlight"><pre><span></span><code>S02_BD2_Equipo##_ApellidoNombre.pdf
 </code></pre></div>
 <p>Cada captura de pantalla del informe debe mostrar, sin recortar, el reloj del sistema (fecha y hora) y tu usuario o foto de perfil (Windows, VS Code o navegador) visibles en pantalla — es lo que permite verificar que la evidencia es tuya y que corresponde al momento real de tu trabajo.</p>
 <h4 id="431-estructura-del-informe">4.3.1 Estructura del informe<a class="headerlink" href="#431-estructura-del-informe" title="Permanent link">&para;</a></h4>
@@ -3564,50 +3332,47 @@ BOM_CATALOGO                   OPEN             USERS                TEMP       
 <ul>
 <li>Nombre:</li>
 <li>Equipo:</li>
-<li>Sesión: S01 - PL/SQL Aplicado al Negocio</li>
+<li>Sesión: S02 - Triggers DML y Auditoría</li>
 <li>Rol o aporte realizado:</li>
 <li>Link de GitHub:</li>
 </ul>
 <p><strong>Evidencia técnica</strong></p>
-<p>Incluye capturas o salidas con una breve explicación debajo de cada una, organizadas en los mismos 5 bloques de la rúbrica (4.6) — así queda claro qué evidencia corresponde a cada criterio evaluado:</p>
+<p>Incluye capturas o salidas con una breve explicación debajo de cada una, organizadas en los mismos 4 bloques de la rúbrica (4.6) — así queda claro qué evidencia corresponde a cada criterio evaluado:</p>
 <ol>
-<li><em>Esquema y tablas del proyecto propio</em><ul>
-<li>Script SQL de creación del esquema y las tablas base.</li>
+<li><em>Tabla de auditoría del proyecto propio</em><ul>
+<li>Script SQL de creación de la tabla de auditoría.</li>
 </ul>
 </li>
-<li><em>Operación transaccional</em><ul>
-<li>Breve explicación de la operación transaccional definida para el proyecto.</li>
+<li><em>Trigger de regla de negocio</em><ul>
+<li>Script del trigger <code>BEFORE</code>, con explicación de la regla.</li>
+<li>Caso rechazado, con el error de Oracle mostrado.</li>
 </ul>
 </li>
-<li><em>Función PL/SQL</em><ul>
-<li>Script de la función PL/SQL.</li>
-</ul>
-</li>
-<li><em>Procedimiento PL/SQL</em><ul>
-<li>Script del procedimiento PL/SQL, con breve explicación.</li>
+<li><em>Trigger de auditoría</em><ul>
+<li>Script del trigger <code>AFTER</code>.</li>
 </ul>
 </li>
 <li><em>Evidencia de ejecución</em><ul>
-<li>Captura o salida de ejecución.</li>
-<li>Resultado de consulta a la tabla.</li>
+<li>Caso válido ejecutado.</li>
+<li>Consulta a la tabla de auditoría con los registros generados.</li>
 </ul>
 </li>
 </ol>
 <p><strong>Error o hallazgo</strong></p>
-<p>Describe un error técnico encontrado: compilación, tipos, parámetros, claves, reglas o pruebas.</p>
+<p>Describe un error técnico encontrado: momento (<code>BEFORE</code>/<code>AFTER</code>) equivocado, uso incorrecto de <code>:OLD</code>/<code>:NEW</code>, o regla mal expresada.</p>
 <p><strong>Reflexión técnica breve</strong></p>
 <p>Responde en 5 a 8 líneas:</p>
-<div class="highlight"><pre><span></span><code>¿Qué regla del negocio conviene proteger en Oracle y por qué no debería quedar solo en el backend?
+<div class="highlight"><pre><span></span><code>¿Por qué una regla de negocio protegida solo en el backend no es suficiente si otro cliente puede escribir directo en la base de datos?
 </code></pre></div>
 <h3 id="44-criterios-minimos-de-aceptacion">4.4 Criterios mínimos de aceptación<a class="headerlink" href="#44-criterios-minimos-de-aceptacion" title="Permanent link">&para;</a></h3>
 <p>La evidencia individual se considera completa si:</p>
 <ul>
 <li>El archivo respeta el nombre solicitado.</li>
-<li>Crea el esquema/usuario propietario y las tablas base antes de la lógica PL/SQL.</li>
-<li>Presenta función y procedimiento compilables.</li>
-<li>Usa parámetros <code>IN</code> y <code>OUT</code>.</li>
-<li>Ejecuta un caso válido.</li>
-<li>Incluye evidencia de ejecución.</li>
+<li>Crea la tabla de auditoría antes de los triggers.</li>
+<li>El trigger de regla de negocio usa <code>:OLD</code> y <code>:NEW</code> para comparar valores.</li>
+<li>El trigger de auditoría cubre <code>INSERT</code>, <code>UPDATE</code> y <code>DELETE</code>.</li>
+<li>Ejecuta un caso válido y uno rechazado por la regla de negocio.</li>
+<li>Verifica los registros de auditoría con una consulta.</li>
 <li>Cada captura de la evidencia técnica muestra el reloj del sistema y el usuario/perfil visible, sin recortar.</li>
 <li>Las fechas y horas de las capturas son coherentes con el historial de commits de su repositorio en GitHub.</li>
 <li>Incluye un error o hallazgo técnico diagnosticado.</li>
@@ -3615,13 +3380,13 @@ BOM_CATALOGO                   OPEN             USERS                TEMP       
 </ul>
 <h3 id="45-preguntas-de-defensa">4.5 Preguntas de defensa<a class="headerlink" href="#45-preguntas-de-defensa" title="Permanent link">&para;</a></h3>
 <ol>
-<li>¿Qué operación transaccional implementaste?</li>
-<li>¿Por qué creaste una función y no solo un procedimiento?</li>
-<li>¿Qué parámetro <code>OUT</code> devuelve tu procedimiento?</li>
-<li>¿Qué validación falta mejorar en S2 o S3?</li>
+<li>¿Qué regla de negocio implementaste y por qué no bastaba con una restricción <code>CHECK</code>?</li>
+<li>¿Por qué tu trigger de regla de negocio es <code>BEFORE</code> y no <code>AFTER</code>?</li>
+<li>¿Qué datos captura tu trigger de auditoría, y de dónde los toma (<code>:OLD</code> o <code>:NEW</code>)?</li>
+<li>¿Qué pasaría si tu tabla de auditoría tuviera una <code>FOREIGN KEY</code> hacia la tabla auditada?</li>
 </ol>
 <h3 id="46-rubrica-de-evaluacion">4.6 Rúbrica de evaluación<a class="headerlink" href="#46-rubrica-de-evaluacion" title="Permanent link">&para;</a></h3>
-<p><strong>Tabla 5. Rúbrica de evaluación</strong></p>
+<p><strong>Tabla 4. Rúbrica de evaluación</strong></p>
 <table>
 <thead>
 <tr>
@@ -3636,46 +3401,37 @@ BOM_CATALOGO                   OPEN             USERS                TEMP       
 </thead>
 <tbody>
 <tr>
-<td>1. Esquema y tablas del proyecto propio*</td>
+<td>1. Tabla de auditoría*</td>
 <td style="text-align: right;">20</td>
-<td>Esquema y tablas propias creados correctamente, con permisos mínimos definidos para el usuario de aplicación.</td>
-<td>Esquema y tablas funcionales, con detalles menores.</td>
-<td>Esquema o tablas incompletos.</td>
-<td>No crea esquema ni tablas.</td>
+<td>Tabla de auditoría bien diseñada, sin <code>FOREIGN KEY</code> hacia la tabla auditada.</td>
+<td>Tabla funcional, con algún detalle menor.</td>
+<td>Tabla incompleta o mal diseñada.</td>
+<td>No crea tabla de auditoría.</td>
 <td style="text-align: right;"></td>
 </tr>
 <tr>
-<td>2. Operación transaccional*</td>
-<td style="text-align: right;">20</td>
-<td>Define una operación transaccional clara y alineada al proyecto propio del equipo.</td>
-<td>Define una operación comprensible.</td>
-<td>Operación parcial o poco conectada.</td>
-<td>No define operación.</td>
+<td>2. Trigger de regla de negocio*</td>
+<td style="text-align: right;">30</td>
+<td>Trigger <code>BEFORE</code> correcto, con regla clara y caso rechazado evidenciado.</td>
+<td>Trigger funcional, con regla simple.</td>
+<td>Trigger incompleto o regla poco clara.</td>
+<td>No presenta trigger de negocio.</td>
 <td style="text-align: right;"></td>
 </tr>
 <tr>
-<td>3. Función PL/SQL*</td>
-<td style="text-align: right;">20</td>
-<td>Función correcta, reutilizable y probada.</td>
-<td>Función funcional con detalles menores.</td>
-<td>Función incompleta o poco probada.</td>
-<td>No presenta función.</td>
+<td>3. Trigger de auditoría*</td>
+<td style="text-align: right;">30</td>
+<td>Trigger <code>AFTER</code> correcto, cubre las tres operaciones DML.</td>
+<td>Trigger funcional, cubre la mayoría de operaciones.</td>
+<td>Trigger incompleto o cubre solo una operación.</td>
+<td>No presenta trigger de auditoría.</td>
 <td style="text-align: right;"></td>
 </tr>
 <tr>
-<td>4. Procedimiento PL/SQL*</td>
+<td>4. Evidencia de ejecución*</td>
 <td style="text-align: right;">20</td>
-<td>Procedimiento correcto con parámetros <code>IN</code>/<code>OUT</code> y registro exitoso.</td>
-<td>Procedimiento funcional con detalles menores.</td>
-<td>Procedimiento parcial o con errores.</td>
-<td>No presenta procedimiento.</td>
-<td style="text-align: right;"></td>
-</tr>
-<tr>
-<td>5. Evidencia de ejecución*</td>
-<td style="text-align: right;">20</td>
-<td>Presenta ejecución y consulta verificable del caso de prueba.</td>
-<td>Presenta evidencia suficiente.</td>
+<td>Casos válido e inválido ejecutados, con consulta de verificación clara.</td>
+<td>Evidencia suficiente, con detalles menores.</td>
 <td>Evidencia incompleta.</td>
 <td>No evidencia ejecución.</td>
 <td style="text-align: right;"></td>
@@ -3694,14 +3450,14 @@ Indica 2 fortalezas y 2 recomendaciones.
 </code></pre></div>
 <h2 id="5-cierre">5. Cierre<a class="headerlink" href="#5-cierre" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 5 min.</p>
-<p><strong>Resumen breve:</strong> hoy el esquema <code>BOM_CATALOGO</code> pasó de no existir a tener tablas base y su primer motor transaccional: una función y un procedimiento PL/SQL que validan reglas del negocio con parámetros <code>IN</code> y <code>OUT</code> — la base sobre la que LP2 conecta su backend.</p>
-<p><strong>Dinámica participativa:</strong> en una ronda rápida (o con una herramienta digital tipo formulario o encuesta en vivo), cada estudiante comparte en una frase qué validación implementó en su función o procedimiento.</p>
+<p><strong>Resumen breve:</strong> hoy <code>PRODUCTOS</code> pasó de depender de que el cliente respetara las reglas, a estar protegido y auditado automáticamente por Oracle mismo — un trigger que rechaza un ajuste de precio no razonable, y otro que deja registro de cada <code>INSERT</code>/<code>UPDATE</code>/<code>DELETE</code>, sin importar qué cliente los cause.</p>
+<p><strong>Dinámica participativa:</strong> en una ronda rápida (o con una herramienta digital tipo formulario o encuesta en vivo), cada estudiante comparte en una frase qué regla de negocio implementó para su propio proyecto.</p>
 <p><strong>Metacognición:</strong> cada estudiante responde en voz alta o por escrito: ¿qué parte de la sesión te costó más entender, y cómo la resolviste?</p>
-<p><strong>Proyección:</strong> el motor transaccional de hoy se amplía en S2 con triggers y auditoría, y el hábito de proteger reglas de negocio en la base de datos aplica a cualquier sistema profesional donde varios clientes (no solo un backend) necesiten confiar en los mismos datos.</p>
+<p><strong>Proyección:</strong> la auditoría de hoy es la base sobre la que S3 agrega manejo de excepciones más robusto, y el mismo patrón (regla en <code>BEFORE</code>, auditoría en <code>AFTER</code>) se repite en cualquier sistema profesional donde varios clientes escriban sobre los mismos datos.</p>
 <h2 id="bibliografia">Bibliografía<a class="headerlink" href="#bibliografia" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Oracle Corporation. (2024). <em>Oracle Database Free 23ai documentation</em>. https://docs.oracle.com/en/database/oracle/oracle-database/23/</li>
-<li>Oracle Corporation. (2024). <em>Database PL/SQL language reference</em>. https://docs.oracle.com/en/database/oracle/oracle-database/23/lnpls/</li>
+<li>Oracle Corporation. (2024). <em>Database PL/SQL language reference - Triggers</em>. https://docs.oracle.com/en/database/oracle/oracle-database/23/lnpls/</li>
 </ol>
 
 

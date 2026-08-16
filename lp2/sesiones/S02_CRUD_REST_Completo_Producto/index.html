@@ -1,0 +1,4194 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Entorno integrado de desarrollo academico para construir modulos ERP con ADS, BD2 y LP2.">
+      
+      
+        <meta name="author" content="UPeU">
+      
+      
+      
+        <link rel="prev" href="../S01_Arquitectura_Backend_REST_Profesional/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+  
+    <title>BOM ERP - S2 - CRUD REST completo de Producto</title>
+  
+
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#s2-crud-rest-completo-de-producto" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../../.." title="BOM ERP" class="md-header__button md-logo" aria-label="BOM ERP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            BOM ERP
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              S2 - CRUD REST completo de Producto
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/262ciclo4/bomerp" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    262ciclo4/bomerp
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Pestañas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Inicio
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../proyecto-integrador/" class="md-tabs__link">
+          
+  
+  
+  Guía del Proyecto Integrador
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../ads/" class="md-tabs__link">
+          
+  
+  
+  ADS
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../bd2/" class="md-tabs__link">
+          
+  
+  
+  BD2
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../" class="md-tabs__link">
+          
+  
+  
+  LP2
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="BOM ERP" class="md-nav__button md-logo" aria-label="BOM ERP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    BOM ERP
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/262ciclo4/bomerp" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    262ciclo4/bomerp
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guía del Proyecto Integrador
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guía del Proyecto Integrador
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Alineamiento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Diseño técnico, motor transaccional y backend inicial
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    1. Diseño técnico, motor transaccional y backend inicial
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/lp2-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Demo U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Modelado UML, administración Oracle y SPA segura
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    2. Modelado UML, administración Oracle y SPA segura
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/lp2-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Demo U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Diseño consolidado, operación Oracle y Full-Stack integrado
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    3. Diseño consolidado, operación Oracle y Full-Stack integrado
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/lp2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/checklist-final/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Checklist final
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/guia-sustentacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guía de sustentación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ADS
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/silabo_ads_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/silabo_ads_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Arquitectura y Diseño Estructural
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Arquitectura y Diseño Estructural
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S01_Fundamentos_Arquitectura_Software/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - Fundamentos de arquitectura de software
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S02_Modelo_C4_Vistas_Arquitectonicas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - Modelo C4 y vistas arquitectónicas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    BD2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/silabo_bd2_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/silabo_bd2_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Programación y optimización (Oracle XE)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Programación y optimización (Oracle XE)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - PL/SQL aplicado al negocio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S02_Triggers_DML_Auditoria/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - Triggers DML y auditoría
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    LP2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../silabo_lp2_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../silabo_lp2_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Decisiones de arquitectura
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Decisiones de arquitectura
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/ADR-001-arquitectura-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-001 - Arquitectura del backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/ADR-002-spring-modulith/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-002 - Spring Modulith
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/ADR-003-spring-boot-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-003 - Versión exacta de Spring Boot 4.0.7
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/ADR-004-jwt-diferido/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-004 - JWT diferido a S10
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Base backend REST modular de BomERP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Base backend REST modular de BomERP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S01_Arquitectura_Backend_REST_Profesional/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - Arquitectura backend REST profesional
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - CRUD REST completo de Producto
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - CRUD REST completo de Producto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-introduccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Introducción
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Introducción">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-presentacion-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Presentación de la sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-indice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Índice
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-proposito-de-aprendizaje" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Propósito de aprendizaje
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-producto-de-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Producto de sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-metodologia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Metodología
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16-motivacion-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6 Motivación de la sesión
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.6 Motivación de la sesión">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#161-caso-catalogo-de-bomerp-producto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6.1 Caso: catálogo de BomERP (Producto)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#17-ubicacion-en-el-curso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.7 Ubicación en el curso
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-explica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Explica
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Explica">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-arquitectura-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Arquitectura de la sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-entidad-repositorio-dto-y-mapeo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Entidad, repositorio, DTO y mapeo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-validacion-de-entrada-con-bean-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Validación de entrada con Bean Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-manejo-de-errores-aplicado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Manejo de errores aplicado
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-logs-y-trazabilidad-en-operaciones-de-escritura" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Logs y trazabilidad en operaciones de escritura
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-aplica-actividad-practica-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Aplica: actividad práctica guiada
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Aplica: actividad práctica guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-verificar-el-punto-de-partida" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Verificar el punto de partida
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-crear-las-excepciones-y-el-filtro-de-trazabilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Crear las excepciones y el filtro de trazabilidad
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.2 Crear las excepciones y el filtro de trazabilidad">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#321-excepciones-y-manejador-global-de-errores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2.1 Excepciones y manejador global de errores
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#322-filtro-de-trazabilidad-correlationidfilter-y-configuracion-de-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2.2 Filtro de trazabilidad CorrelationIdFilter y configuración de logs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#323-ejecutar-y-probar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2.3 Ejecutar y probar
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-migrar-productoresponse-a-clase-y-crear-productorequest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Migrar ProductoResponse a clase y crear ProductoRequest
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-crear-productomapper" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Crear ProductoMapper
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-ampliar-productoserviceproductoserviceimpl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Ampliar ProductoService/ProductoServiceImpl
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-ampliar-productocontroller" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Ampliar ProductoController
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37-probar-el-crud-completo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 Probar el CRUD completo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#38-escribir-pruebas-automatizadas-del-controller" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 Escribir pruebas automatizadas del controller
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#39-como-lo-resuelve-la-industria-mapstruct-opcional-referencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.9 Cómo lo resuelve la industria: MapStruct (opcional, referencia)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#310-relacionar-con-ads-y-bd2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.10 Relacionar con ADS y BD2
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-crea-actividad-autonoma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Crea: actividad autónoma
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Crea: actividad autónoma">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-actividad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Actividad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-proposito" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Propósito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-indicaciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Indicaciones
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.3 Indicaciones">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#431-estructura-del-informe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3.1 Estructura del informe
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-criterios-minimos-de-aceptacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Criterios mínimos de aceptación
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-preguntas-de-defensa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Preguntas de defensa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-rubrica-de-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 Rúbrica de evaluación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-cierre" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Cierre
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bibliografia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bibliografía
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-introduccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Introducción
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Introducción">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-presentacion-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Presentación de la sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-indice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Índice
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-proposito-de-aprendizaje" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Propósito de aprendizaje
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-producto-de-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Producto de sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-metodologia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Metodología
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16-motivacion-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6 Motivación de la sesión
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.6 Motivación de la sesión">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#161-caso-catalogo-de-bomerp-producto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6.1 Caso: catálogo de BomERP (Producto)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#17-ubicacion-en-el-curso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.7 Ubicación en el curso
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-explica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Explica
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Explica">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-arquitectura-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Arquitectura de la sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-entidad-repositorio-dto-y-mapeo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Entidad, repositorio, DTO y mapeo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-validacion-de-entrada-con-bean-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Validación de entrada con Bean Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-manejo-de-errores-aplicado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Manejo de errores aplicado
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-logs-y-trazabilidad-en-operaciones-de-escritura" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Logs y trazabilidad en operaciones de escritura
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-aplica-actividad-practica-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Aplica: actividad práctica guiada
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Aplica: actividad práctica guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-verificar-el-punto-de-partida" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Verificar el punto de partida
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-crear-las-excepciones-y-el-filtro-de-trazabilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Crear las excepciones y el filtro de trazabilidad
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.2 Crear las excepciones y el filtro de trazabilidad">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#321-excepciones-y-manejador-global-de-errores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2.1 Excepciones y manejador global de errores
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#322-filtro-de-trazabilidad-correlationidfilter-y-configuracion-de-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2.2 Filtro de trazabilidad CorrelationIdFilter y configuración de logs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#323-ejecutar-y-probar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2.3 Ejecutar y probar
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-migrar-productoresponse-a-clase-y-crear-productorequest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Migrar ProductoResponse a clase y crear ProductoRequest
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-crear-productomapper" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Crear ProductoMapper
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-ampliar-productoserviceproductoserviceimpl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Ampliar ProductoService/ProductoServiceImpl
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-ampliar-productocontroller" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Ampliar ProductoController
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37-probar-el-crud-completo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 Probar el CRUD completo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#38-escribir-pruebas-automatizadas-del-controller" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 Escribir pruebas automatizadas del controller
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#39-como-lo-resuelve-la-industria-mapstruct-opcional-referencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.9 Cómo lo resuelve la industria: MapStruct (opcional, referencia)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#310-relacionar-con-ads-y-bd2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.10 Relacionar con ADS y BD2
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-crea-actividad-autonoma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Crea: actividad autónoma
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Crea: actividad autónoma">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-actividad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Actividad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-proposito" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Propósito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-indicaciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Indicaciones
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.3 Indicaciones">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#431-estructura-del-informe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3.1 Estructura del informe
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-criterios-minimos-de-aceptacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Criterios mínimos de aceptación
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-preguntas-de-defensa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Preguntas de defensa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-rubrica-de-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 Rúbrica de evaluación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-cierre" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Cierre
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bibliografia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bibliografía
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="s2-crud-rest-completo-de-producto">S2 - CRUD REST Completo de Producto<a class="headerlink" href="#s2-crud-rest-completo-de-producto" title="Permanent link">&para;</a></h1>
+<p><em>Por: Angel Sullon Macalupu @asullom - 2026</em></p>
+<h2 id="1-introduccion">1. Introducción<a class="headerlink" href="#1-introduccion" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 20 min.</p>
+<h3 id="11-presentacion-de-la-sesion">1.1 Presentación de la sesión<a class="headerlink" href="#11-presentacion-de-la-sesion" title="Permanent link">&para;</a></h3>
+<p>En S1, <code>Producto</code> (si se completó el 3.5.2 opcional) solo exponía un listado de solo lectura. Esta sesión lo convierte en un recurso REST completo: crear, consultar uno por id, actualizar y eliminar, con un DTO de entrada validado, mapeo explícito entre capas y el manejo global de errores (<code>GlobalExceptionHandler</code>, <code>CorrelationIdFilter</code>) puesto a prueba con casos reales de validación y de recurso no encontrado. Esas dos clases ya se crearon en S1 (3.3) — 3.2 de esta guía repite esa explicación porque el sílabo lista "excepciones" y "logs" como parte del alcance oficial de S2, no solo de S1.</p>
+<h3 id="12-indice">1.2 Índice<a class="headerlink" href="#12-indice" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Excepciones y filtro de trazabilidad (repaso de S1).</li>
+<li>Entidad, repositorio, DTO y mapeo.</li>
+<li>Servicio de aplicación con las cuatro operaciones CRUD.</li>
+<li>Validación de entrada con Bean Validation.</li>
+<li>Controlador REST completo, manejo de errores aplicado y pruebas automatizadas.</li>
+</ol>
+<h3 id="13-proposito-de-aprendizaje">1.3 Propósito de aprendizaje<a class="headerlink" href="#13-proposito-de-aprendizaje" title="Permanent link">&para;</a></h3>
+<p>Al concluir la clase, estarás en condiciones de:</p>
+<ul>
+<li><strong>Construir y probar</strong> un recurso REST completo (crear, consultar, actualizar, eliminar) sobre <code>Producto</code>, con DTO de entrada validado, mapeo explícito entidad-DTO mediante una clase <code>Mapper</code> dedicada, manejo global de errores verificado con casos reales, y trazabilidad por petición mediante logs.</li>
+</ul>
+<h3 id="14-producto-de-sesion">1.4 Producto de sesión<a class="headerlink" href="#14-producto-de-sesion" title="Permanent link">&para;</a></h3>
+<p>API REST completa de <code>Producto</code> (<code>GET</code>, <code>GET /{id}</code>, <code>POST</code>, <code>PUT</code>, <code>DELETE</code>), con entidad, repositorio, DTO de entrada (<code>ProductoRequest</code>) y de salida (<code>ProductoResponse</code>), un <code>ProductoMapper</code> dedicado, validaciones con Bean Validation, y manejo de errores probado con casos válidos e inválidos.</p>
+<h3 id="15-metodologia">1.5 Metodología<a class="headerlink" href="#15-metodologia" title="Permanent link">&para;</a></h3>
+<p><strong>Tabla 1. Metodología de la sesión</strong></p>
+<table>
+<thead>
+<tr>
+<th>Actividades a Realizar en el Periodo</th>
+<th>Orientaciones generales (Orientaciones Metodológicas)</th>
+<th>Material de estudio recomendado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Revisión previa individual</td>
+<td>Si no completaste el 3.5.2 opcional de S1, revisa esa sección antes de clase (<code>Producto</code> con <code>listar()</code> debe existir). Repasar Bean Validation (<code>@NotBlank</code>, <code>@Size</code>, <code>@NotNull</code>). Trabajo individual, antes de clase.</td>
+<td>S1 (3.5.2), documentación de Jakarta Bean Validation.</td>
+</tr>
+<tr>
+<td>Clase presencial</td>
+<td>Construcción guiada del CRUD REST completo de <code>Producto</code>: DTO, mapper, servicio y controlador, con casos de prueba válidos e inválidos. Trabajo individual en la propia laptop, siguiendo al docente paso a paso; consulta inmediata ante errores de compilación o de mapeo.</td>
+<td><code>pom.xml</code> ya configurado (S1), backend ejecutable, cliente REST para verificar endpoints.</td>
+</tr>
+<tr>
+<td>Evaluación formativa</td>
+<td>Verificación en clase de <code>POST</code>/<code>GET</code>/<code>PUT</code>/<code>DELETE</code> sobre <code>/api/v1/productos</code>, incluidos los casos <code>400</code> (validación) y <code>404</code> (no encontrado). La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4.</td>
+<td>Indicaciones de entrega (4.3), rúbrica de evaluación (4.6).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="16-motivacion-de-la-sesion">1.6 Motivación de la sesión<a class="headerlink" href="#16-motivacion-de-la-sesion" title="Permanent link">&para;</a></h3>
+<h4 id="161-caso-catalogo-de-bomerp-producto">1.6.1 Caso: catálogo de BomERP (<code>Producto</code>)<a class="headerlink" href="#161-caso-catalogo-de-bomerp-producto" title="Permanent link">&para;</a></h4>
+<p>En S1 bastaba con listar productos para verificar que el backend funcionaba. Pero un catálogo real no se mantiene solo — el equipo de compras necesita registrar productos nuevos, corregir un precio mal cargado, o dar de baja un producto discontinuado. Sin esas operaciones, <code>ventas</code> (S4) no tendría de dónde tomar un precio o un stock reales para descontar. Esta sesión completa ese ciclo de vida para <code>Producto</code>.</p>
+<p><strong>Preguntas de análisis</strong></p>
+<p><strong>Activación de conocimientos previos</strong></p>
+<ol>
+<li>En S1, <code>CategoriaResponse</code>/<code>ProductoResponse</code> eran <code>record</code>. ¿Por qué esta sesión los convierte en clases con <code>@Builder</code>?</li>
+<li>Si dos peticiones actualizan el mismo producto casi al mismo tiempo, ¿qué garantiza JPA (y qué no garantiza) sobre cuál gana?</li>
+</ol>
+<p><strong>Comprensión de CRUD REST</strong></p>
+<ol>
+<li>¿Por qué el DTO de entrada (<code>ProductoRequest</code>) es una clase distinta del de salida (<code>ProductoResponse</code>), en vez de reutilizar uno solo?</li>
+<li>¿Qué responde la API si se intenta actualizar o eliminar un <code>id</code> que no existe?</li>
+<li>¿Qué responde la API si el <code>nombre</code> llega vacío en el <code>POST</code>?</li>
+</ol>
+<h3 id="17-ubicacion-en-el-curso">1.7 Ubicación en el curso<a class="headerlink" href="#17-ubicacion-en-el-curso" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Unidad: U1 - Base backend REST modular de BomERP.</li>
+<li>Producto del curso: base Full-Stack modular de BomERP.</li>
+<li>Producto de unidad: base backend modular de BomERP, con módulos de Catálogo, Inventario, Ventas y Compras delimitados.</li>
+<li>Avance del producto en esta sesión: <code>Producto</code> con CRUD completo, validado y con manejo de errores probado.</li>
+</ul>
+<p>Roadmap del producto de la unidad:</p>
+<p><strong>Figura 1. Roadmap del producto de la unidad</strong></p>
+<pre class="mermaid"><code>flowchart TB
+    S1["`**S1:** Arquitectura backend REST profesional`"]
+    S2["`**S2:** CRUD REST completo de Producto`"]
+    S3["`**S3:** Objetos relacionados Categoria-Producto`"]
+    S4["`**S4:** Operación cabecera-detalle`"]
+    S5["`**S5:** Consultas y reportes`"]
+    S6["`**S6:** Producto U1`"]
+
+    S1 --&gt; S2 --&gt; S3 --&gt; S4 --&gt; S5 --&gt; S6
+
+    classDef today fill:#ffe08a,stroke:#9a6b00,stroke-width:2px,color:#111;
+    class S2 today;</code></pre>
+<h2 id="2-explica">2. Explica<a class="headerlink" href="#2-explica" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 25 min.</p>
+<h3 id="21-arquitectura-de-la-sesion">2.1 Arquitectura de la sesión<a class="headerlink" href="#21-arquitectura-de-la-sesion" title="Permanent link">&para;</a></h3>
+<p><strong>Figura 2. Flujo de una petición de escritura sobre <code>Producto</code></strong></p>
+<pre class="mermaid"><code>flowchart LR
+    Client["Cliente - PowerShell / bash / Swagger"]
+    Controller["ProductoController"]
+    Mapper["ProductoMapper"]
+    Service["ProductoServiceImpl"]
+    Repo["ProductoRepository"]
+    DB[("Oracle - BOM_CATALOGO.PRODUCTOS")]
+
+    Client --&gt;|"ProductoRequest + @Valid"| Controller
+    Controller --&gt; Service
+    Service --&gt; Mapper
+    Mapper --&gt;|"toEntity"| Service
+    Service --&gt; Repo
+    Repo --&gt; DB
+    Service --&gt; Mapper
+    Mapper --&gt;|"toResponse"| Service
+    Service --&gt; Controller
+    Controller --&gt;|"ProductoResponse"| Client</code></pre>
+<p>Lectura del diagrama:</p>
+<ul>
+<li>El controller nunca construye ni lee la entidad <code>Producto</code> directamente: siempre entra y sale por un DTO, y el <code>ProductoMapper</code> es el único punto que conoce ambos lados (DTO y entidad).</li>
+<li><code>@Valid</code> en el controller corta las peticiones inválidas <strong>antes</strong> de que lleguen al service — el service asume que todo lo que recibe ya pasó validación de forma.</li>
+<li>Integración (referencia, no requisito para esta sesión): ADS diseñó este mismo patrón (Controller-Service-Mapper-Repository-DTO) en su S10 como patrón táctico general; aquí se implementa contra Oracle real. <strong>Error frecuente</strong>: mezclar la validación de forma (<code>@NotBlank</code>, <code>@Size</code>) con reglas de negocio (por ejemplo, "el precio no puede bajar de la mitad") — esta sesión solo cubre la primera; reglas de negocio más complejas se tratan en sesiones posteriores.</li>
+</ul>
+<p>Este diagrama es el mapa que guía el resto de la explicación: cada apartado siguiente desarrolla uno de sus componentes, en el mismo orden del Índice (1.2).</p>
+<h3 id="22-entidad-repositorio-dto-y-mapeo">2.2 Entidad, repositorio, DTO y mapeo<a class="headerlink" href="#22-entidad-repositorio-dto-y-mapeo" title="Permanent link">&para;</a></h3>
+<p>La entidad <code>Producto</code> y <code>ProductoRepository</code> ya existen desde S1 (3.5.2) y no cambian en esta sesión. Lo que cambia es el DTO de salida y cómo se construye.</p>
+<p>En S1, con solo <code>listar()</code>, un <code>record CategoriaResponse</code>/<code>ProductoResponse</code> alcanzaba: inmutable, sin Lombok, una sola forma de construirlo. Ahora <code>Producto</code> necesita dos DTO distintos (<code>ProductoRequest</code> para lo que entra, <code>ProductoResponse</code> para lo que sale) y un mapeo en ambas direcciones (<code>toEntity</code>/<code>toResponse</code>) — un <code>record</code> no tiene setters ni encaja con <code>@Builder</code>, así que <code>ProductoResponse</code> pasa a ser una clase con Lombok (<code>@Getter @Setter @Builder @NoArgsConstructor @AllArgsConstructor</code>), igual que ya lo hace Distribuidas desde su S1.</p>
+<p><strong>Nota de alcance:</strong> <code>Categoria</code> sigue siendo <code>record</code> en esta sesión — solo <code>Producto</code> recibe CRUD completo en S2. <code>Categoria</code> recibe su propio CRUD progresivamente en S2-S3 (ver Tabla 10 de S1).</p>
+<h3 id="23-validacion-de-entrada-con-bean-validation">2.3 Validación de entrada con Bean Validation<a class="headerlink" href="#23-validacion-de-entrada-con-bean-validation" title="Permanent link">&para;</a></h3>
+<p><code>ProductoRequest</code> declara las reglas de forma directamente sobre sus campos (<code>@NotBlank</code>, <code>@Size</code>, <code>@NotNull</code>, <code>@DecimalMin</code>), y el controller las activa con <code>@Valid</code> en el parámetro <code>@RequestBody</code>. Si algo no cumple, Spring nunca llega a ejecutar el método del controller: responde <code>400</code> directo, con el mismo <code>GlobalExceptionHandler</code> de S1 (3.3.1) manejando <code>MethodArgumentNotValidException</code>.</p>
+<p><strong>Error frecuente</strong>: olvidar <code>@Valid</code> en el <code>@RequestBody</code> del controller. Sin esa anotación, Spring ignora por completo las anotaciones de <code>ProductoRequest</code> y deja pasar datos inválidos hasta el service.</p>
+<h3 id="24-manejo-de-errores-aplicado">2.4 Manejo de errores aplicado<a class="headerlink" href="#24-manejo-de-errores-aplicado" title="Permanent link">&para;</a></h3>
+<p>El <code>GlobalExceptionHandler</code> y el <code>ResourceNotFoundException</code> ya existen desde S1 (3.3.1) — hoy es la primera vez que la sesión los ejercita con casos reales: pedir, actualizar o eliminar un <code>id</code> que no existe lanza <code>ResourceNotFoundException</code>, capturado por el mismo manejador global que ya estaba en pie desde S1 sin usarse todavía.</p>
+<h3 id="25-logs-y-trazabilidad-en-operaciones-de-escritura">2.5 Logs y trazabilidad en operaciones de escritura<a class="headerlink" href="#25-logs-y-trazabilidad-en-operaciones-de-escritura" title="Permanent link">&para;</a></h3>
+<p>El <code>CorrelationIdFilter</code> de S1 (3.3.2) ya asigna un <code>traceId</code> a cada petición HTTP, sin importar el método. Hoy, por primera vez, ese <code>traceId</code> acompaña también peticiones <code>POST</code>/<code>PUT</code>/<code>DELETE</code> — útil para rastrear, por ejemplo, quién creó o eliminó un producto específico revisando los logs por ese identificador.</p>
+<h2 id="3-aplica-actividad-practica-guiada">3. Aplica: actividad práctica guiada<a class="headerlink" href="#3-aplica-actividad-practica-guiada" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 2h.</p>
+<p><strong>Actividad:</strong> construcción guiada del CRUD REST completo de <code>Producto</code> (Producto de la sesión en 1.4).</p>
+<p><strong>Propósito de la actividad:</strong> convertir <code>Producto</code> de un listado de solo lectura a un recurso REST completo — con DTO de entrada validado, mapeo explícito mediante <code>ProductoMapper</code>, y las cuatro operaciones CRUD probadas con casos válidos e inválidos — verificando cada incremento antes de continuar al siguiente.</p>
+<p><strong>Orientaciones metodológicas:</strong> en el laboratorio, el docente construye el CRUD completo de <code>Producto</code> paso a paso frente a la clase, ejecutando cada prueba (válida e inválida) antes de avanzar; los estudiantes replican cada paso en su propio equipo, verificando la respuesta HTTP exacta antes de continuar.</p>
+<p><strong>Actividades para realizar:</strong></p>
+<ul>
+<li><strong>3.1</strong> Verificar el punto de partida.</li>
+<li><strong>3.2</strong> Crear las excepciones y el filtro de trazabilidad.</li>
+<li><strong>3.3</strong> Migrar <code>ProductoResponse</code> a clase y crear <code>ProductoRequest</code>.</li>
+<li><strong>3.4</strong> Crear <code>ProductoMapper</code>.</li>
+<li><strong>3.5</strong> Ampliar <code>ProductoService</code>/<code>ProductoServiceImpl</code>.</li>
+<li><strong>3.6</strong> Ampliar <code>ProductoController</code>.</li>
+<li><strong>3.7</strong> Probar el CRUD completo.</li>
+<li><strong>3.8</strong> Escribir pruebas automatizadas del controller.</li>
+<li><strong>3.9</strong> Cómo lo resuelve la industria: MapStruct (opcional, referencia).</li>
+<li><strong>3.10</strong> Relacionar con ADS y BD2.</li>
+</ul>
+<h3 id="31-verificar-el-punto-de-partida">3.1 Verificar el punto de partida<a class="headerlink" href="#31-verificar-el-punto-de-partida" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> confirmación de que <code>Producto</code> (entidad, repositorio y <code>listar()</code>) ya existe.</p>
+<div class="admonition note">
+<p class="admonition-title">Si no completaste el 3.5.2 opcional de S1</p>
+<p>Esta sesión asume que <code>catalogo/producto/entity/Producto.java</code> y <code>catalogo/producto/repository/ProductoRepository.java</code> ya existen (S1, 3.5.2). Si en S1 solo hiciste <code>Categoria</code> y dejaste <code>Producto</code> pendiente por ser opcional, créalos ahora siguiendo exactamente 3.5.2 de S1 antes de continuar — son idénticos, esta sesión no los repite.</p>
+</div>
+<p><strong>Requisito antes de continuar:</strong> confirma que <code>http://localhost:8080/api/v1/productos</code> responde (lista vacía o con datos) antes de tocar código nuevo. Si falla, el problema es de S1 (conexión a Oracle o tablas faltantes, ver 3.5 de S1), no de esta sesión.</p>
+<h3 id="32-crear-las-excepciones-y-el-filtro-de-trazabilidad">3.2 Crear las excepciones y el filtro de trazabilidad<a class="headerlink" href="#32-crear-las-excepciones-y-el-filtro-de-trazabilidad" title="Permanent link">&para;</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Contenido repetido de S1 (3.3), a propósito</p>
+<p><code>GlobalExceptionHandler</code>, <code>ResourceNotFoundException</code>, <code>CorrelationIdFilter</code> y <code>logback-spring.xml</code> ya existen desde S1 (3.3) — si los creaste ahí, este paso no agrega código nuevo, solo repite la explicación porque el sílabo de BD2/LP2 lista "excepciones" y "logs" como parte del alcance oficial de <strong>esta</strong> sesión (ver 1.4), no solo de S1. Si por algún motivo no los creaste en S1, créalos ahora siguiendo esta misma sección — el código es idéntico en ambas guías.</p>
+</div>
+<p><strong>Producto del paso:</strong> manejo de errores centralizado y filtro de trazabilidad (<code>traceId</code> en cada log) funcionando en <code>bomerp-backend</code> — mismas clases que S1 (3.3), documentadas aquí para que la evidencia de S2 sea autocontenida.</p>
+<h4 id="321-excepciones-y-manejador-global-de-errores">3.2.1 Excepciones y manejador global de errores<a class="headerlink" href="#321-excepciones-y-manejador-global-de-errores" title="Permanent link">&para;</a></h4>
+<p><strong><code>exception/ResourceNotFoundException.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.exception</span><span class="p">;</span>
+
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ResourceNotFoundException</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">RuntimeException</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">ResourceNotFoundException</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">mensaje</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">super</span><span class="p">(</span><span class="n">mensaje</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong><code>exception/GlobalExceptionHandler.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.exception</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.http.HttpStatus</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.http.ResponseEntity</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.bind.MethodArgumentNotValidException</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.bind.annotation.ExceptionHandler</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.bind.annotation.RestControllerAdvice</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.time.Instant</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.HashMap</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Map</span><span class="p">;</span>
+
+<span class="nd">@RestControllerAdvice</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">GlobalExceptionHandler</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@ExceptionHandler</span><span class="p">(</span><span class="n">ResourceNotFoundException</span><span class="p">.</span><span class="na">class</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="nf">handleNotFound</span><span class="p">(</span><span class="n">ResourceNotFoundException</span><span class="w"> </span><span class="n">ex</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+<span class="w">        </span><span class="n">body</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&quot;timestamp&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">Instant</span><span class="p">.</span><span class="na">now</span><span class="p">().</span><span class="na">toString</span><span class="p">());</span>
+<span class="w">        </span><span class="n">body</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&quot;status&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">HttpStatus</span><span class="p">.</span><span class="na">NOT_FOUND</span><span class="p">.</span><span class="na">value</span><span class="p">());</span>
+<span class="w">        </span><span class="n">body</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&quot;error&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Not Found&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">body</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&quot;message&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">ex</span><span class="p">.</span><span class="na">getMessage</span><span class="p">());</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">status</span><span class="p">(</span><span class="n">HttpStatus</span><span class="p">.</span><span class="na">NOT_FOUND</span><span class="p">).</span><span class="na">body</span><span class="p">(</span><span class="n">body</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@ExceptionHandler</span><span class="p">(</span><span class="n">MethodArgumentNotValidException</span><span class="p">.</span><span class="na">class</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="nf">handleValidation</span><span class="p">(</span><span class="n">MethodArgumentNotValidException</span><span class="w"> </span><span class="n">ex</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+<span class="w">        </span><span class="n">body</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&quot;timestamp&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">Instant</span><span class="p">.</span><span class="na">now</span><span class="p">().</span><span class="na">toString</span><span class="p">());</span>
+<span class="w">        </span><span class="n">body</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&quot;status&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">HttpStatus</span><span class="p">.</span><span class="na">BAD_REQUEST</span><span class="p">.</span><span class="na">value</span><span class="p">());</span>
+<span class="w">        </span><span class="n">body</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&quot;error&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Bad Request&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">body</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&quot;message&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Error de validación en los datos enviados&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">status</span><span class="p">(</span><span class="n">HttpStatus</span><span class="p">.</span><span class="na">BAD_REQUEST</span><span class="p">).</span><span class="na">body</span><span class="p">(</span><span class="n">body</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>En S1, <code>catalogo</code> solo listaba (<code>GET</code>), así que <code>ResourceNotFoundException</code> todavía no se lanzaba desde ningún service — quedó lista para el DTO de entrada y las operaciones <code>POST</code>/<code>PUT</code>/<code>DELETE</code> que esta misma sesión implementa (3.3 en adelante).</p>
+<h4 id="322-filtro-de-trazabilidad-correlationidfilter-y-configuracion-de-logs">3.2.2 Filtro de trazabilidad <code>CorrelationIdFilter</code> y configuración de logs<a class="headerlink" href="#322-filtro-de-trazabilidad-correlationidfilter-y-configuracion-de-logs" title="Permanent link">&para;</a></h4>
+<p>Este filtro agrega un identificador de trazabilidad a cada request usando el header <code>X-Trace-ID</code>. Si el cliente no lo envía, el filtro genera un UUID.</p>
+<p><strong><code>filter/CorrelationIdFilter.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.filter</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.servlet.FilterChain</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.servlet.ServletException</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.servlet.http.HttpServletRequest</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.servlet.http.HttpServletResponse</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.slf4j.MDC</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.stereotype.Component</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.filter.OncePerRequestFilter</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.io.IOException</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.UUID</span><span class="p">;</span>
+
+<span class="nd">@Component</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">CorrelationIdFilter</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">OncePerRequestFilter</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">TRACE_ID_HEADER</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;X-Trace-ID&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">MDC_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;traceId&quot;</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">protected</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">doFilterInternal</span><span class="p">(</span><span class="n">HttpServletRequest</span><span class="w"> </span><span class="n">request</span><span class="p">,</span>
+<span class="w">                                     </span><span class="n">HttpServletResponse</span><span class="w"> </span><span class="n">response</span><span class="p">,</span>
+<span class="w">                                     </span><span class="n">FilterChain</span><span class="w"> </span><span class="n">filterChain</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">ServletException</span><span class="p">,</span><span class="w"> </span><span class="n">IOException</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">traceId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">request</span><span class="p">.</span><span class="na">getHeader</span><span class="p">(</span><span class="n">TRACE_ID_HEADER</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">traceId</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">traceId</span><span class="p">.</span><span class="na">isBlank</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">traceId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">UUID</span><span class="p">.</span><span class="na">randomUUID</span><span class="p">().</span><span class="na">toString</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">MDC</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">MDC_KEY</span><span class="p">,</span><span class="w"> </span><span class="n">traceId</span><span class="p">);</span>
+<span class="w">            </span><span class="n">response</span><span class="p">.</span><span class="na">setHeader</span><span class="p">(</span><span class="n">TRACE_ID_HEADER</span><span class="p">,</span><span class="w"> </span><span class="n">traceId</span><span class="p">);</span>
+<span class="w">            </span><span class="n">filterChain</span><span class="p">.</span><span class="na">doFilter</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="w"> </span><span class="n">response</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">finally</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">MDC</span><span class="p">.</span><span class="na">remove</span><span class="p">(</span><span class="n">MDC_KEY</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Y <code>src/main/resources/logback-spring.xml</code>, que define el formato de logs e incluye el <code>traceId</code> en cada línea (<code>[%X{traceId}]</code>), con salida por consola y por archivo en <code>logs/bomerp.log</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="nt">&lt;configuration&gt;</span>
+<span class="w">    </span><span class="nt">&lt;include</span><span class="w"> </span><span class="na">resource=</span><span class="s">&quot;org/springframework/boot/logging/logback/defaults.xml&quot;</span><span class="nt">/&gt;</span>
+
+<span class="w">    </span><span class="nt">&lt;property</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;LOG_PATTERN&quot;</span>
+<span class="w">              </span><span class="na">value=</span><span class="s">&quot;%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{traceId}] %-5level %logger{36} - %msg%n&quot;</span><span class="nt">/&gt;</span>
+
+<span class="w">    </span><span class="nt">&lt;appender</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;CONSOLE&quot;</span><span class="w"> </span><span class="na">class=</span><span class="s">&quot;ch.qos.logback.core.ConsoleAppender&quot;</span><span class="nt">&gt;</span>
+<span class="w">        </span><span class="nt">&lt;encoder&gt;</span>
+<span class="w">            </span><span class="nt">&lt;pattern&gt;</span>${LOG_PATTERN}<span class="nt">&lt;/pattern&gt;</span>
+<span class="w">        </span><span class="nt">&lt;/encoder&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/appender&gt;</span>
+
+<span class="w">    </span><span class="nt">&lt;appender</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;FILE&quot;</span><span class="w"> </span><span class="na">class=</span><span class="s">&quot;ch.qos.logback.core.rolling.RollingFileAppender&quot;</span><span class="nt">&gt;</span>
+<span class="w">        </span><span class="nt">&lt;file&gt;</span>logs/bomerp.log<span class="nt">&lt;/file&gt;</span>
+<span class="w">        </span><span class="nt">&lt;encoder&gt;</span>
+<span class="w">            </span><span class="nt">&lt;pattern&gt;</span>${LOG_PATTERN}<span class="nt">&lt;/pattern&gt;</span>
+<span class="w">        </span><span class="nt">&lt;/encoder&gt;</span>
+<span class="w">        </span><span class="nt">&lt;rollingPolicy</span><span class="w"> </span><span class="na">class=</span><span class="s">&quot;ch.qos.logback.core.rolling.TimeBasedRollingPolicy&quot;</span><span class="nt">&gt;</span>
+<span class="w">            </span><span class="nt">&lt;fileNamePattern&gt;</span>logs/bomerp-%d{yyyy-MM-dd}.log<span class="nt">&lt;/fileNamePattern&gt;</span>
+<span class="w">            </span><span class="nt">&lt;maxHistory&gt;</span>7<span class="nt">&lt;/maxHistory&gt;</span>
+<span class="w">        </span><span class="nt">&lt;/rollingPolicy&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/appender&gt;</span>
+
+<span class="w">    </span><span class="nt">&lt;root</span><span class="w"> </span><span class="na">level=</span><span class="s">&quot;INFO&quot;</span><span class="nt">&gt;</span>
+<span class="w">        </span><span class="nt">&lt;appender-ref</span><span class="w"> </span><span class="na">ref=</span><span class="s">&quot;CONSOLE&quot;</span><span class="nt">/&gt;</span>
+<span class="w">        </span><span class="nt">&lt;appender-ref</span><span class="w"> </span><span class="na">ref=</span><span class="s">&quot;FILE&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/root&gt;</span>
+<span class="nt">&lt;/configuration&gt;</span>
+</code></pre></div>
+<h4 id="323-ejecutar-y-probar">3.2.3 Ejecutar y probar<a class="headerlink" href="#323-ejecutar-y-probar" title="Permanent link">&para;</a></h4>
+<p>Si ya hiciste esto en S1, salta la ejecución — ya está probado. Si no, arranca la aplicación y verifica el cambio de formato: antes de <code>logback-spring.xml</code>, la terminal muestra el formato por defecto de Spring Boot; después, cambia al patrón definido (<code>[%X{traceId}]</code> en vez de PID/app/hilo):</p>
+<div class="highlight"><pre><span></span><code>2026-08-15 18:53:05.581 [] INFO  o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path &#39;/&#39;
+2026-08-15 18:53:17.004 [22deb350-54b4-4dea-a9c6-b09aaae9cea6] INFO  o.s.api.AbstractOpenApiResource - Init duration for springdoc-openapi is: 113 ms
+</code></pre></div>
+<p>Las primeras líneas (arranque) muestran <code>[]</code> vacío: todavía no hay ninguna petición HTTP en curso. La línea disparada por una petición real ya trae un <code>traceId</code>: el <code>CorrelationIdFilter</code> generó el UUID, lo puso en el <code>MDC</code>, y ese log lo heredó automáticamente.</p>
+<h3 id="33-migrar-productoresponse-a-clase-y-crear-productorequest">3.3 Migrar <code>ProductoResponse</code> a clase y crear <code>ProductoRequest</code><a class="headerlink" href="#33-migrar-productoresponse-a-clase-y-crear-productorequest" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> DTO de entrada y de salida, ambos como clases con Lombok.</p>
+<p>Reemplaza el contenido de <code>catalogo/producto/dto/ProductoResponse.java</code> (el <code>record</code> de S1) por:</p>
+<p><strong><code>catalogo/producto/dto/ProductoResponse.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.dto</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.AllArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Builder</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Getter</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.NoArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Setter</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.math.BigDecimal</span><span class="p">;</span>
+
+<span class="nd">@Getter</span>
+<span class="nd">@Setter</span>
+<span class="nd">@Builder</span>
+<span class="nd">@NoArgsConstructor</span>
+<span class="nd">@AllArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ProductoResponse</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">nombre</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">precio</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Integer</span><span class="w"> </span><span class="n">stock</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong><code>catalogo/producto/dto/ProductoRequest.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.dto</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.validation.constraints.DecimalMin</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.validation.constraints.NotBlank</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.validation.constraints.NotNull</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.validation.constraints.PositiveOrZero</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.validation.constraints.Size</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Getter</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Setter</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.math.BigDecimal</span><span class="p">;</span>
+
+<span class="nd">@Getter</span>
+<span class="nd">@Setter</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ProductoRequest</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@NotBlank</span>
+<span class="w">    </span><span class="nd">@Size</span><span class="p">(</span><span class="n">max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">120</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">nombre</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@NotNull</span>
+<span class="w">    </span><span class="nd">@DecimalMin</span><span class="p">(</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;0.0&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">inclusive</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">precio</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@NotNull</span>
+<span class="w">    </span><span class="nd">@PositiveOrZero</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Integer</span><span class="w"> </span><span class="n">stock</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="34-crear-productomapper">3.4 Crear <code>ProductoMapper</code><a class="headerlink" href="#34-crear-productomapper" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> clase dedicada al mapeo <code>Producto</code> ↔ DTO, en ambas direcciones.</p>
+<p><strong><code>catalogo/producto/mapper/ProductoMapper.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.mapper</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.stereotype.Component</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoRequest</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoResponse</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.entity.Producto</span><span class="p">;</span>
+
+<span class="nd">@Component</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ProductoMapper</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Producto</span><span class="w"> </span><span class="nf">toEntity</span><span class="p">(</span><span class="n">ProductoRequest</span><span class="w"> </span><span class="n">request</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Producto</span><span class="w"> </span><span class="n">producto</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Producto</span><span class="p">();</span>
+<span class="w">        </span><span class="n">producto</span><span class="p">.</span><span class="na">setNombre</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="na">getNombre</span><span class="p">());</span>
+<span class="w">        </span><span class="n">producto</span><span class="p">.</span><span class="na">setPrecio</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="na">getPrecio</span><span class="p">());</span>
+<span class="w">        </span><span class="n">producto</span><span class="p">.</span><span class="na">setStock</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="na">getStock</span><span class="p">());</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">producto</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ProductoResponse</span><span class="w"> </span><span class="nf">toResponse</span><span class="p">(</span><span class="n">Producto</span><span class="w"> </span><span class="n">producto</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ProductoResponse</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
+<span class="w">                </span><span class="p">.</span><span class="na">id</span><span class="p">(</span><span class="n">producto</span><span class="p">.</span><span class="na">getId</span><span class="p">())</span>
+<span class="w">                </span><span class="p">.</span><span class="na">nombre</span><span class="p">(</span><span class="n">producto</span><span class="p">.</span><span class="na">getNombre</span><span class="p">())</span>
+<span class="w">                </span><span class="p">.</span><span class="na">precio</span><span class="p">(</span><span class="n">producto</span><span class="p">.</span><span class="na">getPrecio</span><span class="p">())</span>
+<span class="w">                </span><span class="p">.</span><span class="na">stock</span><span class="p">(</span><span class="n">producto</span><span class="p">.</span><span class="na">getStock</span><span class="p">())</span>
+<span class="w">                </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>toEntity</code> usa <code>new</code> + setters, no <code>@Builder</code>, porque <code>Producto</code> (la entidad JPA) mantiene <code>@Getter @Setter @NoArgsConstructor</code> desde S1, sin <code>@Builder</code> — mezclar <code>@Builder</code> en la entidad persistente no aporta nada aquí y agrega una anotación más a mantener.</p>
+<h3 id="35-ampliar-productoserviceproductoserviceimpl">3.5 Ampliar <code>ProductoService</code>/<code>ProductoServiceImpl</code><a class="headerlink" href="#35-ampliar-productoserviceproductoserviceimpl" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> las cuatro operaciones CRUD en el service, con <code>ResourceNotFoundException</code> en las que buscan por <code>id</code>.</p>
+<p><strong><code>catalogo/producto/service/ProductoService.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.service</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoRequest</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoResponse</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+
+<span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">ProductoService</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">ProductoResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">listar</span><span class="p">();</span>
+<span class="w">    </span><span class="n">ProductoResponse</span><span class="w"> </span><span class="nf">obtener</span><span class="p">(</span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">);</span>
+<span class="w">    </span><span class="n">ProductoResponse</span><span class="w"> </span><span class="nf">crear</span><span class="p">(</span><span class="n">ProductoRequest</span><span class="w"> </span><span class="n">request</span><span class="p">);</span>
+<span class="w">    </span><span class="n">ProductoResponse</span><span class="w"> </span><span class="nf">actualizar</span><span class="p">(</span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">ProductoRequest</span><span class="w"> </span><span class="n">request</span><span class="p">);</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">eliminar</span><span class="p">(</span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong><code>catalogo/producto/service/ProductoServiceImpl.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.service</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.RequiredArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.stereotype.Service</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.transaction.annotation.Transactional</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoRequest</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoResponse</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.entity.Producto</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.mapper.ProductoMapper</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.repository.ProductoRepository</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.exception.ResourceNotFoundException</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+
+<span class="nd">@Service</span>
+<span class="nd">@RequiredArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ProductoServiceImpl</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">ProductoService</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">ProductoRepository</span><span class="w"> </span><span class="n">productoRepository</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">ProductoMapper</span><span class="w"> </span><span class="n">productoMapper</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="nd">@Transactional</span><span class="p">(</span><span class="n">readOnly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">ProductoResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">listar</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">productoRepository</span><span class="p">.</span><span class="na">findAll</span><span class="p">().</span><span class="na">stream</span><span class="p">().</span><span class="na">map</span><span class="p">(</span><span class="n">productoMapper</span><span class="p">::</span><span class="n">toResponse</span><span class="p">).</span><span class="na">toList</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="nd">@Transactional</span><span class="p">(</span><span class="n">readOnly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ProductoResponse</span><span class="w"> </span><span class="nf">obtener</span><span class="p">(</span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">productoMapper</span><span class="p">.</span><span class="na">toResponse</span><span class="p">(</span><span class="n">buscarOFallar</span><span class="p">(</span><span class="n">id</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ProductoResponse</span><span class="w"> </span><span class="nf">crear</span><span class="p">(</span><span class="n">ProductoRequest</span><span class="w"> </span><span class="n">request</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Producto</span><span class="w"> </span><span class="n">producto</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">productoMapper</span><span class="p">.</span><span class="na">toEntity</span><span class="p">(</span><span class="n">request</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">productoMapper</span><span class="p">.</span><span class="na">toResponse</span><span class="p">(</span><span class="n">productoRepository</span><span class="p">.</span><span class="na">save</span><span class="p">(</span><span class="n">producto</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ProductoResponse</span><span class="w"> </span><span class="nf">actualizar</span><span class="p">(</span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">ProductoRequest</span><span class="w"> </span><span class="n">request</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Producto</span><span class="w"> </span><span class="n">producto</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">buscarOFallar</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+<span class="w">        </span><span class="n">producto</span><span class="p">.</span><span class="na">setNombre</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="na">getNombre</span><span class="p">());</span>
+<span class="w">        </span><span class="n">producto</span><span class="p">.</span><span class="na">setPrecio</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="na">getPrecio</span><span class="p">());</span>
+<span class="w">        </span><span class="n">producto</span><span class="p">.</span><span class="na">setStock</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="na">getStock</span><span class="p">());</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">productoMapper</span><span class="p">.</span><span class="na">toResponse</span><span class="p">(</span><span class="n">productoRepository</span><span class="p">.</span><span class="na">save</span><span class="p">(</span><span class="n">producto</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">eliminar</span><span class="p">(</span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">productoRepository</span><span class="p">.</span><span class="na">delete</span><span class="p">(</span><span class="n">buscarOFallar</span><span class="p">(</span><span class="n">id</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Producto</span><span class="w"> </span><span class="nf">buscarOFallar</span><span class="p">(</span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">productoRepository</span><span class="p">.</span><span class="na">findById</span><span class="p">(</span><span class="n">id</span><span class="p">)</span>
+<span class="w">                </span><span class="p">.</span><span class="na">orElseThrow</span><span class="p">(()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ResourceNotFoundException</span><span class="p">(</span><span class="s">&quot;Producto no encontrado: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">id</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>pe.edu.upeu.bomerp.exception</code> es el paquete compartido creado en S1 (3.3.1) — <code>ResourceNotFoundException</code> no se repite aquí, se reutiliza tal cual.</p>
+<h3 id="36-ampliar-productocontroller">3.6 Ampliar <code>ProductoController</code><a class="headerlink" href="#36-ampliar-productocontroller" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> los cinco endpoints (<code>GET</code>, <code>GET /{id}</code>, <code>POST</code>, <code>PUT</code>, <code>DELETE</code>) sobre <code>/api/v1/productos</code>.</p>
+<p><strong><code>catalogo/producto/controller/ProductoController.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.controller</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">io.swagger.v3.oas.annotations.Operation</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io.swagger.v3.oas.annotations.tags.Tag</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.validation.Valid</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.RequiredArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.http.HttpStatus</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.http.ResponseEntity</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.bind.annotation.*</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoRequest</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoResponse</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.service.ProductoService</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+
+<span class="nd">@Tag</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Productos&quot;</span><span class="p">)</span>
+<span class="nd">@RestController</span>
+<span class="nd">@RequestMapping</span><span class="p">(</span><span class="s">&quot;/api/v1/productos&quot;</span><span class="p">)</span>
+<span class="nd">@RequiredArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ProductoController</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">ProductoService</span><span class="w"> </span><span class="n">productoService</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Operation</span><span class="p">(</span><span class="n">summary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Lista los productos registrados&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@GetMapping</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">ProductoResponse</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="nf">listar</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">ok</span><span class="p">(</span><span class="n">productoService</span><span class="p">.</span><span class="na">listar</span><span class="p">());</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Operation</span><span class="p">(</span><span class="n">summary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Consulta un producto por id&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@GetMapping</span><span class="p">(</span><span class="s">&quot;/{id}&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">ProductoResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">obtener</span><span class="p">(</span><span class="nd">@PathVariable</span><span class="w"> </span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">ok</span><span class="p">(</span><span class="n">productoService</span><span class="p">.</span><span class="na">obtener</span><span class="p">(</span><span class="n">id</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Operation</span><span class="p">(</span><span class="n">summary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Registra un producto nuevo&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@PostMapping</span>
+<span class="w">    </span><span class="nd">@ResponseStatus</span><span class="p">(</span><span class="n">HttpStatus</span><span class="p">.</span><span class="na">CREATED</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ProductoResponse</span><span class="w"> </span><span class="nf">crear</span><span class="p">(</span><span class="nd">@Valid</span><span class="w"> </span><span class="nd">@RequestBody</span><span class="w"> </span><span class="n">ProductoRequest</span><span class="w"> </span><span class="n">request</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">productoService</span><span class="p">.</span><span class="na">crear</span><span class="p">(</span><span class="n">request</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Operation</span><span class="p">(</span><span class="n">summary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Actualiza un producto existente&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@PutMapping</span><span class="p">(</span><span class="s">&quot;/{id}&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">ProductoResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">actualizar</span><span class="p">(</span><span class="nd">@PathVariable</span><span class="w"> </span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="nd">@Valid</span><span class="w"> </span><span class="nd">@RequestBody</span><span class="w"> </span><span class="n">ProductoRequest</span><span class="w"> </span><span class="n">request</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">ok</span><span class="p">(</span><span class="n">productoService</span><span class="p">.</span><span class="na">actualizar</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">request</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Operation</span><span class="p">(</span><span class="n">summary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Elimina un producto&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@DeleteMapping</span><span class="p">(</span><span class="s">&quot;/{id}&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@ResponseStatus</span><span class="p">(</span><span class="n">HttpStatus</span><span class="p">.</span><span class="na">NO_CONTENT</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">eliminar</span><span class="p">(</span><span class="nd">@PathVariable</span><span class="w"> </span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">productoService</span><span class="p">.</span><span class="na">eliminar</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="37-probar-el-crud-completo">3.7 Probar el CRUD completo<a class="headerlink" href="#37-probar-el-crud-completo" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> evidencia de los cinco endpoints, incluidos los casos de error.</p>
+<p>PowerShell:</p>
+<div class="highlight"><pre><span></span><code><span class="c"># Crear (201)</span>
+<span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-Uri</span> <span class="s2">&quot;http://localhost:8080/api/v1/productos&quot;</span> <span class="n">-ContentType</span> <span class="s2">&quot;application/json&quot;</span> <span class="n">-Body</span> <span class="s1">&#39;{&quot;nombre&quot;:&quot;Teclado mecánico&quot;,&quot;precio&quot;:180.50,&quot;stock&quot;:25}&#39;</span>
+
+<span class="c"># Consultar por id (200) - reemplaza {id} por el id devuelto arriba</span>
+<span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Get</span> <span class="n">-Uri</span> <span class="s2">&quot;http://localhost:8080/api/v1/productos/{id}&quot;</span>
+
+<span class="c"># Actualizar (200)</span>
+<span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Put</span> <span class="n">-Uri</span> <span class="s2">&quot;http://localhost:8080/api/v1/productos/{id}&quot;</span> <span class="n">-ContentType</span> <span class="s2">&quot;application/json&quot;</span> <span class="n">-Body</span> <span class="s1">&#39;{&quot;nombre&quot;:&quot;Teclado mecánico RGB&quot;,&quot;precio&quot;:199.90,&quot;stock&quot;:20}&#39;</span>
+
+<span class="c"># Eliminar (204)</span>
+<span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Delete</span> <span class="n">-Uri</span> <span class="s2">&quot;http://localhost:8080/api/v1/productos/{id}&quot;</span>
+
+<span class="c"># Caso inválido: nombre vacío (400)</span>
+<span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-Uri</span> <span class="s2">&quot;http://localhost:8080/api/v1/productos&quot;</span> <span class="n">-ContentType</span> <span class="s2">&quot;application/json&quot;</span> <span class="n">-Body</span> <span class="s1">&#39;{&quot;nombre&quot;:&quot;&quot;,&quot;precio&quot;:10,&quot;stock&quot;:1}&#39;</span>
+
+<span class="c"># Caso no encontrado: id inexistente (404)</span>
+<span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Get</span> <span class="n">-Uri</span> <span class="s2">&quot;http://localhost:8080/api/v1/productos/999999&quot;</span>
+</code></pre></div>
+<p>bash macOS/Linux:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Crear (201)</span>
+curl<span class="w"> </span>-i<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8080/api/v1/productos<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;nombre&quot;:&quot;Teclado mecánico&quot;,&quot;precio&quot;:180.50,&quot;stock&quot;:25}&#39;</span>
+
+<span class="c1"># Consultar por id (200) - reemplaza {id} por el id devuelto arriba</span>
+curl<span class="w"> </span>-i<span class="w"> </span>http://localhost:8080/api/v1/productos/<span class="o">{</span>id<span class="o">}</span>
+
+<span class="c1"># Actualizar (200)</span>
+curl<span class="w"> </span>-i<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span>http://localhost:8080/api/v1/productos/<span class="o">{</span>id<span class="o">}</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;nombre&quot;:&quot;Teclado mecánico RGB&quot;,&quot;precio&quot;:199.90,&quot;stock&quot;:20}&#39;</span>
+
+<span class="c1"># Eliminar (204)</span>
+curl<span class="w"> </span>-i<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span>http://localhost:8080/api/v1/productos/<span class="o">{</span>id<span class="o">}</span>
+
+<span class="c1"># Caso inválido: nombre vacío (400)</span>
+curl<span class="w"> </span>-i<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8080/api/v1/productos<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;nombre&quot;:&quot;&quot;,&quot;precio&quot;:10,&quot;stock&quot;:1}&#39;</span>
+
+<span class="c1"># Caso no encontrado: id inexistente (404)</span>
+curl<span class="w"> </span>-i<span class="w"> </span>http://localhost:8080/api/v1/productos/999999
+</code></pre></div>
+<p><strong>Tabla 2. Verificación del CRUD antes de continuar</strong></p>
+<table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>Método</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Crear producto válido</td>
+<td><code>POST</code></td>
+<td><code>201 Created</code>, cuerpo con <code>id</code> asignado</td>
+</tr>
+<tr>
+<td>Consultar por id existente</td>
+<td><code>GET /{id}</code></td>
+<td><code>200 OK</code>, datos del producto</td>
+</tr>
+<tr>
+<td>Actualizar producto existente</td>
+<td><code>PUT /{id}</code></td>
+<td><code>200 OK</code>, datos actualizados</td>
+</tr>
+<tr>
+<td>Eliminar producto existente</td>
+<td><code>DELETE /{id}</code></td>
+<td><code>204 No Content</code></td>
+</tr>
+<tr>
+<td>Nombre vacío en <code>POST</code></td>
+<td><code>POST</code></td>
+<td><code>400</code>, cuerpo con <code>error: "Bad Request"</code> (3.3.1 de S1)</td>
+</tr>
+<tr>
+<td>Id inexistente en <code>GET</code>/<code>PUT</code>/<code>DELETE</code></td>
+<td>cualquiera</td>
+<td><code>404</code>, cuerpo con <code>error: "Not Found"</code> (3.3.1 de S1)</td>
+</tr>
+<tr>
+<td>Trazabilidad</td>
+<td>cualquiera</td>
+<td>Log de la petición muestra <code>[traceId]</code> no vacío (3.3.2 de S1)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="38-escribir-pruebas-automatizadas-del-controller">3.8 Escribir pruebas automatizadas del controller<a class="headerlink" href="#38-escribir-pruebas-automatizadas-del-controller" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> <code>ProductoControllerTest</code>, con los casos de 3.7 automatizados en vez de ejecutados a mano.</p>
+<p>Las pruebas manuales de 3.7 verifican el CRUD una vez; una prueba automatizada verifica lo mismo <strong>cada vez que compilas</strong>, sin depender de que alguien recuerde ejecutar los <code>curl</code>/<code>Invoke-RestMethod</code> uno por uno. <code>@WebMvcTest</code> levanta solo la capa web (controller, <code>@Valid</code>, <code>GlobalExceptionHandler</code>) — sin Oracle, sin <code>ProductoServiceImpl</code> real — y <code>@MockitoBean</code> reemplaza <code>ProductoService</code> por un doble de prueba controlado por el test.</p>
+<p><strong><code>src/test/java/pe/edu/upeu/bomerp/catalogo/producto/controller/ProductoControllerTest.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.controller</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.fasterxml.jackson.databind.ObjectMapper</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.junit.jupiter.api.Test</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.beans.factory.annotation.Autowired</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.http.MediaType</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.test.context.bean.override.mockito.MockitoBean</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.test.web.servlet.MockMvc</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoRequest</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoResponse</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.service.ProductoService</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.exception.ResourceNotFoundException</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.math.BigDecimal</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+
+<span class="kn">import static</span><span class="w"> </span><span class="nn">org.mockito.ArgumentMatchers.any</span><span class="p">;</span>
+<span class="kn">import static</span><span class="w"> </span><span class="nn">org.mockito.Mockito.when</span><span class="p">;</span>
+<span class="kn">import static</span><span class="w"> </span><span class="nn">org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*</span><span class="p">;</span>
+<span class="kn">import static</span><span class="w"> </span><span class="nn">org.springframework.test.web.servlet.result.MockMvcResultMatchers.*</span><span class="p">;</span>
+
+<span class="nd">@WebMvcTest</span><span class="p">(</span><span class="n">ProductoController</span><span class="p">.</span><span class="na">class</span><span class="p">)</span>
+<span class="kd">class</span> <span class="nc">ProductoControllerTest</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@Autowired</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">MockMvc</span><span class="w"> </span><span class="n">mockMvc</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Autowired</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">ObjectMapper</span><span class="w"> </span><span class="n">objectMapper</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@MockitoBean</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">ProductoService</span><span class="w"> </span><span class="n">productoService</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Test</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">listar_respondeOkConLosProductosDelService</span><span class="p">()</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">when</span><span class="p">(</span><span class="n">productoService</span><span class="p">.</span><span class="na">listar</span><span class="p">()).</span><span class="na">thenReturn</span><span class="p">(</span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span>
+<span class="w">                </span><span class="n">ProductoResponse</span><span class="p">.</span><span class="na">builder</span><span class="p">().</span><span class="na">id</span><span class="p">(</span><span class="mi">1L</span><span class="p">).</span><span class="na">nombre</span><span class="p">(</span><span class="s">&quot;Teclado mecánico&quot;</span><span class="p">).</span><span class="na">precio</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">BigDecimal</span><span class="p">(</span><span class="s">&quot;180.50&quot;</span><span class="p">)).</span><span class="na">stock</span><span class="p">(</span><span class="mi">25</span><span class="p">).</span><span class="na">build</span><span class="p">()</span>
+<span class="w">        </span><span class="p">));</span>
+
+<span class="w">        </span><span class="n">mockMvc</span><span class="p">.</span><span class="na">perform</span><span class="p">(</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;/api/v1/productos&quot;</span><span class="p">))</span>
+<span class="w">                </span><span class="p">.</span><span class="na">andExpect</span><span class="p">(</span><span class="n">status</span><span class="p">().</span><span class="na">isOk</span><span class="p">())</span>
+<span class="w">                </span><span class="p">.</span><span class="na">andExpect</span><span class="p">(</span><span class="n">jsonPath</span><span class="p">(</span><span class="s">&quot;$[0].nombre&quot;</span><span class="p">).</span><span class="na">value</span><span class="p">(</span><span class="s">&quot;Teclado mecánico&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Test</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">crear_conDatosValidos_respondeCreated</span><span class="p">()</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">ProductoRequest</span><span class="w"> </span><span class="n">request</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ProductoRequest</span><span class="p">();</span>
+<span class="w">        </span><span class="n">request</span><span class="p">.</span><span class="na">setNombre</span><span class="p">(</span><span class="s">&quot;Teclado mecánico&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">request</span><span class="p">.</span><span class="na">setPrecio</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">BigDecimal</span><span class="p">(</span><span class="s">&quot;180.50&quot;</span><span class="p">));</span>
+<span class="w">        </span><span class="n">request</span><span class="p">.</span><span class="na">setStock</span><span class="p">(</span><span class="mi">25</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">when</span><span class="p">(</span><span class="n">productoService</span><span class="p">.</span><span class="na">crear</span><span class="p">(</span><span class="n">any</span><span class="p">())).</span><span class="na">thenReturn</span><span class="p">(</span>
+<span class="w">                </span><span class="n">ProductoResponse</span><span class="p">.</span><span class="na">builder</span><span class="p">().</span><span class="na">id</span><span class="p">(</span><span class="mi">1L</span><span class="p">).</span><span class="na">nombre</span><span class="p">(</span><span class="s">&quot;Teclado mecánico&quot;</span><span class="p">).</span><span class="na">precio</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">BigDecimal</span><span class="p">(</span><span class="s">&quot;180.50&quot;</span><span class="p">)).</span><span class="na">stock</span><span class="p">(</span><span class="mi">25</span><span class="p">).</span><span class="na">build</span><span class="p">()</span>
+<span class="w">        </span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">mockMvc</span><span class="p">.</span><span class="na">perform</span><span class="p">(</span><span class="n">post</span><span class="p">(</span><span class="s">&quot;/api/v1/productos&quot;</span><span class="p">)</span>
+<span class="w">                        </span><span class="p">.</span><span class="na">contentType</span><span class="p">(</span><span class="n">MediaType</span><span class="p">.</span><span class="na">APPLICATION_JSON</span><span class="p">)</span>
+<span class="w">                        </span><span class="p">.</span><span class="na">content</span><span class="p">(</span><span class="n">objectMapper</span><span class="p">.</span><span class="na">writeValueAsString</span><span class="p">(</span><span class="n">request</span><span class="p">)))</span>
+<span class="w">                </span><span class="p">.</span><span class="na">andExpect</span><span class="p">(</span><span class="n">status</span><span class="p">().</span><span class="na">isCreated</span><span class="p">())</span>
+<span class="w">                </span><span class="p">.</span><span class="na">andExpect</span><span class="p">(</span><span class="n">jsonPath</span><span class="p">(</span><span class="s">&quot;$.id&quot;</span><span class="p">).</span><span class="na">value</span><span class="p">(</span><span class="mi">1</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Test</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">crear_conNombreVacio_respondeBadRequestSinLlegarAlService</span><span class="p">()</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">ProductoRequest</span><span class="w"> </span><span class="n">request</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ProductoRequest</span><span class="p">();</span>
+<span class="w">        </span><span class="n">request</span><span class="p">.</span><span class="na">setNombre</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">request</span><span class="p">.</span><span class="na">setPrecio</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">BigDecimal</span><span class="p">(</span><span class="s">&quot;10&quot;</span><span class="p">));</span>
+<span class="w">        </span><span class="n">request</span><span class="p">.</span><span class="na">setStock</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">mockMvc</span><span class="p">.</span><span class="na">perform</span><span class="p">(</span><span class="n">post</span><span class="p">(</span><span class="s">&quot;/api/v1/productos&quot;</span><span class="p">)</span>
+<span class="w">                        </span><span class="p">.</span><span class="na">contentType</span><span class="p">(</span><span class="n">MediaType</span><span class="p">.</span><span class="na">APPLICATION_JSON</span><span class="p">)</span>
+<span class="w">                        </span><span class="p">.</span><span class="na">content</span><span class="p">(</span><span class="n">objectMapper</span><span class="p">.</span><span class="na">writeValueAsString</span><span class="p">(</span><span class="n">request</span><span class="p">)))</span>
+<span class="w">                </span><span class="p">.</span><span class="na">andExpect</span><span class="p">(</span><span class="n">status</span><span class="p">().</span><span class="na">isBadRequest</span><span class="p">());</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Test</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">obtener_conIdInexistente_respondeNotFound</span><span class="p">()</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">when</span><span class="p">(</span><span class="n">productoService</span><span class="p">.</span><span class="na">obtener</span><span class="p">(</span><span class="mi">999L</span><span class="p">)).</span><span class="na">thenThrow</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">ResourceNotFoundException</span><span class="p">(</span><span class="s">&quot;Producto no encontrado: 999&quot;</span><span class="p">));</span>
+
+<span class="w">        </span><span class="n">mockMvc</span><span class="p">.</span><span class="na">perform</span><span class="p">(</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;/api/v1/productos/999&quot;</span><span class="p">))</span>
+<span class="w">                </span><span class="p">.</span><span class="na">andExpect</span><span class="p">(</span><span class="n">status</span><span class="p">().</span><span class="na">isNotFound</span><span class="p">());</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>@WebMvcTest</code> incluye automáticamente los <code>@RestControllerAdvice</code> del proyecto (como <code>GlobalExceptionHandler</code>, S1 3.3.1) — por eso el caso de nombre vacío responde <code>400</code> real, generado por el mismo manejador que usa la aplicación completa, no un mock. <code>crear_conNombreVacio_respondeBadRequestSinLlegarAlService</code> verifica implícitamente que <code>@Valid</code> corta la petición antes del controller: como nunca se programó un <code>when(productoService.crear(...))</code> para ese caso, si la validación fallara y la petición llegara igual al service mockeado, Mockito respondería <code>null</code> y el test fallaría por una razón distinta — la prueba está diseñada para fallar ruidosamente si <code>@Valid</code> deja de funcionar.</p>
+<p><strong>Error frecuente</strong>: usar <code>@SpringBootTest</code> en vez de <code>@WebMvcTest</code> para probar un controller — <code>@SpringBootTest</code> levanta el contexto completo (incluida la conexión a Oracle), mucho más lento y con una dependencia que esta prueba no necesita. <code>@WebMvcTest</code> es la porción mínima suficiente para probar contrato HTTP, validación y manejo de errores.</p>
+<p>Ejecuta las pruebas:</p>
+<div class="highlight"><pre><span></span><code><span class="p">.\</span><span class="n">mvnw</span><span class="p">.</span><span class="n">cmd</span> <span class="n">test</span> <span class="n">-Dtest</span><span class="p">=</span><span class="n">ProductoControllerTest</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>./mvnw<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-Dtest<span class="o">=</span>ProductoControllerTest
+</code></pre></div>
+<h3 id="39-como-lo-resuelve-la-industria-mapstruct-opcional-referencia">3.9 Cómo lo resuelve la industria: MapStruct (opcional, referencia)<a class="headerlink" href="#39-como-lo-resuelve-la-industria-mapstruct-opcional-referencia" title="Permanent link">&para;</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Alternativa opcional, no reemplaza 3.4 en la evidencia de la sesión</p>
+<p>Esta sección es informativa: muestra cómo un equipo profesional evita
+escribir a mano el cuerpo de un mapper como <code>ProductoMapper</code> (3.4). La
+implementación que se evalúa en 4.4-4.6 es la manual de 3.4. Adoptar
+MapStruct es una decisión de equipo, no un requisito de S2.</p>
+</div>
+<p><strong>Producto del paso:</strong> el mismo <code>ProductoMapper</code> de 3.4, generado en compilación en vez de escrito a mano.</p>
+<p>Con <a href="https://mapstruct.org/">MapStruct</a>, un mapper es una <strong>interfaz</strong> — el procesador de anotaciones genera la implementación (<code>ProductoMapperImpl</code>) al compilar.</p>
+<p>En el <code>pom.xml</code>, agrega la dependencia:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.mapstruct<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>mapstruct<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;version&gt;</span>1.6.3<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div>
+<p>Y en el <code>maven-compiler-plugin</code>, junto al <code>annotationProcessorPaths</code> que ya tiene Lombok, agrega el de MapStruct <strong>después</strong> de Lombok — MapStruct necesita ver los getters/setters que Lombok genera, y el orden de los <code>&lt;path&gt;</code> determina en qué orden corren los procesadores:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;annotationProcessorPaths&gt;</span>
+<span class="w">    </span><span class="nt">&lt;path&gt;</span>
+<span class="w">        </span><span class="nt">&lt;groupId&gt;</span>org.projectlombok<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">        </span><span class="nt">&lt;artifactId&gt;</span>lombok<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/path&gt;</span>
+<span class="w">    </span><span class="nt">&lt;path&gt;</span>
+<span class="w">        </span><span class="nt">&lt;groupId&gt;</span>org.mapstruct<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">        </span><span class="nt">&lt;artifactId&gt;</span>mapstruct-processor<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">        </span><span class="nt">&lt;version&gt;</span>1.6.3<span class="nt">&lt;/version&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/path&gt;</span>
+<span class="nt">&lt;/annotationProcessorPaths&gt;</span>
+</code></pre></div>
+<p><code>ProductoMapper</code> pasa de clase a interfaz:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.mapper</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.mapstruct.Mapper</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoRequest</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoResponse</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.entity.Producto</span><span class="p">;</span>
+
+<span class="nd">@Mapper</span><span class="p">(</span><span class="n">componentModel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;spring&quot;</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">ProductoMapper</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Producto</span><span class="w"> </span><span class="nf">toEntity</span><span class="p">(</span><span class="n">ProductoRequest</span><span class="w"> </span><span class="n">request</span><span class="p">);</span>
+<span class="w">    </span><span class="n">ProductoResponse</span><span class="w"> </span><span class="nf">toResponse</span><span class="p">(</span><span class="n">Producto</span><span class="w"> </span><span class="n">producto</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Como los nombres de campo coinciden exactamente entre <code>Producto</code>, <code>ProductoRequest</code> y <code>ProductoResponse</code> (<code>nombre</code>, <code>precio</code>, <code>stock</code>), MapStruct los relaciona sin ninguna anotación <code>@Mapping</code> adicional — el mapeo de 3.4, que hoy tiene diez líneas de <code>set</code>/<code>get</code> repetidos, se reduce a dos firmas de método sin cuerpo.</p>
+<p><strong>Ventajas frente al mapeo manual (3.4):</strong></p>
+<ul>
+<li><strong>Menos código que mantener</strong>: si mañana <code>Producto</code> agrega un campo con el mismo nombre en el DTO, MapStruct lo mapea solo — nadie edita <code>ProductoMapper</code> a mano.</li>
+<li><strong>Errores en compilación, no en producción</strong>: si un campo del DTO no tiene de dónde mapearse, MapStruct falla el build con un mensaje claro, en vez de dejarlo en <code>null</code> silenciosamente.</li>
+<li><strong>Sin costo de reflexión en tiempo de ejecución</strong>: el código generado es Java plano, igual de rápido que el mapeo manual — a diferencia de librerías que mapean por reflexión en cada llamada (por ejemplo, ModelMapper).</li>
+</ul>
+<h3 id="310-relacionar-con-ads-y-bd2">3.10 Relacionar con ADS y BD2<a class="headerlink" href="#310-relacionar-con-ads-y-bd2" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> matriz de integración actualizada.</p>
+<p><strong>Tabla 3. Matriz de integración LP2-ADS-BD2 (S2)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Endpoint LP2</th>
+<th>Componente ADS</th>
+<th>Objeto BD2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>POST /api/v1/productos</code></td>
+<td>Patrón Controller-Service-Mapper-Repository (ADS S10)</td>
+<td><code>SP_REGISTRAR_PRODUCTO</code> (BD2 S1), regla equivalente</td>
+</tr>
+<tr>
+<td><code>PUT /api/v1/productos/{id}</code></td>
+<td>Contrato REST versionado (ADS S10)</td>
+<td><code>SP_APLICAR_DESCUENTO_PRODUCTO</code> (BD2 S1), regla equivalente</td>
+</tr>
+<tr>
+<td><code>DELETE /api/v1/productos/{id}</code></td>
+<td>—</td>
+<td><code>TRG_PRODUCTO_AUDITORIA</code> sobre <code>PRODUCTOS</code> (BD2 S2)</td>
+</tr>
+</tbody>
+</table>
+<p>Sesión equivalente en los otros dos cursos, misma semana: <a href="../../../ads/sesiones/S02_Modelo_C4_Vistas_Arquitectonicas/">ADS - S2 Modelo C4 y Vistas Arquitectónicas</a> y <a href="../../../bd2/sesiones/S02_Triggers_DML_Auditoria/">BD2 - S2 Triggers DML y Auditoría</a>.</p>
+<p><strong>Evidencia de aprendizaje:</strong></p>
+<ul>
+<li><code>Producto</code> con CRUD REST completo (<code>GET</code>, <code>GET /{id}</code>, <code>POST</code>, <code>PUT</code>, <code>DELETE</code>), DTO de entrada/salida y <code>ProductoMapper</code> dedicado.</li>
+<li>Validaciones de entrada probadas con al menos un caso inválido (<code>400</code>).</li>
+<li>Manejo de errores probado con al menos un caso de recurso no encontrado (<code>404</code>).</li>
+<li><code>ProductoControllerTest</code> en verde, con los casos de éxito, validación y no encontrado automatizados.</li>
+</ul>
+<h2 id="4-crea-actividad-autonoma">4. Crea: actividad autónoma<a class="headerlink" href="#4-crea-actividad-autonoma" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 2h fuera del aula.</p>
+<h3 id="41-actividad">4.1 Actividad<a class="headerlink" href="#41-actividad" title="Permanent link">&para;</a></h3>
+<p>Replicación autónoma del CRUD REST completo en la entidad principal del dominio elegido por el equipo, documentada en evidencia individual.</p>
+<p>Completa y evidencia estas tareas:</p>
+<ol>
+<li>Definir el DTO de entrada y de salida de tu entidad principal.</li>
+<li>Crear el <code>Mapper</code> dedicado, con <code>toEntity</code>/<code>toResponse</code>.</li>
+<li>Implementar las cuatro operaciones CRUD en el service.</li>
+<li>Exponer los cinco endpoints en el controller.</li>
+<li>Probar al menos un caso válido y uno inválido por operación.</li>
+<li>Escribir al menos una prueba automatizada (<code>@WebMvcTest</code>) del controller.</li>
+</ol>
+<h3 id="42-proposito">4.2 Propósito<a class="headerlink" href="#42-proposito" title="Permanent link">&para;</a></h3>
+<p>Que cada estudiante demuestre, de forma individual y fuera del aula, que puede reproducir el patrón CRUD construido en clase sin el acompañamiento del docente.</p>
+<p>Cada estudiante documenta el CRUD de la entidad principal de su dominio.</p>
+<h3 id="43-indicaciones">4.3 Indicaciones<a class="headerlink" href="#43-indicaciones" title="Permanent link">&para;</a></h3>
+<p>Entrega un PDF con el siguiente nombre:</p>
+<div class="highlight"><pre><span></span><code>S02_LP2_Equipo##_ApellidoNombre.pdf
+</code></pre></div>
+<p>Cada captura de pantalla del informe debe mostrar, sin recortar, el reloj del sistema (fecha y hora) y tu usuario o foto de perfil (Windows, VS Code o navegador) visibles en pantalla — es lo que permite verificar que la evidencia es tuya y que corresponde al momento real de tu trabajo.</p>
+<h4 id="431-estructura-del-informe">4.3.1 Estructura del informe<a class="headerlink" href="#431-estructura-del-informe" title="Permanent link">&para;</a></h4>
+<p><strong>Datos del estudiante</strong></p>
+<ul>
+<li>Nombre:</li>
+<li>Equipo:</li>
+<li>Sesión: S02 - CRUD REST Completo de Producto</li>
+<li>Rol o aporte realizado:</li>
+<li>Link de GitHub:</li>
+</ul>
+<p><strong>Evidencia técnica</strong></p>
+<p>Incluye capturas o salidas de consola con una breve explicación debajo de cada una, organizadas en los mismos 4 bloques de la rúbrica (4.6) — así queda claro qué evidencia corresponde a cada criterio evaluado:</p>
+<ol>
+<li><em>DTO, mapeo y validación</em><ul>
+<li><code>ProductoRequest</code>/<code>ProductoResponse</code> (o los DTO de tu entidad) y el <code>Mapper</code> dedicado.</li>
+<li>Caso inválido respondiendo <code>400</code>.</li>
+</ul>
+</li>
+<li><em>Operaciones CRUD funcionales</em><ul>
+<li><code>POST</code>, <code>GET /{id}</code>, <code>PUT</code>, <code>DELETE</code> respondiendo con el código HTTP esperado.</li>
+<li>Prueba automatizada del controller (<code>@WebMvcTest</code>) en verde.</li>
+</ul>
+</li>
+<li><em>Manejo de errores y trazabilidad</em><ul>
+<li>Caso de <code>id</code> inexistente respondiendo <code>404</code>.</li>
+<li>Log de una petición mostrando <code>traceId</code>.</li>
+</ul>
+</li>
+<li><em>Separación de responsabilidades</em><ul>
+<li>Estructura de paquetes (<code>dto</code>, <code>mapper</code>, <code>service</code>, <code>controller</code>).</li>
+</ul>
+</li>
+</ol>
+<p><strong>Error o hallazgo</strong></p>
+<p>Describe un error o hallazgo: mapeo incompleto, validación faltante, código HTTP incorrecto o regla de negocio no contemplada.</p>
+<p><strong>Reflexión técnica breve</strong></p>
+<p>Responde en 5 a 8 líneas:</p>
+<div class="highlight"><pre><span></span><code>¿Por qué separar el mapeo entidad-DTO en una clase propia, en vez de hacerlo directamente en el controller o el service?
+</code></pre></div>
+<p><strong>Anexo: Feedback de la sesión</strong></p>
+<p>Pega esta página como la última hoja del PDF, con tus respuestas.</p>
+<ol>
+<li>¿Cuál es el aprendizaje más importante que te llevas de la clase de hoy?</li>
+<li>¿Qué punto de la clase te resultó más confuso o te dejó con dudas?</li>
+<li>¿Tienes alguna pregunta que te gustaría que sea respondida la siguiente clase?</li>
+<li>Sobre tu nivel de comprensión de la clase de hoy, marca una opción:<ul>
+<li>¡Entendido! - Lo domino y podría explicarlo.</li>
+<li>Más o menos. - Entendí la idea general, pero tengo dudas.</li>
+<li>Necesito ayuda. - Me siento perdido/a con este tema.</li>
+</ul>
+</li>
+<li>¿Cómo puedo ayudarte a comprender mejor el tema?</li>
+<li>Pensando en tu participación y esfuerzo en la clase de hoy, ¿cómo te autoevaluarías? Marca una opción:<ul>
+<li>Muy Comprometido/a: Me esforcé al máximo.</li>
+<li>Comprometido/a: Sé que podría haberme esforzado un poco más.</li>
+<li>Poco Comprometido/a: Hoy no di mi mejor esfuerzo.</li>
+</ul>
+</li>
+<li>Mi satisfacción con la clase fue... (califica del 1 al 10, donde 1 es insatisfecho y 10 es muy satisfecho).</li>
+</ol>
+<h3 id="44-criterios-minimos-de-aceptacion">4.4 Criterios mínimos de aceptación<a class="headerlink" href="#44-criterios-minimos-de-aceptacion" title="Permanent link">&para;</a></h3>
+<p>La evidencia individual se considera completa si:</p>
+<ul>
+<li>El archivo respeta el nombre solicitado.</li>
+<li>Implementa las cuatro operaciones CRUD sobre la entidad principal de su dominio.</li>
+<li>El DTO de entrada valida al menos dos reglas de forma (<code>@NotBlank</code>, <code>@Size</code>, <code>@NotNull</code>, etc.).</li>
+<li>Usa un <code>Mapper</code> dedicado, no mapeo manual disperso en el controller o el service.</li>
+<li>Prueba al menos un caso inválido (<code>400</code>) y un caso de recurso no encontrado (<code>404</code>).</li>
+<li>Incluye al menos una prueba automatizada del controller (<code>@WebMvcTest</code>) en verde.</li>
+<li>Cada captura de la evidencia técnica muestra el reloj del sistema y el usuario/perfil visible, sin recortar.</li>
+<li>Las fechas y horas de las capturas son coherentes con el historial de commits de su repositorio en GitHub.</li>
+<li>Incluye un error o hallazgo técnico diagnosticado.</li>
+<li>Incluye la reflexión técnica breve solicitada.</li>
+<li>Incluye el Anexo de feedback de la sesión respondido, como última página del PDF.</li>
+</ul>
+<h3 id="45-preguntas-de-defensa">4.5 Preguntas de defensa<a class="headerlink" href="#45-preguntas-de-defensa" title="Permanent link">&para;</a></h3>
+<ol>
+<li>¿Por qué <code>ProductoResponse</code> pasó de <code>record</code> a clase en esta sesión?</li>
+<li>¿Qué diferencia hay entre la validación de forma (<code>@Valid</code>) y una regla de negocio?</li>
+<li>¿Qué código HTTP corresponde a "recurso no encontrado" y quién lo genera en tu backend?</li>
+<li>¿Qué pasaría si el controller construyera la entidad directamente, sin pasar por el <code>Mapper</code>?</li>
+<li>¿Por qué tu prueba de controller usa <code>@WebMvcTest</code> y no <code>@SpringBootTest</code>?</li>
+</ol>
+<h3 id="46-rubrica-de-evaluacion">4.6 Rúbrica de evaluación<a class="headerlink" href="#46-rubrica-de-evaluacion" title="Permanent link">&para;</a></h3>
+<p><strong>Tabla 4. Rúbrica de evaluación</strong></p>
+<table>
+<thead>
+<tr>
+<th>Criterio</th>
+<th style="text-align: right;">Peso (%)</th>
+<th>A (20 pts)</th>
+<th>B (15 pts)</th>
+<th>C (10 pts)</th>
+<th>D (5 pts)</th>
+<th style="text-align: right;">Nivel obtenido</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. DTO, mapeo y validación*</td>
+<td style="text-align: right;">25</td>
+<td>DTO de entrada/salida separados, <code>Mapper</code> dedicado y validaciones correctas, con caso inválido evidenciado.</td>
+<td>DTO y mapeo funcionales, con validación parcial.</td>
+<td>DTO o mapeo incompletos.</td>
+<td>No presenta DTO ni mapeo.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>2. Operaciones CRUD funcionales*</td>
+<td style="text-align: right;">25</td>
+<td>Las cuatro operaciones CRUD funcionan con los códigos HTTP correctos, con al menos una prueba automatizada (<code>@WebMvcTest</code>) en verde.</td>
+<td>La mayoría de las operaciones funciona, con detalles menores; prueba automatizada ausente o incompleta.</td>
+<td>Menos de la mitad de las operaciones funciona.</td>
+<td>Ninguna operación funciona.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>3. Manejo de errores y trazabilidad*</td>
+<td style="text-align: right;">25</td>
+<td>Casos <code>400</code> y <code>404</code> evidenciados, con <code>traceId</code> visible en logs.</td>
+<td>Al menos un caso de error evidenciado.</td>
+<td>Manejo de errores parcial o sin evidencia.</td>
+<td>No maneja errores.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>4. Separación de responsabilidades*</td>
+<td style="text-align: right;">25</td>
+<td>Estructura por capas (<code>dto</code>, <code>mapper</code>, <code>service</code>, <code>controller</code>) clara y consistente con el patrón de la sesión.</td>
+<td>Estructura presente, con acoplamiento menor.</td>
+<td>Estructura confusa o incompleta.</td>
+<td>No separa responsabilidades.</td>
+<td style="text-align: right;"></td>
+</tr>
+</tbody>
+</table>
+<p>* Agregado manual.</p>
+<p>Nota final = suma de (<code>Peso</code> / 100 × <code>Puntos del nivel obtenido</code>) = ____ / 20.</p>
+<p>Para usar la rúbrica con IA, solicita:</p>
+<div class="highlight"><pre><span></span><code>Evalúa el PDF usando la rúbrica de la sesión.
+Para cada criterio selecciona el nivel obtenido usando la escala A=20, B=15, C=10, D=5 puntos.
+Justifica brevemente cada nivel asignado.
+Verifica que cada captura muestre reloj del sistema y usuario/perfil visible, y que las fechas sean coherentes con el historial de commits de GitHub. Si falta esta evidencia o hay inconsistencias, indícalo explícitamente antes de calificar.
+Calcula la nota final con la fórmula: suma de (Peso/100 × Puntos del nivel obtenido), directamente sobre 20.
+Indica 2 fortalezas y 2 recomendaciones.
+</code></pre></div>
+<h2 id="5-cierre">5. Cierre<a class="headerlink" href="#5-cierre" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 5 min.</p>
+<p><strong>Resumen breve:</strong> hoy <code>Producto</code> pasó de un listado de solo lectura a un recurso REST completo — creación, consulta individual, actualización y eliminación, con validación de entrada, mapeo explícito y el manejo global de errores de S1 finalmente puesto a prueba con casos reales.</p>
+<p><strong>Dinámica participativa:</strong> en una ronda rápida (o con una herramienta digital tipo formulario o encuesta en vivo), cada estudiante comparte en una frase qué caso de error (<code>400</code> o <code>404</code>) le costó más reproducir.</p>
+<p><strong>Metacognición:</strong> cada estudiante responde el Anexo de feedback de la sesión, incluido en su evidencia individual (ver 4.3.1). El docente analiza esas respuestas con IA para identificar temas recurrentes o dudas comunes del equipo, y con esos indicadores construye el cierre real de la sesión — que se entrega al inicio de S3, no al final de esta clase.</p>
+<p><strong>Proyección:</strong> el <code>Mapper</code> y el patrón CRUD de hoy se repiten en S3 cuando <code>Categoria</code> y <code>Producto</code> se relacionen, y en cada módulo nuevo del curso (<code>ventas</code> en S4, <code>seguridad</code> en S10) — es el mismo patrón, aplicado una y otra vez a entidades distintas.</p>
+<h2 id="bibliografia">Bibliografía<a class="headerlink" href="#bibliografia" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Spring. (2024). <em>Validation, data binding, and type conversion</em>. VMware. https://docs.spring.io/spring-framework/reference/core/validation.html</li>
+<li>Jakarta EE. (2024). <em>Jakarta Bean Validation specification</em>. Eclipse Foundation. https://beanvalidation.org/</li>
+<li>Spring. (2024). <em>Spring Data JPA reference documentation</em>. VMware. https://docs.spring.io/spring-data/jpa/reference/</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Angel Sullon @asullom - UPeU 2026
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.top", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
