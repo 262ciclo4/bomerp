@@ -4092,6 +4092,29 @@ eventos, esa tabla no se usa — y con <code>ddl-auto: validate</code> (3.2.3),
 Hibernate falla al arrancar porque la tabla no existe en Oracle
 (<code>Schema-validation: missing table [event_publication]</code>). Detalle
 completo: <a href="../../adr/ADR-002-spring-modulith/">ADR-002</a>.</p>
+</div>
+<div class="admonition danger">
+<p class="admonition-title">Paso obligatorio: elimina también <code>spring-modulith-observability</code> del <code>pom.xml</code></p>
+<p>El Initializr también agrega <code>spring-modulith-observability</code> (scope
+<code>runtime</code>) al seleccionar Spring Modulith. <strong>Bórrala del <code>pom.xml</code>
+ahora mismo, junto con la anterior</strong> — si la dejas, el proyecto arranca
+hasta que creas el primer <code>Filter</code> (<code>CorrelationIdFilter</code>, 3.3.2), y ahí
+falla con un <code>NullPointerException</code> confuso:</p>
+<div class="highlight"><pre><span></span><code>WARN  o.s.aop.framework.CglibAopProxy - Unable to proxy interface-implementing
+method [...GenericFilterBean.init...] because it is marked as final
+ERROR o.a.c.c.C.[Tomcat].[localhost].[/] - Exception starting filter [correlationIdFilter]
+java.lang.NullPointerException: Cannot invoke &quot;...Log.isDebugEnabled()&quot; because &quot;this.logger&quot; is null
+</code></pre></div>
+<p>Por qué: esta dependencia agrega instrumentación automática con
+Micrometer sobre los beans de Spring, vía proxy AOP (CGLIB). Un
+<code>Filter</code> no debería proxiarse así — <code>GenericFilterBean.init()</code> es
+<code>final</code>, CGLIB no puede sobreescribirlo, y termina creando un proxy que
+se salta el constructor real (y con él, la inicialización del campo
+<code>logger</code>). No es un error en tu <code>CorrelationIdFilter.java</code> — es esta
+dependencia peleándose con cualquier <code>Filter</code> del proyecto. No la pide
+la lista de 9 dependencias de esta guía y no aporta nada para lo que
+S1 necesita (solo agrega métricas/trazas, no verificación de módulos —
+esa la sigue haciendo <code>spring-modulith-starter-core</code>, que si se queda).</p>
 <p>Verifica que quedó eliminada buscando <code>spring-modulith-starter-jpa</code> en
 el <code>pom.xml</code>: la búsqueda no debe encontrar ninguna coincidencia.</p>
 </div>
