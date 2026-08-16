@@ -70,10 +70,10 @@ nav:
       - Silabos:
           - Silabo 2026-1: lp2/silabo_lp2_2026_1.md
           - Silabo 2026-2: lp2/silabo_lp2_2026_2.md
-      - I. Decisiones de arquitectura:
+      - Decisiones de arquitectura:
           - ADR-001 - Arquitectura del backend: lp2/adr/ADR-001-arquitectura-backend.md
           - ADR-002 - Spring Modulith: lp2/adr/ADR-002-spring-modulith.md
           - ADR-003 - Versión exacta de Spring Boot 4.0.7: lp2/adr/ADR-003-spring-boot-4.md
           - ADR-004 - JWT diferido a S10: lp2/adr/ADR-004-jwt-diferido.md
-      - 1. Base backend REST modular de BomERP:
+      - I. Base backend REST modular de BomERP:
           - S1 - Arquitectura backend REST profesional: lp2/sesiones/S01_Arquitectura_Backend_REST_Profesional.md
