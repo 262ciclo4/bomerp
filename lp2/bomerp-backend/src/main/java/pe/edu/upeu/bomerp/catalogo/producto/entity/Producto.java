@@ -12,14 +12,14 @@ import lombok.Setter;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "PRODUCTO", schema = "BOM_CATALOGO")
+@Table(name = "PRODUCTOS", schema = "BOM_CATALOGO")
 @Getter
 @Setter
 @NoArgsConstructor
 public class Producto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID_PRODUCTO")
+    @Column(name = "ID")
     private Long id;
 
     @Column(name = "NOMBRE", nullable = false, length = 120)

@@ -11,14 +11,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "CATEGORIA", schema = "BOM_CATALOGO")
+@Table(name = "CATEGORIAS", schema = "BOM_CATALOGO")
 @Getter
 @Setter
 @NoArgsConstructor
 public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID_CATEGORIA")
+    @Column(name = "ID")
     private Long id;
 
     @Column(name = "NOMBRE", nullable = false, unique = true, length = 80)

@@ -428,6 +428,31 @@ Después de `Enter`, el asistente pide dónde guardar el proyecto. Navega hasta 
     (`Schema-validation: missing table [event_publication]`). Detalle
     completo: [ADR-002](../adr/ADR-002-spring-modulith.md).
 
+!!! danger "Paso obligatorio: elimina también `spring-modulith-observability` del `pom.xml`"
+    El Initializr también agrega `spring-modulith-observability` (scope
+    `runtime`) al seleccionar Spring Modulith. **Bórrala del `pom.xml`
+    ahora mismo, junto con la anterior** — si la dejas, el proyecto arranca
+    hasta que creas el primer `Filter` (`CorrelationIdFilter`, 3.3.2), y ahí
+    falla con un `NullPointerException` confuso:
+
+    ```text
+    WARN  o.s.aop.framework.CglibAopProxy - Unable to proxy interface-implementing
+    method [...GenericFilterBean.init...] because it is marked as final
+    ERROR o.a.c.c.C.[Tomcat].[localhost].[/] - Exception starting filter [correlationIdFilter]
+    java.lang.NullPointerException: Cannot invoke "...Log.isDebugEnabled()" because "this.logger" is null
+    ```
+
+    Por qué: esta dependencia agrega instrumentación automática con
+    Micrometer sobre los beans de Spring, vía proxy AOP (CGLIB). Un
+    `Filter` no debería proxiarse así — `GenericFilterBean.init()` es
+    `final`, CGLIB no puede sobreescribirlo, y termina creando un proxy que
+    se salta el constructor real (y con él, la inicialización del campo
+    `logger`). No es un error en tu `CorrelationIdFilter.java` — es esta
+    dependencia peleándose con cualquier `Filter` del proyecto. No la pide
+    la lista de 9 dependencias de esta guía y no aporta nada para lo que
+    S1 necesita (solo agrega métricas/trazas, no verificación de módulos —
+    esa la sigue haciendo `spring-modulith-starter-core`, que si se queda).
+
     Verifica que quedó eliminada buscando `spring-modulith-starter-jpa` en
     el `pom.xml`: la búsqueda no debe encontrar ninguna coincidencia.
 
