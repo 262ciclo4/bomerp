@@ -3181,10 +3181,10 @@
 <h2 id="1-introduccion">1. Introducción<a class="headerlink" href="#1-introduccion" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 20 min.</p>
 <h3 id="11-presentacion-de-la-sesion">1.1 Presentación de la sesión<a class="headerlink" href="#11-presentacion-de-la-sesion" title="Permanent link">&para;</a></h3>
-<p>En S1, <code>Producto</code> (si se completó el 3.5.2 opcional) solo exponía un listado de solo lectura. Esta sesión lo convierte en un recurso REST completo: crear, consultar uno por id, actualizar y eliminar, con un DTO de entrada validado, mapeo explícito entre capas y el manejo global de errores (<code>GlobalExceptionHandler</code>, <code>CorrelationIdFilter</code>) puesto a prueba con casos reales de validación y de recurso no encontrado. Esas dos clases ya se crearon en S1 (3.3) — 3.2 de esta guía repite esa explicación porque el sílabo lista "excepciones" y "logs" como parte del alcance oficial de S2, no solo de S1.</p>
+<p>En S1, <code>Producto</code> (si se completó el 3.4.2 opcional) solo exponía un listado de solo lectura. Esta sesión lo convierte en un recurso REST completo: crear, consultar uno por id, actualizar y eliminar, con un DTO de entrada validado, mapeo explícito entre capas y el manejo global de errores (<code>GlobalExceptionHandler</code>, <code>CorrelationIdFilter</code>, creados en 3.2 de esta misma sesión) puesto a prueba con casos reales de validación y de recurso no encontrado.</p>
 <h3 id="12-indice">1.2 Índice<a class="headerlink" href="#12-indice" title="Permanent link">&para;</a></h3>
 <ol>
-<li>Excepciones y filtro de trazabilidad (repaso de S1).</li>
+<li>Excepciones y filtro de trazabilidad.</li>
 <li>Entidad, repositorio, DTO y mapeo.</li>
 <li>Servicio de aplicación con las cuatro operaciones CRUD.</li>
 <li>Validación de entrada con Bean Validation.</li>
@@ -3210,8 +3210,8 @@
 <tbody>
 <tr>
 <td>Revisión previa individual</td>
-<td>Si no completaste el 3.5.2 opcional de S1, revisa esa sección antes de clase (<code>Producto</code> con <code>listar()</code> debe existir). Repasar Bean Validation (<code>@NotBlank</code>, <code>@Size</code>, <code>@NotNull</code>). Trabajo individual, antes de clase.</td>
-<td>S1 (3.5.2), documentación de Jakarta Bean Validation.</td>
+<td>Si no completaste el 3.4.2 opcional de S1, revisa esa sección antes de clase (<code>Producto</code> con <code>listar()</code> debe existir). Repasar Bean Validation (<code>@NotBlank</code>, <code>@Size</code>, <code>@NotNull</code>). Trabajo individual, antes de clase.</td>
+<td>S1 (3.4.2), documentación de Jakarta Bean Validation.</td>
 </tr>
 <tr>
 <td>Clase presencial</td>
@@ -3291,16 +3291,16 @@
 </ul>
 <p>Este diagrama es el mapa que guía el resto de la explicación: cada apartado siguiente desarrolla uno de sus componentes, en el mismo orden del Índice (1.2).</p>
 <h3 id="22-entidad-repositorio-dto-y-mapeo">2.2 Entidad, repositorio, DTO y mapeo<a class="headerlink" href="#22-entidad-repositorio-dto-y-mapeo" title="Permanent link">&para;</a></h3>
-<p>La entidad <code>Producto</code> y <code>ProductoRepository</code> ya existen desde S1 (3.5.2) y no cambian en esta sesión. Lo que cambia es el DTO de salida y cómo se construye.</p>
+<p>La entidad <code>Producto</code> y <code>ProductoRepository</code> ya existen desde S1 (3.4.2) y no cambian en esta sesión. Lo que cambia es el DTO de salida y cómo se construye.</p>
 <p>En S1, con solo <code>listar()</code>, un <code>record CategoriaResponse</code>/<code>ProductoResponse</code> alcanzaba: inmutable, sin Lombok, una sola forma de construirlo. Ahora <code>Producto</code> necesita dos DTO distintos (<code>ProductoRequest</code> para lo que entra, <code>ProductoResponse</code> para lo que sale) y un mapeo en ambas direcciones (<code>toEntity</code>/<code>toResponse</code>) — un <code>record</code> no tiene setters ni encaja con <code>@Builder</code>, así que <code>ProductoResponse</code> pasa a ser una clase con Lombok (<code>@Getter @Setter @Builder @NoArgsConstructor @AllArgsConstructor</code>), igual que ya lo hace Distribuidas desde su S1.</p>
 <p><strong>Nota de alcance:</strong> <code>Categoria</code> sigue siendo <code>record</code> en esta sesión — solo <code>Producto</code> recibe CRUD completo en S2. <code>Categoria</code> recibe su propio CRUD progresivamente en S2-S3 (ver Tabla 10 de S1).</p>
 <h3 id="23-validacion-de-entrada-con-bean-validation">2.3 Validación de entrada con Bean Validation<a class="headerlink" href="#23-validacion-de-entrada-con-bean-validation" title="Permanent link">&para;</a></h3>
-<p><code>ProductoRequest</code> declara las reglas de forma directamente sobre sus campos (<code>@NotBlank</code>, <code>@Size</code>, <code>@NotNull</code>, <code>@DecimalMin</code>), y el controller las activa con <code>@Valid</code> en el parámetro <code>@RequestBody</code>. Si algo no cumple, Spring nunca llega a ejecutar el método del controller: responde <code>400</code> directo, con el mismo <code>GlobalExceptionHandler</code> de S1 (3.3.1) manejando <code>MethodArgumentNotValidException</code>.</p>
+<p><code>ProductoRequest</code> declara las reglas de forma directamente sobre sus campos (<code>@NotBlank</code>, <code>@Size</code>, <code>@NotNull</code>, <code>@DecimalMin</code>), y el controller las activa con <code>@Valid</code> en el parámetro <code>@RequestBody</code>. Si algo no cumple, Spring nunca llega a ejecutar el método del controller: responde <code>400</code> directo, con el <code>GlobalExceptionHandler</code> (3.2.1) manejando <code>MethodArgumentNotValidException</code>.</p>
 <p><strong>Error frecuente</strong>: olvidar <code>@Valid</code> en el <code>@RequestBody</code> del controller. Sin esa anotación, Spring ignora por completo las anotaciones de <code>ProductoRequest</code> y deja pasar datos inválidos hasta el service.</p>
 <h3 id="24-manejo-de-errores-aplicado">2.4 Manejo de errores aplicado<a class="headerlink" href="#24-manejo-de-errores-aplicado" title="Permanent link">&para;</a></h3>
-<p>El <code>GlobalExceptionHandler</code> y el <code>ResourceNotFoundException</code> ya existen desde S1 (3.3.1) — hoy es la primera vez que la sesión los ejercita con casos reales: pedir, actualizar o eliminar un <code>id</code> que no existe lanza <code>ResourceNotFoundException</code>, capturado por el mismo manejador global que ya estaba en pie desde S1 sin usarse todavía.</p>
+<p><code>GlobalExceptionHandler</code> y <code>ResourceNotFoundException</code> se crean en 3.2.1 de esta misma sesión, antes de tocar el CRUD — pedir, actualizar o eliminar un <code>id</code> que no existe lanza <code>ResourceNotFoundException</code>, capturado por ese mismo manejador global.</p>
 <h3 id="25-logs-y-trazabilidad-en-operaciones-de-escritura">2.5 Logs y trazabilidad en operaciones de escritura<a class="headerlink" href="#25-logs-y-trazabilidad-en-operaciones-de-escritura" title="Permanent link">&para;</a></h3>
-<p>El <code>CorrelationIdFilter</code> de S1 (3.3.2) ya asigna un <code>traceId</code> a cada petición HTTP, sin importar el método. Hoy, por primera vez, ese <code>traceId</code> acompaña también peticiones <code>POST</code>/<code>PUT</code>/<code>DELETE</code> — útil para rastrear, por ejemplo, quién creó o eliminó un producto específico revisando los logs por ese identificador.</p>
+<p>El <code>CorrelationIdFilter</code> (3.2.2) asigna un <code>traceId</code> a cada petición HTTP, sin importar el método — incluidas las peticiones <code>POST</code>/<code>PUT</code>/<code>DELETE</code> que este CRUD agrega, útil para rastrear, por ejemplo, quién creó o eliminó un producto específico revisando los logs por ese identificador.</p>
 <h2 id="3-aplica-actividad-practica-guiada">3. Aplica: actividad práctica guiada<a class="headerlink" href="#3-aplica-actividad-practica-guiada" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 2h.</p>
 <p><strong>Actividad:</strong> construcción guiada del CRUD REST completo de <code>Producto</code> (Producto de la sesión en 1.4).</p>
@@ -3322,16 +3322,12 @@
 <h3 id="31-verificar-el-punto-de-partida">3.1 Verificar el punto de partida<a class="headerlink" href="#31-verificar-el-punto-de-partida" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> confirmación de que <code>Producto</code> (entidad, repositorio y <code>listar()</code>) ya existe.</p>
 <div class="admonition note">
-<p class="admonition-title">Si no completaste el 3.5.2 opcional de S1</p>
-<p>Esta sesión asume que <code>catalogo/producto/entity/Producto.java</code> y <code>catalogo/producto/repository/ProductoRepository.java</code> ya existen (S1, 3.5.2). Si en S1 solo hiciste <code>Categoria</code> y dejaste <code>Producto</code> pendiente por ser opcional, créalos ahora siguiendo exactamente 3.5.2 de S1 antes de continuar — son idénticos, esta sesión no los repite.</p>
+<p class="admonition-title">Si no completaste el 3.4.2 opcional de S1</p>
+<p>Esta sesión asume que <code>catalogo/producto/entity/Producto.java</code> y <code>catalogo/producto/repository/ProductoRepository.java</code> ya existen (S1, 3.4.2). Si en S1 solo hiciste <code>Categoria</code> y dejaste <code>Producto</code> pendiente por ser opcional, créalos ahora siguiendo exactamente 3.4.2 de S1 antes de continuar — son idénticos, esta sesión no los repite.</p>
 </div>
-<p><strong>Requisito antes de continuar:</strong> confirma que <code>http://localhost:8080/api/v1/productos</code> responde (lista vacía o con datos) antes de tocar código nuevo. Si falla, el problema es de S1 (conexión a Oracle o tablas faltantes, ver 3.5 de S1), no de esta sesión.</p>
+<p><strong>Requisito antes de continuar:</strong> confirma que <code>http://localhost:8080/api/v1/productos</code> responde (lista vacía o con datos) antes de tocar código nuevo. Si falla, el problema es de S1 (conexión a Oracle o tablas faltantes, ver 3.4 de S1), no de esta sesión.</p>
 <h3 id="32-crear-las-excepciones-y-el-filtro-de-trazabilidad">3.2 Crear las excepciones y el filtro de trazabilidad<a class="headerlink" href="#32-crear-las-excepciones-y-el-filtro-de-trazabilidad" title="Permanent link">&para;</a></h3>
-<div class="admonition note">
-<p class="admonition-title">Contenido repetido de S1 (3.3), a propósito</p>
-<p><code>GlobalExceptionHandler</code>, <code>ResourceNotFoundException</code>, <code>CorrelationIdFilter</code> y <code>logback-spring.xml</code> ya existen desde S1 (3.3) — si los creaste ahí, este paso no agrega código nuevo, solo repite la explicación porque el sílabo de BD2/LP2 lista "excepciones" y "logs" como parte del alcance oficial de <strong>esta</strong> sesión (ver 1.4), no solo de S1. Si por algún motivo no los creaste en S1, créalos ahora siguiendo esta misma sección — el código es idéntico en ambas guías.</p>
-</div>
-<p><strong>Producto del paso:</strong> manejo de errores centralizado y filtro de trazabilidad (<code>traceId</code> en cada log) funcionando en <code>bomerp-backend</code> — mismas clases que S1 (3.3), documentadas aquí para que la evidencia de S2 sea autocontenida.</p>
+<p><strong>Producto del paso:</strong> manejo de errores centralizado y filtro de trazabilidad (<code>traceId</code> en cada log) funcionando en <code>bomerp-backend</code>, antes de ampliar el CRUD de <code>Producto</code>. El sílabo de LP2 lista "excepciones" y "logs" como parte del alcance oficial de <strong>esta</strong> sesión (ver 1.4), no de S1 — por eso se crean aquí, no en S1.</p>
 <h4 id="321-excepciones-y-manejador-global-de-errores">3.2.1 Excepciones y manejador global de errores<a class="headerlink" href="#321-excepciones-y-manejador-global-de-errores" title="Permanent link">&para;</a></h4>
 <p><strong><code>exception/ResourceNotFoundException.java</code></strong></p>
 <div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.exception</span><span class="p">;</span>
@@ -3453,10 +3449,17 @@
 </code></pre></div>
 <h4 id="323-ejecutar-y-probar">3.2.3 Ejecutar y probar<a class="headerlink" href="#323-ejecutar-y-probar" title="Permanent link">&para;</a></h4>
 <p>Si ya hiciste esto en S1, salta la ejecución — ya está probado. Si no, arranca la aplicación y verifica el cambio de formato: antes de <code>logback-spring.xml</code>, la terminal muestra el formato por defecto de Spring Boot; después, cambia al patrón definido (<code>[%X{traceId}]</code> en vez de PID/app/hilo):</p>
-<div class="highlight"><pre><span></span><code>2026-08-15 18:53:05.581 [] INFO  o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path &#39;/&#39;
-2026-08-15 18:53:17.004 [22deb350-54b4-4dea-a9c6-b09aaae9cea6] INFO  o.s.api.AbstractOpenApiResource - Init duration for springdoc-openapi is: 113 ms
+<div class="highlight"><pre><span></span><code>2026-08-16 18:07:09.078 [] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 4 ms
+2026-08-16 18:07:21.448 [4ded4f1b-efc8-4ef4-8462-435c7a3779ef] INFO  o.s.api.AbstractOpenApiResource - Init duration for springdoc-openapi is: 589 ms
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.descripcion,
+        c1_0.nombre 
+    from
+        bom_catalogo.categorias c1_0
 </code></pre></div>
-<p>Las primeras líneas (arranque) muestran <code>[]</code> vacío: todavía no hay ninguna petición HTTP en curso. La línea disparada por una petición real ya trae un <code>traceId</code>: el <code>CorrelationIdFilter</code> generó el UUID, lo puso en el <code>MDC</code>, y ese log lo heredó automáticamente.</p>
+<p>La línea de arranque muestra <code>[]</code> vacío: todavía no hay ninguna petición HTTP en curso. En cambio, al hacer clic en "Try it out" sobre <code>GET /api/v1/categorias</code> en Swagger, la petición ya trae un <code>traceId</code> real (<code>4ded4f1b-...</code>): el <code>CorrelationIdFilter</code> generó el UUID y lo puso en el <code>MDC</code>. La consulta <code>Hibernate: select...</code> que aparece justo después es la evidencia de que esa misma petición llegó hasta <code>CategoriaRepository.findAll()</code> y consultó Oracle de verdad — Hibernate la imprime con su propio formato (<code>show-sql</code>), sin el prefijo <code>[traceId]</code>, porque usa un logger aparte del patrón de <code>logback-spring.xml</code>.</p>
 <h3 id="33-migrar-productoresponse-a-clase-y-crear-productorequest">3.3 Migrar <code>ProductoResponse</code> a clase y crear <code>ProductoRequest</code><a class="headerlink" href="#33-migrar-productoresponse-a-clase-y-crear-productorequest" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> DTO de entrada y de salida, ambos como clases con Lombok.</p>
 <p>Reemplaza el contenido de <code>catalogo/producto/dto/ProductoResponse.java</code> (el <code>record</code> de S1) por:</p>
@@ -3618,7 +3621,7 @@
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<p><code>pe.edu.upeu.bomerp.exception</code> es el paquete compartido creado en S1 (3.3.1) — <code>ResourceNotFoundException</code> no se repite aquí, se reutiliza tal cual.</p>
+<p><code>pe.edu.upeu.bomerp.exception</code> es el paquete compartido creado en 3.2.1 de esta sesión — <code>ResourceNotFoundException</code> no se repite aquí, se reutiliza tal cual.</p>
 <h3 id="36-ampliar-productocontroller">3.6 Ampliar <code>ProductoController</code><a class="headerlink" href="#36-ampliar-productocontroller" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> los cinco endpoints (<code>GET</code>, <code>GET /{id}</code>, <code>POST</code>, <code>PUT</code>, <code>DELETE</code>) sobre <code>/api/v1/productos</code>.</p>
 <p><strong><code>catalogo/producto/controller/ProductoController.java</code></strong></p>
@@ -3749,17 +3752,17 @@ curl<span class="w"> </span>-i<span class="w"> </span>http://localhost:8080/api/
 <tr>
 <td>Nombre vacío en <code>POST</code></td>
 <td><code>POST</code></td>
-<td><code>400</code>, cuerpo con <code>error: "Bad Request"</code> (3.3.1 de S1)</td>
+<td><code>400</code>, cuerpo con <code>error: "Bad Request"</code> (3.2.1)</td>
 </tr>
 <tr>
 <td>Id inexistente en <code>GET</code>/<code>PUT</code>/<code>DELETE</code></td>
 <td>cualquiera</td>
-<td><code>404</code>, cuerpo con <code>error: "Not Found"</code> (3.3.1 de S1)</td>
+<td><code>404</code>, cuerpo con <code>error: "Not Found"</code> (3.2.1)</td>
 </tr>
 <tr>
 <td>Trazabilidad</td>
 <td>cualquiera</td>
-<td>Log de la petición muestra <code>[traceId]</code> no vacío (3.3.2 de S1)</td>
+<td>Log de la petición muestra <code>[traceId]</code> no vacío (3.2.2)</td>
 </tr>
 </tbody>
 </table>
@@ -3852,7 +3855,7 @@ curl<span class="w"> </span>-i<span class="w"> </span>http://localhost:8080/api/
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<p><code>@WebMvcTest</code> incluye automáticamente los <code>@RestControllerAdvice</code> del proyecto (como <code>GlobalExceptionHandler</code>, S1 3.3.1) — por eso el caso de nombre vacío responde <code>400</code> real, generado por el mismo manejador que usa la aplicación completa, no un mock. <code>crear_conNombreVacio_respondeBadRequestSinLlegarAlService</code> verifica implícitamente que <code>@Valid</code> corta la petición antes del controller: como nunca se programó un <code>when(productoService.crear(...))</code> para ese caso, si la validación fallara y la petición llegara igual al service mockeado, Mockito respondería <code>null</code> y el test fallaría por una razón distinta — la prueba está diseñada para fallar ruidosamente si <code>@Valid</code> deja de funcionar.</p>
+<p><code>@WebMvcTest</code> incluye automáticamente los <code>@RestControllerAdvice</code> del proyecto (como <code>GlobalExceptionHandler</code>, 3.2.1) — por eso el caso de nombre vacío responde <code>400</code> real, generado por el mismo manejador que usa la aplicación completa, no un mock. <code>crear_conNombreVacio_respondeBadRequestSinLlegarAlService</code> verifica implícitamente que <code>@Valid</code> corta la petición antes del controller: como nunca se programó un <code>when(productoService.crear(...))</code> para ese caso, si la validación fallara y la petición llegara igual al service mockeado, Mockito respondería <code>null</code> y el test fallaría por una razón distinta — la prueba está diseñada para fallar ruidosamente si <code>@Valid</code> deja de funcionar.</p>
 <p><strong>Error frecuente</strong>: usar <code>@SpringBootTest</code> en vez de <code>@WebMvcTest</code> para probar un controller — <code>@SpringBootTest</code> levanta el contexto completo (incluida la conexión a Oracle), mucho más lento y con una dependencia que esta prueba no necesita. <code>@WebMvcTest</code> es la porción mínima suficiente para probar contrato HTTP, validación y manejo de errores.</p>
 <p>Ejecuta las pruebas:</p>
 <div class="highlight"><pre><span></span><code><span class="p">.\</span><span class="n">mvnw</span><span class="p">.</span><span class="n">cmd</span> <span class="n">test</span> <span class="n">-Dtest</span><span class="p">=</span><span class="n">ProductoControllerTest</span>
@@ -4115,7 +4118,7 @@ Indica 2 fortalezas y 2 recomendaciones.
 </code></pre></div>
 <h2 id="5-cierre">5. Cierre<a class="headerlink" href="#5-cierre" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 5 min.</p>
-<p><strong>Resumen breve:</strong> hoy <code>Producto</code> pasó de un listado de solo lectura a un recurso REST completo — creación, consulta individual, actualización y eliminación, con validación de entrada, mapeo explícito y el manejo global de errores de S1 finalmente puesto a prueba con casos reales.</p>
+<p><strong>Resumen breve:</strong> hoy <code>Producto</code> pasó de un listado de solo lectura a un recurso REST completo — creación, consulta individual, actualización y eliminación, con validación de entrada, mapeo explícito y el manejo global de errores puesto a prueba con casos reales.</p>
 <p><strong>Dinámica participativa:</strong> en una ronda rápida (o con una herramienta digital tipo formulario o encuesta en vivo), cada estudiante comparte en una frase qué caso de error (<code>400</code> o <code>404</code>) le costó más reproducir.</p>
 <p><strong>Metacognición:</strong> cada estudiante responde el Anexo de feedback de la sesión, incluido en su evidencia individual (ver 4.3.1). El docente analiza esas respuestas con IA para identificar temas recurrentes o dudas comunes del equipo, y con esos indicadores construye el cierre real de la sesión — que se entrega al inicio de S3, no al final de esta clase.</p>
 <p><strong>Proyección:</strong> el <code>Mapper</code> y el patrón CRUD de hoy se repiten en S3 cuando <code>Categoria</code> y <code>Producto</code> se relacionen, y en cada módulo nuevo del curso (<code>ventas</code> en S4, <code>seguridad</code> en S10) — es el mismo patrón, aplicado una y otra vez a entidades distintas.</p>
