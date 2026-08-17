@@ -134,6 +134,17 @@ En S1, con solo `listar()`, un `record CategoriaResponse`/`ProductoResponse` alc
 
 **Error frecuente**: olvidar `@Valid` en el `@RequestBody` del controller. Sin esa anotación, Spring ignora por completo las anotaciones de `ProductoRequest` y deja pasar datos inválidos hasta el service.
 
+**La DTO no es la única capa que valida — son cuatro en el backend, cada una protegiendo algo distinto:**
+
+1. **DTO (`ProductoRequest` + `@Valid`)**: la más rápida — responde `400` antes de ejecutar el controller. Solo protege lo que pasa por este endpoint.
+2. **Entity (`Producto`)**: hoy no tiene anotaciones de Bean Validation, a propósito — el único camino para crear/modificar un `Producto` ya es `ProductoController` con `@Valid`, así que repetir las mismas reglas en la entidad sería validar dos veces sin ganar nada.
+3. **Restricciones de Oracle** (`NOMBRE NOT NULL`, `CK_PRODUCTO_PRECIO`, `CK_PRODUCTO_STOCK`, ver BD2 S1): la última línea de defensa, dentro del motor mismo — protege sin importar qué aplicación o cliente escriba en `PRODUCTOS`, no solo este backend. Se repiten a propósito las mismas reglas que la DTO, porque protegen contra clientes distintos (ver 3.6 de BD2 S02, mismo criterio con los triggers).
+4. **Service (`ProductoServiceImpl`)**: la única capa que puede validar algo que **no** está en la forma del dato, sino en el estado actual del sistema — necesita consultar la base. Ya lo usas en `buscarOFallar(id)`: ninguna anotación de Bean Validation puede responder "¿existe un `Producto` con este id?", porque eso depende de lo que haya guardado en ese momento, no de la forma del `id` en sí.
+
+**Una quinta capa llega recién en S7, y no es parte de este backend**: la SPA Angular también validará sus propios formularios (campo requerido, tipo numérico, etc.) antes de enviar la petición. Esa validación mejora la experiencia del usuario (feedback inmediato, sin esperar al servidor) pero **nunca reemplaza** a las cuatro de arriba — cualquiera puede saltarse el formulario de Angular y mandar la petición directo (como ya hiciste con `Invoke-RestMethod`/Postman en 3.7), así que el backend tiene que validar igual, como si el frontend no existiera.
+
+**Error frecuente**: si algún día una regla se saltara la validación de la DTO y llegara a violar un `CHECK` de Oracle, Hibernate lanzaría una `DataIntegrityViolationException` — y `GlobalExceptionHandler` (3.2.1) **no la maneja hoy**, así que el cliente recibiría un `500` genérico en vez de un `400` claro. No es un problema mientras `@Valid` siga cubriendo las mismas reglas que los `CHECK`, pero es la clase de hallazgo que vale documentar en la evidencia (4.3.1) si tu equipo decide profundizar en esto.
+
 ### 2.4 Manejo de errores aplicado
 
 `GlobalExceptionHandler` y `ResourceNotFoundException` se crean en 3.2.1 de esta misma sesión, antes de tocar el CRUD — pedir, actualizar o eliminar un `id` que no existe lanza `ResourceNotFoundException`, capturado por ese mismo manejador global.
