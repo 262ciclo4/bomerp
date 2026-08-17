@@ -3824,13 +3824,14 @@ MapStruct es una decisión de equipo, no un requisito de S2.</p>
 <h3 id="39-escribir-pruebas-automatizadas-del-controller">3.9 Escribir pruebas automatizadas del controller<a class="headerlink" href="#39-escribir-pruebas-automatizadas-del-controller" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> <code>ProductoControllerTest</code>, con los casos de 3.7 automatizados en vez de ejecutados a mano.</p>
 <p>Las pruebas manuales de 3.7 verifican el CRUD una vez; una prueba automatizada verifica lo mismo <strong>cada vez que compilas</strong>, sin depender de que alguien recuerde ejecutar los <code>curl</code>/<code>Invoke-RestMethod</code> uno por uno. <code>@WebMvcTest</code> levanta solo la capa web (controller, <code>@Valid</code>, <code>GlobalExceptionHandler</code>) — sin Oracle, sin <code>ProductoServiceImpl</code> real — y <code>@MockitoBean</code> reemplaza <code>ProductoService</code> por un doble de prueba controlado por el test.</p>
+<p><strong>Error frecuente</strong>: importar <code>@WebMvcTest</code> desde <code>org.springframework.boot.test.autoconfigure.web.servlet</code> (el paquete de Spring Boot 2.x/3.x) — en Spring Boot <strong>4.0.7</strong> ese paquete ya no existe. La anotación se movió a <code>org.springframework.boot.webmvc.test.autoconfigure</code> como parte de la modularización de los starters de test (<code>spring-boot-starter-webmvc-test</code>, ver <code>pom.xml</code>). El import correcto para este proyecto es el que usa el código de abajo.</p>
+<p><strong>Error frecuente</strong>: importar <code>ObjectMapper</code> desde <code>com.fasterxml.jackson.databind</code> (Jackson 2, "clásico") y autoinyectarlo con <code>@Autowired</code> — en Spring Boot <strong>4.0.7</strong> (con Spring Framework 7), el <code>ObjectMapper</code> que Spring autoconfigura por defecto es de <strong>Jackson 3</strong>, un paquete completamente nuevo: <code>tools.jackson.databind</code>. Jackson 2 sigue presente en el classpath (lo usan otras librerías de testing), pero Spring ya no registra un bean de ese tipo — por eso <code>@Autowired private ObjectMapper objectMapper</code> con el import viejo falla con <code>No qualifying bean of type 'com.fasterxml.jackson.databind.ObjectMapper' available</code>. El import correcto es <code>tools.jackson.databind.ObjectMapper</code> (el método <code>writeValueAsString(...)</code> se usa exactamente igual).</p>
 <p><strong><code>src/test/java/pe/edu/upeu/bomerp/catalogo/producto/controller/ProductoControllerTest.java</code></strong></p>
 <div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.controller</span><span class="p">;</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">com.fasterxml.jackson.databind.ObjectMapper</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">org.junit.jupiter.api.Test</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.beans.factory.annotation.Autowired</span><span class="p">;</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.http.MediaType</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.test.context.bean.override.mockito.MockitoBean</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.test.web.servlet.MockMvc</span><span class="p">;</span>
@@ -3838,6 +3839,7 @@ MapStruct es una decisión de equipo, no un requisito de S2.</p>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoResponse</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.service.ProductoService</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.exception.ResourceNotFoundException</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tools.jackson.databind.ObjectMapper</span><span class="p">;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">java.math.BigDecimal</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
