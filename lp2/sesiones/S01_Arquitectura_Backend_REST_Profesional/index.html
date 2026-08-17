@@ -3847,13 +3847,13 @@ hay nada real que desplegar.</p>
 el comando de Temurin es el mismo para Intel y para Apple Silicon
 M1/M2/M3/M4 — Homebrew detecta la arquitectura automáticamente):</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># 1. Instalar Homebrew (si no lo tiene)</span>
-/bin/bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh<span class="k">)</span><span class="s2">&quot;</span>
+/bin/bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">"</span><span class="k">$(</span>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh<span class="k">)</span><span class="s2">"</span>
 
 <span class="c1"># 2. Solo en Apple Silicon (M1/M2/M3/M4): agregar Homebrew al PATH.</span>
 <span class="c1">#    Se instala en /opt/homebrew (no en /usr/local como en Intel), y el</span>
 <span class="c1">#    propio instalador lo pide como paso obligatorio, no opcional.</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;eval &quot;$(/opt/homebrew/bin/brew shellenv)&quot;&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.zprofile
-<span class="nb">eval</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>/opt/homebrew/bin/brew<span class="w"> </span>shellenv<span class="k">)</span><span class="s2">&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s1">'eval "$(/opt/homebrew/bin/brew shellenv)"'</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.zprofile
+<span class="nb">eval</span><span class="w"> </span><span class="s2">"</span><span class="k">$(</span>/opt/homebrew/bin/brew<span class="w"> </span>shellenv<span class="k">)</span><span class="s2">"</span>
 
 <span class="c1"># 3. Instalar Temurin 21</span>
 brew<span class="w"> </span>install<span class="w"> </span>--cask<span class="w"> </span>temurin@21
@@ -3861,12 +3861,12 @@ brew<span class="w"> </span>install<span class="w"> </span>--cask<span class="w"
 <p><strong>Linux (Ubuntu/Debian)</strong> — repositorio oficial de Adoptium vía <code>apt</code>:</p>
 <div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>wget<span class="w"> </span>apt-transport-https<span class="w"> </span>gpg
 wget<span class="w"> </span>-qO<span class="w"> </span>-<span class="w"> </span>https://packages.adoptium.net/artifactory/api/gpg/key/public<span class="w"> </span><span class="p">|</span><span class="w"> </span>gpg<span class="w"> </span>--dearmor<span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/apt/trusted.gpg.d/adoptium.gpg<span class="w"> </span>&gt;<span class="w"> </span>/dev/null
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;deb https://packages.adoptium.net/artifactory/deb </span><span class="k">$(</span>awk<span class="w"> </span>-F<span class="o">=</span><span class="w"> </span><span class="s1">&#39;/^VERSION_CODENAME/{print$2}&#39;</span><span class="w"> </span>/etc/os-release<span class="k">)</span><span class="s2"> main&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/apt/sources.list.d/adoptium.list
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"deb https://packages.adoptium.net/artifactory/deb </span><span class="k">$(</span>awk<span class="w"> </span>-F<span class="o">=</span><span class="w"> </span><span class="s1">'/^VERSION_CODENAME/{print$2}'</span><span class="w"> </span>/etc/os-release<span class="k">)</span><span class="s2"> main"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/apt/sources.list.d/adoptium.list
 sudo<span class="w"> </span>apt<span class="w"> </span>update
 sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>temurin-21-jdk
 </code></pre></div>
 <p><strong>Linux (Fedora/RHEL)</strong> — repositorio oficial de Adoptium vía <code>dnf</code>:</p>
-<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/yum.repos.d/adoptium.repo<span class="w"> </span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/yum.repos.d/adoptium.repo<span class="w"> </span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="s">&lt;&lt;'EOF'</span>
 <span class="s">[Adoptium]</span>
 <span class="s">name=Adoptium</span>
 <span class="s">baseurl=https://packages.adoptium.net/artifactory/rpm/$(. /etc/os-release; echo $ID)/$releasever/$basearch</span>
@@ -4088,7 +4088,7 @@ ahí falla con un <code>NullPointerException</code> confuso:</p>
 <div class="highlight"><pre><span></span><code>WARN  o.s.aop.framework.CglibAopProxy - Unable to proxy interface-implementing
 method [...GenericFilterBean.init...] because it is marked as final
 ERROR o.a.c.c.C.[Tomcat].[localhost].[/] - Exception starting filter [correlationIdFilter]
-java.lang.NullPointerException: Cannot invoke &quot;...Log.isDebugEnabled()&quot; because &quot;this.logger&quot; is null
+java.lang.NullPointerException: Cannot invoke "...Log.isDebugEnabled()" because "this.logger" is null
 </code></pre></div>
 <p>Por qué: esta dependencia agrega instrumentación automática con
 Micrometer sobre los beans de Spring, vía proxy AOP (CGLIB). Un
@@ -4133,7 +4133,7 @@ APPLICATION FAILED TO START
 
 Description:
 
-Failed to configure a DataSource: &#39;url&#39; attribute is not specified and no embedded datasource could be configured.
+Failed to configure a DataSource: 'url' attribute is not specified and no embedded datasource could be configured.
 
 Reason: Failed to determine a suitable driver class
 </code></pre></div>
@@ -4149,7 +4149,7 @@ Reason: Failed to determine a suitable driver class
 <span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bomerp-oracle</span>
 <span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
 <span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;1521:1521&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"1521:1521"</span>
 <span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">ORACLE_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">123456</span>
 <span class="w">      </span><span class="nt">APP_USER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BOMERP_APP</span>
@@ -4157,7 +4157,7 @@ Reason: Failed to determine a suitable driver class
 <span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">oracle-data:/opt/oracle/oradata</span>
 <span class="w">    </span><span class="nt">healthcheck</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;CMD&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;healthcheck.sh&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"CMD"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"healthcheck.sh"</span><span class="p p-Indicator">]</span>
 <span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10s</span>
 <span class="w">      </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5s</span>
 <span class="w">      </span><span class="nt">retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
@@ -4269,8 +4269,8 @@ en el repo (ver <code>bd2/README.md</code>, sección sobre U2-U3).</p>
 <div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="nb">cp </span><span class="p">..\..\</span><span class="n">docs</span><span class="p">\</span><span class="n">proyecto-integrador</span><span class="p">\</span><span class="n">u1</span><span class="p">\</span><span class="n">oracle</span><span class="p">\</span><span class="n">S01_01_esquemas</span><span class="p">.</span><span class="n">sql</span> <span class="n">bomerp-oracle</span><span class="p">:/</span><span class="n">tmp</span><span class="p">/</span><span class="n">S01_01_esquemas</span><span class="p">.</span><span class="n">sql</span>
 <span class="n">docker</span> <span class="nb">cp </span><span class="p">..\..\</span><span class="n">docs</span><span class="p">\</span><span class="n">proyecto-integrador</span><span class="p">\</span><span class="n">u1</span><span class="p">\</span><span class="n">oracle</span><span class="p">\</span><span class="n">S01_02_tablas</span><span class="p">.</span><span class="n">sql</span> <span class="n">bomerp-oracle</span><span class="p">:/</span><span class="n">tmp</span><span class="p">/</span><span class="n">S01_02_tablas</span><span class="p">.</span><span class="n">sql</span>
 
-<span class="n">docker</span> <span class="n">exec</span> <span class="n">bomerp-oracle</span> <span class="n">sqlplus</span> <span class="n">-s</span> <span class="n">system</span><span class="p">/</span><span class="n">123456</span><span class="nv">@localhost</span><span class="p">:</span><span class="n">1521</span><span class="p">/</span><span class="n">FREEPDB1</span> <span class="s1">&#39;@/tmp/S01_01_esquemas.sql&#39;</span>
-<span class="n">docker</span> <span class="n">exec</span> <span class="n">bomerp-oracle</span> <span class="n">sqlplus</span> <span class="n">-s</span> <span class="n">system</span><span class="p">/</span><span class="n">123456</span><span class="nv">@localhost</span><span class="p">:</span><span class="n">1521</span><span class="p">/</span><span class="n">FREEPDB1</span> <span class="s1">&#39;@/tmp/S01_02_tablas.sql&#39;</span>
+<span class="n">docker</span> <span class="n">exec</span> <span class="n">bomerp-oracle</span> <span class="n">sqlplus</span> <span class="n">-s</span> <span class="n">system</span><span class="p">/</span><span class="n">123456</span><span class="nv">@localhost</span><span class="p">:</span><span class="n">1521</span><span class="p">/</span><span class="n">FREEPDB1</span> <span class="s1">'@/tmp/S01_01_esquemas.sql'</span>
+<span class="n">docker</span> <span class="n">exec</span> <span class="n">bomerp-oracle</span> <span class="n">sqlplus</span> <span class="n">-s</span> <span class="n">system</span><span class="p">/</span><span class="n">123456</span><span class="nv">@localhost</span><span class="p">:</span><span class="n">1521</span><span class="p">/</span><span class="n">FREEPDB1</span> <span class="s1">'@/tmp/S01_02_tablas.sql'</span>
 </code></pre></div>
 <h5 id="verificar-esquemas-tablas-y-registros-por-sql">Verificar esquemas, tablas y registros por SQL<a class="headerlink" href="#verificar-esquemas-tablas-y-registros-por-sql" title="Permanent link">&para;</a></h5>
 <p>Si prefieres no depender del árbol del cliente gráfico (o quieres confirmar
@@ -4281,13 +4281,13 @@ contenedor con una sesión interactiva de <code>sqlplus</code>, conectado como <
 </code></pre></div>
 <p>Ya dentro del prompt <code>SQL&gt;</code>, pega estas consultas una por una (o todas juntas):</p>
 <div class="highlight"><pre><span></span><code><span class="c1">-- ¿Existen los usuarios/esquemas?</span>
-<span class="k">SELECT</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">dba_users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;BOM_CATALOGO&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;BOMERP_APP&#39;</span><span class="p">);</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">dba_users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">'BOM_CATALOGO'</span><span class="p">,</span><span class="w"> </span><span class="s1">'BOMERP_APP'</span><span class="p">);</span>
 
 <span class="c1">-- ¿Qué tablas tiene BOM_CATALOGO?</span>
-<span class="k">SELECT</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">all_tables</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="k">owner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;BOM_CATALOGO&#39;</span><span class="p">;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">all_tables</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="k">owner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'BOM_CATALOGO'</span><span class="p">;</span>
 
 <span class="c1">-- ¿Qué privilegios tiene BOM_CATALOGO?</span>
-<span class="k">SELECT</span><span class="w"> </span><span class="n">privilege</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">dba_sys_privs</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">grantee</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;BOM_CATALOGO&#39;</span><span class="p">;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">privilege</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">dba_sys_privs</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">grantee</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'BOM_CATALOGO'</span><span class="p">;</span>
 
 <span class="c1">-- Ver los registros de cada tabla</span>
 <span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">CATEGORIAS</span><span class="p">;</span>
@@ -4298,16 +4298,16 @@ contenedor con una sesión interactiva de <code>sqlplus</code>, conectado como <
 </code></pre></div>
 <p>Si conectas como <code>BOM_CATALOGO</code> en vez de <code>system</code>, usa <code>user_tables</code> en lugar de <code>all_tables</code> (sin filtrar por <code>owner</code>) y quita el prefijo <code>BOM_CATALOGO.</code> de los <code>SELECT *</code>.</p>
 <p><strong>Sin entrar al contenedor</strong>: envuelve cada consulta con <code>bash -c</code> (equivalente al flag <code>-c</code> de <code>psql</code>, que <code>sqlplus</code> no tiene):</p>
-<div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">exec</span> <span class="n">bomerp-oracle</span> <span class="n">bash</span> <span class="n">-c</span> <span class="s2">&quot;echo \&quot;</span><span class="nb">SELECT </span><span class="n">table_name</span> <span class="n">FROM</span> <span class="n">all_tables</span> <span class="nb">WHERE </span><span class="n">owner</span> <span class="p">=</span> <span class="s1">&#39;BOM_CATALOGO&#39;</span><span class="p">;\</span><span class="s2">&quot; | sqlplus -s system/123456@localhost:1521/FREEPDB1&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">exec</span> <span class="n">bomerp-oracle</span> <span class="n">bash</span> <span class="n">-c</span> <span class="s2">"echo \"</span><span class="nb">SELECT </span><span class="n">table_name</span> <span class="n">FROM</span> <span class="n">all_tables</span> <span class="nb">WHERE </span><span class="n">owner</span> <span class="p">=</span> <span class="s1">'BOM_CATALOGO'</span><span class="p">;\</span><span class="s2">" | sqlplus -s system/123456@localhost:1521/FREEPDB1"</span>
 </code></pre></div>
 <p>O las 5 consultas juntas en un solo comando (here-string de PowerShell):</p>
-<div class="highlight"><pre><span></span><code><span class="sh">@&quot;</span>
-<span class="sh">SELECT username FROM dba_users WHERE username IN (&#39;BOM_CATALOGO&#39;, &#39;BOMERP_APP&#39;);</span>
-<span class="sh">SELECT table_name FROM all_tables WHERE owner = &#39;BOM_CATALOGO&#39;;</span>
-<span class="sh">SELECT privilege FROM dba_sys_privs WHERE grantee = &#39;BOM_CATALOGO&#39;;</span>
+<div class="highlight"><pre><span></span><code><span class="sh">@"</span>
+<span class="sh">SELECT username FROM dba_users WHERE username IN ('BOM_CATALOGO', 'BOMERP_APP');</span>
+<span class="sh">SELECT table_name FROM all_tables WHERE owner = 'BOM_CATALOGO';</span>
+<span class="sh">SELECT privilege FROM dba_sys_privs WHERE grantee = 'BOM_CATALOGO';</span>
 <span class="sh">SELECT * FROM BOM_CATALOGO.CATEGORIAS;</span>
 <span class="sh">SELECT * FROM BOM_CATALOGO.PRODUCTOS;</span>
-<span class="sh">&quot;@</span> <span class="p">|</span> <span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="n">bomerp-oracle</span> <span class="n">sqlplus</span> <span class="n">-s</span> <span class="n">system</span><span class="p">/</span><span class="n">123456</span><span class="nv">@localhost</span><span class="p">:</span><span class="n">1521</span><span class="p">/</span><span class="n">FREEPDB1</span>
+<span class="sh">"@</span> <span class="p">|</span> <span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="n">bomerp-oracle</span> <span class="n">sqlplus</span> <span class="n">-s</span> <span class="n">system</span><span class="p">/</span><span class="n">123456</span><span class="nv">@localhost</span><span class="p">:</span><span class="n">1521</span><span class="p">/</span><span class="n">FREEPDB1</span>
 </code></pre></div>
 <p>Evidencia esperada tras ejecutar ambos scripts: <code>BOM_CATALOGO</code> y <code>BOMERP_APP</code> existen, <code>BOM_CATALOGO</code> tiene <code>CATEGORIAS</code> y <code>PRODUCTOS</code>, y ambas consultas <code>SELECT *</code> responden (vacías está bien — todavía no se insertó nada; los datos de ejemplo llegan en 3.4).</p>
 <h5 id="reiniciar-docker-desde-cero-opcional-solo-si-algo-quedo-en-mal-estado">Reiniciar Docker desde cero (opcional, solo si algo quedó en mal estado)<a class="headerlink" href="#reiniciar-docker-desde-cero-opcional-solo-si-algo-quedo-en-mal-estado" title="Permanent link">&para;</a></h5>
@@ -4335,8 +4335,8 @@ contenedor con una sesión interactiva de <code>sqlplus</code>, conectado como <
 </code></pre></div>
 <p>Ojo con un detalle real: Docker Compose nombra el volumen y la red a partir del <code>name:</code> declarado en <code>compose-dev.yml</code> (<code>bomerp-backend-dev</code>), no del nombre del contenedor — el contenedor se llama <code>bomerp-oracle</code>, pero el volumen queda como <code>bomerp-backend-dev_oracle-data</code> y la red como <code>bomerp-backend-dev_default</code>. Sin ese <code>name:</code> explícito, Compose usaría en su lugar el nombre de la <strong>carpeta</strong> donde corres el comando (<code>bomerp-backend</code>) — por eso conviene declararlo, para que el nombre no dependa de dónde clonaste el repositorio. <code>docker compose down -v</code> ya lo resuelve solo porque usa su propio registro interno, no un filtro de texto.</p>
 <p>Si el contenedor quedó suelto (por ejemplo, lo creaste fuera de <code>docker compose</code>) y <code>down -v</code> no lo encuentra, bórralo manualmente con los nombres reales:</p>
-<div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="nb">ps </span><span class="n">-aq</span> <span class="p">-</span><span class="n">-filter</span> <span class="s2">&quot;name=bomerp&quot;</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="n">docker</span> <span class="nb">rm </span><span class="o">-f</span> <span class="nv">$_</span> <span class="p">}</span>
-<span class="n">docker</span> <span class="n">volume</span> <span class="nb">ls </span><span class="n">-q</span> <span class="p">-</span><span class="n">-filter</span> <span class="s2">&quot;name=bomerp-backend-dev_oracle-data&quot;</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="n">docker</span> <span class="n">volume</span> <span class="nb">rm </span><span class="o">-f</span> <span class="nv">$_</span> <span class="p">}</span>
+<div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="nb">ps </span><span class="n">-aq</span> <span class="p">-</span><span class="n">-filter</span> <span class="s2">"name=bomerp"</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="n">docker</span> <span class="nb">rm </span><span class="o">-f</span> <span class="nv">$_</span> <span class="p">}</span>
+<span class="n">docker</span> <span class="n">volume</span> <span class="nb">ls </span><span class="n">-q</span> <span class="p">-</span><span class="n">-filter</span> <span class="s2">"name=bomerp-backend-dev_oracle-data"</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="n">docker</span> <span class="n">volume</span> <span class="nb">rm </span><span class="o">-f</span> <span class="nv">$_</span> <span class="p">}</span>
 </code></pre></div>
 <h5 id="configurar-spring-boot-para-conectarse-a-oracle">Configurar Spring Boot para conectarse a Oracle<a class="headerlink" href="#configurar-spring-boot-para-conectarse-a-oracle" title="Permanent link">&para;</a></h5>
 <p>Con Oracle levantado y el esquema creado, falta que Spring Boot sepa cómo conectarse.</p>
@@ -4401,11 +4401,11 @@ contenedor con una sesión interactiva de <code>sqlplus</code>, conectado como <
 ./mvnw<span class="w"> </span>spring-boot:run
 </code></pre></div>
 <p>Esta vez arranca sin el error de 3.2.2:</p>
-<div class="highlight"><pre><span></span><code>Tomcat started on port 8080 (http) with context path &#39;/&#39;
+<div class="highlight"><pre><span></span><code>Tomcat started on port 8080 (http) with context path '/'
 </code></pre></div>
 <p>Confirma también con <code>/actuator/health</code> — ya debe incluir el componente <code>db</code> en <code>UP</code>, prueba de que la conexión a Oracle quedó activa, no solo declarada:</p>
 <p>PowerShell:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Get</span> <span class="n">-Uri</span> <span class="s2">&quot;http://localhost:8080/actuator/health&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Get</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:8080/actuator/health"</span>
 </code></pre></div>
 <p>bash macOS/Linux:</p>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://localhost:8080/actuator/health
@@ -4427,9 +4427,9 @@ contenedor con una sesión interactiva de <code>sqlplus</code>, conectado como <
 <span class="w">    </span><span class="nd">@Bean</span>
 <span class="w">    </span><span class="n">OpenAPI</span><span class="w"> </span><span class="nf">bomErpOpenApi</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">OpenAPI</span><span class="p">().</span><span class="na">info</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">Info</span><span class="p">()</span>
-<span class="w">                </span><span class="p">.</span><span class="na">title</span><span class="p">(</span><span class="s">&quot;BomERP API&quot;</span><span class="p">)</span>
-<span class="w">                </span><span class="p">.</span><span class="na">version</span><span class="p">(</span><span class="s">&quot;v1&quot;</span><span class="p">)</span>
-<span class="w">                </span><span class="p">.</span><span class="na">description</span><span class="p">(</span><span class="s">&quot;Contrato REST del backend unico de LP2&quot;</span><span class="p">));</span>
+<span class="w">                </span><span class="p">.</span><span class="na">title</span><span class="p">(</span><span class="s">"BomERP API"</span><span class="p">)</span>
+<span class="w">                </span><span class="p">.</span><span class="na">version</span><span class="p">(</span><span class="s">"v1"</span><span class="p">)</span>
+<span class="w">                </span><span class="p">.</span><span class="na">description</span><span class="p">(</span><span class="s">"Contrato REST del backend unico de LP2"</span><span class="p">));</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -4445,9 +4445,9 @@ contenedor con una sesión interactiva de <code>sqlplus</code>, conectado como <
 <span class="nd">@RestController</span>
 <span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">HelloController</span><span class="w"> </span><span class="p">{</span>
 
-<span class="w">    </span><span class="nd">@GetMapping</span><span class="p">(</span><span class="s">&quot;/api/v1/hello&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@GetMapping</span><span class="p">(</span><span class="s">"/api/v1/hello"</span><span class="p">)</span>
 <span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">holaMundo</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;Hola BomERP&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s">"Hola BomERP"</span><span class="p">;</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -4481,7 +4481,7 @@ o http://localhost:8080/swagger-ui.html:</p>
 <h4 id="331-levantar-una-segunda-instancia">3.3.1 Levantar una segunda instancia<a class="headerlink" href="#331-levantar-una-segunda-instancia" title="Permanent link">&para;</a></h4>
 <p><strong>Sin modificar <code>application-dev.yml</code></strong> (para no romper el puerto 8080 que usan los pasos anteriores de esta guía), la Terminal 1 sigue corriendo tal cual en <code>8080</code> (la que ya tenías abierta desde 3.2.4). Abre una <strong>Terminal 2</strong> nueva y pásale un puerto distinto como argumento de línea de comandos, desde <code>lp2/bomerp-backend</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="c"># Windows (PowerShell o cmd) - Terminal 2 (simultánea, con Oracle y la Terminal 1 ya corriendo en 8080)</span>
-<span class="p">.\</span><span class="n">mvnw</span><span class="p">.</span><span class="n">cmd</span> <span class="n">spring-boot</span><span class="p">:</span><span class="n">run</span> <span class="s2">&quot;-Dspring-boot.run.arguments=--server.port=8081&quot;</span>
+<span class="p">.\</span><span class="n">mvnw</span><span class="p">.</span><span class="n">cmd</span> <span class="n">spring-boot</span><span class="p">:</span><span class="n">run</span> <span class="s2">"-Dspring-boot.run.arguments=--server.port=8081"</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="c1"># macOS / Linux - Terminal 2 (simultánea, con Oracle y la Terminal 1 ya corriendo en 8080)</span>
 ./mvnw<span class="w"> </span>spring-boot:run<span class="w"> </span>-Dspring-boot.run.arguments<span class="o">=</span>--server.port<span class="o">=</span><span class="m">8081</span>
@@ -4490,10 +4490,10 @@ o http://localhost:8080/swagger-ui.html:</p>
 <h4 id="332-ejecutar-y-probar">3.3.2 Ejecutar y probar<a class="headerlink" href="#332-ejecutar-y-probar" title="Permanent link">&para;</a></h4>
 <p>Verifica que ambas instancias responden por separado, con el endpoint <code>/api/v1/hello</code> y con <code>/actuator/health</code>:</p>
 <p>PowerShell:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Get</span> <span class="n">-Uri</span> <span class="s2">&quot;http://localhost:8080/api/v1/hello&quot;</span>
-<span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Get</span> <span class="n">-Uri</span> <span class="s2">&quot;http://localhost:8081/api/v1/hello&quot;</span>
-<span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Get</span> <span class="n">-Uri</span> <span class="s2">&quot;http://localhost:8080/actuator/health&quot;</span>
-<span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Get</span> <span class="n">-Uri</span> <span class="s2">&quot;http://localhost:8081/actuator/health&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Get</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:8080/api/v1/hello"</span>
+<span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Get</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:8081/api/v1/hello"</span>
+<span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Get</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:8080/actuator/health"</span>
+<span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Get</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:8081/actuator/health"</span>
 </code></pre></div>
 <p>bash macOS/Linux:</p>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://localhost:8080/api/v1/hello
@@ -4522,20 +4522,20 @@ curl<span class="w"> </span>http://localhost:8081/actuator/health
 <span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Setter</span><span class="p">;</span>
 
 <span class="nd">@Entity</span>
-<span class="nd">@Table</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;CATEGORIAS&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;BOM_CATALOGO&quot;</span><span class="p">)</span>
+<span class="nd">@Table</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"CATEGORIAS"</span><span class="p">,</span><span class="w"> </span><span class="n">schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"BOM_CATALOGO"</span><span class="p">)</span>
 <span class="nd">@Getter</span>
 <span class="nd">@Setter</span>
 <span class="nd">@NoArgsConstructor</span>
 <span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Categoria</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nd">@Id</span>
 <span class="w">    </span><span class="nd">@GeneratedValue</span><span class="p">(</span><span class="n">strategy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GenerationType</span><span class="p">.</span><span class="na">IDENTITY</span><span class="p">)</span>
-<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;ID&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"ID"</span><span class="p">)</span>
 <span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
 
-<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;NOMBRE&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="n">unique</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">80</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"NOMBRE"</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="n">unique</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">80</span><span class="p">)</span>
 <span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">nombre</span><span class="p">;</span>
 
-<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;DESCRIPCION&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">200</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"DESCRIPCION"</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">200</span><span class="p">)</span>
 <span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">descripcion</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -4605,14 +4605,14 @@ curl<span class="w"> </span>http://localhost:8081/actuator/health
 <span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.categoria.service.CategoriaService</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
 
-<span class="nd">@Tag</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Categorías&quot;</span><span class="p">)</span>
+<span class="nd">@Tag</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Categorías"</span><span class="p">)</span>
 <span class="nd">@RestController</span>
-<span class="nd">@RequestMapping</span><span class="p">(</span><span class="s">&quot;/api/v1/categorias&quot;</span><span class="p">)</span>
+<span class="nd">@RequestMapping</span><span class="p">(</span><span class="s">"/api/v1/categorias"</span><span class="p">)</span>
 <span class="nd">@RequiredArgsConstructor</span>
 <span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">CategoriaController</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">CategoriaService</span><span class="w"> </span><span class="n">categoriaService</span><span class="p">;</span>
 
-<span class="w">    </span><span class="nd">@Operation</span><span class="p">(</span><span class="n">summary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Lista las categorías registradas&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@Operation</span><span class="p">(</span><span class="n">summary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Lista las categorías registradas"</span><span class="p">)</span>
 <span class="w">    </span><span class="nd">@GetMapping</span>
 <span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">CategoriaResponse</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="nf">listar</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">ok</span><span class="p">(</span><span class="n">categoriaService</span><span class="p">.</span><span class="na">listar</span><span class="p">());</span>
@@ -4640,23 +4640,23 @@ curl<span class="w"> </span>http://localhost:8081/actuator/health
 <span class="kn">import</span><span class="w"> </span><span class="nn">java.math.BigDecimal</span><span class="p">;</span>
 
 <span class="nd">@Entity</span>
-<span class="nd">@Table</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;PRODUCTOS&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;BOM_CATALOGO&quot;</span><span class="p">)</span>
+<span class="nd">@Table</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"PRODUCTOS"</span><span class="p">,</span><span class="w"> </span><span class="n">schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"BOM_CATALOGO"</span><span class="p">)</span>
 <span class="nd">@Getter</span>
 <span class="nd">@Setter</span>
 <span class="nd">@NoArgsConstructor</span>
 <span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Producto</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nd">@Id</span>
 <span class="w">    </span><span class="nd">@GeneratedValue</span><span class="p">(</span><span class="n">strategy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GenerationType</span><span class="p">.</span><span class="na">IDENTITY</span><span class="p">)</span>
-<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;ID&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"ID"</span><span class="p">)</span>
 <span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
 
-<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;NOMBRE&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">120</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"NOMBRE"</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">120</span><span class="p">)</span>
 <span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">nombre</span><span class="p">;</span>
 
-<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;PRECIO&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="n">precision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"PRECIO"</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="n">precision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
 <span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">precio</span><span class="p">;</span>
 
-<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;STOCK&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"STOCK"</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
 <span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Integer</span><span class="w"> </span><span class="n">stock</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -4728,14 +4728,14 @@ curl<span class="w"> </span>http://localhost:8081/actuator/health
 <span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.service.ProductoService</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
 
-<span class="nd">@Tag</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Productos&quot;</span><span class="p">)</span>
+<span class="nd">@Tag</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Productos"</span><span class="p">)</span>
 <span class="nd">@RestController</span>
-<span class="nd">@RequestMapping</span><span class="p">(</span><span class="s">&quot;/api/v1/productos&quot;</span><span class="p">)</span>
+<span class="nd">@RequestMapping</span><span class="p">(</span><span class="s">"/api/v1/productos"</span><span class="p">)</span>
 <span class="nd">@RequiredArgsConstructor</span>
 <span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ProductoController</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">ProductoService</span><span class="w"> </span><span class="n">productoService</span><span class="p">;</span>
 
-<span class="w">    </span><span class="nd">@Operation</span><span class="p">(</span><span class="n">summary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Lista los productos registrados&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@Operation</span><span class="p">(</span><span class="n">summary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Lista los productos registrados"</span><span class="p">)</span>
 <span class="w">    </span><span class="nd">@GetMapping</span>
 <span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">ProductoResponse</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="nf">listar</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">ok</span><span class="p">(</span><span class="n">productoService</span><span class="p">.</span><span class="na">listar</span><span class="p">());</span>
@@ -4875,19 +4875,19 @@ curl<span class="w"> </span>http://localhost:8081/actuator/health
 <h3 id="36-reconocer-el-dto-de-entrada-reservado-para-s2">3.6 Reconocer el DTO de entrada reservado para S2<a class="headerlink" href="#36-reconocer-el-dto-de-entrada-reservado-para-s2" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> request DTO.</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;nombre&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Teclado mecánico&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;precio&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">180.50</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;stock&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span>
+<span class="w">  </span><span class="nt">"nombre"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Teclado mecánico"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"precio"</span><span class="p">:</span><span class="w"> </span><span class="mf">180.50</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"stock"</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span>
 <span class="p">}</span>
 </code></pre></div>
 <p>En S1 este contrato se documenta, pero no se implementa todavía el registro.</p>
 <h3 id="37-disenar-dto-de-salida">3.7 Diseñar DTO de salida<a class="headerlink" href="#37-disenar-dto-de-salida" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> response DTO.</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;nombre&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Teclado mecánico&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;precio&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">180.50</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;stock&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span>
+<span class="w">  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"nombre"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Teclado mecánico"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"precio"</span><span class="p">:</span><span class="w"> </span><span class="mf">180.50</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"stock"</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="38-documentar-errores">3.8 Documentar errores<a class="headerlink" href="#38-documentar-errores" title="Permanent link">&para;</a></h3>
@@ -5179,7 +5179,7 @@ Indica 2 fortalezas y 2 recomendaciones.
 <span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bomerp-mysql</span>
 <span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
 <span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;13306:3306&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"13306:3306"</span>
 <span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">MYSQL_ROOT_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">123456</span>
 <span class="w">      </span><span class="nt">MYSQL_DATABASE</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bom_catalogo</span>
