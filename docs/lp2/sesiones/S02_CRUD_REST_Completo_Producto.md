@@ -167,6 +167,12 @@ Tiempo: 2h.
 
 ### 3.1 Verificar el punto de partida
 
+**Punto de partida común:** todo el equipo debe comenzar exactamente desde donde quedó S1, no desde su propio avance individual. Clona la rama `s01-arquitectura-base` (el snapshot de cierre de S1):
+
+```bash
+git clone --branch s01-arquitectura-base https://github.com/262ciclo4/bomerp.git
+```
+
 **Producto del paso:** confirmación de que `Producto` (entidad, repositorio y `listar()`) ya existe.
 
 !!! note "Si no completaste el 3.4.2 opcional de S1"
