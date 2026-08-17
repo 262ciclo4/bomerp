@@ -2476,10 +2476,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#38-escribir-pruebas-automatizadas-del-controller" class="md-nav__link">
+  <a href="#38-como-lo-resuelve-la-industria-mapstruct-opcional-referencia" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.8 Escribir pruebas automatizadas del controller
+        3.8 Cómo lo resuelve la industria: MapStruct (opcional, referencia)
       
     </span>
   </a>
@@ -2487,10 +2487,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#39-como-lo-resuelve-la-industria-mapstruct-opcional-referencia" class="md-nav__link">
+  <a href="#39-escribir-pruebas-automatizadas-del-controller" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.9 Cómo lo resuelve la industria: MapStruct (opcional, referencia)
+        3.9 Escribir pruebas automatizadas del controller
       
     </span>
   </a>
@@ -2997,10 +2997,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#38-escribir-pruebas-automatizadas-del-controller" class="md-nav__link">
+  <a href="#38-como-lo-resuelve-la-industria-mapstruct-opcional-referencia" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.8 Escribir pruebas automatizadas del controller
+        3.8 Cómo lo resuelve la industria: MapStruct (opcional, referencia)
       
     </span>
   </a>
@@ -3008,10 +3008,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#39-como-lo-resuelve-la-industria-mapstruct-opcional-referencia" class="md-nav__link">
+  <a href="#39-escribir-pruebas-automatizadas-del-controller" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.9 Cómo lo resuelve la industria: MapStruct (opcional, referencia)
+        3.9 Escribir pruebas automatizadas del controller
       
     </span>
   </a>
@@ -3315,8 +3315,8 @@
 <li><strong>3.5</strong> Ampliar <code>ProductoService</code>/<code>ProductoServiceImpl</code>.</li>
 <li><strong>3.6</strong> Ampliar <code>ProductoController</code>.</li>
 <li><strong>3.7</strong> Probar el CRUD completo.</li>
-<li><strong>3.8</strong> Escribir pruebas automatizadas del controller.</li>
-<li><strong>3.9</strong> Cómo lo resuelve la industria: MapStruct (opcional, referencia).</li>
+<li><strong>3.8</strong> Cómo lo resuelve la industria: MapStruct (opcional, referencia).</li>
+<li><strong>3.9</strong> Escribir pruebas automatizadas del controller.</li>
 <li><strong>3.10</strong> Relacionar con ADS y BD2.</li>
 </ul>
 <h3 id="31-verificar-el-punto-de-partida">3.1 Verificar el punto de partida<a class="headerlink" href="#31-verificar-el-punto-de-partida" title="Permanent link">&para;</a></h3>
@@ -3682,14 +3682,18 @@ Hibernate:
 <h3 id="37-probar-el-crud-completo">3.7 Probar el CRUD completo<a class="headerlink" href="#37-probar-el-crud-completo" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> evidencia de los cinco endpoints, incluidos los casos de error.</p>
 <p>PowerShell:</p>
+<p><strong>Error frecuente</strong>: en Windows PowerShell, <code>Invoke-RestMethod -Body</code> con caracteres acentuados ("mecánico") los codifica en ANSI, no UTF-8, y Jackson no puede parsear ese body — responde <code>400</code> aunque los datos sean por lo demás válidos. Más simple que convertir a bytes UTF-8: evita tildes en los datos de prueba, igual que ya haces con las categorías (<code>Electrodomesticos</code>, no <code>Electrodomésticos</code>). Si necesitas mandar un valor con tilde sí o sí, convierte el JSON a bytes UTF-8 explícitamente antes de enviarlo:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$json</span> <span class="p">=</span> <span class="s1">&#39;{&quot;nombre&quot;:&quot;Teclado mecánico&quot;,&quot;precio&quot;:180.50,&quot;stock&quot;:25}&#39;</span>
+<span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-Uri</span> <span class="s2">&quot;http://localhost:8080/api/v1/productos&quot;</span> <span class="n">-ContentType</span> <span class="s2">&quot;application/json&quot;</span> <span class="n">-Body</span> <span class="p">(</span><span class="no">[System.Text.Encoding]</span><span class="p">::</span><span class="n">UTF8</span><span class="p">.</span><span class="n">GetBytes</span><span class="p">(</span><span class="nv">$json</span><span class="p">))</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="c"># Crear (201)</span>
-<span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-Uri</span> <span class="s2">&quot;http://localhost:8080/api/v1/productos&quot;</span> <span class="n">-ContentType</span> <span class="s2">&quot;application/json&quot;</span> <span class="n">-Body</span> <span class="s1">&#39;{&quot;nombre&quot;:&quot;Teclado mecánico&quot;,&quot;precio&quot;:180.50,&quot;stock&quot;:25}&#39;</span>
+<span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-Uri</span> <span class="s2">&quot;http://localhost:8080/api/v1/productos&quot;</span> <span class="n">-ContentType</span> <span class="s2">&quot;application/json&quot;</span> <span class="n">-Body</span> <span class="s1">&#39;{&quot;nombre&quot;:&quot;Teclado mecanico&quot;,&quot;precio&quot;:180.50,&quot;stock&quot;:25}&#39;</span>
 
 <span class="c"># Consultar por id (200) - reemplaza {id} por el id devuelto arriba</span>
 <span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Get</span> <span class="n">-Uri</span> <span class="s2">&quot;http://localhost:8080/api/v1/productos/{id}&quot;</span>
 
 <span class="c"># Actualizar (200)</span>
-<span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Put</span> <span class="n">-Uri</span> <span class="s2">&quot;http://localhost:8080/api/v1/productos/{id}&quot;</span> <span class="n">-ContentType</span> <span class="s2">&quot;application/json&quot;</span> <span class="n">-Body</span> <span class="s1">&#39;{&quot;nombre&quot;:&quot;Teclado mecánico RGB&quot;,&quot;precio&quot;:199.90,&quot;stock&quot;:20}&#39;</span>
+<span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Put</span> <span class="n">-Uri</span> <span class="s2">&quot;http://localhost:8080/api/v1/productos/{id}&quot;</span> <span class="n">-ContentType</span> <span class="s2">&quot;application/json&quot;</span> <span class="n">-Body</span> <span class="s1">&#39;{&quot;nombre&quot;:&quot;Teclado mecanico RGB&quot;,&quot;precio&quot;:199.90,&quot;stock&quot;:20}&#39;</span>
 
 <span class="c"># Eliminar (204)</span>
 <span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Delete</span> <span class="n">-Uri</span> <span class="s2">&quot;http://localhost:8080/api/v1/productos/{id}&quot;</span>
@@ -3702,13 +3706,13 @@ Hibernate:
 </code></pre></div>
 <p>bash macOS/Linux:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Crear (201)</span>
-curl<span class="w"> </span>-i<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8080/api/v1/productos<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;nombre&quot;:&quot;Teclado mecánico&quot;,&quot;precio&quot;:180.50,&quot;stock&quot;:25}&#39;</span>
+curl<span class="w"> </span>-i<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8080/api/v1/productos<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;nombre&quot;:&quot;Teclado mecanico&quot;,&quot;precio&quot;:180.50,&quot;stock&quot;:25}&#39;</span>
 
 <span class="c1"># Consultar por id (200) - reemplaza {id} por el id devuelto arriba</span>
 curl<span class="w"> </span>-i<span class="w"> </span>http://localhost:8080/api/v1/productos/<span class="o">{</span>id<span class="o">}</span>
 
 <span class="c1"># Actualizar (200)</span>
-curl<span class="w"> </span>-i<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span>http://localhost:8080/api/v1/productos/<span class="o">{</span>id<span class="o">}</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;nombre&quot;:&quot;Teclado mecánico RGB&quot;,&quot;precio&quot;:199.90,&quot;stock&quot;:20}&#39;</span>
+curl<span class="w"> </span>-i<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span>http://localhost:8080/api/v1/productos/<span class="o">{</span>id<span class="o">}</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;nombre&quot;:&quot;Teclado mecanico RGB&quot;,&quot;precio&quot;:199.90,&quot;stock&quot;:20}&#39;</span>
 
 <span class="c1"># Eliminar (204)</span>
 curl<span class="w"> </span>-i<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span>http://localhost:8080/api/v1/productos/<span class="o">{</span>id<span class="o">}</span>
@@ -3766,7 +3770,58 @@ curl<span class="w"> </span>-i<span class="w"> </span>http://localhost:8080/api/
 </tr>
 </tbody>
 </table>
-<h3 id="38-escribir-pruebas-automatizadas-del-controller">3.8 Escribir pruebas automatizadas del controller<a class="headerlink" href="#38-escribir-pruebas-automatizadas-del-controller" title="Permanent link">&para;</a></h3>
+<h3 id="38-como-lo-resuelve-la-industria-mapstruct-opcional-referencia">3.8 Cómo lo resuelve la industria: MapStruct (opcional, referencia)<a class="headerlink" href="#38-como-lo-resuelve-la-industria-mapstruct-opcional-referencia" title="Permanent link">&para;</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Alternativa opcional, no reemplaza 3.4 en la evidencia de la sesión</p>
+<p>Esta sección es informativa: muestra cómo un equipo profesional evita
+escribir a mano el cuerpo de un mapper como <code>ProductoMapper</code> (3.4). La
+implementación que se evalúa en 4.4-4.6 es la manual de 3.4. Adoptar
+MapStruct es una decisión de equipo, no un requisito de S2.</p>
+</div>
+<p><strong>Producto del paso:</strong> el mismo <code>ProductoMapper</code> de 3.4, generado en compilación en vez de escrito a mano.</p>
+<p>Con <a href="https://mapstruct.org/">MapStruct</a>, un mapper es una <strong>interfaz</strong> — el procesador de anotaciones genera la implementación (<code>ProductoMapperImpl</code>) al compilar.</p>
+<p>En el <code>pom.xml</code>, agrega la dependencia:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.mapstruct<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>mapstruct<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;version&gt;</span>1.6.3<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div>
+<p>Y en el <code>maven-compiler-plugin</code>, junto al <code>annotationProcessorPaths</code> que ya tiene Lombok, agrega el de MapStruct <strong>después</strong> de Lombok — MapStruct necesita ver los getters/setters que Lombok genera, y el orden de los <code>&lt;path&gt;</code> determina en qué orden corren los procesadores:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;annotationProcessorPaths&gt;</span>
+<span class="w">    </span><span class="nt">&lt;path&gt;</span>
+<span class="w">        </span><span class="nt">&lt;groupId&gt;</span>org.projectlombok<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">        </span><span class="nt">&lt;artifactId&gt;</span>lombok<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/path&gt;</span>
+<span class="w">    </span><span class="nt">&lt;path&gt;</span>
+<span class="w">        </span><span class="nt">&lt;groupId&gt;</span>org.mapstruct<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">        </span><span class="nt">&lt;artifactId&gt;</span>mapstruct-processor<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">        </span><span class="nt">&lt;version&gt;</span>1.6.3<span class="nt">&lt;/version&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/path&gt;</span>
+<span class="nt">&lt;/annotationProcessorPaths&gt;</span>
+</code></pre></div>
+<p><code>ProductoMapper</code> pasa de clase a interfaz:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.mapper</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.mapstruct.Mapper</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoRequest</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoResponse</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.entity.Producto</span><span class="p">;</span>
+
+<span class="nd">@Mapper</span><span class="p">(</span><span class="n">componentModel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;spring&quot;</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">ProductoMapper</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Producto</span><span class="w"> </span><span class="nf">toEntity</span><span class="p">(</span><span class="n">ProductoRequest</span><span class="w"> </span><span class="n">request</span><span class="p">);</span>
+<span class="w">    </span><span class="n">ProductoResponse</span><span class="w"> </span><span class="nf">toResponse</span><span class="p">(</span><span class="n">Producto</span><span class="w"> </span><span class="n">producto</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Como los nombres de campo coinciden exactamente entre <code>Producto</code>, <code>ProductoRequest</code> y <code>ProductoResponse</code> (<code>nombre</code>, <code>precio</code>, <code>stock</code>), MapStruct los relaciona sin ninguna anotación <code>@Mapping</code> adicional — el mapeo de 3.4, que hoy tiene diez líneas de <code>set</code>/<code>get</code> repetidos, se reduce a dos firmas de método sin cuerpo.</p>
+<p><strong>Ventajas frente al mapeo manual (3.4):</strong></p>
+<ul>
+<li><strong>Menos código que mantener</strong>: si mañana <code>Producto</code> agrega un campo con el mismo nombre en el DTO, MapStruct lo mapea solo — nadie edita <code>ProductoMapper</code> a mano.</li>
+<li><strong>Errores en compilación, no en producción</strong>: si un campo del DTO no tiene de dónde mapearse, MapStruct falla el build con un mensaje claro, en vez de dejarlo en <code>null</code> silenciosamente.</li>
+<li><strong>Sin costo de reflexión en tiempo de ejecución</strong>: el código generado es Java plano, igual de rápido que el mapeo manual — a diferencia de librerías que mapean por reflexión en cada llamada (por ejemplo, ModelMapper).</li>
+</ul>
+<h3 id="39-escribir-pruebas-automatizadas-del-controller">3.9 Escribir pruebas automatizadas del controller<a class="headerlink" href="#39-escribir-pruebas-automatizadas-del-controller" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> <code>ProductoControllerTest</code>, con los casos de 3.7 automatizados en vez de ejecutados a mano.</p>
 <p>Las pruebas manuales de 3.7 verifican el CRUD una vez; una prueba automatizada verifica lo mismo <strong>cada vez que compilas</strong>, sin depender de que alguien recuerde ejecutar los <code>curl</code>/<code>Invoke-RestMethod</code> uno por uno. <code>@WebMvcTest</code> levanta solo la capa web (controller, <code>@Valid</code>, <code>GlobalExceptionHandler</code>) — sin Oracle, sin <code>ProductoServiceImpl</code> real — y <code>@MockitoBean</code> reemplaza <code>ProductoService</code> por un doble de prueba controlado por el test.</p>
 <p><strong><code>src/test/java/pe/edu/upeu/bomerp/catalogo/producto/controller/ProductoControllerTest.java</code></strong></p>
@@ -3862,57 +3917,6 @@ curl<span class="w"> </span>-i<span class="w"> </span>http://localhost:8080/api/
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>./mvnw<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-Dtest<span class="o">=</span>ProductoControllerTest
 </code></pre></div>
-<h3 id="39-como-lo-resuelve-la-industria-mapstruct-opcional-referencia">3.9 Cómo lo resuelve la industria: MapStruct (opcional, referencia)<a class="headerlink" href="#39-como-lo-resuelve-la-industria-mapstruct-opcional-referencia" title="Permanent link">&para;</a></h3>
-<div class="admonition note">
-<p class="admonition-title">Alternativa opcional, no reemplaza 3.4 en la evidencia de la sesión</p>
-<p>Esta sección es informativa: muestra cómo un equipo profesional evita
-escribir a mano el cuerpo de un mapper como <code>ProductoMapper</code> (3.4). La
-implementación que se evalúa en 4.4-4.6 es la manual de 3.4. Adoptar
-MapStruct es una decisión de equipo, no un requisito de S2.</p>
-</div>
-<p><strong>Producto del paso:</strong> el mismo <code>ProductoMapper</code> de 3.4, generado en compilación en vez de escrito a mano.</p>
-<p>Con <a href="https://mapstruct.org/">MapStruct</a>, un mapper es una <strong>interfaz</strong> — el procesador de anotaciones genera la implementación (<code>ProductoMapperImpl</code>) al compilar.</p>
-<p>En el <code>pom.xml</code>, agrega la dependencia:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
-<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.mapstruct<span class="nt">&lt;/groupId&gt;</span>
-<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>mapstruct<span class="nt">&lt;/artifactId&gt;</span>
-<span class="w">    </span><span class="nt">&lt;version&gt;</span>1.6.3<span class="nt">&lt;/version&gt;</span>
-<span class="nt">&lt;/dependency&gt;</span>
-</code></pre></div>
-<p>Y en el <code>maven-compiler-plugin</code>, junto al <code>annotationProcessorPaths</code> que ya tiene Lombok, agrega el de MapStruct <strong>después</strong> de Lombok — MapStruct necesita ver los getters/setters que Lombok genera, y el orden de los <code>&lt;path&gt;</code> determina en qué orden corren los procesadores:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">&lt;annotationProcessorPaths&gt;</span>
-<span class="w">    </span><span class="nt">&lt;path&gt;</span>
-<span class="w">        </span><span class="nt">&lt;groupId&gt;</span>org.projectlombok<span class="nt">&lt;/groupId&gt;</span>
-<span class="w">        </span><span class="nt">&lt;artifactId&gt;</span>lombok<span class="nt">&lt;/artifactId&gt;</span>
-<span class="w">    </span><span class="nt">&lt;/path&gt;</span>
-<span class="w">    </span><span class="nt">&lt;path&gt;</span>
-<span class="w">        </span><span class="nt">&lt;groupId&gt;</span>org.mapstruct<span class="nt">&lt;/groupId&gt;</span>
-<span class="w">        </span><span class="nt">&lt;artifactId&gt;</span>mapstruct-processor<span class="nt">&lt;/artifactId&gt;</span>
-<span class="w">        </span><span class="nt">&lt;version&gt;</span>1.6.3<span class="nt">&lt;/version&gt;</span>
-<span class="w">    </span><span class="nt">&lt;/path&gt;</span>
-<span class="nt">&lt;/annotationProcessorPaths&gt;</span>
-</code></pre></div>
-<p><code>ProductoMapper</code> pasa de clase a interfaz:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.mapper</span><span class="p">;</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">org.mapstruct.Mapper</span><span class="p">;</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoRequest</span><span class="p">;</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoResponse</span><span class="p">;</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.entity.Producto</span><span class="p">;</span>
-
-<span class="nd">@Mapper</span><span class="p">(</span><span class="n">componentModel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;spring&quot;</span><span class="p">)</span>
-<span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">ProductoMapper</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">Producto</span><span class="w"> </span><span class="nf">toEntity</span><span class="p">(</span><span class="n">ProductoRequest</span><span class="w"> </span><span class="n">request</span><span class="p">);</span>
-<span class="w">    </span><span class="n">ProductoResponse</span><span class="w"> </span><span class="nf">toResponse</span><span class="p">(</span><span class="n">Producto</span><span class="w"> </span><span class="n">producto</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div>
-<p>Como los nombres de campo coinciden exactamente entre <code>Producto</code>, <code>ProductoRequest</code> y <code>ProductoResponse</code> (<code>nombre</code>, <code>precio</code>, <code>stock</code>), MapStruct los relaciona sin ninguna anotación <code>@Mapping</code> adicional — el mapeo de 3.4, que hoy tiene diez líneas de <code>set</code>/<code>get</code> repetidos, se reduce a dos firmas de método sin cuerpo.</p>
-<p><strong>Ventajas frente al mapeo manual (3.4):</strong></p>
-<ul>
-<li><strong>Menos código que mantener</strong>: si mañana <code>Producto</code> agrega un campo con el mismo nombre en el DTO, MapStruct lo mapea solo — nadie edita <code>ProductoMapper</code> a mano.</li>
-<li><strong>Errores en compilación, no en producción</strong>: si un campo del DTO no tiene de dónde mapearse, MapStruct falla el build con un mensaje claro, en vez de dejarlo en <code>null</code> silenciosamente.</li>
-<li><strong>Sin costo de reflexión en tiempo de ejecución</strong>: el código generado es Java plano, igual de rápido que el mapeo manual — a diferencia de librerías que mapean por reflexión en cada llamada (por ejemplo, ModelMapper).</li>
-</ul>
 <h3 id="310-relacionar-con-ads-y-bd2">3.10 Relacionar con ADS y BD2<a class="headerlink" href="#310-relacionar-con-ads-y-bd2" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> matriz de integración actualizada.</p>
 <p><strong>Tabla 3. Matriz de integración LP2-ADS-BD2 (S2)</strong></p>
