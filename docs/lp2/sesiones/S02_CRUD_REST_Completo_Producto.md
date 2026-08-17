@@ -161,8 +161,8 @@ Tiempo: 2h.
 - **3.5** Ampliar `ProductoService`/`ProductoServiceImpl`.
 - **3.6** Ampliar `ProductoController`.
 - **3.7** Probar el CRUD completo.
-- **3.8** Escribir pruebas automatizadas del controller.
-- **3.9** Cómo lo resuelve la industria: MapStruct (opcional, referencia).
+- **3.8** Cómo lo resuelve la industria: MapStruct (opcional, referencia).
+- **3.9** Escribir pruebas automatizadas del controller.
 - **3.10** Relacionar con ADS y BD2.
 
 ### 3.1 Verificar el punto de partida
@@ -585,15 +585,22 @@ public class ProductoController {
 
 PowerShell:
 
+**Error frecuente**: en Windows PowerShell, `Invoke-RestMethod -Body` con caracteres acentuados ("mecánico") los codifica en ANSI, no UTF-8, y Jackson no puede parsear ese body — responde `400` aunque los datos sean por lo demás válidos. Más simple que convertir a bytes UTF-8: evita tildes en los datos de prueba, igual que ya haces con las categorías (`Electrodomesticos`, no `Electrodomésticos`). Si necesitas mandar un valor con tilde sí o sí, convierte el JSON a bytes UTF-8 explícitamente antes de enviarlo:
+
+```powershell
+$json = '{"nombre":"Teclado mecánico","precio":180.50,"stock":25}'
+Invoke-RestMethod -Method Post -Uri "http://localhost:8080/api/v1/productos" -ContentType "application/json" -Body ([System.Text.Encoding]::UTF8.GetBytes($json))
+```
+
 ```powershell
 # Crear (201)
-Invoke-RestMethod -Method Post -Uri "http://localhost:8080/api/v1/productos" -ContentType "application/json" -Body '{"nombre":"Teclado mecánico","precio":180.50,"stock":25}'
+Invoke-RestMethod -Method Post -Uri "http://localhost:8080/api/v1/productos" -ContentType "application/json" -Body '{"nombre":"Teclado mecanico","precio":180.50,"stock":25}'
 
 # Consultar por id (200) - reemplaza {id} por el id devuelto arriba
 Invoke-RestMethod -Method Get -Uri "http://localhost:8080/api/v1/productos/{id}"
 
 # Actualizar (200)
-Invoke-RestMethod -Method Put -Uri "http://localhost:8080/api/v1/productos/{id}" -ContentType "application/json" -Body '{"nombre":"Teclado mecánico RGB","precio":199.90,"stock":20}'
+Invoke-RestMethod -Method Put -Uri "http://localhost:8080/api/v1/productos/{id}" -ContentType "application/json" -Body '{"nombre":"Teclado mecanico RGB","precio":199.90,"stock":20}'
 
 # Eliminar (204)
 Invoke-RestMethod -Method Delete -Uri "http://localhost:8080/api/v1/productos/{id}"
@@ -609,13 +616,13 @@ bash macOS/Linux:
 
 ```bash
 # Crear (201)
-curl -i -X POST http://localhost:8080/api/v1/productos -H "Content-Type: application/json" -d '{"nombre":"Teclado mecánico","precio":180.50,"stock":25}'
+curl -i -X POST http://localhost:8080/api/v1/productos -H "Content-Type: application/json" -d '{"nombre":"Teclado mecanico","precio":180.50,"stock":25}'
 
 # Consultar por id (200) - reemplaza {id} por el id devuelto arriba
 curl -i http://localhost:8080/api/v1/productos/{id}
 
 # Actualizar (200)
-curl -i -X PUT http://localhost:8080/api/v1/productos/{id} -H "Content-Type: application/json" -d '{"nombre":"Teclado mecánico RGB","precio":199.90,"stock":20}'
+curl -i -X PUT http://localhost:8080/api/v1/productos/{id} -H "Content-Type: application/json" -d '{"nombre":"Teclado mecanico RGB","precio":199.90,"stock":20}'
 
 # Eliminar (204)
 curl -i -X DELETE http://localhost:8080/api/v1/productos/{id}
@@ -639,7 +646,70 @@ curl -i http://localhost:8080/api/v1/productos/999999
 | Id inexistente en `GET`/`PUT`/`DELETE` | cualquiera | `404`, cuerpo con `error: "Not Found"` (3.2.1) |
 | Trazabilidad | cualquiera | Log de la petición muestra `[traceId]` no vacío (3.2.2) |
 
-### 3.8 Escribir pruebas automatizadas del controller
+### 3.8 Cómo lo resuelve la industria: MapStruct (opcional, referencia)
+
+!!! note "Alternativa opcional, no reemplaza 3.4 en la evidencia de la sesión"
+    Esta sección es informativa: muestra cómo un equipo profesional evita
+    escribir a mano el cuerpo de un mapper como `ProductoMapper` (3.4). La
+    implementación que se evalúa en 4.4-4.6 es la manual de 3.4. Adoptar
+    MapStruct es una decisión de equipo, no un requisito de S2.
+
+**Producto del paso:** el mismo `ProductoMapper` de 3.4, generado en compilación en vez de escrito a mano.
+
+Con [MapStruct](https://mapstruct.org/), un mapper es una **interfaz** — el procesador de anotaciones genera la implementación (`ProductoMapperImpl`) al compilar.
+
+En el `pom.xml`, agrega la dependencia:
+
+```xml
+<dependency>
+    <groupId>org.mapstruct</groupId>
+    <artifactId>mapstruct</artifactId>
+    <version>1.6.3</version>
+</dependency>
+```
+
+Y en el `maven-compiler-plugin`, junto al `annotationProcessorPaths` que ya tiene Lombok, agrega el de MapStruct **después** de Lombok — MapStruct necesita ver los getters/setters que Lombok genera, y el orden de los `<path>` determina en qué orden corren los procesadores:
+
+```xml
+<annotationProcessorPaths>
+    <path>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+    </path>
+    <path>
+        <groupId>org.mapstruct</groupId>
+        <artifactId>mapstruct-processor</artifactId>
+        <version>1.6.3</version>
+    </path>
+</annotationProcessorPaths>
+```
+
+`ProductoMapper` pasa de clase a interfaz:
+
+```java
+package pe.edu.upeu.bomerp.catalogo.producto.mapper;
+
+import org.mapstruct.Mapper;
+import pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoRequest;
+import pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoResponse;
+import pe.edu.upeu.bomerp.catalogo.producto.entity.Producto;
+
+@Mapper(componentModel = "spring")
+public interface ProductoMapper {
+    Producto toEntity(ProductoRequest request);
+    ProductoResponse toResponse(Producto producto);
+}
+```
+
+Como los nombres de campo coinciden exactamente entre `Producto`, `ProductoRequest` y `ProductoResponse` (`nombre`, `precio`, `stock`), MapStruct los relaciona sin ninguna anotación `@Mapping` adicional — el mapeo de 3.4, que hoy tiene diez líneas de `set`/`get` repetidos, se reduce a dos firmas de método sin cuerpo.
+
+**Ventajas frente al mapeo manual (3.4):**
+
+- **Menos código que mantener**: si mañana `Producto` agrega un campo con el mismo nombre en el DTO, MapStruct lo mapea solo — nadie edita `ProductoMapper` a mano.
+- **Errores en compilación, no en producción**: si un campo del DTO no tiene de dónde mapearse, MapStruct falla el build con un mensaje claro, en vez de dejarlo en `null` silenciosamente.
+- **Sin costo de reflexión en tiempo de ejecución**: el código generado es Java plano, igual de rápido que el mapeo manual — a diferencia de librerías que mapean por reflexión en cada llamada (por ejemplo, ModelMapper).
+
+### 3.9 Escribir pruebas automatizadas del controller
 
 **Producto del paso:** `ProductoControllerTest`, con los casos de 3.7 automatizados en vez de ejecutados a mano.
 
@@ -747,69 +817,6 @@ Ejecuta las pruebas:
 ```bash
 ./mvnw test -Dtest=ProductoControllerTest
 ```
-
-### 3.9 Cómo lo resuelve la industria: MapStruct (opcional, referencia)
-
-!!! note "Alternativa opcional, no reemplaza 3.4 en la evidencia de la sesión"
-    Esta sección es informativa: muestra cómo un equipo profesional evita
-    escribir a mano el cuerpo de un mapper como `ProductoMapper` (3.4). La
-    implementación que se evalúa en 4.4-4.6 es la manual de 3.4. Adoptar
-    MapStruct es una decisión de equipo, no un requisito de S2.
-
-**Producto del paso:** el mismo `ProductoMapper` de 3.4, generado en compilación en vez de escrito a mano.
-
-Con [MapStruct](https://mapstruct.org/), un mapper es una **interfaz** — el procesador de anotaciones genera la implementación (`ProductoMapperImpl`) al compilar.
-
-En el `pom.xml`, agrega la dependencia:
-
-```xml
-<dependency>
-    <groupId>org.mapstruct</groupId>
-    <artifactId>mapstruct</artifactId>
-    <version>1.6.3</version>
-</dependency>
-```
-
-Y en el `maven-compiler-plugin`, junto al `annotationProcessorPaths` que ya tiene Lombok, agrega el de MapStruct **después** de Lombok — MapStruct necesita ver los getters/setters que Lombok genera, y el orden de los `<path>` determina en qué orden corren los procesadores:
-
-```xml
-<annotationProcessorPaths>
-    <path>
-        <groupId>org.projectlombok</groupId>
-        <artifactId>lombok</artifactId>
-    </path>
-    <path>
-        <groupId>org.mapstruct</groupId>
-        <artifactId>mapstruct-processor</artifactId>
-        <version>1.6.3</version>
-    </path>
-</annotationProcessorPaths>
-```
-
-`ProductoMapper` pasa de clase a interfaz:
-
-```java
-package pe.edu.upeu.bomerp.catalogo.producto.mapper;
-
-import org.mapstruct.Mapper;
-import pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoRequest;
-import pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoResponse;
-import pe.edu.upeu.bomerp.catalogo.producto.entity.Producto;
-
-@Mapper(componentModel = "spring")
-public interface ProductoMapper {
-    Producto toEntity(ProductoRequest request);
-    ProductoResponse toResponse(Producto producto);
-}
-```
-
-Como los nombres de campo coinciden exactamente entre `Producto`, `ProductoRequest` y `ProductoResponse` (`nombre`, `precio`, `stock`), MapStruct los relaciona sin ninguna anotación `@Mapping` adicional — el mapeo de 3.4, que hoy tiene diez líneas de `set`/`get` repetidos, se reduce a dos firmas de método sin cuerpo.
-
-**Ventajas frente al mapeo manual (3.4):**
-
-- **Menos código que mantener**: si mañana `Producto` agrega un campo con el mismo nombre en el DTO, MapStruct lo mapea solo — nadie edita `ProductoMapper` a mano.
-- **Errores en compilación, no en producción**: si un campo del DTO no tiene de dónde mapearse, MapStruct falla el build con un mensaje claro, en vez de dejarlo en `null` silenciosamente.
-- **Sin costo de reflexión en tiempo de ejecución**: el código generado es Java plano, igual de rápido que el mapeo manual — a diferencia de librerías que mapean por reflexión en cada llamada (por ejemplo, ModelMapper).
 
 ### 3.10 Relacionar con ADS y BD2
 
