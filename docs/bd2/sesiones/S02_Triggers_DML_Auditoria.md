@@ -309,7 +309,7 @@ ID_PRODUCTO   ACCION   PRECIO_ANTERIOR   PRECIO_NUEVO   FECHA_EVENTO
 |---|---|---|
 | `TRG_PRODUCTO_PRECIO_BU` | Integridad: regla protegida sin importar el cliente | `PUT /api/v1/productos/{id}` (S2), segunda capa de protección |
 | `TRG_PRODUCTO_AUDITORIA` | Auditabilidad (Tabla 4 de ADS S1) | Ninguno directo — el backend no necesita saber que existe |
-| `PRODUCTO_AUDITORIA` | Trazabilidad de cambios | Evidencia complementaria a los logs con `traceId` de LP2 (S1, 3.3.2) |
+| `PRODUCTO_AUDITORIA` | Trazabilidad de cambios | Evidencia complementaria a los logs con `traceId` de LP2 (S2, 3.2.2) |
 
 Sesión equivalente en los otros dos cursos, misma semana: [ADS - S2 Modelo C4 y Vistas Arquitectónicas](../../ads/sesiones/S02_Modelo_C4_Vistas_Arquitectonicas.md) y [LP2 - S2 CRUD REST Completo de Producto](../../lp2/sesiones/S02_CRUD_REST_Completo_Producto.md).
 
