@@ -715,15 +715,18 @@ Como los nombres de campo coinciden exactamente entre `Producto`, `ProductoReque
 
 Las pruebas manuales de 3.7 verifican el CRUD una vez; una prueba automatizada verifica lo mismo **cada vez que compilas**, sin depender de que alguien recuerde ejecutar los `curl`/`Invoke-RestMethod` uno por uno. `@WebMvcTest` levanta solo la capa web (controller, `@Valid`, `GlobalExceptionHandler`) — sin Oracle, sin `ProductoServiceImpl` real — y `@MockitoBean` reemplaza `ProductoService` por un doble de prueba controlado por el test.
 
+**Error frecuente**: importar `@WebMvcTest` desde `org.springframework.boot.test.autoconfigure.web.servlet` (el paquete de Spring Boot 2.x/3.x) — en Spring Boot **4.0.7** ese paquete ya no existe. La anotación se movió a `org.springframework.boot.webmvc.test.autoconfigure` como parte de la modularización de los starters de test (`spring-boot-starter-webmvc-test`, ver `pom.xml`). El import correcto para este proyecto es el que usa el código de abajo.
+
+**Error frecuente**: importar `ObjectMapper` desde `com.fasterxml.jackson.databind` (Jackson 2, "clásico") y autoinyectarlo con `@Autowired` — en Spring Boot **4.0.7** (con Spring Framework 7), el `ObjectMapper` que Spring autoconfigura por defecto es de **Jackson 3**, un paquete completamente nuevo: `tools.jackson.databind`. Jackson 2 sigue presente en el classpath (lo usan otras librerías de testing), pero Spring ya no registra un bean de ese tipo — por eso `@Autowired private ObjectMapper objectMapper` con el import viejo falla con `No qualifying bean of type 'com.fasterxml.jackson.databind.ObjectMapper' available`. El import correcto es `tools.jackson.databind.ObjectMapper` (el método `writeValueAsString(...)` se usa exactamente igual).
+
 **`src/test/java/pe/edu/upeu/bomerp/catalogo/producto/controller/ProductoControllerTest.java`**
 
 ```java
 package pe.edu.upeu.bomerp.catalogo.producto.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -731,6 +734,7 @@ import pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoRequest;
 import pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoResponse;
 import pe.edu.upeu.bomerp.catalogo.producto.service.ProductoService;
 import pe.edu.upeu.bomerp.exception.ResourceNotFoundException;
+import tools.jackson.databind.ObjectMapper;
 
 import java.math.BigDecimal;
 import java.util.List;
