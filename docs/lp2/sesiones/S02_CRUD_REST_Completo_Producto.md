@@ -8,11 +8,11 @@ Tiempo: 20 min.
 
 ### 1.1 Presentación de la sesión
 
-En S1, `Producto` (si se completó el 3.5.2 opcional) solo exponía un listado de solo lectura. Esta sesión lo convierte en un recurso REST completo: crear, consultar uno por id, actualizar y eliminar, con un DTO de entrada validado, mapeo explícito entre capas y el manejo global de errores (`GlobalExceptionHandler`, `CorrelationIdFilter`) puesto a prueba con casos reales de validación y de recurso no encontrado. Esas dos clases ya se crearon en S1 (3.3) — 3.2 de esta guía repite esa explicación porque el sílabo lista "excepciones" y "logs" como parte del alcance oficial de S2, no solo de S1.
+En S1, `Producto` (si se completó el 3.4.2 opcional) solo exponía un listado de solo lectura. Esta sesión lo convierte en un recurso REST completo: crear, consultar uno por id, actualizar y eliminar, con un DTO de entrada validado, mapeo explícito entre capas y el manejo global de errores (`GlobalExceptionHandler`, `CorrelationIdFilter`, creados en 3.2 de esta misma sesión) puesto a prueba con casos reales de validación y de recurso no encontrado.
 
 ### 1.2 Índice
 
-1. Excepciones y filtro de trazabilidad (repaso de S1).
+1. Excepciones y filtro de trazabilidad.
 2. Entidad, repositorio, DTO y mapeo.
 3. Servicio de aplicación con las cuatro operaciones CRUD.
 4. Validación de entrada con Bean Validation.
@@ -34,7 +34,7 @@ API REST completa de `Producto` (`GET`, `GET /{id}`, `POST`, `PUT`, `DELETE`), c
 
 | Actividades a Realizar en el Periodo | Orientaciones generales (Orientaciones Metodológicas) | Material de estudio recomendado |
 |---|---|---|
-| Revisión previa individual | Si no completaste el 3.5.2 opcional de S1, revisa esa sección antes de clase (`Producto` con `listar()` debe existir). Repasar Bean Validation (`@NotBlank`, `@Size`, `@NotNull`). Trabajo individual, antes de clase. | S1 (3.5.2), documentación de Jakarta Bean Validation. |
+| Revisión previa individual | Si no completaste el 3.4.2 opcional de S1, revisa esa sección antes de clase (`Producto` con `listar()` debe existir). Repasar Bean Validation (`@NotBlank`, `@Size`, `@NotNull`). Trabajo individual, antes de clase. | S1 (3.4.2), documentación de Jakarta Bean Validation. |
 | Clase presencial | Construcción guiada del CRUD REST completo de `Producto`: DTO, mapper, servicio y controlador, con casos de prueba válidos e inválidos. Trabajo individual en la propia laptop, siguiendo al docente paso a paso; consulta inmediata ante errores de compilación o de mapeo. | `pom.xml` ya configurado (S1), backend ejecutable, cliente REST para verificar endpoints. |
 | Evaluación formativa | Verificación en clase de `POST`/`GET`/`PUT`/`DELETE` sobre `/api/v1/productos`, incluidos los casos `400` (validación) y `404` (no encontrado). La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4. | Indicaciones de entrega (4.3), rúbrica de evaluación (4.6). |
 
@@ -122,7 +122,7 @@ Este diagrama es el mapa que guía el resto de la explicación: cada apartado si
 
 ### 2.2 Entidad, repositorio, DTO y mapeo
 
-La entidad `Producto` y `ProductoRepository` ya existen desde S1 (3.5.2) y no cambian en esta sesión. Lo que cambia es el DTO de salida y cómo se construye.
+La entidad `Producto` y `ProductoRepository` ya existen desde S1 (3.4.2) y no cambian en esta sesión. Lo que cambia es el DTO de salida y cómo se construye.
 
 En S1, con solo `listar()`, un `record CategoriaResponse`/`ProductoResponse` alcanzaba: inmutable, sin Lombok, una sola forma de construirlo. Ahora `Producto` necesita dos DTO distintos (`ProductoRequest` para lo que entra, `ProductoResponse` para lo que sale) y un mapeo en ambas direcciones (`toEntity`/`toResponse`) — un `record` no tiene setters ni encaja con `@Builder`, así que `ProductoResponse` pasa a ser una clase con Lombok (`@Getter @Setter @Builder @NoArgsConstructor @AllArgsConstructor`), igual que ya lo hace Distribuidas desde su S1.
 
@@ -130,17 +130,17 @@ En S1, con solo `listar()`, un `record CategoriaResponse`/`ProductoResponse` alc
 
 ### 2.3 Validación de entrada con Bean Validation
 
-`ProductoRequest` declara las reglas de forma directamente sobre sus campos (`@NotBlank`, `@Size`, `@NotNull`, `@DecimalMin`), y el controller las activa con `@Valid` en el parámetro `@RequestBody`. Si algo no cumple, Spring nunca llega a ejecutar el método del controller: responde `400` directo, con el mismo `GlobalExceptionHandler` de S1 (3.3.1) manejando `MethodArgumentNotValidException`.
+`ProductoRequest` declara las reglas de forma directamente sobre sus campos (`@NotBlank`, `@Size`, `@NotNull`, `@DecimalMin`), y el controller las activa con `@Valid` en el parámetro `@RequestBody`. Si algo no cumple, Spring nunca llega a ejecutar el método del controller: responde `400` directo, con el `GlobalExceptionHandler` (3.2.1) manejando `MethodArgumentNotValidException`.
 
 **Error frecuente**: olvidar `@Valid` en el `@RequestBody` del controller. Sin esa anotación, Spring ignora por completo las anotaciones de `ProductoRequest` y deja pasar datos inválidos hasta el service.
 
 ### 2.4 Manejo de errores aplicado
 
-El `GlobalExceptionHandler` y el `ResourceNotFoundException` ya existen desde S1 (3.3.1) — hoy es la primera vez que la sesión los ejercita con casos reales: pedir, actualizar o eliminar un `id` que no existe lanza `ResourceNotFoundException`, capturado por el mismo manejador global que ya estaba en pie desde S1 sin usarse todavía.
+`GlobalExceptionHandler` y `ResourceNotFoundException` se crean en 3.2.1 de esta misma sesión, antes de tocar el CRUD — pedir, actualizar o eliminar un `id` que no existe lanza `ResourceNotFoundException`, capturado por ese mismo manejador global.
 
 ### 2.5 Logs y trazabilidad en operaciones de escritura
 
-El `CorrelationIdFilter` de S1 (3.3.2) ya asigna un `traceId` a cada petición HTTP, sin importar el método. Hoy, por primera vez, ese `traceId` acompaña también peticiones `POST`/`PUT`/`DELETE` — útil para rastrear, por ejemplo, quién creó o eliminó un producto específico revisando los logs por ese identificador.
+El `CorrelationIdFilter` (3.2.2) asigna un `traceId` a cada petición HTTP, sin importar el método — incluidas las peticiones `POST`/`PUT`/`DELETE` que este CRUD agrega, útil para rastrear, por ejemplo, quién creó o eliminó un producto específico revisando los logs por ese identificador.
 
 ## 3. Aplica: actividad práctica guiada
 
@@ -169,17 +169,14 @@ Tiempo: 2h.
 
 **Producto del paso:** confirmación de que `Producto` (entidad, repositorio y `listar()`) ya existe.
 
-!!! note "Si no completaste el 3.5.2 opcional de S1"
-    Esta sesión asume que `catalogo/producto/entity/Producto.java` y `catalogo/producto/repository/ProductoRepository.java` ya existen (S1, 3.5.2). Si en S1 solo hiciste `Categoria` y dejaste `Producto` pendiente por ser opcional, créalos ahora siguiendo exactamente 3.5.2 de S1 antes de continuar — son idénticos, esta sesión no los repite.
+!!! note "Si no completaste el 3.4.2 opcional de S1"
+    Esta sesión asume que `catalogo/producto/entity/Producto.java` y `catalogo/producto/repository/ProductoRepository.java` ya existen (S1, 3.4.2). Si en S1 solo hiciste `Categoria` y dejaste `Producto` pendiente por ser opcional, créalos ahora siguiendo exactamente 3.4.2 de S1 antes de continuar — son idénticos, esta sesión no los repite.
 
-**Requisito antes de continuar:** confirma que `http://localhost:8080/api/v1/productos` responde (lista vacía o con datos) antes de tocar código nuevo. Si falla, el problema es de S1 (conexión a Oracle o tablas faltantes, ver 3.5 de S1), no de esta sesión.
+**Requisito antes de continuar:** confirma que `http://localhost:8080/api/v1/productos` responde (lista vacía o con datos) antes de tocar código nuevo. Si falla, el problema es de S1 (conexión a Oracle o tablas faltantes, ver 3.4 de S1), no de esta sesión.
 
 ### 3.2 Crear las excepciones y el filtro de trazabilidad
 
-!!! note "Contenido repetido de S1 (3.3), a propósito"
-    `GlobalExceptionHandler`, `ResourceNotFoundException`, `CorrelationIdFilter` y `logback-spring.xml` ya existen desde S1 (3.3) — si los creaste ahí, este paso no agrega código nuevo, solo repite la explicación porque el sílabo de BD2/LP2 lista "excepciones" y "logs" como parte del alcance oficial de **esta** sesión (ver 1.4), no solo de S1. Si por algún motivo no los creaste en S1, créalos ahora siguiendo esta misma sección — el código es idéntico en ambas guías.
-
-**Producto del paso:** manejo de errores centralizado y filtro de trazabilidad (`traceId` en cada log) funcionando en `bomerp-backend` — mismas clases que S1 (3.3), documentadas aquí para que la evidencia de S2 sea autocontenida.
+**Producto del paso:** manejo de errores centralizado y filtro de trazabilidad (`traceId` en cada log) funcionando en `bomerp-backend`, antes de ampliar el CRUD de `Producto`. El sílabo de LP2 lista "excepciones" y "logs" como parte del alcance oficial de **esta** sesión (ver 1.4), no de S1 — por eso se crean aquí, no en S1.
 
 #### 3.2.1 Excepciones y manejador global de errores
 
@@ -321,11 +318,18 @@ Y `src/main/resources/logback-spring.xml`, que define el formato de logs e inclu
 Si ya hiciste esto en S1, salta la ejecución — ya está probado. Si no, arranca la aplicación y verifica el cambio de formato: antes de `logback-spring.xml`, la terminal muestra el formato por defecto de Spring Boot; después, cambia al patrón definido (`[%X{traceId}]` en vez de PID/app/hilo):
 
 ```text
-2026-08-15 18:53:05.581 [] INFO  o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
-2026-08-15 18:53:17.004 [22deb350-54b4-4dea-a9c6-b09aaae9cea6] INFO  o.s.api.AbstractOpenApiResource - Init duration for springdoc-openapi is: 113 ms
+2026-08-16 18:07:09.078 [] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 4 ms
+2026-08-16 18:07:21.448 [4ded4f1b-efc8-4ef4-8462-435c7a3779ef] INFO  o.s.api.AbstractOpenApiResource - Init duration for springdoc-openapi is: 589 ms
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.descripcion,
+        c1_0.nombre 
+    from
+        bom_catalogo.categorias c1_0
 ```
 
-Las primeras líneas (arranque) muestran `[]` vacío: todavía no hay ninguna petición HTTP en curso. La línea disparada por una petición real ya trae un `traceId`: el `CorrelationIdFilter` generó el UUID, lo puso en el `MDC`, y ese log lo heredó automáticamente.
+La línea de arranque muestra `[]` vacío: todavía no hay ninguna petición HTTP en curso. En cambio, al hacer clic en "Try it out" sobre `GET /api/v1/categorias` en Swagger, la petición ya trae un `traceId` real (`4ded4f1b-...`): el `CorrelationIdFilter` generó el UUID y lo puso en el `MDC`. La consulta `Hibernate: select...` que aparece justo después es la evidencia de que esa misma petición llegó hasta `CategoriaRepository.findAll()` y consultó Oracle de verdad — Hibernate la imprime con su propio formato (`show-sql`), sin el prefijo `[traceId]`, porque usa un logger aparte del patrón de `logback-spring.xml`.
 
 ### 3.3 Migrar `ProductoResponse` a clase y crear `ProductoRequest`
 
@@ -511,7 +515,7 @@ public class ProductoServiceImpl implements ProductoService {
 }
 ```
 
-`pe.edu.upeu.bomerp.exception` es el paquete compartido creado en S1 (3.3.1) — `ResourceNotFoundException` no se repite aquí, se reutiliza tal cual.
+`pe.edu.upeu.bomerp.exception` es el paquete compartido creado en 3.2.1 de esta sesión — `ResourceNotFoundException` no se repite aquí, se reutiliza tal cual.
 
 ### 3.6 Ampliar `ProductoController`
 
@@ -631,9 +635,9 @@ curl -i http://localhost:8080/api/v1/productos/999999
 | Consultar por id existente | `GET /{id}` | `200 OK`, datos del producto |
 | Actualizar producto existente | `PUT /{id}` | `200 OK`, datos actualizados |
 | Eliminar producto existente | `DELETE /{id}` | `204 No Content` |
-| Nombre vacío en `POST` | `POST` | `400`, cuerpo con `error: "Bad Request"` (3.3.1 de S1) |
-| Id inexistente en `GET`/`PUT`/`DELETE` | cualquiera | `404`, cuerpo con `error: "Not Found"` (3.3.1 de S1) |
-| Trazabilidad | cualquiera | Log de la petición muestra `[traceId]` no vacío (3.3.2 de S1) |
+| Nombre vacío en `POST` | `POST` | `400`, cuerpo con `error: "Bad Request"` (3.2.1) |
+| Id inexistente en `GET`/`PUT`/`DELETE` | cualquiera | `404`, cuerpo con `error: "Not Found"` (3.2.1) |
+| Trazabilidad | cualquiera | Log de la petición muestra `[traceId]` no vacío (3.2.2) |
 
 ### 3.8 Escribir pruebas automatizadas del controller
 
@@ -730,7 +734,7 @@ class ProductoControllerTest {
 }
 ```
 
-`@WebMvcTest` incluye automáticamente los `@RestControllerAdvice` del proyecto (como `GlobalExceptionHandler`, S1 3.3.1) — por eso el caso de nombre vacío responde `400` real, generado por el mismo manejador que usa la aplicación completa, no un mock. `crear_conNombreVacio_respondeBadRequestSinLlegarAlService` verifica implícitamente que `@Valid` corta la petición antes del controller: como nunca se programó un `when(productoService.crear(...))` para ese caso, si la validación fallara y la petición llegara igual al service mockeado, Mockito respondería `null` y el test fallaría por una razón distinta — la prueba está diseñada para fallar ruidosamente si `@Valid` deja de funcionar.
+`@WebMvcTest` incluye automáticamente los `@RestControllerAdvice` del proyecto (como `GlobalExceptionHandler`, 3.2.1) — por eso el caso de nombre vacío responde `400` real, generado por el mismo manejador que usa la aplicación completa, no un mock. `crear_conNombreVacio_respondeBadRequestSinLlegarAlService` verifica implícitamente que `@Valid` corta la petición antes del controller: como nunca se programó un `when(productoService.crear(...))` para ese caso, si la validación fallara y la petición llegara igual al service mockeado, Mockito respondería `null` y el test fallaría por una razón distinta — la prueba está diseñada para fallar ruidosamente si `@Valid` deja de funcionar.
 
 **Error frecuente**: usar `@SpringBootTest` en vez de `@WebMvcTest` para probar un controller — `@SpringBootTest` levanta el contexto completo (incluida la conexión a Oracle), mucho más lento y con una dependencia que esta prueba no necesita. `@WebMvcTest` es la porción mínima suficiente para probar contrato HTTP, validación y manejo de errores.
 
@@ -971,7 +975,7 @@ Indica 2 fortalezas y 2 recomendaciones.
 
 Tiempo: 5 min.
 
-**Resumen breve:** hoy `Producto` pasó de un listado de solo lectura a un recurso REST completo — creación, consulta individual, actualización y eliminación, con validación de entrada, mapeo explícito y el manejo global de errores de S1 finalmente puesto a prueba con casos reales.
+**Resumen breve:** hoy `Producto` pasó de un listado de solo lectura a un recurso REST completo — creación, consulta individual, actualización y eliminación, con validación de entrada, mapeo explícito y el manejo global de errores puesto a prueba con casos reales.
 
 **Dinámica participativa:** en una ronda rápida (o con una herramienta digital tipo formulario o encuesta en vivo), cada estudiante comparte en una frase qué caso de error (`400` o `404`) le costó más reproducir.
 
