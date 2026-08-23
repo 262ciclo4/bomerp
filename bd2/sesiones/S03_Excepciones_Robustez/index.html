@@ -3279,9 +3279,37 @@
 <span class="k">END</span><span class="p">;</span>
 </code></pre></div>
 <p><code>PRAGMA EXCEPTION_INIT</code> no cambia el comportamiento de Oracle — solo le da un nombre legible a un código que ya existía, para poder escribir <code>WHEN e_categoria_inexistente</code> en vez de comparar <code>SQLCODE = -2291</code> a mano.</p>
+<p><strong>Figura 3. Cómo elegir entre <code>PRAGMA EXCEPTION_INIT</code> y <code>RAISE_APPLICATION_ERROR</code></strong></p>
+<pre class="mermaid"><code>flowchart TD
+    Start["Necesitas manejar un error por nombre"]
+    Q1{"El codigo de error&lt;br/&gt;ya existe en Oracle?"}
+    Pragma["PRAGMA EXCEPTION_INIT&lt;br/&gt;(3.3, ORA-02291)"]
+    Raise["RAISE_APPLICATION_ERROR&lt;br/&gt;(3.4, regla propia)"]
+
+    Start --&gt; Q1
+    Q1 --&gt;|"si, lo genera Oracle"| Pragma
+    Q1 --&gt;|"no, lo genera tu logica"| Raise</code></pre>
+<p>La pregunta de la Figura 3 es la misma que resume la Tabla 3, hecha explícita: si el error ya lo dispara Oracle (una restricción, una conversión), le pones nombre con <code>PRAGMA EXCEPTION_INIT</code>; si el error no existe hasta que tu propia validación lo detecta, lo generás vos con <code>RAISE_APPLICATION_ERROR</code>. Nunca hace falta usar los dos para el mismo caso.</p>
 <h3 id="24-registro-de-errores-y-tolerancia-a-fallos">2.4 Registro de errores y tolerancia a fallos<a class="headerlink" href="#24-registro-de-errores-y-tolerancia-a-fallos" title="Permanent link">&para;</a></h3>
 <p><strong>Registro de errores</strong>: cada excepción capturada se guarda en una tabla propia (<code>LOG_ERRORES</code>), con el mismo criterio de auditoría que <code>PRODUCTO_AUDITORIA</code> (S2) — qué objeto falló, qué código de error, qué mensaje, cuándo y con qué usuario. <code>SQLCODE</code> y <code>SQLERRM</code> (dentro del bloque <code>EXCEPTION</code>) dan el código y el mensaje exacto que Oracle generó, disponibles solo ahí.</p>
 <p><strong>Tolerancia a fallos</strong>: no significa "que el error no pase" — significa que el sistema no se cae en silencio ni deja al que llama sin explicación. El patrón de esta sesión es: <strong>capturar → registrar → relanzar con mensaje claro</strong> (no solo capturar y registrar, ni solo capturar y relanzar sin registrar). Relanzar es importante: si <code>SP_REGISTRAR_PRODUCTO</code> traga la excepción sin relanzarla, quien lo invocó (LP2, otro script) cree que el producto se guardó cuando en realidad no.</p>
+<p><strong>Figura 4. Tolerancia a fallos: patrón correcto vs. error frecuente</strong></p>
+<pre class="mermaid"><code>flowchart TD
+    Error["Excepcion capturada"]
+
+    subgraph Correcto["Patron de esta sesion"]
+        direction LR
+        R1["Registrar en LOG_ERRORES"] --&gt; R2["Relanzar con mensaje claro"]
+    end
+
+    subgraph Incorrecto["Error frecuente: WHEN OTHERS THEN NULL (2.2)"]
+        direction LR
+        I1["No registra"] -.-&gt; I2["No relanza"]
+    end
+
+    Error --&gt; Correcto
+    Error -.-&gt;|"a evitar"| Incorrecto</code></pre>
+<p>El bloque "Incorrecto" es el mismo <code>WHEN OTHERS THEN NULL</code> que 2.2 ya marcó como error frecuente: no registra ni relanza, así que el fallo desaparece sin dejar rastro y quien invocó el procedimiento cree que todo salió bien. El patrón de esta sesión (arriba, "Correcto") siempre hace las dos cosas, en ese orden — invertirlas o saltarse una es la falla que se pide diagnosticar en 4.3.1 ("Error o hallazgo").</p>
 <h2 id="3-aplica-actividad-practica-guiada">3. Aplica: actividad práctica guiada<a class="headerlink" href="#3-aplica-actividad-practica-guiada" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 2h.</p>
 <p><strong>Actividad:</strong> incorporación guiada de manejo de excepciones y registro de errores sobre <code>SP_REGISTRAR_PRODUCTO</code>, <code>SP_APLICAR_DESCUENTO_PRODUCTO</code> (S1) y una función nueva (Producto de la sesión en 1.4).</p>
