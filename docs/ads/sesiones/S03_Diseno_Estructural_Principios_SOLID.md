@@ -136,6 +136,8 @@ No son principios independientes de SOLID — son la razón *por qué* SOLID fun
 
 **Ejemplo de referencia.** En LP2: `catalogo/producto` solo contiene clases sobre `Producto` (alta cohesión); `ProductoController` depende de la interfaz `ProductoService`, nunca de `ProductoServiceImpl` directamente (bajo acoplamiento). El caso más interesante para evaluar es el acoplamiento **entre** `producto` y `categoria` — dos paquetes hermanos del mismo módulo — que se analiza con el código real en 3.4.
 
+El acoplamiento no es solo un asunto entre clases (una clase que depende de otra) — también aparece **entre contratos**: si el DTO de salida de una entidad reutiliza tal cual el DTO de otra entidad relacionada, el primero queda acoplado a cada cambio que sufra el segundo, aunque ese cambio no tenga nada que ver con lo que el primero necesita mostrar. Introducir un DTO más chico, dedicado solo a lo que se embebe, es la misma estrategia de bajo acoplamiento (Tabla 3) aplicada a contratos en vez de a clases — este caso también se evalúa con código real en 3.4.
+
 ### 2.4 Modularidad y abstracción
 
 **Modularidad**: el sistema se divide en unidades (módulos) con un límite explícito y verificable — no basta con una convención de carpetas; el límite debe poder comprobarse, idealmente de forma automática, para que nadie lo cruce sin darse cuenta.
@@ -239,14 +241,26 @@ private Categoria buscarCategoriaOFallar(Long categoriaId) {
 | Qué expone `categoria` hacia afuera | Su capa de persistencia completa | Solo lo que `CategoriaService` decide exponer |
 | Costo de cambiar `categoria` internamente | Podría afectar a `producto` si cambia el `Repository` | `producto` no se entera mientras el contrato de `CategoriaService` no cambie |
 
-No hay una respuesta única "correcta" — es una tensión real de diseño, y documentarla (con el criterio de arriba) es el hallazgo que se espera en 3.6.
+No hay una respuesta única "correcta" — es una tensión real de diseño, y documentarla (con el criterio de arriba) es uno de los hallazgos que se espera en 3.6.
+
+**Un segundo caso, esta vez de acoplamiento entre contratos:** `ProductoResponse` no reutiliza `CategoriaResponse` (el DTO que ya existe para exponer una categoría) — introduce `CategoriaResumen`, un DTO más chico, dedicado solo a lo que se embebe en un producto (`id`, `nombre`, sin `descripcion`).
+
+**Tabla 6. Acoplamiento entre contratos: reutilizar vs. desacoplar**
+
+| | Reutilizar `CategoriaResponse` en `ProductoResponse` | Introducir `CategoriaResumen` (real, LP2 S3) |
+|---|---|---|
+| Acoplamiento | El contrato de `/productos` cambia de forma cada vez que `CategoriaResponse` cambia, aunque el cambio no afecte a lo que un producto necesita mostrar. | El contrato de `/productos` solo cambia si `CategoriaResumen` cambia — independiente de `CategoriaResponse`. |
+| Costo hoy | Ninguno — `descripcion` no es un dato sensible ni voluminoso. | Una clase más, un método de mapeo más (`CategoriaMapper.toResumen`). |
+| Beneficio | Menos código. | El contrato de `/productos` no depende de decisiones futuras de `/categorias`. |
+
+Igual que el caso anterior, no hay una respuesta única "correcta": con los hechos de hoy (nada sensible en `descripcion`, sin motivo de ocultamiento), reutilizar `CategoriaResponse` habría sido igual de válido — la decisión real de introducir `CategoriaResumen` es explícitamente anticipatoria. Vale la pena nombrarla como tal en el hallazgo (3.6), no presentarla como la única opción correcta.
 
 ### 3.5 Evaluar modularidad y abstracción
 
 **Producto del paso:** confirmación de que el límite de módulo (`catalogo`) se respeta, y que las abstracciones (DTO, interfaces) cumplen su función.
 
 - **Modularidad:** `catalogo` sigue siendo el único módulo con código real; `ModularityTests` (LP2) verifica que ningún otro módulo (todavía inexistente: `ventas` llega en S4) acceda a sus repositorios o entidades directamente. Nada que evaluar todavía más allá de eso — la prueba real es automática, no una opinión de diseño.
-- **Abstracción — DTO:** `ProductoResponse` embebe `CategoriaResumen` (`id`, `nombre`), no la entidad `Categoria` completa (que también tiene `descripcion`) — el contrato REST expone exactamente lo que un cliente necesita para mostrar un producto con su categoría, sin acoplar la API pública a cada campo interno de `Categoria`.
+- **Abstracción — DTO:** `ProductoResponse` embebe `CategoriaResumen`, no la entidad `Categoria` completa — la abstracción entidad-DTO evita que la API pública dependa de cada campo interno de `Categoria`. El acoplamiento **entre** `CategoriaResumen` y `CategoriaResponse` (dos DTO, no una entidad y un DTO) ya se evaluó con más detalle en 3.4.
 - **Abstracción — interfaces de servicio:** ya evaluado en 3.2/3.3; se repite aquí como confirmación de que la abstracción no es solo una interfaz vacía — realmente oculta la implementación (MapStruct, Spring Data JPA) del resto del sistema.
 
 ### 3.6 Documentar el hallazgo real
@@ -259,7 +273,7 @@ Ejemplo de hallazgo real de esta sesión (documentado en 3.4): *"`ProductoServic
 
 **Producto del paso:** matriz de integración de la sesión.
 
-**Tabla 6. Matriz de integración ADS-LP2-BD2 (S3)**
+**Tabla 7. Matriz de integración ADS-LP2-BD2 (S3)**
 
 | Criterio evaluado | Evidencia real en LP2 | Relación con BD2 |
 |---|---|---|
@@ -394,7 +408,7 @@ La evidencia individual se considera completa si:
 
 ### 4.6 Rúbrica de evaluación
 
-**Tabla 7. Rúbrica de evaluación**
+**Tabla 8. Rúbrica de evaluación**
 
 | Criterio | Peso (%) | A (20 pts) | B (15 pts) | C (10 pts) | D (5 pts) | Nivel obtenido |
 |---|---:|---|---|---|---|---:|
