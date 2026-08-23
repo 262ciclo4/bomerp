@@ -3510,6 +3510,7 @@
     CS["CategoriaService (alternativa)"]
     PSI --&gt;|"actual"| CR
     PSI -.-&gt;|"alternativa, mas desacoplada"| CS</code></pre>
+<p>La flecha alternativa no elimina la dependencia — la cambia de un detalle interno (<code>CategoriaRepository</code>, acceso a datos) a un contrato público y estable (<code>CategoriaService</code>). Menos acoplamiento no es cero dependencias: es depender de algo que cambia con menos frecuencia.</p>
 <p>No hay una respuesta única "correcta" — es una tensión real de diseño, y documentarla (con el criterio de arriba) es uno de los hallazgos que se espera en 3.6.</p>
 <p><strong>Un segundo caso, esta vez de acoplamiento entre contratos:</strong> <code>ProductoResponse</code> no reutiliza <code>CategoriaResponse</code> (el DTO que ya existe para exponer una categoría) — introduce <code>CategoriaResumen</code>, un DTO más chico, dedicado solo a lo que se embebe en un producto (<code>id</code>, <code>nombre</code>, sin <code>descripcion</code>).</p>
 <p><strong>Tabla 6. Acoplamiento entre contratos: reutilizar vs. desacoplar</strong></p>
