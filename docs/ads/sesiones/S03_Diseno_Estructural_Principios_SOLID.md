@@ -198,7 +198,7 @@ flowchart TB
     end
 ```
 
-Las dos mitades de la Figura 4 son el mismo patrón en dos niveles distintos: en ambas, la flecha sólida es lo que el código real hace hoy, y la punteada es la alternativa que la Tabla 5 (3.4) y la Tabla 6 (3.4) comparan. A la izquierda, "más desacoplada" significa depender de un contrato público (`CategoriaService`) en vez de acceso directo a datos; a la derecha, "más acoplada" significa lo contrario de lo que hizo LP2 — reutilizar `CategoriaResponse` habría atado el contrato de `/productos` a cada cambio futuro de `/categorias`. Ninguna de las dos mitades tiene una alternativa objetivamente "correcta": ambas son tensiones de diseño, no violaciones, y se documentan como tales en 3.6.
+Las dos mitades de la Figura 4 son el mismo patrón en dos niveles distintos, pero con un resultado opuesto — vale la pena notarlo, porque "actual" no significa lo mismo en las dos: en **"Acoplamiento entre clases"** (derecha), lo que el código real hace hoy (`ProductoServiceImpl` → `CategoriaRepository`) es la opción **más acoplada** de las dos; la de bajo acoplamiento (`CategoriaService`) es la alternativa que **no** se implementó — una tensión de diseño real, sin resolver, no un error. En **"Acoplamiento entre contratos"** (izquierda), en cambio, lo que el código real hace hoy (`CategoriaResumen`) **ya es** la opción de bajo acoplamiento; la alternativa (reutilizar `CategoriaResponse`) habría sido la más acoplada, y LP2 evitó tomarla. En ambos casos la flecha sólida es el código real y la punteada es la alternativa comparada en la Tabla 5 y la Tabla 6 (3.4) — pero solo uno de los dos casos ya está resuelto del lado del bajo acoplamiento. Ninguna de las dos mitades tiene una alternativa objetivamente "correcta": ambas son tensiones de diseño, no violaciones, y se documentan como tales en 3.6.
 
 ### 2.4 Modularidad y abstracción
 
@@ -405,6 +405,8 @@ flowchart LR
 ```
 
 La flecha alternativa no elimina la dependencia — la cambia de un detalle interno (`CategoriaRepository`, acceso a datos) a un contrato público y estable (`CategoriaService`). Menos acoplamiento no es cero dependencias: es depender de algo que cambia con menos frecuencia.
+
+**Error frecuente al leer este diagrama:** pensar que la alternativa (vía `CategoriaService`) es "más acoplada" porque `CategoriaServiceImpl` internamente llama a `CategoriaRepository` (y quizás a más cosas). Eso no cuenta: el acoplamiento se mide por lo que `ProductoServiceImpl` conoce **directamente**, no por lo que su dependencia hace por dentro. `ProductoServiceImpl` nunca ve, importa ni compila contra lo que `CategoriaServiceImpl` usa internamente — solo contra el contrato de `CategoriaService`. Si `categoria` agregara mañana una regla de negocio (por ejemplo, "solo categorías activas"), esa regla llegaría automáticamente a `ProductoServiceImpl` si depende de `CategoriaService`, pero **no** si depende de `CategoriaRepository` directamente — ese es el riesgo real de la opción actual, no al revés.
 
 No hay una respuesta única "correcta" — es una tensión real de diseño, y documentarla (con el criterio de arriba) es uno de los hallazgos que se espera en 3.6.
 
