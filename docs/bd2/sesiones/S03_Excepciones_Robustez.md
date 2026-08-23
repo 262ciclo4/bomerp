@@ -160,11 +160,49 @@ END;
 
 `PRAGMA EXCEPTION_INIT` no cambia el comportamiento de Oracle — solo le da un nombre legible a un código que ya existía, para poder escribir `WHEN e_categoria_inexistente` en vez de comparar `SQLCODE = -2291` a mano.
 
+**Figura 3. Cómo elegir entre `PRAGMA EXCEPTION_INIT` y `RAISE_APPLICATION_ERROR`**
+
+```mermaid
+flowchart TD
+    Start["Necesitas manejar un error por nombre"]
+    Q1{"El codigo de error<br/>ya existe en Oracle?"}
+    Pragma["PRAGMA EXCEPTION_INIT<br/>(3.3, ORA-02291)"]
+    Raise["RAISE_APPLICATION_ERROR<br/>(3.4, regla propia)"]
+
+    Start --> Q1
+    Q1 -->|"si, lo genera Oracle"| Pragma
+    Q1 -->|"no, lo genera tu logica"| Raise
+```
+
+La pregunta de la Figura 3 es la misma que resume la Tabla 3, hecha explícita: si el error ya lo dispara Oracle (una restricción, una conversión), le pones nombre con `PRAGMA EXCEPTION_INIT`; si el error no existe hasta que tu propia validación lo detecta, lo generás vos con `RAISE_APPLICATION_ERROR`. Nunca hace falta usar los dos para el mismo caso.
+
 ### 2.4 Registro de errores y tolerancia a fallos
 
 **Registro de errores**: cada excepción capturada se guarda en una tabla propia (`LOG_ERRORES`), con el mismo criterio de auditoría que `PRODUCTO_AUDITORIA` (S2) — qué objeto falló, qué código de error, qué mensaje, cuándo y con qué usuario. `SQLCODE` y `SQLERRM` (dentro del bloque `EXCEPTION`) dan el código y el mensaje exacto que Oracle generó, disponibles solo ahí.
 
 **Tolerancia a fallos**: no significa "que el error no pase" — significa que el sistema no se cae en silencio ni deja al que llama sin explicación. El patrón de esta sesión es: **capturar → registrar → relanzar con mensaje claro** (no solo capturar y registrar, ni solo capturar y relanzar sin registrar). Relanzar es importante: si `SP_REGISTRAR_PRODUCTO` traga la excepción sin relanzarla, quien lo invocó (LP2, otro script) cree que el producto se guardó cuando en realidad no.
+
+**Figura 4. Tolerancia a fallos: patrón correcto vs. error frecuente**
+
+```mermaid
+flowchart TD
+    Error["Excepcion capturada"]
+
+    subgraph Correcto["Patron de esta sesion"]
+        direction LR
+        R1["Registrar en LOG_ERRORES"] --> R2["Relanzar con mensaje claro"]
+    end
+
+    subgraph Incorrecto["Error frecuente: WHEN OTHERS THEN NULL (2.2)"]
+        direction LR
+        I1["No registra"] -.-> I2["No relanza"]
+    end
+
+    Error --> Correcto
+    Error -.->|"a evitar"| Incorrecto
+```
+
+El bloque "Incorrecto" es el mismo `WHEN OTHERS THEN NULL` que 2.2 ya marcó como error frecuente: no registra ni relanza, así que el fallo desaparece sin dejar rastro y quien invocó el procedimiento cree que todo salió bien. El patrón de esta sesión (arriba, "Correcto") siempre hace las dos cosas, en ese orden — invertirlas o saltarse una es la falla que se pide diagnosticar en 4.3.1 ("Error o hallazgo").
 
 ## 3. Aplica: actividad práctica guiada
 
