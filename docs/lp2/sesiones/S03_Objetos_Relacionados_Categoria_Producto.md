@@ -137,6 +137,8 @@ Que un campo llegue con un valor (`@NotNull`) no significa que ese valor corresp
 
 **Ejemplo de referencia (LP2).** `ProductoRequest` declara `categoriaId` con `@NotNull` — eso solo garantiza que el campo no llegue vacío, no que el id corresponda a una `Categoria` real. Esa segunda verificación es responsabilidad del service (mismo criterio de S2, 2.3, punto 4): antes de guardar o actualizar un `Producto`, `ProductoServiceImpl` busca la `Categoria` por id y lanza `ResourceNotFoundException` (ya creada en S2, 3.2.1) si no existe — el mismo manejador global responde `404`, sin código nuevo en `GlobalExceptionHandler`.
 
+Esta búsqueda no es solo para tener el objeto `Categoria` que pide `@ManyToOne` — es lo que evita que un `categoriaId` inválido llegue a violar `FK_PRODUCTO_CATEGORIA` directamente en el `INSERT`. Si esa validación no existiera, Oracle igual rechazaría el dato (la restricción sigue ahí), pero el error llegaría como `DataIntegrityViolationException` sin traducir — exactamente el mismo hueco que `DELETE /api/v1/categorias/{id}` sí deja sin resolver hoy (3.4, "Error frecuente"). `crear`/`actualizar` responden `404` limpio; `eliminar` responde `500` crudo — la diferencia es solo esta validación explícita, no la restricción de la base de datos, que en ambos casos es la misma.
+
 ### 2.4 Prevención de ciclos de serialización
 
 Un problema clásico de JPA: si una entidad relacionada mantiene una colección de vuelta hacia la entidad principal (una relación bidireccional), y ambas se serializan directamente a JSON, cada instancia intentaría serializar su relación, que intentaría serializar su colección de vuelta, indefinidamente — un `StackOverflowError`. El riesgo se evita con dos decisiones tomadas antes de que el problema pueda aparecer: mantener la relación unidireccional (sin una colección de vuelta en la entidad relacionada) y no serializar entidades directamente, siempre a través de un DTO construido campo por campo.
@@ -360,6 +362,8 @@ public class CategoriaServiceImpl implements CategoriaService {
 ```
 
 **Error frecuente (para probar, no para corregir en esta sesión):** si intentas `DELETE /api/v1/categorias/{id}` sobre una categoría que ya tiene productos asociados, Oracle rechaza el borrado por `FK_PRODUCTO_CATEGORIA` (`ORA-02292: integrity constraint violated - child record found`) — y `GlobalExceptionHandler` **todavía no maneja** `DataIntegrityViolationException` (S2, 2.3, ya lo dejó anotado como hallazgo pendiente). El cliente recibe un `500` genérico en vez de un `409`/`400` claro. Repórtalo como el "error o hallazgo" de tu evidencia (4.3.1) si te toca reproducirlo.
+
+Nota la asimetría con `crear`/`actualizar` (2.3, 3.9): ahí `buscarCategoriaOFallar` valida **antes** de llegar a la base de datos y responde `404` limpio; acá nadie valida antes del `DELETE`, así que el mismo tipo de restricción (`FK_PRODUCTO_CATEGORIA`) produce un error crudo en un caso y uno controlado en el otro. No es que la FK proteja distinto — es que solo un lado tiene la validación explícita en el service.
 
 ### 3.5 Exponer el CRUD de `Categoria` como API REST
 
@@ -792,7 +796,7 @@ Deberías ver `ModularityTests`, `ProductoControllerTest` y `CategoriaController
 | `GET /api/v1/categorias/{id}/productos` | Navegación controlada entre componentes (ADS) | Consulta con `JOIN` implícito vía `ID_CATEGORIA` |
 | `DELETE /api/v1/categorias/{id}` | — | `FK_PRODUCTO_CATEGORIA` como restricción de integridad referencial (BD2 S1) |
 
-Sesión equivalente en los otros dos cursos, misma semana: ADS y BD2 todavía no publican su guía de S3 en este repositorio — revisa `docs/ads/sesiones/` y `docs/bd2/sesiones/` cuando esté disponible.
+Sesión equivalente en los otros dos cursos, misma semana: [ADS - S3 Diseño Estructural y Principios SOLID](../../ads/sesiones/S03_Diseno_Estructural_Principios_SOLID.md) y [BD2 - S3 Manejo de Excepciones y Robustez](../../bd2/sesiones/S03_Excepciones_Robustez.md).
 
 **Evidencia de aprendizaje:**
 
