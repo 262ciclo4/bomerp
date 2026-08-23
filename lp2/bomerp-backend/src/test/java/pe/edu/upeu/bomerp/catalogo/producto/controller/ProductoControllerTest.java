@@ -6,6 +6,7 @@ import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import pe.edu.upeu.bomerp.catalogo.categoria.dto.CategoriaResumen;
 import pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoRequest;
 import pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoResponse;
 import pe.edu.upeu.bomerp.catalogo.producto.service.ProductoService;
@@ -49,16 +50,19 @@ class ProductoControllerTest {
         request.setNombre("Teclado mecánico");
         request.setPrecio(new BigDecimal("180.50"));
         request.setStock(25);
+        request.setCategoriaId(1L);
 
         when(productoService.crear(any())).thenReturn(
-                ProductoResponse.builder().id(1L).nombre("Teclado mecánico").precio(new BigDecimal("180.50")).stock(25).build()
+                ProductoResponse.builder().id(1L).nombre("Teclado mecánico").precio(new BigDecimal("180.50")).stock(25)
+                        .categoria(new CategoriaResumen(1L, "Electrodomesticos")).build()
         );
 
         mockMvc.perform(post("/api/v1/productos")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value(1));
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.categoria.nombre").value("Electrodomesticos"));
     }
 
     @Test
@@ -67,6 +71,20 @@ class ProductoControllerTest {
         request.setNombre("");
         request.setPrecio(new BigDecimal("10"));
         request.setStock(1);
+        request.setCategoriaId(1L);
+
+        mockMvc.perform(post("/api/v1/productos")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void crear_conCategoriaIdNulo_respondeBadRequestSinLlegarAlService() throws Exception {
+        ProductoRequest request = new ProductoRequest();
+        request.setNombre("Teclado mecánico");
+        request.setPrecio(new BigDecimal("180.50"));
+        request.setStock(25);
 
         mockMvc.perform(post("/api/v1/productos")
                         .contentType(MediaType.APPLICATION_JSON)

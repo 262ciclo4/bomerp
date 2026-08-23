@@ -59,6 +59,7 @@ nav:
       - I. Arquitectura y Diseño Estructural:
           - S1 - Fundamentos de arquitectura de software: ads/sesiones/S01_Fundamentos_Arquitectura_Software.md
           - S2 - Modelo C4 y vistas arquitectónicas: ads/sesiones/S02_Modelo_C4_Vistas_Arquitectonicas.md
+          - S3 - Diseño estructural y principios SOLID: ads/sesiones/S03_Diseno_Estructural_Principios_SOLID.md
   - BD2:
       - Inicio: bd2/index.md
       - Silabos:
@@ -67,6 +68,7 @@ nav:
       - I. Programación y optimización (Oracle XE):
           - S1 - PL/SQL aplicado al negocio: bd2/sesiones/S01_PLSQL_Aplicado_Negocio.md
           - S2 - Triggers DML y auditoría: bd2/sesiones/S02_Triggers_DML_Auditoria.md
+          - S3 - Manejo de excepciones y robustez: bd2/sesiones/S03_Excepciones_Robustez.md
   - LP2:
       - Inicio: lp2/index.md
       - Silabos:
@@ -80,3 +82,4 @@ nav:
       - I. Base backend REST modular de BomERP:
           - S1 - Arquitectura backend REST profesional: lp2/sesiones/S01_Arquitectura_Backend_REST_Profesional.md
           - S2 - CRUD REST completo de Producto: lp2/sesiones/S02_CRUD_REST_Completo_Producto.md
+          - S3 - Objetos relacionados Categoria-Producto: lp2/sesiones/S03_Objetos_Relacionados_Categoria_Producto.md

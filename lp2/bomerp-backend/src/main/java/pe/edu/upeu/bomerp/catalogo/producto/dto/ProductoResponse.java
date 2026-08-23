@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pe.edu.upeu.bomerp.catalogo.categoria.dto.CategoriaResumen;
 import java.math.BigDecimal;
 
 @Getter
@@ -17,4 +18,5 @@ public class ProductoResponse {
     private String nombre;
     private BigDecimal precio;
     private Integer stock;
+    private CategoriaResumen categoria;
 }

@@ -63,12 +63,15 @@ quedar fuera del repositorio — no se crean antes.
   `ventas`, `seguridad`, ...) es un **paquete directo** bajo esa raíz, y es
   un módulo de aplicación de **Spring Modulith**.
 - Dentro de cada módulo, organización por capas y por sub-recurso:
-  `modulo/recurso/{controller,dto,entity,repository,service}`. **El módulo
-  `catalogo` (con `categoria` y `producto`, alcance de S1) todavía no está
-  implementado en `bomerp-backend`** — hoy el proyecto solo trae el
-  scaffold de Spring Initializr (`BomerpBackendApplication`,
-  `HelloController` de ejemplo, `OpenApiConfig`). Créalo desde cero
-  siguiendo esta convención al ejecutar S1, no asumas que ya existe.
+  `modulo/recurso/{controller,dto,entity,repository,service,mapper}`.
+  **Estado real (2026-08-21): S1-S3 implementadas y verificadas con
+  `mvnw test`** (13 tests en verde, incluidos `ModularityTests`). El módulo
+  `catalogo` tiene `categoria` y `producto` con CRUD completo, asociados
+  entre sí (`Producto.categoria`, `@ManyToOne` sobre la columna real
+  `PRODUCTOS.ID_CATEGORIA`, que ya existía en Oracle desde S1/BD2). Los
+  mappers de ambos son **MapStruct** (interfaces `@Mapper`), no clases
+  manuales — el camino que S2 (3.8) presentó como "opcional" es el que
+  terminó adoptado de verdad; no reescribir a mapeo manual sin motivo.
 - Clases compartidas sin módulo propio (p. ej. `OpenApiConfig`) van sueltas
   en el paquete raíz `pe.edu.upeu.bomerp`, que Modulith trata como
   compartido/abierto a todos los módulos.
@@ -101,7 +104,11 @@ quedar fuera del repositorio — no se crean antes.
 
 - Java 21, Lombok (`@Getter`/`@Setter`/`@NoArgsConstructor` en entidades,
   `@RequiredArgsConstructor` en servicios/controladores).
-- DTO de salida como `record`.
+- DTO de salida: `record` mientras el recurso es de solo lectura (ver
+  `CategoriaResumen`); en cuanto necesita CRUD completo pasa a clase con
+  Lombok (`@Getter @Setter @Builder @NoArgsConstructor @AllArgsConstructor`,
+  ver `ProductoResponse`/`CategoriaResponse`) — un `record` no tiene
+  setters ni encaja con `@Builder`.
 - Entidades JPA con `schema = "BOM_<MODULO>"` en `@Table` (esquemas Oracle
   por módulo funcional, definidos en BD2).
 - Interfaces de servicio (`XxxService`) + implementación (`XxxServiceImpl`),
