@@ -6,7 +6,7 @@ Tiempo: 20 min.
 
 ### 1.1 Presentación de la sesión
 
-`SP_REGISTRAR_PRODUCTO` y `SP_APLICAR_DESCUENTO_PRODUCTO` (S1) funcionan mientras alguien los invoque con datos correctos — pero ninguno de los dos anticipa un error: si `p_id_categoria` no existe, Oracle rechaza el `INSERT` con un código interno (`ORA-02291`) que llega crudo hasta quien invocó el procedimiento, sin contexto ni registro; y `SP_APLICAR_DESCUENTO_PRODUCTO` acepta cualquier `p_porcentaje_descuento` — incluido `150` o `-30` — sin cuestionar si eso tiene sentido. Esta sesión agrega manejo de excepciones (predefinidas y personalizadas) y un registro de errores a esos mismos procedimientos, para que un fallo se capture, se documente y responda con un mensaje claro — en vez de propagar un error interno de Oracle sin explicación.
+Un procedimiento o función PL/SQL que solo funciona cuando recibe datos correctos no está completo — en cualquier sistema real, algo eventualmente falla: una referencia que no existe, un valor fuera de rango, una fila que no aparece. Sin manejo de excepciones, esos fallos llegan crudos hasta quien invocó el procedimiento (un código de error interno de Oracle, sin contexto) y no dejan ningún rastro de que ocurrieron. Esta sesión agrega manejo de excepciones — predefinidas y personalizadas —, registro de errores y tolerancia a fallos a procedimientos y funciones ya construidos, para que cada fallo se capture, se documente y responda con un mensaje claro, en vez de propagar un error interno de Oracle sin explicación.
 
 ### 1.2 Índice
 

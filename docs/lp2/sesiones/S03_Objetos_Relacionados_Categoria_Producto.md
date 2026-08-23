@@ -8,15 +8,14 @@ Tiempo: 20 min.
 
 ### 1.1 Presentación de la sesión
 
-En S2, `Producto` obtuvo un CRUD REST completo — pero seguía siendo un recurso aislado, sin ninguna relación real con `Categoria`. Sin embargo, la base de datos ya conocía esa relación desde S1: el script de BD2 que crea `PRODUCTOS` (`S01_02_tablas.sql`) ya define la columna `ID_CATEGORIA` con su restricción `FK_PRODUCTO_CATEGORIA` hacia `CATEGORIAS`. Durante dos sesiones, esa columna existió en Oracle sin que ninguna entidad JPA la mapeara. Esta sesión cierra esa brecha: `Producto` se asocia a `Categoria` mediante `@ManyToOne`, con un DTO relacionado (no la entidad completa), validación de la referencia, y una navegación controlada entre ambos recursos. De paso, `Categoria` completa el CRUD que quedó pendiente desde S1 (ver S1 Tabla 10, S2 nota de alcance de 2.2).
+Un CRUD REST sobre una sola entidad, aislada, alcanza hasta que el dominio empieza a tener entidades relacionadas entre sí — la mayoría de los recursos reales de un ERP dependen de al menos otro (un producto pertenece a una categoría, una venta a un cliente, y así sucesivamente). Relacionar dos entidades trae preguntas nuevas que un CRUD aislado no enfrenta: cómo modelar la asociación en el ORM, qué forma darle al DTO relacionado que sale por la API, cómo navegar de una entidad a la otra sin cargar todo de una vez, cómo validar que la referencia recibida realmente exista, y cómo evitar que la relación produzca un ciclo infinito al serializar. Esta sesión resuelve las cinco sobre el caso concreto del proyecto: `Producto` y `Categoria`.
 
 ### 1.2 Índice
 
-1. Asociación `@ManyToOne` entre `Producto` y `Categoria`.
-2. DTO relacionados: `CategoriaResumen` embebido en `ProductoResponse`.
-3. Validación de referencias: `categoriaId` inexistente.
-4. Prevención de ciclos de serialización.
-5. Navegación controlada y CRUD completo de `Categoria`.
+1. Asociaciones entre entidades y DTO relacionados.
+2. Validación de referencias.
+3. Prevención de ciclos de serialización.
+4. Navegación controlada y CRUD de la entidad relacionada.
 
 ### 1.3 Propósito de aprendizaje
 
@@ -129,15 +128,19 @@ flowchart LR
 
 Lectura del diagrama: el service **resuelve** la categoría antes de mapear — el mapper nunca consulta la base de datos, solo transforma objetos que ya recibió resueltos. Esa separación es la misma de S2 (2.4, punto 4): el service es la única capa que valida algo que depende del estado actual del sistema, no de la forma del dato.
 
-### 2.2 Asociación `@ManyToOne` y DTO relacionados
+### 2.2 Asociación de entidades y DTO relacionados
 
-`@ManyToOne` declara "muchos `Producto` pueden apuntar a una `Categoria`"; `@JoinColumn(name = "ID_CATEGORIA")` le dice a Hibernate qué columna física de `PRODUCTOS` guarda esa referencia — la misma que ya existe en Oracle desde S1 (1.6.1). La relación es **unidireccional**: `Producto` conoce a su `Categoria`, pero `Categoria` no mantiene una lista de sus `Producto` como campo de la entidad. Eso no es una limitación, es una decisión — se retoma en 2.4.
+**Asociación de entidades (ORM):** cuando dos entidades del dominio están relacionadas en la base de datos mediante una llave foránea, el ORM necesita una anotación que declare esa relación también en el lado Java — sin ella, la columna existe en la tabla pero ninguna consulta JPA la usa. La anotación para el lado "muchos" de una relación uno-a-muchos indica, además, qué columna física guarda la referencia.
 
-`ProductoResponse` no expone la `Categoria` completa: agrega un campo `CategoriaResumen`, un `record` con solo `id` y `nombre` — sin `descripcion`. El DTO que sale por la API se diseña para lo que el cliente necesita mostrar (por ejemplo, un combo o una etiqueta), no para calcar toda la entidad relacionada.
+**DTO relacionados:** cuando el DTO de salida de una entidad principal necesita mostrar información de su entidad relacionada, no debe exponer la entidad relacionada completa — solo un subconjunto pensado para lo que el cliente necesita mostrar (por ejemplo, un combo o una etiqueta), nunca una copia de cada campo de la entidad original.
+
+**Ejemplo de referencia (LP2).** `@ManyToOne` declara "muchos `Producto` pueden apuntar a una `Categoria`"; `@JoinColumn(name = "ID_CATEGORIA")` le dice a Hibernate qué columna física de `PRODUCTOS` guarda esa referencia — la misma que ya existe en Oracle desde S1 (1.6.1). La relación es **unidireccional**: `Producto` conoce a su `Categoria`, pero `Categoria` no mantiene una lista de sus `Producto` como campo de la entidad. Eso no es una limitación, es una decisión — se retoma en 2.4. Del lado del DTO, `ProductoResponse` agrega un campo `CategoriaResumen`, un `record` con solo `id` y `nombre` — sin `descripcion`.
 
 ### 2.3 Validación de referencias
 
-`ProductoRequest` declara `categoriaId` con `@NotNull` — eso solo garantiza que el campo no llegue vacío, no que el id corresponda a una `Categoria` real. Esa segunda verificación es responsabilidad del service (mismo criterio de S2, 2.3, punto 4): antes de guardar o actualizar un `Producto`, `ProductoServiceImpl` busca la `Categoria` por id y lanza `ResourceNotFoundException` (ya creada en S2, 3.2.1) si no existe — el mismo manejador global responde `404`, sin código nuevo en `GlobalExceptionHandler`.
+Que un campo llegue con un valor (`@NotNull`) no significa que ese valor corresponda a un registro real — validar que el id recibido exista en la base es responsabilidad de la capa de servicio, no de Bean Validation, que solo valida la forma del dato, nunca su existencia.
+
+**Ejemplo de referencia (LP2).** `ProductoRequest` declara `categoriaId` con `@NotNull` — eso solo garantiza que el campo no llegue vacío, no que el id corresponda a una `Categoria` real. Esa segunda verificación es responsabilidad del service (mismo criterio de S2, 2.3, punto 4): antes de guardar o actualizar un `Producto`, `ProductoServiceImpl` busca la `Categoria` por id y lanza `ResourceNotFoundException` (ya creada en S2, 3.2.1) si no existe — el mismo manejador global responde `404`, sin código nuevo en `GlobalExceptionHandler`.
 
 ### 2.4 Prevención de ciclos de serialización
 
@@ -152,9 +155,9 @@ Esta sesión nunca llega a ese problema, por dos decisiones tomadas antes de que
 
 ### 2.5 Navegación controlada y CRUD completo de `Categoria`
 
-"Navegación controlada" significa: para ir de una `Categoria` a sus `Producto`, se hace mediante una consulta explícita bajo demanda (`GET /api/v1/categorias/{id}/productos`), no mediante una colección que Hibernate carga automáticamente cada vez que se lee una `Categoria` (lo que además sería costoso si nunca se necesita esa lista).
+**Navegación controlada** significa: para ir de una entidad a las instancias de otra que la referencian, se expone una consulta explícita bajo demanda (un endpoint dedicado), nunca una colección que el ORM carga automáticamente cada vez que se lee la entidad principal — eso sería costoso si esa lista rara vez se necesita, y reintroduce el riesgo de ciclo evitado en 2.4.
 
-`Categoria` completa en esta sesión el mismo patrón CRUD que S2 aplicó a `Producto`: `CategoriaRequest` (entrada validada), `CategoriaResponse` (salida, ahora clase con `@Builder` en vez de `record` — mismo motivo que S2 documentó para `Producto`, 2.2), y `CategoriaMapper`.
+**Ejemplo de referencia (LP2).** `GET /api/v1/categorias/{id}/productos` es esa consulta explícita — no una colección cargada dentro de la entidad `Categoria`. De paso, `Categoria` completa en esta sesión el mismo patrón CRUD que S2 aplicó a `Producto`: `CategoriaRequest` (entrada validada), `CategoriaResponse` (salida, ahora clase con `@Builder` en vez de `record` — mismo motivo que S2 documentó para `Producto`, 2.2), y `CategoriaMapper`.
 
 ## 3. Aplica: actividad práctica guiada
 

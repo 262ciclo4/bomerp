@@ -6,14 +6,13 @@ Tiempo: 20 min.
 
 ### 1.1 Presentación de la sesión
 
-En S2, la Figura 12 (C4) dejó una nota pendiente: la relación `Producto` → `Categoria` existe en el esquema Oracle (`ID_CATEGORIA`, `FK_PRODUCTO_CATEGORIA`, ver BD2 S1) pero todavía no estaba mapeada como `@ManyToOne` en el código real de LP2 — un vacío marcado explícitamente como "error o hallazgo" en esa sesión. Esta semana LP2 (S3) cerró exactamente ese vacío: `Producto` ya tiene la asociación, `Categoria` completó su CRUD, y ambos módulos usan MapStruct para el mapeo. Esta sesión no diseña nada nuevo — **evalúa** ese código real (`catalogo/categoria`, `catalogo/producto`) contra los principios SOLID, cohesión, acoplamiento, modularidad y abstracción, y documenta qué cumple, qué es una tensión de diseño válida, y qué sería una violación real si apareciera.
+En S2, el equipo dibujó la estructura del sistema con el modelo C4 (C1-C4), sin cuestionar todavía si esa estructura estaba bien diseñada — solo si estaba bien representada. Esta sesión aplica sobre esa misma estructura un criterio distinto: los cinco principios SOLID, más cohesión, acoplamiento, modularidad y abstracción — el vocabulario que permite distinguir una clase o un módulo bien diseñado de uno que solo se ve ordenado en el diagrama, y que sirve tanto para evaluar código que ya existe como para decidir cómo estructurar el que todavía no se ha escrito.
 
 ### 1.2 Índice
 
-1. Principios SOLID: qué resuelven y por qué importan.
+1. Principios SOLID.
 2. Cohesión y acoplamiento.
 3. Modularidad y abstracción.
-4. Evaluación de los módulos reales de LP2 (`categoria`, `producto`) contra estos criterios.
 
 ### 1.3 Propósito de aprendizaje
 
@@ -37,23 +36,23 @@ Evaluación documentada de `catalogo/categoria` y `catalogo/producto` (LP2, cód
 
 ### 1.6 Motivación de la sesión
 
-#### 1.6.1 Caso: el vacío que S2 encontró y S3 evalúa
+#### 1.6.1 Caso: el service que fue creciendo
 
-En S2 (Figura 12), el diagrama de código dibujó `Producto ..> Categoria` con línea punteada, marcando explícitamente que la relación existía en Oracle pero no en el código Java. Esa nota no era un adorno: era una predicción de que, cuando LP2 cerrara ese vacío, el diseño resultante tendría que evaluarse — ¿la forma en que se resolvió respeta SOLID, o introdujo acoplamiento innecesario entre `categoria` y `producto`?
+En muchos proyectos reales, un service que "solo hacía una cosa" al inicio termina absorbiendo tareas que no le correspondían: valida datos de entrada, arma el mensaje para un log de auditoría, decide si notificar por correo, y persiste — todo en el mismo método. Cada tarea nueva parece razonable agregarla ahí ("ya está el código, es rápido"), hasta que cambiar una sola regla de negocio obliga a tocar una clase que ahora tiene varias razones distintas para cambiar, y ninguna prueba pequeña la cubre completa.
 
-LP2 (S3, esta misma semana) resolvió el vacío: `Producto` ahora tiene `@ManyToOne`/`@JoinColumn("ID_CATEGORIA")` hacia `Categoria`, `ProductoServiceImpl` valida que el `categoriaId` recibido exista antes de guardar, y `ProductoResponse` embebe un `CategoriaResumen` (no la entidad `Categoria` completa). Esta sesión evalúa exactamente esa solución real, no un ejemplo hipotético.
+Esto no es un problema de sintaxis ni de que el código "no funcione" — funciona. Es un problema de diseño: la clase perdió cohesión (mezcla responsabilidades no relacionadas) y probablemente ganó acoplamiento (otras clases empiezan a depender de sus detalles internos para no duplicar lógica). Los principios SOLID, junto con cohesión, acoplamiento, modularidad y abstracción, son el vocabulario que permite detectar este tipo de problema **antes** de que sea costoso corregirlo — y son exactamente los criterios que esta sesión aplica sobre código real en la sección 3.
 
 **Preguntas de análisis**
 
 **Activación de conocimientos previos**
 
-1. Antes de revisar el código real, ¿qué esperarías que pasara si `ProductoServiceImpl` importara directamente `CategoriaRepository` y llamara a un método interno suyo en vez de pasar por `CategoriaService`?
-2. ¿Qué principio SOLID (de los cinco) crees que es el más fácil de violar sin darte cuenta al agregar una asociación entre dos entidades?
+1. ¿Has visto (o escrito) alguna vez una clase o función que terminó "haciendo de todo"? ¿Qué la hizo crecer así?
+2. De los cinco principios SOLID, ¿cuál crees que es el más fácil de violar sin darte cuenta al agregar una funcionalidad "rápida"?
 
 **Comprensión de SOLID aplicado**
 
-1. `ProductoServiceImpl` ahora depende de `CategoriaRepository` (no de `CategoriaService`) para validar el `categoriaId`. ¿Es esto una violación de algún principio, o una decisión aceptable? Justifica con el criterio de cohesión/acoplamiento de 2.3.
-2. ¿Por qué `ProductoResponse` embebe `CategoriaResumen` y no la entidad `Categoria` completa? Relaciónalo con abstracción (2.4).
+1. ¿Por qué una clase con alta cohesión suele ser más fácil de probar que una con baja cohesión?
+2. ¿Qué diferencia hay entre un acoplamiento aceptable (depender de una interfaz o contrato) y uno problemático (depender de los detalles internos de otra clase)?
 
 ### 1.7 Ubicación en el curso
 
@@ -118,28 +117,32 @@ Esta sesión no dibuja una vista nueva: toma la estructura que C3/C4 (S2) ya doc
 
 Los cinco principios no son reglas aisladas: **S** evita que una clase crezca sin control, **O**/**L** garantizan que se pueda extender sin romper lo existente, **I** evita interfaces infladas, y **D** es el que hace posible **O** y **L** en la práctica — sin depender de abstracciones, no hay forma de sustituir una implementación por otra sin tocar el código que la usa.
 
+**Ejemplo de referencia.** En `catalogo/producto` (LP2): `ProductoController` solo traduce HTTP a llamadas al service, sin persistir ni validar reglas de negocio (S); `ProductoService` es una interfaz con una única implementación hoy, lista para aceptar una segunda sin que el controller cambie (O/L); y `ProductoServiceImpl` recibe `ProductoRepository` y `ProductoMapper` como interfaces inyectadas por el framework, nunca las crea con `new` (D). Este código real se evalúa con más detalle en 3.1-3.3.
+
 ### 2.3 Cohesión y acoplamiento
 
 **Cohesión**: qué tan relacionado está lo que vive *dentro* de un mismo paquete o clase. Alta cohesión = todo lo que está junto tiene un propósito común.
 
-**Acoplamiento**: qué tan dependiente es una parte del sistema de los detalles internos de otra. Bajo acoplamiento = un cambio interno en A no obliga a cambiar B.
+**Acoplamiento**: qué tan dependiente es una parte del sistema de los detalles internos de otra. Bajo acoplamiento = un cambio interno en un módulo no obliga a cambiar otro que solo consume su contrato.
 
 **Tabla 3. Cohesión y acoplamiento, en una frase**
 
 | | Alta cohesión / bajo acoplamiento (deseable) | Baja cohesión / alto acoplamiento (evitar) |
 |---|---|---|
-| Cohesión | Un paquete `producto/` que solo contiene clases sobre `Producto`. | Un paquete `utils/` con validación, formateo de fechas y lógica de negocio mezclados. |
-| Acoplamiento | `ProductoController` depende de la interfaz `ProductoService`, no de `ProductoServiceImpl`. | `ProductoController` construye un `ProductoRepository` directamente, saltándose el service. |
+| Cohesión | Un paquete que solo contiene clases sobre una misma entidad del dominio. | Un paquete `utils/` con validación, formateo de fechas y lógica de negocio mezclados. |
+| Acoplamiento | Un controller depende de la interfaz de su service, no de la implementación concreta. | Un controller construye un repositorio directamente, saltándose el service. |
 
 No son principios independientes de SOLID — son la razón *por qué* SOLID funciona: **S** produce alta cohesión (una responsabilidad por clase); **D** produce bajo acoplamiento (depender de interfaces, no de implementaciones).
 
+**Ejemplo de referencia.** En LP2: `catalogo/producto` solo contiene clases sobre `Producto` (alta cohesión); `ProductoController` depende de la interfaz `ProductoService`, nunca de `ProductoServiceImpl` directamente (bajo acoplamiento). El caso más interesante para evaluar es el acoplamiento **entre** `producto` y `categoria` — dos paquetes hermanos del mismo módulo — que se analiza con el código real en 3.4.
+
 ### 2.4 Modularidad y abstracción
 
-**Modularidad**: el sistema se divide en unidades (módulos) con un límite explícito y verificable — en LP2, el límite es el paquete de módulo (`catalogo`, `ventas`, ...) bajo `pe.edu.upeu.bomerp`, verificado automáticamente por Spring Modulith (`ModularityTests`, ADR-002 de LP2): un módulo solo puede llamar al `Service` público de otro, nunca a su `Repository` ni a su `Entity` directamente.
+**Modularidad**: el sistema se divide en unidades (módulos) con un límite explícito y verificable — no basta con una convención de carpetas; el límite debe poder comprobarse, idealmente de forma automática, para que nadie lo cruce sin darse cuenta.
 
-**Abstracción**: exponer solo lo necesario, ocultando el detalle de implementación. Un DTO es abstracción sobre una entidad (el cliente HTTP nunca ve columnas de Oracle, solo los campos que el contrato REST decide mostrar); una interfaz de servicio es abstracción sobre su implementación.
+**Abstracción**: exponer solo lo necesario, ocultando el detalle de implementación. Un DTO es abstracción sobre una entidad (el cliente HTTP nunca ve columnas de la base de datos, solo los campos que el contrato REST decide mostrar); una interfaz de servicio es abstracción sobre su implementación.
 
-**Nota de alcance:** `categoria` y `producto` (esta sesión) son **paquetes dentro del mismo módulo** `catalogo`, no dos módulos distintos — la regla de "solo `Service` público, nunca `Repository` ajeno" es la que Spring Modulith verifica **entre módulos** (`catalogo` vs. `ventas`), no necesariamente dentro de un mismo módulo. Que `ProductoServiceImpl` use `CategoriaRepository` directamente (en vez de `CategoriaService`) es una decisión de diseño **dentro** de `catalogo` — se evalúa en 3.4, no es una violación de `ModularityTests`.
+**Ejemplo de referencia.** En LP2, el límite de módulo es el paquete bajo `pe.edu.upeu.bomerp` (`catalogo`, `ventas`, ...), verificado automáticamente por Spring Modulith (`ModularityTests`, ver ADR-002 de LP2): un módulo solo puede llamar al `Service` público de otro, nunca a su `Repository` ni a su `Entity` directamente. `categoria` y `producto` (evaluados en esta sesión) son **paquetes dentro del mismo módulo** `catalogo`, no dos módulos distintos — la regla anterior es la que Spring Modulith verifica **entre módulos** (`catalogo` vs. `ventas`), no necesariamente dentro de uno mismo. En abstracción, `ProductoResponse` embebe `CategoriaResumen` (`id` y `nombre`) en vez de la entidad `Categoria` completa — el contrato REST expone solo lo que un cliente necesita. Estos dos casos reales se retoman en 3.4 y 3.5.
 
 ## 3. Aplica: actividad práctica guiada
 
