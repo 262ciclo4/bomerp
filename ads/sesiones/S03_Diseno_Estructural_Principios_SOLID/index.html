@@ -3476,6 +3476,7 @@
 </code></pre></div>
 <p><strong>¿Es esto una violación?</strong> No, y la razón importa más que la conclusión: <code>categoria</code> y <code>producto</code> son paquetes <strong>dentro del mismo módulo</strong> (<code>catalogo</code>), no dos módulos separados verificados por Spring Modulith (2.4). La regla "solo <code>Service</code> público, nunca <code>Repository</code> ajeno" protege el límite <strong>entre módulos</strong> (para que, por ejemplo, <code>ventas</code> nunca dependa del <code>Repository</code> interno de <code>catalogo</code>) — dentro de un mismo módulo, acoplar dos paquetes hermanos mediante sus repositorios es una decisión de diseño interna, no una violación arquitectónica.</p>
 <p><strong>Dicho eso, es acoplamiento real y vale la pena nombrarlo:</strong> si <code>producto</code> necesita validar contra <code>categoria</code> cada vez con más frecuencia (por ejemplo, en S4 al construir <code>ventas</code>, que también necesitará consultar <code>Producto</code>), la alternativa más desacoplada sería que <code>ProductoServiceImpl</code> dependiera de <code>CategoriaService</code> (la abstracción pública del paquete <code>categoria</code>) en vez de <code>CategoriaRepository</code> directamente — mismo principio de Inversión de Dependencias (2.2), aplicado ahora entre paquetes hermanos, no solo entre capas.</p>
+<p>Esto es <strong>deuda técnica intencional</strong>, no accidental: la deuda accidental aparece sin que nadie la decida ni la documente; la intencional (o "prudente", en el cuadrante de deuda técnica de Fowler — ver Bibliografía) se toma a propósito, con la condición que la haría exigible ya identificada — en este caso, que <code>categoria</code> gane lógica de negocio propia que <code>producto</code> no debería saltarse. Documentar esa condición (como se hizo arriba) es lo que separa una tensión de diseño aceptable de una violación sin justificar.</p>
 <p><strong>Tabla 5. Acoplamiento actual vs. alternativa más desacoplada</strong></p>
 <table>
 <thead>
@@ -3810,6 +3811,7 @@ Indica 2 fortalezas y 2 recomendaciones.
 <li>Martin, R. C. (2017). <em>Clean Architecture: A Craftsman's Guide to Software Structure and Design</em>. Prentice Hall.</li>
 <li>Baeldung. (2024). <em>SOLID Principles</em>. https://www.baeldung.com/solid-principles</li>
 <li>Fowler, M. (2024). <em>CouplingAndCohesion</em>. martinfowler.com. https://martinfowler.com/ieeeSoftware/coupling.pdf</li>
+<li>Fowler, M. (2019). <em>TechnicalDebtQuadrant</em>. martinfowler.com. https://martinfowler.com/bliki/TechnicalDebtQuadrant.html</li>
 <li>Broadcom Inc. (2025). <em>Spring Framework reference documentation — Dependency Injection</em>. VMware Tanzu. https://docs.spring.io/spring-framework/reference/core/beans/dependencies.html</li>
 </ol>
 
