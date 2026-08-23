@@ -404,6 +404,8 @@ flowchart LR
     PSI -.->|"alternativa, mas desacoplada"| CS
 ```
 
+La flecha alternativa no elimina la dependencia — la cambia de un detalle interno (`CategoriaRepository`, acceso a datos) a un contrato público y estable (`CategoriaService`). Menos acoplamiento no es cero dependencias: es depender de algo que cambia con menos frecuencia.
+
 No hay una respuesta única "correcta" — es una tensión real de diseño, y documentarla (con el criterio de arriba) es uno de los hallazgos que se espera en 3.6.
 
 **Un segundo caso, esta vez de acoplamiento entre contratos:** `ProductoResponse` no reutiliza `CategoriaResponse` (el DTO que ya existe para exponer una categoría) — introduce `CategoriaResumen`, un DTO más chico, dedicado solo a lo que se embebe en un producto (`id`, `nombre`, sin `descripcion`).
