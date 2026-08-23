@@ -1478,10 +1478,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#161-caso-el-vacio-que-s2-encontro-y-s3-evalua" class="md-nav__link">
+  <a href="#161-caso-el-service-que-fue-creciendo" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1.6.1 Caso: el vacío que S2 encontró y S3 evalúa
+        1.6.1 Caso: el service que fue creciendo
       
     </span>
   </a>
@@ -2768,10 +2768,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#161-caso-el-vacio-que-s2-encontro-y-s3-evalua" class="md-nav__link">
+  <a href="#161-caso-el-service-que-fue-creciendo" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1.6.1 Caso: el vacío que S2 encontró y S3 evalúa
+        1.6.1 Caso: el service que fue creciendo
       
     </span>
   </a>
@@ -3100,13 +3100,12 @@
 <h2 id="1-introduccion">1. Introducción<a class="headerlink" href="#1-introduccion" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 20 min.</p>
 <h3 id="11-presentacion-de-la-sesion">1.1 Presentación de la sesión<a class="headerlink" href="#11-presentacion-de-la-sesion" title="Permanent link">&para;</a></h3>
-<p>En S2, la Figura 12 (C4) dejó una nota pendiente: la relación <code>Producto</code> → <code>Categoria</code> existe en el esquema Oracle (<code>ID_CATEGORIA</code>, <code>FK_PRODUCTO_CATEGORIA</code>, ver BD2 S1) pero todavía no estaba mapeada como <code>@ManyToOne</code> en el código real de LP2 — un vacío marcado explícitamente como "error o hallazgo" en esa sesión. Esta semana LP2 (S3) cerró exactamente ese vacío: <code>Producto</code> ya tiene la asociación, <code>Categoria</code> completó su CRUD, y ambos módulos usan MapStruct para el mapeo. Esta sesión no diseña nada nuevo — <strong>evalúa</strong> ese código real (<code>catalogo/categoria</code>, <code>catalogo/producto</code>) contra los principios SOLID, cohesión, acoplamiento, modularidad y abstracción, y documenta qué cumple, qué es una tensión de diseño válida, y qué sería una violación real si apareciera.</p>
+<p>En S2, el equipo dibujó la estructura del sistema con el modelo C4 (C1-C4), sin cuestionar todavía si esa estructura estaba bien diseñada — solo si estaba bien representada. Esta sesión aplica sobre esa misma estructura un criterio distinto: los cinco principios SOLID, más cohesión, acoplamiento, modularidad y abstracción — el vocabulario que permite distinguir una clase o un módulo bien diseñado de uno que solo se ve ordenado en el diagrama, y que sirve tanto para evaluar código que ya existe como para decidir cómo estructurar el que todavía no se ha escrito.</p>
 <h3 id="12-indice">1.2 Índice<a class="headerlink" href="#12-indice" title="Permanent link">&para;</a></h3>
 <ol>
-<li>Principios SOLID: qué resuelven y por qué importan.</li>
+<li>Principios SOLID.</li>
 <li>Cohesión y acoplamiento.</li>
 <li>Modularidad y abstracción.</li>
-<li>Evaluación de los módulos reales de LP2 (<code>categoria</code>, <code>producto</code>) contra estos criterios.</li>
 </ol>
 <h3 id="13-proposito-de-aprendizaje">1.3 Propósito de aprendizaje<a class="headerlink" href="#13-proposito-de-aprendizaje" title="Permanent link">&para;</a></h3>
 <p>Al concluir la clase, estarás en condiciones de:</p>
@@ -3144,19 +3143,19 @@
 </tbody>
 </table>
 <h3 id="16-motivacion-de-la-sesion">1.6 Motivación de la sesión<a class="headerlink" href="#16-motivacion-de-la-sesion" title="Permanent link">&para;</a></h3>
-<h4 id="161-caso-el-vacio-que-s2-encontro-y-s3-evalua">1.6.1 Caso: el vacío que S2 encontró y S3 evalúa<a class="headerlink" href="#161-caso-el-vacio-que-s2-encontro-y-s3-evalua" title="Permanent link">&para;</a></h4>
-<p>En S2 (Figura 12), el diagrama de código dibujó <code>Producto ..&gt; Categoria</code> con línea punteada, marcando explícitamente que la relación existía en Oracle pero no en el código Java. Esa nota no era un adorno: era una predicción de que, cuando LP2 cerrara ese vacío, el diseño resultante tendría que evaluarse — ¿la forma en que se resolvió respeta SOLID, o introdujo acoplamiento innecesario entre <code>categoria</code> y <code>producto</code>?</p>
-<p>LP2 (S3, esta misma semana) resolvió el vacío: <code>Producto</code> ahora tiene <code>@ManyToOne</code>/<code>@JoinColumn("ID_CATEGORIA")</code> hacia <code>Categoria</code>, <code>ProductoServiceImpl</code> valida que el <code>categoriaId</code> recibido exista antes de guardar, y <code>ProductoResponse</code> embebe un <code>CategoriaResumen</code> (no la entidad <code>Categoria</code> completa). Esta sesión evalúa exactamente esa solución real, no un ejemplo hipotético.</p>
+<h4 id="161-caso-el-service-que-fue-creciendo">1.6.1 Caso: el service que fue creciendo<a class="headerlink" href="#161-caso-el-service-que-fue-creciendo" title="Permanent link">&para;</a></h4>
+<p>En muchos proyectos reales, un service que "solo hacía una cosa" al inicio termina absorbiendo tareas que no le correspondían: valida datos de entrada, arma el mensaje para un log de auditoría, decide si notificar por correo, y persiste — todo en el mismo método. Cada tarea nueva parece razonable agregarla ahí ("ya está el código, es rápido"), hasta que cambiar una sola regla de negocio obliga a tocar una clase que ahora tiene varias razones distintas para cambiar, y ninguna prueba pequeña la cubre completa.</p>
+<p>Esto no es un problema de sintaxis ni de que el código "no funcione" — funciona. Es un problema de diseño: la clase perdió cohesión (mezcla responsabilidades no relacionadas) y probablemente ganó acoplamiento (otras clases empiezan a depender de sus detalles internos para no duplicar lógica). Los principios SOLID, junto con cohesión, acoplamiento, modularidad y abstracción, son el vocabulario que permite detectar este tipo de problema <strong>antes</strong> de que sea costoso corregirlo — y son exactamente los criterios que esta sesión aplica sobre código real en la sección 3.</p>
 <p><strong>Preguntas de análisis</strong></p>
 <p><strong>Activación de conocimientos previos</strong></p>
 <ol>
-<li>Antes de revisar el código real, ¿qué esperarías que pasara si <code>ProductoServiceImpl</code> importara directamente <code>CategoriaRepository</code> y llamara a un método interno suyo en vez de pasar por <code>CategoriaService</code>?</li>
-<li>¿Qué principio SOLID (de los cinco) crees que es el más fácil de violar sin darte cuenta al agregar una asociación entre dos entidades?</li>
+<li>¿Has visto (o escrito) alguna vez una clase o función que terminó "haciendo de todo"? ¿Qué la hizo crecer así?</li>
+<li>De los cinco principios SOLID, ¿cuál crees que es el más fácil de violar sin darte cuenta al agregar una funcionalidad "rápida"?</li>
 </ol>
 <p><strong>Comprensión de SOLID aplicado</strong></p>
 <ol>
-<li><code>ProductoServiceImpl</code> ahora depende de <code>CategoriaRepository</code> (no de <code>CategoriaService</code>) para validar el <code>categoriaId</code>. ¿Es esto una violación de algún principio, o una decisión aceptable? Justifica con el criterio de cohesión/acoplamiento de 2.3.</li>
-<li>¿Por qué <code>ProductoResponse</code> embebe <code>CategoriaResumen</code> y no la entidad <code>Categoria</code> completa? Relaciónalo con abstracción (2.4).</li>
+<li>¿Por qué una clase con alta cohesión suele ser más fácil de probar que una con baja cohesión?</li>
+<li>¿Qué diferencia hay entre un acoplamiento aceptable (depender de una interfaz o contrato) y uno problemático (depender de los detalles internos de otra clase)?</li>
 </ol>
 <h3 id="17-ubicacion-en-el-curso">1.7 Ubicación en el curso<a class="headerlink" href="#17-ubicacion-en-el-curso" title="Permanent link">&para;</a></h3>
 <ul>
@@ -3233,9 +3232,10 @@
 </tbody>
 </table>
 <p>Los cinco principios no son reglas aisladas: <strong>S</strong> evita que una clase crezca sin control, <strong>O</strong>/<strong>L</strong> garantizan que se pueda extender sin romper lo existente, <strong>I</strong> evita interfaces infladas, y <strong>D</strong> es el que hace posible <strong>O</strong> y <strong>L</strong> en la práctica — sin depender de abstracciones, no hay forma de sustituir una implementación por otra sin tocar el código que la usa.</p>
+<p><strong>Ejemplo de referencia.</strong> En <code>catalogo/producto</code> (LP2): <code>ProductoController</code> solo traduce HTTP a llamadas al service, sin persistir ni validar reglas de negocio (S); <code>ProductoService</code> es una interfaz con una única implementación hoy, lista para aceptar una segunda sin que el controller cambie (O/L); y <code>ProductoServiceImpl</code> recibe <code>ProductoRepository</code> y <code>ProductoMapper</code> como interfaces inyectadas por el framework, nunca las crea con <code>new</code> (D). Este código real se evalúa con más detalle en 3.1-3.3.</p>
 <h3 id="23-cohesion-y-acoplamiento">2.3 Cohesión y acoplamiento<a class="headerlink" href="#23-cohesion-y-acoplamiento" title="Permanent link">&para;</a></h3>
 <p><strong>Cohesión</strong>: qué tan relacionado está lo que vive <em>dentro</em> de un mismo paquete o clase. Alta cohesión = todo lo que está junto tiene un propósito común.</p>
-<p><strong>Acoplamiento</strong>: qué tan dependiente es una parte del sistema de los detalles internos de otra. Bajo acoplamiento = un cambio interno en A no obliga a cambiar B.</p>
+<p><strong>Acoplamiento</strong>: qué tan dependiente es una parte del sistema de los detalles internos de otra. Bajo acoplamiento = un cambio interno en un módulo no obliga a cambiar otro que solo consume su contrato.</p>
 <p><strong>Tabla 3. Cohesión y acoplamiento, en una frase</strong></p>
 <table>
 <thead>
@@ -3248,21 +3248,23 @@
 <tbody>
 <tr>
 <td>Cohesión</td>
-<td>Un paquete <code>producto/</code> que solo contiene clases sobre <code>Producto</code>.</td>
+<td>Un paquete que solo contiene clases sobre una misma entidad del dominio.</td>
 <td>Un paquete <code>utils/</code> con validación, formateo de fechas y lógica de negocio mezclados.</td>
 </tr>
 <tr>
 <td>Acoplamiento</td>
-<td><code>ProductoController</code> depende de la interfaz <code>ProductoService</code>, no de <code>ProductoServiceImpl</code>.</td>
-<td><code>ProductoController</code> construye un <code>ProductoRepository</code> directamente, saltándose el service.</td>
+<td>Un controller depende de la interfaz de su service, no de la implementación concreta.</td>
+<td>Un controller construye un repositorio directamente, saltándose el service.</td>
 </tr>
 </tbody>
 </table>
 <p>No son principios independientes de SOLID — son la razón <em>por qué</em> SOLID funciona: <strong>S</strong> produce alta cohesión (una responsabilidad por clase); <strong>D</strong> produce bajo acoplamiento (depender de interfaces, no de implementaciones).</p>
+<p><strong>Ejemplo de referencia.</strong> En LP2: <code>catalogo/producto</code> solo contiene clases sobre <code>Producto</code> (alta cohesión); <code>ProductoController</code> depende de la interfaz <code>ProductoService</code>, nunca de <code>ProductoServiceImpl</code> directamente (bajo acoplamiento). El caso más interesante para evaluar es el acoplamiento <strong>entre</strong> <code>producto</code> y <code>categoria</code> — dos paquetes hermanos del mismo módulo — que se analiza con el código real en 3.4.</p>
+<p>El acoplamiento no es solo un asunto entre clases (una clase que depende de otra) — también aparece <strong>entre contratos</strong>: si el DTO de salida de una entidad reutiliza tal cual el DTO de otra entidad relacionada, el primero queda acoplado a cada cambio que sufra el segundo, aunque ese cambio no tenga nada que ver con lo que el primero necesita mostrar. Introducir un DTO más chico, dedicado solo a lo que se embebe, es la misma estrategia de bajo acoplamiento (Tabla 3) aplicada a contratos en vez de a clases — este caso también se evalúa con código real en 3.4.</p>
 <h3 id="24-modularidad-y-abstraccion">2.4 Modularidad y abstracción<a class="headerlink" href="#24-modularidad-y-abstraccion" title="Permanent link">&para;</a></h3>
-<p><strong>Modularidad</strong>: el sistema se divide en unidades (módulos) con un límite explícito y verificable — en LP2, el límite es el paquete de módulo (<code>catalogo</code>, <code>ventas</code>, ...) bajo <code>pe.edu.upeu.bomerp</code>, verificado automáticamente por Spring Modulith (<code>ModularityTests</code>, ADR-002 de LP2): un módulo solo puede llamar al <code>Service</code> público de otro, nunca a su <code>Repository</code> ni a su <code>Entity</code> directamente.</p>
-<p><strong>Abstracción</strong>: exponer solo lo necesario, ocultando el detalle de implementación. Un DTO es abstracción sobre una entidad (el cliente HTTP nunca ve columnas de Oracle, solo los campos que el contrato REST decide mostrar); una interfaz de servicio es abstracción sobre su implementación.</p>
-<p><strong>Nota de alcance:</strong> <code>categoria</code> y <code>producto</code> (esta sesión) son <strong>paquetes dentro del mismo módulo</strong> <code>catalogo</code>, no dos módulos distintos — la regla de "solo <code>Service</code> público, nunca <code>Repository</code> ajeno" es la que Spring Modulith verifica <strong>entre módulos</strong> (<code>catalogo</code> vs. <code>ventas</code>), no necesariamente dentro de un mismo módulo. Que <code>ProductoServiceImpl</code> use <code>CategoriaRepository</code> directamente (en vez de <code>CategoriaService</code>) es una decisión de diseño <strong>dentro</strong> de <code>catalogo</code> — se evalúa en 3.4, no es una violación de <code>ModularityTests</code>.</p>
+<p><strong>Modularidad</strong>: el sistema se divide en unidades (módulos) con un límite explícito y verificable — no basta con una convención de carpetas; el límite debe poder comprobarse, idealmente de forma automática, para que nadie lo cruce sin darse cuenta.</p>
+<p><strong>Abstracción</strong>: exponer solo lo necesario, ocultando el detalle de implementación. Un DTO es abstracción sobre una entidad (el cliente HTTP nunca ve columnas de la base de datos, solo los campos que el contrato REST decide mostrar); una interfaz de servicio es abstracción sobre su implementación.</p>
+<p><strong>Ejemplo de referencia.</strong> En LP2, el límite de módulo es el paquete bajo <code>pe.edu.upeu.bomerp</code> (<code>catalogo</code>, <code>ventas</code>, ...), verificado automáticamente por Spring Modulith (<code>ModularityTests</code>, ver ADR-002 de LP2): un módulo solo puede llamar al <code>Service</code> público de otro, nunca a su <code>Repository</code> ni a su <code>Entity</code> directamente. <code>categoria</code> y <code>producto</code> (evaluados en esta sesión) son <strong>paquetes dentro del mismo módulo</strong> <code>catalogo</code>, no dos módulos distintos — la regla anterior es la que Spring Modulith verifica <strong>entre módulos</strong> (<code>catalogo</code> vs. <code>ventas</code>), no necesariamente dentro de uno mismo. En abstracción, <code>ProductoResponse</code> embebe <code>CategoriaResumen</code> (<code>id</code> y <code>nombre</code>) en vez de la entidad <code>Categoria</code> completa — el contrato REST expone solo lo que un cliente necesita. Estos dos casos reales se retoman en 3.4 y 3.5.</p>
 <h2 id="3-aplica-actividad-practica-guiada">3. Aplica: actividad práctica guiada<a class="headerlink" href="#3-aplica-actividad-practica-guiada" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 2h.</p>
 <p><strong>Actividad:</strong> evaluación guiada de <code>catalogo/categoria</code> y <code>catalogo/producto</code> (código real de LP2, S1-S3) contra SOLID, cohesión, acoplamiento, modularidad y abstracción (Producto de la sesión en 1.4).</p>
@@ -3379,12 +3381,41 @@
 </tr>
 </tbody>
 </table>
-<p>No hay una respuesta única "correcta" — es una tensión real de diseño, y documentarla (con el criterio de arriba) es el hallazgo que se espera en 3.6.</p>
+<p>No hay una respuesta única "correcta" — es una tensión real de diseño, y documentarla (con el criterio de arriba) es uno de los hallazgos que se espera en 3.6.</p>
+<p><strong>Un segundo caso, esta vez de acoplamiento entre contratos:</strong> <code>ProductoResponse</code> no reutiliza <code>CategoriaResponse</code> (el DTO que ya existe para exponer una categoría) — introduce <code>CategoriaResumen</code>, un DTO más chico, dedicado solo a lo que se embebe en un producto (<code>id</code>, <code>nombre</code>, sin <code>descripcion</code>).</p>
+<p><strong>Tabla 6. Acoplamiento entre contratos: reutilizar vs. desacoplar</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Reutilizar <code>CategoriaResponse</code> en <code>ProductoResponse</code></th>
+<th>Introducir <code>CategoriaResumen</code> (real, LP2 S3)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Acoplamiento</td>
+<td>El contrato de <code>/productos</code> cambia de forma cada vez que <code>CategoriaResponse</code> cambia, aunque el cambio no afecte a lo que un producto necesita mostrar.</td>
+<td>El contrato de <code>/productos</code> solo cambia si <code>CategoriaResumen</code> cambia — independiente de <code>CategoriaResponse</code>.</td>
+</tr>
+<tr>
+<td>Costo hoy</td>
+<td>Ninguno — <code>descripcion</code> no es un dato sensible ni voluminoso.</td>
+<td>Una clase más, un método de mapeo más (<code>CategoriaMapper.toResumen</code>).</td>
+</tr>
+<tr>
+<td>Beneficio</td>
+<td>Menos código.</td>
+<td>El contrato de <code>/productos</code> no depende de decisiones futuras de <code>/categorias</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>Igual que el caso anterior, no hay una respuesta única "correcta": con los hechos de hoy (nada sensible en <code>descripcion</code>, sin motivo de ocultamiento), reutilizar <code>CategoriaResponse</code> habría sido igual de válido — la decisión real de introducir <code>CategoriaResumen</code> es explícitamente anticipatoria. Vale la pena nombrarla como tal en el hallazgo (3.6), no presentarla como la única opción correcta.</p>
 <h3 id="35-evaluar-modularidad-y-abstraccion">3.5 Evaluar modularidad y abstracción<a class="headerlink" href="#35-evaluar-modularidad-y-abstraccion" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> confirmación de que el límite de módulo (<code>catalogo</code>) se respeta, y que las abstracciones (DTO, interfaces) cumplen su función.</p>
 <ul>
 <li><strong>Modularidad:</strong> <code>catalogo</code> sigue siendo el único módulo con código real; <code>ModularityTests</code> (LP2) verifica que ningún otro módulo (todavía inexistente: <code>ventas</code> llega en S4) acceda a sus repositorios o entidades directamente. Nada que evaluar todavía más allá de eso — la prueba real es automática, no una opinión de diseño.</li>
-<li><strong>Abstracción — DTO:</strong> <code>ProductoResponse</code> embebe <code>CategoriaResumen</code> (<code>id</code>, <code>nombre</code>), no la entidad <code>Categoria</code> completa (que también tiene <code>descripcion</code>) — el contrato REST expone exactamente lo que un cliente necesita para mostrar un producto con su categoría, sin acoplar la API pública a cada campo interno de <code>Categoria</code>.</li>
+<li><strong>Abstracción — DTO:</strong> <code>ProductoResponse</code> embebe <code>CategoriaResumen</code>, no la entidad <code>Categoria</code> completa — la abstracción entidad-DTO evita que la API pública dependa de cada campo interno de <code>Categoria</code>. El acoplamiento <strong>entre</strong> <code>CategoriaResumen</code> y <code>CategoriaResponse</code> (dos DTO, no una entidad y un DTO) ya se evaluó con más detalle en 3.4.</li>
 <li><strong>Abstracción — interfaces de servicio:</strong> ya evaluado en 3.2/3.3; se repite aquí como confirmación de que la abstracción no es solo una interfaz vacía — realmente oculta la implementación (MapStruct, Spring Data JPA) del resto del sistema.</li>
 </ul>
 <h3 id="36-documentar-el-hallazgo-real">3.6 Documentar el hallazgo real<a class="headerlink" href="#36-documentar-el-hallazgo-real" title="Permanent link">&para;</a></h3>
@@ -3392,7 +3423,7 @@
 <p>Ejemplo de hallazgo real de esta sesión (documentado en 3.4): <em>"<code>ProductoServiceImpl</code> depende de <code>CategoriaRepository</code> en vez de <code>CategoriaService</code>. No es una violación de <code>ModularityTests</code> (mismo módulo), pero si <code>producto</code> empieza a necesitar más operaciones sobre <code>categoria</code> a medida que el sistema crece, migrar a <code>CategoriaService</code> reduciría el acoplamiento entre ambos paquetes sin costo arquitectónico."</em> Tu evidencia individual (4.3.1) debe incluir un hallazgo equivalente, real, sobre el módulo de tu propio proyecto — no una copia de este.</p>
 <h3 id="37-relacionar-con-lp2-y-bd2">3.7 Relacionar con LP2 y BD2<a class="headerlink" href="#37-relacionar-con-lp2-y-bd2" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> matriz de integración de la sesión.</p>
-<p><strong>Tabla 6. Matriz de integración ADS-LP2-BD2 (S3)</strong></p>
+<p><strong>Tabla 7. Matriz de integración ADS-LP2-BD2 (S3)</strong></p>
 <table>
 <thead>
 <tr>
@@ -3540,7 +3571,7 @@ acoplamiento entre dos módulos distintos?
 <li>¿Qué diferencia hay entre exponer una entidad JPA directamente y exponer un DTO?</li>
 </ol>
 <h3 id="46-rubrica-de-evaluacion">4.6 Rúbrica de evaluación<a class="headerlink" href="#46-rubrica-de-evaluacion" title="Permanent link">&para;</a></h3>
-<p><strong>Tabla 7. Rúbrica de evaluación</strong></p>
+<p><strong>Tabla 8. Rúbrica de evaluación</strong></p>
 <table>
 <thead>
 <tr>
