@@ -3233,6 +3233,38 @@
 </table>
 <p>Los cinco principios no son reglas aisladas: <strong>S</strong> evita que una clase crezca sin control, <strong>O</strong>/<strong>L</strong> garantizan que se pueda extender sin romper lo existente, <strong>I</strong> evita interfaces infladas, y <strong>D</strong> es el que hace posible <strong>O</strong> y <strong>L</strong> en la práctica — sin depender de abstracciones, no hay forma de sustituir una implementación por otra sin tocar el código que la usa.</p>
 <p><strong>Ejemplo de referencia.</strong> En <code>catalogo/producto</code> (LP2): <code>ProductoController</code> solo traduce HTTP a llamadas al service, sin persistir ni validar reglas de negocio (S); <code>ProductoService</code> es una interfaz con una única implementación hoy, lista para aceptar una segunda sin que el controller cambie (O/L); y <code>ProductoServiceImpl</code> recibe <code>ProductoRepository</code> y <code>ProductoMapper</code> como interfaces inyectadas por el framework, nunca las crea con <code>new</code> (D). Este código real se evalúa con más detalle en 3.1-3.3.</p>
+<p><strong>Figura 3. Diagrama de clases UML — dependencias reales de <code>ProductoServiceImpl</code></strong></p>
+<pre class="mermaid"><code>classDiagram
+    class ProductoController {
+        -ProductoService productoService
+    }
+    class ProductoService {
+        &lt;&lt;interface&gt;&gt;
+        +listar() List~ProductoResponse~
+        +obtener(id) ProductoResponse
+        +crear(request) ProductoResponse
+    }
+    class ProductoServiceImpl {
+        -ProductoRepository productoRepository
+        -CategoriaRepository categoriaRepository
+        -ProductoMapper productoMapper
+    }
+    class ProductoRepository {
+        &lt;&lt;interface&gt;&gt;
+    }
+    class CategoriaRepository {
+        &lt;&lt;interface&gt;&gt;
+    }
+    class ProductoMapper {
+        &lt;&lt;interface&gt;&gt;
+    }
+
+    ProductoController --&gt; ProductoService : depende de la interfaz, no de la impl. (D)
+    ProductoService &lt;|.. ProductoServiceImpl : implementa el contrato (O, L)
+    ProductoServiceImpl --&gt; ProductoRepository : interfaz inyectada (D)
+    ProductoServiceImpl --&gt; CategoriaRepository : interfaz inyectada (D)
+    ProductoServiceImpl --&gt; ProductoMapper : interfaz inyectada (D)</code></pre>
+<p>Cada flecha de la Figura 3 es evidencia de un principio distinto: la de <code>ProductoController</code> hacia <code>ProductoService</code> y las tres que salen de <code>ProductoServiceImpl</code> apuntan todas a interfaces, nunca a una clase concreta — esa es Inversión de Dependencias (D) hecha visible. La flecha punteada <code>ProductoService &lt;|.. ProductoServiceImpl</code> es la relación de implementación que hace posible O y L: mientras el contrato no cambie, <code>ProductoServiceImpl</code> puede reemplazarse por otra clase sin tocar <code>ProductoController</code>. Responsabilidad única (S) no se ve como una flecha — se ve en lo que <strong>no</strong> aparece dentro de <code>ProductoServiceImpl</code>: ningún método de formateo, envío de correo o logging mezclado con la lógica de <code>Producto</code>. Segregación de interfaces (I) tampoco es una flecha: es que <code>ProductoService</code> solo declara los métodos que <code>ProductoController</code> realmente usa, sin métodos de más.</p>
 <h3 id="23-cohesion-y-acoplamiento">2.3 Cohesión y acoplamiento<a class="headerlink" href="#23-cohesion-y-acoplamiento" title="Permanent link">&para;</a></h3>
 <p><strong>Cohesión</strong>: qué tan relacionado está lo que vive <em>dentro</em> de un mismo paquete o clase. Alta cohesión = todo lo que está junto tiene un propósito común.</p>
 <p><strong>Acoplamiento</strong>: qué tan dependiente es una parte del sistema de los detalles internos de otra. Bajo acoplamiento = un cambio interno en un módulo no obliga a cambiar otro que solo consume su contrato.</p>
@@ -3261,10 +3293,53 @@
 <p>No son principios independientes de SOLID — son la razón <em>por qué</em> SOLID funciona: <strong>S</strong> produce alta cohesión (una responsabilidad por clase); <strong>D</strong> produce bajo acoplamiento (depender de interfaces, no de implementaciones).</p>
 <p><strong>Ejemplo de referencia.</strong> En LP2: <code>catalogo/producto</code> solo contiene clases sobre <code>Producto</code> (alta cohesión); <code>ProductoController</code> depende de la interfaz <code>ProductoService</code>, nunca de <code>ProductoServiceImpl</code> directamente (bajo acoplamiento). El caso más interesante para evaluar es el acoplamiento <strong>entre</strong> <code>producto</code> y <code>categoria</code> — dos paquetes hermanos del mismo módulo — que se analiza con el código real en 3.4.</p>
 <p>El acoplamiento no es solo un asunto entre clases (una clase que depende de otra) — también aparece <strong>entre contratos</strong>: si el DTO de salida de una entidad reutiliza tal cual el DTO de otra entidad relacionada, el primero queda acoplado a cada cambio que sufra el segundo, aunque ese cambio no tenga nada que ver con lo que el primero necesita mostrar. Introducir un DTO más chico, dedicado solo a lo que se embebe, es la misma estrategia de bajo acoplamiento (Tabla 3) aplicada a contratos en vez de a clases — este caso también se evalúa con código real en 3.4.</p>
+<p><strong>Figura 4. Dos formas de acoplamiento evaluadas en esta sesión</strong></p>
+<pre class="mermaid"><code>flowchart TB
+    subgraph Clases["Acoplamiento entre clases"]
+        direction TB
+        PSI["ProductoServiceImpl"]
+        CR["CategoriaRepository&lt;br/&gt;(actual)"]
+        CS["CategoriaService&lt;br/&gt;(alternativa)"]
+        PSI --&gt;|"actual"| CR
+        PSI -.-&gt;|"alternativa, mas desacoplada"| CS
+    end
+
+    subgraph Contratos["Acoplamiento entre contratos"]
+        direction TB
+        PR["ProductoResponse"]
+        CRes["CategoriaResumen&lt;br/&gt;(actual)"]
+        CResp["CategoriaResponse&lt;br/&gt;(alternativa: reutilizar)"]
+        PR --&gt;|"actual"| CRes
+        PR -.-&gt;|"alternativa, mas acoplada"| CResp
+    end</code></pre>
+<p>Las dos mitades de la Figura 4 son el mismo patrón en dos niveles distintos: en ambas, la flecha sólida es lo que el código real hace hoy, y la punteada es la alternativa que la Tabla 5 (3.4) y la Tabla 6 (3.4) comparan. A la izquierda, "más desacoplada" significa depender de un contrato público (<code>CategoriaService</code>) en vez de acceso directo a datos; a la derecha, "más acoplada" significa lo contrario de lo que hizo LP2 — reutilizar <code>CategoriaResponse</code> habría atado el contrato de <code>/productos</code> a cada cambio futuro de <code>/categorias</code>. Ninguna de las dos mitades tiene una alternativa objetivamente "correcta": ambas son tensiones de diseño, no violaciones, y se documentan como tales en 3.6.</p>
 <h3 id="24-modularidad-y-abstraccion">2.4 Modularidad y abstracción<a class="headerlink" href="#24-modularidad-y-abstraccion" title="Permanent link">&para;</a></h3>
 <p><strong>Modularidad</strong>: el sistema se divide en unidades (módulos) con un límite explícito y verificable — no basta con una convención de carpetas; el límite debe poder comprobarse, idealmente de forma automática, para que nadie lo cruce sin darse cuenta.</p>
 <p><strong>Abstracción</strong>: exponer solo lo necesario, ocultando el detalle de implementación. Un DTO es abstracción sobre una entidad (el cliente HTTP nunca ve columnas de la base de datos, solo los campos que el contrato REST decide mostrar); una interfaz de servicio es abstracción sobre su implementación.</p>
 <p><strong>Ejemplo de referencia.</strong> En LP2, el límite de módulo es el paquete bajo <code>pe.edu.upeu.bomerp</code> (<code>catalogo</code>, <code>ventas</code>, ...), verificado automáticamente por Spring Modulith (<code>ModularityTests</code>, ver ADR-002 de LP2): un módulo solo puede llamar al <code>Service</code> público de otro, nunca a su <code>Repository</code> ni a su <code>Entity</code> directamente. <code>categoria</code> y <code>producto</code> (evaluados en esta sesión) son <strong>paquetes dentro del mismo módulo</strong> <code>catalogo</code>, no dos módulos distintos — la regla anterior es la que Spring Modulith verifica <strong>entre módulos</strong> (<code>catalogo</code> vs. <code>ventas</code>), no necesariamente dentro de uno mismo. En abstracción, <code>ProductoResponse</code> embebe <code>CategoriaResumen</code> (<code>id</code> y <code>nombre</code>) en vez de la entidad <code>Categoria</code> completa — el contrato REST expone solo lo que un cliente necesita. Estos dos casos reales se retoman en 3.4 y 3.5.</p>
+<p><strong>Figura 5. Modularidad (límite entre módulos) y abstracción (DTO sobre entidad)</strong></p>
+<pre class="mermaid"><code>flowchart TB
+    subgraph Mod["Modularidad: limite verificado por Spring Modulith"]
+        direction TB
+        subgraph Catalogo["Modulo catalogo"]
+            direction LR
+            CatPkg["categoria"]
+            ProdPkg["producto"]
+        end
+        Ventas["Modulo ventas (S4, futuro)"]
+        Ventas --&gt;|"permitido: Service publico"| CatPkg
+        Ventas -.-&gt;|"prohibido, ModularityTests lo bloquea"| CatPkg
+    end
+
+    subgraph Abs["Abstraccion: el cliente HTTP nunca ve la entidad"]
+        direction LR
+        Cliente["Cliente HTTP"]
+        DTO["ProductoResponse (DTO)"]
+        Entidad["Producto (entidad JPA / columnas Oracle)"]
+        Cliente --&gt; DTO
+        DTO -.-&gt;|"oculta"| Entidad
+    end</code></pre>
+<p>La mitad "Modularidad" de la Figura 5 muestra por qué <code>producto</code> y <code>categoria</code> (dentro de <code>catalogo</code>) pueden acoplarse entre sí sin que <code>ModularityTests</code> proteste (2.3, 3.4): la regla que sí bloquea es la flecha punteada, cuando un módulo <strong>distinto</strong> (<code>ventas</code>, todavía inexistente) intenta saltarse el <code>Service</code> público de <code>catalogo</code>. La mitad "Abstracción" es el mismo principio de la Figura 4 (derecha) visto un nivel más abajo: el cliente HTTP nunca llega a <code>Producto</code> (la entidad), solo a <code>ProductoResponse</code> — el DTO es la frontera que oculta cada columna interna de la tabla <code>PRODUCTOS</code>.</p>
 <h2 id="3-aplica-actividad-practica-guiada">3. Aplica: actividad práctica guiada<a class="headerlink" href="#3-aplica-actividad-practica-guiada" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 2h.</p>
 <p><strong>Actividad:</strong> evaluación guiada de <code>catalogo/categoria</code> y <code>catalogo/producto</code> (código real de LP2, S1-S3) contra SOLID, cohesión, acoplamiento, modularidad y abstracción (Producto de la sesión en 1.4).</p>
@@ -3455,7 +3530,7 @@
 </tr>
 </tbody>
 </table>
-<p>Sesión equivalente en los otros dos cursos, misma semana: <a href="../../../lp2/sesiones/S03_Objetos_Relacionados_Categoria_Producto/">LP2 - S3 Objetos Relacionados Categoria-Producto</a>. BD2 todavía no publica su guía de S3 en este repositorio.</p>
+<p>Sesión equivalente en los otros dos cursos, misma semana: <a href="../../../lp2/sesiones/S03_Objetos_Relacionados_Categoria_Producto/">LP2 - S3 Objetos Relacionados Categoria-Producto</a> y <a href="../../../bd2/sesiones/S03_Excepciones_Robustez/">BD2 - S3 Manejo de Excepciones y Robustez</a>.</p>
 <p><strong>Evidencia de aprendizaje:</strong></p>
 <ul>
 <li>Tabla de responsabilidad única (S) para <code>categoria</code> y <code>producto</code>.</li>
@@ -3652,6 +3727,7 @@ Indica 2 fortalezas y 2 recomendaciones.
 <ol>
 <li>Martin, R. C. (2003). <em>Agile Software Development: Principles, Patterns, and Practices</em>. Prentice Hall.</li>
 <li>Martin, R. C. (2017). <em>Clean Architecture: A Craftsman's Guide to Software Structure and Design</em>. Prentice Hall.</li>
+<li>Baeldung. (2024). <em>SOLID Principles</em>. https://www.baeldung.com/solid-principles</li>
 <li>Fowler, M. (2024). <em>CouplingAndCohesion</em>. martinfowler.com. https://martinfowler.com/ieeeSoftware/coupling.pdf</li>
 <li>Broadcom Inc. (2025). <em>Spring Framework reference documentation — Dependency Injection</em>. VMware Tanzu. https://docs.spring.io/spring-framework/reference/core/beans/dependencies.html</li>
 </ol>
