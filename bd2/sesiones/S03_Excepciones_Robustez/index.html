@@ -13,10 +13,10 @@
       
       
       
-        <link rel="prev" href="../S01_PLSQL_Aplicado_Negocio/">
+        <link rel="prev" href="../S02_Triggers_DML_Auditoria/">
       
       
-        <link rel="next" href="../S03_Excepciones_Robustez/">
+        <link rel="next" href="../../../lp2/">
       
       
         
@@ -27,7 +27,7 @@
     
     
   
-    <title>BOM ERP - S2 - Triggers DML y auditoría</title>
+    <title>BOM ERP - S3 - Manejo de excepciones y robustez</title>
   
 
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#s2-triggers-dml-y-auditoria" class="md-skip">
+        <a href="#s3-manejo-de-excepciones-y-robustez" class="md-skip">
           Saltar a contenido
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              S2 - Triggers DML y auditoría
+              S3 - Manejo de excepciones y robustez
             
           </span>
         </div>
@@ -1649,6 +1649,34 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../S02_Triggers_DML_Auditoria/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - Triggers DML y auditoría
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -1668,7 +1696,7 @@
   <span class="md-ellipsis">
     
   
-    S2 - Triggers DML y auditoría
+    S3 - Manejo de excepciones y robustez
   
 
     
@@ -1686,7 +1714,7 @@
   <span class="md-ellipsis">
     
   
-    S2 - Triggers DML y auditoría
+    S3 - Manejo de excepciones y robustez
   
 
     
@@ -1791,10 +1819,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#161-caso-catalogo-de-bomerp-auditoria-de-precio" class="md-nav__link">
+  <a href="#161-caso-el-error-que-nadie-explico" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1.6.1 Caso: catálogo de BomERP (auditoría de precio)
+        1.6.1 Caso: el error que nadie explicó
       
     </span>
   </a>
@@ -1846,10 +1874,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#22-triggers-dml-momento-y-evento" class="md-nav__link">
+  <a href="#22-excepciones-predefinidas-de-plsql" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.2 Triggers DML: momento y evento
+        2.2 Excepciones predefinidas de PL/SQL
       
     </span>
   </a>
@@ -1857,10 +1885,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#23-pseudo-registros-old-y-new" class="md-nav__link">
+  <a href="#23-excepciones-personalizadas-pragma-exception_init-y-raise_application_error" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.3 Pseudo-registros :OLD y :NEW
+        2.3 Excepciones personalizadas: PRAGMA EXCEPTION_INIT y RAISE_APPLICATION_ERROR
       
     </span>
   </a>
@@ -1868,21 +1896,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#24-reglas-automaticas-de-negocio-con-triggers" class="md-nav__link">
+  <a href="#24-registro-de-errores-y-tolerancia-a-fallos" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.4 Reglas automáticas de negocio con triggers
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#25-auditoria-basica-con-triggers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2.5 Auditoría básica con triggers
+        2.4 Registro de errores y tolerancia a fallos
       
     </span>
   </a>
@@ -1907,10 +1924,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#31-definir-la-regla-de-negocio-y-el-alcance-de-la-auditoria" class="md-nav__link">
+  <a href="#31-definir-el-alcance-de-errores-a-manejar" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.1 Definir la regla de negocio y el alcance de la auditoría
+        3.1 Definir el alcance de errores a manejar
       
     </span>
   </a>
@@ -1918,10 +1935,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#32-crear-la-tabla-producto_auditoria" class="md-nav__link">
+  <a href="#32-crear-la-tabla-log_errores" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.2 Crear la tabla PRODUCTO_AUDITORIA
+        3.2 Crear la tabla LOG_ERRORES
       
     </span>
   </a>
@@ -1929,10 +1946,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#33-crear-el-trigger-de-regla-de-negocio-before-update" class="md-nav__link">
+  <a href="#33-incorporar-excepciones-en-sp_registrar_producto" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.3 Crear el trigger de regla de negocio (BEFORE UPDATE)
+        3.3 Incorporar excepciones en SP_REGISTRAR_PRODUCTO
       
     </span>
   </a>
@@ -1940,10 +1957,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#34-crear-el-trigger-de-auditoria-after-insert-or-update-or-delete" class="md-nav__link">
+  <a href="#34-incorporar-una-excepcion-personalizada-en-sp_aplicar_descuento_producto" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.4 Crear el trigger de auditoría (AFTER INSERT OR UPDATE OR DELETE)
+        3.4 Incorporar una excepción personalizada en SP_APLICAR_DESCUENTO_PRODUCTO
       
     </span>
   </a>
@@ -1951,10 +1968,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#35-probar-ambos-triggers-con-casos-validos-e-invalidos" class="md-nav__link">
+  <a href="#35-crear-fn_obtener_precio_producto-con-manejo-de-no_data_found" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.5 Probar ambos triggers con casos válidos e inválidos
+        3.5 Crear FN_OBTENER_PRECIO_PRODUCTO con manejo de NO_DATA_FOUND
       
     </span>
   </a>
@@ -1962,10 +1979,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#36-relacionar-con-ads-y-lp2" class="md-nav__link">
+  <a href="#36-probar-los-tres-con-casos-validos-e-invalidos" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.6 Relacionar con ADS y LP2
+        3.6 Probar los tres con casos válidos e inválidos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37-relacionar-con-ads-y-lp2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 Relacionar con ADS y LP2
       
     </span>
   </a>
@@ -2103,34 +2131,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../S03_Excepciones_Robustez/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    S3 - Manejo de excepciones y robustez
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -2768,10 +2768,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#161-caso-catalogo-de-bomerp-auditoria-de-precio" class="md-nav__link">
+  <a href="#161-caso-el-error-que-nadie-explico" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1.6.1 Caso: catálogo de BomERP (auditoría de precio)
+        1.6.1 Caso: el error que nadie explicó
       
     </span>
   </a>
@@ -2823,10 +2823,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#22-triggers-dml-momento-y-evento" class="md-nav__link">
+  <a href="#22-excepciones-predefinidas-de-plsql" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.2 Triggers DML: momento y evento
+        2.2 Excepciones predefinidas de PL/SQL
       
     </span>
   </a>
@@ -2834,10 +2834,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#23-pseudo-registros-old-y-new" class="md-nav__link">
+  <a href="#23-excepciones-personalizadas-pragma-exception_init-y-raise_application_error" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.3 Pseudo-registros :OLD y :NEW
+        2.3 Excepciones personalizadas: PRAGMA EXCEPTION_INIT y RAISE_APPLICATION_ERROR
       
     </span>
   </a>
@@ -2845,21 +2845,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#24-reglas-automaticas-de-negocio-con-triggers" class="md-nav__link">
+  <a href="#24-registro-de-errores-y-tolerancia-a-fallos" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.4 Reglas automáticas de negocio con triggers
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#25-auditoria-basica-con-triggers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2.5 Auditoría básica con triggers
+        2.4 Registro de errores y tolerancia a fallos
       
     </span>
   </a>
@@ -2884,10 +2873,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#31-definir-la-regla-de-negocio-y-el-alcance-de-la-auditoria" class="md-nav__link">
+  <a href="#31-definir-el-alcance-de-errores-a-manejar" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.1 Definir la regla de negocio y el alcance de la auditoría
+        3.1 Definir el alcance de errores a manejar
       
     </span>
   </a>
@@ -2895,10 +2884,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#32-crear-la-tabla-producto_auditoria" class="md-nav__link">
+  <a href="#32-crear-la-tabla-log_errores" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.2 Crear la tabla PRODUCTO_AUDITORIA
+        3.2 Crear la tabla LOG_ERRORES
       
     </span>
   </a>
@@ -2906,10 +2895,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#33-crear-el-trigger-de-regla-de-negocio-before-update" class="md-nav__link">
+  <a href="#33-incorporar-excepciones-en-sp_registrar_producto" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.3 Crear el trigger de regla de negocio (BEFORE UPDATE)
+        3.3 Incorporar excepciones en SP_REGISTRAR_PRODUCTO
       
     </span>
   </a>
@@ -2917,10 +2906,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#34-crear-el-trigger-de-auditoria-after-insert-or-update-or-delete" class="md-nav__link">
+  <a href="#34-incorporar-una-excepcion-personalizada-en-sp_aplicar_descuento_producto" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.4 Crear el trigger de auditoría (AFTER INSERT OR UPDATE OR DELETE)
+        3.4 Incorporar una excepción personalizada en SP_APLICAR_DESCUENTO_PRODUCTO
       
     </span>
   </a>
@@ -2928,10 +2917,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#35-probar-ambos-triggers-con-casos-validos-e-invalidos" class="md-nav__link">
+  <a href="#35-crear-fn_obtener_precio_producto-con-manejo-de-no_data_found" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.5 Probar ambos triggers con casos válidos e inválidos
+        3.5 Crear FN_OBTENER_PRECIO_PRODUCTO con manejo de NO_DATA_FOUND
       
     </span>
   </a>
@@ -2939,10 +2928,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#36-relacionar-con-ads-y-lp2" class="md-nav__link">
+  <a href="#36-probar-los-tres-con-casos-validos-e-invalidos" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.6 Relacionar con ADS y LP2
+        3.6 Probar los tres con casos válidos e inválidos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37-relacionar-con-ads-y-lp2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 Relacionar con ADS y LP2
       
     </span>
   </a>
@@ -3096,25 +3096,25 @@
   
 
 
-<h1 id="s2-triggers-dml-y-auditoria">S2 - Triggers DML y Auditoría<a class="headerlink" href="#s2-triggers-dml-y-auditoria" title="Permanent link">&para;</a></h1>
+<h1 id="s3-manejo-de-excepciones-y-robustez">S3 - Manejo de Excepciones y Robustez<a class="headerlink" href="#s3-manejo-de-excepciones-y-robustez" title="Permanent link">&para;</a></h1>
 <h2 id="1-introduccion">1. Introducción<a class="headerlink" href="#1-introduccion" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 20 min.</p>
 <h3 id="11-presentacion-de-la-sesion">1.1 Presentación de la sesión<a class="headerlink" href="#11-presentacion-de-la-sesion" title="Permanent link">&para;</a></h3>
-<p>En S1, <code>SP_APLICAR_DESCUENTO_PRODUCTO</code> ajusta el precio de un producto sin que quede registro de quién lo cambió, ni verificación de que el ajuste sea razonable — cualquier procedimiento, o incluso un <code>UPDATE</code> directo desde otro cliente, puede dejar el precio en cualquier valor sin dejar rastro. Esta sesión resuelve ambos problemas con <strong>triggers DML</strong>: uno que aplica una regla automática de negocio, y otro que registra auditoría básica — ambos disparados por Oracle mismo, sin depender de que el cliente que hizo el cambio se acuerde de invocarlos.</p>
+<p><code>SP_REGISTRAR_PRODUCTO</code> y <code>SP_APLICAR_DESCUENTO_PRODUCTO</code> (S1) funcionan mientras alguien los invoque con datos correctos — pero ninguno de los dos anticipa un error: si <code>p_id_categoria</code> no existe, Oracle rechaza el <code>INSERT</code> con un código interno (<code>ORA-02291</code>) que llega crudo hasta quien invocó el procedimiento, sin contexto ni registro; y <code>SP_APLICAR_DESCUENTO_PRODUCTO</code> acepta cualquier <code>p_porcentaje_descuento</code> — incluido <code>150</code> o <code>-30</code> — sin cuestionar si eso tiene sentido. Esta sesión agrega manejo de excepciones (predefinidas y personalizadas) y un registro de errores a esos mismos procedimientos, para que un fallo se capture, se documente y responda con un mensaje claro — en vez de propagar un error interno de Oracle sin explicación.</p>
 <h3 id="12-indice">1.2 Índice<a class="headerlink" href="#12-indice" title="Permanent link">&para;</a></h3>
 <ol>
-<li>Triggers DML: momento y evento.</li>
-<li>Pseudo-registros <code>:OLD</code> y <code>:NEW</code>.</li>
-<li>Reglas automáticas de negocio con triggers.</li>
-<li>Auditoría básica con triggers.</li>
+<li>Excepciones predefinidas de PL/SQL.</li>
+<li>Excepciones personalizadas: <code>PRAGMA EXCEPTION_INIT</code> y <code>RAISE_APPLICATION_ERROR</code>.</li>
+<li>Registro de errores.</li>
+<li>Tolerancia a fallos.</li>
 </ol>
 <h3 id="13-proposito-de-aprendizaje">1.3 Propósito de aprendizaje<a class="headerlink" href="#13-proposito-de-aprendizaje" title="Permanent link">&para;</a></h3>
 <p>Al concluir la clase, estarás en condiciones de:</p>
 <ul>
-<li><strong>Implementar y probar</strong> triggers DML que apliquen una regla automática de negocio y registren auditoría básica sobre <code>PRODUCTOS</code>, usando <code>:OLD</code> y <code>:NEW</code> para comparar el estado antes y después de cada operación.</li>
+<li><strong>Incorporar</strong> manejo de excepciones predefinidas y personalizadas en procedimientos y funciones PL/SQL reales, registrando cada fallo en una tabla de errores y respondiendo con un mensaje claro en vez de un código Oracle interno sin contexto.</li>
 </ul>
 <h3 id="14-producto-de-sesion">1.4 Producto de sesión<a class="headerlink" href="#14-producto-de-sesion" title="Permanent link">&para;</a></h3>
-<p>Dos triggers sobre <code>BOM_CATALOGO.PRODUCTOS</code>: uno que impide un ajuste de precio no razonable (regla de negocio), y otro que registra cada <code>INSERT</code>/<code>UPDATE</code>/<code>DELETE</code> en una tabla de auditoría nueva (<code>PRODUCTO_AUDITORIA</code>).</p>
+<p><code>SP_REGISTRAR_PRODUCTO</code> y <code>SP_APLICAR_DESCUENTO_PRODUCTO</code> (S1) con manejo de excepciones agregado, una función nueva (<code>FN_OBTENER_PRECIO_PRODUCTO</code>) con manejo de <code>NO_DATA_FOUND</code>, y una tabla <code>LOG_ERRORES</code> que registra cada fallo capturado.</p>
 <h3 id="15-metodologia">1.5 Metodología<a class="headerlink" href="#15-metodologia" title="Permanent link">&para;</a></h3>
 <p><strong>Tabla 1. Metodología de la sesión</strong></p>
 <table>
@@ -3128,41 +3128,44 @@
 <tbody>
 <tr>
 <td>Revisión previa individual</td>
-<td>Revisar <code>SP_APLICAR_DESCUENTO_PRODUCTO</code> de S1 y el caso de esta sesión (ver 1.6). Trabajo individual, antes de clase.</td>
-<td>S1 (3.5), sílabo BD2 U1.</td>
+<td>Revisar <code>SP_REGISTRAR_PRODUCTO</code> y <code>SP_APLICAR_DESCUENTO_PRODUCTO</code> de S1, y <code>TRG_PRODUCTO_AUDITORIA</code> de S2. Trabajo individual, antes de clase; identificar qué pasa hoy si se llama a <code>SP_REGISTRAR_PRODUCTO</code> con una categoría inexistente.</td>
+<td>S1 (3.5), S2 (Tabla 2), sílabo BD2 U1.</td>
 </tr>
 <tr>
 <td>Clase presencial</td>
-<td>Creación guiada de la tabla de auditoría y los dos triggers DML sobre <code>PRODUCTOS</code>. Trabajo individual en la propia laptop, siguiendo al docente paso a paso; consulta inmediata ante errores de compilación.</td>
-<td>Script <code>S02_triggers_dml_auditoria.sql</code>.</td>
+<td>Incorporación guiada de manejo de excepciones y registro de errores sobre los procedimientos reales de S1. Trabajo individual en la propia laptop, siguiendo al docente paso a paso; consulta inmediata ante errores de compilación.</td>
+<td>Script <code>S03_excepciones_robustez.sql</code>.</td>
 </tr>
 <tr>
 <td>Evaluación formativa</td>
-<td>Verificación en clase de los triggers con casos válidos e inválidos (ajuste de precio razonable y no razonable, <code>INSERT</code>/<code>UPDATE</code>/<code>DELETE</code> auditados). La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4.</td>
+<td>Verificación en clase de cada excepción con un caso que la dispare, y de <code>LOG_ERRORES</code> con los registros generados. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4.</td>
 <td>Indicaciones de entrega (4.3), rúbrica de evaluación (4.6).</td>
 </tr>
 </tbody>
 </table>
 <h3 id="16-motivacion-de-la-sesion">1.6 Motivación de la sesión<a class="headerlink" href="#16-motivacion-de-la-sesion" title="Permanent link">&para;</a></h3>
-<h4 id="161-caso-catalogo-de-bomerp-auditoria-de-precio">1.6.1 Caso: catálogo de BomERP (auditoría de precio)<a class="headerlink" href="#161-caso-catalogo-de-bomerp-auditoria-de-precio" title="Permanent link">&para;</a></h4>
-<p><code>SP_APLICAR_DESCUENTO_PRODUCTO</code> (S1) confía en que quien lo invoca pasa un porcentaje razonable — pero nada impide que alguien, por error o directamente con un <code>UPDATE</code>, deje un producto en precio cero. Y si el precio cambia, nadie puede responder después "¿quién lo cambió, cuándo, y de cuánto a cuánto?" sin una auditoría. Un trigger resuelve ambos casos porque se dispara automáticamente ante el evento DML, sin importar qué cliente lo causó — a diferencia de un procedimiento, que solo protege si alguien decide invocarlo.</p>
+<h4 id="161-caso-el-error-que-nadie-explico">1.6.1 Caso: el error que nadie explicó<a class="headerlink" href="#161-caso-el-error-que-nadie-explico" title="Permanent link">&para;</a></h4>
+<p>Ejecuta hoy <code>SP_REGISTRAR_PRODUCTO</code> con un <code>p_id_categoria</code> que no existe en <code>CATEGORIAS</code>, y Oracle responde así, sin que el procedimiento haga nada por explicarlo:</p>
+<div class="highlight"><pre><span></span><code>ORA-02291: integrity constraint (BOM_CATALOGO.FK_PRODUCTO_CATEGORIA) violated - parent key not found
+</code></pre></div>
+<p>Quien recibe ese error (otro script, un desarrollador, o en el futuro LP2 si algún día invocara el procedimiento directo) no sabe, sin leer el mensaje interno de Oracle, que el problema es "la categoría no existe" — y no queda ningún registro de que ese intento fallido ocurrió. Esta sesión no cambia la restricción <code>FK_PRODUCTO_CATEGORIA</code> (sigue protegiendo la integridad, igual que en S1) — agrega una capa que <strong>captura</strong> ese fallo, lo <strong>registra</strong>, y responde con un mensaje que sí explica qué pasó.</p>
 <p><strong>Preguntas de análisis</strong></p>
 <p><strong>Activación de conocimientos previos</strong></p>
 <ol>
-<li><code>SP_APLICAR_DESCUENTO_PRODUCTO</code> (S1) valida el porcentaje de descuento en el procedimiento. ¿Qué pasa si alguien actualiza <code>PRODUCTOS.PRECIO</code> con un <code>UPDATE</code> directo, sin pasar por ese procedimiento?</li>
-<li>¿LP2 (S2) también valida el precio en <code>ProductoRequest</code>? ¿Por qué esta sesión agrega una segunda capa de protección en Oracle?</li>
+<li><code>ORA-02291</code> no es uno de los nombres de excepción predefinidos de PL/SQL (<code>NO_DATA_FOUND</code>, <code>DUP_VAL_ON_INDEX</code>, etc.). ¿Cómo le pondrías nombre a un error de Oracle que no tiene uno ya definido?</li>
+<li>LP2 (S3) ya valida que <code>categoriaId</code> exista <strong>antes</strong> de llamar al repositorio (<code>ProductoServiceImpl.buscarCategoriaOFallar</code>). Si LP2 ya lo previene, ¿por qué esta sesión igual lo maneja en Oracle?</li>
 </ol>
-<p><strong>Comprensión de triggers</strong></p>
+<p><strong>Comprensión de excepciones</strong></p>
 <ol>
-<li>¿Qué diferencia hay entre un trigger <code>BEFORE UPDATE</code> y uno <code>AFTER UPDATE</code>?</li>
-<li>¿Por qué <code>:OLD</code> no tiene valores en un <code>INSERT</code>, ni <code>:NEW</code> los tiene en un <code>DELETE</code>?</li>
+<li>¿Qué diferencia hay entre una excepción predefinida y una personalizada?</li>
+<li>¿Por qué registrar el error <strong>antes</strong> de volver a lanzarlo (no solo uno de los dos)?</li>
 </ol>
 <h3 id="17-ubicacion-en-el-curso">1.7 Ubicación en el curso<a class="headerlink" href="#17-ubicacion-en-el-curso" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Unidad: U1 - Programación y optimización (Oracle XE).</li>
 <li>Producto del curso: base de datos empresarial Oracle operativa, administrada, optimizada, auditada y resiliente.</li>
 <li>Producto de unidad: motor transaccional Oracle optimizado.</li>
-<li>Avance del producto en esta sesión: reglas automáticas de negocio y auditoría básica sobre <code>PRODUCTOS</code>.</li>
+<li>Avance del producto en esta sesión: manejo de excepciones y registro de errores sobre los procedimientos de <code>BOM_CATALOGO</code>.</li>
 </ul>
 <p>Roadmap del producto de la unidad:</p>
 <p><strong>Figura 1. Roadmap del producto de la unidad</strong></p>
@@ -3177,185 +3180,278 @@
     S1 --&gt; S2 --&gt; S3 --&gt; S4 --&gt; S5 --&gt; S6
 
     classDef today fill:#ffe08a,stroke:#9a6b00,stroke-width:2px,color:#111;
-    class S2 today;</code></pre>
+    class S3 today;</code></pre>
 <h2 id="2-explica">2. Explica<a class="headerlink" href="#2-explica" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 25 min.</p>
 <h3 id="21-arquitectura-de-la-sesion">2.1 Arquitectura de la sesión<a class="headerlink" href="#21-arquitectura-de-la-sesion" title="Permanent link">&para;</a></h3>
-<p><strong>Figura 2. Triggers DML sobre <code>PRODUCTOS</code></strong></p>
+<p><strong>Figura 2. Manejo de excepciones sobre <code>SP_REGISTRAR_PRODUCTO</code></strong></p>
 <pre class="mermaid"><code>flowchart TB
-    subgraph ORA["Motor transaccional Oracle - esquema BOM_CATALOGO"]
-        T[(PRODUCTOS)]
-        TRG1[TRG_PRODUCTO_PRECIO_BU - BEFORE UPDATE]
-        TRG2[TRG_PRODUCTO_AUDITORIA - AFTER INSERT/UPDATE/DELETE]
-        AUD[(PRODUCTO_AUDITORIA)]
+    Cliente["Cliente (script, LP2, u otro)"]
+    SP["SP_REGISTRAR_PRODUCTO"]
+    Insert["INSERT INTO PRODUCTOS"]
+    FK["FK_PRODUCTO_CATEGORIA (S1)"]
+    Handler["Bloque EXCEPTION"]
+    Log[("LOG_ERRORES")]
 
-        T -.-&gt;|dispara antes de escribir| TRG1
-        TRG1 --&gt;|valida :OLD vs :NEW, o rechaza| T
-        T -.-&gt;|dispara despues de escribir| TRG2
-        TRG2 --&gt;|registra :OLD y :NEW| AUD
-    end
-
-    APP["`Aplicación cliente (cualquiera: backend, otro script, SQL directo)`"]
-    APP --&gt;|"INSERT / UPDATE / DELETE"| T</code></pre>
+    Cliente --&gt; SP --&gt; Insert --&gt; FK
+    FK --&gt;|"viola la restriccion"| Handler
+    Handler --&gt;|"registra"| Log
+    Handler --&gt;|"relanza con mensaje claro"| Cliente
+    FK --&gt;|"pasa"| Cliente</code></pre>
 <p>Lectura del diagrama:</p>
 <ul>
-<li>Ningún cliente invoca <code>TRG_PRODUCTO_PRECIO_BU</code> ni <code>TRG_PRODUCTO_AUDITORIA</code> directamente — Oracle los dispara solo, en el momento (<code>BEFORE</code>/<code>AFTER</code>) y evento (<code>INSERT</code>/<code>UPDATE</code>/<code>DELETE</code>) declarados en cada uno.</li>
-<li><code>TRG_PRODUCTO_PRECIO_BU</code> corre <strong>antes</strong> de escribir: puede rechazar la operación (<code>RAISE_APPLICATION_ERROR</code>). <code>TRG_PRODUCTO_AUDITORIA</code> corre <strong>después</strong>: la operación ya ocurrió, solo registra lo que pasó.</li>
-<li>Integración (referencia, no requisito para esta sesión): LP2 (S2) ya valida <code>ProductoRequest</code> en el backend (Bean Validation) antes de llegar a Oracle. Estos triggers son una segunda capa, independiente de si el cliente es el backend de LP2, otro script, o alguien conectado directo con SQL. <strong>Error frecuente</strong>: pensar que la validación del backend hace innecesaria la de Oracle — son capas distintas, protegen contra clientes distintos.</li>
+<li>La restricción <code>FK_PRODUCTO_CATEGORIA</code> (S1) sigue siendo la que impide el dato inválido — esta sesión no la reemplaza, agrega qué pasa <strong>después</strong> de que Oracle la rechaza.</li>
+<li>El bloque <code>EXCEPTION</code> captura el fallo, lo registra en <code>LOG_ERRORES</code>, y recién ahí decide: relanzar con un mensaje claro (tolerancia a fallos con visibilidad) o continuar, según el caso.</li>
+<li>Integración (referencia, no requisito para esta sesión): LP2 (S3) ya previene este caso específico validando <code>categoriaId</code> antes de escribir. Esta capa protege contra cualquier <strong>otro</strong> cliente que no pase por esa validación — mismo criterio que S2 (2.1) usó para los triggers.</li>
 </ul>
 <p>Este diagrama es el mapa que guía el resto de la explicación: cada apartado siguiente desarrolla uno de sus componentes, en el mismo orden del Índice (1.2).</p>
-<h3 id="22-triggers-dml-momento-y-evento">2.2 Triggers DML: momento y evento<a class="headerlink" href="#22-triggers-dml-momento-y-evento" title="Permanent link">&para;</a></h3>
-<p>Un <strong>trigger DML</strong> es un bloque PL/SQL que Oracle ejecuta automáticamente ante un evento (<code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>) sobre una tabla, en un momento determinado (<code>BEFORE</code> o <code>AFTER</code>) respecto a ese evento, y con un alcance de fila (<code>FOR EACH ROW</code>) o de sentencia.</p>
-<p>Alcance metodológico de S2:</p>
-<div class="highlight"><pre><span></span><code>En S2 se crean triggers FOR EACH ROW sobre una sola tabla
-(PRODUCTOS). Triggers compuestos, INSTEAD OF (sobre vistas) y
-triggers a nivel de sentencia se dejan fuera de esta sesión.
-</code></pre></div>
-<p><strong>Error frecuente</strong>: usar <code>AFTER</code> cuando se necesita rechazar la operación — un trigger <code>AFTER</code> ya no puede impedir el <code>INSERT</code>/<code>UPDATE</code>/<code>DELETE</code>, porque el evento ya ocurrió; para bloquear algo, el trigger debe ser <code>BEFORE</code>.</p>
-<h3 id="23-pseudo-registros-old-y-new">2.3 Pseudo-registros <code>:OLD</code> y <code>:NEW</code><a class="headerlink" href="#23-pseudo-registros-old-y-new" title="Permanent link">&para;</a></h3>
-<p>Dentro de un trigger <code>FOR EACH ROW</code>, <code>:OLD</code> representa la fila <strong>antes</strong> del cambio y <code>:NEW</code> la fila <strong>después</strong>. En un <code>INSERT</code>, <code>:OLD</code> no tiene valores (la fila no existía); en un <code>DELETE</code>, <code>:NEW</code> no tiene valores (la fila deja de existir); en un <code>UPDATE</code>, ambos están disponibles y se pueden comparar directamente.</p>
-<p><strong>Error frecuente</strong>: intentar modificar <code>:OLD</code> (es de solo lectura) — solo <code>:NEW</code> puede modificarse, y solo dentro de un trigger <code>BEFORE</code>.</p>
-<h3 id="24-reglas-automaticas-de-negocio-con-triggers">2.4 Reglas automáticas de negocio con triggers<a class="headerlink" href="#24-reglas-automaticas-de-negocio-con-triggers" title="Permanent link">&para;</a></h3>
-<p>Una regla de negocio puesta en un trigger <code>BEFORE</code> se aplica <strong>siempre</strong>, sin importar qué cliente ejecute el <code>INSERT</code>/<code>UPDATE</code>/<code>DELETE</code> — a diferencia de una regla puesta solo en un procedimiento (S1), que protege únicamente a quien decide invocarlo.</p>
-<p><strong>Error frecuente</strong>: duplicar en el trigger una regla que ya garantiza una restricción <code>CHECK</code> de la tabla (por ejemplo, <code>STOCK &gt;= 0</code>, ya cubierto por <code>CK_PRODUCTO_STOCK</code> desde S1) — el trigger debe agregar una regla que el <code>CHECK</code> no puede expresar (como comparar el valor nuevo contra el anterior), no repetir la misma validación dos veces.</p>
-<h3 id="25-auditoria-basica-con-triggers">2.5 Auditoría básica con triggers<a class="headerlink" href="#25-auditoria-basica-con-triggers" title="Permanent link">&para;</a></h3>
-<p>Un trigger de auditoría registra, en una tabla aparte, qué cambió, cuándo y en qué operación — usando <code>:OLD</code> y <code>:NEW</code> para capturar el valor anterior y el nuevo. Como el trigger se ejecuta con los privilegios del dueño del esquema (<code>BOM_CATALOGO</code>), no hace falta otorgarle permisos adicionales a <code>BOMERP_APP</code> sobre la tabla de auditoría.</p>
-<h2 id="3-aplica-actividad-practica-guiada">3. Aplica: actividad práctica guiada<a class="headerlink" href="#3-aplica-actividad-practica-guiada" title="Permanent link">&para;</a></h2>
-<p>Tiempo: 2h.</p>
-<p><strong>Actividad:</strong> creación guiada de la tabla de auditoría y los dos triggers DML sobre <code>PRODUCTOS</code> (Producto de la sesión en 1.4).</p>
-<p><strong>Propósito de la actividad:</strong> construir <code>PRODUCTO_AUDITORIA</code> y dos triggers — uno que aplica una regla automática de negocio (<code>BEFORE UPDATE</code>) y otro que registra auditoría básica (<code>AFTER INSERT OR UPDATE OR DELETE</code>) — verificando cada incremento con casos válidos e inválidos antes de continuar al siguiente.</p>
-<p><strong>Orientaciones metodológicas:</strong> en el laboratorio, el docente crea la tabla de auditoría y los dos triggers paso a paso frente a la clase, probando cada uno con un caso que lo dispare correctamente y otro que lo haga fallar (para la regla de negocio); los estudiantes replican cada paso en su propio equipo, verificando la compilación y el resultado antes de avanzar.</p>
-<p><strong>Actividades para realizar:</strong></p>
-<ul>
-<li><strong>3.1</strong> Definir la regla de negocio y el alcance de la auditoría.</li>
-<li><strong>3.2</strong> Crear la tabla <code>PRODUCTO_AUDITORIA</code>.</li>
-<li><strong>3.3</strong> Crear el trigger de regla de negocio (<code>BEFORE UPDATE</code>).</li>
-<li><strong>3.4</strong> Crear el trigger de auditoría (<code>AFTER INSERT OR UPDATE OR DELETE</code>).</li>
-<li><strong>3.5</strong> Probar ambos triggers con casos válidos e inválidos.</li>
-<li><strong>3.6</strong> Relacionar con ADS y LP2.</li>
-</ul>
-<p><strong>Script completo, listo para ejecutar</strong> (el paso siguiente explica cada bloque): <a href="../../../proyecto-integrador/u1/oracle/S02_triggers_dml_auditoria.sql"><code>S02_triggers_dml_auditoria.sql</code></a>.</p>
-<h3 id="31-definir-la-regla-de-negocio-y-el-alcance-de-la-auditoria">3.1 Definir la regla de negocio y el alcance de la auditoría<a class="headerlink" href="#31-definir-la-regla-de-negocio-y-el-alcance-de-la-auditoria" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> regla de negocio y alcance de auditoría definidos.</p>
-<p><strong>Tabla 2. Regla de negocio y alcance de auditoría</strong></p>
+<h3 id="22-excepciones-predefinidas-de-plsql">2.2 Excepciones predefinidas de PL/SQL<a class="headerlink" href="#22-excepciones-predefinidas-de-plsql" title="Permanent link">&para;</a></h3>
+<p>Oracle ya tiene nombre para los errores más comunes — no hace falta declararlos, solo capturarlos por su nombre en un bloque <code>EXCEPTION</code>.</p>
+<p><strong>Tabla 2. Excepciones predefinidas más comunes</strong></p>
 <table>
 <thead>
 <tr>
-<th>Elemento</th>
-<th>Respuesta</th>
+<th>Excepción</th>
+<th>Cuándo ocurre</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Tabla protegida</td>
-<td><code>BOM_CATALOGO.PRODUCTOS</code></td>
+<td><code>NO_DATA_FOUND</code></td>
+<td>Un <code>SELECT ... INTO</code> no encuentra ninguna fila.</td>
 </tr>
 <tr>
-<td>Regla automática de negocio</td>
-<td>El precio no puede bajar más del 50% en un solo <code>UPDATE</code></td>
+<td><code>TOO_MANY_ROWS</code></td>
+<td>Un <code>SELECT ... INTO</code> encuentra más de una fila (esperaba exactamente una).</td>
 </tr>
 <tr>
-<td>Operaciones auditadas</td>
-<td><code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code> sobre <code>PRODUCTOS</code></td>
+<td><code>DUP_VAL_ON_INDEX</code></td>
+<td>Un <code>INSERT</code>/<code>UPDATE</code> viola una restricción <code>UNIQUE</code> o la clave primaria.</td>
 </tr>
 <tr>
-<td>Dato mínimo por evento auditado</td>
-<td><code>ID_PRODUCTO</code>, acción, precio y stock (<code>:OLD</code>/<code>:NEW</code>), fecha, usuario Oracle</td>
+<td><code>VALUE_ERROR</code></td>
+<td>Error de conversión o asignación (por ejemplo, un valor que no cabe en el tipo destino).</td>
+</tr>
+<tr>
+<td><code>ZERO_DIVIDE</code></td>
+<td>División entre cero.</td>
+</tr>
+<tr>
+<td><code>OTHERS</code></td>
+<td>No es una excepción específica — captura <strong>cualquier</strong> error no capturado antes por su nombre. Se usa como red de seguridad, nunca como la única rama.</td>
 </tr>
 </tbody>
 </table>
-<h3 id="32-crear-la-tabla-producto_auditoria">3.2 Crear la tabla <code>PRODUCTO_AUDITORIA</code><a class="headerlink" href="#32-crear-la-tabla-producto_auditoria" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> tabla <code>PRODUCTO_AUDITORIA</code> operativa en el esquema <code>BOM_CATALOGO</code>.</p>
-<p><strong>Requisito antes de continuar:</strong> conéctate como <code>BOM_CATALOGO</code> (misma conexión de S1, 3.2) — la tabla y los triggers de esta sesión son objetos de ese esquema, igual que <code>CATEGORIAS</code> y <code>PRODUCTOS</code>.</p>
-<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTO_AUDITORIA</span><span class="w"> </span><span class="p">(</span>
-<span class="w">    </span><span class="n">ID_AUDITORIA</span><span class="w">     </span><span class="nb">NUMBER</span><span class="w"> </span><span class="k">GENERATED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">IDENTITY</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
-<span class="w">    </span><span class="n">ID_PRODUCTO</span><span class="w">      </span><span class="nb">NUMBER</span><span class="p">,</span>
-<span class="w">    </span><span class="n">ACCION</span><span class="w">           </span><span class="n">VARCHAR2</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
-<span class="w">    </span><span class="n">PRECIO_ANTERIOR</span><span class="w">  </span><span class="nb">NUMBER</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span>
-<span class="w">    </span><span class="n">PRECIO_NUEVO</span><span class="w">     </span><span class="nb">NUMBER</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span>
-<span class="w">    </span><span class="n">STOCK_ANTERIOR</span><span class="w">   </span><span class="nb">NUMBER</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span>
-<span class="w">    </span><span class="n">STOCK_NUEVO</span><span class="w">      </span><span class="nb">NUMBER</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span>
-<span class="w">    </span><span class="n">FECHA_EVENTO</span><span class="w">     </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">SYSTIMESTAMP</span><span class="p">,</span>
-<span class="w">    </span><span class="n">USUARIO_ORACLE</span><span class="w">   </span><span class="n">VARCHAR2</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">USER</span>
+<p><strong>Error frecuente</strong>: usar <code>WHEN OTHERS THEN NULL</code> — captura el error y no hace nada, ni lo registra ni lo relanza. El fallo desaparece en silencio, sin que nadie se entere de que ocurrió; es peor que no manejarlo, porque simula que todo salió bien.</p>
+<h3 id="23-excepciones-personalizadas-pragma-exception_init-y-raise_application_error">2.3 Excepciones personalizadas: <code>PRAGMA EXCEPTION_INIT</code> y <code>RAISE_APPLICATION_ERROR</code><a class="headerlink" href="#23-excepciones-personalizadas-pragma-exception_init-y-raise_application_error" title="Permanent link">&para;</a></h3>
+<p>No todos los errores de Oracle tienen un nombre predefinido — <code>ORA-02291</code> (violación de llave foránea, el caso de 1.6.1) es uno de ellos. PL/SQL da dos formas de manejar esto, para dos necesidades distintas:</p>
+<p><strong>Tabla 3. Dos formas de excepción personalizada</strong></p>
+<table>
+<thead>
+<tr>
+<th>Forma</th>
+<th>Qué hace</th>
+<th>Cuándo usarla</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PRAGMA EXCEPTION_INIT</code></td>
+<td>Le pone nombre a un código de error de Oracle que <strong>ya existe</strong> pero no tiene uno predefinido (como <code>ORA-02291</code>).</td>
+<td>Cuando el error lo genera Oracle mismo (una restricción, una conversión) y solo quieres capturarlo por nombre en vez de por código numérico.</td>
+</tr>
+<tr>
+<td><code>RAISE_APPLICATION_ERROR</code></td>
+<td>Genera un error <strong>nuevo</strong>, propio de tu lógica de negocio, con un código en el rango <code>-20000</code> a <code>-20999</code> (mismo rango que ya usó <code>TRG_PRODUCTO_PRECIO_BU</code> en S2) y un mensaje propio.</td>
+<td>Cuando la regla no la rompe Oracle — la rompe tu propia validación (por ejemplo, un porcentaje de descuento fuera de rango).</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="c1">-- PRAGMA EXCEPTION_INIT: nombrar un error de Oracle sin nombre predefinido</span>
+<span class="k">DECLARE</span>
+<span class="w">    </span><span class="n">e_categoria_inexistente</span><span class="w"> </span><span class="k">EXCEPTION</span><span class="p">;</span>
+<span class="w">    </span><span class="n">PRAGMA</span><span class="w"> </span><span class="n">EXCEPTION_INIT</span><span class="p">(</span><span class="n">e_categoria_inexistente</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mi">2291</span><span class="p">);</span>
+<span class="k">BEGIN</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="k">EXCEPTION</span>
+<span class="w">    </span><span class="k">WHEN</span><span class="w"> </span><span class="n">e_categoria_inexistente</span><span class="w"> </span><span class="k">THEN</span>
+<span class="w">        </span><span class="p">...</span>
+<span class="k">END</span><span class="p">;</span>
+</code></pre></div>
+<p><code>PRAGMA EXCEPTION_INIT</code> no cambia el comportamiento de Oracle — solo le da un nombre legible a un código que ya existía, para poder escribir <code>WHEN e_categoria_inexistente</code> en vez de comparar <code>SQLCODE = -2291</code> a mano.</p>
+<h3 id="24-registro-de-errores-y-tolerancia-a-fallos">2.4 Registro de errores y tolerancia a fallos<a class="headerlink" href="#24-registro-de-errores-y-tolerancia-a-fallos" title="Permanent link">&para;</a></h3>
+<p><strong>Registro de errores</strong>: cada excepción capturada se guarda en una tabla propia (<code>LOG_ERRORES</code>), con el mismo criterio de auditoría que <code>PRODUCTO_AUDITORIA</code> (S2) — qué objeto falló, qué código de error, qué mensaje, cuándo y con qué usuario. <code>SQLCODE</code> y <code>SQLERRM</code> (dentro del bloque <code>EXCEPTION</code>) dan el código y el mensaje exacto que Oracle generó, disponibles solo ahí.</p>
+<p><strong>Tolerancia a fallos</strong>: no significa "que el error no pase" — significa que el sistema no se cae en silencio ni deja al que llama sin explicación. El patrón de esta sesión es: <strong>capturar → registrar → relanzar con mensaje claro</strong> (no solo capturar y registrar, ni solo capturar y relanzar sin registrar). Relanzar es importante: si <code>SP_REGISTRAR_PRODUCTO</code> traga la excepción sin relanzarla, quien lo invocó (LP2, otro script) cree que el producto se guardó cuando en realidad no.</p>
+<h2 id="3-aplica-actividad-practica-guiada">3. Aplica: actividad práctica guiada<a class="headerlink" href="#3-aplica-actividad-practica-guiada" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 2h.</p>
+<p><strong>Actividad:</strong> incorporación guiada de manejo de excepciones y registro de errores sobre <code>SP_REGISTRAR_PRODUCTO</code>, <code>SP_APLICAR_DESCUENTO_PRODUCTO</code> (S1) y una función nueva (Producto de la sesión en 1.4).</p>
+<p><strong>Propósito de la actividad:</strong> capturar excepciones predefinidas y personalizadas sobre procedimientos reales, registrar cada fallo en <code>LOG_ERRORES</code>, y verificar que cada caso responde con un mensaje claro en vez de un error interno de Oracle sin contexto.</p>
+<p><strong>Orientaciones metodológicas:</strong> en el laboratorio, el docente incorpora el manejo de excepciones paso a paso frente a la clase, probando cada uno con un caso que lo dispare; los estudiantes replican cada paso en su propio equipo, verificando <code>LOG_ERRORES</code> antes de continuar.</p>
+<p><strong>Actividades para realizar:</strong></p>
+<ul>
+<li><strong>3.1</strong> Definir el alcance de errores a manejar.</li>
+<li><strong>3.2</strong> Crear la tabla <code>LOG_ERRORES</code>.</li>
+<li><strong>3.3</strong> Incorporar excepciones en <code>SP_REGISTRAR_PRODUCTO</code>.</li>
+<li><strong>3.4</strong> Incorporar una excepción personalizada en <code>SP_APLICAR_DESCUENTO_PRODUCTO</code>.</li>
+<li><strong>3.5</strong> Crear <code>FN_OBTENER_PRECIO_PRODUCTO</code> con manejo de <code>NO_DATA_FOUND</code>.</li>
+<li><strong>3.6</strong> Probar los tres con casos válidos e inválidos.</li>
+<li><strong>3.7</strong> Relacionar con ADS y LP2.</li>
+</ul>
+<p><strong>Script completo, listo para ejecutar</strong> (el paso siguiente explica cada bloque): <a href="../../proyecto-integrador/u1/oracle/S03_excepciones_robustez.sql"><code>S03_excepciones_robustez.sql</code></a>.</p>
+<h3 id="31-definir-el-alcance-de-errores-a-manejar">3.1 Definir el alcance de errores a manejar<a class="headerlink" href="#31-definir-el-alcance-de-errores-a-manejar" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> alcance de errores definido.</p>
+<p><strong>Tabla 4. Alcance de errores de esta sesión</strong></p>
+<table>
+<thead>
+<tr>
+<th>Objeto</th>
+<th>Error a manejar</th>
+<th>Tipo de excepción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SP_REGISTRAR_PRODUCTO</code></td>
+<td>Categoría inexistente (<code>ORA-02291</code>)</td>
+<td>Personalizada (<code>PRAGMA EXCEPTION_INIT</code>)</td>
+</tr>
+<tr>
+<td><code>SP_APLICAR_DESCUENTO_PRODUCTO</code></td>
+<td>Porcentaje de descuento fuera de <code>[0, 100]</code></td>
+<td>Personalizada (<code>RAISE_APPLICATION_ERROR</code>)</td>
+</tr>
+<tr>
+<td><code>FN_OBTENER_PRECIO_PRODUCTO</code> (nueva)</td>
+<td>Producto inexistente</td>
+<td>Predefinida (<code>NO_DATA_FOUND</code>)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="32-crear-la-tabla-log_errores">3.2 Crear la tabla <code>LOG_ERRORES</code><a class="headerlink" href="#32-crear-la-tabla-log_errores" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> tabla <code>LOG_ERRORES</code> operativa en el esquema <code>BOM_CATALOGO</code>.</p>
+<p><strong>Requisito antes de continuar:</strong> conéctate como <code>BOM_CATALOGO</code> (misma conexión de S1, 3.2) — la tabla y los procedimientos de esta sesión son objetos de ese esquema, igual que <code>CATEGORIAS</code>, <code>PRODUCTOS</code> y <code>PRODUCTO_AUDITORIA</code> (S2).</p>
+<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">LOG_ERRORES</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">ID_LOG</span><span class="w">          </span><span class="nb">NUMBER</span><span class="w"> </span><span class="k">GENERATED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">IDENTITY</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">    </span><span class="n">OBJETO</span><span class="w">          </span><span class="n">VARCHAR2</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">CODIGO_ERROR</span><span class="w">    </span><span class="nb">NUMBER</span><span class="p">,</span>
+<span class="w">    </span><span class="n">MENSAJE_ERROR</span><span class="w">   </span><span class="n">VARCHAR2</span><span class="p">(</span><span class="mi">500</span><span class="p">),</span>
+<span class="w">    </span><span class="n">FECHA_EVENTO</span><span class="w">    </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">SYSTIMESTAMP</span><span class="p">,</span>
+<span class="w">    </span><span class="n">USUARIO_ORACLE</span><span class="w">  </span><span class="n">VARCHAR2</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">USER</span>
 <span class="p">);</span>
 </code></pre></div>
-<p><code>ID_PRODUCTO</code> no lleva <code>FOREIGN KEY</code> hacia <code>PRODUCTOS</code>: un registro de auditoría de un <code>DELETE</code> debe sobrevivir aunque el producto ya no exista — si fuera clave foránea, Oracle impediría borrar el producto auditado.</p>
-<h3 id="33-crear-el-trigger-de-regla-de-negocio-before-update">3.3 Crear el trigger de regla de negocio (<code>BEFORE UPDATE</code>)<a class="headerlink" href="#33-crear-el-trigger-de-regla-de-negocio-before-update" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> trigger que rechaza un ajuste de precio mayor al 50% en una sola operación.</p>
-<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">TRIGGER</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">TRG_PRODUCTO_PRECIO_BU</span>
-<span class="k">BEFORE</span><span class="w"> </span><span class="k">UPDATE</span><span class="w"> </span><span class="k">OF</span><span class="w"> </span><span class="n">PRECIO</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTOS</span>
-<span class="k">FOR</span><span class="w"> </span><span class="k">EACH</span><span class="w"> </span><span class="k">ROW</span>
+<p>Mismo criterio que <code>PRODUCTO_AUDITORIA</code> (S2): sin <code>FOREIGN KEY</code> hacia ninguna tabla — un registro de error debe poder guardarse aunque la operación que falló nunca haya llegado a escribir nada.</p>
+<h3 id="33-incorporar-excepciones-en-sp_registrar_producto">3.3 Incorporar excepciones en <code>SP_REGISTRAR_PRODUCTO</code><a class="headerlink" href="#33-incorporar-excepciones-en-sp_registrar_producto" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> <code>SP_REGISTRAR_PRODUCTO</code> captura la categoría inexistente, la registra en <code>LOG_ERRORES</code>, y relanza con un mensaje claro.</p>
+<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">PROCEDURE</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">SP_REGISTRAR_PRODUCTO</span><span class="p">(</span>
+<span class="w">    </span><span class="n">p_id_categoria</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="nb">NUMBER</span><span class="p">,</span>
+<span class="w">    </span><span class="n">p_nombre</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="n">VARCHAR2</span><span class="p">,</span>
+<span class="w">    </span><span class="n">p_precio</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="nb">NUMBER</span><span class="p">,</span>
+<span class="w">    </span><span class="n">p_stock</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="nb">NUMBER</span><span class="p">,</span>
+<span class="w">    </span><span class="n">p_id_producto</span><span class="w"> </span><span class="k">OUT</span><span class="w"> </span><span class="nb">NUMBER</span>
+<span class="p">)</span><span class="w"> </span><span class="k">IS</span>
+<span class="w">    </span><span class="n">e_categoria_inexistente</span><span class="w"> </span><span class="k">EXCEPTION</span><span class="p">;</span>
+<span class="w">    </span><span class="n">PRAGMA</span><span class="w"> </span><span class="n">EXCEPTION_INIT</span><span class="p">(</span><span class="n">e_categoria_inexistente</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mi">2291</span><span class="p">);</span>
 <span class="k">BEGIN</span>
-<span class="w">    </span><span class="k">IF</span><span class="w"> </span><span class="p">:</span><span class="k">NEW</span><span class="p">.</span><span class="n">PRECIO</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="p">(:</span><span class="k">OLD</span><span class="p">.</span><span class="n">PRECIO</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="k">THEN</span>
-<span class="w">        </span><span class="n">RAISE_APPLICATION_ERROR</span><span class="p">(</span>
-<span class="w">            </span><span class="o">-</span><span class="mi">20001</span><span class="p">,</span>
-<span class="w">            </span><span class="s1">'El precio no puede bajar mas del 50% en un solo ajuste. Actual: '</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">:</span><span class="k">OLD</span><span class="p">.</span><span class="n">PRECIO</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">', propuesto: '</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">:</span><span class="k">NEW</span><span class="p">.</span><span class="n">PRECIO</span>
-<span class="w">        </span><span class="p">);</span>
-<span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="k">IF</span><span class="p">;</span>
+<span class="w">    </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTOS</span><span class="w"> </span><span class="p">(</span><span class="n">ID_CATEGORIA</span><span class="p">,</span><span class="w"> </span><span class="n">NOMBRE</span><span class="p">,</span><span class="w"> </span><span class="n">PRECIO</span><span class="p">,</span><span class="w"> </span><span class="n">STOCK</span><span class="p">)</span>
+<span class="w">    </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="n">p_id_categoria</span><span class="p">,</span><span class="w"> </span><span class="n">p_nombre</span><span class="p">,</span><span class="w"> </span><span class="n">p_precio</span><span class="p">,</span><span class="w"> </span><span class="n">p_stock</span><span class="p">)</span>
+<span class="w">    </span><span class="n">RETURNING</span><span class="w"> </span><span class="n">ID</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">p_id_producto</span><span class="p">;</span>
+<span class="k">EXCEPTION</span>
+<span class="w">    </span><span class="k">WHEN</span><span class="w"> </span><span class="n">e_categoria_inexistente</span><span class="w"> </span><span class="k">THEN</span>
+<span class="w">        </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">LOG_ERRORES</span><span class="w"> </span><span class="p">(</span><span class="n">OBJETO</span><span class="p">,</span><span class="w"> </span><span class="n">CODIGO_ERROR</span><span class="p">,</span><span class="w"> </span><span class="n">MENSAJE_ERROR</span><span class="p">)</span>
+<span class="w">        </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">'SP_REGISTRAR_PRODUCTO'</span><span class="p">,</span><span class="w"> </span><span class="k">SQLCODE</span><span class="p">,</span><span class="w"> </span><span class="n">SQLERRM</span><span class="p">);</span>
+<span class="w">        </span><span class="n">RAISE_APPLICATION_ERROR</span><span class="p">(</span><span class="o">-</span><span class="mi">20010</span><span class="p">,</span><span class="w"> </span><span class="s1">'La categoria '</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">p_id_categoria</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">' no existe. Verifica el id antes de registrar el producto.'</span><span class="p">);</span>
 <span class="k">END</span><span class="p">;</span>
 <span class="o">/</span>
 </code></pre></div>
-<p><code>BEFORE UPDATE OF PRECIO</code> limita el trigger a disparar solo cuando la sentencia toca la columna <code>PRECIO</code> — un <code>UPDATE</code> que solo cambie <code>NOMBRE</code> no lo activa.</p>
-<h3 id="34-crear-el-trigger-de-auditoria-after-insert-or-update-or-delete">3.4 Crear el trigger de auditoría (<code>AFTER INSERT OR UPDATE OR DELETE</code>)<a class="headerlink" href="#34-crear-el-trigger-de-auditoria-after-insert-or-update-or-delete" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> trigger que registra cada operación DML sobre <code>PRODUCTOS</code>.</p>
-<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">TRIGGER</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">TRG_PRODUCTO_AUDITORIA</span>
-<span class="k">AFTER</span><span class="w"> </span><span class="k">INSERT</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">UPDATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTOS</span>
-<span class="k">FOR</span><span class="w"> </span><span class="k">EACH</span><span class="w"> </span><span class="k">ROW</span>
-<span class="k">DECLARE</span>
-<span class="w">    </span><span class="n">v_accion</span><span class="w"> </span><span class="n">VARCHAR2</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+<p><code>e_categoria_inexistente</code> captura específicamente <code>ORA-02291</code>; cualquier otro error (uno que esta sesión no anticipó) sigue sin capturarse — y eso es intencional: capturar solo lo que sabés manejar, no todo con <code>WHEN OTHERS</code> (2.2). El <code>INSERT</code> a <code>LOG_ERRORES</code> ocurre <strong>antes</strong> del <code>RAISE_APPLICATION_ERROR</code>: si se invirtiera el orden, el procedimiento terminaría en el <code>RAISE</code> y el registro nunca se ejecutaría.</p>
+<h3 id="34-incorporar-una-excepcion-personalizada-en-sp_aplicar_descuento_producto">3.4 Incorporar una excepción personalizada en <code>SP_APLICAR_DESCUENTO_PRODUCTO</code><a class="headerlink" href="#34-incorporar-una-excepcion-personalizada-en-sp_aplicar_descuento_producto" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> <code>SP_APLICAR_DESCUENTO_PRODUCTO</code> rechaza un porcentaje fuera de rango, con registro y mensaje propio.</p>
+<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">PROCEDURE</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">SP_APLICAR_DESCUENTO_PRODUCTO</span><span class="p">(</span>
+<span class="w">    </span><span class="n">p_precio</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="k">OUT</span><span class="w"> </span><span class="nb">NUMBER</span><span class="p">,</span>
+<span class="w">    </span><span class="n">p_porcentaje_descuento</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="nb">NUMBER</span>
+<span class="p">)</span><span class="w"> </span><span class="k">IS</span>
 <span class="k">BEGIN</span>
-<span class="w">    </span><span class="k">IF</span><span class="w"> </span><span class="n">INSERTING</span><span class="w"> </span><span class="k">THEN</span>
-<span class="w">        </span><span class="n">v_accion</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="s1">'INSERT'</span><span class="p">;</span>
-<span class="w">    </span><span class="k">ELSIF</span><span class="w"> </span><span class="n">UPDATING</span><span class="w"> </span><span class="k">THEN</span>
-<span class="w">        </span><span class="n">v_accion</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="s1">'UPDATE'</span><span class="p">;</span>
-<span class="w">    </span><span class="k">ELSE</span>
-<span class="w">        </span><span class="n">v_accion</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="s1">'DELETE'</span><span class="p">;</span>
+<span class="w">    </span><span class="k">IF</span><span class="w"> </span><span class="n">p_porcentaje_descuento</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="n">p_porcentaje_descuento</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="k">THEN</span>
+<span class="w">        </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">LOG_ERRORES</span><span class="w"> </span><span class="p">(</span><span class="n">OBJETO</span><span class="p">,</span><span class="w"> </span><span class="n">CODIGO_ERROR</span><span class="p">,</span><span class="w"> </span><span class="n">MENSAJE_ERROR</span><span class="p">)</span>
+<span class="w">        </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">'SP_APLICAR_DESCUENTO_PRODUCTO'</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mi">20011</span><span class="p">,</span><span class="w"> </span><span class="s1">'Porcentaje fuera de rango: '</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">p_porcentaje_descuento</span><span class="p">);</span>
+<span class="w">        </span><span class="n">RAISE_APPLICATION_ERROR</span><span class="p">(</span><span class="o">-</span><span class="mi">20011</span><span class="p">,</span><span class="w"> </span><span class="s1">'El porcentaje de descuento debe estar entre 0 y 100. Recibido: '</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">p_porcentaje_descuento</span><span class="p">);</span>
 <span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="k">IF</span><span class="p">;</span>
 
-<span class="w">    </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTO_AUDITORIA</span><span class="w"> </span><span class="p">(</span>
-<span class="w">        </span><span class="n">ID_PRODUCTO</span><span class="p">,</span><span class="w"> </span><span class="n">ACCION</span><span class="p">,</span><span class="w"> </span><span class="n">PRECIO_ANTERIOR</span><span class="p">,</span><span class="w"> </span><span class="n">PRECIO_NUEVO</span><span class="p">,</span><span class="w"> </span><span class="n">STOCK_ANTERIOR</span><span class="p">,</span><span class="w"> </span><span class="n">STOCK_NUEVO</span>
-<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span>
-<span class="w">        </span><span class="k">COALESCE</span><span class="p">(:</span><span class="k">NEW</span><span class="p">.</span><span class="n">ID</span><span class="p">,</span><span class="w"> </span><span class="p">:</span><span class="k">OLD</span><span class="p">.</span><span class="n">ID</span><span class="p">),</span>
-<span class="w">        </span><span class="n">v_accion</span><span class="p">,</span>
-<span class="w">        </span><span class="p">:</span><span class="k">OLD</span><span class="p">.</span><span class="n">PRECIO</span><span class="p">,</span><span class="w"> </span><span class="p">:</span><span class="k">NEW</span><span class="p">.</span><span class="n">PRECIO</span><span class="p">,</span>
-<span class="w">        </span><span class="p">:</span><span class="k">OLD</span><span class="p">.</span><span class="n">STOCK</span><span class="p">,</span><span class="w"> </span><span class="p">:</span><span class="k">NEW</span><span class="p">.</span><span class="n">STOCK</span>
-<span class="w">    </span><span class="p">);</span>
+<span class="w">    </span><span class="n">p_precio</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">p_precio</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="n">p_precio</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">p_porcentaje_descuento</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">100</span><span class="p">);</span>
 <span class="k">END</span><span class="p">;</span>
 <span class="o">/</span>
 </code></pre></div>
-<p><code>INSERTING</code>/<code>UPDATING</code>/<code>DELETING</code> son funciones condicionales disponibles solo dentro de un trigger — permiten que un mismo trigger cubra los tres eventos sin declarar tres triggers separados. <code>COALESCE(:NEW.ID, :OLD.ID)</code> resuelve el caso <code>DELETE</code> (<code>:NEW</code> vacío) y el caso <code>INSERT</code> (<code>:OLD</code> vacío) con una sola expresión — <code>ID</code> es la clave primaria de <code>PRODUCTOS</code> (genérica, mismo estándar de S1), no <code>ID_PRODUCTO</code>; ese nombre con prefijo se reserva para la columna de <code>PRODUCTO_AUDITORIA</code> que referencia ese id desde otra tabla.</p>
-<h3 id="35-probar-ambos-triggers-con-casos-validos-e-invalidos">3.5 Probar ambos triggers con casos válidos e inválidos<a class="headerlink" href="#35-probar-ambos-triggers-con-casos-validos-e-invalidos" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> evidencia de ejecución de los dos triggers.</p>
-<p>Caso válido — registrar y luego ajustar el precio dentro del límite permitido:</p>
+<p>A diferencia de 3.3 (donde el error lo genera Oracle y esta sesión solo lo captura), acá el error <strong>no existe hasta que este procedimiento lo crea</strong> — nadie más que esta regla de negocio sabe que un descuento de <code>150%</code> no tiene sentido. Por eso no hace falta <code>PRAGMA EXCEPTION_INIT</code>: no hay ningún código de Oracle que nombrar, se genera uno propio directo con <code>RAISE_APPLICATION_ERROR</code>.</p>
+<h3 id="35-crear-fn_obtener_precio_producto-con-manejo-de-no_data_found">3.5 Crear <code>FN_OBTENER_PRECIO_PRODUCTO</code> con manejo de <code>NO_DATA_FOUND</code><a class="headerlink" href="#35-crear-fn_obtener_precio_producto-con-manejo-de-no_data_found" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> función nueva que consulta el precio de un producto, manejando el caso de id inexistente.</p>
+<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">FN_OBTENER_PRECIO_PRODUCTO</span><span class="p">(</span>
+<span class="w">    </span><span class="n">p_id_producto</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="nb">NUMBER</span>
+<span class="p">)</span><span class="w"> </span><span class="k">RETURN</span><span class="w"> </span><span class="nb">NUMBER</span><span class="w"> </span><span class="k">IS</span>
+<span class="w">    </span><span class="n">v_precio</span><span class="w"> </span><span class="nb">NUMBER</span><span class="p">;</span>
+<span class="k">BEGIN</span>
+<span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">PRECIO</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">v_precio</span>
+<span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTOS</span>
+<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p_id_producto</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="n">v_precio</span><span class="p">;</span>
+<span class="k">EXCEPTION</span>
+<span class="w">    </span><span class="k">WHEN</span><span class="w"> </span><span class="n">NO_DATA_FOUND</span><span class="w"> </span><span class="k">THEN</span>
+<span class="w">        </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">LOG_ERRORES</span><span class="w"> </span><span class="p">(</span><span class="n">OBJETO</span><span class="p">,</span><span class="w"> </span><span class="n">CODIGO_ERROR</span><span class="p">,</span><span class="w"> </span><span class="n">MENSAJE_ERROR</span><span class="p">)</span>
+<span class="w">        </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">'FN_OBTENER_PRECIO_PRODUCTO'</span><span class="p">,</span><span class="w"> </span><span class="k">SQLCODE</span><span class="p">,</span><span class="w"> </span><span class="s1">'Producto no encontrado: '</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">p_id_producto</span><span class="p">);</span>
+<span class="w">        </span><span class="n">RAISE_APPLICATION_ERROR</span><span class="p">(</span><span class="o">-</span><span class="mi">20012</span><span class="p">,</span><span class="w"> </span><span class="s1">'No existe un producto con id '</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">p_id_producto</span><span class="p">);</span>
+<span class="k">END</span><span class="p">;</span>
+<span class="o">/</span>
+</code></pre></div>
+<p><code>SELECT ... INTO</code> es exactamente el tipo de sentencia donde <code>NO_DATA_FOUND</code> aparece en la práctica: espera <strong>una</strong> fila, y si la consulta no encuentra ninguna, PL/SQL la lanza automáticamente — no hace falta un <code>IF</code> para comprobarlo antes.</p>
+<h3 id="36-probar-los-tres-con-casos-validos-e-invalidos">3.6 Probar los tres con casos válidos e inválidos<a class="headerlink" href="#36-probar-los-tres-con-casos-validos-e-invalidos" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> evidencia de ejecución de los tres casos.</p>
+<p>Caso válido — registrar un producto con categoría real, aplicar un descuento razonable, y consultar su precio:</p>
+<div class="highlight"><pre><span></span><code><span class="k">DECLARE</span>
+<span class="w">    </span><span class="n">v_id_producto</span><span class="w"> </span><span class="nb">NUMBER</span><span class="p">;</span>
+<span class="w">    </span><span class="n">v_precio</span><span class="w"> </span><span class="nb">NUMBER</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="p">.</span><span class="mi">00</span><span class="p">;</span>
+<span class="k">BEGIN</span>
+<span class="w">    </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">SP_REGISTRAR_PRODUCTO</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s1">'Teclado de prueba'</span><span class="p">,</span><span class="w"> </span><span class="mi">100</span><span class="p">.</span><span class="mi">00</span><span class="p">,</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span><span class="w"> </span><span class="n">v_id_producto</span><span class="p">);</span>
+<span class="w">    </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">SP_APLICAR_DESCUENTO_PRODUCTO</span><span class="p">(</span><span class="n">v_precio</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">);</span>
+<span class="w">    </span><span class="n">DBMS_OUTPUT</span><span class="p">.</span><span class="n">PUT_LINE</span><span class="p">(</span><span class="s1">'Producto: '</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">v_id_producto</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">', precio con descuento (variable local): '</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">v_precio</span><span class="p">);</span>
+<span class="w">    </span><span class="n">DBMS_OUTPUT</span><span class="p">.</span><span class="n">PUT_LINE</span><span class="p">(</span><span class="s1">'Precio real en BD: '</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">FN_OBTENER_PRECIO_PRODUCTO</span><span class="p">(</span><span class="n">v_id_producto</span><span class="p">));</span>
+<span class="k">END</span><span class="p">;</span>
+<span class="o">/</span>
+</code></pre></div>
+<p>Caso inválido 1 — categoría inexistente (debe fallar con <code>ORA-20010</code>):</p>
 <div class="highlight"><pre><span></span><code><span class="k">DECLARE</span>
 <span class="w">    </span><span class="n">v_id_producto</span><span class="w"> </span><span class="nb">NUMBER</span><span class="p">;</span>
 <span class="k">BEGIN</span>
-<span class="w">    </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">SP_REGISTRAR_PRODUCTO</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s1">'Mouse inalambrico'</span><span class="p">,</span><span class="w"> </span><span class="mi">80</span><span class="p">.</span><span class="mi">00</span><span class="p">,</span><span class="w"> </span><span class="mi">40</span><span class="p">,</span><span class="w"> </span><span class="n">v_id_producto</span><span class="p">);</span>
-<span class="w">    </span><span class="k">UPDATE</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTOS</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">PRECIO</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">60</span><span class="p">.</span><span class="mi">00</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v_id_producto</span><span class="p">;</span><span class="w"> </span><span class="c1">-- baja 25%, permitido</span>
-<span class="w">    </span><span class="n">DBMS_OUTPUT</span><span class="p">.</span><span class="n">PUT_LINE</span><span class="p">(</span><span class="s1">'Producto de prueba: '</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">v_id_producto</span><span class="p">);</span>
+<span class="w">    </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">SP_REGISTRAR_PRODUCTO</span><span class="p">(</span><span class="mi">999999</span><span class="p">,</span><span class="w"> </span><span class="s1">'Producto sin categoria'</span><span class="p">,</span><span class="w"> </span><span class="mi">50</span><span class="p">.</span><span class="mi">00</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="n">v_id_producto</span><span class="p">);</span>
 <span class="k">END</span><span class="p">;</span>
 <span class="o">/</span>
 </code></pre></div>
-<p>Caso inválido — intentar un ajuste que supera el 50% (debe fallar con <code>ORA-20001</code>):</p>
-<div class="highlight"><pre><span></span><code><span class="k">UPDATE</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTOS</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">PRECIO</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span><span class="p">.</span><span class="mi">00</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">NOMBRE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'Mouse inalambrico'</span><span class="p">;</span><span class="w"> </span><span class="c1">-- baja 75% desde 80, rechazado</span>
+<p>Caso inválido 2 — porcentaje de descuento fuera de rango (debe fallar con <code>ORA-20011</code>):</p>
+<div class="highlight"><pre><span></span><code><span class="k">DECLARE</span>
+<span class="w">    </span><span class="n">v_precio</span><span class="w"> </span><span class="nb">NUMBER</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="p">.</span><span class="mi">00</span><span class="p">;</span>
+<span class="k">BEGIN</span>
+<span class="w">    </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">SP_APLICAR_DESCUENTO_PRODUCTO</span><span class="p">(</span><span class="n">v_precio</span><span class="p">,</span><span class="w"> </span><span class="mi">150</span><span class="p">);</span>
+<span class="k">END</span><span class="p">;</span>
+<span class="o">/</span>
 </code></pre></div>
-<p>Resultado esperado del caso inválido:</p>
-<div class="highlight"><pre><span></span><code>ORA-20001: El precio no puede bajar mas del 50% en un solo ajuste. Actual: 60, propuesto: 20
+<p>Caso inválido 3 — producto inexistente (debe fallar con <code>ORA-20012</code>):</p>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">FN_OBTENER_PRECIO_PRODUCTO</span><span class="p">(</span><span class="mi">999999</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">DUAL</span><span class="p">;</span>
 </code></pre></div>
-<p>Verifica la auditoría generada por el caso válido (el <code>INSERT</code> de <code>SP_REGISTRAR_PRODUCTO</code> y el <code>UPDATE</code> exitoso, no el rechazado — un trigger <code>BEFORE</code> que aborta con <code>RAISE_APPLICATION_ERROR</code> nunca deja pasar la operación, así que <code>TRG_PRODUCTO_AUDITORIA</code> no llega a dispararse en el caso inválido):</p>
-<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="n">ID_PRODUCTO</span><span class="p">,</span><span class="w"> </span><span class="n">ACCION</span><span class="p">,</span><span class="w"> </span><span class="n">PRECIO_ANTERIOR</span><span class="p">,</span><span class="w"> </span><span class="n">PRECIO_NUEVO</span><span class="p">,</span><span class="w"> </span><span class="n">FECHA_EVENTO</span>
-<span class="k">FROM</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTO_AUDITORIA</span>
-<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ID_AUDITORIA</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
+<p>Verifica que los tres casos inválidos quedaron registrados:</p>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="n">OBJETO</span><span class="p">,</span><span class="w"> </span><span class="n">CODIGO_ERROR</span><span class="p">,</span><span class="w"> </span><span class="n">MENSAJE_ERROR</span><span class="p">,</span><span class="w"> </span><span class="n">FECHA_EVENTO</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">LOG_ERRORES</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ID_LOG</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
 </code></pre></div>
-<p>Salida esperada (dos filas: el <code>INSERT</code> del registro y el <code>UPDATE</code> que bajó el precio a 60):</p>
-<div class="highlight"><pre><span></span><code>ID_PRODUCTO   ACCION   PRECIO_ANTERIOR   PRECIO_NUEVO   FECHA_EVENTO
------------   ------   ---------------   ------------   -------------------------
-&lt;id&gt;          UPDATE   80                60             15-AUG-26 ...
-&lt;id&gt;          INSERT   (null)            80              15-AUG-26 ...
+<p>Salida esperada (tres filas, una por cada caso inválido — el caso válido no genera ningún registro en <code>LOG_ERRORES</code>):</p>
+<div class="highlight"><pre><span></span><code>OBJETO                          CODIGO_ERROR   MENSAJE_ERROR
+------------------------------  ------------   ------------------------------------
+FN_OBTENER_PRECIO_PRODUCTO      100            Producto no encontrado: 999999
+SP_APLICAR_DESCUENTO_PRODUCTO   -20011         Porcentaje fuera de rango: 150
+SP_REGISTRAR_PRODUCTO           -2291          ORA-02291: integrity constraint ...
 </code></pre></div>
-<h3 id="36-relacionar-con-ads-y-lp2">3.6 Relacionar con ADS y LP2<a class="headerlink" href="#36-relacionar-con-ads-y-lp2" title="Permanent link">&para;</a></h3>
+<p><code>SQLCODE</code> de <code>NO_DATA_FOUND</code> es <code>100</code> (no un número negativo <code>-20XXX</code>) — es una de las pocas excepciones predefinidas con código positivo; el resto de errores de Oracle (incluidos los de aplicación con <code>RAISE_APPLICATION_ERROR</code>) son negativos.</p>
+<h3 id="37-relacionar-con-ads-y-lp2">3.7 Relacionar con ADS y LP2<a class="headerlink" href="#37-relacionar-con-ads-y-lp2" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> matriz de integración.</p>
-<p><strong>Tabla 3. Matriz de integración BD2-ADS-LP2 (S2)</strong></p>
+<p><strong>Tabla 5. Matriz de integración BD2-ADS-LP2 (S3)</strong></p>
 <table>
 <thead>
 <tr>
@@ -3366,49 +3462,51 @@ triggers a nivel de sentencia se dejan fuera de esta sesión.
 </thead>
 <tbody>
 <tr>
-<td><code>TRG_PRODUCTO_PRECIO_BU</code></td>
-<td>Integridad: regla protegida sin importar el cliente</td>
-<td><code>PUT /api/v1/productos/{id}</code> (S2), segunda capa de protección</td>
+<td><code>SP_REGISTRAR_PRODUCTO</code> (excepción de categoría)</td>
+<td>Tolerancia a fallos (atributo de calidad, ver ADS S1)</td>
+<td><code>POST /api/v1/productos</code> — LP2 ya previene este caso en <code>ProductoServiceImpl.buscarCategoriaOFallar()</code> (LP2 S3); esta capa protege a cualquier otro cliente.</td>
 </tr>
 <tr>
-<td><code>TRG_PRODUCTO_AUDITORIA</code></td>
-<td>Auditabilidad (Tabla 4 de ADS S1)</td>
-<td>Ninguno directo — el backend no necesita saber que existe</td>
+<td><code>SP_APLICAR_DESCUENTO_PRODUCTO</code> (rango de descuento)</td>
+<td>Regla de negocio protegida sin importar el cliente (mismo criterio que S2)</td>
+<td>Ninguno directo — LP2 todavía no expone un endpoint de descuento.</td>
 </tr>
 <tr>
-<td><code>PRODUCTO_AUDITORIA</code></td>
-<td>Trazabilidad de cambios</td>
-<td>Evidencia complementaria a los logs con <code>traceId</code> de LP2 (S2, 3.2.2)</td>
+<td><code>LOG_ERRORES</code></td>
+<td>Auditabilidad y diagnóstico (ADS S1)</td>
+<td>Complementa (no reemplaza) los logs con <code>traceId</code> de LP2 (S2, 3.2.2) — <code>LOG_ERRORES</code> registra fallos dentro de Oracle; el <code>traceId</code> rastrea la petición HTTP completa.</td>
 </tr>
 </tbody>
 </table>
-<p>Sesión equivalente en los otros dos cursos, misma semana: <a href="../../../ads/sesiones/S02_Modelo_C4_Vistas_Arquitectonicas/">ADS - S2 Modelo C4 y Vistas Arquitectónicas</a> y <a href="../../../lp2/sesiones/S02_CRUD_REST_Completo_Producto/">LP2 - S2 CRUD REST Completo de Producto</a>.</p>
+<p>Sesión equivalente en los otros dos cursos, misma semana: <a href="../../../ads/sesiones/S03_Diseno_Estructural_Principios_SOLID/">ADS - S3 Diseño Estructural y Principios SOLID</a> y <a href="../../../lp2/sesiones/S03_Objetos_Relacionados_Categoria_Producto/">LP2 - S3 Objetos Relacionados Categoria-Producto</a>.</p>
 <p><strong>Evidencia de aprendizaje:</strong></p>
 <ul>
-<li>Tabla <code>PRODUCTO_AUDITORIA</code> creada en el esquema <code>BOM_CATALOGO</code>.</li>
-<li>Trigger de regla de negocio (<code>TRG_PRODUCTO_PRECIO_BU</code>) probado con un caso válido y uno rechazado.</li>
-<li>Trigger de auditoría (<code>TRG_PRODUCTO_AUDITORIA</code>) probado, con registros verificados mediante <code>SELECT</code>.</li>
+<li>Tabla <code>LOG_ERRORES</code> creada en el esquema <code>BOM_CATALOGO</code>.</li>
+<li><code>SP_REGISTRAR_PRODUCTO</code> con excepción personalizada (<code>PRAGMA EXCEPTION_INIT</code>) probada con caso inválido.</li>
+<li><code>SP_APLICAR_DESCUENTO_PRODUCTO</code> con excepción personalizada (<code>RAISE_APPLICATION_ERROR</code>) probada con caso inválido.</li>
+<li><code>FN_OBTENER_PRECIO_PRODUCTO</code> con manejo de <code>NO_DATA_FOUND</code> probado.</li>
+<li><code>LOG_ERRORES</code> verificado con los tres registros de los casos inválidos.</li>
 <li>Matriz de integración con ADS y LP2.</li>
 </ul>
 <h2 id="4-crea-actividad-autonoma">4. Crea: actividad autónoma<a class="headerlink" href="#4-crea-actividad-autonoma" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 2h fuera del aula.</p>
 <h3 id="41-actividad">4.1 Actividad<a class="headerlink" href="#41-actividad" title="Permanent link">&para;</a></h3>
-<p>Creación autónoma de una tabla de auditoría y dos triggers DML (regla de negocio + auditoría) sobre la entidad transaccional del proyecto propio del equipo, documentada en evidencia individual.</p>
+<p>Incorporación autónoma de manejo de excepciones (predefinidas y personalizadas) y registro de errores sobre los procedimientos/funciones del proyecto propio del equipo, documentada en evidencia individual.</p>
 <p>Completa y evidencia estas tareas:</p>
 <ol>
-<li>Definir una regla automática de negocio comparable con <code>:OLD</code> y <code>:NEW</code>.</li>
-<li>Crear la tabla de auditoría del proyecto propio.</li>
-<li>Crear un trigger <code>BEFORE</code> que aplique la regla de negocio.</li>
-<li>Crear un trigger <code>AFTER</code> que registre auditoría.</li>
-<li>Ejecutar un caso válido y uno inválido (rechazado por el trigger de negocio).</li>
-<li>Verificar los registros de auditoría con una consulta.</li>
+<li>Identificar al menos un error real que hoy no está manejado en tus procedimientos/funciones (S1 propio).</li>
+<li>Crear tu propia tabla de registro de errores.</li>
+<li>Incorporar al menos una excepción predefinida (<code>NO_DATA_FOUND</code>, <code>DUP_VAL_ON_INDEX</code>, u otra).</li>
+<li>Incorporar al menos una excepción personalizada (<code>PRAGMA EXCEPTION_INIT</code> o <code>RAISE_APPLICATION_ERROR</code>).</li>
+<li>Ejecutar un caso válido y uno por cada excepción incorporada.</li>
+<li>Verificar los registros de tu tabla de errores con una consulta.</li>
 </ol>
 <h3 id="42-proposito">4.2 Propósito<a class="headerlink" href="#42-proposito" title="Permanent link">&para;</a></h3>
-<p>Que cada estudiante demuestre, de forma individual y fuera del aula, que puede reproducir el patrón de triggers construido en clase sin el acompañamiento del docente.</p>
-<p>Cada estudiante adapta el ejemplo a la entidad transaccional de su equipo.</p>
+<p>Que cada estudiante demuestre, de forma individual y fuera del aula, que puede reproducir el patrón de manejo de excepciones construido en clase sin el acompañamiento del docente.</p>
+<p>Cada estudiante adapta el ejemplo a los procedimientos/funciones de su propio proyecto.</p>
 <h3 id="43-indicaciones">4.3 Indicaciones<a class="headerlink" href="#43-indicaciones" title="Permanent link">&para;</a></h3>
 <p>Entrega un PDF con el siguiente nombre:</p>
-<div class="highlight"><pre><span></span><code>S02_BD2_Equipo##_ApellidoNombre.pdf
+<div class="highlight"><pre><span></span><code>S03_BD2_Equipo##_ApellidoNombre.pdf
 </code></pre></div>
 <p>Cada captura de pantalla del informe debe mostrar, sin recortar, el reloj del sistema (fecha y hora) y tu usuario o foto de perfil (Windows, VS Code o navegador) visibles en pantalla — es lo que permite verificar que la evidencia es tuya y que corresponde al momento real de tu trabajo.</p>
 <h4 id="431-estructura-del-informe">4.3.1 Estructura del informe<a class="headerlink" href="#431-estructura-del-informe" title="Permanent link">&para;</a></h4>
@@ -3416,47 +3514,50 @@ triggers a nivel de sentencia se dejan fuera de esta sesión.
 <ul>
 <li>Nombre:</li>
 <li>Equipo:</li>
-<li>Sesión: S02 - Triggers DML y Auditoría</li>
+<li>Sesión: S03 - Manejo de Excepciones y Robustez</li>
 <li>Rol o aporte realizado:</li>
 <li>Link de GitHub:</li>
 </ul>
 <p><strong>Evidencia técnica</strong></p>
 <p>Incluye capturas o salidas con una breve explicación debajo de cada una, organizadas en los mismos 4 bloques de la rúbrica (4.6) — así queda claro qué evidencia corresponde a cada criterio evaluado:</p>
 <ol>
-<li><em>Tabla de auditoría del proyecto propio</em><ul>
-<li>Script SQL de creación de la tabla de auditoría.</li>
+<li><em>Tabla de registro de errores</em><ul>
+<li>Script SQL de creación de la tabla.</li>
 </ul>
 </li>
-<li><em>Trigger de regla de negocio</em><ul>
-<li>Script del trigger <code>BEFORE</code>, con explicación de la regla.</li>
-<li>Caso rechazado, con el error de Oracle mostrado.</li>
+<li><em>Excepción predefinida</em><ul>
+<li>Script del bloque que la maneja, con explicación de cuándo ocurre.</li>
+<li>Caso que la dispara, con el error mostrado.</li>
 </ul>
 </li>
-<li><em>Trigger de auditoría</em><ul>
-<li>Script del trigger <code>AFTER</code>.</li>
+<li><em>Excepción personalizada</em><ul>
+<li>Script del bloque (<code>PRAGMA EXCEPTION_INIT</code> o <code>RAISE_APPLICATION_ERROR</code>), con explicación de la regla.</li>
+<li>Caso que la dispara.</li>
 </ul>
 </li>
-<li><em>Evidencia de ejecución</em><ul>
+<li><em>Evidencia de ejecución y registro</em><ul>
 <li>Caso válido ejecutado.</li>
-<li>Consulta a la tabla de auditoría con los registros generados.</li>
+<li>Consulta a la tabla de errores con los registros generados.</li>
 </ul>
 </li>
 </ol>
 <p><strong>Error o hallazgo</strong></p>
-<p>Describe un error técnico encontrado: momento (<code>BEFORE</code>/<code>AFTER</code>) equivocado, uso incorrecto de <code>:OLD</code>/<code>:NEW</code>, o regla mal expresada.</p>
+<p>Describe un error técnico encontrado: excepción no capturada correctamente, <code>WHEN OTHERS</code> mal usado, o un caso donde el registro y el relanzamiento quedaron en el orden incorrecto.</p>
 <p><strong>Reflexión técnica breve</strong></p>
 <p>Responde en 5 a 8 líneas:</p>
-<div class="highlight"><pre><span></span><code>¿Por qué una regla de negocio protegida solo en el backend no es suficiente si otro cliente puede escribir directo en la base de datos?
+<div class="highlight"><pre><span></span><code>¿Por qué capturar un error y no volver a lanzarlo puede ser peor que no
+manejarlo? Relaciona tu respuesta con el caso de 1.6.1.
 </code></pre></div>
 <h3 id="44-criterios-minimos-de-aceptacion">4.4 Criterios mínimos de aceptación<a class="headerlink" href="#44-criterios-minimos-de-aceptacion" title="Permanent link">&para;</a></h3>
 <p>La evidencia individual se considera completa si:</p>
 <ul>
 <li>El archivo respeta el nombre solicitado.</li>
-<li>Crea la tabla de auditoría antes de los triggers.</li>
-<li>El trigger de regla de negocio usa <code>:OLD</code> y <code>:NEW</code> para comparar valores.</li>
-<li>El trigger de auditoría cubre <code>INSERT</code>, <code>UPDATE</code> y <code>DELETE</code>.</li>
-<li>Ejecuta un caso válido y uno rechazado por la regla de negocio.</li>
-<li>Verifica los registros de auditoría con una consulta.</li>
+<li>Crea una tabla de registro de errores, sin <code>FOREIGN KEY</code> hacia la tabla que audita.</li>
+<li>Incorpora al menos una excepción predefinida, con caso de prueba.</li>
+<li>Incorpora al menos una excepción personalizada, con caso de prueba.</li>
+<li>Cada excepción capturada se registra <strong>antes</strong> de relanzarse (no una sola de las dos acciones).</li>
+<li>No usa <code>WHEN OTHERS THEN NULL</code> como manejo de error.</li>
+<li>Verifica los registros de la tabla de errores con una consulta.</li>
 <li>Cada captura de la evidencia técnica muestra el reloj del sistema y el usuario/perfil visible, sin recortar.</li>
 <li>Las fechas y horas de las capturas son coherentes con el historial de commits de su repositorio en GitHub.</li>
 <li>Incluye un error o hallazgo técnico diagnosticado.</li>
@@ -3464,13 +3565,13 @@ triggers a nivel de sentencia se dejan fuera de esta sesión.
 </ul>
 <h3 id="45-preguntas-de-defensa">4.5 Preguntas de defensa<a class="headerlink" href="#45-preguntas-de-defensa" title="Permanent link">&para;</a></h3>
 <ol>
-<li>¿Qué regla de negocio implementaste y por qué no bastaba con una restricción <code>CHECK</code>?</li>
-<li>¿Por qué tu trigger de regla de negocio es <code>BEFORE</code> y no <code>AFTER</code>?</li>
-<li>¿Qué datos captura tu trigger de auditoría, y de dónde los toma (<code>:OLD</code> o <code>:NEW</code>)?</li>
-<li>¿Qué pasaría si tu tabla de auditoría tuviera una <code>FOREIGN KEY</code> hacia la tabla auditada?</li>
+<li>¿Qué excepción predefinida usaste y en qué situación real ocurre?</li>
+<li>¿Por qué tu excepción personalizada necesitó <code>PRAGMA EXCEPTION_INIT</code> o <code>RAISE_APPLICATION_ERROR</code> — cuál de los dos, y por qué ese y no el otro?</li>
+<li>¿Qué pasaría si tu procedimiento registrara el error pero no lo relanzara?</li>
+<li>¿Qué diferencia hay entre el código de <code>SQLCODE</code> de una excepción predefinida como <code>NO_DATA_FOUND</code> y uno generado con <code>RAISE_APPLICATION_ERROR</code>?</li>
 </ol>
 <h3 id="46-rubrica-de-evaluacion">4.6 Rúbrica de evaluación<a class="headerlink" href="#46-rubrica-de-evaluacion" title="Permanent link">&para;</a></h3>
-<p><strong>Tabla 4. Rúbrica de evaluación</strong></p>
+<p><strong>Tabla 6. Rúbrica de evaluación</strong></p>
 <table>
 <thead>
 <tr>
@@ -3485,38 +3586,38 @@ triggers a nivel de sentencia se dejan fuera de esta sesión.
 </thead>
 <tbody>
 <tr>
-<td>1. Tabla de auditoría*</td>
+<td>1. Tabla de registro de errores*</td>
 <td style="text-align: right;">20</td>
-<td>Tabla de auditoría bien diseñada, sin <code>FOREIGN KEY</code> hacia la tabla auditada.</td>
+<td>Tabla bien diseñada, sin <code>FOREIGN KEY</code> hacia la tabla auditada.</td>
 <td>Tabla funcional, con algún detalle menor.</td>
 <td>Tabla incompleta o mal diseñada.</td>
-<td>No crea tabla de auditoría.</td>
+<td>No crea tabla de errores.</td>
 <td style="text-align: right;"></td>
 </tr>
 <tr>
-<td>2. Trigger de regla de negocio*</td>
+<td>2. Excepción predefinida*</td>
+<td style="text-align: right;">25</td>
+<td>Excepción predefinida correcta, con caso de prueba claro y explicación de cuándo ocurre.</td>
+<td>Excepción funcional, con explicación básica.</td>
+<td>Excepción incompleta o mal aplicada.</td>
+<td>No presenta excepción predefinida.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>3. Excepción personalizada*</td>
+<td style="text-align: right;">25</td>
+<td>Excepción personalizada correcta (forma adecuada al caso), con caso de prueba claro.</td>
+<td>Excepción funcional, con detalles menores.</td>
+<td>Excepción incompleta o forma incorrecta para el caso.</td>
+<td>No presenta excepción personalizada.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>4. Evidencia de ejecución y registro*</td>
 <td style="text-align: right;">30</td>
-<td>Trigger <code>BEFORE</code> correcto, con regla clara y caso rechazado evidenciado.</td>
-<td>Trigger funcional, con regla simple.</td>
-<td>Trigger incompleto o regla poco clara.</td>
-<td>No presenta trigger de negocio.</td>
-<td style="text-align: right;"></td>
-</tr>
-<tr>
-<td>3. Trigger de auditoría*</td>
-<td style="text-align: right;">30</td>
-<td>Trigger <code>AFTER</code> correcto, cubre las tres operaciones DML.</td>
-<td>Trigger funcional, cubre la mayoría de operaciones.</td>
-<td>Trigger incompleto o cubre solo una operación.</td>
-<td>No presenta trigger de auditoría.</td>
-<td style="text-align: right;"></td>
-</tr>
-<tr>
-<td>4. Evidencia de ejecución*</td>
-<td style="text-align: right;">20</td>
-<td>Casos válido e inválido ejecutados, con consulta de verificación clara.</td>
-<td>Evidencia suficiente, con detalles menores.</td>
-<td>Evidencia incompleta.</td>
+<td>Casos válido e inválidos ejecutados, registro verificado con orden correcto (registrar antes de relanzar).</td>
+<td>Evidencia suficiente, con algún detalle menor.</td>
+<td>Evidencia incompleta o orden incorrecto.</td>
 <td>No evidencia ejecución.</td>
 <td style="text-align: right;"></td>
 </tr>
@@ -3534,14 +3635,14 @@ Indica 2 fortalezas y 2 recomendaciones.
 </code></pre></div>
 <h2 id="5-cierre">5. Cierre<a class="headerlink" href="#5-cierre" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 5 min.</p>
-<p><strong>Resumen breve:</strong> hoy <code>PRODUCTOS</code> pasó de depender de que el cliente respetara las reglas, a estar protegido y auditado automáticamente por Oracle mismo — un trigger que rechaza un ajuste de precio no razonable, y otro que deja registro de cada <code>INSERT</code>/<code>UPDATE</code>/<code>DELETE</code>, sin importar qué cliente los cause.</p>
-<p><strong>Dinámica participativa:</strong> en una ronda rápida (o con una herramienta digital tipo formulario o encuesta en vivo), cada estudiante comparte en una frase qué regla de negocio implementó para su propio proyecto.</p>
+<p><strong>Resumen breve:</strong> hoy los procedimientos de S1 dejaron de fallar en silencio o con un error interno de Oracle sin contexto — cada fallo anticipado (categoría inexistente, descuento fuera de rango, producto inexistente) se captura, se registra en <code>LOG_ERRORES</code>, y responde con un mensaje claro, sin dejar de propagar el error para que quien invocó el procedimiento sepa que la operación no se completó.</p>
+<p><strong>Dinámica participativa:</strong> en una ronda rápida, cada estudiante comparte en una frase qué error real encontró al probar su propio proyecto antes de manejarlo.</p>
 <p><strong>Metacognición:</strong> cada estudiante responde en voz alta o por escrito: ¿qué parte de la sesión te costó más entender, y cómo la resolviste?</p>
-<p><strong>Proyección:</strong> la auditoría de hoy es la base sobre la que S3 agrega manejo de excepciones más robusto, y el mismo patrón (regla en <code>BEFORE</code>, auditoría en <code>AFTER</code>) se repite en cualquier sistema profesional donde varios clientes escriban sobre los mismos datos.</p>
+<p><strong>Proyección:</strong> el registro de errores de hoy es insumo directo para S4 (optimización de consultas) — un <code>LOG_ERRORES</code> con volumen real es también el primer candidato a necesitar un índice propio, y las excepciones bien manejadas evitan que una consulta mal optimizada falle en silencio en vez de reportar el problema.</p>
 <h2 id="bibliografia">Bibliografía<a class="headerlink" href="#bibliografia" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Oracle Corporation. (2024). <em>Oracle Database Free 23ai documentation</em>. https://docs.oracle.com/en/database/oracle/oracle-database/23/</li>
-<li>Oracle Corporation. (2024). <em>Database PL/SQL language reference - Triggers</em>. https://docs.oracle.com/en/database/oracle/oracle-database/23/lnpls/</li>
+<li>Oracle Corporation. (2024). <em>Database PL/SQL language reference - Handling PL/SQL Errors</em>. https://docs.oracle.com/en/database/oracle/oracle-database/23/lnpls/</li>
 </ol>
 
 
