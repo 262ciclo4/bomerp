@@ -101,9 +101,9 @@ flowchart LR
 
     Client -->|"ProductoRequest{categoriaId}"| Controller
     Controller --> Service
-    Service -->|"1. resolver y validar"| CatRepo
+    Service -->|"resolver y validar"| CatRepo
     CatRepo -->|"Categoria o excepción"| Service
-    Service -->|"2. mapear (request, categoria)"| Mapper
+    Service -->|"mapear"| Mapper
     Mapper --> Service
     Service --> Repo
     Repo --> DB
@@ -111,7 +111,7 @@ flowchart LR
     Controller -->|"ProductoResponse{categoria}"| Client
 ```
 
-Lectura del diagrama: el service **resuelve** la categoría antes de mapear — el mapper nunca consulta la base de datos, solo transforma objetos que ya recibió resueltos. Esa separación es la misma de S2 (2.4, punto 4): el service es la única capa que valida algo que depende del estado actual del sistema, no de la forma del dato.
+Lectura del diagrama: el service **resuelve** la categoría antes de mapear — el mapper nunca consulta la base de datos, solo transforma objetos que ya recibió resueltos. Esa separación es la misma de S2 (2.4, punto 4): el service es la única capa que valida algo que depende del estado actual del sistema, no de la forma del dato. Esta es la forma general del patrón — el paso a paso exacto de cuántas veces se llama a cada capa se construye en 3.9 (Figura 8), cuando toca escribir el código.
 
 ### 2.2 Asociación de entidades y DTO relacionados
 
@@ -131,6 +131,36 @@ Lectura del diagrama: el service **resuelve** la categoría antes de mapear — 
 
 Esta cadena — DTO nuevo, mapper con un método más, mapper compuesto vía `uses` — se repite cada vez que una entidad necesita mostrar una versión reducida de otra; se construye paso a paso en 3.2, 3.3, 3.7 y 3.8.
 
+**Figura 3. Asociación de entidades (ORM) vs. asociación de DTO**
+
+```mermaid
+classDiagram
+    class Producto {
+        -Long id
+        -String nombre
+        -Categoria categoria
+    }
+    class Categoria {
+        -Long id
+        -String nombre
+        -String descripcion
+    }
+    class ProductoResponse {
+        -Long id
+        -String nombre
+        -CategoriaResumen categoria
+    }
+    class CategoriaResumen {
+        -Long id
+        -String nombre
+    }
+
+    Producto "muchos" --> "uno" Categoria : @ManyToOne, unidireccional
+    ProductoResponse --> CategoriaResumen : DTO relacionado
+```
+
+Las dos flechas de la Figura 3 no son la misma relación vista dos veces: la de arriba (`Producto` → `Categoria`) es la asociación ORM, mapeada a `ID_CATEGORIA`; la de abajo (`ProductoResponse` → `CategoriaResumen`) es una asociación distinta, entre DTO, que existe solo para la API — `CategoriaResumen` ni siquiera tiene `descripcion`, aunque `Categoria` sí.
+
 ### 2.3 Validación de referencias
 
 Que un campo llegue con un valor (`@NotNull`) no significa que ese valor corresponda a un registro real — validar que el id recibido exista en la base es responsabilidad de la capa de servicio, no de Bean Validation, que solo valida la forma del dato, nunca su existencia.
@@ -138,6 +168,28 @@ Que un campo llegue con un valor (`@NotNull`) no significa que ese valor corresp
 **Ejemplo de referencia (LP2).** `ProductoRequest` declara `categoriaId` con `@NotNull` — eso solo garantiza que el campo no llegue vacío, no que el id corresponda a una `Categoria` real. Esa segunda verificación es responsabilidad del service (mismo criterio de S2, 2.3, punto 4): antes de guardar o actualizar un `Producto`, `ProductoServiceImpl` busca la `Categoria` por id y lanza `ResourceNotFoundException` (ya creada en S2, 3.2.1) si no existe — el mismo manejador global responde `404`, sin código nuevo en `GlobalExceptionHandler`.
 
 Esta búsqueda no es solo para tener el objeto `Categoria` que pide `@ManyToOne` — es lo que evita que un `categoriaId` inválido llegue a violar `FK_PRODUCTO_CATEGORIA` directamente en el `INSERT`. Si esa validación no existiera, Oracle igual rechazaría el dato (la restricción sigue ahí), pero el error llegaría como `DataIntegrityViolationException` sin traducir — exactamente el mismo hueco que `DELETE /api/v1/categorias/{id}` sí deja sin resolver hoy (3.4, "Error frecuente"). `crear`/`actualizar` responden `404` limpio; `eliminar` responde `500` crudo — la diferencia es solo esta validación explícita, no la restricción de la base de datos, que en ambos casos es la misma.
+
+**Figura 4. Validación de referencias, paso a paso**
+
+```mermaid
+flowchart TD
+    Req["ProductoRequest.categoriaId"]
+    NotNull{"@NotNull cumplido?"}
+    Bad["400 Bad Request"]
+    Buscar["Service: buscarCategoriaOFallar(id)"]
+    Existe{"Categoria existe<br/>en la base de datos?"}
+    NotFound["404 Not Found"]
+    Continuar["Continua: guardar Producto"]
+
+    Req --> NotNull
+    NotNull -->|"no"| Bad
+    NotNull -->|"si"| Buscar
+    Buscar --> Existe
+    Existe -->|"no"| NotFound
+    Existe -->|"si"| Continuar
+```
+
+`@NotNull` (Bean Validation) solo corta el camino si el campo llega vacío — nunca llega a preguntarle nada a la base de datos. La pregunta "¿existe de verdad?" es la segunda mitad del diagrama, y es exclusivamente responsabilidad del service.
 
 ### 2.4 Prevención de ciclos de serialización
 
@@ -150,11 +202,47 @@ Un problema clásico de JPA: si una entidad relacionada mantiene una colección 
 
 **Error frecuente**: agregar `@OneToMany` en `Categoria` "por si se necesita después" es exactamente el tipo de anticipación que este curso evita (ver `CLAUDE.md`, "no adelantar alcance") — y además reintroduce el riesgo de ciclo que esta sesión evitó a propósito. Si una sesión futura necesita navegar de `Categoria` a sus `Producto`, la forma correcta es una consulta explícita (2.5), no una colección cargada automáticamente en la entidad.
 
+**Figura 5. El ciclo evitado, y las dos decisiones que lo evitan**
+
+```mermaid
+flowchart LR
+    subgraph Riesgo["Riesgo hipotetico: relacion bidireccional + entidades serializadas"]
+        direction LR
+        P1["Producto"] -->|"serializa"| C1["Categoria"]
+        C1 -->|"@OneToMany, serializa de vuelta"| P1
+    end
+    subgraph Real["Real, esta sesion"]
+        direction LR
+        P2["Producto"] -->|"@ManyToOne"| C2["Categoria (sin lista de vuelta)"]
+        DTO["ProductoResponse"] -.->|"nunca serializa la entidad"| P2
+    end
+```
+
+El bloque "Riesgo" no es código de esta sesión — es lo que pasaría si se agregara `@OneToMany` en `Categoria` (el error frecuente de arriba): las dos flechas entre `Producto` y `Categoria` se retroalimentan sin fin. El bloque "Real" muestra por qué eso nunca ocurre aquí: la relación va en un solo sentido, y lo que se serializa nunca es la entidad, siempre el DTO.
+
 ### 2.5 Navegación controlada y CRUD completo de `Categoria`
 
 **Navegación controlada** significa: para ir de una entidad a las instancias de otra que la referencian, se expone una consulta explícita bajo demanda (un endpoint dedicado), nunca una colección que el ORM carga automáticamente cada vez que se lee la entidad principal — eso sería costoso si esa lista rara vez se necesita, y reintroduce el riesgo de ciclo evitado en 2.4.
 
 **Ejemplo de referencia (LP2).** `GET /api/v1/categorias/{id}/productos` es esa consulta explícita — no una colección cargada dentro de la entidad `Categoria`. De paso, `Categoria` completa en esta sesión el mismo patrón CRUD que S2 aplicó a `Producto`: `CategoriaRequest` (entrada validada), `CategoriaResponse` (salida, ahora clase con `@Builder` en vez de `record` — mismo motivo que S2 documentó para `Producto`, 2.2), y `CategoriaMapper`.
+
+**Figura 6. Navegación controlada: consulta explícita, no colección automática**
+
+```mermaid
+flowchart LR
+    subgraph Evitado["Evitado: coleccion automatica en la entidad"]
+        direction LR
+        Cat1["Categoria"] -->|"@OneToMany (no existe)"| Lista["List~Producto~ cargada siempre que se lee Categoria"]
+    end
+    subgraph Real["Real: navegacion controlada"]
+        direction LR
+        Cliente["Cliente"] -->|"GET /categorias/id/productos"| CatCtrl["CategoriaController"]
+        CatCtrl --> ProdSvc["ProductoService.listarPorCategoria"]
+        ProdSvc --> Repo["ProductoRepository.findByCategoriaId"]
+    end
+```
+
+El bloque "Evitado" es la alternativa que 2.4 ya descartó por el riesgo de ciclo; acá se ve además su otro costo: cargaría la lista de productos **cada vez** que alguien lee una categoría, aunque nadie la necesite. El bloque "Real" solo consulta bajo demanda, cuando el cliente pide explícitamente ese endpoint — y pasa por `ProductoService`, no por su repositorio directo, aunque lo invoque `CategoriaController` (3.5).
 
 ## 3. Aplica: actividad práctica guiada
 
@@ -509,9 +597,49 @@ public interface ProductoMapper {
 
 `ProductoRequest` y `Categoria` **ambos** tienen un campo `nombre` — MapStruct no puede adivinar de cuál de los dos parámetros viene el `nombre` de `Producto`. Con un solo parámetro fuente (como en S2) esto nunca pasa, porque no hay ambigüedad posible. La solución es la de arriba: `@Mapping(target = "nombre", source = "request.nombre")` desambigua explícitamente, calificando el origen con el nombre del parámetro (`request.nombre`, no solo `nombre`). Lo mismo aplica a `precio`/`stock`, aunque `Categoria` no tenga esos campos — una vez que declaras el mapper con más de un parámetro, MapStruct exige que **todos** los campos ambiguos (o potencialmente ambiguos) se resuelvan de forma explícita.
 
+**Figura 7. Por qué `nombre` es ambiguo, y cómo se resuelve**
+
+```mermaid
+flowchart TD
+    PR["ProductoRequest.nombre"]
+    Cat["Categoria.nombre"]
+    Amb{"MapStruct: dos posibles origenes<br/>para Producto.nombre"}
+    Fix["@Mapping(target='nombre', source='request.nombre')"]
+    Target["Producto.nombre"]
+
+    PR --> Amb
+    Cat --> Amb
+    Amb -->|"sin @Mapping: error de compilacion"| Fix
+    Fix -->|"resuelto"| Target
+```
+
+La ambigüedad no es un error de MapStruct — es correcto que se detenga: con dos parámetros fuente y un campo `nombre` en ambos, no hay forma automática de saber cuál querías. `@Mapping` es la respuesta explícita a esa pregunta, campo por campo.
+
 ### 3.9 Validar la referencia y habilitar la navegación controlada
 
 **Producto del paso:** `ProductoServiceImpl` resuelve y valida `categoriaId` antes de guardar; `listarPorCategoria` para la navegación de 3.5.
+
+**Figura 8. `ProductoServiceImpl.crear()`, paso a paso — lo que el código de abajo implementa**
+
+```mermaid
+flowchart LR
+    Req["ProductoRequest{categoriaId}"]
+    CatRepo["CategoriaRepository"]
+    Mapper["ProductoMapper"]
+    Repo["ProductoRepository"]
+    DB[("Oracle")]
+    Resp["ProductoResponse{categoria}"]
+
+    Req -->|"1. resolver y validar"| CatRepo
+    CatRepo -->|"Categoria"| Mapper
+    Req -->|"2. mapear a entidad<br/>toEntity(request, categoria)"| Mapper
+    Mapper -->|"Producto"| Repo
+    Repo -->|"3. guardar"| DB
+    DB -->|"Producto guardado"| Mapper
+    Mapper -->|"4. mapear a respuesta<br/>toResponse(producto)"| Resp
+```
+
+Esta es la versión exacta de la Figura 2 (2.1) — cuatro pasos, no dos, porque el mapper se usa dos veces: el paso 2 arma la entidad antes de guardar; el paso 4, después de guardar, arma la respuesta — y es ahí, en el paso 4, donde `CategoriaMapper.toResumen()` se compone automáticamente (vía `uses`, 3.8) para embeber el `CategoriaResumen`. El código de abajo implementa exactamente estos cuatro pasos, en este orden.
 
 ```java
 package pe.edu.upeu.bomerp.catalogo.producto.service;
