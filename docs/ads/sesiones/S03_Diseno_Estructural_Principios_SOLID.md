@@ -272,6 +272,26 @@ Tiempo: 2h.
 
 Repite la misma tabla para `categoria` (`CategoriaController`, `CategoriaServiceImpl`, `CategoriaRepository`, `CategoriaMapper`, `Categoria`) — el patrón es idéntico.
 
+**Figura 6. S visto por contraste: hipotético vs. real**
+
+```mermaid
+classDiagram
+    class Hipotetico["ProductoServiceImpl (hipotetico, viola S)"] {
+        +crear(request)
+        +validarFormato(request)
+        +formatearLogAuditoria(producto)
+        +enviarCorreoNotificacion(producto)
+    }
+    class Real["ProductoServiceImpl (real, Tabla 4)"] {
+        +crear(request)
+        +obtener(id)
+        +actualizar(id, request)
+        +eliminar(id)
+    }
+```
+
+La versión hipotética junta persistencia, formato de logs y envío de correos — tres razones de cambio distintas. La real solo orquesta la regla de negocio de `Producto`; log y notificación no aparecen porque no son su responsabilidad.
+
 ### 3.2 Evaluar abierto/cerrado, Liskov e interfaces (O, L, I)
 
 **Producto del paso:** análisis de extensibilidad sobre `ProductoService`/`CategoriaService`.
@@ -281,6 +301,26 @@ Repite la misma tabla para `categoria` (`CategoriaController`, `CategoriaService
 **Liskov (L):** cualquier implementación futura de `ProductoService` debe poder sustituir a `ProductoServiceImpl` sin que `ProductoController` note la diferencia — mismo contrato (misma firma, mismas excepciones esperadas: `ResourceNotFoundException` cuando el id no existe). Hoy no hay una segunda implementación, así que L se cumple **por diseño de la interfaz**, no por evidencia de sustitución real todavía.
 
 **Segregación de interfaces (I):** `ProductoService` expone exactamente `listar`, `obtener`, `crear`, `actualizar`, `eliminar`, `listarPorCategoria` — todos usados por `ProductoController`. No hay un método "de más" que ningún cliente use. Compara esto con una interfaz hipotética `ServicioGenerico<T>` con quince métodos: forzaría a `ProductoServiceImpl` a implementar operaciones que `ProductoController` nunca llama.
+
+**Figura 7. O y L: interfaz con una implementación real y una hipotética**
+
+```mermaid
+classDiagram
+    class ProductoService {
+        <<interface>>
+        +listar()
+        +obtener(id)
+        +crear(request)
+    }
+    class ProductoServiceImpl["ProductoServiceImpl (real)"]
+    class ProductoServiceCacheado["ProductoServiceCacheado (hipotetico)"]
+
+    ProductoController --> ProductoService
+    ProductoService <|.. ProductoServiceImpl
+    ProductoService <|.. ProductoServiceCacheado
+```
+
+`ProductoController` solo conoce la interfaz; una segunda implementación (hipotética, en gris) podría sumarse sin tocarlo — eso es O. Que ambas puedan sustituirse sin romper el contrato de `ProductoController` es L.
 
 ### 3.3 Evaluar inversión de dependencias (D)
 
@@ -305,6 +345,28 @@ public class ProductoServiceImpl implements ProductoService {
 ```
 
 Las tres dependencias de `ProductoServiceImpl` son interfaces (`ProductoRepository`, `CategoriaRepository`, `ProductoMapper`), inyectadas por Spring vía `@RequiredArgsConstructor` — ninguna se instancia con `new`. Esto es Inversión de Dependencias real, no solo declarada: `ProductoServiceImpl` no sabe (ni le importa) si `ProductoRepository` lo implementa Spring Data JPA u otra tecnología de persistencia.
+
+**Figura 8. D acotado: las tres dependencias inyectadas de `ProductoServiceImpl`**
+
+```mermaid
+classDiagram
+    class ProductoServiceImpl
+    class ProductoRepository {
+        <<interface>>
+    }
+    class CategoriaRepository {
+        <<interface>>
+    }
+    class ProductoMapper {
+        <<interface>>
+    }
+
+    ProductoServiceImpl --> ProductoRepository : interfaz, no new
+    ProductoServiceImpl --> CategoriaRepository : interfaz, no new
+    ProductoServiceImpl --> ProductoMapper : interfaz, no new
+```
+
+Mismo recorte de la Figura 3 (2.2), acotado solo a D: ninguna flecha llega a una clase concreta.
 
 ### 3.4 Evaluar cohesión y acoplamiento entre `categoria` y `producto`
 
@@ -331,6 +393,17 @@ private Categoria buscarCategoriaOFallar(Long categoriaId) {
 | Qué expone `categoria` hacia afuera | Su capa de persistencia completa | Solo lo que `CategoriaService` decide exponer |
 | Costo de cambiar `categoria` internamente | Podría afectar a `producto` si cambia el `Repository` | `producto` no se entera mientras el contrato de `CategoriaService` no cambie |
 
+**Figura 9. Acoplamiento entre clases, acotado a este caso**
+
+```mermaid
+flowchart LR
+    PSI["ProductoServiceImpl"]
+    CR["CategoriaRepository (actual)"]
+    CS["CategoriaService (alternativa)"]
+    PSI -->|"actual"| CR
+    PSI -.->|"alternativa, mas desacoplada"| CS
+```
+
 No hay una respuesta única "correcta" — es una tensión real de diseño, y documentarla (con el criterio de arriba) es uno de los hallazgos que se espera en 3.6.
 
 **Un segundo caso, esta vez de acoplamiento entre contratos:** `ProductoResponse` no reutiliza `CategoriaResponse` (el DTO que ya existe para exponer una categoría) — introduce `CategoriaResumen`, un DTO más chico, dedicado solo a lo que se embebe en un producto (`id`, `nombre`, sin `descripcion`).
@@ -343,6 +416,17 @@ No hay una respuesta única "correcta" — es una tensión real de diseño, y do
 | Costo hoy | Ninguno — `descripcion` no es un dato sensible ni voluminoso. | Una clase más, un método de mapeo más (`CategoriaMapper.toResumen`). |
 | Beneficio | Menos código. | El contrato de `/productos` no depende de decisiones futuras de `/categorias`. |
 
+**Figura 10. Acoplamiento entre contratos, acotado a este caso**
+
+```mermaid
+flowchart LR
+    PR["ProductoResponse"]
+    CRes["CategoriaResumen (actual)"]
+    CResp["CategoriaResponse (alternativa: reutilizar)"]
+    PR -->|"actual"| CRes
+    PR -.->|"alternativa, mas acoplada"| CResp
+```
+
 Igual que el caso anterior, no hay una respuesta única "correcta": con los hechos de hoy (nada sensible en `descripcion`, sin motivo de ocultamiento), reutilizar `CategoriaResponse` habría sido igual de válido — la decisión real de introducir `CategoriaResumen` es explícitamente anticipatoria. Vale la pena nombrarla como tal en el hallazgo (3.6), no presentarla como la única opción correcta.
 
 ### 3.5 Evaluar modularidad y abstracción
@@ -350,7 +434,31 @@ Igual que el caso anterior, no hay una respuesta única "correcta": con los hech
 **Producto del paso:** confirmación de que el límite de módulo (`catalogo`) se respeta, y que las abstracciones (DTO, interfaces) cumplen su función.
 
 - **Modularidad:** `catalogo` sigue siendo el único módulo con código real; `ModularityTests` (LP2) verifica que ningún otro módulo (todavía inexistente: `ventas` llega en S4) acceda a sus repositorios o entidades directamente. Nada que evaluar todavía más allá de eso — la prueba real es automática, no una opinión de diseño.
+
+**Figura 11. Modularidad, acotada al límite `catalogo`-`ventas`**
+
+```mermaid
+flowchart LR
+    Ventas["Modulo ventas (S4, futuro)"]
+    CatSvc["categoria.CategoriaService (publico)"]
+    CatRepo["categoria.CategoriaRepository (interno)"]
+    Ventas -->|"permitido"| CatSvc
+    Ventas -.->|"bloqueado por ModularityTests"| CatRepo
+```
+
 - **Abstracción — DTO:** `ProductoResponse` embebe `CategoriaResumen`, no la entidad `Categoria` completa — la abstracción entidad-DTO evita que la API pública dependa de cada campo interno de `Categoria`. El acoplamiento **entre** `CategoriaResumen` y `CategoriaResponse` (dos DTO, no una entidad y un DTO) ya se evaluó con más detalle en 3.4.
+
+**Figura 12. Abstracción, acotada a DTO vs. entidad**
+
+```mermaid
+flowchart LR
+    Cliente["Cliente HTTP"]
+    DTO["ProductoResponse"]
+    Entidad["Producto (entidad)"]
+    Cliente --> DTO
+    DTO -.->|"oculta"| Entidad
+```
+
 - **Abstracción — interfaces de servicio:** ya evaluado en 3.2/3.3; se repite aquí como confirmación de que la abstracción no es solo una interfaz vacía — realmente oculta la implementación (MapStruct, Spring Data JPA) del resto del sistema.
 
 ### 3.6 Documentar el hallazgo real
