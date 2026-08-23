@@ -3395,11 +3395,41 @@
 </tbody>
 </table>
 <p>Repite la misma tabla para <code>categoria</code> (<code>CategoriaController</code>, <code>CategoriaServiceImpl</code>, <code>CategoriaRepository</code>, <code>CategoriaMapper</code>, <code>Categoria</code>) — el patrón es idéntico.</p>
+<p><strong>Figura 6. S visto por contraste: hipotético vs. real</strong></p>
+<pre class="mermaid"><code>classDiagram
+    class Hipotetico["ProductoServiceImpl (hipotetico, viola S)"] {
+        +crear(request)
+        +validarFormato(request)
+        +formatearLogAuditoria(producto)
+        +enviarCorreoNotificacion(producto)
+    }
+    class Real["ProductoServiceImpl (real, Tabla 4)"] {
+        +crear(request)
+        +obtener(id)
+        +actualizar(id, request)
+        +eliminar(id)
+    }</code></pre>
+<p>La versión hipotética junta persistencia, formato de logs y envío de correos — tres razones de cambio distintas. La real solo orquesta la regla de negocio de <code>Producto</code>; log y notificación no aparecen porque no son su responsabilidad.</p>
 <h3 id="32-evaluar-abiertocerrado-liskov-e-interfaces-o-l-i">3.2 Evaluar abierto/cerrado, Liskov e interfaces (O, L, I)<a class="headerlink" href="#32-evaluar-abiertocerrado-liskov-e-interfaces-o-l-i" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> análisis de extensibilidad sobre <code>ProductoService</code>/<code>CategoriaService</code>.</p>
 <p><code>ProductoService</code>/<code>CategoriaService</code> son <strong>interfaces</strong>, con una sola implementación cada una (<code>ProductoServiceImpl</code>/<code>CategoriaServiceImpl</code>) hoy. Eso ya deja el diseño <strong>abierto</strong> a extensión: si mañana se necesitara, por ejemplo, una versión con caché (<code>ProductoServiceCacheado implements ProductoService</code>), <code>ProductoController</code> no cambiaría una sola línea — solo cambiaría qué implementación se inyecta.</p>
 <p><strong>Liskov (L):</strong> cualquier implementación futura de <code>ProductoService</code> debe poder sustituir a <code>ProductoServiceImpl</code> sin que <code>ProductoController</code> note la diferencia — mismo contrato (misma firma, mismas excepciones esperadas: <code>ResourceNotFoundException</code> cuando el id no existe). Hoy no hay una segunda implementación, así que L se cumple <strong>por diseño de la interfaz</strong>, no por evidencia de sustitución real todavía.</p>
 <p><strong>Segregación de interfaces (I):</strong> <code>ProductoService</code> expone exactamente <code>listar</code>, <code>obtener</code>, <code>crear</code>, <code>actualizar</code>, <code>eliminar</code>, <code>listarPorCategoria</code> — todos usados por <code>ProductoController</code>. No hay un método "de más" que ningún cliente use. Compara esto con una interfaz hipotética <code>ServicioGenerico&lt;T&gt;</code> con quince métodos: forzaría a <code>ProductoServiceImpl</code> a implementar operaciones que <code>ProductoController</code> nunca llama.</p>
+<p><strong>Figura 7. O y L: interfaz con una implementación real y una hipotética</strong></p>
+<pre class="mermaid"><code>classDiagram
+    class ProductoService {
+        &lt;&lt;interface&gt;&gt;
+        +listar()
+        +obtener(id)
+        +crear(request)
+    }
+    class ProductoServiceImpl["ProductoServiceImpl (real)"]
+    class ProductoServiceCacheado["ProductoServiceCacheado (hipotetico)"]
+
+    ProductoController --&gt; ProductoService
+    ProductoService &lt;|.. ProductoServiceImpl
+    ProductoService &lt;|.. ProductoServiceCacheado</code></pre>
+<p><code>ProductoController</code> solo conoce la interfaz; una segunda implementación (hipotética, en gris) podría sumarse sin tocarlo — eso es O. Que ambas puedan sustituirse sin romper el contrato de <code>ProductoController</code> es L.</p>
 <h3 id="33-evaluar-inversion-de-dependencias-d">3.3 Evaluar inversión de dependencias (D)<a class="headerlink" href="#33-evaluar-inversion-de-dependencias-d" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> verificación de que las dependencias reales van hacia abstracciones, no implementaciones.</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@RestController</span>
@@ -3419,6 +3449,23 @@
 <span class="p">}</span>
 </code></pre></div>
 <p>Las tres dependencias de <code>ProductoServiceImpl</code> son interfaces (<code>ProductoRepository</code>, <code>CategoriaRepository</code>, <code>ProductoMapper</code>), inyectadas por Spring vía <code>@RequiredArgsConstructor</code> — ninguna se instancia con <code>new</code>. Esto es Inversión de Dependencias real, no solo declarada: <code>ProductoServiceImpl</code> no sabe (ni le importa) si <code>ProductoRepository</code> lo implementa Spring Data JPA u otra tecnología de persistencia.</p>
+<p><strong>Figura 8. D acotado: las tres dependencias inyectadas de <code>ProductoServiceImpl</code></strong></p>
+<pre class="mermaid"><code>classDiagram
+    class ProductoServiceImpl
+    class ProductoRepository {
+        &lt;&lt;interface&gt;&gt;
+    }
+    class CategoriaRepository {
+        &lt;&lt;interface&gt;&gt;
+    }
+    class ProductoMapper {
+        &lt;&lt;interface&gt;&gt;
+    }
+
+    ProductoServiceImpl --&gt; ProductoRepository : interfaz, no new
+    ProductoServiceImpl --&gt; CategoriaRepository : interfaz, no new
+    ProductoServiceImpl --&gt; ProductoMapper : interfaz, no new</code></pre>
+<p>Mismo recorte de la Figura 3 (2.2), acotado solo a D: ninguna flecha llega a una clase concreta.</p>
 <h3 id="34-evaluar-cohesion-y-acoplamiento-entre-categoria-y-producto">3.4 Evaluar cohesión y acoplamiento entre <code>categoria</code> y <code>producto</code><a class="headerlink" href="#34-evaluar-cohesion-y-acoplamiento-entre-categoria-y-producto" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> justificación explícita del acoplamiento real entre los dos paquetes.</p>
 <p><code>ProductoServiceImpl</code> depende de <code>CategoriaRepository</code> directamente (no de <code>CategoriaService</code>):</p>
@@ -3456,6 +3503,13 @@
 </tr>
 </tbody>
 </table>
+<p><strong>Figura 9. Acoplamiento entre clases, acotado a este caso</strong></p>
+<pre class="mermaid"><code>flowchart LR
+    PSI["ProductoServiceImpl"]
+    CR["CategoriaRepository (actual)"]
+    CS["CategoriaService (alternativa)"]
+    PSI --&gt;|"actual"| CR
+    PSI -.-&gt;|"alternativa, mas desacoplada"| CS</code></pre>
 <p>No hay una respuesta única "correcta" — es una tensión real de diseño, y documentarla (con el criterio de arriba) es uno de los hallazgos que se espera en 3.6.</p>
 <p><strong>Un segundo caso, esta vez de acoplamiento entre contratos:</strong> <code>ProductoResponse</code> no reutiliza <code>CategoriaResponse</code> (el DTO que ya existe para exponer una categoría) — introduce <code>CategoriaResumen</code>, un DTO más chico, dedicado solo a lo que se embebe en un producto (<code>id</code>, <code>nombre</code>, sin <code>descripcion</code>).</p>
 <p><strong>Tabla 6. Acoplamiento entre contratos: reutilizar vs. desacoplar</strong></p>
@@ -3485,12 +3539,37 @@
 </tr>
 </tbody>
 </table>
+<p><strong>Figura 10. Acoplamiento entre contratos, acotado a este caso</strong></p>
+<pre class="mermaid"><code>flowchart LR
+    PR["ProductoResponse"]
+    CRes["CategoriaResumen (actual)"]
+    CResp["CategoriaResponse (alternativa: reutilizar)"]
+    PR --&gt;|"actual"| CRes
+    PR -.-&gt;|"alternativa, mas acoplada"| CResp</code></pre>
 <p>Igual que el caso anterior, no hay una respuesta única "correcta": con los hechos de hoy (nada sensible en <code>descripcion</code>, sin motivo de ocultamiento), reutilizar <code>CategoriaResponse</code> habría sido igual de válido — la decisión real de introducir <code>CategoriaResumen</code> es explícitamente anticipatoria. Vale la pena nombrarla como tal en el hallazgo (3.6), no presentarla como la única opción correcta.</p>
 <h3 id="35-evaluar-modularidad-y-abstraccion">3.5 Evaluar modularidad y abstracción<a class="headerlink" href="#35-evaluar-modularidad-y-abstraccion" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> confirmación de que el límite de módulo (<code>catalogo</code>) se respeta, y que las abstracciones (DTO, interfaces) cumplen su función.</p>
 <ul>
 <li><strong>Modularidad:</strong> <code>catalogo</code> sigue siendo el único módulo con código real; <code>ModularityTests</code> (LP2) verifica que ningún otro módulo (todavía inexistente: <code>ventas</code> llega en S4) acceda a sus repositorios o entidades directamente. Nada que evaluar todavía más allá de eso — la prueba real es automática, no una opinión de diseño.</li>
+</ul>
+<p><strong>Figura 11. Modularidad, acotada al límite <code>catalogo</code>-<code>ventas</code></strong></p>
+<pre class="mermaid"><code>flowchart LR
+    Ventas["Modulo ventas (S4, futuro)"]
+    CatSvc["categoria.CategoriaService (publico)"]
+    CatRepo["categoria.CategoriaRepository (interno)"]
+    Ventas --&gt;|"permitido"| CatSvc
+    Ventas -.-&gt;|"bloqueado por ModularityTests"| CatRepo</code></pre>
+<ul>
 <li><strong>Abstracción — DTO:</strong> <code>ProductoResponse</code> embebe <code>CategoriaResumen</code>, no la entidad <code>Categoria</code> completa — la abstracción entidad-DTO evita que la API pública dependa de cada campo interno de <code>Categoria</code>. El acoplamiento <strong>entre</strong> <code>CategoriaResumen</code> y <code>CategoriaResponse</code> (dos DTO, no una entidad y un DTO) ya se evaluó con más detalle en 3.4.</li>
+</ul>
+<p><strong>Figura 12. Abstracción, acotada a DTO vs. entidad</strong></p>
+<pre class="mermaid"><code>flowchart LR
+    Cliente["Cliente HTTP"]
+    DTO["ProductoResponse"]
+    Entidad["Producto (entidad)"]
+    Cliente --&gt; DTO
+    DTO -.-&gt;|"oculta"| Entidad</code></pre>
+<ul>
 <li><strong>Abstracción — interfaces de servicio:</strong> ya evaluado en 3.2/3.3; se repite aquí como confirmación de que la abstracción no es solo una interfaz vacía — realmente oculta la implementación (MapStruct, Spring Data JPA) del resto del sistema.</li>
 </ul>
 <h3 id="36-documentar-el-hallazgo-real">3.6 Documentar el hallazgo real<a class="headerlink" href="#36-documentar-el-hallazgo-real" title="Permanent link">&para;</a></h3>
