@@ -385,6 +385,8 @@ private Categoria buscarCategoriaOFallar(Long categoriaId) {
 
 **Dicho eso, es acoplamiento real y vale la pena nombrarlo:** si `producto` necesita validar contra `categoria` cada vez con más frecuencia (por ejemplo, en S4 al construir `ventas`, que también necesitará consultar `Producto`), la alternativa más desacoplada sería que `ProductoServiceImpl` dependiera de `CategoriaService` (la abstracción pública del paquete `categoria`) en vez de `CategoriaRepository` directamente — mismo principio de Inversión de Dependencias (2.2), aplicado ahora entre paquetes hermanos, no solo entre capas.
 
+Esto es **deuda técnica intencional**, no accidental: la deuda accidental aparece sin que nadie la decida ni la documente; la intencional (o "prudente", en el cuadrante de deuda técnica de Fowler — ver Bibliografía) se toma a propósito, con la condición que la haría exigible ya identificada — en este caso, que `categoria` gane lógica de negocio propia que `producto` no debería saltarse. Documentar esa condición (como se hizo arriba) es lo que separa una tensión de diseño aceptable de una violación sin justificar.
+
 **Tabla 5. Acoplamiento actual vs. alternativa más desacoplada**
 
 | | Acoplamiento actual (real, LP2 S3) | Alternativa (vía `CategoriaService`) |
@@ -653,4 +655,5 @@ Tiempo: 5 min.
 2. Martin, R. C. (2017). *Clean Architecture: A Craftsman's Guide to Software Structure and Design*. Prentice Hall.
 3. Baeldung. (2024). *SOLID Principles*. https://www.baeldung.com/solid-principles
 4. Fowler, M. (2024). *CouplingAndCohesion*. martinfowler.com. https://martinfowler.com/ieeeSoftware/coupling.pdf
-5. Broadcom Inc. (2025). *Spring Framework reference documentation — Dependency Injection*. VMware Tanzu. https://docs.spring.io/spring-framework/reference/core/beans/dependencies.html
+5. Fowler, M. (2019). *TechnicalDebtQuadrant*. martinfowler.com. https://martinfowler.com/bliki/TechnicalDebtQuadrant.html
+6. Broadcom Inc. (2025). *Spring Framework reference documentation — Dependency Injection*. VMware Tanzu. https://docs.spring.io/spring-framework/reference/core/beans/dependencies.html
