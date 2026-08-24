@@ -1015,17 +1015,6 @@ public class ProductoController {
 }
 ```
 
-```java
-@Operation(summary = "Lista los productos registrados, opcionalmente filtrados por categoria")
-@GetMapping
-public ResponseEntity<List<ProductoResponse>> listar(@RequestParam(required = false) Long categoriaId) {
-    if (categoriaId != null) {
-        return ResponseEntity.ok(productoService.listarPorCategoria(categoriaId));
-    }
-    return ResponseEntity.ok(productoService.listar());
-}
-```
-
 Con esto, `GET /api/v1/productos?categoriaId={id}` es la navegación controlada de 2.5 — resuelta enteramente dentro de `producto`, sin que `CategoriaController` (3.5) necesite conocer `ProductoService`.
 
 ### 3.10 Optimizar la consulta de listado con `@EntityGraph`
