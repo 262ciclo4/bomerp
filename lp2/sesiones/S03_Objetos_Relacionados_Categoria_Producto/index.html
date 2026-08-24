@@ -4155,15 +4155,6 @@ select c1_0.id, c1_0.descripcion, c1_0.nombre from categorias c1_0 where c1_0.id
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="nd">@Operation</span><span class="p">(</span><span class="n">summary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Lista los productos registrados, opcionalmente filtrados por categoria"</span><span class="p">)</span>
-<span class="nd">@GetMapping</span>
-<span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">ProductoResponse</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="nf">listar</span><span class="p">(</span><span class="nd">@RequestParam</span><span class="p">(</span><span class="n">required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span><span class="w"> </span><span class="n">Long</span><span class="w"> </span><span class="n">categoriaId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">categoriaId</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">ok</span><span class="p">(</span><span class="n">productoService</span><span class="p">.</span><span class="na">listarPorCategoria</span><span class="p">(</span><span class="n">categoriaId</span><span class="p">));</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">ok</span><span class="p">(</span><span class="n">productoService</span><span class="p">.</span><span class="na">listar</span><span class="p">());</span>
-<span class="p">}</span>
-</code></pre></div>
 <p>Con esto, <code>GET /api/v1/productos?categoriaId={id}</code> es la navegación controlada de 2.5 — resuelta enteramente dentro de <code>producto</code>, sin que <code>CategoriaController</code> (3.5) necesite conocer <code>ProductoService</code>.</p>
 <h3 id="310-optimizar-la-consulta-de-listado-con-entitygraph">3.10 Optimizar la consulta de listado con <code>@EntityGraph</code><a class="headerlink" href="#310-optimizar-la-consulta-de-listado-con-entitygraph" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> <code>ProductoRepository.findAll()</code> con <code>@EntityGraph</code>, evitando el N+1 de 2.6.</p>
