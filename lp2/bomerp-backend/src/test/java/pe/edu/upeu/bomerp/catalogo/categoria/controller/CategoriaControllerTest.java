@@ -9,13 +9,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import pe.edu.upeu.bomerp.catalogo.categoria.dto.CategoriaRequest;
 import pe.edu.upeu.bomerp.catalogo.categoria.dto.CategoriaResponse;
 import pe.edu.upeu.bomerp.catalogo.categoria.service.CategoriaService;
-import pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoResponse;
-import pe.edu.upeu.bomerp.catalogo.producto.service.ProductoService;
 import pe.edu.upeu.bomerp.exception.ResourceNotFoundException;
 import tools.jackson.databind.ObjectMapper;
-
-import java.math.BigDecimal;
-import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -33,9 +28,6 @@ class CategoriaControllerTest {
 
     @MockitoBean
     private CategoriaService categoriaService;
-
-    @MockitoBean
-    private ProductoService productoService;
 
     @Test
     void crear_conDatosValidos_respondeCreated() throws Exception {
@@ -70,25 +62,6 @@ class CategoriaControllerTest {
         when(categoriaService.obtener(999L)).thenThrow(new ResourceNotFoundException("Categoria no encontrada: 999"));
 
         mockMvc.perform(get("/api/v1/categorias/999"))
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
-    void listarProductos_conCategoriaExistente_respondeOkConSusProductos() throws Exception {
-        when(productoService.listarPorCategoria(1L)).thenReturn(List.of(
-                ProductoResponse.builder().id(10L).nombre("Teclado mecánico").precio(new BigDecimal("180.50")).stock(25).build()
-        ));
-
-        mockMvc.perform(get("/api/v1/categorias/1/productos"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(10));
-    }
-
-    @Test
-    void listarProductos_conCategoriaInexistente_respondeNotFound() throws Exception {
-        when(productoService.listarPorCategoria(999L)).thenThrow(new ResourceNotFoundException("Categoria no encontrada: 999"));
-
-        mockMvc.perform(get("/api/v1/categorias/999/productos"))
                 .andExpect(status().isNotFound());
     }
 }

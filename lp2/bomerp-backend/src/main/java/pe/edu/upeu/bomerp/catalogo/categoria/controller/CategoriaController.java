@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import pe.edu.upeu.bomerp.catalogo.categoria.dto.CategoriaRequest;
 import pe.edu.upeu.bomerp.catalogo.categoria.dto.CategoriaResponse;
 import pe.edu.upeu.bomerp.catalogo.categoria.service.CategoriaService;
-import pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoResponse;
-import pe.edu.upeu.bomerp.catalogo.producto.service.ProductoService;
 import java.util.List;
 
 @Tag(name = "Categorías")
@@ -20,7 +18,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoriaController {
     private final CategoriaService categoriaService;
-    private final ProductoService productoService;
 
     @Operation(summary = "Lista las categorías registradas")
     @GetMapping
@@ -52,11 +49,5 @@ public class CategoriaController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void eliminar(@PathVariable Long id) {
         categoriaService.eliminar(id);
-    }
-
-    @Operation(summary = "Lista los productos de una categoría")
-    @GetMapping("/{id}/productos")
-    public ResponseEntity<List<ProductoResponse>> listarProductos(@PathVariable Long id) {
-        return ResponseEntity.ok(productoService.listarPorCategoria(id));
     }
 }

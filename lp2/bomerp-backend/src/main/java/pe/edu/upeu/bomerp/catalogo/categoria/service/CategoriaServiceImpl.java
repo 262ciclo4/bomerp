@@ -30,12 +30,14 @@ public class CategoriaServiceImpl implements CategoriaService {
     }
 
     @Override
+    @Transactional
     public CategoriaResponse crear(CategoriaRequest request) {
         Categoria categoria = categoriaMapper.toEntity(request);
         return categoriaMapper.toResponse(categoriaRepository.save(categoria));
     }
 
     @Override
+    @Transactional
     public CategoriaResponse actualizar(Long id, CategoriaRequest request) {
         Categoria categoria = buscarOFallar(id);
         categoria.setNombre(request.getNombre());
@@ -44,6 +46,7 @@ public class CategoriaServiceImpl implements CategoriaService {
     }
 
     @Override
+    @Transactional
     public void eliminar(Long id) {
         categoriaRepository.delete(buscarOFallar(id));
     }

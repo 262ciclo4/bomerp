@@ -12,8 +12,6 @@ import pe.edu.upeu.bomerp.catalogo.producto.entity.Producto;
 public interface ProductoMapper {
 
     @Mapping(target = "nombre", source = "request.nombre")
-    @Mapping(target = "precio", source = "request.precio")
-    @Mapping(target = "stock", source = "request.stock")
     @Mapping(target = "categoria", source = "categoria")
     Producto toEntity(ProductoRequest request, Categoria categoria);
 

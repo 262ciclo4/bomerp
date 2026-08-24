@@ -99,4 +99,23 @@ class ProductoControllerTest {
         mockMvc.perform(get("/api/v1/productos/999"))
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    void listar_conCategoriaIdExistente_respondeOkFiltrado() throws Exception {
+        when(productoService.listarPorCategoria(1L)).thenReturn(List.of(
+                ProductoResponse.builder().id(10L).nombre("Teclado mecánico").precio(new BigDecimal("180.50")).stock(25).build()
+        ));
+
+        mockMvc.perform(get("/api/v1/productos").param("categoriaId", "1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(10));
+    }
+
+    @Test
+    void listar_conCategoriaIdInexistente_respondeNotFound() throws Exception {
+        when(productoService.listarPorCategoria(999L)).thenThrow(new ResourceNotFoundException("Categoria no encontrada: 999"));
+
+        mockMvc.perform(get("/api/v1/productos").param("categoriaId", "999"))
+                .andExpect(status().isNotFound());
+    }
 }

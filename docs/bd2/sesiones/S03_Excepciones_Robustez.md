@@ -174,7 +174,7 @@ flowchart TD
     Q1 -->|"no, lo genera tu logica"| Raise
 ```
 
-La pregunta de la Figura 3 es la misma que resume la Tabla 3, hecha explícita: si el error ya lo dispara Oracle (una restricción, una conversión), le pones nombre con `PRAGMA EXCEPTION_INIT`; si el error no existe hasta que tu propia validación lo detecta, lo generás vos con `RAISE_APPLICATION_ERROR`. Nunca hace falta usar los dos para el mismo caso.
+La pregunta de la Figura 3 es la misma que resume la Tabla 3, hecha explícita: si el error ya lo dispara Oracle (una restricción, una conversión), le pones nombre con `PRAGMA EXCEPTION_INIT`; si el error no existe hasta que tu propia validación lo detecta, lo generas tú con `RAISE_APPLICATION_ERROR`. Nunca hace falta usar los dos para el mismo caso.
 
 ### 2.4 Registro de errores y tolerancia a fallos
 
@@ -284,7 +284,7 @@ END;
 /
 ```
 
-`e_categoria_inexistente` captura específicamente `ORA-02291`; cualquier otro error (uno que esta sesión no anticipó) sigue sin capturarse — y eso es intencional: capturar solo lo que sabés manejar, no todo con `WHEN OTHERS` (2.2). El `INSERT` a `LOG_ERRORES` ocurre **antes** del `RAISE_APPLICATION_ERROR`: si se invirtiera el orden, el procedimiento terminaría en el `RAISE` y el registro nunca se ejecutaría.
+`e_categoria_inexistente` captura específicamente `ORA-02291`; cualquier otro error (uno que esta sesión no anticipó) sigue sin capturarse — y eso es intencional: capturar solo lo que sabes manejar, no todo con `WHEN OTHERS` (2.2). El `INSERT` a `LOG_ERRORES` ocurre **antes** del `RAISE_APPLICATION_ERROR`: si se invirtiera el orden, el procedimiento terminaría en el `RAISE` y el registro nunca se ejecutaría.
 
 ### 3.4 Incorporar una excepción personalizada en `SP_APLICAR_DESCUENTO_PRODUCTO`
 

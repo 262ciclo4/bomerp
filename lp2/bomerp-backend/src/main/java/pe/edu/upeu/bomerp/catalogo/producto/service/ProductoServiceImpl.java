@@ -33,6 +33,7 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
+    @Transactional
     public ProductoResponse crear(ProductoRequest request) {
         Categoria categoria = buscarCategoriaOFallar(request.getCategoriaId());
         Producto producto = productoMapper.toEntity(request, categoria);
@@ -40,6 +41,7 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
+    @Transactional
     public ProductoResponse actualizar(Long id, ProductoRequest request) {
         Producto producto = buscarOFallar(id);
         Categoria categoria = buscarCategoriaOFallar(request.getCategoriaId());
@@ -51,6 +53,7 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
+    @Transactional
     public void eliminar(Long id) {
         productoRepository.delete(buscarOFallar(id));
     }

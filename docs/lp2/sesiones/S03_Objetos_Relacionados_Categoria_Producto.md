@@ -16,6 +16,8 @@ Un CRUD REST sobre una sola entidad, aislada, alcanza hasta que el dominio empie
 2. Validación de referencias.
 3. Prevención de ciclos de serialización.
 4. Navegación controlada y CRUD de la entidad relacionada.
+5. Consultas eficientes con relaciones: JPQL y `@EntityGraph`.
+6. Transacciones: por qué `@Transactional` debe cubrir toda la operación.
 
 ### 1.3 Propósito de aprendizaje
 
@@ -25,7 +27,7 @@ Al concluir la clase, estarás en condiciones de:
 
 ### 1.4 Producto de sesión
 
-API de `Categoria`-`Producto` con asociación ORM (`@ManyToOne`/`@JoinColumn`), `CategoriaResumen` embebido en `ProductoResponse`, validación de `categoriaId`, endpoint de navegación (`GET /api/v1/categorias/{id}/productos`), y CRUD completo de `Categoria` (`GET`, `GET /{id}`, `POST`, `PUT`, `DELETE`).
+API de `Categoria`-`Producto` con asociación ORM (`@ManyToOne`/`@JoinColumn`), `CategoriaResumen` embebido en `ProductoResponse`, validación de `categoriaId`, navegación controlada (`GET /api/v1/productos?categoriaId={id}`), listado optimizado con `@EntityGraph` (sin N+1), y CRUD completo de `Categoria` (`GET`, `GET /{id}`, `POST`, `PUT`, `DELETE`).
 
 ### 1.5 Metodología
 
@@ -34,8 +36,8 @@ API de `Categoria`-`Producto` con asociación ORM (`@ManyToOne`/`@JoinColumn`), 
 | Actividades a Realizar en el Periodo | Orientaciones generales (Orientaciones Metodológicas) | Material de estudio recomendado |
 |---|---|---|
 | Revisión previa individual | Repasar S2 (`Producto` con CRUD completo). Revisar la definición real de `PRODUCTOS` en Oracle — `ID_CATEGORIA` y `FK_PRODUCTO_CATEGORIA` ya existen desde S1, esta sesión recién los usa. Repasar MapStruct (S2, 3.8). | S2, `docs/proyecto-integrador/u1/oracle/S01_02_tablas.sql`. |
-| Clase presencial | Construcción guiada de la asociación `Categoria`-`Producto`: entidad, DTO relacionado, mapeo con MapStruct multi-fuente, validación de referencia, navegación controlada y CRUD completo de `Categoria`. Trabajo individual, siguiendo al docente paso a paso. | `pom.xml` (MapStruct ya configurado desde S2), backend ejecutable, cliente REST. |
-| Evaluación formativa | Verificación en clase de `POST`/`PUT`/`DELETE` sobre `/api/v1/categorias`, la asociación reflejada en `/api/v1/productos`, el caso `categoriaId` inexistente (`404`), y `GET /api/v1/categorias/{id}/productos`. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4. | Indicaciones de entrega (4.3), rúbrica de evaluación (4.6). |
+| Clase presencial | Construcción guiada de la asociación `Categoria`-`Producto`: entidad, DTO relacionado, mapeo con MapStruct multi-fuente, validación de referencia, navegación controlada, consulta optimizada con `@EntityGraph` y CRUD completo de `Categoria`. Trabajo individual, siguiendo al docente paso a paso. | `pom.xml` (MapStruct ya configurado desde S2), backend ejecutable, cliente REST. |
+| Evaluación formativa | Verificación en clase de `POST`/`PUT`/`DELETE` sobre `/api/v1/categorias`, la asociación reflejada en `/api/v1/productos`, el caso `categoriaId` inexistente (`404`), y `GET /api/v1/productos?categoriaId={id}`. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4. | Indicaciones de entrega (4.3), rúbrica de evaluación (4.6). |
 
 ### 1.6 Motivación de la sesión
 
@@ -111,7 +113,7 @@ flowchart LR
     Controller -->|"ProductoResponse{categoria}"| Client
 ```
 
-Lectura del diagrama: el service **resuelve** la categoría antes de mapear — el mapper nunca consulta la base de datos, solo transforma objetos que ya recibió resueltos. Esa separación es la misma de S2 (2.4, punto 4): el service es la única capa que valida algo que depende del estado actual del sistema, no de la forma del dato. Esta es la forma general del patrón — el paso a paso exacto de cuántas veces se llama a cada capa se construye en 3.9 (Figura 8), cuando toca escribir el código.
+Lectura del diagrama: el service **resuelve** la categoría antes de mapear — el mapper nunca consulta la base de datos, solo transforma objetos que ya recibió resueltos. Esa separación es la misma de S2 (2.4, punto 4): el service es la única capa que valida algo que depende del estado actual del sistema, no de la forma del dato. Esta es la forma general del patrón — el paso a paso exacto de cuántas veces se llama a cada capa se construye en 3.9 (Figura 10), cuando toca escribir el código.
 
 ### 2.2 Asociación de entidades y DTO relacionados
 
@@ -202,29 +204,25 @@ Un problema clásico de JPA: si una entidad relacionada mantiene una colección 
 
 **Error frecuente**: agregar `@OneToMany` en `Categoria` "por si se necesita después" es exactamente el tipo de anticipación que este curso evita (ver `CLAUDE.md`, "no adelantar alcance") — y además reintroduce el riesgo de ciclo que esta sesión evitó a propósito. Si una sesión futura necesita navegar de `Categoria` a sus `Producto`, la forma correcta es una consulta explícita (2.5), no una colección cargada automáticamente en la entidad.
 
-**Figura 5. El ciclo evitado, y las dos decisiones que lo evitan**
+**Figura 5. Por qué no hay ciclo posible**
 
 ```mermaid
 flowchart LR
-    subgraph Riesgo["Riesgo hipotetico: relacion bidireccional + entidades serializadas"]
-        direction LR
-        P1["Producto"] -->|"serializa"| C1["Categoria"]
-        C1 -->|"@OneToMany, serializa de vuelta"| P1
-    end
-    subgraph Real["Real, esta sesion"]
-        direction LR
-        P2["Producto"] -->|"@ManyToOne"| C2["Categoria (sin lista de vuelta)"]
-        DTO["ProductoResponse"] -.->|"nunca serializa la entidad"| P2
-    end
+    DTO["ProductoResponse"]
+    P["Producto"]
+    C["Categoria (sin lista de vuelta)"]
+
+    DTO -.->|"nunca serializa la entidad"| P
+    P -->|"@ManyToOne"| C
 ```
 
-El bloque "Riesgo" no es código de esta sesión — es lo que pasaría si se agregara `@OneToMany` en `Categoria` (el error frecuente de arriba): las dos flechas entre `Producto` y `Categoria` se retroalimentan sin fin. El bloque "Real" muestra por qué eso nunca ocurre aquí: la relación va en un solo sentido, y lo que se serializa nunca es la entidad, siempre el DTO.
+Las dos flechas de la Figura 5 son las dos decisiones de arriba: la sólida (`Producto` → `Categoria`, unidireccional) es la primera; la punteada (`ProductoResponse` nunca serializa la entidad) es la segunda. Ninguna de las dos puede retroalimentarse a sí misma — por eso no hay ciclo posible.
 
 ### 2.5 Navegación controlada y CRUD completo de `Categoria`
 
 **Navegación controlada** significa: para ir de una entidad a las instancias de otra que la referencian, se expone una consulta explícita bajo demanda (un endpoint dedicado), nunca una colección que el ORM carga automáticamente cada vez que se lee la entidad principal — eso sería costoso si esa lista rara vez se necesita, y reintroduce el riesgo de ciclo evitado en 2.4.
 
-**Ejemplo de referencia (LP2).** `GET /api/v1/categorias/{id}/productos` es esa consulta explícita — no una colección cargada dentro de la entidad `Categoria`. De paso, `Categoria` completa en esta sesión el mismo patrón CRUD que S2 aplicó a `Producto`: `CategoriaRequest` (entrada validada), `CategoriaResponse` (salida, ahora clase con `@Builder` en vez de `record` — mismo motivo que S2 documentó para `Producto`, 2.2), y `CategoriaMapper`.
+**Ejemplo de referencia (LP2).** `GET /api/v1/productos?categoriaId={id}` es esa consulta explícita — no una colección cargada dentro de la entidad `Categoria`. Es un filtro sobre la colección de `Producto`, no un recurso anidado de `Categoria`: `Producto` tiene existencia propia (su propio CRUD completo, desde S2), no le pertenece a `Categoria` como una línea le pertenece a un pedido — por eso la consulta vive en `ProductoController`, no en `CategoriaController` (3.9). De paso, `Categoria` completa en esta sesión el mismo patrón CRUD que S2 aplicó a `Producto`: `CategoriaRequest` (entrada validada), `CategoriaResponse` (salida, ahora clase con `@Builder` en vez de `record` — mismo motivo que S2 documentó para `Producto`, 2.2), y `CategoriaMapper`.
 
 **Figura 6. Navegación controlada: consulta explícita, no colección automática**
 
@@ -236,13 +234,129 @@ flowchart LR
     end
     subgraph Real["Real: navegacion controlada"]
         direction LR
-        Cliente["Cliente"] -->|"GET /categorias/id/productos"| CatCtrl["CategoriaController"]
-        CatCtrl --> ProdSvc["ProductoService.listarPorCategoria"]
+        Cliente["Cliente"] -->|"GET /productos?categoriaId=id"| ProdCtrl["ProductoController"]
+        ProdCtrl --> ProdSvc["ProductoService.listarPorCategoria"]
         ProdSvc --> Repo["ProductoRepository.findByCategoriaId"]
     end
 ```
 
-El bloque "Evitado" es la alternativa que 2.4 ya descartó por el riesgo de ciclo; acá se ve además su otro costo: cargaría la lista de productos **cada vez** que alguien lee una categoría, aunque nadie la necesite. El bloque "Real" solo consulta bajo demanda, cuando el cliente pide explícitamente ese endpoint — y pasa por `ProductoService`, no por su repositorio directo, aunque lo invoque `CategoriaController` (3.5).
+El bloque "Evitado" es la alternativa que 2.4 ya descartó por el riesgo de ciclo; acá se ve además su otro costo: cargaría la lista de productos **cada vez** que alguien lee una categoría, aunque nadie la necesite. El bloque "Real" solo consulta bajo demanda, cuando el cliente pide explícitamente ese filtro — y queda enteramente dentro de `ProductoController`/`ProductoService`, sin que `CategoriaController` participe (3.5, 3.9).
+
+### 2.6 Consultas eficientes con relaciones: JPQL y `@EntityGraph`
+
+Cuando una consulta trae una lista de entidades que a su vez tienen una relación `LAZY` (2.2), y algo en el camino (el mapper, el DTO) necesita el dato de esa relación para cada fila, Hibernate no lo trae todo de una vez — dispara una consulta adicional por cada fila. Esto se llama el problema **N+1**: una consulta para traer la lista (1), más una consulta extra por cada elemento de la lista (N) para resolver su relación. Con pocos registros no se nota; con miles, sí.
+
+**JPQL** (*Jakarta Persistence Query Language*) es el lenguaje de consulta de JPA — se parece a SQL, pero opera sobre **entidades y sus campos** (`Producto`, `p.categoria`), no sobre tablas y columnas (`PRODUCTOS`, `ID_CATEGORIA`); Hibernate lo traduce a SQL real al ejecutar. La cláusula `JOIN FETCH` le dice a JPQL que traiga la entidad relacionada en la **misma** consulta, con un solo `JOIN` SQL, en vez de dejar que la relación se resuelva sola, más tarde, una vez por fila.
+
+**`@EntityGraph`** hace lo mismo que un `JOIN FETCH`, pero de forma declarativa: en vez de escribir JPQL a mano, le dices a Spring Data JPA qué caminos (`attributePaths`) cargar junto con la entidad principal, y él arma la consulta optimizada por ti — sin tocar el service ni el mapper.
+
+**Tabla 2. JPQL con `JOIN FETCH` vs. `@EntityGraph`**
+
+| | JPQL con `JOIN FETCH` | `@EntityGraph` |
+|---|---|---|
+| Cómo se escribe | Consulta completa a mano, con `@Query` | Solo se declaran los caminos a cargar |
+| Cuándo conviene | Consultas con condiciones o proyecciones propias | El método ya existe (`findAll`, `findById`) y solo falta evitar el N+1 |
+| Resultado en SQL | Un `JOIN` explícito en la consulta que escribiste | Un `JOIN` que Spring Data genera por ti |
+
+**Ejemplo de referencia (LP2).** `ProductoServiceImpl.listar()` (3.9) llama a `productoRepository.findAll()`, y el mapper después pide `categoria.getNombre()` para cada producto al construir su `CategoriaResumen` — una consulta extra por producto, el N+1 de arriba. Se soluciona en 3.10 agregando `@EntityGraph` al método, sin cambiar el service ni el mapper.
+
+**Figura 7. Una sola consulta con `@EntityGraph` vs. N+1**
+
+```mermaid
+flowchart TB
+    subgraph UnaSola["Una sola consulta: con EntityGraph"]
+        direction TB
+        Q3["1 consulta: SELECT ... FROM PRODUCTOS JOIN CATEGORIAS ON ..."]
+    end
+    subgraph NMasUno["N+1: findAll() sin EntityGraph"]
+        direction TB
+        Q1["1 consulta: SELECT * FROM PRODUCTOS"]
+        Q2["N consultas: SELECT * FROM CATEGORIAS WHERE ID = ? (una por producto)"]
+        Q1 --> Q2
+    end
+```
+
+Con 1000 productos, la versión N+1 ejecuta 1001 consultas contra Oracle; la versión con `@EntityGraph` ejecuta una sola, con un `JOIN`. El resultado (los mismos datos) es idéntico — lo que cambia es cuántas veces se viaja a la base de datos, y eso es justo lo que le importa a "grandes volúmenes de datos".
+
+**Ejemplo esperado en consola** (con dos productos de categorías distintas; el formato exacto puede variar según la versión de Hibernate, pero el número de sentencias es lo que importa).
+
+**Con `@EntityGraph(attributePaths = "categoria")`** (la versión que se construye en 3.10) — `findAll()` se sobrescribe explícitamente:
+
+```java
+package pe.edu.upeu.bomerp.catalogo.producto.repository;
+
+import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.JpaRepository;
+import pe.edu.upeu.bomerp.catalogo.producto.entity.Producto;
+import java.util.List;
+
+public interface ProductoRepository extends JpaRepository<Producto, Long> {
+
+    @Override
+    @EntityGraph(attributePaths = "categoria")
+    List<Producto> findAll();
+
+    List<Producto> findByCategoriaId(Long categoriaId);
+}
+```
+
+`productoRepository.findAll()` genera una sola consulta, con `JOIN`:
+
+```text
+select p1_0.id, c1_0.id, c1_0.descripcion, c1_0.nombre, p1_0.nombre, p1_0.precio, p1_0.stock
+from productos p1_0
+join categorias c1_0 on c1_0.id=p1_0.id_categoria
+```
+
+**Sin `@EntityGraph`** — `ProductoRepository` hereda `findAll()` de `JpaRepository` tal cual, sin sobrescribirlo:
+
+```java
+package pe.edu.upeu.bomerp.catalogo.producto.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import pe.edu.upeu.bomerp.catalogo.producto.entity.Producto;
+import java.util.List;
+
+public interface ProductoRepository extends JpaRepository<Producto, Long> {
+    List<Producto> findByCategoriaId(Long categoriaId);
+}
+```
+
+La misma llamada, `productoRepository.findAll()`, genera ahora una consulta por `Producto` y una más por cada `Categoria` que necesita resolver:
+
+```text
+select p1_0.id, p1_0.id_categoria, p1_0.nombre, p1_0.precio, p1_0.stock from productos p1_0
+select c1_0.id, c1_0.descripcion, c1_0.nombre from categorias c1_0 where c1_0.id=?
+select c1_0.id, c1_0.descripcion, c1_0.nombre from categorias c1_0 where c1_0.id=?
+```
+
+Mismos datos, mismas dos categorías resueltas — la diferencia es que la primera versión no vuelve a preguntarle a Oracle por cada fila. Verifica el número real de sentencias en tu propia consola al hacer 3.10 (`show-sql: true` ya está activo desde S1).
+
+### 2.7 Transacciones: por qué `@Transactional` debe cubrir toda la operación
+
+**Transacción**: una unidad de trabajo que Spring/Hibernate abre y cierra como un bloque — mientras está abierta, hay una sesión de Hibernate activa, capaz de resolver relaciones `LAZY` (2.2); en cuanto se cierra, cualquier proxy que haya quedado sin resolver ya no se puede completar.
+
+Sin `@Transactional` en el método de servicio, cada llamada a un repositorio de Spring Data JPA abre y cierra su propia transacción por separado — el método en sí no tiene ninguna transacción propia que las una. Si ese método necesita leer una relación `LAZY` **después** de que el repositorio que la resolvió ya cerró su transacción, la sesión ya no existe para completarla.
+
+**Regla práctica:** cualquier método de servicio que toca una relación `LAZY` y necesita leerla para construir la respuesta (por ejemplo, al mapear a un DTO) debe llevar `@Transactional` — de forma que la transacción cubra desde la primera consulta hasta que termina de construirse esa respuesta, no solo una llamada aislada al repositorio. Los métodos de solo lectura usan `@Transactional(readOnly = true)` (una optimización, ver 2.6); los que escriben (`crear`, `actualizar`, `eliminar`) usan `@Transactional` sin ese atributo.
+
+**Ejemplo de referencia (LP2).** `ProductoServiceImpl.crear()` (3.9) hace tres cosas que deben ocurrir en la misma sesión: resolver la `Categoria` (`buscarCategoriaOFallar`), guardar el `Producto`, y mapear la respuesta (`toResponse`, que lee `categoria.getNombre()` para el `CategoriaResumen`, 2.2). Sin `@Transactional` en `crear()`, las dos primeras corren en transacciones separadas, y la tercera se queda sin sesión — este fue un error real, no hipotético, al probar esta sesión.
+
+**Figura 8. Una transacción por método, no una por llamada**
+
+```mermaid
+flowchart TB
+    subgraph SinTx["Sin @Transactional: tres sesiones separadas"]
+        direction LR
+        T1["Sesion 1: buscarCategoriaOFallar"] --> T2["Sesion 2: productoRepository.save"] --> T3["toResponse: sesion ya cerrada -> LazyInitializationException"]
+    end
+    subgraph ConTx["Con @Transactional: una sola sesion"]
+        direction LR
+        U["Una sesion: resolver categoria, guardar, mapear respuesta"]
+    end
+```
+
+La mitad de arriba es lo que pasaba antes de corregirlo: tres transacciones cortas, cada una con su propia sesión — para cuando `toResponse` necesita `categoria.getNombre()`, ya no queda ninguna sesión abierta. La mitad de abajo es la corrección: una sola transacción, abierta desde el principio del método hasta que termina de construir la respuesta.
 
 ## 3. Aplica: actividad práctica guiada
 
@@ -265,9 +379,10 @@ Tiempo: 2h.
 - **3.7** Adaptar los DTO de `Producto` a la asociación.
 - **3.8** Resolver el mapeo de la asociación con MapStruct.
 - **3.9** Validar la referencia y habilitar la navegación controlada.
-- **3.10** Verificar la asociación completa, de punta a punta.
-- **3.11** Cubrir la asociación con pruebas automatizadas.
-- **3.12** Relacionar con ADS y BD2.
+- **3.10** Optimizar la consulta de listado con `@EntityGraph`.
+- **3.11** Verificar la asociación completa, de punta a punta.
+- **3.12** Cubrir la asociación con pruebas automatizadas (opcional).
+- **3.13** Relacionar con ADS y BD2.
 
 ### 3.1 Verificar el punto de partida
 
@@ -424,12 +539,14 @@ public class CategoriaServiceImpl implements CategoriaService {
     }
 
     @Override
+    @Transactional
     public CategoriaResponse crear(CategoriaRequest request) {
         Categoria categoria = categoriaMapper.toEntity(request);
         return categoriaMapper.toResponse(categoriaRepository.save(categoria));
     }
 
     @Override
+    @Transactional
     public CategoriaResponse actualizar(Long id, CategoriaRequest request) {
         Categoria categoria = buscarOFallar(id);
         categoria.setNombre(request.getNombre());
@@ -438,6 +555,7 @@ public class CategoriaServiceImpl implements CategoriaService {
     }
 
     @Override
+    @Transactional
     public void eliminar(Long id) {
         categoriaRepository.delete(buscarOFallar(id));
     }
@@ -455,7 +573,7 @@ Nota la asimetría con `crear`/`actualizar` (2.3, 3.9): ahí `buscarCategoriaOFa
 
 ### 3.5 Exponer el CRUD de `Categoria` como API REST
 
-**Producto del paso:** los seis endpoints — el CRUD completo más la navegación controlada.
+**Producto del paso:** los cinco endpoints del CRUD completo de `Categoria`.
 
 **`catalogo/categoria/controller/CategoriaController.java`**
 
@@ -472,8 +590,6 @@ import org.springframework.web.bind.annotation.*;
 import pe.edu.upeu.bomerp.catalogo.categoria.dto.CategoriaRequest;
 import pe.edu.upeu.bomerp.catalogo.categoria.dto.CategoriaResponse;
 import pe.edu.upeu.bomerp.catalogo.categoria.service.CategoriaService;
-import pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoResponse;
-import pe.edu.upeu.bomerp.catalogo.producto.service.ProductoService;
 import java.util.List;
 
 @Tag(name = "Categorías")
@@ -482,7 +598,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoriaController {
     private final CategoriaService categoriaService;
-    private final ProductoService productoService;
 
     @Operation(summary = "Lista las categorías registradas")
     @GetMapping
@@ -515,27 +630,61 @@ public class CategoriaController {
     public void eliminar(@PathVariable Long id) {
         categoriaService.eliminar(id);
     }
-
-    @Operation(summary = "Lista los productos de una categoría")
-    @GetMapping("/{id}/productos")
-    public ResponseEntity<List<ProductoResponse>> listarProductos(@PathVariable Long id) {
-        return ResponseEntity.ok(productoService.listarPorCategoria(id));
-    }
 }
 ```
 
-`listarProductos` delega en `ProductoService`, no en `ProductoRepository` — `CategoriaController` nunca toca un repositorio ajeno directamente, el mismo principio que Spring Modulith verifica entre módulos (`ModularityTests`), aplicado aquí también entre paquetes de una misma entidad.
+`CategoriaController` depende solo de `CategoriaService` — nada de `producto` aparece acá. La navegación controlada (2.5) no vive en este controller: `Producto` tiene existencia propia, así que filtrarlo por categoría es una consulta sobre `/productos`, no un recurso anidado de `/categorias`. Se construye en `ProductoController`, dentro de 3.9.
+
+Esta decisión evita a propósito el acoplamiento que tendría agregar un `listarProductos` acá (`CategoriaController` dependiendo de `ProductoService`, en sentido opuesto al que 3.9 sí agrega, de `producto` hacia `categoria` vía `ProductoServiceImpl` → `CategoriaRepository`, analizada en ADS S3, 3.4). No son dependencias bidireccionales: la única flecha real entre los dos paquetes va de `producto` hacia `categoria` — `categoria` nunca necesita conocer `producto`.
 
 ### 3.6 Asociar `Producto` con `Categoria` mediante el ORM
 
 **Producto del paso:** `Producto.categoria`, mapeada a la columna `ID_CATEGORIA` que ya existe en Oracle desde S1 (1.5).
 
-Agrega a `catalogo/producto/entity/Producto.java`:
+Así queda `catalogo/producto/entity/Producto.java` completo, con las dos líneas nuevas (`@ManyToOne`/`@JoinColumn`) agregadas al final de la clase, después de `stock`:
 
 ```java
-@ManyToOne(fetch = FetchType.LAZY)
-@JoinColumn(name = "ID_CATEGORIA", nullable = false)
-private Categoria categoria;
+package pe.edu.upeu.bomerp.catalogo.producto.entity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import pe.edu.upeu.bomerp.catalogo.categoria.entity.Categoria;
+import java.math.BigDecimal;
+
+@Entity
+@Table(name = "PRODUCTOS", schema = "BOM_CATALOGO")
+@Getter
+@Setter
+@NoArgsConstructor
+public class Producto {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
+    private Long id;
+
+    @Column(name = "NOMBRE", nullable = false, length = 120)
+    private String nombre;
+
+    @Column(name = "PRECIO", nullable = false, precision = 10, scale = 2)
+    private BigDecimal precio;
+
+    @Column(name = "STOCK", nullable = false)
+    private Integer stock;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID_CATEGORIA", nullable = false)
+    private Categoria categoria;
+}
 ```
 
 `fetch = FetchType.LAZY` evita que cada consulta de `Producto` traiga también su `Categoria` si nadie la va a usar — se carga recién cuando algo llama a `producto.getCategoria()` (por ejemplo, dentro del mapper, en 3.8).
@@ -544,20 +693,67 @@ private Categoria categoria;
 
 **Producto del paso:** `ProductoRequest` con `categoriaId`, `ProductoResponse` con `CategoriaResumen`.
 
-Agrega a `ProductoRequest`:
+Así queda `ProductoRequest.java` completo, con `categoriaId` agregado al final:
 
 ```java
-@NotNull
-private Long categoriaId;
+package pe.edu.upeu.bomerp.catalogo.producto.dto;
+
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
+import java.math.BigDecimal;
+
+@Getter
+@Setter
+public class ProductoRequest {
+
+    @NotBlank
+    @Size(max = 120)
+    private String nombre;
+
+    @NotNull
+    @DecimalMin(value = "0.0", inclusive = true)
+    private BigDecimal precio;
+
+    @NotNull
+    @PositiveOrZero
+    private Integer stock;
+
+    @NotNull
+    private Long categoriaId;
+}
 ```
 
-Agrega a `ProductoResponse`:
+Así queda `ProductoResponse.java` completo, con `categoria` agregado al final (el import nuevo es `pe.edu.upeu.bomerp.catalogo.categoria.dto.CategoriaResumen`):
 
 ```java
-private CategoriaResumen categoria;
-```
+package pe.edu.upeu.bomerp.catalogo.producto.dto;
 
-(el import es `pe.edu.upeu.bomerp.catalogo.categoria.dto.CategoriaResumen`).
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import pe.edu.upeu.bomerp.catalogo.categoria.dto.CategoriaResumen;
+import java.math.BigDecimal;
+
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class ProductoResponse {
+    private Long id;
+    private String nombre;
+    private BigDecimal precio;
+    private Integer stock;
+    private CategoriaResumen categoria;
+}
+```
 
 ### 3.8 Resolver el mapeo de la asociación con MapStruct
 
@@ -578,8 +774,6 @@ import pe.edu.upeu.bomerp.catalogo.producto.entity.Producto;
 public interface ProductoMapper {
 
     @Mapping(target = "nombre", source = "request.nombre")
-    @Mapping(target = "precio", source = "request.precio")
-    @Mapping(target = "stock", source = "request.stock")
     @Mapping(target = "categoria", source = "categoria")
     Producto toEntity(ProductoRequest request, Categoria categoria);
 
@@ -595,9 +789,11 @@ public interface ProductoMapper {
 [ERROR] .../ProductoMapper.java:[15,14] Several possible source properties for target property "nombre".
 ```
 
-`ProductoRequest` y `Categoria` **ambos** tienen un campo `nombre` — MapStruct no puede adivinar de cuál de los dos parámetros viene el `nombre` de `Producto`. Con un solo parámetro fuente (como en S2) esto nunca pasa, porque no hay ambigüedad posible. La solución es la de arriba: `@Mapping(target = "nombre", source = "request.nombre")` desambigua explícitamente, calificando el origen con el nombre del parámetro (`request.nombre`, no solo `nombre`). Lo mismo aplica a `precio`/`stock`, aunque `Categoria` no tenga esos campos — una vez que declaras el mapper con más de un parámetro, MapStruct exige que **todos** los campos ambiguos (o potencialmente ambiguos) se resuelvan de forma explícita.
+`ProductoRequest` y `Categoria` **ambos** tienen un campo `nombre` — MapStruct no puede adivinar de cuál de los dos parámetros viene el `nombre` de `Producto`. Con un solo parámetro fuente (como en S2) esto nunca pasa, porque no hay ambigüedad posible. La solución es la de arriba: `@Mapping(target = "nombre", source = "request.nombre")` desambigua explícitamente, calificando el origen con el nombre del parámetro (`request.nombre`, no solo `nombre`).
 
-**Figura 7. Por qué `nombre` es ambiguo, y cómo se resuelve**
+`precio` y `stock` **no** necesitan `@Mapping`: solo existen en `request`, así que no hay ninguna ambigüedad que resolver — MapStruct los mapea solo. `categoria`, en cambio, sí necesita su propio `@Mapping`, pero por una razón distinta: no es un campo ambiguo, es un parámetro completo (`categoria`) que debe asignarse directo a un campo del mismo nombre en `Producto`. MapStruct no hace esa conexión automáticamente — sin `@Mapping(target = "categoria", source = "categoria")`, el compilador solo avisa con una advertencia (`Unmapped target property: categoria`), no con un error, y `producto.categoria` queda `null` en silencio.
+
+**Figura 9. Por qué `nombre` es ambiguo, y cómo se resuelve**
 
 ```mermaid
 flowchart TD
@@ -617,9 +813,9 @@ La ambigüedad no es un error de MapStruct — es correcto que se detenga: con d
 
 ### 3.9 Validar la referencia y habilitar la navegación controlada
 
-**Producto del paso:** `ProductoServiceImpl` resuelve y valida `categoriaId` antes de guardar; `listarPorCategoria` para la navegación de 3.5.
+**Producto del paso:** `ProductoServiceImpl` resuelve y valida `categoriaId` antes de guardar; `listarPorCategoria` y el filtro en `ProductoController` para la navegación controlada de 2.5.
 
-**Figura 8. `ProductoServiceImpl.crear()`, paso a paso — lo que el código de abajo implementa**
+**Figura 10. `ProductoServiceImpl.crear()`, paso a paso — lo que el código de abajo implementa**
 
 ```mermaid
 flowchart LR
@@ -677,6 +873,7 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
+    @Transactional
     public ProductoResponse crear(ProductoRequest request) {
         Categoria categoria = buscarCategoriaOFallar(request.getCategoriaId());
         Producto producto = productoMapper.toEntity(request, categoria);
@@ -684,6 +881,7 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
+    @Transactional
     public ProductoResponse actualizar(Long id, ProductoRequest request) {
         Producto producto = buscarOFallar(id);
         Categoria categoria = buscarCategoriaOFallar(request.getCategoriaId());
@@ -695,6 +893,7 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
+    @Transactional
     public void eliminar(Long id) {
         productoRepository.delete(buscarOFallar(id));
     }
@@ -718,21 +917,162 @@ public class ProductoServiceImpl implements ProductoService {
 }
 ```
 
+**Error frecuente real:** si `crear`/`actualizar`/`eliminar` no llevaran `@Transactional` (como `listar`/`obtener`/`listarPorCategoria` sí tienen, con `readOnly = true`), cada llamada a un repositorio abriría y cerraría su propia sesión de Hibernate por separado. `buscarCategoriaOFallar` y `productoRepository.save` quedarían en sesiones distintas, y para cuando `productoMapper.toResponse` intenta leer `categoria.getNombre()` (para armar el `CategoriaResumen`, 2.2), la sesión que resolvió esa relación ya se cerró — `LazyInitializationException: could not initialize proxy ... no session`. `@Transactional` (sin `readOnly`, porque estas operaciones sí escriben) mantiene una sola sesión abierta durante todo el método, desde que se resuelve la categoría hasta que se construye la respuesta.
+
 `listarPorCategoria` valida la categoría **antes** de consultar sus productos — así, pedir los productos de una categoría inexistente responde `404`, no una lista vacía que confundiría "categoría sin productos" con "categoría que no existe".
+
+Así queda `ProductoRepository.java` completo, con `findByCategoriaId` agregado (todavía sin `@EntityGraph` — eso llega en 3.10):
+
+```java
+package pe.edu.upeu.bomerp.catalogo.producto.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import pe.edu.upeu.bomerp.catalogo.producto.entity.Producto;
+import java.util.List;
+
+public interface ProductoRepository extends JpaRepository<Producto, Long> {
+    List<Producto> findByCategoriaId(Long categoriaId);
+}
+```
+
+Así queda `ProductoService.java` completo, con `listarPorCategoria` agregado al final:
+
+```java
+package pe.edu.upeu.bomerp.catalogo.producto.service;
+
+import pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoRequest;
+import pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoResponse;
+import java.util.List;
+
+public interface ProductoService {
+    List<ProductoResponse> listar();
+    ProductoResponse obtener(Long id);
+    ProductoResponse crear(ProductoRequest request);
+    ProductoResponse actualizar(Long id, ProductoRequest request);
+    void eliminar(Long id);
+    List<ProductoResponse> listarPorCategoria(Long categoriaId);
+}
+```
+
+Por último, actualiza `listar()` en `ProductoController` para aceptar el filtro opcional — así queda `ProductoController.java` completo, con el `listar()` modificado (`@RequestParam` nuevo) y el resto del CRUD de S2 sin cambios:
+
+```java
+package pe.edu.upeu.bomerp.catalogo.producto.controller;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoRequest;
+import pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoResponse;
+import pe.edu.upeu.bomerp.catalogo.producto.service.ProductoService;
+import java.util.List;
+
+@Tag(name = "Productos")
+@RestController
+@RequestMapping("/api/v1/productos")
+@RequiredArgsConstructor
+public class ProductoController {
+    private final ProductoService productoService;
+
+    @Operation(summary = "Lista los productos registrados, opcionalmente filtrados por categoria")
+    @GetMapping
+    public ResponseEntity<List<ProductoResponse>> listar(@RequestParam(required = false) Long categoriaId) {
+        if (categoriaId != null) {
+            return ResponseEntity.ok(productoService.listarPorCategoria(categoriaId));
+        }
+        return ResponseEntity.ok(productoService.listar());
+    }
+
+    @Operation(summary = "Consulta un producto por id")
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductoResponse> obtener(@PathVariable Long id) {
+        return ResponseEntity.ok(productoService.obtener(id));
+    }
+
+    @Operation(summary = "Registra un producto nuevo")
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public ProductoResponse crear(@Valid @RequestBody ProductoRequest request) {
+        return productoService.crear(request);
+    }
+
+    @Operation(summary = "Actualiza un producto existente")
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductoResponse> actualizar(@PathVariable Long id, @Valid @RequestBody ProductoRequest request) {
+        return ResponseEntity.ok(productoService.actualizar(id, request));
+    }
+
+    @Operation(summary = "Elimina un producto")
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void eliminar(@PathVariable Long id) {
+        productoService.eliminar(id);
+    }
+}
+```
+
+```java
+@Operation(summary = "Lista los productos registrados, opcionalmente filtrados por categoria")
+@GetMapping
+public ResponseEntity<List<ProductoResponse>> listar(@RequestParam(required = false) Long categoriaId) {
+    if (categoriaId != null) {
+        return ResponseEntity.ok(productoService.listarPorCategoria(categoriaId));
+    }
+    return ResponseEntity.ok(productoService.listar());
+}
+```
+
+Con esto, `GET /api/v1/productos?categoriaId={id}` es la navegación controlada de 2.5 — resuelta enteramente dentro de `producto`, sin que `CategoriaController` (3.5) necesite conocer `ProductoService`.
+
+### 3.10 Optimizar la consulta de listado con `@EntityGraph`
+
+**Producto del paso:** `ProductoRepository.findAll()` con `@EntityGraph`, evitando el N+1 de 2.6.
 
 Agrega a `ProductoRepository`:
 
 ```java
-List<Producto> findByCategoriaId(Long categoriaId);
+package pe.edu.upeu.bomerp.catalogo.producto.repository;
+
+import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.JpaRepository;
+import pe.edu.upeu.bomerp.catalogo.producto.entity.Producto;
+import java.util.List;
+
+public interface ProductoRepository extends JpaRepository<Producto, Long> {
+
+    @Override
+    @EntityGraph(attributePaths = "categoria")
+    List<Producto> findAll();
+
+    List<Producto> findByCategoriaId(Long categoriaId);
+}
 ```
 
-Y a `ProductoService` (interfaz):
+`@Override` es necesario porque estás sobrescribiendo el `findAll()` que `JpaRepository` ya declara, solo para agregarle el `@EntityGraph` — el resto de la interfaz no cambia.
 
-```java
-List<ProductoResponse> listarPorCategoria(Long categoriaId);
+**Producto del paso (verificación):** confirmar en la consola que `listar()` ahora ejecuta una sola consulta con `JOIN`, no una por producto.
+
+`application-dev.yml` ya tiene esta configuración desde S1 — no hace falta agregar nada, solo confirmarla y mirar la consola:
+
+```yaml
+spring:
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
 ```
 
-### 3.10 Verificar la asociación completa, de punta a punta
+`show-sql: true` es lo que imprime cada sentencia SQL real en la consola; `format_sql: true` la imprime formateada (varias líneas, indentada), más fácil de leer que una sola línea larga. Llama a `GET /api/v1/productos` con al menos dos productos de categorías distintas y confirma: **una sola consulta** con `join categorias` en el `FROM`, no varias consultas repetidas `select ... from categorias where id=?`, una por producto.
+
+### 3.11 Verificar la asociación completa, de punta a punta
 
 **Producto del paso:** evidencia de la asociación funcionando end-to-end.
 
@@ -746,7 +1086,7 @@ Invoke-RestMethod -Method Post -Uri "http://localhost:8080/api/v1/categorias" -C
 Invoke-RestMethod -Method Post -Uri "http://localhost:8080/api/v1/productos" -ContentType "application/json" -Body '{"nombre":"Licuadora","precio":150.00,"stock":10,"categoriaId":{categoriaId}}'
 
 # Listar productos de esa categoria (200)
-Invoke-RestMethod -Method Get -Uri "http://localhost:8080/api/v1/categorias/{categoriaId}/productos"
+Invoke-RestMethod -Method Get -Uri "http://localhost:8080/api/v1/productos?categoriaId={categoriaId}"
 
 # Caso invalido: categoriaId inexistente (404)
 Invoke-RestMethod -Method Post -Uri "http://localhost:8080/api/v1/productos" -ContentType "application/json" -Body '{"nombre":"Licuadora","precio":150.00,"stock":10,"categoriaId":999999}'
@@ -762,28 +1102,31 @@ curl -i -X POST http://localhost:8080/api/v1/categorias -H "Content-Type: applic
 curl -i -X POST http://localhost:8080/api/v1/productos -H "Content-Type: application/json" -d '{"nombre":"Licuadora","precio":150.00,"stock":10,"categoriaId":{categoriaId}}'
 
 # Listar productos de esa categoria (200)
-curl -i http://localhost:8080/api/v1/categorias/{categoriaId}/productos
+curl -i "http://localhost:8080/api/v1/productos?categoriaId={categoriaId}"
 
 # Caso invalido: categoriaId inexistente (404)
 curl -i -X POST http://localhost:8080/api/v1/productos -H "Content-Type: application/json" -d '{"nombre":"Licuadora","precio":150.00,"stock":10,"categoriaId":999999}'
 ```
 
-**Tabla 2. Verificación de la asociación antes de continuar**
+**Tabla 3. Verificación de la asociación antes de continuar**
 
 | Caso | Método | Resultado esperado |
 |---|---|---|
 | Crear categoría válida | `POST /api/v1/categorias` | `201 Created` |
 | Crear producto con `categoriaId` válido | `POST /api/v1/productos` | `201 Created`, cuerpo con `categoria.nombre` |
-| Listar productos de una categoría | `GET /api/v1/categorias/{id}/productos` | `200 OK`, lista con el producto creado |
+| Listar productos de una categoría | `GET /api/v1/productos?categoriaId={id}` | `200 OK`, lista con el producto creado |
 | `categoriaId` inexistente en `POST`/`PUT` de producto | cualquiera | `404`, cuerpo con `error: "Not Found"` |
-| Categoría inexistente en `GET .../productos` | `GET` | `404` (no una lista vacía) |
+| Categoría inexistente en `GET /productos?categoriaId=...` | `GET` | `404` (no una lista vacía) |
 | Eliminar categoría con productos asociados | `DELETE /api/v1/categorias/{id}` | `500` (hallazgo conocido, 3.4) |
 
-### 3.11 Cubrir la asociación con pruebas automatizadas
+### 3.12 Cubrir la asociación con pruebas automatizadas (opcional)
 
-**Producto del paso:** `CategoriaControllerTest`, y `ProductoControllerTest` (S2) actualizado — `ProductoRequest` ahora exige `categoriaId`, así que el caso "datos válidos" de S2 necesita incluirlo o pasa a fallar con `400`.
+!!! note "3.12 es opcional"
+    Si el tiempo de clase no alcanza, la sesión cierra igual sin este paso — la asociación ya quedó verificada manualmente en 3.11. Completarlo suma como evidencia adicional, pero no es requisito para cerrar la sesión ni se evalúa en la rúbrica (4.6).
 
-Actualiza el `crear_conDatosValidos_respondeCreated` de S2 (`ProductoControllerTest`) agregando `request.setCategoriaId(1L);` antes de enviarlo, y agrega un caso nuevo para el campo que esta sesión introduce:
+**Producto del paso:** `CategoriaControllerTest`, y `ProductoControllerTest` (S2) actualizado — `ProductoRequest` ahora exige `categoriaId`, así que el caso "datos válidos" de S2 necesita incluirlo o pasa a fallar con `400`; y `ProductoControllerTest` suma los dos casos de navegación (2.5, 3.9), porque el filtro vive en `ProductoController`, no en `CategoriaController`.
+
+Actualiza el `crear_conDatosValidos_respondeCreated` de S2 (`ProductoControllerTest`) agregando `request.setCategoriaId(1L);` antes de enviarlo, y agrega estos casos nuevos:
 
 ```java
 @Test
@@ -799,9 +1142,28 @@ void crear_conCategoriaIdNulo_respondeBadRequestSinLlegarAlService() throws Exce
                     .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest());
 }
+
+@Test
+void listar_conCategoriaIdExistente_respondeOkFiltrado() throws Exception {
+    when(productoService.listarPorCategoria(1L)).thenReturn(List.of(
+            ProductoResponse.builder().id(10L).nombre("Teclado mecánico").precio(new BigDecimal("180.50")).stock(25).build()
+    ));
+
+    mockMvc.perform(get("/api/v1/productos").param("categoriaId", "1"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$[0].id").value(10));
+}
+
+@Test
+void listar_conCategoriaIdInexistente_respondeNotFound() throws Exception {
+    when(productoService.listarPorCategoria(999L)).thenThrow(new ResourceNotFoundException("Categoria no encontrada: 999"));
+
+    mockMvc.perform(get("/api/v1/productos").param("categoriaId", "999"))
+            .andExpect(status().isNotFound());
+}
 ```
 
-**`src/test/java/pe/edu/upeu/bomerp/catalogo/categoria/controller/CategoriaControllerTest.java`** (mismo patrón que `ProductoControllerTest` de S2, más los dos casos de navegación):
+**`src/test/java/pe/edu/upeu/bomerp/catalogo/categoria/controller/CategoriaControllerTest.java`** (mismo patrón que `ProductoControllerTest` de S2 — sin `ProductoService`, `CategoriaController` no lo necesita):
 
 ```java
 package pe.edu.upeu.bomerp.catalogo.categoria.controller;
@@ -815,13 +1177,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import pe.edu.upeu.bomerp.catalogo.categoria.dto.CategoriaRequest;
 import pe.edu.upeu.bomerp.catalogo.categoria.dto.CategoriaResponse;
 import pe.edu.upeu.bomerp.catalogo.categoria.service.CategoriaService;
-import pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoResponse;
-import pe.edu.upeu.bomerp.catalogo.producto.service.ProductoService;
 import pe.edu.upeu.bomerp.exception.ResourceNotFoundException;
 import tools.jackson.databind.ObjectMapper;
-
-import java.math.BigDecimal;
-import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -839,9 +1196,6 @@ class CategoriaControllerTest {
 
     @MockitoBean
     private CategoriaService categoriaService;
-
-    @MockitoBean
-    private ProductoService productoService;
 
     @Test
     void crear_conDatosValidos_respondeCreated() throws Exception {
@@ -878,25 +1232,6 @@ class CategoriaControllerTest {
         mockMvc.perform(get("/api/v1/categorias/999"))
                 .andExpect(status().isNotFound());
     }
-
-    @Test
-    void listarProductos_conCategoriaExistente_respondeOkConSusProductos() throws Exception {
-        when(productoService.listarPorCategoria(1L)).thenReturn(List.of(
-                ProductoResponse.builder().id(10L).nombre("Teclado mecánico").precio(new BigDecimal("180.50")).stock(25).build()
-        ));
-
-        mockMvc.perform(get("/api/v1/categorias/1/productos"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(10));
-    }
-
-    @Test
-    void listarProductos_conCategoriaInexistente_respondeNotFound() throws Exception {
-        when(productoService.listarPorCategoria(999L)).thenThrow(new ResourceNotFoundException("Categoria no encontrada: 999"));
-
-        mockMvc.perform(get("/api/v1/categorias/999/productos"))
-                .andExpect(status().isNotFound());
-    }
 }
 ```
 
@@ -912,16 +1247,16 @@ Ejecuta las pruebas:
 
 Deberías ver `ModularityTests`, `ProductoControllerTest` y `CategoriaControllerTest` en verde — `ModularityTests` sigue pasando porque `categoria` y `producto` son paquetes dentro del mismo módulo `catalogo`, no módulos distintos; la regla que Spring Modulith verifica es entre módulos de negocio (`catalogo` vs. `ventas`, por ejemplo), no dentro de uno.
 
-### 3.12 Relacionar con ADS y BD2
+### 3.13 Relacionar con ADS y BD2
 
 **Producto del paso:** matriz de integración actualizada.
 
-**Tabla 3. Matriz de integración LP2-ADS-BD2 (S3)**
+**Tabla 4. Matriz de integración LP2-ADS-BD2 (S3)**
 
 | Endpoint LP2 | Componente ADS | Objeto BD2 |
 |---|---|---|
 | `POST /api/v1/productos` (con `categoriaId`) | Asociación entre entidades del modelo de dominio (ADS) | `FK_PRODUCTO_CATEGORIA` sobre `PRODUCTOS.ID_CATEGORIA` (BD2 S1) |
-| `GET /api/v1/categorias/{id}/productos` | Navegación controlada entre componentes (ADS) | Consulta con `JOIN` implícito vía `ID_CATEGORIA` |
+| `GET /api/v1/productos?categoriaId={id}` | Navegación controlada entre componentes (ADS) | Consulta con `JOIN` implícito vía `ID_CATEGORIA` |
 | `DELETE /api/v1/categorias/{id}` | — | `FK_PRODUCTO_CATEGORIA` como restricción de integridad referencial (BD2 S1) |
 
 Sesión equivalente en los otros dos cursos, misma semana: [ADS - S3 Diseño Estructural y Principios SOLID](../../ads/sesiones/S03_Diseno_Estructural_Principios_SOLID.md) y [BD2 - S3 Manejo de Excepciones y Robustez](../../bd2/sesiones/S03_Excepciones_Robustez.md).
@@ -930,7 +1265,8 @@ Sesión equivalente en los otros dos cursos, misma semana: [ADS - S3 Diseño Est
 
 - `Producto` asociado a `Categoria` mediante `@ManyToOne`/`@JoinColumn`, con `CategoriaResumen` embebido en `ProductoResponse`.
 - Validación de `categoriaId` inexistente probada (`404`).
-- `GET /api/v1/categorias/{id}/productos` funcionando, con el caso de categoría inexistente probado.
+- `GET /api/v1/productos?categoriaId={id}` funcionando, con el caso de categoría inexistente probado.
+- `ProductoRepository.findAll()` con `@EntityGraph`, verificado en consola con una sola consulta (sin N+1).
 - `Categoria` con CRUD completo (`GET`, `GET /{id}`, `POST`, `PUT`, `DELETE`).
 - `CategoriaControllerTest` en verde; `ProductoControllerTest` de S2 actualizado y en verde.
 
@@ -947,10 +1283,9 @@ Completa y evidencia estas tareas:
 1. Agregar la asociación `@ManyToOne`/`@JoinColumn` en tu entidad principal, hacia su entidad de clasificación.
 2. Agregar el DTO relacionado (equivalente a `CategoriaResumen`) embebido en el DTO de salida de tu entidad principal.
 3. Validar que el id de la entidad relacionada exista antes de crear/actualizar, respondiendo `404` si no.
-4. Implementar un endpoint de navegación controlada (equivalente a `GET /api/v1/categorias/{id}/productos`) sobre tu propio dominio.
+4. Implementar una navegación controlada (equivalente a `GET /api/v1/productos?categoriaId={id}`) sobre tu propio dominio — como filtro del recurso principal, no como recurso anidado del relacionado.
 5. Completar el CRUD de tu entidad de clasificación, si todavía no lo tenía.
 6. Probar al menos un caso válido y uno inválido de la asociación.
-7. Escribir al menos una prueba automatizada (`@WebMvcTest`) que cubra la navegación controlada.
 
 ### 4.2 Propósito
 
@@ -985,7 +1320,7 @@ Incluye capturas o salidas de consola con una breve explicación debajo de cada 
 2. *Validación de referencias*
     - Caso de id relacionado inexistente respondiendo `404`.
 3. *Navegación controlada*
-    - Endpoint que lista los elementos de la entidad principal a partir de su entidad relacionada, con prueba automatizada.
+    - Endpoint que lista los elementos de la entidad principal a partir de su entidad relacionada.
 4. *CRUD de la entidad de clasificación*
     - `Categoria` (o tu equivalente) con CRUD completo funcional.
 
@@ -1030,7 +1365,6 @@ La evidencia individual se considera completa si:
 - Valida que el id relacionado exista, respondiendo `404` si no.
 - Implementa un endpoint de navegación controlada, probado con al menos un caso válido.
 - Completa el CRUD de la entidad de clasificación (o confirma que ya estaba completo).
-- Incluye al menos una prueba automatizada de la navegación controlada.
 - Cada captura de la evidencia técnica muestra el reloj del sistema y el usuario/perfil visible, sin recortar.
 - Las fechas y horas de las capturas son coherentes con el historial de commits de su repositorio en GitHub.
 - Incluye un error o hallazgo técnico diagnosticado.
@@ -1043,18 +1377,18 @@ La evidencia individual se considera completa si:
 2. ¿Qué garantiza que esta sesión nunca produzca un ciclo de serialización, aunque no uses `@JsonIgnore` en ningún lado?
 3. ¿Por qué el mapper no consulta la base de datos para resolver `categoriaId`, y quién lo hace en su lugar?
 4. ¿Qué significa "navegación controlada" y en qué se diferencia de un `@OneToMany` cargado automáticamente?
-5. ¿Por qué `ModularityTests` sigue pasando aunque `categoria` y `producto` ahora se conocen entre sí?
+5. ¿Por qué `ModularityTests` sigue pasando aunque `producto` ahora dependa de `categoria`? ¿Y por qué la navegación filtrada quedó en `ProductoController`, y no en `CategoriaController`?
 
 ### 4.6 Rúbrica de evaluación
 
-**Tabla 4. Rúbrica de evaluación**
+**Tabla 5. Rúbrica de evaluación**
 
 | Criterio | Peso (%) | A (20 pts) | B (15 pts) | C (10 pts) | D (5 pts) | Nivel obtenido |
 |---|---:|---|---|---|---|---:|
 | 1. Asociación ORM y DTO relacionados* | 25 | Asociación `@ManyToOne` correcta, con DTO relacionado bien diseñado (sin sobre-exponer ni sub-exponer datos). | Asociación y DTO relacionado funcionales, con detalles menores. | Asociación incompleta o DTO relacionado ausente. | No implementa la asociación. | |
-| 2. Validación de referencias* | 25 | Valida la referencia con `404` claro, incluida al menos una prueba del caso inválido. | Valida la referencia correctamente, sin prueba automatizada. | Validación parcial o inconsistente. | No valida la referencia. | |
-| 3. Navegación controlada* | 25 | Endpoint de navegación funcional, probado, con manejo explícito del caso "entidad relacionada inexistente". | Endpoint funcional, sin ese caso cubierto. | Navegación incompleta o poco clara. | No implementa navegación controlada. | |
-| 4. CRUD de la entidad de clasificación* | 25 | CRUD completo y probado de la entidad de clasificación. | CRUD funcional, con pruebas parciales. | CRUD incompleto. | No completa el CRUD. | |
+| 2. Validación de referencias* | 25 | Valida la referencia con `404` claro, con evidencia del caso inválido ejecutado. | Valida la referencia correctamente, con evidencia parcial. | Validación parcial o inconsistente. | No valida la referencia. | |
+| 3. Navegación controlada* | 25 | Endpoint de navegación funcional, con evidencia de ejecución, incluido el caso "entidad relacionada inexistente". | Endpoint funcional, sin ese caso cubierto. | Navegación incompleta o poco clara. | No implementa navegación controlada. | |
+| 4. CRUD de la entidad de clasificación* | 25 | CRUD completo, con evidencia de ejecución de la entidad de clasificación. | CRUD funcional, con evidencia parcial. | CRUD incompleto. | No completa el CRUD. | |
 
 \* Agregado manual.
 
