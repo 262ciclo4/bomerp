@@ -32,7 +32,7 @@ Comparación documentada de los siete estilos arquitectónicos contra BomERP, co
 | Actividades a Realizar en el Periodo | Orientaciones generales (Orientaciones Metodológicas) | Material de estudio recomendado |
 |---|---|---|
 | Revisión previa individual | Repasar la Tabla 5 de S1 (evaluación inicial de estilos arquitectónicos) y la vista de despliegue de S2 (Figura 7, escalamiento horizontal de LP2). Trabajo individual, antes de clase. | S1 (3.4, Tabla 5), S2 (2.7, Figura 7). |
-| Clase presencial | Comparación guiada de los siete estilos, evaluación de escalabilidad horizontal y diseño *stateless* con evidencia real, y análisis de cuándo DDD orienta hacia hexagonal o Clean Architecture. Trabajo individual, siguiendo al docente paso a paso. | Pasos 3.1 a 3.6 de esta guía, ADR-001 y ADR-004 de LP2. |
+| Clase presencial | Comparación guiada de los siete estilos, evaluación de escalabilidad horizontal y diseño *stateless* con evidencia real, y análisis de cuándo DDD orienta hacia hexagonal o Clean Architecture. Trabajo individual, siguiendo al docente paso a paso. | Pasos 3.1 a 3.6 de esta guía (3.7 opcional), ADR-001 y ADR-004 de LP2. |
 | Evaluación formativa | Revisión en clase de la tabla de trade-offs y de la justificación documentada. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4. | Indicaciones de entrega (4.3), rúbrica de evaluación (4.6). |
 
 ### 1.6 Motivación de la sesión
@@ -794,15 +794,15 @@ Tiempo: 5 min.
 
 ## Bibliografía
 
-1. Martin, R. C. (2017). *Clean Architecture: A Craftsman's Guide to Software Structure and Design*. Prentice Hall.
-2. Fowler, M. (2015). *Microservices*. martinfowler.com. https://martinfowler.com/articles/microservices.html
-3. Fowler, M. (2015). *MonolithFirst*. martinfowler.com. https://martinfowler.com/bliki/MonolithFirst.html
-4. Evans, E. (2003). *Domain-Driven Design: Tackling Complexity in the Heart of Software*. Addison-Wesley.
-5. Cockburn, A. (2005). *Hexagonal Architecture*. https://alistair.cockburn.us/hexagonal-architecture/
-6. Thoughtworks. (2024). *Hexagonal architecture explained through a practical example*. https://www.thoughtworks.com/insights/blog/architecture/hexagonal-architecture-explained-practical-example
+1. Amazon Web Services. (2014). *AWS Lambda* [anuncio de producto]. AWS re:Invent, noviembre de 2014. https://press.aboutamazon.com/2014/11/amazon-web-services-announces-aws-lambda
+2. Cockburn, A. (2005). *Hexagonal Architecture*. https://alistair.cockburn.us/hexagonal-architecture/
+3. Evans, E. (2003). *Domain-Driven Design: Tackling Complexity in the Heart of Software*. Addison-Wesley.
+4. Fowler, M. (2015). *Microservices*. martinfowler.com. https://martinfowler.com/articles/microservices.html
+5. Fowler, M. (2015). *MonolithFirst*. martinfowler.com. https://martinfowler.com/bliki/MonolithFirst.html
+6. Gilbert, S., & Lynch, N. (2002). Brewer's conjecture and the feasibility of consistent, available, partition-tolerant web services. *ACM SIGACT News*, 33(2), 51-59.
 7. Google. (2025). *Guide to app architecture*. Android Developers. https://developer.android.com/topic/architecture
-8. Gilbert, S., & Lynch, N. (2002). Brewer's conjecture and the feasibility of consistent, available, partition-tolerant web services. *ACM SIGACT News*, 33(2), 51-59.
-9. Pritchett, D. (2008). BASE: An ACID alternative. *ACM Queue*, 6(3), 48-55. https://queue.acm.org/detail.cfm?id=1394128
-10. Martin, R. C. (1996). Granularity. *C++ Report*, 8(10) — origen del Acyclic Dependencies Principle (ADP), Common Closure Principle (CCP) y Common Reuse Principle (CRP).
-11. Jackson, C. (2019). *Micro Frontends*. martinfowler.com. https://martinfowler.com/articles/micro-frontends.html
-12. Amazon Web Services. (2014). *AWS Lambda* [anuncio de producto]. AWS re:Invent, noviembre de 2014. https://press.aboutamazon.com/2014/11/amazon-web-services-announces-aws-lambda
+8. Jackson, C. (2019). *Micro Frontends*. martinfowler.com. https://martinfowler.com/articles/micro-frontends.html
+9. Martin, R. C. (1996). Granularity. *C++ Report*, 8(10) — origen del Acyclic Dependencies Principle (ADP), Common Closure Principle (CCP) y Common Reuse Principle (CRP).
+10. Martin, R. C. (2017). *Clean Architecture: A Craftsman's Guide to Software Structure and Design*. Prentice Hall.
+11. Pritchett, D. (2008). BASE: An ACID alternative. *ACM Queue*, 6(3), 48-55. https://queue.acm.org/detail.cfm?id=1394128
+12. Thoughtworks. (2024). *Hexagonal architecture explained through a practical example*. https://www.thoughtworks.com/insights/blog/architecture/hexagonal-architecture-explained-practical-example
