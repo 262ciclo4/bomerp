@@ -6,11 +6,11 @@ Tiempo: 20 min.
 
 ### 1.1 Presentación de la sesión
 
-Elegir un estilo arquitectónico no es una decisión que se tome una sola vez y se dé por cerrada — se propone temprano, con la información disponible en ese momento, y se confirma o se ajusta cuando aparece evidencia real que la pone a prueba. Esta sesión toma esa segunda parte: profundiza en los estilos arquitectónicos modernos (monolito modular, arquitectura en capas, arquitectura hexagonal, Clean Architecture, microservicios), sus trade-offs, qué significa que un sistema escale horizontalmente y sea *stateless*, y en qué momento el diseño estratégico de Domain-Driven Design (DDD) empuja la elección hacia hexagonal o Clean Architecture — para justificar con criterio una decisión, no solo nombrarla.
+Elegir un estilo arquitectónico no es una decisión que se tome una sola vez y se dé por cerrada — se propone temprano, con la información disponible en ese momento, y se confirma o se ajusta cuando aparece evidencia real que la pone a prueba. Esta sesión toma esa segunda parte: profundiza en los estilos arquitectónicos modernos (arquitectura en capas, arquitectura hexagonal, Clean Architecture, monolito modular, microservicios, serverless y microfrontend), sus trade-offs, qué significa que un sistema escale horizontalmente y sea *stateless*, y en qué momento el diseño estratégico de Domain-Driven Design (DDD) empuja la elección hacia hexagonal o Clean Architecture — para justificar con criterio una decisión, no solo nombrarla.
 
 ### 1.2 Índice
 
-1. Estilos arquitectónicos: monolito modular, capas, hexagonal, Clean Architecture y microservicios.
+1. Estilos arquitectónicos: capas, hexagonal, Clean Architecture, monolito modular, microservicios, serverless y microfrontend.
 2. Trade-offs entre estilos.
 3. Escalabilidad horizontal y diseño *stateless*.
 4. Domain-Driven Design: cuándo orienta hacia hexagonal o Clean Architecture.
@@ -23,7 +23,7 @@ Al concluir la clase, estarás en condiciones de:
 
 ### 1.4 Producto de sesión
 
-Comparación documentada de los cinco estilos arquitectónicos contra BomERP, con trade-offs explícitos, evidencia real de escalabilidad horizontal y diseño *stateless*, y la justificación formal del estilo elegido (monolito modular con Spring Modulith).
+Comparación documentada de los siete estilos arquitectónicos contra BomERP, con trade-offs explícitos, evidencia real de escalabilidad horizontal y diseño *stateless*, y la justificación formal del estilo elegido (monolito modular con Spring Modulith).
 
 ### 1.5 Metodología
 
@@ -32,7 +32,7 @@ Comparación documentada de los cinco estilos arquitectónicos contra BomERP, co
 | Actividades a Realizar en el Periodo | Orientaciones generales (Orientaciones Metodológicas) | Material de estudio recomendado |
 |---|---|---|
 | Revisión previa individual | Repasar la Tabla 5 de S1 (evaluación inicial de estilos arquitectónicos) y la vista de despliegue de S2 (Figura 7, escalamiento horizontal de LP2). Trabajo individual, antes de clase. | S1 (3.4, Tabla 5), S2 (2.7, Figura 7). |
-| Clase presencial | Comparación guiada de los cinco estilos, evaluación de escalabilidad horizontal y diseño *stateless* con evidencia real, y análisis de cuándo DDD orienta hacia hexagonal o Clean Architecture. Trabajo individual, siguiendo al docente paso a paso. | Pasos 3.1 a 3.6 de esta guía, ADR-001 y ADR-004 de LP2. |
+| Clase presencial | Comparación guiada de los siete estilos, evaluación de escalabilidad horizontal y diseño *stateless* con evidencia real, y análisis de cuándo DDD orienta hacia hexagonal o Clean Architecture. Trabajo individual, siguiendo al docente paso a paso. | Pasos 3.1 a 3.6 de esta guía, ADR-001 y ADR-004 de LP2. |
 | Evaluación formativa | Revisión en clase de la tabla de trade-offs y de la justificación documentada. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4. | Indicaciones de entrega (4.3), rúbrica de evaluación (4.6). |
 
 ### 1.6 Motivación de la sesión
@@ -80,7 +80,7 @@ flowchart TB
 
 ## 2. Explica
 
-Tiempo: 25 min.
+Tiempo: 55 min.
 
 ### 2.1 Arquitectura de la sesión
 
@@ -106,7 +106,7 @@ Esta sesión no descarta la propuesta de S1 ni empieza de cero — toma esa prim
 
 Cada estilo arquitectónico resuelve un problema específico, a cambio de un costo específico — no hay un estilo "mejor" en abstracto, solo un estilo más o menos adecuado para un alcance, un equipo y un momento del proyecto concretos.
 
-Antes de compararlos, vale la pena ver qué tienen en común los cinco estilos de esta sesión: todos aparecieron entre 2003 y 2016, lo que justifica llamarlos "modernos" frente a otros patrones muy anteriores y todavía vigentes.
+Antes de compararlos, vale la pena ver qué tienen en común los siete estilos de esta sesión: todos aparecieron entre 2003 y 2016, lo que justifica llamarlos "modernos" frente a otros patrones muy anteriores y todavía vigentes.
 
 **Tabla 2. Línea de tiempo de patrones y estilos arquitectónicos relacionados (2003-2016)**
 
@@ -123,80 +123,52 @@ Antes de compararlos, vale la pena ver qué tienen en común los cinco estilos d
 | 2012-2014 | Serverless | Ken Fromm acuña el término (2012); adopción masiva con el lanzamiento de AWS Lambda (2014). |
 | 2016 | Microfrontend | ThoughtWorks Technology Radar. |
 
-Ninguno de los cinco estilos que profundiza esta sesión (monolito modular, capas, hexagonal, Clean Architecture, microservicios) tiene más de 25 años — y varios, menos de 15. Eso los distingue de patrones mucho más antiguos y todavía vigentes, como MVC (1978-1979, Trygve Reenskaug, Xerox PARC): MVC no es menos válido, pertenece a otra categoría. Organiza la capa de presentación (cómo se estructura una vista y su interacción con el usuario), no cómo se organiza un sistema de backend completo — por eso MVC, MVP y MVVM no compiten con monolito modular, hexagonal o microservicios: resuelven un problema distinto, a otro nivel de la aplicación.
+Ninguno de los siete estilos que profundiza esta sesión (capas, hexagonal, Clean Architecture, monolito modular, microservicios, serverless, microfrontend) tiene más de 25 años — y varios, menos de 15. Eso los distingue de patrones mucho más antiguos y todavía vigentes, como MVC (1978-1979, Trygve Reenskaug, Xerox PARC): MVC no es menos válido, pertenece a otra categoría. Organiza la capa de presentación (cómo se estructura una vista y su interacción con el usuario), no cómo se organiza un sistema de backend completo — por eso MVC, MVP y MVVM no compiten con monolito modular, hexagonal o microservicios: resuelven un problema distinto, a otro nivel de la aplicación.
 
 **Tabla 3. Estilos arquitectónicos modernos**
 
 | Estilo | Qué es | Cuándo conviene | Costo que agrega |
 |---|---|---|---|
-| **Monolito modular** | Un solo ejecutable, dividido internamente en módulos con límites verificables (no solo carpetas por convención). | Equipo pequeño, un solo despliegue, límites de dominio ya identificados. | Todo se despliega junto — no se puede escalar ni desplegar un módulo por separado. |
 | **Arquitectura en capas** | El código se organiza en capas horizontales (presentación, negocio, datos), cada una dependiendo solo de la inmediatamente inferior. | Casi cualquier sistema — es la base sobre la que se aplican los demás estilos. | Si se usa sola, no impone límites *entre módulos de dominio*, solo entre capas técnicas. |
 | **Arquitectura hexagonal** (puertos y adaptadores) | El dominio queda en el centro, aislado de frameworks y tecnología externa mediante puertos (interfaces) y adaptadores (implementaciones). | El dominio tiene reglas de negocio complejas que deben poder probarse sin levantar infraestructura (base de datos, HTTP). | Agrega indirección (interfaces, mapeos) que un dominio simple no necesita. |
 | **Clean Architecture** | Generaliza la idea de la arquitectura hexagonal en círculos concéntricos de dependencia (entidades, casos de uso, adaptadores, frameworks), todos apuntando hacia el centro. | Sistemas grandes donde la lógica de negocio debe sobrevivir a cambios de framework o de tecnología de persistencia. | Requiere disciplina para no romper la regla de dependencia (nada del centro conoce nada de afuera); cuesta más al equipo que recién empieza. |
+| **Monolito modular** | Un solo ejecutable, dividido internamente en módulos con límites verificables (no solo carpetas por convención). | Equipo pequeño, un solo despliegue, límites de dominio ya identificados. | Todo se despliega junto — no se puede escalar ni desplegar un módulo por separado. |
 | **Microservicios** | Cada módulo de negocio es un proceso independiente, con su propia base de datos y su propio ciclo de despliegue. | Equipos grandes, módulos que necesitan escalar o desplegarse a ritmos distintos. | Complejidad operacional real: red, descubrimiento de servicios, consistencia entre bases de datos distintas, versionado de contratos. |
+| **Serverless** (FaaS) | Cada función se despliega y ejecuta por separado, disparada por un evento; el proveedor cloud administra el servidor. | Cargas esporádicas o con picos impredecibles, sin justificación para un proceso corriendo 24/7. | *Cold start*, límite de tiempo de ejecución por invocación, y el mismo problema de consistencia que microservicios, más agudo. |
+| **Microfrontend** | Cada fragmento de la interfaz se construye, prueba y despliega por separado; una aplicación contenedora los ensambla. | Varios equipos de frontend trabajando en la misma aplicación, sin coordinar un release único. | Complejidad de integración entre fragmentos, duplicación de dependencias, coherencia visual entre equipos. |
 
 Ningún estilo elimina el trade-off del anterior — lo cambia por otro. Monolito modular cambia "no puedo escalar un módulo por separado" por "no tengo que operar red ni bases de datos distribuidas"; microservicios hace exactamente el cambio contrario.
 
 **Ejemplo de referencia (LP2).** BomERP usa monolito modular con arquitectura en capas dentro de cada módulo (`catalogo/producto/{controller,service,repository,entity}`, ver ADR-001 de LP2) — no hexagonal, no microservicios. La razón documentada en el ADR no es "monolito es más fácil" en abstracto: es que el sílabo de LP2 no evalúa despliegue distribuido, el equipo es pequeño, y todo el sistema se despliega como un único ejecutable — el trade-off de microservicios (complejidad operacional) no tendría ninguna ganancia real a cambio, en este proyecto. Microservicios se estudia conceptualmente aquí, en ADS, y se practica de verdad en el curso de Aplicaciones Distribuidas (una etapa posterior de la cadena BomERP), con un proyecto de referencia propio (`producto-ms`, un reactor Maven multi-módulo) — dos cursos distintos, con el mismo nombre corto de tres letras, pero contenidos y proyectos diferentes.
 
-**Figura 3. Los cinco estilos, de menos a más piezas independientes**
+**Figura 3. Dos ejes independientes: organización interna vs. alcance de despliegue**
 
 ```mermaid
-flowchart LR
-    Capas["Arquitectura en capas<br/>(base de todos)"]
-    Mono["Monolito modular<br/>(BomERP, decision actual)"]
-    Hex["Arquitectura hexagonal"]
-    Clean["Clean Architecture"]
-    Micro["Microservicios"]
-
-    Capas --> Mono --> Hex --> Clean --> Micro
+flowchart TB
+    subgraph Organizacion["Organizacion interna del codigo (dentro de una pieza)"]
+        direction LR
+        Capas["Arquitectura en capas<br/>(base de todas)"] --> Hex["Arquitectura hexagonal"] --> Clean["Clean Architecture"]
+    end
+    subgraph Alcance["Piezas independientes (alcance de despliegue)"]
+        direction LR
+        Mono["Monolito modular<br/>(BomERP, decision actual)"] --> Micro["Microservicios"] --> Server["Serverless<br/>(funciones)"]
+    end
 
     classDef real fill:#ffe08a,stroke:#9a6b00,stroke-width:2px,color:#111;
     class Mono real;
 ```
 
-La Figura 3 no es una escala de "mejor a peor" — es una escala de cuántas piezas independientes tiene el sistema y cuánta indirección hay entre el dominio y la infraestructura. BomERP está en el segundo escalón, no porque los demás sean superiores, sino porque el alcance real del proyecto no justifica moverse más a la derecha (todavía).
+La Figura 3 separa dos preguntas que esta sesión insiste en no mezclar (2.3, "Error frecuente"): cuántas piezas independientes tiene el sistema (eje inferior) y cómo se organiza el código *dentro* de cada pieza (eje superior). Son ejes independientes entre sí — un monolito modular o un microservicio, cada uno por separado, puede construirse con capas, con hexagonal o con Clean Architecture por dentro (2.7). BomERP está en el primer escalón de ambos ejes — capas como organización interna, monolito modular como alcance —, no porque los demás sean superiores, sino porque el alcance real del proyecto no justifica moverse más a la derecha en ninguno de los dos (todavía).
 
-La Tabla 3 resume los cinco estilos en una fila cada uno — suficiente para compararlos, pero no para reconocer el diagrama típico de cada uno ni para saber dónde se usa en la práctica. Los siguientes cinco apartados profundizan uno por uno, en el mismo orden.
+Microfrontend no aparece en ninguno de los dos ejes porque no es una decisión sobre el backend — igual que ya se explicó con MVC/MVVM (2.2, Tabla 2), es la misma idea de piezas independientes aplicada a la capa de presentación, no al backend; por eso se trata por separado (2.9).
 
-### 2.3 Monolito modular, en profundidad
+La Tabla 3 resume los siete estilos en una fila cada uno — suficiente para compararlos, pero no para reconocer el diagrama típico de cada uno ni para saber dónde se usa en la práctica. Los siguientes siete apartados profundizan uno por uno, en el mismo orden.
 
-Un monolito modular es **un solo proceso desplegable**, pero organizado por dentro en módulos con límites explícitos — la diferencia con un monolito "a secas" (todo mezclado, sin límites) es justamente esa organización interna, verificada por herramientas, no solo por convención de carpetas.
-
-**Figura 4. Diagrama típico de un monolito modular**
-
-```mermaid
-flowchart TB
-    subgraph App["Un solo proceso desplegable"]
-        subgraph Cat["Modulo catalogo"]
-            direction TB
-            CatC["Controller"] --> CatS["Service"] --> CatR["Repository"]
-        end
-        subgraph Ven["Modulo ventas"]
-            direction TB
-            VenC["Controller"] --> VenS["Service"] --> VenR["Repository"]
-        end
-        VenS -.->|"solo el Service publico"| CatS
-    end
-    DB[("Base de datos")]
-    CatR --> DB
-    VenR --> DB
-
-    classDef today fill:#ffe08a,stroke:#9a6b00,stroke-width:2px,color:#111;
-    class App today;
-```
-
-Todos los módulos comparten el mismo proceso y el mismo ciclo de despliegue — cuando se despliega una versión nueva, se despliega el ejecutable completo, no un módulo por separado. La flecha punteada entre `ventas` y `catalogo` es la regla clave: un módulo puede llamar al `Service` público de otro, nunca a su `Repository` — el mismo límite que impondría un microservicio, pero verificado en tiempo de compilación/prueba (Spring Modulith), no por una llamada de red.
-
-**Dónde se usa en la práctica:** equipos pequeños o medianos, productos con un solo ciclo de despliegue, o empresas que empiezan como monolito modular y solo separan un módulo en microservicio el día que un problema real (no anticipado) lo justifica — Shopify es un caso frecuentemente citado en la industria de un monolito modular a gran escala, mantenido así de forma deliberada.
-
-**Ejemplo de referencia (LP2).** Esta es exactamente la arquitectura real de BomERP hoy — la Figura 4 no es un ejemplo genérico, es el diagrama de `lp2/bomerp-backend` (ADR-001 de LP2), con `catalogo` como único módulo real hasta ahora y `ventas` previsto para LP2 S4.
-
-### 2.4 Arquitectura en capas, en profundidad
+### 2.3 Arquitectura en capas, en profundidad
 
 La arquitectura en capas organiza el código en niveles horizontales — cada capa depende solo de la que tiene inmediatamente debajo, nunca al revés, y nunca se salta una capa para llegar directo a otra más abajo.
 
-**Figura 5. Diagrama típico de arquitectura en capas**
+**Figura 4. Diagrama típico de arquitectura en capas**
 
 ```mermaid
 flowchart TB
@@ -214,13 +186,13 @@ flowchart TB
 
 La capa de vista es la única que no vive dentro del backend — es quien consume la API (un navegador, una SPA, otra aplicación). Las tres capas resaltadas sí son las que Spring Boot organiza como código: `Controller` (presentación), `Service` (negocio) y `Repository` (acceso a datos).
 
-**Dónde se usa en la práctica:** es la base casi universal de cualquier aplicación empresarial — no compite con los otros cuatro estilos, vive **dentro** de ellos. Un monolito modular tiene capas dentro de cada módulo (como BomERP); un microservicio tiene capas dentro de cada servicio; incluso hexagonal y Clean Architecture son, en el fondo, una forma más estricta de organizar capas, con una regla extra sobre la dirección de las dependencias.
+**Dónde se usa en la práctica:** es la base casi universal de cualquier aplicación empresarial — no compite con los otros seis estilos, vive **dentro** de ellos. Un monolito modular tiene capas dentro de cada módulo (como BomERP); un microservicio tiene capas dentro de cada servicio; incluso hexagonal y Clean Architecture son, en el fondo, una forma más estricta de organizar capas, con una regla extra sobre la dirección de las dependencias.
 
 **Error frecuente:** confundir "capas" con "monolito" — son ejes distintos. Capas responde "¿cómo se organiza el código dentro de una pieza?"; monolito modular / microservicios responde "¿cuántas piezas desplegables hay?". BomERP usa las dos a la vez: capas dentro de cada módulo, monolito modular como forma de desplegar todos los módulos juntos.
 
 **Ejemplo de referencia (LP2).** `catalogo/producto/{controller,service,repository,entity}` (LP2, desde S1) sigue este flujo exacto: `ProductoController` nunca llama a `ProductoRepository` directo, siempre pasa por `ProductoService` (ADR-001 de LP2).
 
-**Figura 6. La Figura 5, con las clases reales de LP2**
+**Figura 5. La Figura 4, con las clases reales de LP2**
 
 ```mermaid
 flowchart TB
@@ -236,13 +208,13 @@ flowchart TB
     class Pres,Neg,Datos today;
 ```
 
-Mismo diagrama, mismas cuatro cajas — la única diferencia con la Figura 5 es que acá cada capa tiene su nombre de clase real, no una etiqueta genérica.
+Mismo diagrama, mismas cuatro cajas — la única diferencia con la Figura 4 es que acá cada capa tiene su nombre de clase real, no una etiqueta genérica.
 
-### 2.5 Arquitectura hexagonal (puertos y adaptadores), en profundidad
+### 2.4 Arquitectura hexagonal (puertos y adaptadores), en profundidad
 
 La arquitectura hexagonal pone el dominio (las reglas de negocio) en el centro, sin que conozca nada de la tecnología que lo rodea. La comunicación con el exterior pasa por **puertos** (interfaces que el dominio define, según lo que necesita) y **adaptadores** (implementaciones concretas de esos puertos, una por cada tecnología externa: REST, base de datos, mensajería).
 
-**Figura 7. Diagrama típico de arquitectura hexagonal**
+**Figura 6. Diagrama típico de arquitectura hexagonal**
 
 ```mermaid
 flowchart TB
@@ -269,7 +241,7 @@ La flecha siempre entra al núcleo por un puerto de entrada y sale por un puerto
 
 **Ejemplo de referencia (LP2).** `catalogo/producto` no tiene esta estructura, y no debería tenerla todavía — `ProductoServiceImpl` llama directo a `ProductoRepository` (Spring Data JPA), sin un puerto de por medio. No es un error: es que hoy no hay lógica de negocio compleja que justifique la indirección.
 
-**Figura 8. Cómo quedaría `catalogo/producto` si se migrara a hexagonal**
+**Figura 7. Cómo quedaría `catalogo/producto` si se migrara a hexagonal**
 
 ```mermaid
 flowchart TB
@@ -295,13 +267,13 @@ flowchart TB
 
 `CategoriaRepository` aparece como un segundo adaptador de salida porque `ProductoServiceImpl` real ya depende de él (para validar `categoriaId`, LP2 S3, 3.9) — no solo de `ProductoRepository`. Una migración a hexagonal tendría que aislar esa dependencia también, con su propio puerto.
 
-`ProductoServiceImpl` hoy cumple *aproximadamente* el rol de "lógica de negocio" de la Figura 7, pero sin los puertos que la aislarían de verdad. Migrar no movería mucho código: `ProductoController` y `ProductoRepository` se quedan donde están, solo pasan a implementar una interfaz nueva en vez de ser llamados directo.
+`ProductoServiceImpl` hoy cumple *aproximadamente* el rol de "lógica de negocio" de la Figura 6, pero sin los puertos que la aislarían de verdad. Migrar no movería mucho código: `ProductoController` y `ProductoRepository` se quedan donde están, solo pasan a implementar una interfaz nueva en vez de ser llamados directo.
 
-### 2.6 Clean Architecture, en profundidad
+### 2.5 Clean Architecture, en profundidad
 
 Clean Architecture generaliza la idea de hexagonal en **círculos concéntricos**: entidades del dominio en el centro, casos de uso alrededor, adaptadores de interfaz más afuera, y frameworks/herramientas en el borde exterior. La regla que lo sostiene todo es la **regla de dependencia**: el código de un círculo solo puede depender de círculos más internos, nunca de uno más externo.
 
-**Figura 9. Diagrama típico de Clean Architecture (círculos concéntricos)**
+**Figura 8. Diagrama típico de Clean Architecture (círculos concéntricos)**
 
 ```mermaid
 flowchart TB
@@ -314,13 +286,13 @@ flowchart TB
     end
 ```
 
-La flecha de dependencia siempre apunta hacia adentro: `Frameworks` puede conocer `Adapters`, `Adapters` puede conocer `UseCases`, `UseCases` puede conocer `Entities` — pero `Entities` no conoce nada de lo que está afuera. Es la misma idea de hexagonal (2.5), expresada como niveles en vez de puertos/adaptadores; en la práctica, muchos equipos usan los dos términos de forma casi intercambiable.
+La flecha de dependencia siempre apunta hacia adentro: `Frameworks` puede conocer `Adapters`, `Adapters` puede conocer `UseCases`, `UseCases` puede conocer `Entities` — pero `Entities` no conoce nada de lo que está afuera. Es la misma idea de hexagonal (2.4), expresada como niveles en vez de puertos/adaptadores; en la práctica, muchos equipos usan los dos términos de forma casi intercambiable.
 
 **Dónde se usa en la práctica:** sistemas grandes y de vida larga, donde el equipo espera que la lógica de negocio sobreviva a más de un cambio de framework. El caso más verificable es la propia **Guía de arquitectura de apps de Google para Android** (`developer.android.com`, ver Bibliografía), inspirada explícitamente en Clean Architecture — con un matiz honesto: Google organiza sus capas `Presentación → Dominio → Datos` (dependencia en un solo sentido), mientras que la Clean Architecture original de Martin invierte también la capa de Datos (`Presentación → Dominio ← Datos`, la capa de Datos implementa interfaces que define el Dominio). Es una adaptación pragmática de la idea, no una copia literal de la regla de dependencia — y es exactamente el tipo de decisión que esta sesión pide justificar, no copiar sin cuestionar.
 
-**Ejemplo de referencia (LP2).** Igual que con hexagonal, BomERP aplica los *principios* de separación de capas (Tabla 5 de S1: "parcialmente") sin adoptar la estructura formal completa de círculos — el mismo criterio de 2.9 (DDD) decide si algún módulo llega a justificarlo más adelante.
+**Ejemplo de referencia (LP2).** Igual que con hexagonal, BomERP aplica los *principios* de separación de capas (Tabla 5 de S1: "parcialmente") sin adoptar la estructura formal completa de círculos — el mismo criterio de 2.11 (DDD) decide si algún módulo llega a justificarlo más adelante.
 
-**Figura 10. Dónde caería cada clase real de LP2 en los círculos de Clean Architecture**
+**Figura 9. Dónde caería cada clase real de LP2 en los círculos de Clean Architecture**
 
 ```mermaid
 flowchart TB
@@ -333,15 +305,75 @@ flowchart TB
     end
 ```
 
-Es casi el mismo ejercicio que la Figura 8 (hexagonal) con otro vocabulario — no es casualidad (2.6): Clean Architecture es la misma idea de aislar el dominio, expresada como círculos en vez de puertos y adaptadores. Lo que hoy "no encaja" en el círculo que le tocaría es siempre lo mismo: `ProductoServiceImpl` (caso de uso) y `Producto`/`Categoria` (entidades) todavía dependen de Spring y de Hibernate — la migración movería esa dependencia hacia afuera, no las reescribiría desde cero.
+Es casi el mismo ejercicio que la Figura 7 (hexagonal) con otro vocabulario — no es casualidad (2.5): Clean Architecture es la misma idea de aislar el dominio, expresada como círculos en vez de puertos y adaptadores. Lo que hoy "no encaja" en el círculo que le tocaría es siempre lo mismo: `ProductoServiceImpl` (caso de uso) y `Producto`/`Categoria` (entidades) todavía dependen de Spring y de Hibernate — la migración movería esa dependencia hacia afuera, no las reescribiría desde cero.
+
+### 2.6 Monolito modular, en profundidad
+
+Un monolito modular es **un solo proceso desplegable**, pero organizado por dentro en módulos con límites explícitos — la diferencia con un monolito "a secas" (todo mezclado, sin límites) es justamente esa organización interna, verificada por herramientas, no solo por convención de carpetas.
+
+**Figura 10. Diagrama típico de un monolito modular**
+
+```mermaid
+flowchart TB
+    subgraph App["Un solo proceso desplegable"]
+        subgraph Cat["Modulo catalogo"]
+            direction TB
+            CatC["Controller"] --> CatS["Service"] --> CatR["Repository"]
+        end
+        subgraph Ven["Modulo ventas"]
+            direction TB
+            VenC["Controller"] --> VenS["Service"] --> VenR["Repository"]
+        end
+        VenS -.->|"solo el Service publico"| CatS
+    end
+    DB[("Base de datos")]
+    CatR --> DB
+    VenR --> DB
+
+    classDef today fill:#ffe08a,stroke:#9a6b00,stroke-width:2px,color:#111;
+    class App today;
+```
+
+Todos los módulos comparten el mismo proceso y el mismo ciclo de despliegue — cuando se despliega una versión nueva, se despliega el ejecutable completo, no un módulo por separado. La flecha punteada entre `ventas` y `catalogo` es la regla clave: un módulo puede llamar al `Service` público de otro, nunca a su `Repository` — el mismo límite que impondría un microservicio, pero verificado en tiempo de compilación/prueba (Spring Modulith), no por una llamada de red.
+
+**ACID por defecto: la contraparte de BASE.** Así como en 2.7 el teorema CAP obliga a microservicios a elegir entre Consistencia y Disponibilidad, aquí ocurre lo contrario: al vivir en un solo proceso con una sola base de datos, cualquier operación puede ejecutarse dentro de una transacción **ACID** completa (Atomicidad, Consistencia, Aislamiento, Durabilidad) sin ceder nada a cambio — no hay red que particionar. La alternativa que sí tiene que asumir un sistema distribuido se llama **BASE** (*Basically Available, Soft state, Eventually consistent*, Pritchett, 2008): disponible casi todo el tiempo, con un estado que no es inmediatamente consistente entre nodos y que converge después. Un monolito modular no necesita elegir BASE — tiene ACID de fábrica.
+
+**Tabla 4. ACID vs. BASE: lo que el monolito modular no tiene que negociar**
+
+| Propiedad | ACID (monolito modular) | BASE (lo que asumiría un sistema distribuido) |
+|---|---|---|
+| Consistencia | Fuerte, garantizada por la transacción | Eventual, converge después de un tiempo |
+| Disponibilidad | No es un trade-off — no hay partición de red que resolver | Se prioriza sobre la consistencia inmediata (2.7, Tabla 5) |
+| Ejemplo | `@Transactional` cubre toda la operación en una sola transacción | Un servicio acepta un dato que puede estar temporalmente desactualizado (2.7, Figura 13) |
+
+**Límites internos: el Acyclic Dependencies Principle (ADP).** Ganar ACID gratis no significa que un monolito modular pueda organizarse de cualquier forma por dentro — la teoría que gobierna sus límites internos es el **Acyclic Dependencies Principle** (Robert C. Martin, 1996-1997, junto con el Common Closure Principle y el Common Reuse Principle): el grafo de dependencias entre módulos no puede tener ciclos. Si `catalogo` dependiera de `ventas` y `ventas` de `catalogo`, ningún módulo se podría desplegar, probar ni entender por separado — la "modularidad" sería solo de nombre. ADP es la contraparte de SOLID (ADS S3) a nivel de módulo, en vez de a nivel de clase.
+
+**Figura 11. Grafo de dependencias entre módulos: con ciclo (viola ADP) vs. sin ciclo**
+
+```mermaid
+flowchart LR
+    subgraph ConCiclo["Con ciclo (viola ADP)"]
+        direction LR
+        CatA["catalogo"] --> VenA["ventas"]
+        VenA --> CatA
+    end
+    subgraph SinCiclo["Sin ciclo (BomERP)"]
+        direction LR
+        VenB["ventas"] -.->|"solo el Service publico"| CatB["catalogo"]
+    end
+```
+
+**Dónde se usa en la práctica:** equipos pequeños o medianos, productos con un solo ciclo de despliegue, o empresas que empiezan como monolito modular y solo separan un módulo en microservicio el día que un problema real (no anticipado) lo justifica — Shopify es un caso frecuentemente citado en la industria de un monolito modular a gran escala, mantenido así de forma deliberada.
+
+**Ejemplo de referencia (LP2).** Esta es exactamente la arquitectura real de BomERP hoy — la Figura 10 no es un ejemplo genérico, es el diagrama de `lp2/bomerp-backend` (ADR-001 de LP2), con `catalogo` como único módulo real hasta ahora y `ventas` previsto para LP2 S4. La ganancia de ACID tampoco es teórica: el bug de `LazyInitializationException` que corrigió LP2 S3 se resolvió agregando `@Transactional` a `ProductoServiceImpl.crear()` — guardar `Producto`, resolver `Categoria` y construir la respuesta corren dentro de una única transacción, sin coordinar nada entre procesos porque no hay más de uno. Y el límite entre módulos (ADP) no se sostiene por convención: `ModularityTests` (LP2, desde S1) ejecuta `ApplicationModules.of(BomErpApplication.class).verify()` y falla la build si algún módulo introduce un ciclo de dependencias.
 
 ### 2.7 Microservicios, en profundidad
 
 En microservicios, cada módulo de negocio es un **proceso independiente**, con su propia base de datos, su propio ciclo de despliegue y, generalmente, su propio repositorio de código. La comunicación entre servicios es siempre por red (HTTP, mensajería), nunca por llamada directa en memoria.
 
-La definición es más simple de lo que parece si no se mezcla con otra pregunta distinta: microservicios solo decide **cuántos procesos independientes hay y dónde están sus límites** — no dice nada sobre cómo se organiza el código *dentro* de cada uno. Cada microservicio, por separado, puede construirse con capas (2.4), con arquitectura hexagonal (2.5), con Clean Architecture (2.6), o incluso sin ninguna disciplina interna — son decisiones independientes. Es común, de hecho, que un microservicio con lógica de negocio compleja use hexagonal por dentro, mientras otro más simple (un CRUD) use solo capas.
+La definición es más simple de lo que parece si no se mezcla con otra pregunta distinta: microservicios solo decide **cuántos procesos independientes hay y dónde están sus límites** — no dice nada sobre cómo se organiza el código *dentro* de cada uno. Cada microservicio, por separado, puede construirse con capas (2.3), con arquitectura hexagonal (2.4), con Clean Architecture (2.5), o incluso sin ninguna disciplina interna — son decisiones independientes. Es común, de hecho, que un microservicio con lógica de negocio compleja use hexagonal por dentro, mientras otro más simple (un CRUD) use solo capas.
 
-**Figura 11. Diagrama típico de microservicios**
+**Figura 12. Diagrama típico de microservicios**
 
 ```mermaid
 flowchart TB
@@ -355,13 +387,13 @@ flowchart TB
     S2 -.->|"HTTP o mensajeria"| S1
 ```
 
-Cada base de datos le pertenece a un solo servicio — ningún otro servicio la consulta directo, ni siquiera para leer; si `Ventas` necesita un dato de `Catalogo`, se lo pide por red (`S2 -.-> S1`), nunca leyendo la base de `Catalogo` directamente. Esa regla es la misma que un monolito modular impone entre módulos (2.3) — la diferencia es que acá se aplica por proceso y por red, no dentro de un mismo ejecutable.
+Cada base de datos le pertenece a un solo servicio — ningún otro servicio la consulta directo, ni siquiera para leer; si `Ventas` necesita un dato de `Catalogo`, se lo pide por red (`S2 -.-> S1`), nunca leyendo la base de `Catalogo` directamente. Esa regla es la misma que un monolito modular impone entre módulos (2.6) — la diferencia es que acá se aplica por proceso y por red, no dentro de un mismo ejecutable.
 
-**Escalabilidad independiente, la otra cara de separar en procesos.** A diferencia de un monolito modular (2.3), donde toda la aplicación escala junta — más instancias del ejecutable completo —, en microservicios cada servicio escala según su propia carga: si el `Servicio Catalogo` recibe mil veces más tráfico de lectura que el `Servicio Seguridad`, se agregan instancias solo de `Catalogo`, sin tocar el resto. Esa independencia es la ganancia real que compensa la complejidad operacional (2.2, Tabla 3) — sin ella, separar en procesos no tendría sentido.
+**Escalabilidad independiente, la otra cara de separar en procesos.** A diferencia de un monolito modular (2.6), donde toda la aplicación escala junta — más instancias del ejecutable completo —, en microservicios cada servicio escala según su propia carga: si el `Servicio Catalogo` recibe mil veces más tráfico de lectura que el `Servicio Seguridad`, se agregan instancias solo de `Catalogo`, sin tocar el resto. Esa independencia es la ganancia real que compensa la complejidad operacional (2.2, Tabla 3) — sin ella, separar en procesos no tendría sentido.
 
 **El costo real: teorema CAP.** El teorema CAP dice que un sistema distribuido no puede garantizar al mismo tiempo tres propiedades: **Consistencia** (todas las réplicas ven el mismo dato al mismo tiempo), **Disponibilidad** (toda petición recibe una respuesta) y **Tolerancia a particiones** (el sistema sigue funcionando aunque falle la red entre nodos). En microservicios, la partición de red **va a ocurrir** — dos servicios se comunican por red, y la red falla tarde o temprano —, así que la P no es negociable; la decisión real está entre C y A cuando eso pasa.
 
-**Tabla 4. Teorema CAP: la decisión real en microservicios**
+**Tabla 5. Teorema CAP: la decisión real en microservicios**
 
 | Si prioriza | Qué gana | Qué pierde | Ejemplo típico |
 |---|---|---|---|
@@ -370,7 +402,7 @@ Cada base de datos le pertenece a un solo servicio — ningún otro servicio la 
 
 La mayoría de sistemas de microservicios reales eligen AP con **consistencia eventual**: cada servicio sigue respondiendo con los datos que tiene, y la inconsistencia temporal se reconcilia después — por ejemplo, con eventos (`Catalogo` publica "el precio cambió", `Ventas` actualiza su copia cuando el evento le llega). El patrón que coordina operaciones que cruzan varios servicios sin una transacción distribuida real se llama **Saga**: una secuencia de pasos locales, cada uno con su propia compensación si algo falla más adelante, en vez de una única transacción ACID sobre varias bases de datos.
 
-**Figura 12. Consistencia fuerte vs. consistencia eventual, si BomERP migrara a microservicios**
+**Figura 13. Consistencia fuerte vs. consistencia eventual, si BomERP migrara a microservicios**
 
 ```mermaid
 flowchart TB
@@ -391,7 +423,55 @@ flowchart TB
 
 **Ejemplo de referencia (LP2).** BomERP no usa microservicios — el ADR-001 de LP2 lo dice explícitamente: el costo (red, bases de datos distribuidas, versionado de contratos, y ahora también CAP y consistencia eventual) no tiene ninguna ganancia real a cambio en un proyecto de equipo pequeño con un solo ciclo de despliegue. Con una sola Oracle compartida, `ProductoServiceImpl` y `CategoriaServiceImpl` (LP2 S3) leen el dato real dentro de la misma transacción — no hay partición de red que resolver, ni necesidad de elegir entre C y A. Esa es la ganancia concreta de no separar en procesos todavía: no es que el equipo no sepa resolver consistencia eventual, es que el proyecto no paga ese costo si no lo necesita.
 
-### 2.8 Escalabilidad horizontal y diseño *stateless*
+### 2.8 Serverless, en profundidad
+
+Serverless (o *Function as a Service*, FaaS) lleva la independencia de piezas un paso más allá que microservicios (2.7): en vez de desplegar un proceso que corre todo el tiempo, se despliega una **función individual** que el proveedor cloud ejecuta solo cuando un evento la dispara (una petición HTTP, un mensaje en cola, un archivo subido) — y se apaga apenas termina. El equipo no administra servidores ni contenedores, ni siquiera el ciclo de vida del proceso: solo el código de la función.
+
+**Figura 14. Diagrama típico de serverless (FaaS)**
+
+```mermaid
+flowchart LR
+    subgraph Eventos["Eventos que disparan funciones"]
+        HTTP["Peticion HTTP"]
+        Cola["Mensaje en cola"]
+        Archivo["Archivo subido"]
+    end
+    HTTP --> F1["Funcion: procesar pedido"]
+    Cola --> F2["Funcion: enviar notificacion"]
+    Archivo --> F3["Funcion: generar miniatura"]
+    F1 --> DB[("Base de datos administrada")]
+    F2 --> Msg[("Servicio de mensajeria")]
+    F3 --> Store[("Almacenamiento de archivos")]
+```
+
+**El costo real: *cold start* y ejecución acotada.** Cada función se apaga por completo entre invocaciones — si pasó suficiente tiempo desde la última llamada, la siguiente paga un ***cold start***: el proveedor tiene que aprovisionar el entorno de ejecución desde cero antes de correr el código, lo que puede agregar cientos de milisegundos o varios segundos de latencia. Además, cada función corre con un límite estricto de tiempo de ejecución — no sirve para procesos largos. Y hereda el mismo problema de consistencia que microservicios (2.7) de forma más aguda: como no hay proceso persistente, no hay ni siquiera memoria local entre invocaciones donde cachear nada.
+
+**Dónde se usa en la práctica:** cargas de trabajo esporádicas o con picos impredecibles — procesar una imagen subida, responder a un webhook, correr un job programado — donde pagar por un servidor corriendo 24/7 no tiene sentido. AWS Lambda (2014, ver Tabla 2 y Bibliografía) es el caso más citado y el que popularizó el modelo.
+
+**Ejemplo de referencia (LP2).** BomERP no usa serverless, y no le falta hoy: cada endpoint de `catalogo/producto` corre en un proceso que ya está activo (`bomerp-backend`), sin picos de carga esporádicos que justifiquen pagar solo por invocación. Si en algún momento apareciera una tarea puntual y poco frecuente (por ejemplo, generar un reporte mensual pesado), sería un candidato razonable para extraerla como función serverless, sin migrar el resto del backend — la misma lógica de "extraer solo lo que lo justifica" que ya aplica microservicios (2.7) o hexagonal (2.4).
+
+### 2.9 Microfrontend, en profundidad
+
+Microfrontend aplica la misma idea de microservicios (2.7) — piezas independientes, con su propio ciclo de despliegue — pero a la **capa de presentación**, no al backend. Cada equipo puede construir, probar y desplegar un fragmento de la interfaz (por ejemplo, "catálogo" y "ventas" como fragmentos separados) que se ensamblan en una sola aplicación visible para el usuario final.
+
+A diferencia de los otros seis estilos de esta sesión — todos sobre cómo se organiza el backend —, Microfrontend vive del otro lado de la API: es la misma distinción que ya se hizo con MVC/MVVM (2.2, Tabla 2). No compite con monolito modular o microservicios, los complementa desde la capa de presentación.
+
+**Figura 15. Diagrama típico de microfrontend**
+
+```mermaid
+flowchart TB
+    Shell["Aplicacion contenedora (shell)"]
+    Shell --> MF1["Microfrontend: catalogo<br/>(equipo A, su propio despliegue)"]
+    Shell --> MF2["Microfrontend: ventas<br/>(equipo B, su propio despliegue)"]
+    MF1 --> API1["API catalogo"]
+    MF2 --> API2["API ventas"]
+```
+
+**Dónde se usa en la práctica:** organizaciones grandes con varios equipos de frontend trabajando en la misma aplicación, que necesitan desplegar su parte sin coordinar un release único de todo el frontend — Zalando (Project Mosaic), IKEA (composición del catálogo por fragmentos) y Spotify (su cliente de escritorio, con paneles independientes) son casos documentados públicamente en sus propios blogs de ingeniería.
+
+**Ejemplo de referencia (LP2).** LP2 no usa microfrontend, y no debería usarlo todavía: la SPA de LP2 (prevista para S7) la construye un solo equipo pequeño, sin necesidad de desplegar fragmentos por separado — coordinar múltiples despliegues de UI solo paga cuando hay varios equipos de frontend compitiendo por el mismo release, que no es el caso de BomERP.
+
+### 2.10 Escalabilidad horizontal y diseño *stateless*
 
 **Escalabilidad horizontal**: la capacidad de atender más carga agregando más copias idénticas de la aplicación (más instancias), en vez de agregarle más recursos a una sola instancia (escalar verticalmente). Para que escalar horizontalmente funcione, cualquier petición debe poder ser atendida por **cualquier** instancia, indistintamente.
 
@@ -401,7 +481,7 @@ Los dos conceptos están relacionados pero no son lo mismo: *stateless* es una p
 
 **Ejemplo de referencia (LP2).** LP2 ya demostró esto con evidencia real, no como ejercicio teórico: S1 (3.3) levantó dos instancias de `bomerp-backend` en paralelo (puertos `8080` y `8081`), ambas conectadas a la misma Oracle, y verificó que cualquiera de las dos responde `/api/v1/hello` y `/actuator/health` sin ninguna coordinación entre ellas. Eso funciona porque el backend nunca guardó estado de cliente en memoria — ni siquiera hay autenticación todavía (JWT se difiere a S10, ver ADR-004 de LP2), así que no hay sesión que sincronizar entre instancias. Cuando JWT llegue en S10, seguirá siendo *stateless*: un JWT es un token autocontenido que el cliente reenvía en cada petición — ninguna instancia necesita recordar quién inició sesión.
 
-**Figura 13. Por qué el diseño *stateless* es lo que permite escalar horizontalmente**
+**Figura 16. Por qué el diseño *stateless* es lo que permite escalar horizontalmente**
 
 ```mermaid
 flowchart TB
@@ -410,7 +490,7 @@ flowchart TB
         C1["Cliente"] -->|"peticion 1"| I1["Instancia A - guarda el carrito en memoria"]
         C1 -.->|"peticion 2, va a otra instancia"| I2["Instancia B - no conoce el carrito"]
     end
-    subgraph SinEstado["Stateless (BomERP, real)"]
+    subgraph SinEstado["Stateless (BomERP)"]
         direction LR
         C2["Cliente"] -->|"peticion 1"| J1["Instancia A"]
         C2 -->|"peticion 2, cualquier instancia"| J2["Instancia B"]
@@ -421,7 +501,7 @@ flowchart TB
 
 En el bloque de arriba, la segunda petición del cliente cae en una instancia distinta que nunca vio la primera — si el estado viviera en memoria, se perdería. En el bloque de abajo (el real), no importa a qué instancia llegue cada petición: la única fuente de estado es Oracle, compartida por todas.
 
-### 2.9 Domain-Driven Design: cuándo orienta hacia hexagonal o Clean Architecture
+### 2.11 Domain-Driven Design: cuándo orienta hacia hexagonal o Clean Architecture
 
 DDD (introducido como adelanto en S2, 2.5) distingue el dominio (las reglas de negocio) de todo lo demás (frameworks, base de datos, HTTP). Cuando ese dominio es simple — pocas reglas, poca lógica que no sea CRUD — separar el dominio del resto con puertos y adaptadores (hexagonal) o con círculos concéntricos (Clean Architecture) agrega una indirección que no paga su costo: más interfaces, más mapeos, más código para el mismo resultado.
 
@@ -433,7 +513,7 @@ La orientación cambia cuando el dominio gana complejidad real: reglas de negoci
 
 Tiempo: 2h.
 
-**Actividad:** comparación guiada de los cinco estilos arquitectónicos contra BomERP, con trade-offs, evidencia de escalabilidad horizontal, diseño *stateless* y orientación DDD (Producto de la sesión en 1.4).
+**Actividad:** comparación guiada de los siete estilos arquitectónicos contra BomERP, con trade-offs, evidencia de escalabilidad horizontal, diseño *stateless* y orientación DDD (Producto de la sesión en 1.4).
 
 **Propósito de la actividad:** justificar con evidencia real, no con preferencia, el estilo arquitectónico ya elegido para el proyecto — confirmándolo donde corresponda y documentando explícitamente por qué las alternativas no aplican todavía.
 
@@ -450,19 +530,23 @@ Tiempo: 2h.
 
 ### 3.1 Profundizar la evaluación de estilos arquitectónicos
 
-**Producto del paso:** tabla de trade-offs de los cinco estilos, aplicada a BomERP.
+**Producto del paso:** tabla de trade-offs de los siete estilos, aplicada a BomERP.
 
-**Tabla 5. Trade-offs de los cinco estilos, aplicados a BomERP**
+**Tabla 6. Trade-offs de los siete estilos, aplicados a BomERP**
 
 | Estilo | ¿Aplica a BomERP hoy? | Trade-off que se ganaría | Trade-off que se pagaría |
 |---|---|---|---|
-| Monolito modular (real) | Sí | Un solo despliegue, límites verificados por Spring Modulith sin costo operacional | No se puede escalar ni desplegar un módulo por separado |
-| Arquitectura en capas (real, dentro de cada módulo) | Sí | Separación clara controller/service/repository/entity | No impone límites entre módulos de dominio por sí sola (eso lo da Modulith) |
+| Arquitectura en capas (dentro de cada módulo) | Sí | Separación clara controller/service/repository/entity | No impone límites entre módulos de dominio por sí sola (eso lo da Modulith) |
 | Arquitectura hexagonal | No, todavía | Dominio aislado de framework, más fácil de probar sin infraestructura | Interfaces y mapeos adicionales que hoy no protegen ninguna lógica compleja |
 | Clean Architecture | Parcial (principios, no estructura formal) | Dominio protegido de cambios de framework a largo plazo | Disciplina y código adicional que el corte actual de LP2 no evalúa |
+| Monolito modular | Sí | Un solo despliegue, límites verificados por Spring Modulith sin costo operacional | No se puede escalar ni desplegar un módulo por separado |
 | Microservicios | No | Escalar y desplegar módulos por separado | Red, bases de datos distribuidas, versionado de contratos — sin equipo ni alcance que lo justifique |
+| Serverless | No | Pagar solo por invocación, sin administrar servidores | *Cold start*, ejecución acotada — sin cargas esporádicas que lo justifiquen |
+| Microfrontend | No | Despliegue independiente por fragmento de UI | Complejidad de integración — un solo equipo de frontend, sin necesidad de coordinar releases |
 
 Esta tabla profundiza la Tabla 5 de S1 (que solo respondía sí/no) agregando explícitamente qué se gana y qué se paga en cada caso — la justificación real está en esas dos columnas, no en el sí/no.
+
+Dos filas no se llenan igual que las demás: la de **Monolito modular** se justifica citando ACID y ADP (2.6), no solo "es más simple"; la de **Microservicios** se justifica citando el teorema CAP (2.7), no solo "más complejidad operacional". Repetir la conclusión sin nombrar el concepto que la sostiene cuenta como trade-off superficial en la rúbrica (4.6).
 
 ### 3.2 Verificar escalabilidad horizontal con evidencia real
 
@@ -470,7 +554,7 @@ Esta tabla profundiza la Tabla 5 de S1 (que solo respondía sí/no) agregando ex
 
 Repasa LP2 S1 (3.3, Figura 7): dos instancias de `bomerp-backend`, puertos `8080` y `8081`, ambas conectadas a la misma Oracle. Si tienes el proyecto de LP2 disponible, reproduce los comandos de 3.3.1-3.3.2 de esa guía y confirma que ambas instancias responden de forma independiente.
 
-**Tabla 6. Evidencia de escalabilidad horizontal**
+**Tabla 7. Evidencia de escalabilidad horizontal**
 
 | Verificación | Resultado esperado (LP2 S1, 3.3.2) |
 |---|---|
@@ -493,11 +577,11 @@ Revisa el código real de `ProductoServiceImpl`/`CategoriaServiceImpl` (LP2 S1-S
 
 Revisa `catalogo/categoria` y `catalogo/producto` (LP2 S1-S3): CRUD, una validación de referencia, sin reglas de negocio que dependan de cálculos complejos o de invariantes multi-entidad. Compáralo con lo que se anticipa para `ventas/Venta-DetalleVenta` (LP2 S4, todavía no implementado): cabecera-detalle con cálculos, control de stock y una operación atómica — más cerca de un agregado DDD real.
 
-**Tabla 7. ¿El dominio ya justifica hexagonal o Clean Architecture?**
+**Tabla 8. ¿El dominio ya justifica hexagonal o Clean Architecture?**
 
 | Módulo | Complejidad real hoy | ¿Justifica aislar el dominio? |
 |---|---|---|
-| `catalogo` (real, LP2 S1-S3) | CRUD + validación de referencia | No — la indirección no protegería ninguna lógica que hoy no exista |
+| `catalogo` (LP2 S1-S3) | CRUD + validación de referencia | No — la indirección no protegería ninguna lógica que hoy no exista |
 | `ventas` (previsto, LP2 S4) | Cabecera-detalle, cálculos, control de stock, operación atómica | Todavía por verse — candidato más real, se evalúa cuando el código exista |
 
 ### 3.5 Documentar el hallazgo o la confirmación
@@ -510,7 +594,7 @@ A diferencia de S3 (donde el hallazgo esperado era una tensión de diseño), ac�
 
 **Producto del paso:** matriz de integración de la sesión.
 
-**Tabla 8. Matriz de integración ADS-LP2-BD2 (S4)**
+**Tabla 9. Matriz de integración ADS-LP2-BD2 (S4)**
 
 | Criterio evaluado | Evidencia real en LP2 | Relación con BD2 |
 |---|---|---|
@@ -523,7 +607,7 @@ Sesión equivalente en los otros dos cursos, misma semana: LP2 y BD2 todavía no
 
 **Evidencia de aprendizaje:**
 
-- Tabla de trade-offs de los cinco estilos arquitectónicos, aplicada a BomERP.
+- Tabla de trade-offs de los siete estilos arquitectónicos, aplicada a BomERP.
 - Evidencia real de escalabilidad horizontal (LP2 S1, 3.3) verificada.
 - Justificación explícita del diseño *stateless*.
 - Evaluación de si DDD orienta hacia hexagonal o Clean Architecture, con al menos un módulo real analizado.
@@ -540,7 +624,7 @@ Evaluación autónoma de estilos arquitectónicos, escalabilidad horizontal, dis
 
 Completa y evidencia estas tareas:
 
-1. Elaborar la tabla de trade-offs de los cinco estilos arquitectónicos, aplicada a tu propio proyecto.
+1. Elaborar la tabla de trade-offs de los siete estilos arquitectónicos, aplicada a tu propio proyecto.
 2. Verificar (o justificar por qué no aplica todavía) la escalabilidad horizontal de tu backend.
 3. Justificar explícitamente si tu diseño es *stateless*, y por qué.
 4. Evaluar si la complejidad real de tu dominio justifica hexagonal o Clean Architecture en algún módulo.
@@ -621,7 +705,7 @@ Pega esta página como la última hoja del PDF, con tus respuestas.
 La evidencia individual se considera completa si:
 
 - El archivo respeta el nombre solicitado.
-- Presenta la tabla de trade-offs de los cinco estilos arquitectónicos, aplicada a su propio proyecto.
+- Presenta la tabla de trade-offs de los siete estilos arquitectónicos, aplicada a su propio proyecto.
 - Verifica o justifica explícitamente la escalabilidad horizontal.
 - Justifica explícitamente el diseño *stateless* (o su ausencia), con código real citado.
 - Evalúa si algún módulo real justifica hexagonal o Clean Architecture, con argumento concreto.
@@ -638,14 +722,16 @@ La evidencia individual se considera completa si:
 3. ¿Por qué tu backend es (o no es) *stateless*, y qué relación tiene eso con la escalabilidad horizontal?
 4. ¿Qué tendría que pasar en tu dominio para que valga la pena aislarlo con arquitectura hexagonal?
 5. ¿Por qué "microservicios" y "Aplicaciones Distribuidas" no son lo mismo que esta sesión de ADS?
+6. ¿Por qué un monolito modular tiene ACID por defecto, y qué se pierde exactamente si se separa en microservicios (teorema CAP)?
+7. ¿Qué es el Acyclic Dependencies Principle, y cómo se verifica (o no) en tu propio proyecto?
 
 ### 4.6 Rúbrica de evaluación
 
-**Tabla 9. Rúbrica de evaluación**
+**Tabla 10. Rúbrica de evaluación**
 
 | Criterio | Peso (%) | A (20 pts) | B (15 pts) | C (10 pts) | D (5 pts) | Nivel obtenido |
 |---|---:|---|---|---|---|---:|
-| 1. Trade-offs de estilos arquitectónicos* | 25 | Tabla completa y correcta, con trade-offs reales aplicados al proyecto propio. | Tabla correcta, con algún trade-off superficial. | Tabla incompleta o con trade-offs genéricos. | No presenta la tabla. | |
+| 1. Trade-offs de estilos arquitectónicos* | 25 | Tabla completa y correcta, con trade-offs reales aplicados al proyecto propio, citando ACID/ADP y CAP donde corresponda (3.1). | Tabla correcta, con algún trade-off superficial o sin citar ACID/CAP donde correspondía. | Tabla incompleta o con trade-offs genéricos. | No presenta la tabla. | |
 | 2. Escalabilidad horizontal* | 25 | Evidencia real de verificación, o justificación sólida de por qué no aplica todavía. | Evidencia o justificación correcta, con detalles menores. | Evidencia superficial o justificación poco clara. | No evalúa escalabilidad horizontal. | |
 | 3. Diseño stateless* | 25 | Justificación explícita y correcta, con código real citado. | Justificación correcta, con citas parciales. | Justificación superficial o incorrecta. | No justifica el diseño stateless. | |
 | 4. Orientación DDD* | 25 | Evaluación concreta de al menos un módulo real, con argumento sólido. | Evaluación correcta, con argumento básico. | Evaluación genérica o poco fundamentada. | No evalúa orientación DDD. | |
@@ -669,7 +755,7 @@ Indica 2 fortalezas y 2 recomendaciones.
 
 Tiempo: 5 min.
 
-**Resumen breve:** hoy la propuesta inicial de S1 (monolito modular con Spring Modulith) se sometió a un análisis más profundo — trade-offs explícitos de los cinco estilos, evidencia real de escalabilidad horizontal y diseño *stateless* (LP2 S1, 3.3), y una evaluación honesta de si el dominio actual de BomERP ya justifica hexagonal o Clean Architecture. La conclusión más probable no es un cambio de rumbo, sino una confirmación bien justificada — y eso también es un resultado válido.
+**Resumen breve:** hoy la propuesta inicial de S1 (monolito modular con Spring Modulith) se sometió a un análisis más profundo — trade-offs explícitos de los siete estilos, evidencia real de escalabilidad horizontal y diseño *stateless* (LP2 S1, 3.3), y una evaluación honesta de si el dominio actual de BomERP ya justifica hexagonal o Clean Architecture. La conclusión más probable no es un cambio de rumbo, sino una confirmación bien justificada — y eso también es un resultado válido.
 
 **Dinámica participativa:** en una ronda rápida, cada estudiante comparte en una frase qué estilo arquitectónico le pareció más tentador "por moda" antes de evaluar sus trade-offs reales.
 
@@ -687,3 +773,7 @@ Tiempo: 5 min.
 6. Thoughtworks. (2024). *Hexagonal architecture explained through a practical example*. https://www.thoughtworks.com/insights/blog/architecture/hexagonal-architecture-explained-practical-example
 7. Google. (2025). *Guide to app architecture*. Android Developers. https://developer.android.com/topic/architecture
 8. Gilbert, S., & Lynch, N. (2002). Brewer's conjecture and the feasibility of consistent, available, partition-tolerant web services. *ACM SIGACT News*, 33(2), 51-59.
+9. Pritchett, D. (2008). BASE: An ACID alternative. *ACM Queue*, 6(3), 48-55. https://queue.acm.org/detail.cfm?id=1394128
+10. Martin, R. C. (1996). Granularity. *C++ Report*, 8(10) — origen del Acyclic Dependencies Principle (ADP), Common Closure Principle (CCP) y Common Reuse Principle (CRP).
+11. Jackson, C. (2019). *Micro Frontends*. martinfowler.com. https://martinfowler.com/articles/micro-frontends.html
+12. Amazon Web Services. (2014). *AWS Lambda* [anuncio de producto]. AWS re:Invent, noviembre de 2014. https://press.aboutamazon.com/2014/11/amazon-web-services-announces-aws-lambda
