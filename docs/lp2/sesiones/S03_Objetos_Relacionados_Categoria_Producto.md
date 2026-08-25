@@ -113,11 +113,34 @@ flowchart LR
     Controller -->|"ProductoResponse{categoria}"| Client
 ```
 
-Lectura del diagrama: el service **resuelve** la categoría antes de mapear — el mapper nunca consulta la base de datos, solo transforma objetos que ya recibió resueltos. Esa separación es la misma de S2 (2.4, punto 4): el service es la única capa que valida algo que depende del estado actual del sistema, no de la forma del dato. Esta es la forma general del patrón — el paso a paso exacto de cuántas veces se llama a cada capa se construye en 3.9 (Figura 10), cuando toca escribir el código.
+Lectura del diagrama: el service **resuelve** la categoría antes de mapear — el mapper nunca consulta la base de datos, solo transforma objetos que ya recibió resueltos. Esa separación es la misma de S2 (2.4, punto 4): el service es la única capa que valida algo que depende del estado actual del sistema, no de la forma del dato. Esta es la forma general del patrón — el paso a paso exacto de cuántas veces se llama a cada capa se construye en 3.9 (Figura 11), cuando toca escribir el código.
 
 ### 2.2 Asociación de entidades y DTO relacionados
 
 **Asociación de entidades (ORM):** cuando dos entidades del dominio están relacionadas en la base de datos mediante una llave foránea, el ORM necesita una anotación que declare esa relación también en el lado Java — sin ella, la columna existe en la tabla pero ninguna consulta JPA la usa. La anotación para el lado "muchos" de una relación uno-a-muchos indica, además, qué columna física guarda la referencia.
+
+**Figura 3. Esquema real en Oracle: `CATEGORIAS` y `PRODUCTOS`**
+
+```mermaid
+erDiagram
+    CATEGORIAS o|--o{ PRODUCTOS : "FK_PRODUCTO_CATEGORIA"
+    CATEGORIAS {
+        NUMBER ID PK
+        VARCHAR2 NOMBRE
+        VARCHAR2 DESCRIPCION
+    }
+    PRODUCTOS {
+        NUMBER ID PK
+        NUMBER ID_CATEGORIA FK
+        VARCHAR2 NOMBRE
+        NUMBER PRECIO
+        NUMBER STOCK
+    }
+```
+
+Este esquema no es una propuesta de esta sesión — ya existe en Oracle desde S1 (`S01_02_tablas.sql`, 1.5), con `FK_PRODUCTO_CATEGORIA` protegiendo la integridad referencial desde el primer día. Lo que esta sesión hace es llevar al código Java una relación que la base de datos ya conocía (1.6.1) — el `@ManyToOne`/`@JoinColumn` de 3.6 es, literalmente, la traducción de esta misma flecha (`ID_CATEGORIA`) al lado de la aplicación.
+
+El lado de `CATEGORIAS` lleva `o|` (cero o uno), no `||` (exactamente uno): `ID_CATEGORIA` en Oracle **no tiene `NOT NULL`** — un producto podría, a nivel de base de datos, no tener categoría. `@JoinColumn(nullable = false)` (3.6) sí exige que sea obligatorio, pero esa es una regla del lado Java, más estricta que lo que Oracle realmente permite — este esquema representa lo que la base de datos hace cumplir hoy, no lo que la aplicación decide exigir además.
 
 **DTO relacionados:** cuando el DTO de salida de una entidad principal necesita mostrar información de su entidad relacionada, hay dos caminos: reutilizar el DTO que ya existe para esa entidad relacionada, o crear uno más chico, pensado solo para lo que se necesita mostrar embebido (por ejemplo, un combo o una etiqueta). El segundo camino no es obligatorio ni es, necesariamente, para ocultar datos sensibles — es una decisión de **desacoplar contratos**: que el DTO de salida de una entidad no cambie de forma solo porque el DTO de la entidad relacionada cambió por una razón que no tiene nada que ver con la primera.
 
@@ -133,13 +156,15 @@ Lectura del diagrama: el service **resuelve** la categoría antes de mapear — 
 
 Esta cadena — DTO nuevo, mapper con un método más, mapper compuesto vía `uses` — se repite cada vez que una entidad necesita mostrar una versión reducida de otra; se construye paso a paso en 3.2, 3.3, 3.7 y 3.8.
 
-**Figura 3. Asociación de entidades (ORM) vs. asociación de DTO**
+**Figura 4. Diagrama de clases completo: entidades, DTO y mappers de `catalogo`**
 
 ```mermaid
 classDiagram
     class Producto {
         -Long id
         -String nombre
+        -BigDecimal precio
+        -Integer stock
         -Categoria categoria
     }
     class Categoria {
@@ -147,10 +172,27 @@ classDiagram
         -String nombre
         -String descripcion
     }
+    class ProductoRequest {
+        -String nombre
+        -BigDecimal precio
+        -Integer stock
+        -Long categoriaId
+    }
     class ProductoResponse {
         -Long id
         -String nombre
+        -BigDecimal precio
+        -Integer stock
         -CategoriaResumen categoria
+    }
+    class CategoriaRequest {
+        -String nombre
+        -String descripcion
+    }
+    class CategoriaResponse {
+        -Long id
+        -String nombre
+        -String descripcion
     }
     class CategoriaResumen {
         -Long id
@@ -158,10 +200,15 @@ classDiagram
     }
 
     Producto "muchos" --> "uno" Categoria : @ManyToOne, unidireccional
+    ProductoRequest ..> Producto : ProductoMapper.toEntity
+    Producto ..> ProductoResponse : ProductoMapper.toResponse
     ProductoResponse --> CategoriaResumen : DTO relacionado
+    CategoriaRequest ..> Categoria : CategoriaMapper.toEntity
+    Categoria ..> CategoriaResponse : CategoriaMapper.toResponse
+    Categoria ..> CategoriaResumen : CategoriaMapper.toResumen
 ```
 
-Las dos flechas de la Figura 3 no son la misma relación vista dos veces: la de arriba (`Producto` → `Categoria`) es la asociación ORM, mapeada a `ID_CATEGORIA`; la de abajo (`ProductoResponse` → `CategoriaResumen`) es una asociación distinta, entre DTO, que existe solo para la API — `CategoriaResumen` ni siquiera tiene `descripcion`, aunque `Categoria` sí.
+La flecha sólida (`Producto` → `Categoria`) es la única asociación real entre entidades — mapeada a `ID_CATEGORIA` (Figura 3), unidireccional (se retoma en 2.4). Todas las demás flechas son punteadas porque no son asociaciones del dominio: son conversiones que hacen los mappers, en un solo sentido, entre un DTO y una entidad, o entre una entidad y otro DTO. `ProductoResponse` → `CategoriaResumen` es la única flecha entre dos DTO — el DTO relacionado explicado arriba, que existe solo para la API y ni siquiera tiene `descripcion`, aunque `Categoria` sí.
 
 ### 2.3 Validación de referencias
 
@@ -171,7 +218,7 @@ Que un campo llegue con un valor (`@NotNull`) no significa que ese valor corresp
 
 Esta búsqueda no es solo para tener el objeto `Categoria` que pide `@ManyToOne` — es lo que evita que un `categoriaId` inválido llegue a violar `FK_PRODUCTO_CATEGORIA` directamente en el `INSERT`. Si esa validación no existiera, Oracle igual rechazaría el dato (la restricción sigue ahí), pero el error llegaría como `DataIntegrityViolationException` sin traducir — exactamente el mismo hueco que `DELETE /api/v1/categorias/{id}` sí deja sin resolver hoy (3.4, "Error frecuente"). `crear`/`actualizar` responden `404` limpio; `eliminar` responde `500` crudo — la diferencia es solo esta validación explícita, no la restricción de la base de datos, que en ambos casos es la misma.
 
-**Figura 4. Validación de referencias, paso a paso**
+**Figura 5. Validación de referencias, paso a paso**
 
 ```mermaid
 flowchart TD
@@ -204,7 +251,7 @@ Un problema clásico de JPA: si una entidad relacionada mantiene una colección 
 
 **Error frecuente**: agregar `@OneToMany` en `Categoria` "por si se necesita después" es exactamente el tipo de anticipación que este curso evita (ver `CLAUDE.md`, "no adelantar alcance") — y además reintroduce el riesgo de ciclo que esta sesión evitó a propósito. Si una sesión futura necesita navegar de `Categoria` a sus `Producto`, la forma correcta es una consulta explícita (2.5), no una colección cargada automáticamente en la entidad.
 
-**Figura 5. Por qué no hay ciclo posible**
+**Figura 6. Por qué no hay ciclo posible**
 
 ```mermaid
 flowchart LR
@@ -216,7 +263,7 @@ flowchart LR
     P -->|"@ManyToOne"| C
 ```
 
-Las dos flechas de la Figura 5 son las dos decisiones de arriba: la sólida (`Producto` → `Categoria`, unidireccional) es la primera; la punteada (`ProductoResponse` nunca serializa la entidad) es la segunda. Ninguna de las dos puede retroalimentarse a sí misma — por eso no hay ciclo posible.
+Las dos flechas de la Figura 6 son las dos decisiones de arriba: la sólida (`Producto` → `Categoria`, unidireccional) es la primera; la punteada (`ProductoResponse` nunca serializa la entidad) es la segunda. Ninguna de las dos puede retroalimentarse a sí misma — por eso no hay ciclo posible.
 
 ### 2.5 Navegación controlada y CRUD completo de `Categoria`
 
@@ -224,7 +271,7 @@ Las dos flechas de la Figura 5 son las dos decisiones de arriba: la sólida (`Pr
 
 **Ejemplo de referencia (LP2).** `GET /api/v1/productos?categoriaId={id}` es esa consulta explícita — no una colección cargada dentro de la entidad `Categoria`. Es un filtro sobre la colección de `Producto`, no un recurso anidado de `Categoria`: `Producto` tiene existencia propia (su propio CRUD completo, desde S2), no le pertenece a `Categoria` como una línea le pertenece a un pedido — por eso la consulta vive en `ProductoController`, no en `CategoriaController` (3.9). De paso, `Categoria` completa en esta sesión el mismo patrón CRUD que S2 aplicó a `Producto`: `CategoriaRequest` (entrada validada), `CategoriaResponse` (salida, ahora clase con `@Builder` en vez de `record` — mismo motivo que S2 documentó para `Producto`, 2.2), y `CategoriaMapper`.
 
-**Figura 6. Navegación controlada: consulta explícita, no colección automática**
+**Figura 7. Navegación controlada: consulta explícita, no colección automática**
 
 ```mermaid
 flowchart LR
@@ -260,7 +307,7 @@ Cuando una consulta trae una lista de entidades que a su vez tienen una relació
 
 **Ejemplo de referencia (LP2).** `ProductoServiceImpl.listar()` (3.9) llama a `productoRepository.findAll()`, y el mapper después pide `categoria.getNombre()` para cada producto al construir su `CategoriaResumen` — una consulta extra por producto, el N+1 de arriba. Se soluciona en 3.10 agregando `@EntityGraph` al método, sin cambiar el service ni el mapper.
 
-**Figura 7. Una sola consulta con `@EntityGraph` vs. N+1**
+**Figura 8. Una sola consulta con `@EntityGraph` vs. N+1**
 
 ```mermaid
 flowchart TB
@@ -342,7 +389,7 @@ Sin `@Transactional` en el método de servicio, cada llamada a un repositorio de
 
 **Ejemplo de referencia (LP2).** `ProductoServiceImpl.crear()` (3.9) hace tres cosas que deben ocurrir en la misma sesión: resolver la `Categoria` (`buscarCategoriaOFallar`), guardar el `Producto`, y mapear la respuesta (`toResponse`, que lee `categoria.getNombre()` para el `CategoriaResumen`, 2.2). Sin `@Transactional` en `crear()`, las dos primeras corren en transacciones separadas, y la tercera se queda sin sesión — este fue un error real, no hipotético, al probar esta sesión.
 
-**Figura 8. Una transacción por método, no una por llamada**
+**Figura 9. Una transacción por método, no una por llamada**
 
 ```mermaid
 flowchart TB
@@ -793,7 +840,7 @@ public interface ProductoMapper {
 
 `precio` y `stock` **no** necesitan `@Mapping`: solo existen en `request`, así que no hay ninguna ambigüedad que resolver — MapStruct los mapea solo. `categoria`, en cambio, sí necesita su propio `@Mapping`, pero por una razón distinta: no es un campo ambiguo, es un parámetro completo (`categoria`) que debe asignarse directo a un campo del mismo nombre en `Producto`. MapStruct no hace esa conexión automáticamente — sin `@Mapping(target = "categoria", source = "categoria")`, el compilador solo avisa con una advertencia (`Unmapped target property: categoria`), no con un error, y `producto.categoria` queda `null` en silencio.
 
-**Figura 9. Por qué `nombre` es ambiguo, y cómo se resuelve**
+**Figura 10. Por qué `nombre` es ambiguo, y cómo se resuelve**
 
 ```mermaid
 flowchart TD
@@ -815,7 +862,7 @@ La ambigüedad no es un error de MapStruct — es correcto que se detenga: con d
 
 **Producto del paso:** `ProductoServiceImpl` resuelve y valida `categoriaId` antes de guardar; `listarPorCategoria` y el filtro en `ProductoController` para la navegación controlada de 2.5.
 
-**Figura 10. `ProductoServiceImpl.crear()`, paso a paso — lo que el código de abajo implementa**
+**Figura 11. `ProductoServiceImpl.crear()`, paso a paso — lo que el código de abajo implementa**
 
 ```mermaid
 flowchart LR

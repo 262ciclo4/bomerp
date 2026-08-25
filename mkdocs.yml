@@ -60,6 +60,7 @@ nav:
           - S1 - Fundamentos de arquitectura de software: ads/sesiones/S01_Fundamentos_Arquitectura_Software.md
           - S2 - Modelo C4 y vistas arquitectónicas: ads/sesiones/S02_Modelo_C4_Vistas_Arquitectonicas.md
           - S3 - Diseño estructural y principios SOLID: ads/sesiones/S03_Diseno_Estructural_Principios_SOLID.md
+          - S4 - Arquitecturas modernas: ads/sesiones/S04_Arquitecturas_Modernas.md
   - BD2:
       - Inicio: bd2/index.md
       - Silabos:
