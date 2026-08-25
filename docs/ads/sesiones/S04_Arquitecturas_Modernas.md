@@ -230,11 +230,25 @@ La flecha siempre entra al núcleo por un puerto de entrada y sale por un puerto
 
 **Dónde se usa en la práctica:** dominios con reglas de negocio genuinamente complejas que deben sobrevivir a cambios de tecnología — sistemas bancarios centrales, motores de tarificación de seguros, o cualquier núcleo de negocio que un equipo espera mantener por años, mientras la infraestructura de alrededor cambia varias veces.
 
-**Ejemplo de referencia (LP2).** `catalogo/producto` no tiene esta estructura, y no debería tenerla todavía — `ProductoServiceImpl` llama directo a `ProductoRepository` (Spring Data JPA), sin un puerto de por medio (confirmado en 2.4 más abajo, Tabla 5). No es un error: es que hoy no hay lógica de negocio compleja que justifique la indirección.
+**Ejemplo de referencia (LP2).** `catalogo/producto` no tiene esta estructura, y no debería tenerla todavía — `ProductoServiceImpl` llama directo a `ProductoRepository` (Spring Data JPA), sin un puerto de por medio. No es un error: es que hoy no hay lógica de negocio compleja que justifique la indirección.
+
+**Tabla 3. Equivalencia: clases reales de LP2 vs. roles hexagonales**
+
+| Rol hexagonal | ¿Qué clase real cumple ese rol hoy? | Qué cambiaría si se migrara |
+|---|---|---|
+| Puerto de entrada | No existe — `ProductoController` llama directo a `ProductoService` | Se crearía una interfaz nueva (ej. `ProductoUseCase`); `ProductoController` pasaría a depender de ella, no de `ProductoService` directamente |
+| Lógica de negocio pura | `ProductoServiceImpl`, parcialmente — hoy conoce `ProductoRepository` (Spring Data JPA) | Dejaría de depender de Spring Data JPA directo; dependería solo de un puerto de salida propio del dominio |
+| Puerto de salida | No existe — `ProductoRepository` se inyecta directo en el service | Se crearía una interfaz nueva (ej. `ProductoRepositoryPort`); `ProductoRepository` pasaría a implementarla, en vez de ser inyectada directo |
+| Adaptador REST (entrada) | `ProductoController` | Implementaría el puerto de entrada, en vez de ser la única puerta al servicio |
+| Adaptador de persistencia (salida) | `ProductoRepository` (Spring Data JPA) | Implementaría el puerto de salida, quedando como un detalle de infraestructura reemplazable |
+
+`ProductoServiceImpl` hoy cumple *aproximadamente* el rol de "lógica de negocio" de la Figura 6, pero sin los puertos que la aislarían de verdad — sigue conociendo Spring Data JPA por su nombre real (`ProductoRepository`), no por una interfaz que el propio dominio hubiera definido.
 
 ### 2.6 Microservicios, en profundidad
 
 En microservicios, cada módulo de negocio es un **proceso independiente**, con su propia base de datos, su propio ciclo de despliegue y, generalmente, su propio repositorio de código. La comunicación entre servicios es siempre por red (HTTP, mensajería), nunca por llamada directa en memoria.
+
+La definición es más simple de lo que parece si no se mezcla con otra pregunta distinta: microservicios solo decide **cuántos procesos independientes hay y dónde están sus límites** — no dice nada sobre cómo se organiza el código *dentro* de cada uno. Cada microservicio, por separado, puede construirse con capas (2.4), con arquitectura hexagonal (2.5), con Clean Architecture (2.7), o incluso sin ninguna disciplina interna — son decisiones independientes. Es común, de hecho, que un microservicio con lógica de negocio compleja use hexagonal por dentro, mientras otro más simple (un CRUD) use solo capas.
 
 **Figura 7. Diagrama típico de microservicios**
 
@@ -254,7 +268,7 @@ Cada base de datos le pertenece a un solo servicio — ningún otro servicio la 
 
 **Dónde se usa en la práctica:** organizaciones grandes, con muchos equipos trabajando en paralelo que necesitan desplegar sin coordinarse entre sí, y servicios con necesidades de escala muy distintas entre ellos (por ejemplo, un servicio de búsqueda que recibe mil veces más tráfico que uno de facturación) — casos frecuentemente citados son Netflix, Amazon y Uber, documentados en sus propios blogs de ingeniería.
 
-**Ejemplo de referencia (LP2).** BomERP no usa microservicios (2.2), y el ADR-001 de LP2 lo dice explícitamente: el costo (red, bases de datos distribuidas, versionado de contratos) no tiene ninguna ganancia real a cambio en un proyecto de equipo pequeño con un solo ciclo de despliegue. El curso de Aplicaciones Distribuidas (etapa posterior de la cadena BomERP) sí trabaja este estilo de verdad, con `producto-ms` como proyecto de referencia.
+**Ejemplo de referencia (LP2).** BomERP no usa microservicios — el ADR-001 de LP2 lo dice explícitamente: el costo (red, bases de datos distribuidas, versionado de contratos) no tiene ninguna ganancia real a cambio en un proyecto de equipo pequeño con un solo ciclo de despliegue.
 
 ### 2.7 Clean Architecture, en profundidad
 
@@ -277,7 +291,18 @@ La flecha de dependencia siempre apunta hacia adentro: `Frameworks` puede conoce
 
 **Dónde se usa en la práctica:** sistemas grandes y de vida larga, donde el equipo espera que la lógica de negocio sobreviva a más de un cambio de framework — es un patrón frecuente en apps Android/iOS grandes (para que la lógica de negocio no dependa del framework de UI) y en sistemas empresariales que ya pasaron por al menos una migración de tecnología dolorosa.
 
-**Ejemplo de referencia (LP2).** Igual que con hexagonal, BomERP aplica los *principios* de separación de capas (Tabla 5 de S1: "parcialmente") sin adoptar la estructura formal completa de círculos — el mismo criterio de 2.4 (DDD) decide si algún módulo llega a justificarlo más adelante.
+**Ejemplo de referencia (LP2).** Igual que con hexagonal, BomERP aplica los *principios* de separación de capas (Tabla 5 de S1: "parcialmente") sin adoptar la estructura formal completa de círculos — el mismo criterio de 2.9 (DDD) decide si algún módulo llega a justificarlo más adelante.
+
+**Tabla 4. Equivalencia: clases reales de LP2 vs. círculos de Clean Architecture**
+
+| Círculo (de adentro hacia afuera) | ¿Qué clase real cumple ese rol hoy? | Qué cambiaría si se migrara |
+|---|---|---|
+| Entidades | `Producto`, `Categoria` — hoy son entidades JPA, ya acopladas a Hibernate (`@Entity`, `@Column`) | Se separarían en objetos de dominio puros, sin ninguna anotación de persistencia |
+| Casos de uso | `ProductoServiceImpl`, parcialmente — hoy depende de Spring (`@Service`, `@Transactional`) y de Spring Data JPA | Se independizaría del framework; solo conocería interfaces propias del dominio |
+| Adaptadores de interfaz | `ProductoController`, `ProductoMapper`, la entidad JPA real de `Producto` | Se mantendrían tal cual están hoy, pero como una capa explícitamente separada del caso de uso |
+| Frameworks y drivers | Spring Boot, Spring Data JPA, Oracle | Sin cambios — es la capa que ya rodea todo, incluso hoy |
+
+Esta tabla es casi la misma que la Tabla 3 (hexagonal) con otros nombres — no es casualidad (2.7): Clean Architecture es la misma idea de aislar el dominio, expresada como círculos en vez de puertos y adaptadores.
 
 ### 2.8 Escalabilidad horizontal y diseño *stateless*
 
@@ -340,7 +365,7 @@ Tiempo: 2h.
 
 **Producto del paso:** tabla de trade-offs de los cinco estilos, aplicada a BomERP.
 
-**Tabla 3. Trade-offs de los cinco estilos, aplicados a BomERP**
+**Tabla 5. Trade-offs de los cinco estilos, aplicados a BomERP**
 
 | Estilo | ¿Aplica a BomERP hoy? | Trade-off que se ganaría | Trade-off que se pagaría |
 |---|---|---|---|
@@ -358,7 +383,7 @@ Esta tabla profundiza la Tabla 5 de S1 (que solo respondía sí/no) agregando ex
 
 Repasa LP2 S1 (3.3, Figura 7): dos instancias de `bomerp-backend`, puertos `8080` y `8081`, ambas conectadas a la misma Oracle. Si tienes el proyecto de LP2 disponible, reproduce los comandos de 3.3.1-3.3.2 de esa guía y confirma que ambas instancias responden de forma independiente.
 
-**Tabla 4. Evidencia de escalabilidad horizontal**
+**Tabla 6. Evidencia de escalabilidad horizontal**
 
 | Verificación | Resultado esperado (LP2 S1, 3.3.2) |
 |---|---|
@@ -381,7 +406,7 @@ Revisa el código real de `ProductoServiceImpl`/`CategoriaServiceImpl` (LP2 S1-S
 
 Revisa `catalogo/categoria` y `catalogo/producto` (LP2 S1-S3): CRUD, una validación de referencia, sin reglas de negocio que dependan de cálculos complejos o de invariantes multi-entidad. Compáralo con lo que se anticipa para `ventas/Venta-DetalleVenta` (LP2 S4, todavía no implementado): cabecera-detalle con cálculos, control de stock y una operación atómica — más cerca de un agregado DDD real.
 
-**Tabla 5. ¿El dominio ya justifica hexagonal o Clean Architecture?**
+**Tabla 7. ¿El dominio ya justifica hexagonal o Clean Architecture?**
 
 | Módulo | Complejidad real hoy | ¿Justifica aislar el dominio? |
 |---|---|---|
@@ -398,7 +423,7 @@ A diferencia de S3 (donde el hallazgo esperado era una tensión de diseño), ac�
 
 **Producto del paso:** matriz de integración de la sesión.
 
-**Tabla 6. Matriz de integración ADS-LP2-BD2 (S4)**
+**Tabla 8. Matriz de integración ADS-LP2-BD2 (S4)**
 
 | Criterio evaluado | Evidencia real en LP2 | Relación con BD2 |
 |---|---|---|
@@ -529,7 +554,7 @@ La evidencia individual se considera completa si:
 
 ### 4.6 Rúbrica de evaluación
 
-**Tabla 7. Rúbrica de evaluación**
+**Tabla 9. Rúbrica de evaluación**
 
 | Criterio | Peso (%) | A (20 pts) | B (15 pts) | C (10 pts) | D (5 pts) | Nivel obtenido |
 |---|---:|---|---|---|---|---:|
