@@ -13,28 +13,28 @@
       
       
       
-        <link rel="prev" href="../ADR-003-spring-boot-4/">
+        <link rel="prev" href="../">
       
       
-        <link rel="next" href="../../sesiones/S01_Arquitectura_Backend_REST_Profesional/">
+        <link rel="next" href="../u1/">
       
       
         
       
       
-      <link rel="icon" href="../../../assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
   
-    <title>BOM ERP - ADR-004 - JWT diferido a S10</title>
+    <title>BOM ERP - Brief técnico (plantilla)</title>
   
 
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -53,7 +53,7 @@
       
     
     
-    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#adr-004-jwt-se-implementa-recien-en-s10-no-en-u1" class="md-skip">
+        <a href="#brief-tecnico-del-proyecto-integrador" class="md-skip">
           Saltar a contenido
         </a>
       
@@ -92,7 +92,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Cabecera">
-    <a href="../../.." title="BOM ERP" class="md-header__button md-logo" aria-label="BOM ERP" data-md-component="logo">
+    <a href="../.." title="BOM ERP" class="md-header__button md-logo" aria-label="BOM ERP" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              ADR-004 - JWT diferido a S10
+              Brief técnico (plantilla)
             
           </span>
         </div>
@@ -209,7 +209,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../.." class="md-tabs__link">
+      <a href="../.." class="md-tabs__link">
         
   
   
@@ -226,11 +226,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../../proyecto-integrador/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
           
   
   
@@ -250,7 +252,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../ads/" class="md-tabs__link">
+        <a href="../../ads/" class="md-tabs__link">
           
   
   
@@ -270,7 +272,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../bd2/" class="md-tabs__link">
+        <a href="../../bd2/" class="md-tabs__link">
           
   
   
@@ -286,13 +288,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../../" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../lp2/" class="md-tabs__link">
           
   
   
@@ -326,7 +326,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegación" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../.." title="BOM ERP" class="md-nav__button md-logo" aria-label="BOM ERP" data-md-component="logo">
+    <a href="../.." title="BOM ERP" class="md-nav__button md-logo" aria-label="BOM ERP" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -356,7 +356,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../.." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -380,24 +380,29 @@
       
   
   
+    
   
   
+  
     
     
     
     
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
             
   
   
@@ -415,7 +420,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -433,7 +438,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../proyecto-integrador/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   
@@ -458,10 +463,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../../proyecto-integrador/brief/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brief técnico (plantilla)
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -477,6 +509,131 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-datos-del-equipo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Datos del equipo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-dominio-del-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Dominio del proyecto
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-modulos-de-negocio-y-alcance-full-stack-esperado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Módulos de negocio y alcance full-stack esperado
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Módulos de negocio y alcance full-stack esperado">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modulo-__-integrante-____-tipo-transaccional-no-transaccional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulo: __ (integrante: ____ · tipo: transaccional / no transaccional)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulo-__-integrante-____-tipo-transaccional-no-transaccional_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulo: __ (integrante: ____ · tipo: transaccional / no transaccional)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-arquitectura-inicial-ads" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Arquitectura inicial (ADS)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-recursos-rest-iniciales-previstos-lp2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Recursos REST iniciales previstos (LP2)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-objetos-oracle-iniciales-previstos-bd2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Objetos Oracle iniciales previstos (BD2)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-aprobacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Aprobación
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -539,7 +696,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../proyecto-integrador/u1/" class="md-nav__link">
+      <a href="../u1/" class="md-nav__link">
         
   
   
@@ -567,7 +724,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../proyecto-integrador/u1/ads-producto/" class="md-nav__link">
+      <a href="../u1/ads-producto/" class="md-nav__link">
         
   
   
@@ -595,7 +752,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../proyecto-integrador/u1/bd2-producto/" class="md-nav__link">
+      <a href="../u1/bd2-producto/" class="md-nav__link">
         
   
   
@@ -623,7 +780,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../proyecto-integrador/u1/lp2-demo/" class="md-nav__link">
+      <a href="../u1/lp2-demo/" class="md-nav__link">
         
   
   
@@ -709,7 +866,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../proyecto-integrador/u2/" class="md-nav__link">
+      <a href="../u2/" class="md-nav__link">
         
   
   
@@ -737,7 +894,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../proyecto-integrador/u2/ads-producto/" class="md-nav__link">
+      <a href="../u2/ads-producto/" class="md-nav__link">
         
   
   
@@ -765,7 +922,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../proyecto-integrador/u2/bd2-producto/" class="md-nav__link">
+      <a href="../u2/bd2-producto/" class="md-nav__link">
         
   
   
@@ -793,7 +950,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../proyecto-integrador/u2/lp2-demo/" class="md-nav__link">
+      <a href="../u2/lp2-demo/" class="md-nav__link">
         
   
   
@@ -879,7 +1036,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../proyecto-integrador/u3/" class="md-nav__link">
+      <a href="../u3/" class="md-nav__link">
         
   
   
@@ -907,7 +1064,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../proyecto-integrador/u3/ads-producto/" class="md-nav__link">
+      <a href="../u3/ads-producto/" class="md-nav__link">
         
   
   
@@ -935,7 +1092,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../proyecto-integrador/u3/bd2-producto/" class="md-nav__link">
+      <a href="../u3/bd2-producto/" class="md-nav__link">
         
   
   
@@ -963,7 +1120,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../proyecto-integrador/u3/lp2-producto/" class="md-nav__link">
+      <a href="../u3/lp2-producto/" class="md-nav__link">
         
   
   
@@ -991,7 +1148,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../proyecto-integrador/u3/checklist-final/" class="md-nav__link">
+      <a href="../u3/checklist-final/" class="md-nav__link">
         
   
   
@@ -1019,7 +1176,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../proyecto-integrador/u3/guia-sustentacion/" class="md-nav__link">
+      <a href="../u3/guia-sustentacion/" class="md-nav__link">
         
   
   
@@ -1112,7 +1269,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../ads/" class="md-nav__link">
+      <a href="../../ads/" class="md-nav__link">
         
   
   
@@ -1190,7 +1347,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../ads/silabo_ads_2026_1/" class="md-nav__link">
+      <a href="../../ads/silabo_ads_2026_1/" class="md-nav__link">
         
   
   
@@ -1218,7 +1375,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../ads/silabo_ads_2026_2/" class="md-nav__link">
+      <a href="../../ads/silabo_ads_2026_2/" class="md-nav__link">
         
   
   
@@ -1304,7 +1461,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../ads/sesiones/S01_Fundamentos_Arquitectura_Software/" class="md-nav__link">
+      <a href="../../ads/sesiones/S01_Fundamentos_Arquitectura_Software/" class="md-nav__link">
         
   
   
@@ -1332,7 +1489,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../ads/sesiones/S02_Modelo_C4_Vistas_Arquitectonicas/" class="md-nav__link">
+      <a href="../../ads/sesiones/S02_Modelo_C4_Vistas_Arquitectonicas/" class="md-nav__link">
         
   
   
@@ -1360,7 +1517,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../ads/sesiones/S03_Diseno_Estructural_Principios_SOLID/" class="md-nav__link">
+      <a href="../../ads/sesiones/S03_Diseno_Estructural_Principios_SOLID/" class="md-nav__link">
         
   
   
@@ -1388,7 +1545,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../ads/sesiones/S04_Arquitecturas_Modernas/" class="md-nav__link">
+      <a href="../../ads/sesiones/S04_Arquitecturas_Modernas/" class="md-nav__link">
         
   
   
@@ -1481,7 +1638,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../bd2/" class="md-nav__link">
+      <a href="../../bd2/" class="md-nav__link">
         
   
   
@@ -1559,7 +1716,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../bd2/silabo_bd2_2026_1/" class="md-nav__link">
+      <a href="../../bd2/silabo_bd2_2026_1/" class="md-nav__link">
         
   
   
@@ -1587,7 +1744,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../bd2/silabo_bd2_2026_2/" class="md-nav__link">
+      <a href="../../bd2/silabo_bd2_2026_2/" class="md-nav__link">
         
   
   
@@ -1673,7 +1830,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio/" class="md-nav__link">
+      <a href="../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio/" class="md-nav__link">
         
   
   
@@ -1701,7 +1858,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../bd2/sesiones/S02_Triggers_DML_Auditoria/" class="md-nav__link">
+      <a href="../../bd2/sesiones/S02_Triggers_DML_Auditoria/" class="md-nav__link">
         
   
   
@@ -1729,7 +1886,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../bd2/sesiones/S03_Excepciones_Robustez/" class="md-nav__link">
+      <a href="../../bd2/sesiones/S03_Excepciones_Robustez/" class="md-nav__link">
         
   
   
@@ -1757,7 +1914,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../bd2/sesiones/S04_Optimizacion_Consultas_SQL/" class="md-nav__link">
+      <a href="../../bd2/sesiones/S04_Optimizacion_Consultas_SQL/" class="md-nav__link">
         
   
   
@@ -1797,29 +1954,24 @@
       
   
   
-    
   
   
-  
     
     
     
     
       
-        
-        
-      
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   
@@ -1837,7 +1989,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1855,7 +2007,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../" class="md-nav__link">
+      <a href="../../lp2/" class="md-nav__link">
         
   
   
@@ -1933,7 +2085,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../silabo_lp2_2026_1/" class="md-nav__link">
+      <a href="../../lp2/silabo_lp2_2026_1/" class="md-nav__link">
         
   
   
@@ -1961,7 +2113,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../silabo_lp2_2026_2/" class="md-nav__link">
+      <a href="../../lp2/silabo_lp2_2026_2/" class="md-nav__link">
         
   
   
@@ -1994,8 +2146,6 @@
                 
   
   
-    
-  
   
   
     
@@ -2006,11 +2156,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" >
         
           
           <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
@@ -2031,7 +2181,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -2049,7 +2199,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../ADR-001-arquitectura-backend/" class="md-nav__link">
+      <a href="../../lp2/adr/ADR-001-arquitectura-backend/" class="md-nav__link">
         
   
   
@@ -2077,7 +2227,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../ADR-002-spring-modulith/" class="md-nav__link">
+      <a href="../../lp2/adr/ADR-002-spring-modulith/" class="md-nav__link">
         
   
   
@@ -2105,7 +2255,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../ADR-003-spring-boot-4/" class="md-nav__link">
+      <a href="../../lp2/adr/ADR-003-spring-boot-4/" class="md-nav__link">
         
   
   
@@ -2130,37 +2280,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-004 - JWT diferido a S10
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../lp2/adr/ADR-004-jwt-diferido/" class="md-nav__link">
         
   
   
@@ -2176,81 +2299,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Tabla de contenidos
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#estado" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Estado
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#contexto" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Contexto
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#decision" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Decisión
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#alternativas-consideradas" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Alternativas consideradas
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#consecuencias" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Consecuencias
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -2321,7 +2369,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sesiones/S01_Arquitectura_Backend_REST_Profesional/" class="md-nav__link">
+      <a href="../../lp2/sesiones/S01_Arquitectura_Backend_REST_Profesional/" class="md-nav__link">
         
   
   
@@ -2349,7 +2397,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sesiones/S02_CRUD_REST_Completo_Producto/" class="md-nav__link">
+      <a href="../../lp2/sesiones/S02_CRUD_REST_Completo_Producto/" class="md-nav__link">
         
   
   
@@ -2377,7 +2425,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sesiones/S03_Objetos_Relacionados_Categoria_Producto/" class="md-nav__link">
+      <a href="../../lp2/sesiones/S03_Objetos_Relacionados_Categoria_Producto/" class="md-nav__link">
         
   
   
@@ -2405,7 +2453,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sesiones/S04_Operacion_Cabecera_Detalle_Venta_DetalleVenta/" class="md-nav__link">
+      <a href="../../lp2/sesiones/S04_Operacion_Cabecera_Detalle_Venta_DetalleVenta/" class="md-nav__link">
         
   
   
@@ -2468,10 +2516,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#estado" class="md-nav__link">
+  <a href="#1-datos-del-equipo" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Estado
+        1. Datos del equipo
       
     </span>
   </a>
@@ -2479,10 +2527,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#contexto" class="md-nav__link">
+  <a href="#2-dominio-del-proyecto" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Contexto
+        2. Dominio del proyecto
       
     </span>
   </a>
@@ -2490,10 +2538,49 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#decision" class="md-nav__link">
+  <a href="#3-modulos-de-negocio-y-alcance-full-stack-esperado" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Decisión
+        3. Módulos de negocio y alcance full-stack esperado
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Módulos de negocio y alcance full-stack esperado">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modulo-__-integrante-____-tipo-transaccional-no-transaccional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulo: __ (integrante: ____ · tipo: transaccional / no transaccional)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulo-__-integrante-____-tipo-transaccional-no-transaccional_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulo: __ (integrante: ____ · tipo: transaccional / no transaccional)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-arquitectura-inicial-ads" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Arquitectura inicial (ADS)
       
     </span>
   </a>
@@ -2501,10 +2588,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#alternativas-consideradas" class="md-nav__link">
+  <a href="#5-recursos-rest-iniciales-previstos-lp2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Alternativas consideradas
+        5. Recursos REST iniciales previstos (LP2)
       
     </span>
   </a>
@@ -2512,10 +2599,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#consecuencias" class="md-nav__link">
+  <a href="#6-objetos-oracle-iniciales-previstos-bd2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Consecuencias
+        6. Objetos Oracle iniciales previstos (BD2)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-aprobacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Aprobación
       
     </span>
   </a>
@@ -2542,51 +2640,132 @@
   
 
 
-<h1 id="adr-004-jwt-se-implementa-recien-en-s10-no-en-u1">ADR-004 - JWT se implementa recién en S10, no en U1<a class="headerlink" href="#adr-004-jwt-se-implementa-recien-en-s10-no-en-u1" title="Permanent link">&para;</a></h1>
-<h2 id="estado">Estado<a class="headerlink" href="#estado" title="Permanent link">&para;</a></h2>
-<p>Aprobada.</p>
-<h2 id="contexto">Contexto<a class="headerlink" href="#contexto" title="Permanent link">&para;</a></h2>
-<p>El sílabo de LP2 pide seguridad con JWT recién en la Unidad 2 (S10 en
-adelante). Durante U1 (S1-S6) el backend expone endpoints REST del módulo
-<code>catalogo</code> (y <code>ventas</code> desde S4) sin autenticación ni autorización.</p>
-<p>Una alternativa sería adelantar JWT desde S1, protegiendo los endpoints
-desde el inicio. Eso obligaría a construir infraestructura de seguridad
-(filtros, tokens, roles) antes de tener claro qué recursos existen y qué
-roles los necesitan — seguridad sin nada concreto que proteger todavía.</p>
-<h2 id="decision">Decisión<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
-<p>Los endpoints del backend quedan <strong>sin autenticación durante toda la U1</strong>
-(S1-S6). JWT, roles y protección de endpoints se implementan recién en S10,
-cuando ya existen los módulos <code>catalogo</code> y <code>ventas</code> funcionales sobre los
-que definir permisos reales.</p>
-<h2 id="alternativas-consideradas">Alternativas consideradas<a class="headerlink" href="#alternativas-consideradas" title="Permanent link">&para;</a></h2>
+<h1 id="brief-tecnico-del-proyecto-integrador">Brief Técnico del Proyecto Integrador<a class="headerlink" href="#brief-tecnico-del-proyecto-integrador" title="Permanent link">&para;</a></h1>
+<p>Este documento es el hito de <strong>S2</strong> del cronograma (ver <a href="../">Alineamiento</a>, sección 4): el punto donde el equipo declara, por escrito, qué proyecto va a construir durante el ciclo — antes de que ADS, BD2 y LP2 avancen más allá de sus primeras sesiones. No reemplaza el informe final; es la ficha corta que fija el rumbo desde el principio, para que "tu propio proyecto" (mencionado en la actividad autónoma de cada sesión) sea el mismo proyecto de S2 a S16, no algo que cada estudiante interpreta por su cuenta.</p>
+<p>Cada equipo llena una sola copia de este brief, la publica en su repositorio (o en su MkDocs) y la actualiza solo si el alcance cambia de verdad — no en cada sesión.</p>
+<h2 id="1-datos-del-equipo">1. Datos del equipo<a class="headerlink" href="#1-datos-del-equipo" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Nombre del equipo:</li>
+<li>Sección:</li>
+<li>Repositorio (URL):</li>
+<li>Topics del repositorio configurados (sí/no):</li>
+</ul>
+<p><strong>Integrantes y curso(s) que lleva cada uno</strong> — no todos los integrantes llevan necesariamente los 3 cursos (ver <a href="../">Alineamiento</a>, "Composición de equipos e integración"); esta tabla es la que define, desde el brief, quién evidencia qué:</p>
 <table>
 <thead>
 <tr>
-<th>Alternativa</th>
-<th>Por qué se descarta</th>
+<th>Integrante</th>
+<th>ADS</th>
+<th>BD2</th>
+<th>LP2</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Adelantar JWT desde S1</td>
-<td>Construye infraestructura de seguridad sin recursos ni roles concretos que proteger todavía; agrega fricción a cada sesión de U1 sin que el sílabo lo evalúe ahí.</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
 </tr>
 <tr>
-<td>Seguridad básica (Basic Auth) como paso intermedio antes de JWT</td>
-<td>El sílabo no pide un paso intermedio; agregar y luego reemplazar Basic Auth es trabajo doble sin justificación pedagógica.</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
 </tr>
 </tbody>
 </table>
-<h2 id="consecuencias">Consecuencias<a class="headerlink" href="#consecuencias" title="Permanent link">&para;</a></h2>
+<h2 id="2-dominio-del-proyecto">2. Dominio del proyecto<a class="headerlink" href="#2-dominio-del-proyecto" title="Permanent link">&para;</a></h2>
 <ul>
-<li>U1 expone endpoints sin autenticación — no es el estado final del
-  proyecto, solo el de esta unidad.</li>
-<li><code>BOMERP_APP</code> (usuario técnico de Oracle) ya existe desde S1 con
-  privilegios mínimos, aunque el backend todavía no valide identidad de
-  usuario final — son dos capas de seguridad distintas (acceso a datos vs.
-  autenticación de usuario).</li>
-<li>S10 parte de módulos y endpoints ya estables, evitando rediseñar el
-  contrato REST por causa de la capa de seguridad.</li>
+<li>Nombre del proyecto:</li>
+<li>Problema o necesidad que resuelve (2-4 líneas):</li>
+<li>Dominio de negocio (breve):</li>
+<li>¿Continúa un proyecto de un ciclo anterior, o es un dominio nuevo? Si continúa, indicar cuál:</li>
+</ul>
+<h2 id="3-modulos-de-negocio-y-alcance-full-stack-esperado">3. Módulos de negocio y alcance full-stack esperado<a class="headerlink" href="#3-modulos-de-negocio-y-alcance-full-stack-esperado" title="Permanent link">&para;</a></h2>
+<p><strong>Regla de asignación de módulos:</strong> cada integrante propone (o hereda) <strong>dos módulos de negocio</strong>, no uno solo. De esos dos, <strong>al menos uno debe ser transaccional</strong> — una operación cabecera-detalle real, con cálculos y al menos una regla de negocio verdadera, equivalente a <code>ventas</code> (<code>Venta</code>/<code>DetalleVenta</code>) en BomERP. El segundo módulo <strong>no necesariamente</strong> es transaccional — puede ser un CRUD simple, relacionado o no, equivalente a <code>catalogo</code> (<code>Categoria</code>/<code>Producto</code>) en BomERP. Ningún integrante se queda con dos módulos no transaccionales.</p>
+<table>
+<thead>
+<tr>
+<th>Integrante</th>
+<th>Módulo transaccional (tipo <code>ventas</code>)</th>
+<th>Módulo no transaccional (tipo <code>catalogo</code>)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Ficha por módulo</strong> — completa un bloque como este por cada módulo de la tabla anterior (uno por celda, repite el bloque tantas veces como módulos tenga el equipo):</p>
+<h3 id="modulo-__-integrante-____-tipo-transaccional-no-transaccional">Módulo: <strong><em>_</em>_ (integrante: </strong>____ · tipo: transaccional / no transaccional)<a class="headerlink" href="#modulo-__-integrante-____-tipo-transaccional-no-transaccional" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Descripción breve (2-3 líneas): qué hace este módulo y por qué existe en el proyecto.</li>
+<li>Entidad principal (si no es transaccional, equivalente a <code>Categoria</code>/<code>Producto</code>) o cabecera-detalle (si es transaccional, equivalente a <code>Venta</code>/<code>DetalleVenta</code>):</li>
+<li>Lista inicial de requisitos (mínimo 3, redactados como "el sistema debe..."):
+    1.
+    2.
+    3.</li>
+</ul>
+<h3 id="modulo-__-integrante-____-tipo-transaccional-no-transaccional_1">Módulo: <strong><em>_</em>_ (integrante: </strong>____ · tipo: transaccional / no transaccional)<a class="headerlink" href="#modulo-__-integrante-____-tipo-transaccional-no-transaccional_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Descripción breve (2-3 líneas):</li>
+<li>Entidad principal o cabecera-detalle:</li>
+<li>Lista inicial de requisitos:
+    1.
+    2.
+    3.</li>
+</ul>
+<p><em>(repite este bloque por cada módulo restante del equipo, hasta cubrir la tabla completa)</em></p>
+<ul>
+<li>Qué SÍ cubre este proyecto en conjunto:</li>
+<li>Qué NO cubre — fuera de alcance, explícito (mismo criterio que BomERP delimita <code>inventario</code>/<code>compras</code> sin implementarlos):</li>
+</ul>
+<h2 id="4-arquitectura-inicial-ads">4. Arquitectura inicial (ADS)<a class="headerlink" href="#4-arquitectura-inicial-ads" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Estilo arquitectónico elegido para el backend (ej. monolito modular) y por qué:</li>
+<li>Justificación breve (1-3 líneas, trade-offs considerados):</li>
+</ul>
+<h2 id="5-recursos-rest-iniciales-previstos-lp2">5. Recursos REST iniciales previstos (LP2)<a class="headerlink" href="#5-recursos-rest-iniciales-previstos-lp2" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Lista de endpoints/recursos iniciales previstos (ej. <code>GET</code>/<code>POST</code> sobre la entidad principal):</li>
+</ul>
+<h2 id="6-objetos-oracle-iniciales-previstos-bd2">6. Objetos Oracle iniciales previstos (BD2)<a class="headerlink" href="#6-objetos-oracle-iniciales-previstos-bd2" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Esquema(s) previsto(s), uno por módulo funcional:</li>
+<li>Tablas iniciales previstas:</li>
+</ul>
+<h2 id="7-aprobacion">7. Aprobación<a class="headerlink" href="#7-aprobacion" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Docente ADS:</li>
+<li>Docente BD2:</li>
+<li>Docente LP2:</li>
+<li>Fecha:</li>
 </ul>
 
 
@@ -2647,10 +2826,10 @@ que definir permisos reales.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.top", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.top", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>
