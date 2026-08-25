@@ -1,0 +1,3866 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Entorno integrado de desarrollo academico para construir modulos ERP con ADS, BD2 y LP2.">
+      
+      
+        <meta name="author" content="UPeU">
+      
+      
+      
+        <link rel="prev" href="../S03_Excepciones_Robustez/">
+      
+      
+        <link rel="next" href="../../../lp2/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+  
+    <title>BOM ERP - S4 - Optimización de consultas SQL</title>
+  
+
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#s4-optimizacion-de-consultas-sql" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../../.." title="BOM ERP" class="md-header__button md-logo" aria-label="BOM ERP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            BOM ERP
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              S4 - Optimización de consultas SQL
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/262ciclo4/bomerp" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    262ciclo4/bomerp
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Pestañas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Inicio
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../proyecto-integrador/" class="md-tabs__link">
+          
+  
+  
+  Guía del Proyecto Integrador
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../ads/" class="md-tabs__link">
+          
+  
+  
+  ADS
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../" class="md-tabs__link">
+          
+  
+  
+  BD2
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../lp2/" class="md-tabs__link">
+          
+  
+  
+  LP2
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="BOM ERP" class="md-nav__button md-logo" aria-label="BOM ERP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    BOM ERP
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/262ciclo4/bomerp" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    262ciclo4/bomerp
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guía del Proyecto Integrador
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guía del Proyecto Integrador
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Alineamiento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Diseño técnico, motor transaccional y backend inicial
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    1. Diseño técnico, motor transaccional y backend inicial
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/lp2-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Demo U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Modelado UML, administración Oracle y SPA segura
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    2. Modelado UML, administración Oracle y SPA segura
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/lp2-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Demo U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Diseño consolidado, operación Oracle y Full-Stack integrado
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    3. Diseño consolidado, operación Oracle y Full-Stack integrado
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/lp2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/checklist-final/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Checklist final
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/guia-sustentacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guía de sustentación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ADS
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/silabo_ads_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/silabo_ads_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Arquitectura y Diseño Estructural
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Arquitectura y Diseño Estructural
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S01_Fundamentos_Arquitectura_Software/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - Fundamentos de arquitectura de software
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S02_Modelo_C4_Vistas_Arquitectonicas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - Modelo C4 y vistas arquitectónicas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S03_Diseno_Estructural_Principios_SOLID/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S3 - Diseño estructural y principios SOLID
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S04_Arquitecturas_Modernas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S4 - Arquitecturas modernas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    BD2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../silabo_bd2_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../silabo_bd2_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Programación y optimización (Oracle XE)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Programación y optimización (Oracle XE)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S01_PLSQL_Aplicado_Negocio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - PL/SQL aplicado al negocio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S02_Triggers_DML_Auditoria/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - Triggers DML y auditoría
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S03_Excepciones_Robustez/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S3 - Manejo de excepciones y robustez
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S4 - Optimización de consultas SQL
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S4 - Optimización de consultas SQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-introduccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Introducción
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Introducción">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-presentacion-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Presentación de la sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-indice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Índice
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-proposito-de-aprendizaje" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Propósito de aprendizaje
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-producto-de-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Producto de sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-metodologia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Metodología
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16-motivacion-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6 Motivación de la sesión
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.6 Motivación de la sesión">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#161-caso-la-consulta-que-funciona-pero-es-lenta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6.1 Caso: la consulta que funciona pero es lenta
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#17-ubicacion-en-el-curso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.7 Ubicación en el curso
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-explica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Explica
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Explica">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-arquitectura-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Arquitectura de la sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-cost-based-optimizer-cbo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Cost Based Optimizer (CBO)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-explain-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Explain Plan
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-dbms_stats-por-que-el-optimizador-necesita-estadisticas-actualizadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 DBMS_STATS: por qué el optimizador necesita estadísticas actualizadas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-buenas-practicas-sql-que-cambian-el-plan-de-ejecucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Buenas prácticas SQL que cambian el plan de ejecución
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-aplica-actividad-practica-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Aplica: actividad práctica guiada
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Aplica: actividad práctica guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-definir-la-consulta-representativa-a-optimizar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Definir la consulta representativa a optimizar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-crear-el-esquema-bom_ventas-y-sus-tablas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Crear el esquema BOM_VENTAS y sus tablas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-cargar-volumen-de-prueba-en-ventasdetalle_ventas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Cargar volumen de prueba en VENTAS/DETALLE_VENTAS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-capturar-el-explain-plan-antes-de-optimizar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Capturar el EXPLAIN PLAN antes de optimizar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-actualizar-estadisticas-con-dbms_stats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Actualizar estadísticas con DBMS_STATS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-reescribir-la-consulta-aplicando-una-buena-practica-sql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Reescribir la consulta aplicando una buena práctica SQL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37-capturar-el-explain-plan-despues-y-comparar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 Capturar el EXPLAIN PLAN después y comparar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#38-relacionar-con-ads-y-lp2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 Relacionar con ADS y LP2
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-crea-actividad-autonoma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Crea: actividad autónoma
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Crea: actividad autónoma">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-actividad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Actividad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-proposito" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Propósito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-indicaciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Indicaciones
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.3 Indicaciones">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#431-estructura-del-informe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3.1 Estructura del informe
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-criterios-minimos-de-aceptacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Criterios mínimos de aceptación
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-preguntas-de-defensa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Preguntas de defensa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-rubrica-de-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 Rúbrica de evaluación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-cierre" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Cierre
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bibliografia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bibliografía
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    LP2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/silabo_lp2_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/silabo_lp2_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Decisiones de arquitectura
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Decisiones de arquitectura
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/adr/ADR-001-arquitectura-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-001 - Arquitectura del backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/adr/ADR-002-spring-modulith/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-002 - Spring Modulith
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/adr/ADR-003-spring-boot-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-003 - Versión exacta de Spring Boot 4.0.7
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/adr/ADR-004-jwt-diferido/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-004 - JWT diferido a S10
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Base backend REST modular de BomERP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Base backend REST modular de BomERP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S01_Arquitectura_Backend_REST_Profesional/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - Arquitectura backend REST profesional
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S02_CRUD_REST_Completo_Producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - CRUD REST completo de Producto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S03_Objetos_Relacionados_Categoria_Producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S3 - Objetos relacionados Categoria-Producto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S04_Operacion_Cabecera_Detalle_Venta_DetalleVenta/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S4 - Operación cabecera-detalle Venta-DetalleVenta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-introduccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Introducción
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Introducción">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-presentacion-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Presentación de la sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-indice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Índice
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-proposito-de-aprendizaje" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Propósito de aprendizaje
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-producto-de-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Producto de sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-metodologia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Metodología
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16-motivacion-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6 Motivación de la sesión
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.6 Motivación de la sesión">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#161-caso-la-consulta-que-funciona-pero-es-lenta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6.1 Caso: la consulta que funciona pero es lenta
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#17-ubicacion-en-el-curso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.7 Ubicación en el curso
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-explica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Explica
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Explica">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-arquitectura-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Arquitectura de la sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-cost-based-optimizer-cbo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Cost Based Optimizer (CBO)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-explain-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Explain Plan
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-dbms_stats-por-que-el-optimizador-necesita-estadisticas-actualizadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 DBMS_STATS: por qué el optimizador necesita estadísticas actualizadas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-buenas-practicas-sql-que-cambian-el-plan-de-ejecucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Buenas prácticas SQL que cambian el plan de ejecución
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-aplica-actividad-practica-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Aplica: actividad práctica guiada
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Aplica: actividad práctica guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-definir-la-consulta-representativa-a-optimizar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Definir la consulta representativa a optimizar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-crear-el-esquema-bom_ventas-y-sus-tablas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Crear el esquema BOM_VENTAS y sus tablas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-cargar-volumen-de-prueba-en-ventasdetalle_ventas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Cargar volumen de prueba en VENTAS/DETALLE_VENTAS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-capturar-el-explain-plan-antes-de-optimizar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Capturar el EXPLAIN PLAN antes de optimizar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-actualizar-estadisticas-con-dbms_stats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Actualizar estadísticas con DBMS_STATS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-reescribir-la-consulta-aplicando-una-buena-practica-sql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Reescribir la consulta aplicando una buena práctica SQL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37-capturar-el-explain-plan-despues-y-comparar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 Capturar el EXPLAIN PLAN después y comparar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#38-relacionar-con-ads-y-lp2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 Relacionar con ADS y LP2
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-crea-actividad-autonoma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Crea: actividad autónoma
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Crea: actividad autónoma">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-actividad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Actividad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-proposito" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Propósito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-indicaciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Indicaciones
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.3 Indicaciones">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#431-estructura-del-informe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3.1 Estructura del informe
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-criterios-minimos-de-aceptacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Criterios mínimos de aceptación
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-preguntas-de-defensa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Preguntas de defensa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-rubrica-de-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 Rúbrica de evaluación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-cierre" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Cierre
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bibliografia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bibliografía
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="s4-optimizacion-de-consultas-sql">S4 - Optimización de Consultas SQL<a class="headerlink" href="#s4-optimizacion-de-consultas-sql" title="Permanent link">&para;</a></h1>
+<h2 id="1-introduccion">1. Introducción<a class="headerlink" href="#1-introduccion" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 20 min.</p>
+<h3 id="11-presentacion-de-la-sesion">1.1 Presentación de la sesión<a class="headerlink" href="#11-presentacion-de-la-sesion" title="Permanent link">&para;</a></h3>
+<p>Hasta ahora, el volumen de datos trabajado fue pequeño — suficiente para probar procedimientos, funciones y excepciones, no para que una consulta lenta se note. Esta sesión trabaja con volumen real de prueba para que el motor de la base de datos tenga algo genuino que decidir: cómo elige un plan de ejecución, qué información necesita para elegir bien, y cómo la forma de escribir una consulta influye en esa elección — sin recurrir todavía a ningún índice nuevo, eso es exactamente el alcance de la sesión siguiente, no de esta.</p>
+<h3 id="12-indice">1.2 Índice<a class="headerlink" href="#12-indice" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Cost Based Optimizer (CBO).</li>
+<li>Explain Plan.</li>
+<li>DBMS_STATS.</li>
+<li>Buenas prácticas SQL.</li>
+</ol>
+<h3 id="13-proposito-de-aprendizaje">1.3 Propósito de aprendizaje<a class="headerlink" href="#13-proposito-de-aprendizaje" title="Permanent link">&para;</a></h3>
+<p>Al concluir la clase, estarás en condiciones de:</p>
+<ul>
+<li><strong>Analizar y optimizar</strong> una consulta representativa del proyecto, actualizando la información que el optimizador usa para decidir y aplicando buenas prácticas de escritura SQL — documentando evidencia real de antes y después.</li>
+</ul>
+<h3 id="14-producto-de-sesion">1.4 Producto de sesión<a class="headerlink" href="#14-producto-de-sesion" title="Permanent link">&para;</a></h3>
+<p>Esquema <code>BOM_VENTAS</code> con <code>VENTAS</code>/<code>DETALLE_VENTAS</code> operativas y con volumen de prueba, más una consulta representativa del proyecto (reporte de ventas por producto) optimizada: <code>EXPLAIN PLAN</code> capturado antes y después de actualizar estadísticas con <code>DBMS_STATS</code> y de reescribir la consulta aplicando una buena práctica SQL concreta.</p>
+<h3 id="15-metodologia">1.5 Metodología<a class="headerlink" href="#15-metodologia" title="Permanent link">&para;</a></h3>
+<p><strong>Tabla 1. Metodología de la sesión</strong></p>
+<table>
+<thead>
+<tr>
+<th>Actividades a Realizar en el Periodo</th>
+<th>Orientaciones generales (Orientaciones Metodológicas)</th>
+<th>Material de estudio recomendado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Revisión previa individual</td>
+<td>Repasar <code>BOM_CATALOGO.PRODUCTOS</code> (S1) y el criterio de "un esquema por módulo funcional" (S1, 3.2). Trabajo individual, antes de clase; anotar cuántas filas tiene hoy <code>PRODUCTOS</code> en tu propia base.</td>
+<td>S1 (3.2), sílabo BD2 U1.</td>
+</tr>
+<tr>
+<td>Clase presencial</td>
+<td>Creación guiada del esquema <code>BOM_VENTAS</code>, carga de volumen de prueba, análisis de <code>EXPLAIN PLAN</code> antes y después de <code>DBMS_STATS</code> y de una buena práctica SQL. Trabajo individual en la propia laptop, siguiendo al docente paso a paso.</td>
+<td>Script <code>S04_optimizacion_consultas.sql</code>.</td>
+</tr>
+<tr>
+<td>Evaluación formativa</td>
+<td>Verificación en clase de <code>EXPLAIN PLAN</code> capturado antes y después, con al menos un cambio identificado en el plan. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4.</td>
+<td>Indicaciones de entrega (4.3), rúbrica de evaluación (4.6).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="16-motivacion-de-la-sesion">1.6 Motivación de la sesión<a class="headerlink" href="#16-motivacion-de-la-sesion" title="Permanent link">&para;</a></h3>
+<h4 id="161-caso-la-consulta-que-funciona-pero-es-lenta">1.6.1 Caso: la consulta que funciona pero es lenta<a class="headerlink" href="#161-caso-la-consulta-que-funciona-pero-es-lenta" title="Permanent link">&para;</a></h4>
+<p>Una consulta que devuelve el resultado correcto no está necesariamente bien — puede estar recorriendo cientos de miles de filas una por una cuando existía una forma de responder lo mismo revisando muchas menos. Con <code>PRODUCTOS</code>/<code>CATEGORIAS</code> casi vacías (S1-S3), esa diferencia era invisible: cualquier plan de ejecución respondía en milisegundos, sin importar si era el mejor plan o no. Recién con volumen real — el que esta sesión carga en <code>BOM_VENTAS</code> — el costo de una mala consulta se vuelve medible, y <code>EXPLAIN PLAN</code> deja de ser un ejercicio teórico.</p>
+<p><strong>Preguntas de análisis</strong></p>
+<p><strong>Activación de conocimientos previos</strong></p>
+<ol>
+<li>¿Alguna vez una consulta te dio el resultado correcto pero tardó visiblemente más de lo esperado? ¿Llegaste a averiguar por qué?</li>
+</ol>
+<p><strong>Comprensión de optimización de consultas</strong></p>
+<ol>
+<li>¿Por qué el optimizador de Oracle necesita estadísticas (<code>DBMS_STATS</code>) para decidir un buen plan, en vez de simplemente ejecutar la consulta tal como está escrita?</li>
+<li>Si una consulta filtra <code>FECHA</code> envuelta en una función (<code>TRUNC(SYSDATE) - TRUNC(v.FECHA) &lt;= 30</code>), ¿por qué eso limita las opciones del optimizador, aunque hoy no exista ningún índice sobre <code>FECHA</code>?</li>
+</ol>
+<h3 id="17-ubicacion-en-el-curso">1.7 Ubicación en el curso<a class="headerlink" href="#17-ubicacion-en-el-curso" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Unidad: U1 - Programación y optimización (Oracle XE).</li>
+<li>Producto del curso: base de datos empresarial Oracle operativa, administrada, optimizada, auditada y resiliente.</li>
+<li>Producto de unidad: motor transaccional Oracle optimizado.</li>
+<li>Avance del producto en esta sesión: esquema <code>BOM_VENTAS</code> creado, y primera consulta representativa optimizada con <code>EXPLAIN PLAN</code>/<code>DBMS_STATS</code>/buenas prácticas.</li>
+</ul>
+<p>Roadmap del producto de la unidad:</p>
+<p><strong>Figura 1. Roadmap del producto de la unidad</strong></p>
+<pre class="mermaid"><code>flowchart TB
+    S1["`**S1:** PL/SQL aplicado al negocio`"]
+    S2["`**S2:** Triggers DML y auditoría`"]
+    S3["`**S3:** Excepciones y robustez`"]
+    S4["`**S4:** Optimización de consultas`"]
+    S5["`**S5:** Índices`"]
+    S6["`**S6:** Producto U1`"]
+
+    S1 --&gt; S2 --&gt; S3 --&gt; S4 --&gt; S5 --&gt; S6
+
+    classDef today fill:#ffe08a,stroke:#9a6b00,stroke-width:2px,color:#111;
+    class S4 today;</code></pre>
+<h2 id="2-explica">2. Explica<a class="headerlink" href="#2-explica" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 25 min.</p>
+<h3 id="21-arquitectura-de-la-sesion">2.1 Arquitectura de la sesión<a class="headerlink" href="#21-arquitectura-de-la-sesion" title="Permanent link">&para;</a></h3>
+<p><strong>Figura 2. De la consulta al plan de ejecución, y de vuelta</strong></p>
+<pre class="mermaid"><code>flowchart LR
+    SQL["Consulta SQL&lt;br/&gt;(reporte de ventas por producto)"]
+    CBO["Cost Based Optimizer"]
+    Stats[("Estadisticas&lt;br/&gt;DBMS_STATS")]
+    Plan["Plan de ejecucion&lt;br/&gt;EXPLAIN PLAN"]
+    Result["Resultado"]
+
+    SQL --&gt; CBO
+    Stats -.-&gt;|"informa las decisiones del CBO"| CBO
+    CBO --&gt; Plan --&gt; Result</code></pre>
+<p>Lectura del diagrama: el CBO no ejecuta la consulta tal como está escrita — primero decide <strong>cómo</strong> ejecutarla (qué tabla recorrer primero, qué método de join usar, si conviene un <code>FULL TABLE SCAN</code>) basado en las estadísticas que tiene disponibles. <code>EXPLAIN PLAN</code> no muestra el resultado de la consulta — muestra esa decisión, antes de correrla. Esta sesión trabaja sobre las dos entradas que el CBO usa para decidir mejor: estadísticas actualizadas (<code>DBMS_STATS</code>) y una consulta escrita de forma que no le oculte información al optimizador (buenas prácticas SQL).</p>
+<p>Este diagrama es el mapa que guía el resto de la explicación: cada apartado siguiente desarrolla uno de sus componentes, en el mismo orden del Índice (1.2).</p>
+<h3 id="22-cost-based-optimizer-cbo">2.2 Cost Based Optimizer (CBO)<a class="headerlink" href="#22-cost-based-optimizer-cbo" title="Permanent link">&para;</a></h3>
+<p><code>BOM_VENTAS</code> es el segundo esquema del proyecto, con el mismo criterio de "un esquema por módulo funcional" que ya estableció <code>BOM_CATALOGO</code> en S1 — se crea recién ahora porque LP2 llega a su módulo <code>ventas</code> esta misma semana (LP2 S4), con volumen de prueba real cargado sobre él: sin datos, no hay nada que el optimizador tenga que decidir de verdad.</p>
+<p>El <strong>Cost Based Optimizer</strong> es el componente de Oracle que decide, para cada consulta, el plan de ejecución con el menor costo estimado — no necesariamente el más rápido en la realidad, sino el que el CBO <em>cree</em> más barato según las estadísticas que tiene disponibles en ese momento (qué tabla recorrer primero, qué método de <em>join</em> usar, si conviene un <code>FULL TABLE SCAN</code>). Esa decisión es exactamente lo que el resto de esta sesión analiza y, cuando corresponde, ayuda a mejorar.</p>
+<p><strong>Decisión de diseño: <code>DETALLE_VENTAS.ID_PRODUCTO</code> no lleva <code>FOREIGN KEY</code> hacia <code>BOM_CATALOGO.PRODUCTOS</code>.</strong> Podría parecer natural agregarla — Oracle sí permite claves foráneas entre esquemas distintos, con los privilegios adecuados — pero eso acoplaría el DDL de <code>BOM_VENTAS</code> a la estructura interna de <code>BOM_CATALOGO</code>, exactamente lo que la separación por esquemas busca evitar. <code>DETALLE_VENTAS</code> guarda <code>ID_PRODUCTO</code> como número simple, más una copia de <code>NOMBRE_PRODUCTO</code> y <code>PRECIO_UNITARIO</code> al momento de la venta — es el mismo criterio, a nivel de esquema Oracle, que LP2 aplica a nivel de módulo Java con <code>@NamedInterface</code> (LP2 S4, 2.4): ninguno de los dos referencia directamente el objeto interno del otro módulo/esquema.</p>
+<h3 id="23-explain-plan">2.3 Explain Plan<a class="headerlink" href="#23-explain-plan" title="Permanent link">&para;</a></h3>
+<p><code>EXPLAIN PLAN</code> muestra la decisión del CBO sin ejecutar la consulta:</p>
+<div class="highlight"><pre><span></span><code><span class="k">EXPLAIN</span><span class="w"> </span><span class="n">PLAN</span><span class="w"> </span><span class="k">FOR</span>
+<span class="o">&lt;</span><span class="n">tu</span><span class="w"> </span><span class="n">consulta</span><span class="w"> </span><span class="n">aqui</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="k">TABLE</span><span class="p">(</span><span class="n">DBMS_XPLAN</span><span class="p">.</span><span class="n">DISPLAY</span><span class="p">);</span>
+</code></pre></div>
+<p>La salida incluye, entre otras columnas, <code>OPERATION</code> (qué hace cada paso: <code>TABLE ACCESS FULL</code>, <code>HASH JOIN</code>, <code>NESTED LOOPS</code>), <code>COST</code> (el costo estimado, no un tiempo real) y <code>ROWS</code> (cuántas filas espera el CBO en ese paso). Comparar un plan "antes" y un plan "después" de un cambio significa comparar esas columnas, no solo mirar si la consulta "corrió rápido" una vez — el tiempo real varía según la carga del servidor en ese instante; el plan es la decisión estructural.</p>
+<p><strong>Error frecuente</strong>: interpretar <code>COST</code> como milisegundos o como una medida absoluta comparable entre consultas distintas. <code>COST</code> es una estimación relativa del CBO, útil para comparar <strong>el mismo tipo de operación</strong> antes y después de un cambio (más estadísticas, una consulta reescrita) — no para comparar dos consultas que hacen cosas distintas entre sí.</p>
+<h3 id="24-dbms_stats-por-que-el-optimizador-necesita-estadisticas-actualizadas">2.4 <code>DBMS_STATS</code>: por qué el optimizador necesita estadísticas actualizadas<a class="headerlink" href="#24-dbms_stats-por-que-el-optimizador-necesita-estadisticas-actualizadas" title="Permanent link">&para;</a></h3>
+<p>El CBO no adivina cuántas filas tiene una tabla ni cómo se distribuyen sus valores — lee esa información de las estadísticas que Oracle guarda sobre cada tabla (<code>NUM_ROWS</code>, distribución de valores por columna, etc.). Una tabla recién cargada con datos nuevos, sin que nadie haya vuelto a calcular sus estadísticas, puede hacer que el CBO decida con información vieja o inexistente — el mismo problema que decidir sin datos actualizados en cualquier otro contexto.</p>
+<div class="highlight"><pre><span></span><code><span class="k">EXEC</span><span class="w"> </span><span class="n">DBMS_STATS</span><span class="p">.</span><span class="n">GATHER_TABLE_STATS</span><span class="p">(</span><span class="s1">'BOM_VENTAS'</span><span class="p">,</span><span class="w"> </span><span class="s1">'DETALLE_VENTAS'</span><span class="p">);</span>
+</code></pre></div>
+<p><code>GATHER_TABLE_STATS</code> recibe el esquema y la tabla, y recalcula sus estadísticas contra los datos reales que hay en ese momento. No cambia ni un solo dato de la tabla — solo actualiza lo que el CBO sabe sobre ella.</p>
+<p><strong>Error frecuente</strong>: cargar un volumen grande de datos de prueba y ejecutar <code>EXPLAIN PLAN</code> inmediatamente después, sin correr <code>DBMS_STATS</code> — el plan que se ve todavía puede estar basado en estadísticas de cuando la tabla estaba casi vacía (o sin estadísticas en absoluto), no en el volumen real que se acaba de cargar.</p>
+<h3 id="25-buenas-practicas-sql-que-cambian-el-plan-de-ejecucion">2.5 Buenas prácticas SQL que cambian el plan de ejecución<a class="headerlink" href="#25-buenas-practicas-sql-que-cambian-el-plan-de-ejecucion" title="Permanent link">&para;</a></h3>
+<p>No toda mejora de una consulta requiere un índice nuevo (eso es S5) — cómo se <strong>escribe</strong> la consulta también le da o le quita información al CBO. Dos prácticas concretas, aplicables desde hoy:</p>
+<p><strong>Tabla 2. Buenas prácticas SQL que afectan el plan, sin tocar índices</strong></p>
+<table>
+<thead>
+<tr>
+<th>Práctica</th>
+<th>Por qué importa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No envolver la columna filtrada en una función (<code>TRUNC(v.FECHA)</code>, <code>UPPER(p.NOMBRE)</code>)</td>
+<td>Una función sobre la columna oculta su valor real al optimizador — hoy limita las estadísticas que el CBO puede aprovechar sobre esa columna; en S5, además, invalida directamente el uso de un índice sobre esa columna.</td>
+</tr>
+<tr>
+<td>Mover el cálculo al lado de la constante, no de la columna (<code>v.FECHA &gt;= SYSDATE - 30</code>, no <code>TRUNC(SYSDATE) - TRUNC(v.FECHA) &lt;= 30</code>)</td>
+<td>Es la misma condición lógica, pero la columna queda "limpia" — el CBO puede evaluarla directamente en vez de calcular una expresión por cada fila.</td>
+</tr>
+<tr>
+<td>Evitar <code>SELECT *</code> cuando solo se necesitan algunas columnas</td>
+<td>Reduce el volumen de datos que Oracle tiene que leer y transportar, incluso antes de pensar en índices.</td>
+</tr>
+<tr>
+<td>Usar variables <em>bind</em> en vez de literales concatenados (relevante para cualquier cliente, incluido LP2/JPA)</td>
+<td>Oracle reutiliza el plan ya calculado para la misma forma de consulta, en vez de volver a analizarla (<em>hard parse</em>) cada vez que cambia un literal.</td>
+</tr>
+</tbody>
+</table>
+<p>La práctica que esta sesión aplica de punta a punta es la segunda (3.6) — las otras tres quedan documentadas aquí como criterio general, no como pasos obligatorios de esta sesión.</p>
+<h2 id="3-aplica-actividad-practica-guiada">3. Aplica: actividad práctica guiada<a class="headerlink" href="#3-aplica-actividad-practica-guiada" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 2h.</p>
+<p><strong>Actividad:</strong> creación del esquema <code>BOM_VENTAS</code>, carga de volumen de prueba, y optimización guiada de una consulta representativa del proyecto con <code>EXPLAIN PLAN</code>, <code>DBMS_STATS</code> y una buena práctica SQL (Producto de la sesión en 1.4).</p>
+<p><strong>Propósito de la actividad:</strong> analizar el plan de ejecución de una consulta real antes y después de dos cambios independientes — estadísticas actualizadas y una reescritura de la consulta — documentando evidencia concreta de cada uno, sin recurrir a índices nuevos (S5).</p>
+<p><strong>Orientaciones metodológicas:</strong> en el laboratorio, el docente construye <code>BOM_VENTAS</code>, carga el volumen de prueba y compara los planes paso a paso frente a la clase; los estudiantes replican cada paso en su propio equipo, capturando su propio <code>EXPLAIN PLAN</code> antes y después (los valores de <code>COST</code> variarán entre equipos según el volumen real cargado — lo que se evalúa es el cambio, no un número exacto).</p>
+<p><strong>Actividades para realizar:</strong></p>
+<ul>
+<li><strong>3.1</strong> Definir la consulta representativa a optimizar.</li>
+<li><strong>3.2</strong> Crear el esquema <code>BOM_VENTAS</code> y sus tablas.</li>
+<li><strong>3.3</strong> Cargar volumen de prueba en <code>VENTAS</code>/<code>DETALLE_VENTAS</code>.</li>
+<li><strong>3.4</strong> Capturar el <code>EXPLAIN PLAN</code> antes de optimizar.</li>
+<li><strong>3.5</strong> Actualizar estadísticas con <code>DBMS_STATS</code>.</li>
+<li><strong>3.6</strong> Reescribir la consulta aplicando una buena práctica SQL.</li>
+<li><strong>3.7</strong> Capturar el <code>EXPLAIN PLAN</code> después y comparar.</li>
+<li><strong>3.8</strong> Relacionar con ADS y LP2.</li>
+</ul>
+<p><strong>Script completo, listo para ejecutar</strong> (los pasos siguientes explican cada bloque): <a href="../../proyecto-integrador/u1/oracle/S04_optimizacion_consultas.sql"><code>S04_optimizacion_consultas.sql</code></a>.</p>
+<h3 id="31-definir-la-consulta-representativa-a-optimizar">3.1 Definir la consulta representativa a optimizar<a class="headerlink" href="#31-definir-la-consulta-representativa-a-optimizar" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> la consulta que esta sesión analiza y mejora de punta a punta.</p>
+<p><strong>Tabla 3. Consulta representativa de esta sesión</strong></p>
+<table>
+<thead>
+<tr>
+<th>Elemento</th>
+<th>Respuesta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Propósito de negocio</td>
+<td>Reporte de ventas por producto: unidades y monto total vendido, filtrado a los últimos 30 días</td>
+</tr>
+<tr>
+<td>Tablas involucradas</td>
+<td><code>BOM_VENTAS.DETALLE_VENTAS</code>, <code>BOM_VENTAS.VENTAS</code>, <code>BOM_CATALOGO.PRODUCTOS</code> (dos esquemas)</td>
+</tr>
+<tr>
+<td>Problema a evitar en la versión inicial</td>
+<td>Filtro de fecha con función sobre la columna (<code>TRUNC(v.FECHA)</code>), en vez de dejarla libre</td>
+</tr>
+<tr>
+<td>Qué NO se hace en esta sesión</td>
+<td>Crear ningún índice — eso es S5</td>
+</tr>
+</tbody>
+</table>
+<h3 id="32-crear-el-esquema-bom_ventas-y-sus-tablas">3.2 Crear el esquema <code>BOM_VENTAS</code> y sus tablas<a class="headerlink" href="#32-crear-el-esquema-bom_ventas-y-sus-tablas" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> esquema <code>BOM_VENTAS</code> con <code>VENTAS</code>/<code>DETALLE_VENTAS</code> operativas, y <code>BOMERP_APP</code> con permisos sobre ambas — igual que ya tiene sobre <code>BOM_CATALOGO</code> desde S1.</p>
+<p>Con una cuenta DBA, crea el usuario propietario del nuevo esquema, con la misma contraseña fija de ambiente DEV que ya usa <code>BOM_CATALOGO</code> (S1, 3.2):</p>
+<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="w"> </span><span class="n">IDENTIFIED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="ss">"123456"</span><span class="w"> </span><span class="n">QUOTA</span><span class="w"> </span><span class="n">UNLIMITED</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">USERS</span><span class="p">;</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">SESSION</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">VIEW</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">PROCEDURE</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">TRIGGER</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">;</span>
+</code></pre></div>
+<p>Conectado como <code>BOM_VENTAS</code>, crea las tablas:</p>
+<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">VENTAS</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">ID</span><span class="w">      </span><span class="nb">NUMBER</span><span class="w"> </span><span class="k">GENERATED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">IDENTITY</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">    </span><span class="n">FECHA</span><span class="w">   </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">ESTADO</span><span class="w">  </span><span class="n">VARCHAR2</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">TOTAL</span><span class="w">   </span><span class="nb">NUMBER</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">CK_VENTA_TOTAL</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">TOTAL</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="p">);</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">DETALLE_VENTAS</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">ID</span><span class="w">               </span><span class="nb">NUMBER</span><span class="w"> </span><span class="k">GENERATED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">IDENTITY</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">    </span><span class="n">ID_VENTA</span><span class="w">         </span><span class="nb">NUMBER</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">ID_PRODUCTO</span><span class="w">      </span><span class="nb">NUMBER</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">NOMBRE_PRODUCTO</span><span class="w">  </span><span class="n">VARCHAR2</span><span class="p">(</span><span class="mi">120</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">PRECIO_UNITARIO</span><span class="w">  </span><span class="nb">NUMBER</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">CANTIDAD</span><span class="w">         </span><span class="nb">NUMBER</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">SUBTOTAL</span><span class="w">         </span><span class="nb">NUMBER</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">FK_DETALLE_VENTA</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">ID_VENTA</span><span class="p">)</span>
+<span class="w">        </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">VENTAS</span><span class="p">(</span><span class="n">ID</span><span class="p">),</span>
+<span class="w">    </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">CK_DETALLE_CANTIDAD</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">CANTIDAD</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
+<span class="w">    </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">CK_DETALLE_SUBTOTAL</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">SUBTOTAL</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="p">);</span>
+</code></pre></div>
+<p>Nota que <code>FK_DETALLE_VENTA</code> referencia <code>VENTAS</code> (misma tabla, mismo esquema) — es la relación cabecera-detalle real, dentro de <code>BOM_VENTAS</code>. <code>ID_PRODUCTO</code> no tiene <code>FOREIGN KEY</code> hacia <code>BOM_CATALOGO.PRODUCTOS</code> (2.2): a propósito, no por descuido.</p>
+<p>Concede a <code>BOMERP_APP</code> (el mismo usuario técnico que ya opera <code>BOM_CATALOGO</code> desde S1) los permisos que el backend de LP2 necesita sobre las tablas nuevas:</p>
+<div class="highlight"><pre><span></span><code><span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="p">,</span><span class="w"> </span><span class="k">INSERT</span><span class="p">,</span><span class="w"> </span><span class="k">UPDATE</span><span class="p">,</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">VENTAS</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">BOMERP_APP</span><span class="p">;</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="p">,</span><span class="w"> </span><span class="k">INSERT</span><span class="p">,</span><span class="w"> </span><span class="k">UPDATE</span><span class="p">,</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">DETALLE_VENTAS</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">BOMERP_APP</span><span class="p">;</span>
+</code></pre></div>
+<p><strong>Error frecuente</strong>: olvidar estos <code>GRANT</code>. Sin ellos, el backend de LP2 (conectado como <code>BOMERP_APP</code>) compila y arranca sin error, pero cualquier operación sobre <code>Venta</code>/<code>DetalleVenta</code> falla en tiempo de ejecución con <code>ORA-01031: insufficient privileges</code> — un error que solo aparece al primer intento real de guardar una venta, no antes.</p>
+<h3 id="33-cargar-volumen-de-prueba-en-ventasdetalle_ventas">3.3 Cargar volumen de prueba en <code>VENTAS</code>/<code>DETALLE_VENTAS</code><a class="headerlink" href="#33-cargar-volumen-de-prueba-en-ventasdetalle_ventas" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> suficiente volumen de datos para que el CBO tenga algo real que optimizar — con tablas casi vacías, cualquier plan responde igual de rápido y la comparación de esta sesión no muestra nada.</p>
+<p>Antes de continuar, confirma que <code>BOM_CATALOGO.PRODUCTOS</code> tiene al menos un producto real (de S1-S3):</p>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="n">ID</span><span class="p">,</span><span class="w"> </span><span class="n">NOMBRE</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTOS</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ROWNUM</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+</code></pre></div>
+<p>Conectado como <code>BOMERP_APP</code>, carga ventas y detalles de prueba, distribuidos en los últimos 90 días y usando los productos que ya existan (ajusta el rango de <code>ID_PRODUCTO</code> a los ids reales de tu propia base — el bloque usa <code>MOD</code> para no depender de un id fijo):</p>
+<div class="highlight"><pre><span></span><code><span class="k">DECLARE</span>
+<span class="w">    </span><span class="n">v_id_venta</span><span class="w">      </span><span class="nb">NUMBER</span><span class="p">;</span>
+<span class="w">    </span><span class="n">v_max_producto</span><span class="w">  </span><span class="nb">NUMBER</span><span class="p">;</span>
+<span class="k">BEGIN</span>
+<span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="k">MAX</span><span class="p">(</span><span class="n">ID</span><span class="p">)</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">v_max_producto</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTOS</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">FOR</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="mi">1</span><span class="p">..</span><span class="mi">500</span><span class="w"> </span><span class="n">LOOP</span>
+<span class="w">        </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">VENTAS</span><span class="w"> </span><span class="p">(</span><span class="n">FECHA</span><span class="p">,</span><span class="w"> </span><span class="n">ESTADO</span><span class="p">,</span><span class="w"> </span><span class="n">TOTAL</span><span class="p">)</span>
+<span class="w">        </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="n">SYSTIMESTAMP</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="k">MOD</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="mi">90</span><span class="p">),</span><span class="w"> </span><span class="s1">'REGISTRADA'</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">        </span><span class="n">RETURNING</span><span class="w"> </span><span class="n">ID</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">v_id_venta</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">FOR</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="mi">1</span><span class="p">..(</span><span class="k">MOD</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">LOOP</span>
+<span class="w">            </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">DETALLE_VENTAS</span>
+<span class="w">                </span><span class="p">(</span><span class="n">ID_VENTA</span><span class="p">,</span><span class="w"> </span><span class="n">ID_PRODUCTO</span><span class="p">,</span><span class="w"> </span><span class="n">NOMBRE_PRODUCTO</span><span class="p">,</span><span class="w"> </span><span class="n">PRECIO_UNITARIO</span><span class="p">,</span><span class="w"> </span><span class="n">CANTIDAD</span><span class="p">,</span><span class="w"> </span><span class="n">SUBTOTAL</span><span class="p">)</span>
+<span class="w">            </span><span class="k">VALUES</span>
+<span class="w">                </span><span class="p">(</span><span class="n">v_id_venta</span><span class="p">,</span><span class="w"> </span><span class="k">MOD</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="n">v_max_producto</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s1">'Producto de prueba'</span><span class="p">,</span><span class="w"> </span><span class="mi">50</span><span class="p">.</span><span class="mi">00</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">,</span>
+<span class="w">                 </span><span class="mi">50</span><span class="p">.</span><span class="mi">00</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">j</span><span class="p">);</span>
+<span class="w">        </span><span class="k">END</span><span class="w"> </span><span class="n">LOOP</span><span class="p">;</span>
+<span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="n">LOOP</span><span class="p">;</span>
+<span class="w">    </span><span class="k">COMMIT</span><span class="p">;</span>
+<span class="k">END</span><span class="p">;</span>
+<span class="o">/</span>
+</code></pre></div>
+<p>Verifica el volumen cargado:</p>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">TOTAL_VENTAS</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">VENTAS</span><span class="p">;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">TOTAL_DETALLES</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">DETALLE_VENTAS</span><span class="p">;</span>
+</code></pre></div>
+<p>500 ventas con 1-3 líneas cada una es un volumen modesto para producción real, pero suficiente para que el CBO ya tenga que decidir entre un <code>FULL TABLE SCAN</code> y otras alternativas — el punto de esta sesión no es simular una carga masiva, es tener datos reales suficientes para que la comparación de 3.4/3.7 sea genuina.</p>
+<h3 id="34-capturar-el-explain-plan-antes-de-optimizar">3.4 Capturar el <code>EXPLAIN PLAN</code> antes de optimizar<a class="headerlink" href="#34-capturar-el-explain-plan-antes-de-optimizar" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> el plan de ejecución de la consulta representativa, en su versión inicial (con la función sobre <code>FECHA</code> que 3.1 ya identificó como problema).</p>
+<p>Conectado como <code>BOMERP_APP</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">EXPLAIN</span><span class="w"> </span><span class="n">PLAN</span><span class="w"> </span><span class="k">FOR</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">NOMBRE</span><span class="p">,</span><span class="w"> </span><span class="k">SUM</span><span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">CANTIDAD</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">TOTAL_UNIDADES</span><span class="p">,</span><span class="w"> </span><span class="k">SUM</span><span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">SUBTOTAL</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">TOTAL_VENDIDO</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">DETALLE_VENTAS</span><span class="w"> </span><span class="n">d</span>
+<span class="k">JOIN</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">VENTAS</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">ID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">ID_VENTA</span>
+<span class="k">JOIN</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTOS</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">ID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">ID_PRODUCTO</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">TRUNC</span><span class="p">(</span><span class="n">SYSDATE</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">TRUNC</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">FECHA</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">30</span>
+<span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">NOMBRE</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">TOTAL_VENDIDO</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
+
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="k">TABLE</span><span class="p">(</span><span class="n">DBMS_XPLAN</span><span class="p">.</span><span class="n">DISPLAY</span><span class="p">);</span>
+</code></pre></div>
+<p>Guarda esta salida completa como tu evidencia "antes" — los valores exactos de <code>COST</code> dependen del volumen real que cargaste en 3.3, así que no hay un número único esperado; lo que importa es tener este plan capturado para compararlo con el de 3.7.</p>
+<h3 id="35-actualizar-estadisticas-con-dbms_stats">3.5 Actualizar estadísticas con <code>DBMS_STATS</code><a class="headerlink" href="#35-actualizar-estadisticas-con-dbms_stats" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> estadísticas de <code>BOM_VENTAS.VENTAS</code>, <code>BOM_VENTAS.DETALLE_VENTAS</code> y <code>BOM_CATALOGO.PRODUCTOS</code> actualizadas contra el volumen real recién cargado.</p>
+<p>Con una cuenta DBA (gathering stats sobre tablas de otro esquema requiere privilegio elevado):</p>
+<div class="highlight"><pre><span></span><code><span class="k">EXEC</span><span class="w"> </span><span class="n">DBMS_STATS</span><span class="p">.</span><span class="n">GATHER_TABLE_STATS</span><span class="p">(</span><span class="s1">'BOM_VENTAS'</span><span class="p">,</span><span class="w"> </span><span class="s1">'VENTAS'</span><span class="p">);</span>
+<span class="k">EXEC</span><span class="w"> </span><span class="n">DBMS_STATS</span><span class="p">.</span><span class="n">GATHER_TABLE_STATS</span><span class="p">(</span><span class="s1">'BOM_VENTAS'</span><span class="p">,</span><span class="w"> </span><span class="s1">'DETALLE_VENTAS'</span><span class="p">);</span>
+<span class="k">EXEC</span><span class="w"> </span><span class="n">DBMS_STATS</span><span class="p">.</span><span class="n">GATHER_TABLE_STATS</span><span class="p">(</span><span class="s1">'BOM_CATALOGO'</span><span class="p">,</span><span class="w"> </span><span class="s1">'PRODUCTOS'</span><span class="p">);</span>
+</code></pre></div>
+<p>Repite el <code>EXPLAIN PLAN</code> de 3.4, sin cambiar la consulta todavía — el único cambio hasta este punto son las estadísticas:</p>
+<div class="highlight"><pre><span></span><code><span class="k">EXPLAIN</span><span class="w"> </span><span class="n">PLAN</span><span class="w"> </span><span class="k">FOR</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">NOMBRE</span><span class="p">,</span><span class="w"> </span><span class="k">SUM</span><span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">CANTIDAD</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">TOTAL_UNIDADES</span><span class="p">,</span><span class="w"> </span><span class="k">SUM</span><span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">SUBTOTAL</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">TOTAL_VENDIDO</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">DETALLE_VENTAS</span><span class="w"> </span><span class="n">d</span>
+<span class="k">JOIN</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">VENTAS</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">ID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">ID_VENTA</span>
+<span class="k">JOIN</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTOS</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">ID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">ID_PRODUCTO</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">TRUNC</span><span class="p">(</span><span class="n">SYSDATE</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">TRUNC</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">FECHA</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">30</span>
+<span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">NOMBRE</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">TOTAL_VENDIDO</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
+
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="k">TABLE</span><span class="p">(</span><span class="n">DBMS_XPLAN</span><span class="p">.</span><span class="n">DISPLAY</span><span class="p">);</span>
+</code></pre></div>
+<p>Compara <code>ROWS</code> y <code>COST</code> de este plan contra el de 3.4 — con la tabla recién cargada y sin estadísticas previas, es común que el CBO haya estimado con valores por defecto o desactualizados en 3.4; después de <code>DBMS_STATS</code>, la estimación de <code>ROWS</code> debería acercarse más al volumen real que verificaste en 3.3.</p>
+<h3 id="36-reescribir-la-consulta-aplicando-una-buena-practica-sql">3.6 Reescribir la consulta aplicando una buena práctica SQL<a class="headerlink" href="#36-reescribir-la-consulta-aplicando-una-buena-practica-sql" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> la misma consulta, con el filtro de fecha reescrito para no envolver la columna en una función (2.5, Tabla 2).</p>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">NOMBRE</span><span class="p">,</span><span class="w"> </span><span class="k">SUM</span><span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">CANTIDAD</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">TOTAL_UNIDADES</span><span class="p">,</span><span class="w"> </span><span class="k">SUM</span><span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">SUBTOTAL</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">TOTAL_VENDIDO</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">DETALLE_VENTAS</span><span class="w"> </span><span class="n">d</span>
+<span class="k">JOIN</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">VENTAS</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">ID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">ID_VENTA</span>
+<span class="k">JOIN</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTOS</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">ID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">ID_PRODUCTO</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">FECHA</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">TRUNC</span><span class="p">(</span><span class="n">SYSDATE</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">30</span>
+<span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">NOMBRE</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">TOTAL_VENDIDO</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
+</code></pre></div>
+<p><code>TRUNC(SYSDATE) - 30</code> se calcula <strong>una sola vez</strong>, antes de evaluar la primera fila — es una constante, no una expresión por fila. <code>v.FECHA</code> queda sin ninguna función encima: el mismo valor que Oracle ya tiene guardado, comparado directamente. La condición es matemáticamente equivalente a la de 3.4/3.5 (ambas dicen "los últimos 30 días"), pero esta versión no le oculta la columna al optimizador.</p>
+<p><strong>Error frecuente</strong>: reescribir la consulta y dar por hecho que el resultado es el mismo, sin comparar filas. Antes de seguir, confirma que ambas versiones devuelven el mismo número de productos y los mismos totales — una reescritura que cambia el resultado no es una optimización, es un bug nuevo.</p>
+<h3 id="37-capturar-el-explain-plan-despues-y-comparar">3.7 Capturar el <code>EXPLAIN PLAN</code> después y comparar<a class="headerlink" href="#37-capturar-el-explain-plan-despues-y-comparar" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> el plan de ejecución de la consulta reescrita, con estadísticas ya actualizadas — y la comparación explícita contra 3.4.</p>
+<div class="highlight"><pre><span></span><code><span class="k">EXPLAIN</span><span class="w"> </span><span class="n">PLAN</span><span class="w"> </span><span class="k">FOR</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">NOMBRE</span><span class="p">,</span><span class="w"> </span><span class="k">SUM</span><span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">CANTIDAD</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">TOTAL_UNIDADES</span><span class="p">,</span><span class="w"> </span><span class="k">SUM</span><span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">SUBTOTAL</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">TOTAL_VENDIDO</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">DETALLE_VENTAS</span><span class="w"> </span><span class="n">d</span>
+<span class="k">JOIN</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">VENTAS</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">ID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">ID_VENTA</span>
+<span class="k">JOIN</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTOS</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">ID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">ID_PRODUCTO</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">FECHA</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">TRUNC</span><span class="p">(</span><span class="n">SYSDATE</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">30</span>
+<span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">NOMBRE</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">TOTAL_VENDIDO</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
+
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="k">TABLE</span><span class="p">(</span><span class="n">DBMS_XPLAN</span><span class="p">.</span><span class="n">DISPLAY</span><span class="p">);</span>
+</code></pre></div>
+<p><strong>Tabla 4. Comparación antes/después (completa con tus propios valores)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Momento</th>
+<th>Cambio aplicado</th>
+<th><code>COST</code></th>
+<th><code>OPERATION</code> relevante</th>
+<th>Observación</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3.4</td>
+<td>Ninguno (consulta inicial, estadísticas sin actualizar)</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>3.5</td>
+<td><code>DBMS_STATS</code> actualizado</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>3.7</td>
+<td><code>DBMS_STATS</code> + consulta reescrita</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Los tres planes de esta tabla son tu evidencia principal (4.3.1) — sin ellos, no hay forma de sustentar que algo cambió, más allá de "corrió rápido".</p>
+<h3 id="38-relacionar-con-ads-y-lp2">3.8 Relacionar con ADS y LP2<a class="headerlink" href="#38-relacionar-con-ads-y-lp2" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> matriz de integración.</p>
+<p><strong>Tabla 5. Matriz de integración BD2-ADS-LP2 (S4)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Objeto BD2</th>
+<th>Decisión ADS</th>
+<th>Endpoint o servicio LP2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BOM_VENTAS.VENTAS</code>/<code>DETALLE_VENTAS</code> (esquema nuevo)</td>
+<td>ACID por defecto en monolito modular (ADS S4, 2.6)</td>
+<td><code>Venta</code>/<code>DetalleVenta</code> (LP2 S4)</td>
+</tr>
+<tr>
+<td><code>DETALLE_VENTAS.ID_PRODUCTO</code> sin <code>FOREIGN KEY</code> cruzada</td>
+<td>Acyclic Dependencies Principle (ADS S4, 2.6)</td>
+<td><code>DetalleVenta.productoId</code> sin <code>@ManyToOne</code> cruzado (LP2 S4, 2.2)</td>
+</tr>
+<tr>
+<td><code>EXPLAIN PLAN</code>/<code>DBMS_STATS</code> sobre la consulta representativa</td>
+<td>—</td>
+<td>Consultas y reportes de la SPA (LP2 S5, previsto)</td>
+</tr>
+</tbody>
+</table>
+<p>Sesión equivalente en los otros dos cursos, misma semana: <a href="../../../ads/sesiones/S04_Arquitecturas_Modernas/">ADS - S4 Arquitecturas Modernas</a> y <a href="../../../lp2/sesiones/S04_Operacion_Cabecera_Detalle_Venta_DetalleVenta/">LP2 - S4 Operación Cabecera-Detalle Venta-DetalleVenta</a>.</p>
+<p><strong>Evidencia de aprendizaje:</strong></p>
+<ul>
+<li>Esquema <code>BOM_VENTAS</code> con <code>VENTAS</code>/<code>DETALLE_VENTAS</code> creadas y con volumen de prueba.</li>
+<li><code>EXPLAIN PLAN</code> capturado antes (3.4), después de <code>DBMS_STATS</code> (3.5) y después de reescribir la consulta (3.7).</li>
+<li>Tabla comparativa de <code>COST</code>/<code>OPERATION</code> completada con valores reales.</li>
+<li>Matriz de integración con ADS y LP2.</li>
+</ul>
+<h2 id="4-crea-actividad-autonoma">4. Crea: actividad autónoma<a class="headerlink" href="#4-crea-actividad-autonoma" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 2h fuera del aula.</p>
+<h3 id="41-actividad">4.1 Actividad<a class="headerlink" href="#41-actividad" title="Permanent link">&para;</a></h3>
+<p>Optimización autónoma de una consulta representativa del proyecto propio del equipo, documentada en evidencia individual.</p>
+<p>Completa y evidencia estas tareas:</p>
+<ol>
+<li>Elegir una consulta representativa de tu propio proyecto, que cruce al menos dos tablas.</li>
+<li>Cargar (o confirmar que ya existe) volumen de prueba suficiente para que la comparación tenga sentido.</li>
+<li>Capturar el <code>EXPLAIN PLAN</code> inicial.</li>
+<li>Actualizar estadísticas con <code>DBMS_STATS</code> y volver a capturar el plan.</li>
+<li>Reescribir la consulta aplicando al menos una buena práctica SQL (2.5, Tabla 2) y capturar el plan final.</li>
+<li>Completar una tabla comparativa con los tres momentos, igual que la Tabla 4 de esta guía.</li>
+</ol>
+<h3 id="42-proposito">4.2 Propósito<a class="headerlink" href="#42-proposito" title="Permanent link">&para;</a></h3>
+<p>Que cada estudiante demuestre, de forma individual y fuera del aula, que puede analizar y mejorar el plan de ejecución de una consulta real sin el acompañamiento del docente.</p>
+<p>Cada estudiante adapta el ejemplo a una consulta representativa de su propio proyecto.</p>
+<h3 id="43-indicaciones">4.3 Indicaciones<a class="headerlink" href="#43-indicaciones" title="Permanent link">&para;</a></h3>
+<p>Entrega un PDF con el siguiente nombre:</p>
+<div class="highlight"><pre><span></span><code>S04_BD2_Equipo##_ApellidoNombre.pdf
+</code></pre></div>
+<p>Cada captura de pantalla del informe debe mostrar, sin recortar, el reloj del sistema (fecha y hora) y tu usuario o foto de perfil (Windows, VS Code o navegador) visibles en pantalla — es lo que permite verificar que la evidencia es tuya y que corresponde al momento real de tu trabajo.</p>
+<h4 id="431-estructura-del-informe">4.3.1 Estructura del informe<a class="headerlink" href="#431-estructura-del-informe" title="Permanent link">&para;</a></h4>
+<p><strong>Datos del estudiante</strong></p>
+<ul>
+<li>Nombre:</li>
+<li>Equipo:</li>
+<li>Sesión: S04 - Optimización de Consultas SQL</li>
+<li>Rol o aporte realizado:</li>
+<li>Link de GitHub:</li>
+</ul>
+<p><strong>Evidencia técnica</strong></p>
+<p>Incluye capturas o salidas con una breve explicación debajo de cada una, organizadas en los mismos 4 bloques de la rúbrica (4.6):</p>
+<ol>
+<li><em>Consulta representativa y volumen de prueba</em><ul>
+<li>Consulta elegida, con al menos dos tablas involucradas.</li>
+<li>Volumen de prueba confirmado (conteo de filas).</li>
+</ul>
+</li>
+<li><em><code>EXPLAIN PLAN</code> inicial</em><ul>
+<li>Salida completa de <code>DBMS_XPLAN.DISPLAY</code>, antes de cualquier cambio.</li>
+</ul>
+</li>
+<li><em><code>DBMS_STATS</code> y comparación</em><ul>
+<li>Estadísticas actualizadas, con el plan capturado después.</li>
+</ul>
+</li>
+<li><em>Buena práctica SQL aplicada</em><ul>
+<li>Consulta reescrita, plan final, y tabla comparativa completa.</li>
+</ul>
+</li>
+</ol>
+<p><strong>Error o hallazgo</strong></p>
+<p>Describe un hallazgo real: un plan que no cambió como esperabas, una estimación de <code>ROWS</code> muy alejada del volumen real, o una reescritura que al principio cambió el resultado antes de corregirla.</p>
+<p><strong>Reflexión técnica breve</strong></p>
+<p>Responde en 5 a 8 líneas:</p>
+<div class="highlight"><pre><span></span><code>¿Por qué una consulta que responde rápido en un ambiente de pruebas con pocos
+datos puede comportarse distinto en producción, y qué papel juega DBMS_STATS
+en esa diferencia?
+</code></pre></div>
+<p><strong>Anexo: Feedback de la sesión</strong></p>
+<p>Pega esta página como la última hoja del PDF, con tus respuestas.</p>
+<ol>
+<li>¿Cuál es el aprendizaje más importante que te llevas de la clase de hoy?</li>
+<li>¿Qué punto de la clase te resultó más confuso o te dejó con dudas?</li>
+<li>¿Tienes alguna pregunta que te gustaría que sea respondida la siguiente clase?</li>
+<li>Sobre tu nivel de comprensión de la clase de hoy, marca una opción:<ul>
+<li>¡Entendido! - Lo domino y podría explicarlo.</li>
+<li>Más o menos. - Entendí la idea general, pero tengo dudas.</li>
+<li>Necesito ayuda. - Me siento perdido/a con este tema.</li>
+</ul>
+</li>
+<li>¿Cómo puedo ayudarte a comprender mejor el tema?</li>
+<li>Pensando en tu participación y esfuerzo en la clase de hoy, ¿cómo te autoevaluarías? Marca una opción:<ul>
+<li>Muy Comprometido/a: Me esforcé al máximo.</li>
+<li>Comprometido/a: Sé que podría haberme esforzado un poco más.</li>
+<li>Poco Comprometido/a: Hoy no di mi mejor esfuerzo.</li>
+</ul>
+</li>
+<li>Mi satisfacción con la clase fue... (califica del 1 al 10, donde 1 es insatisfecho y 10 es muy satisfecho).</li>
+</ol>
+<h3 id="44-criterios-minimos-de-aceptacion">4.4 Criterios mínimos de aceptación<a class="headerlink" href="#44-criterios-minimos-de-aceptacion" title="Permanent link">&para;</a></h3>
+<p>La evidencia individual se considera completa si:</p>
+<ul>
+<li>El archivo respeta el nombre solicitado.</li>
+<li>Presenta una consulta representativa con al menos dos tablas, y volumen de prueba confirmado.</li>
+<li>Captura el <code>EXPLAIN PLAN</code> inicial, antes de cualquier cambio.</li>
+<li>Actualiza estadísticas con <code>DBMS_STATS</code> y captura el plan resultante.</li>
+<li>Reescribe la consulta aplicando al menos una buena práctica SQL, con el plan final capturado.</li>
+<li>No crea ningún índice nuevo (alcance de S5).</li>
+<li>Completa la tabla comparativa de los tres momentos.</li>
+<li>Cada captura de la evidencia técnica muestra el reloj del sistema y el usuario/perfil visible, sin recortar.</li>
+<li>Las fechas y horas de las capturas son coherentes con el historial de commits de su repositorio en GitHub.</li>
+<li>Incluye un error o hallazgo técnico diagnosticado.</li>
+<li>Incluye la reflexión técnica breve solicitada.</li>
+<li>Incluye el Anexo de feedback de la sesión respondido, como última página del PDF.</li>
+</ul>
+<h3 id="45-preguntas-de-defensa">4.5 Preguntas de defensa<a class="headerlink" href="#45-preguntas-de-defensa" title="Permanent link">&para;</a></h3>
+<ol>
+<li>¿Por qué <code>EXPLAIN PLAN</code> no ejecuta realmente la consulta?</li>
+<li>¿Qué diferencia encontraste entre el plan de 3.4 y el de 3.5, y a qué la atribuyes?</li>
+<li>¿Por qué envolver una columna en una función limita al optimizador, incluso sin ningún índice de por medio?</li>
+<li>¿Por qué <code>DETALLE_VENTAS.ID_PRODUCTO</code> no tiene una <code>FOREIGN KEY</code> hacia <code>BOM_CATALOGO.PRODUCTOS</code>?</li>
+<li>¿Qué esperarías que cambiara en el plan de esta consulta cuando S5 agregue un índice sobre <code>VENTAS.FECHA</code>?</li>
+</ol>
+<h3 id="46-rubrica-de-evaluacion">4.6 Rúbrica de evaluación<a class="headerlink" href="#46-rubrica-de-evaluacion" title="Permanent link">&para;</a></h3>
+<p><strong>Tabla 6. Rúbrica de evaluación</strong></p>
+<table>
+<thead>
+<tr>
+<th>Criterio</th>
+<th style="text-align: right;">Peso (%)</th>
+<th>A (20 pts)</th>
+<th>B (15 pts)</th>
+<th>C (10 pts)</th>
+<th>D (5 pts)</th>
+<th style="text-align: right;">Nivel obtenido</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Consulta representativa y volumen*</td>
+<td style="text-align: right;">20</td>
+<td>Consulta real con al menos dos tablas, volumen de prueba suficiente y verificado.</td>
+<td>Consulta y volumen presentes, con detalles menores.</td>
+<td>Consulta simple o volumen insuficiente para ver diferencias.</td>
+<td>No presenta consulta ni volumen.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>2. <code>EXPLAIN PLAN</code> antes/después*</td>
+<td style="text-align: right;">30</td>
+<td>Los tres planes (inicial, con <code>DBMS_STATS</code>, final) capturados y comparados correctamente.</td>
+<td>Al menos dos planes capturados y comparados.</td>
+<td>Un solo plan capturado, sin comparación real.</td>
+<td>No presenta ningún <code>EXPLAIN PLAN</code>.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>3. <code>DBMS_STATS</code>*</td>
+<td style="text-align: right;">20</td>
+<td>Estadísticas actualizadas correctamente, con su efecto identificado en el plan.</td>
+<td>Estadísticas actualizadas, sin identificar el efecto con claridad.</td>
+<td>Ejecuta <code>DBMS_STATS</code> sin evidenciar ningún cambio.</td>
+<td>No actualiza estadísticas.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>4. Buena práctica SQL aplicada*</td>
+<td style="text-align: right;">30</td>
+<td>Reescritura correcta, con el mismo resultado que la original y el plan final comparado.</td>
+<td>Reescritura correcta, con comparación parcial.</td>
+<td>Reescritura presente, sin verificar que el resultado sea el mismo.</td>
+<td>No aplica ninguna buena práctica SQL.</td>
+<td style="text-align: right;"></td>
+</tr>
+</tbody>
+</table>
+<p>* Agregado manual.</p>
+<p>Nota final = suma de (<code>Peso</code> / 100 × <code>Puntos del nivel obtenido</code>) = ____ / 20.</p>
+<p>Para usar la rúbrica con IA, solicita:</p>
+<div class="highlight"><pre><span></span><code>Evalúa el PDF usando la rúbrica de la sesión.
+Para cada criterio selecciona el nivel obtenido usando la escala A=20, B=15, C=10, D=5 puntos.
+Justifica brevemente cada nivel asignado.
+Verifica que cada captura muestre reloj del sistema y usuario/perfil visible, y que las fechas sean coherentes con el historial de commits de GitHub. Si falta esta evidencia o hay inconsistencias, indícalo explícitamente antes de calificar.
+Calcula la nota final con la fórmula: suma de (Peso/100 × Puntos del nivel obtenido), directamente sobre 20.
+Indica 2 fortalezas y 2 recomendaciones.
+</code></pre></div>
+<h2 id="5-cierre">5. Cierre<a class="headerlink" href="#5-cierre" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 5 min.</p>
+<p><strong>Resumen breve:</strong> hoy nació el esquema <code>BOM_VENTAS</code> — con volumen real de prueba, no solo estructura — y una consulta representativa del proyecto pasó por tres momentos comparables: plan inicial, plan con estadísticas actualizadas (<code>DBMS_STATS</code>) y plan final tras reescribir la consulta con una buena práctica SQL, sin tocar ningún índice todavía.</p>
+<p><strong>Dinámica participativa:</strong> en una ronda rápida, cada estudiante comparte en una frase qué cambió (o no) entre su plan "antes" y su plan "después".</p>
+<p><strong>Metacognición:</strong> cada estudiante responde el Anexo de feedback de la sesión, incluido en su evidencia individual (ver 4.3.1). El docente analiza esas respuestas con IA para identificar temas recurrentes o dudas comunes del equipo, y con esos indicadores construye el cierre real de la sesión — que se entrega al inicio de S5, no al final de esta clase.</p>
+<p><strong>Proyección:</strong> S5 retoma exactamente esta misma consulta (y <code>LOG_ERRORES</code>, S3) para decidir qué índice concreto agregar — B-Tree, Bitmap o Function-Based — usando la selectividad real que hoy ya se puede medir con <code>EXPLAIN PLAN</code>.</p>
+<h2 id="bibliografia">Bibliografía<a class="headerlink" href="#bibliografia" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Oracle Corporation. (2024). <em>Database Free 23ai documentation</em>. https://docs.oracle.com/en/database/oracle/oracle-database/23/</li>
+<li>Oracle Corporation. (2024). <em>Database SQL Tuning Guide</em>. https://docs.oracle.com/en/database/oracle/oracle-database/23/tgsql/</li>
+<li>Oracle Corporation. (2024). <em>DBMS_STATS package reference</em>. https://docs.oracle.com/en/database/oracle/oracle-database/23/arpls/DBMS_STATS.html</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Angel Sullon @asullom - UPeU 2026
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.top", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

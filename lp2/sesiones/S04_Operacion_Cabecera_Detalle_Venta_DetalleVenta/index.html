@@ -1,0 +1,4256 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Entorno integrado de desarrollo academico para construir modulos ERP con ADS, BD2 y LP2.">
+      
+      
+        <meta name="author" content="UPeU">
+      
+      
+      
+        <link rel="prev" href="../S03_Objetos_Relacionados_Categoria_Producto/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+  
+    <title>BOM ERP - S4 - Operación cabecera-detalle Venta-DetalleVenta</title>
+  
+
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#s4-operacion-cabecera-detalle-venta-y-detalleventa" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../../.." title="BOM ERP" class="md-header__button md-logo" aria-label="BOM ERP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            BOM ERP
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              S4 - Operación cabecera-detalle Venta-DetalleVenta
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/262ciclo4/bomerp" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    262ciclo4/bomerp
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Pestañas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Inicio
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../proyecto-integrador/" class="md-tabs__link">
+          
+  
+  
+  Guía del Proyecto Integrador
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../ads/" class="md-tabs__link">
+          
+  
+  
+  ADS
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../bd2/" class="md-tabs__link">
+          
+  
+  
+  BD2
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../" class="md-tabs__link">
+          
+  
+  
+  LP2
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="BOM ERP" class="md-nav__button md-logo" aria-label="BOM ERP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    BOM ERP
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/262ciclo4/bomerp" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    262ciclo4/bomerp
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guía del Proyecto Integrador
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guía del Proyecto Integrador
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Alineamiento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Diseño técnico, motor transaccional y backend inicial
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    1. Diseño técnico, motor transaccional y backend inicial
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/lp2-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Demo U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Modelado UML, administración Oracle y SPA segura
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    2. Modelado UML, administración Oracle y SPA segura
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/lp2-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Demo U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Diseño consolidado, operación Oracle y Full-Stack integrado
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    3. Diseño consolidado, operación Oracle y Full-Stack integrado
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/lp2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/checklist-final/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Checklist final
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/guia-sustentacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guía de sustentación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ADS
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/silabo_ads_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/silabo_ads_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Arquitectura y Diseño Estructural
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Arquitectura y Diseño Estructural
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S01_Fundamentos_Arquitectura_Software/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - Fundamentos de arquitectura de software
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S02_Modelo_C4_Vistas_Arquitectonicas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - Modelo C4 y vistas arquitectónicas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S03_Diseno_Estructural_Principios_SOLID/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S3 - Diseño estructural y principios SOLID
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S04_Arquitecturas_Modernas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S4 - Arquitecturas modernas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    BD2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/silabo_bd2_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/silabo_bd2_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Programación y optimización (Oracle XE)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Programación y optimización (Oracle XE)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - PL/SQL aplicado al negocio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S02_Triggers_DML_Auditoria/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - Triggers DML y auditoría
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S03_Excepciones_Robustez/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S3 - Manejo de excepciones y robustez
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S04_Optimizacion_Consultas_SQL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S4 - Optimización de consultas SQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    LP2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../silabo_lp2_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../silabo_lp2_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Decisiones de arquitectura
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Decisiones de arquitectura
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/ADR-001-arquitectura-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-001 - Arquitectura del backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/ADR-002-spring-modulith/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-002 - Spring Modulith
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/ADR-003-spring-boot-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-003 - Versión exacta de Spring Boot 4.0.7
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/ADR-004-jwt-diferido/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-004 - JWT diferido a S10
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Base backend REST modular de BomERP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Base backend REST modular de BomERP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S01_Arquitectura_Backend_REST_Profesional/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - Arquitectura backend REST profesional
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S02_CRUD_REST_Completo_Producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - CRUD REST completo de Producto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S03_Objetos_Relacionados_Categoria_Producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S3 - Objetos relacionados Categoria-Producto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S4 - Operación cabecera-detalle Venta-DetalleVenta
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S4 - Operación cabecera-detalle Venta-DetalleVenta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-introduccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Introducción
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Introducción">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-presentacion-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Presentación de la sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-indice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Índice
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-proposito-de-aprendizaje" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Propósito de aprendizaje
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-producto-de-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Producto de sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-metodologia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Metodología
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16-motivacion-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6 Motivación de la sesión
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.6 Motivación de la sesión">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#161-caso-el-descuento-de-stock-que-se-aplico-sin-la-venta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6.1 Caso: el descuento de stock que se aplicó sin la venta
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#17-ubicacion-en-el-curso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.7 Ubicación en el curso
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-explica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Explica
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Explica">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-arquitectura-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Arquitectura de la sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-dto-compuesto-y-coleccion-de-detalles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 DTO compuesto y colección de detalles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-calculos-y-estados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Cálculos y estados
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-actualizacion-de-existencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Actualización de existencias
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-registro-atomico-commit-y-rollback-mediante-transacciones-orm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Registro atómico, commit y rollback mediante transacciones ORM
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-aplica-actividad-practica-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Aplica: actividad práctica guiada
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Aplica: actividad práctica guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-verificar-el-punto-de-partida" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Verificar el punto de partida
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-exponer-productoservice-a-otros-modulos-con-namedinterface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Exponer ProductoService a otros módulos con @NamedInterface
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-crear-las-entidades-venta-detalleventa-y-estadoventa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Crear las entidades Venta, DetalleVenta y EstadoVenta
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-crear-los-dto-compuestos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Crear los DTO compuestos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-ampliar-productoservice-con-descontarstock-y-stockinsuficienteexception" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Ampliar ProductoService con descontarStock y StockInsuficienteException
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-crear-ventamapper" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Crear VentaMapper
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37-crear-ventarepository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 Crear VentaRepository
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#38-crear-ventaserviceventaserviceimpl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 Crear VentaService/VentaServiceImpl
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#39-crear-ventacontroller" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.9 Crear VentaController
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#310-probar-la-operacion-completa-incluido-el-rollback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.10 Probar la operación completa, incluido el rollback
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#311-verificar-los-limites-de-modulo-con-modularitytests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.11 Verificar los límites de módulo con ModularityTests
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#312-relacionar-con-ads-y-bd2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.12 Relacionar con ADS y BD2
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-crea-actividad-autonoma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Crea: actividad autónoma
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Crea: actividad autónoma">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-actividad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Actividad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-proposito" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Propósito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-indicaciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Indicaciones
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.3 Indicaciones">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#431-estructura-del-informe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3.1 Estructura del informe
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-criterios-minimos-de-aceptacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Criterios mínimos de aceptación
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-preguntas-de-defensa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Preguntas de defensa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-rubrica-de-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 Rúbrica de evaluación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-cierre" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Cierre
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bibliografia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bibliografía
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-introduccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Introducción
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Introducción">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-presentacion-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Presentación de la sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-indice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Índice
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-proposito-de-aprendizaje" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Propósito de aprendizaje
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-producto-de-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Producto de sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-metodologia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Metodología
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16-motivacion-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6 Motivación de la sesión
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.6 Motivación de la sesión">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#161-caso-el-descuento-de-stock-que-se-aplico-sin-la-venta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6.1 Caso: el descuento de stock que se aplicó sin la venta
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#17-ubicacion-en-el-curso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.7 Ubicación en el curso
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-explica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Explica
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Explica">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-arquitectura-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Arquitectura de la sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-dto-compuesto-y-coleccion-de-detalles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 DTO compuesto y colección de detalles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-calculos-y-estados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Cálculos y estados
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-actualizacion-de-existencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Actualización de existencias
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-registro-atomico-commit-y-rollback-mediante-transacciones-orm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Registro atómico, commit y rollback mediante transacciones ORM
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-aplica-actividad-practica-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Aplica: actividad práctica guiada
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Aplica: actividad práctica guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-verificar-el-punto-de-partida" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Verificar el punto de partida
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-exponer-productoservice-a-otros-modulos-con-namedinterface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Exponer ProductoService a otros módulos con @NamedInterface
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-crear-las-entidades-venta-detalleventa-y-estadoventa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Crear las entidades Venta, DetalleVenta y EstadoVenta
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-crear-los-dto-compuestos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Crear los DTO compuestos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-ampliar-productoservice-con-descontarstock-y-stockinsuficienteexception" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Ampliar ProductoService con descontarStock y StockInsuficienteException
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-crear-ventamapper" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Crear VentaMapper
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37-crear-ventarepository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 Crear VentaRepository
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#38-crear-ventaserviceventaserviceimpl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 Crear VentaService/VentaServiceImpl
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#39-crear-ventacontroller" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.9 Crear VentaController
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#310-probar-la-operacion-completa-incluido-el-rollback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.10 Probar la operación completa, incluido el rollback
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#311-verificar-los-limites-de-modulo-con-modularitytests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.11 Verificar los límites de módulo con ModularityTests
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#312-relacionar-con-ads-y-bd2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.12 Relacionar con ADS y BD2
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-crea-actividad-autonoma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Crea: actividad autónoma
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Crea: actividad autónoma">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-actividad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Actividad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-proposito" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Propósito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-indicaciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Indicaciones
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.3 Indicaciones">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#431-estructura-del-informe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3.1 Estructura del informe
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-criterios-minimos-de-aceptacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Criterios mínimos de aceptación
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-preguntas-de-defensa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Preguntas de defensa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-rubrica-de-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 Rúbrica de evaluación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-cierre" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Cierre
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bibliografia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bibliografía
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="s4-operacion-cabecera-detalle-venta-y-detalleventa">S4 - Operación Cabecera-Detalle: Venta y DetalleVenta<a class="headerlink" href="#s4-operacion-cabecera-detalle-venta-y-detalleventa" title="Permanent link">&para;</a></h1>
+<p><em>Por: Angel Sullon Macalupu @asullom - 2026</em></p>
+<h2 id="1-introduccion">1. Introducción<a class="headerlink" href="#1-introduccion" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 20 min.</p>
+<h3 id="11-presentacion-de-la-sesion">1.1 Presentación de la sesión<a class="headerlink" href="#11-presentacion-de-la-sesion" title="Permanent link">&para;</a></h3>
+<p>Hasta ahora, cada operación construida trabajó sobre una sola entidad protagonista por vez — un CRUD, aunque relacionado con otra entidad, sigue siendo eso. Esta sesión agrega un segundo módulo de negocio y con él aparece un tipo de operación distinto: registrar una operación de dominio no es guardar una fila, es guardar una cabecera junto con una colección de líneas, calcular totales, aplicar una regla de negocio real que depende de otro módulo, y que todo eso ocurra junto o no ocurra nada. Esta sesión construye esa operación completa, con su primera regla de negocio real y su primera comunicación entre dos módulos.</p>
+<h3 id="12-indice">1.2 Índice<a class="headerlink" href="#12-indice" title="Permanent link">&para;</a></h3>
+<ol>
+<li>DTO compuesto y colección de detalles.</li>
+<li>Cálculos y estados.</li>
+<li>Actualización de existencias.</li>
+<li>Registro atómico, commit y rollback mediante transacciones ORM.</li>
+</ol>
+<h3 id="13-proposito-de-aprendizaje">1.3 Propósito de aprendizaje<a class="headerlink" href="#13-proposito-de-aprendizaje" title="Permanent link">&para;</a></h3>
+<p>Al concluir la clase, estarás en condiciones de:</p>
+<ul>
+<li><strong>Construir y probar</strong> una operación de dominio cabecera-detalle, con cálculos, una regla de negocio real, y una transacción atómica verificada con un caso de éxito y un caso de rollback — comunicando dos módulos mediante un servicio público expuesto explícitamente.</li>
+</ul>
+<h3 id="14-producto-de-sesion">1.4 Producto de sesión<a class="headerlink" href="#14-producto-de-sesion" title="Permanent link">&para;</a></h3>
+<p>API REST de <code>Venta</code> (<code>POST</code>, <code>GET</code>, <code>GET /{id}</code>) con <code>DetalleVenta</code> como colección embebida en el DTO de entrada y de salida, cálculo de subtotales y total, descuento real de stock de <code>Producto</code> mediante el servicio público de <code>catalogo</code>, transacción atómica probada con un caso de éxito y un caso de rollback por stock insuficiente, y límites de módulo verificados con <code>ModularityTests</code>.</p>
+<h3 id="15-metodologia">1.5 Metodología<a class="headerlink" href="#15-metodologia" title="Permanent link">&para;</a></h3>
+<p><strong>Tabla 1. Metodología de la sesión</strong></p>
+<table>
+<thead>
+<tr>
+<th>Actividades a Realizar en el Periodo</th>
+<th>Orientaciones generales (Orientaciones Metodológicas)</th>
+<th>Material de estudio recomendado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Revisión previa individual</td>
+<td>Repasar <code>ProductoServiceImpl</code>/<code>ProductoRepository</code> (S1, S3) y ADR-002 (verificación de módulos con Spring Modulith). Trabajo individual, antes de clase.</td>
+<td>S1 (3.4.2), S3 (3.9), ADR-002.</td>
+</tr>
+<tr>
+<td>Clase presencial</td>
+<td>Construcción guiada de <code>ventas</code>: entidades, DTO compuesto, servicio con cálculos y control de stock, transacción atómica, controlador, y verificación de límites de módulo. Trabajo individual en la propia laptop, siguiendo al docente paso a paso.</td>
+<td>Backend ejecutable (S1-S3), cliente REST para verificar endpoints.</td>
+</tr>
+<tr>
+<td>Evaluación formativa</td>
+<td>Verificación en clase de <code>POST /api/v1/ventas</code> con un caso de éxito (stock suficiente) y un caso de rollback (stock insuficiente), más <code>ModularityTests</code> en verde. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4.</td>
+<td>Indicaciones de entrega (4.3), rúbrica de evaluación (4.6).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="16-motivacion-de-la-sesion">1.6 Motivación de la sesión<a class="headerlink" href="#16-motivacion-de-la-sesion" title="Permanent link">&para;</a></h3>
+<h4 id="161-caso-el-descuento-de-stock-que-se-aplico-sin-la-venta">1.6.1 Caso: el descuento de stock que se aplicó sin la venta<a class="headerlink" href="#161-caso-el-descuento-de-stock-que-se-aplico-sin-la-venta" title="Permanent link">&para;</a></h4>
+<p>Imagina que <code>descontarStock</code> se ejecuta para el primer producto de una venta con tres líneas, se guarda ese cambio, y recién en la segunda línea se descubre que no hay stock suficiente. Si cada paso se guardara por separado, el resultado sería un producto con el stock ya descontado y ninguna venta registrada que lo explique — un dato inconsistente que nadie decidió dejar así, un efecto secundario de tratar una operación de varios pasos como si fueran pasos independientes.</p>
+<p>Esa es exactamente la clase de bug que una transacción evita: todo el conjunto de cambios (la cabecera, cada línea, cada descuento de stock) se confirma junto o se revierte junto — no hay un estado intermedio visible para nadie más. Esta sesión no solo implementa <code>Venta</code>-<code>DetalleVenta</code>: prueba explícitamente que el rollback funciona, provocándolo a propósito.</p>
+<p><strong>Preguntas de análisis</strong></p>
+<p><strong>Activación de conocimientos previos</strong></p>
+<ol>
+<li>En S3, <code>ProductoServiceImpl.crear()</code> necesitó <code>@Transactional</code> para no romperse al resolver <code>Categoria</code>. ¿Qué tienen en común ese caso y el de esta sesión?</li>
+</ol>
+<p><strong>Comprensión de la operación cabecera-detalle</strong></p>
+<ol>
+<li>Si <code>Venta</code> y <code>DetalleVenta</code> se guardaran en dos llamadas a <code>save()</code> separadas, en vez de una sola operación transaccional, ¿qué podría quedar inconsistente si la segunda falla?</li>
+<li><code>DetalleVenta</code> no tiene una relación JPA (<code>@ManyToOne</code>) hacia <code>Producto</code> — solo guarda su <code>id</code>, nombre y precio en el momento de la venta. ¿Por qué, si <code>Producto</code> ya existe como entidad en <code>catalogo</code>?</li>
+</ol>
+<h3 id="17-ubicacion-en-el-curso">1.7 Ubicación en el curso<a class="headerlink" href="#17-ubicacion-en-el-curso" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Unidad: U1 - Base backend REST modular de BomERP.</li>
+<li>Producto del curso: base Full-Stack modular de BomERP.</li>
+<li>Producto de unidad: base backend modular de BomERP, con módulos de Catálogo, Inventario, Ventas y Compras delimitados.</li>
+<li>Avance del producto en esta sesión: módulo <code>ventas</code> creado, con <code>Venta</code>-<code>DetalleVenta</code> funcional, transaccional y verificado contra <code>catalogo</code>.</li>
+</ul>
+<p>Roadmap del producto de la unidad:</p>
+<p><strong>Figura 1. Roadmap del producto de la unidad</strong></p>
+<pre class="mermaid"><code>flowchart TB
+    S1["`**S1:** Arquitectura backend REST profesional`"]
+    S2["`**S2:** CRUD REST completo de Producto`"]
+    S3["`**S3:** Objetos relacionados Categoria-Producto`"]
+    S4["`**S4:** Operación cabecera-detalle`"]
+    S5["`**S5:** Consultas y reportes`"]
+    S6["`**S6:** Producto U1`"]
+
+    S1 --&gt; S2 --&gt; S3 --&gt; S4 --&gt; S5 --&gt; S6
+
+    classDef today fill:#ffe08a,stroke:#9a6b00,stroke-width:2px,color:#111;
+    class S4 today;</code></pre>
+<h2 id="2-explica">2. Explica<a class="headerlink" href="#2-explica" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 30 min.</p>
+<h3 id="21-arquitectura-de-la-sesion">2.1 Arquitectura de la sesión<a class="headerlink" href="#21-arquitectura-de-la-sesion" title="Permanent link">&para;</a></h3>
+<p><strong>Figura 2. Flujo de una petición <code>POST /api/v1/ventas</code></strong></p>
+<pre class="mermaid"><code>flowchart LR
+    Client["Cliente - PowerShell / bash / Swagger"]
+    Controller["VentaController"]
+    Service["VentaServiceImpl (modulo ventas)"]
+    ProdService["ProductoService (modulo catalogo, expuesto)"]
+    Repo["VentaRepository"]
+    DB[("Oracle - BOM_VENTAS.VENTAS / DETALLE_VENTAS")]
+    DBCat[("Oracle - BOM_CATALOGO.PRODUCTOS")]
+
+    Client --&gt;|"VentaRequest + @Valid"| Controller
+    Controller --&gt; Service
+    Service --&gt;|"por cada linea: obtener + descontarStock"| ProdService
+    ProdService --&gt; DBCat
+    Service --&gt; Repo
+    Repo --&gt; DB
+    Service --&gt; Controller
+    Controller --&gt;|"VentaResponse"| Client</code></pre>
+<p>Lectura del diagrama: <code>VentaServiceImpl</code> vive en <code>ventas</code>, pero no toca <code>ProductoRepository</code> ni la entidad <code>Producto</code> directamente — pasa siempre por <code>ProductoService</code>, el mismo límite que ya impone Spring Modulith dentro de un solo módulo (S3, <code>ProductoServiceImpl</code> nunca llama a <code>CategoriaRepository</code>), ahora entre dos módulos distintos.</p>
+<h3 id="22-dto-compuesto-y-coleccion-de-detalles">2.2 DTO compuesto y colección de detalles<a class="headerlink" href="#22-dto-compuesto-y-coleccion-de-detalles" title="Permanent link">&para;</a></h3>
+<p>Una <strong>cabecera</strong> (<code>Venta</code>) agrupa datos que aplican a toda la operación (fecha, estado, total); un <strong>detalle</strong> (<code>DetalleVenta</code>) es cada línea individual (qué producto, cuánto, a qué precio). La relación es uno a muchos: una <code>Venta</code> tiene varios <code>DetalleVenta</code>, y cada <code>DetalleVenta</code> pertenece exactamente a una <code>Venta</code> — el mismo patrón <code>@OneToMany</code>/<code>@ManyToOne</code> de S3, aplicado ahora dentro de un mismo módulo nuevo en vez de entre <code>Categoria</code> y <code>Producto</code>.</p>
+<p><strong>Decisión de diseño: <code>DetalleVenta</code> no referencia la entidad <code>Producto</code>.</strong> Podría parecer natural agregar <code>@ManyToOne private Producto producto;</code> en <code>DetalleVenta</code>, igual que <code>Producto</code> referencia <code>Categoria</code> en <code>catalogo</code> — pero <code>Producto</code> es una entidad de <strong>otro módulo</strong>. Una relación JPA directa obligaría a <code>ventas</code> a conocer el mapeo interno de <code>catalogo</code> (su tabla, sus columnas, su ciclo de vida), justo el acoplamiento que Spring Modulith existe para evitar (ADR-002). En vez de eso, <code>DetalleVenta</code> guarda <code>productoId</code> (un <code>Long</code> simple, sin relación JPA) más una <strong>copia</strong> de <code>nombreProducto</code> y <code>precioUnitario</code> tomada en el momento de la venta.</p>
+<p>Esa copia no es una limitación — es correcta para el dominio: si <code>Producto.precio</code> cambia la próxima semana, una venta ya registrada no debe recalcularse sola. El precio de una venta pasada es el que se cobró ese día, no el que el producto tenga hoy.</p>
+<h3 id="23-calculos-y-estados">2.3 Cálculos y estados<a class="headerlink" href="#23-calculos-y-estados" title="Permanent link">&para;</a></h3>
+<p>Cada <code>DetalleVenta</code> calcula su <code>subtotal</code> como <code>precioUnitario × cantidad</code>; el <code>total</code> de la <code>Venta</code> es la suma de todos los <code>subtotal</code> de sus detalles. Ambos cálculos ocurren en el service, no en el controller ni en la entidad — la entidad <code>Venta</code>/<code>DetalleVenta</code> solo almacena el resultado, no lo recalcula por sí sola cada vez que se lee.</p>
+<p>Cada <code>Venta</code> también tiene un <strong>estado</strong> (<code>EstadoVenta</code>) — hoy con un único valor posible, <code>REGISTRADA</code>: toda venta creada en esta sesión queda ahí, sin operación de anulación todavía (3.3). El campo existe desde ahora porque una operación cabecera-detalle real casi siempre necesita más de un estado con el tiempo (por ejemplo, <code>ANULADA</code>, con su propia reversión de stock) — aunque esta sesión no lo explote todavía, extenderlo más adelante es agregar un valor al enum y la lógica que lo use, no rediseñar la entidad.</p>
+<h3 id="24-actualizacion-de-existencias">2.4 Actualización de existencias<a class="headerlink" href="#24-actualizacion-de-existencias" title="Permanent link">&para;</a></h3>
+<p>S2 (2.3) ya distinguió cuatro capas de validación, y adelantó que la última — la del service — es la única que puede validar algo que depende del <strong>estado actual del sistema</strong>, no de la forma del dato. "El nombre no puede estar vacío" se valida con <code>@NotBlank</code>, sin consultar nada; "hay stock suficiente para vender 5 unidades" <strong>sí</strong> necesita consultar el stock real en ese instante — es una regla de negocio, no de forma, y Bean Validation no puede expresarla.</p>
+<p><code>ProductoService.descontarStock(id, cantidad)</code> implementa esa regla: si <code>cantidad</code> supera el stock disponible, lanza una excepción de negocio (<code>StockInsuficienteException</code>, distinta de <code>ResourceNotFoundException</code>) — el mismo mecanismo de <code>GlobalExceptionHandler</code> (S2, 3.2.1) que ya maneja errores de forma y de recurso no encontrado, ahora también maneja un tercer tipo de error: uno de regla de negocio.</p>
+<p>Esa actualización de stock no ocurre dentro del mismo módulo: vive en <code>catalogo</code>, y quien la necesita es <code>ventas</code>. ADR-002 estableció la regla y <code>ModularityTests</code> la verifica: un módulo se comunica con otro mediante un <strong>servicio Java público</strong>, nunca accediendo al repositorio o a la entidad interna del otro módulo. Hasta S3, esa regla nunca se puso a prueba de verdad — solo existía <code>catalogo</code>, no había ningún otro módulo desde donde violarla.</p>
+<p>Spring Modulith, por defecto, solo expone como "API pública" de un módulo los tipos que están <strong>directamente</strong> en el paquete raíz del módulo (<code>pe.edu.upeu.bomerp.catalogo</code>) — y ese paquete, en este proyecto, está vacío: todo vive anidado en <code>catalogo.producto.*</code> y <code>catalogo.categoria.*</code>. Sin ningún ajuste, <code>ventas</code> no podría importar <code>ProductoService</code> aunque quisiera — Modulith lo trataría como interno de <code>catalogo</code> y <code>ModularityTests</code> fallaría la build. La solución es marcar explícitamente los paquetes que sí deben ser visibles desde otros módulos con <code>@NamedInterface</code>, en un <code>package-info.java</code> — el paso 3.2 de esta sesión hace exactamente eso, antes de escribir ninguna línea de <code>ventas</code>.</p>
+<h3 id="25-registro-atomico-commit-y-rollback-mediante-transacciones-orm">2.5 Registro atómico, commit y rollback mediante transacciones ORM<a class="headerlink" href="#25-registro-atomico-commit-y-rollback-mediante-transacciones-orm" title="Permanent link">&para;</a></h3>
+<p><code>VentaServiceImpl.crear()</code> recorre cada línea del <code>VentaRequest</code> y, por cada una, llama a <code>ProductoService.descontarStock()</code> <strong>antes</strong> de terminar de construir la <code>Venta</code>. Todo el método está anotado <code>@Transactional</code> — y, como <code>descontarStock()</code> en <code>catalogo</code> también lo está, Spring no abre una transacción nueva para cada llamada: por defecto (<code>Propagation.REQUIRED</code>), una llamada transaccional hecha <em>dentro</em> de otra transaccional se une a la que ya está abierta, no crea una independiente.</p>
+<p>Esa es la pieza que hace posible el rollback completo: si la línea 2 de 3 falla por stock insuficiente, la excepción se propaga fuera de <code>crear()</code> sin que nada la capture — Spring revierte <strong>toda</strong> la transacción, incluido el descuento de stock ya aplicado a la línea 1. Nada queda a medias, ni en <code>ventas</code> ni en <code>catalogo</code>, aunque sean tablas de esquemas Oracle distintos (<code>BOM_VENTAS</code>, <code>BOM_CATALOGO</code>): siguen siendo la misma base de datos, el mismo <code>DataSource</code>, la misma transacción JDBC.</p>
+<p><strong>Todo esto es implícito: en ningún lado del código hay un <code>commit()</code> ni un <code>rollback()</code>.</strong> <code>@Transactional</code> funciona mediante un <strong><em>proxy</em></strong>: Spring envuelve <code>VentaServiceImpl</code> (y <code>ProductoServiceImpl</code>) en un objeto intermedio que abre la transacción antes de ejecutar el método real, y decide qué hacer según cómo termine — el código de <code>crear()</code> no sabe nada de esto, ni lo controla.</p>
+<ul>
+<li>Si <code>crear()</code> retorna normalmente, el proxy hace <code>commit()</code>.</li>
+<li>Si <code>crear()</code> deja escapar una excepción sin capturarla, el proxy hace <code>rollback()</code>.</li>
+</ul>
+<p><strong>La regla exacta que activa el rollback, sin ninguna configuración extra:</strong> por defecto, Spring solo revierte la transacción ante excepciones <strong><em>unchecked</em></strong> (las que extienden <code>RuntimeException</code> o <code>Error</code>) — una excepción <strong><em>checked</em></strong> (que extiende <code>Exception</code> directamente) deja que el proxy haga <code>commit()</code> igual, aunque haya interrumpido el método a medio camino. <code>StockInsuficienteException</code> (3.5, de esta sesión) y <code>ResourceNotFoundException</code> (S2, 3.2.1) extienden <code>RuntimeException</code> justamente por esto: no es una elección de estilo, es la condición que hace posible el rollback automático de esta sesión sin escribir una sola línea de manejo de transacciones. Si algún día una regla de negocio se expresara con una excepción <em>checked</em>, el rollback automático dejaría de funcionar a menos que se declare explícito: <code>@Transactional(rollbackFor = Exception.class)</code>.</p>
+<p><strong>Figura 3. Transacción atómica: caso de éxito vs. caso de rollback</strong></p>
+<pre class="mermaid"><code>flowchart TB
+    subgraph Exito["Caso de exito: las tres lineas tienen stock"]
+        direction TB
+        E1["Linea 1: descontar stock OK"] --&gt; E2["Linea 2: descontar stock OK"] --&gt; E3["Linea 3: descontar stock OK"] --&gt; E4["COMMIT: Venta + 3 DetalleVenta + stock actualizado"]
+    end
+    subgraph Rollback["Caso de rollback: la linea 2 no tiene stock suficiente"]
+        direction TB
+        R1["Linea 1: descontar stock OK"] --&gt; R2["Linea 2: StockInsuficienteException"] -.-&gt;|"ROLLBACK de toda la transaccion"| R3["Nada se guarda: ni la Venta, ni los detalles, ni el stock de la linea 1"]
+    end</code></pre>
+<p><strong>Error frecuente</strong>: pensar que el rollback "deshace" el <code>UPDATE</code> de stock de la línea 1 con un segundo <code>UPDATE</code> correctivo. No es así — el <code>UPDATE</code> de la línea 1 nunca se confirmó (<code>COMMIT</code>) en la base de datos; hasta que la transacción completa termina bien, todos los cambios viven solo en la sesión de Hibernate, no en Oracle.</p>
+<h2 id="3-aplica-actividad-practica-guiada">3. Aplica: actividad práctica guiada<a class="headerlink" href="#3-aplica-actividad-practica-guiada" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 2h.</p>
+<p><strong>Actividad:</strong> construcción guiada del módulo <code>ventas</code> con la operación <code>Venta</code>-<code>DetalleVenta</code> completa (Producto de la sesión en 1.4).</p>
+<p><strong>Propósito de la actividad:</strong> crear el segundo módulo de negocio de BomERP, con una operación cabecera-detalle real: cálculos, una regla de negocio verdadera (stock), una transacción atómica probada con éxito y con rollback, y comunicación entre módulos verificada mecánicamente, no solo por convención.</p>
+<p><strong>Orientaciones metodológicas:</strong> en el laboratorio, el docente construye <code>ventas</code> paso a paso frente a la clase, ejecutando el caso de éxito y el caso de rollback antes de avanzar; los estudiantes replican cada paso en su propio equipo, verificando la respuesta HTTP y el estado de la base de datos antes de continuar.</p>
+<p><strong>Actividades para realizar:</strong></p>
+<ul>
+<li><strong>3.1</strong> Verificar el punto de partida.</li>
+<li><strong>3.2</strong> Exponer <code>ProductoService</code> a otros módulos con <code>@NamedInterface</code>.</li>
+<li><strong>3.3</strong> Crear las entidades <code>Venta</code>, <code>DetalleVenta</code> y <code>EstadoVenta</code>.</li>
+<li><strong>3.4</strong> Crear los DTO compuestos.</li>
+<li><strong>3.5</strong> Ampliar <code>ProductoService</code> con <code>descontarStock</code> y <code>StockInsuficienteException</code>.</li>
+<li><strong>3.6</strong> Crear <code>VentaMapper</code>.</li>
+<li><strong>3.7</strong> Crear <code>VentaRepository</code>.</li>
+<li><strong>3.8</strong> Crear <code>VentaService</code>/<code>VentaServiceImpl</code>.</li>
+<li><strong>3.9</strong> Crear <code>VentaController</code>.</li>
+<li><strong>3.10</strong> Probar la operación completa, incluido el rollback.</li>
+<li><strong>3.11</strong> Verificar los límites de módulo con <code>ModularityTests</code>.</li>
+<li><strong>3.12</strong> Relacionar con ADS y BD2.</li>
+</ul>
+<h3 id="31-verificar-el-punto-de-partida">3.1 Verificar el punto de partida<a class="headerlink" href="#31-verificar-el-punto-de-partida" title="Permanent link">&para;</a></h3>
+<p><strong>Punto de partida común:</strong> todo el equipo debe comenzar exactamente desde donde quedó S3, no desde su propio avance individual. Clona la rama <code>s03-objetos-relacionados</code> (el snapshot de cierre de S3):</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>--branch<span class="w"> </span>s03-objetos-relacionados<span class="w"> </span>https://github.com/262ciclo4/bomerp.git
+</code></pre></div>
+<p><strong>Producto del paso:</strong> confirmación de que <code>catalogo</code> (<code>Categoria</code>, <code>Producto</code>, con su relación y su <code>@Transactional</code>) sigue funcionando antes de tocar código nuevo.</p>
+<p><strong>Requisito antes de continuar:</strong> confirma que <code>http://localhost:8080/api/v1/productos</code> responde con datos antes de continuar. Si falla, el problema es de una sesión anterior, no de esta.</p>
+<h3 id="32-exponer-productoservice-a-otros-modulos-con-namedinterface">3.2 Exponer <code>ProductoService</code> a otros módulos con <code>@NamedInterface</code><a class="headerlink" href="#32-exponer-productoservice-a-otros-modulos-con-namedinterface" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> <code>catalogo.producto.service</code> y <code>catalogo.producto.dto</code> marcados como interfaces con nombre, visibles desde <code>ventas</code>.</p>
+<p><strong><code>catalogo/producto/service/package-info.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="cm">/**</span>
+<span class="cm"> * ProductoService es la unica forma en que otros modulos (ventas, desde S4)</span>
+<span class="cm"> * pueden leer o modificar productos - nunca accediendo a ProductoRepository</span>
+<span class="cm"> * ni a la entidad Producto directamente (ADR-002).</span>
+<span class="cm"> */</span>
+<span class="nd">@org.springframework.modulith.NamedInterface</span><span class="p">(</span><span class="s">"producto-service"</span><span class="p">)</span>
+<span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.service</span><span class="p">;</span>
+</code></pre></div>
+<p><strong><code>catalogo/producto/dto/package-info.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="cm">/**</span>
+<span class="cm"> * ProductoResponse es el unico tipo de catalogo.producto que otros modulos</span>
+<span class="cm"> * pueden recibir de vuelta - nunca la entidad Producto (ADR-002).</span>
+<span class="cm"> */</span>
+<span class="nd">@org.springframework.modulith.NamedInterface</span><span class="p">(</span><span class="s">"producto-dto"</span><span class="p">)</span>
+<span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.dto</span><span class="p">;</span>
+</code></pre></div>
+<p><strong>Error frecuente</strong>: crear el <code>package-info.java</code> en el paquete equivocado (por ejemplo, en <code>catalogo.producto</code> en vez de <code>catalogo.producto.service</code>). <code>@NamedInterface</code> expone exactamente el paquete donde vive el <code>package-info.java</code>, no sus subpaquetes ni su paquete padre.</p>
+<p>Sin este paso, <code>mvnw test -Dtest=ModularityTests</code> fallará en cuanto <code>ventas</code> importe <code>ProductoService</code> — no es opcional, es lo que hace lícita la comunicación entre módulos que el resto de esta sesión necesita.</p>
+<h3 id="33-crear-las-entidades-venta-detalleventa-y-estadoventa">3.3 Crear las entidades <code>Venta</code>, <code>DetalleVenta</code> y <code>EstadoVenta</code><a class="headerlink" href="#33-crear-las-entidades-venta-detalleventa-y-estadoventa" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> el modelo de datos de la operación, con la relación cabecera-detalle y sin ninguna relación JPA hacia <code>catalogo</code>.</p>
+<p><strong><code>ventas/venta/entity/EstadoVenta.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.entity</span><span class="p">;</span>
+
+<span class="kd">public</span><span class="w"> </span><span class="kd">enum</span><span class="w"> </span><span class="n">EstadoVenta</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">REGISTRADA</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Nota de alcance</p>
+<p><code>EstadoVenta</code> hoy solo tiene <code>REGISTRADA</code> — toda venta creada en esta sesión queda en ese estado, sin operación de anulación todavía. Un estado <code>ANULADA</code> (con su propio endpoint y su propia regla de reversión de stock) es una extensión natural para una sesión posterior, no parte del alcance de S4.</p>
+</div>
+<p><strong><code>ventas/venta/entity/Venta.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.entity</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.CascadeType</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.Column</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.Entity</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.EnumType</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.Enumerated</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.GeneratedValue</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.GenerationType</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.Id</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.OneToMany</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.Table</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Getter</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.NoArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Setter</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.math.BigDecimal</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.time.LocalDateTime</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.ArrayList</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+
+<span class="nd">@Entity</span>
+<span class="nd">@Table</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"VENTAS"</span><span class="p">,</span><span class="w"> </span><span class="n">schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"BOM_VENTAS"</span><span class="p">)</span>
+<span class="nd">@Getter</span>
+<span class="nd">@Setter</span>
+<span class="nd">@NoArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Venta</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nd">@Id</span>
+<span class="w">    </span><span class="nd">@GeneratedValue</span><span class="p">(</span><span class="n">strategy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GenerationType</span><span class="p">.</span><span class="na">IDENTITY</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"ID"</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"FECHA"</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">fecha</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Enumerated</span><span class="p">(</span><span class="n">EnumType</span><span class="p">.</span><span class="na">STRING</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"ESTADO"</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">EstadoVenta</span><span class="w"> </span><span class="n">estado</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"TOTAL"</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="n">precision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w"> </span><span class="n">scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">total</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@OneToMany</span><span class="p">(</span><span class="n">mappedBy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"venta"</span><span class="p">,</span><span class="w"> </span><span class="n">cascade</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CascadeType</span><span class="p">.</span><span class="na">ALL</span><span class="p">,</span><span class="w"> </span><span class="n">orphanRemoval</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">DetalleVenta</span><span class="o">&gt;</span><span class="w"> </span><span class="n">detalles</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong><code>ventas/venta/entity/DetalleVenta.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.entity</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.Column</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.Entity</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.GeneratedValue</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.GenerationType</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.Id</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.JoinColumn</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.ManyToOne</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.Table</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Getter</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.NoArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Setter</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.math.BigDecimal</span><span class="p">;</span>
+
+<span class="nd">@Entity</span>
+<span class="nd">@Table</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"DETALLE_VENTAS"</span><span class="p">,</span><span class="w"> </span><span class="n">schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"BOM_VENTAS"</span><span class="p">)</span>
+<span class="nd">@Getter</span>
+<span class="nd">@Setter</span>
+<span class="nd">@NoArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">DetalleVenta</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nd">@Id</span>
+<span class="w">    </span><span class="nd">@GeneratedValue</span><span class="p">(</span><span class="n">strategy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GenerationType</span><span class="p">.</span><span class="na">IDENTITY</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"ID"</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@ManyToOne</span>
+<span class="w">    </span><span class="nd">@JoinColumn</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"ID_VENTA"</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Venta</span><span class="w"> </span><span class="n">venta</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"ID_PRODUCTO"</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Long</span><span class="w"> </span><span class="n">productoId</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"NOMBRE_PRODUCTO"</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">120</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">nombreProducto</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"PRECIO_UNITARIO"</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="n">precision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">precioUnitario</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"CANTIDAD"</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Integer</span><span class="w"> </span><span class="n">cantidad</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"SUBTOTAL"</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="n">precision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w"> </span><span class="n">scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">subtotal</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>productoId</code> es un <code>Long</code> sin <code>@ManyToOne</code> — como ya se explicó en 2.2, <code>DetalleVenta</code> no tiene una relación JPA hacia <code>Producto</code>, solo guarda su identificador y una copia de los datos relevantes al momento de la venta.</p>
+<h3 id="34-crear-los-dto-compuestos">3.4 Crear los DTO compuestos<a class="headerlink" href="#34-crear-los-dto-compuestos" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> <code>VentaRequest</code>, con una colección de <code>DetalleVentaRequest</code>, y <code>VentaResponse</code>, con una colección de <code>DetalleVentaResponse</code>.</p>
+<p><strong><code>ventas/venta/dto/DetalleVentaRequest.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.dto</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.validation.constraints.NotNull</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.validation.constraints.Positive</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Getter</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Setter</span><span class="p">;</span>
+
+<span class="nd">@Getter</span>
+<span class="nd">@Setter</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">DetalleVentaRequest</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@NotNull</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Long</span><span class="w"> </span><span class="n">productoId</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@NotNull</span>
+<span class="w">    </span><span class="nd">@Positive</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Integer</span><span class="w"> </span><span class="n">cantidad</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong><code>ventas/venta/dto/VentaRequest.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.dto</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.validation.Valid</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.validation.constraints.NotEmpty</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Getter</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Setter</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+
+<span class="nd">@Getter</span>
+<span class="nd">@Setter</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">VentaRequest</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@NotEmpty</span>
+<span class="w">    </span><span class="nd">@Valid</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">DetalleVentaRequest</span><span class="o">&gt;</span><span class="w"> </span><span class="n">detalles</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Error frecuente</strong>: olvidar <code>@Valid</code> sobre <code>List&lt;DetalleVentaRequest&gt; detalles</code>. Sin esa anotación, Spring valida que la lista no esté vacía (<code>@NotEmpty</code>), pero <strong>no</strong> entra a validar cada <code>DetalleVentaRequest</code> dentro de ella — un <code>productoId</code> nulo o una <code>cantidad</code> negativa pasarían sin error.</p>
+<p><strong><code>ventas/venta/dto/DetalleVentaResponse.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.dto</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.AllArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Builder</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Getter</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.NoArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Setter</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.math.BigDecimal</span><span class="p">;</span>
+
+<span class="nd">@Getter</span>
+<span class="nd">@Setter</span>
+<span class="nd">@Builder</span>
+<span class="nd">@NoArgsConstructor</span>
+<span class="nd">@AllArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">DetalleVentaResponse</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Long</span><span class="w"> </span><span class="n">productoId</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">nombreProducto</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">precioUnitario</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Integer</span><span class="w"> </span><span class="n">cantidad</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">subtotal</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong><code>ventas/venta/dto/VentaResponse.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.dto</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.AllArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Builder</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Getter</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.NoArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Setter</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.math.BigDecimal</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.time.LocalDateTime</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+
+<span class="nd">@Getter</span>
+<span class="nd">@Setter</span>
+<span class="nd">@Builder</span>
+<span class="nd">@NoArgsConstructor</span>
+<span class="nd">@AllArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">VentaResponse</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">fecha</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">estado</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">total</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">DetalleVentaResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">detalles</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="35-ampliar-productoservice-con-descontarstock-y-stockinsuficienteexception">3.5 Ampliar <code>ProductoService</code> con <code>descontarStock</code> y <code>StockInsuficienteException</code><a class="headerlink" href="#35-ampliar-productoservice-con-descontarstock-y-stockinsuficienteexception" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> la regla de negocio de stock, disponible como método público de <code>catalogo</code> para que <code>ventas</code> la use.</p>
+<p><strong><code>exception/StockInsuficienteException.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.exception</span><span class="p">;</span>
+
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">StockInsuficienteException</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">RuntimeException</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">StockInsuficienteException</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">mensaje</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">super</span><span class="p">(</span><span class="n">mensaje</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Amplía <code>GlobalExceptionHandler</code> (S2, 3.2.1) con un tercer <code>@ExceptionHandler</code>, esta vez respondiendo <code>409 Conflict</code> — no es un error de forma (<code>400</code>) ni de recurso inexistente (<code>404</code>), es un conflicto entre lo pedido y el estado actual del sistema:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@ExceptionHandler</span><span class="p">(</span><span class="n">StockInsuficienteException</span><span class="p">.</span><span class="na">class</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="nf">handleStockInsuficiente</span><span class="p">(</span><span class="n">StockInsuficienteException</span><span class="w"> </span><span class="n">ex</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="n">body</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">"timestamp"</span><span class="p">,</span><span class="w"> </span><span class="n">Instant</span><span class="p">.</span><span class="na">now</span><span class="p">().</span><span class="na">toString</span><span class="p">());</span>
+<span class="w">    </span><span class="n">body</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">"status"</span><span class="p">,</span><span class="w"> </span><span class="n">HttpStatus</span><span class="p">.</span><span class="na">CONFLICT</span><span class="p">.</span><span class="na">value</span><span class="p">());</span>
+<span class="w">    </span><span class="n">body</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">"error"</span><span class="p">,</span><span class="w"> </span><span class="s">"Conflict"</span><span class="p">);</span>
+<span class="w">    </span><span class="n">body</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">"message"</span><span class="p">,</span><span class="w"> </span><span class="n">ex</span><span class="p">.</span><span class="na">getMessage</span><span class="p">());</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">status</span><span class="p">(</span><span class="n">HttpStatus</span><span class="p">.</span><span class="na">CONFLICT</span><span class="p">).</span><span class="na">body</span><span class="p">(</span><span class="n">body</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Amplía la interfaz <code>ProductoService</code> (S1) con el nuevo método:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="nf">descontarStock</span><span class="p">(</span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">Integer</span><span class="w"> </span><span class="n">cantidad</span><span class="p">);</span>
+</code></pre></div>
+<p>Y su implementación en <code>ProductoServiceImpl</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@Override</span>
+<span class="nd">@Transactional</span>
+<span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">descontarStock</span><span class="p">(</span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">Integer</span><span class="w"> </span><span class="n">cantidad</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Producto</span><span class="w"> </span><span class="n">producto</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">buscarOFallar</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">producto</span><span class="p">.</span><span class="na">getStock</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">cantidad</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">StockInsuficienteException</span><span class="p">(</span>
+<span class="w">                </span><span class="s">"Stock insuficiente para "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">producto</span><span class="p">.</span><span class="na">getNombre</span><span class="p">()</span>
+<span class="w">                        </span><span class="o">+</span><span class="w"> </span><span class="s">": disponible "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">producto</span><span class="p">.</span><span class="na">getStock</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">", solicitado "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">cantidad</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">producto</span><span class="p">.</span><span class="na">setStock</span><span class="p">(</span><span class="n">producto</span><span class="p">.</span><span class="na">getStock</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">cantidad</span><span class="p">);</span>
+<span class="w">    </span><span class="n">productoRepository</span><span class="p">.</span><span class="na">save</span><span class="p">(</span><span class="n">producto</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>buscarOFallar(id)</code> ya existe en <code>ProductoServiceImpl</code> desde S2 — <code>descontarStock</code> lo reutiliza, no lo repite.</p>
+<h3 id="36-crear-ventamapper">3.6 Crear <code>VentaMapper</code><a class="headerlink" href="#36-crear-ventamapper" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> conversión entre <code>Venta</code>/<code>DetalleVenta</code> y sus DTO, en ambas direcciones — sin recibir la entidad <code>Producto</code>, solo <code>ProductoResponse</code> (el DTO expuesto de <code>catalogo</code>).</p>
+<p>Desde S3, <code>CategoriaMapper</code>/<code>ProductoMapper</code> ya son interfaces MapStruct, no clases escritas a mano — <code>VentaMapper</code> sigue el mismo criterio, no vuelve al mapeo manual de S2. La dependencia y el <code>annotation processor</code> de MapStruct en el <code>pom.xml</code> ya están configurados desde S2 (3.8); este paso no los repite.</p>
+<p><strong><code>ventas/venta/mapper/VentaMapper.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.mapper</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.mapstruct.Mapper</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.mapstruct.Mapping</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoResponse</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.dto.DetalleVentaRequest</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.dto.DetalleVentaResponse</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.dto.VentaResponse</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.entity.DetalleVenta</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.entity.Venta</span><span class="p">;</span>
+
+<span class="nd">@Mapper</span><span class="p">(</span><span class="n">componentModel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"spring"</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">VentaMapper</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@Mapping</span><span class="p">(</span><span class="n">target</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"id"</span><span class="p">,</span><span class="w"> </span><span class="n">ignore</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@Mapping</span><span class="p">(</span><span class="n">target</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"venta"</span><span class="p">,</span><span class="w"> </span><span class="n">ignore</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@Mapping</span><span class="p">(</span><span class="n">target</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"productoId"</span><span class="p">,</span><span class="w"> </span><span class="n">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"producto.id"</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@Mapping</span><span class="p">(</span><span class="n">target</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"nombreProducto"</span><span class="p">,</span><span class="w"> </span><span class="n">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"producto.nombre"</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@Mapping</span><span class="p">(</span><span class="n">target</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"precioUnitario"</span><span class="p">,</span><span class="w"> </span><span class="n">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"producto.precio"</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@Mapping</span><span class="p">(</span><span class="n">target</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"subtotal"</span><span class="p">,</span><span class="w"> </span><span class="n">expression</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"java(producto.getPrecio().multiply(java.math.BigDecimal.valueOf(request.getCantidad())))"</span><span class="p">)</span>
+<span class="w">    </span><span class="n">DetalleVenta</span><span class="w"> </span><span class="nf">toDetalle</span><span class="p">(</span><span class="n">DetalleVentaRequest</span><span class="w"> </span><span class="n">request</span><span class="p">,</span><span class="w"> </span><span class="n">ProductoResponse</span><span class="w"> </span><span class="n">producto</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">VentaResponse</span><span class="w"> </span><span class="nf">toResponse</span><span class="p">(</span><span class="n">Venta</span><span class="w"> </span><span class="n">venta</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">DetalleVentaResponse</span><span class="w"> </span><span class="nf">toDetalleResponse</span><span class="p">(</span><span class="n">DetalleVenta</span><span class="w"> </span><span class="n">detalle</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>toDetalle</code> recibe <code>ProductoResponse</code>, no <code>Producto</code> — es el tipo que <code>ProductoService.obtener()</code> ya devuelve, y el único que <code>catalogo.producto.dto</code> expone (3.2). <code>VentaMapper</code> nunca ve la entidad <code>Producto</code>, ni podría importarla aunque quisiera: no está en un <code>@NamedInterface</code>.</p>
+<p>Con dos parámetros de origen (<code>request</code>, <code>producto</code>) y <strong>ningún</strong> nombre de campo coincidente entre ellos y <code>DetalleVenta</code> (<code>productoId</code> no es <code>id</code>, <code>nombreProducto</code> no es <code>nombre</code>, <code>precioUnitario</code> no es <code>precio</code>), MapStruct no puede resolver la ambigüedad solo — el mismo criterio ya verificado empíricamente en S3 (<code>ProductoMapper.toEntity</code>): campos con nombre coincidente se mapean solos, campos sin coincidencia exacta necesitan <code>@Mapping</code> explícito. <code>subtotal</code> no es una simple copia de campo — es un cálculo — así que usa <code>expression</code> en vez de <code>source</code>: el único caso en esta sesión donde el mapper hace algo más que mover datos de un lado a otro. <code>id</code> y <code>venta</code> se ignoran explícitamente porque <code>DetalleVenta</code> los recibe después, fuera del mapper (<code>id</code> lo genera Oracle, <code>venta</code> lo asigna <code>VentaServiceImpl</code> al agregar el detalle a la colección, 3.8).</p>
+<p><code>toResponse</code> no necesita ningún <code>@Mapping</code>: <code>id</code>, <code>fecha</code> y <code>total</code> coinciden en nombre y tipo; <code>estado</code> coincide en nombre pero cambia de tipo (<code>EstadoVenta</code> a <code>String</code>) — MapStruct genera automáticamente <code>venta.getEstado().name()</code>, la misma conversión implícita enum-a-<code>String</code> que ya usa el resto del proyecto de forma transparente; <code>detalles</code> coincide en nombre y usa automáticamente <code>toDetalleResponse</code> (declarado en el mismo mapper) para convertir cada elemento de la lista.</p>
+<p><strong>Verifica antes de continuar</strong>: corre <code>mvnw compile</code> y confirma que <code>VentaMapperImpl</code> se genera sin advertencias de <code>unmapped target property</code> — si aparece alguna, falta un <code>@Mapping</code> (o un <code>ignore = true</code>) para ese campo.</p>
+<h3 id="37-crear-ventarepository">3.7 Crear <code>VentaRepository</code><a class="headerlink" href="#37-crear-ventarepository" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> el repositorio de <code>Venta</code> — <code>DetalleVenta</code> no necesita uno propio, se persiste en cascada desde <code>Venta</code> (<code>CascadeType.ALL</code> en 3.3).</p>
+<p><strong><code>ventas/venta/repository/VentaRepository.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.repository</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.data.jpa.repository.EntityGraph</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.data.jpa.repository.JpaRepository</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.entity.Venta</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Optional</span><span class="p">;</span>
+
+<span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">VentaRepository</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">JpaRepository</span><span class="o">&lt;</span><span class="n">Venta</span><span class="p">,</span><span class="w"> </span><span class="n">Long</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="nd">@EntityGraph</span><span class="p">(</span><span class="n">attributePaths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"detalles"</span><span class="p">)</span>
+<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Venta</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">findAll</span><span class="p">();</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="nd">@EntityGraph</span><span class="p">(</span><span class="n">attributePaths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"detalles"</span><span class="p">)</span>
+<span class="w">    </span><span class="n">Optional</span><span class="o">&lt;</span><span class="n">Venta</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">findById</span><span class="p">(</span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Mismo criterio que <code>ProductoRepository.findAll()</code> (S3, 3.10): sin <code>@EntityGraph</code>, listar ventas con sus detalles caería en el problema N+1 — una consulta por <code>Venta</code> más una consulta adicional por cada colección <code>detalles</code> que se toque.</p>
+<h3 id="38-crear-ventaserviceventaserviceimpl">3.8 Crear <code>VentaService</code>/<code>VentaServiceImpl</code><a class="headerlink" href="#38-crear-ventaserviceventaserviceimpl" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> la operación completa — cálculos, descuento de stock por cada línea, y todo dentro de una sola transacción.</p>
+<p><strong><code>ventas/venta/service/VentaService.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.service</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.dto.VentaRequest</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.dto.VentaResponse</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+
+<span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">VentaService</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">VentaResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">listar</span><span class="p">();</span>
+<span class="w">    </span><span class="n">VentaResponse</span><span class="w"> </span><span class="nf">obtener</span><span class="p">(</span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">);</span>
+<span class="w">    </span><span class="n">VentaResponse</span><span class="w"> </span><span class="nf">crear</span><span class="p">(</span><span class="n">VentaRequest</span><span class="w"> </span><span class="n">request</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong><code>ventas/venta/service/VentaServiceImpl.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.service</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.RequiredArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.stereotype.Service</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.transaction.annotation.Transactional</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoResponse</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.service.ProductoService</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.exception.ResourceNotFoundException</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.dto.DetalleVentaRequest</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.dto.VentaRequest</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.dto.VentaResponse</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.entity.DetalleVenta</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.entity.EstadoVenta</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.entity.Venta</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.mapper.VentaMapper</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.repository.VentaRepository</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.math.BigDecimal</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.time.LocalDateTime</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+
+<span class="nd">@Service</span>
+<span class="nd">@RequiredArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">VentaServiceImpl</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">VentaService</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">VentaRepository</span><span class="w"> </span><span class="n">ventaRepository</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">ProductoService</span><span class="w"> </span><span class="n">productoService</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">VentaMapper</span><span class="w"> </span><span class="n">ventaMapper</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="nd">@Transactional</span><span class="p">(</span><span class="n">readOnly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">VentaResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">listar</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ventaRepository</span><span class="p">.</span><span class="na">findAll</span><span class="p">().</span><span class="na">stream</span><span class="p">().</span><span class="na">map</span><span class="p">(</span><span class="n">ventaMapper</span><span class="p">::</span><span class="n">toResponse</span><span class="p">).</span><span class="na">toList</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="nd">@Transactional</span><span class="p">(</span><span class="n">readOnly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">VentaResponse</span><span class="w"> </span><span class="nf">obtener</span><span class="p">(</span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Venta</span><span class="w"> </span><span class="n">venta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ventaRepository</span><span class="p">.</span><span class="na">findById</span><span class="p">(</span><span class="n">id</span><span class="p">)</span>
+<span class="w">                </span><span class="p">.</span><span class="na">orElseThrow</span><span class="p">(()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ResourceNotFoundException</span><span class="p">(</span><span class="s">"Venta no encontrada: "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">id</span><span class="p">));</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ventaMapper</span><span class="p">.</span><span class="na">toResponse</span><span class="p">(</span><span class="n">venta</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="nd">@Transactional</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">VentaResponse</span><span class="w"> </span><span class="nf">crear</span><span class="p">(</span><span class="n">VentaRequest</span><span class="w"> </span><span class="n">request</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Venta</span><span class="w"> </span><span class="n">venta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Venta</span><span class="p">();</span>
+<span class="w">        </span><span class="n">venta</span><span class="p">.</span><span class="na">setFecha</span><span class="p">(</span><span class="n">LocalDateTime</span><span class="p">.</span><span class="na">now</span><span class="p">());</span>
+<span class="w">        </span><span class="n">venta</span><span class="p">.</span><span class="na">setEstado</span><span class="p">(</span><span class="n">EstadoVenta</span><span class="p">.</span><span class="na">REGISTRADA</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BigDecimal</span><span class="p">.</span><span class="na">ZERO</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">DetalleVentaRequest</span><span class="w"> </span><span class="n">detalleRequest</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">request</span><span class="p">.</span><span class="na">getDetalles</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">ProductoResponse</span><span class="w"> </span><span class="n">producto</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">productoService</span><span class="p">.</span><span class="na">obtener</span><span class="p">(</span><span class="n">detalleRequest</span><span class="p">.</span><span class="na">getProductoId</span><span class="p">());</span>
+<span class="w">            </span><span class="n">productoService</span><span class="p">.</span><span class="na">descontarStock</span><span class="p">(</span><span class="n">detalleRequest</span><span class="p">.</span><span class="na">getProductoId</span><span class="p">(),</span><span class="w"> </span><span class="n">detalleRequest</span><span class="p">.</span><span class="na">getCantidad</span><span class="p">());</span>
+
+<span class="w">            </span><span class="n">DetalleVenta</span><span class="w"> </span><span class="n">detalle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ventaMapper</span><span class="p">.</span><span class="na">toDetalle</span><span class="p">(</span><span class="n">detalleRequest</span><span class="p">,</span><span class="w"> </span><span class="n">producto</span><span class="p">);</span>
+<span class="w">            </span><span class="n">detalle</span><span class="p">.</span><span class="na">setVenta</span><span class="p">(</span><span class="n">venta</span><span class="p">);</span>
+<span class="w">            </span><span class="n">venta</span><span class="p">.</span><span class="na">getDetalles</span><span class="p">().</span><span class="na">add</span><span class="p">(</span><span class="n">detalle</span><span class="p">);</span>
+<span class="w">            </span><span class="n">total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">total</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">detalle</span><span class="p">.</span><span class="na">getSubtotal</span><span class="p">());</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">venta</span><span class="p">.</span><span class="na">setTotal</span><span class="p">(</span><span class="n">total</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ventaMapper</span><span class="p">.</span><span class="na">toResponse</span><span class="p">(</span><span class="n">ventaRepository</span><span class="p">.</span><span class="na">save</span><span class="p">(</span><span class="n">venta</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>productoService.obtener(...)</code> ya lanza <code>ResourceNotFoundException</code> (S2) si el <code>productoId</code> no existe, y <code>productoService.descontarStock(...)</code> (3.5) lanza <code>StockInsuficienteException</code> si no alcanza el stock — <code>VentaServiceImpl.crear()</code> no repite ninguna de las dos validaciones, confía en que <code>ProductoService</code> (el servicio público de <code>catalogo</code>) ya las hace.</p>
+<p><strong>Error frecuente</strong>: llamar a <code>productoService.descontarStock(...)</code> <strong>después</strong> de agregar el detalle a <code>venta.getDetalles()</code>, no antes. El orden en el código de arriba no es casual: si <code>descontarStock</code> falla, la excepción interrumpe el <code>for</code> antes de que ese detalle se agregue a la colección — y como toda la transacción se revierte, ni siquiera importa en qué momento exacto se agregó, pero mantener el descuento de stock como el primer paso de cada iteración hace el flujo más fácil de leer y de depurar.</p>
+<h3 id="39-crear-ventacontroller">3.9 Crear <code>VentaController</code><a class="headerlink" href="#39-crear-ventacontroller" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> los tres endpoints (<code>GET</code>, <code>GET /{id}</code>, <code>POST</code>) sobre <code>/api/v1/ventas</code>.</p>
+<p><strong><code>ventas/venta/controller/VentaController.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.controller</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">io.swagger.v3.oas.annotations.Operation</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io.swagger.v3.oas.annotations.tags.Tag</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.validation.Valid</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.RequiredArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.http.HttpStatus</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.http.ResponseEntity</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.bind.annotation.*</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.dto.VentaRequest</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.dto.VentaResponse</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.service.VentaService</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+
+<span class="nd">@Tag</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Ventas"</span><span class="p">)</span>
+<span class="nd">@RestController</span>
+<span class="nd">@RequestMapping</span><span class="p">(</span><span class="s">"/api/v1/ventas"</span><span class="p">)</span>
+<span class="nd">@RequiredArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">VentaController</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">VentaService</span><span class="w"> </span><span class="n">ventaService</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Operation</span><span class="p">(</span><span class="n">summary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Lista las ventas registradas"</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@GetMapping</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">VentaResponse</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="nf">listar</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">ok</span><span class="p">(</span><span class="n">ventaService</span><span class="p">.</span><span class="na">listar</span><span class="p">());</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Operation</span><span class="p">(</span><span class="n">summary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Consulta una venta por id, con sus detalles"</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@GetMapping</span><span class="p">(</span><span class="s">"/{id}"</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">VentaResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">obtener</span><span class="p">(</span><span class="nd">@PathVariable</span><span class="w"> </span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">ok</span><span class="p">(</span><span class="n">ventaService</span><span class="p">.</span><span class="na">obtener</span><span class="p">(</span><span class="n">id</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Operation</span><span class="p">(</span><span class="n">summary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Registra una venta con sus detalles, descontando stock"</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@PostMapping</span>
+<span class="w">    </span><span class="nd">@ResponseStatus</span><span class="p">(</span><span class="n">HttpStatus</span><span class="p">.</span><span class="na">CREATED</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">VentaResponse</span><span class="w"> </span><span class="nf">crear</span><span class="p">(</span><span class="nd">@Valid</span><span class="w"> </span><span class="nd">@RequestBody</span><span class="w"> </span><span class="n">VentaRequest</span><span class="w"> </span><span class="n">request</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ventaService</span><span class="p">.</span><span class="na">crear</span><span class="p">(</span><span class="n">request</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>No hay <code>PUT</code> ni <code>DELETE</code> en esta sesión: modificar una venta ya registrada (¿recalcular stock? ¿qué pasa con el detalle eliminado?) es una operación con reglas propias que el sílabo no pide todavía — el mismo criterio de alcance que ya aplicó <code>Categoria</code> en S2-S3.</p>
+<h3 id="310-probar-la-operacion-completa-incluido-el-rollback">3.10 Probar la operación completa, incluido el rollback<a class="headerlink" href="#310-probar-la-operacion-completa-incluido-el-rollback" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> evidencia del caso de éxito y del caso de rollback, más el stock verificado antes y después de cada uno.</p>
+<p>Antes de empezar, confirma el stock actual de dos productos que vayas a usar (reemplaza <code>{id}</code> por ids reales de tu base):</p>
+<div class="highlight"><pre><span></span><code><span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Get</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:8080/api/v1/productos/{id}"</span>
+</code></pre></div>
+<p><strong>Caso de éxito</strong> — una venta con stock suficiente en todas sus líneas:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:8080/api/v1/ventas"</span> <span class="n">-ContentType</span> <span class="s2">"application/json"</span> <span class="n">-Body</span> <span class="s1">'{"detalles":[{"productoId":1,"cantidad":2},{"productoId":2,"cantidad":1}]}'</span>
+</code></pre></div>
+<p>Verifica: la respuesta trae <code>201</code>, un <code>total</code> calculado, y el stock de los productos 1 y 2 bajó exactamente en 2 y 1.</p>
+<p><strong>Caso de rollback</strong> — una de las líneas pide más cantidad de la que hay en stock:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:8080/api/v1/ventas"</span> <span class="n">-ContentType</span> <span class="s2">"application/json"</span> <span class="n">-Body</span> <span class="s1">'{"detalles":[{"productoId":1,"cantidad":1},{"productoId":2,"cantidad":999999}]}'</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-i<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8080/api/v1/ventas<span class="w"> </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span>-d<span class="w"> </span><span class="s1">'{"detalles":[{"productoId":1,"cantidad":1},{"productoId":2,"cantidad":999999}]}'</span>
+</code></pre></div>
+<p>Verifica: la respuesta trae <code>409</code>, <strong>ninguna</strong> venta nueva aparece en <code>GET /api/v1/ventas</code>, y el stock del producto 1 (la línea que sí tenía stock suficiente) queda <strong>exactamente igual</strong> que antes de este intento — la prueba real de que la transacción se revirtió completa, no solo la línea que falló.</p>
+<p><strong>Tabla 2. Verificación de la operación antes de continuar</strong></p>
+<table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>Resultado esperado</th>
+<th>Cómo se verifica</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Venta con stock suficiente en todas las líneas</td>
+<td><code>201 Created</code>, <code>total</code> correcto</td>
+<td><code>GET</code> del producto: stock bajó exactamente lo pedido</td>
+</tr>
+<tr>
+<td>Venta con una línea sin stock suficiente</td>
+<td><code>409 Conflict</code></td>
+<td><code>GET /api/v1/ventas</code>: no aparece ninguna venta nueva</td>
+</tr>
+<tr>
+<td>Rollback real (no solo la línea que falló)</td>
+<td>Stock de la línea previa sin cambios</td>
+<td><code>GET</code> del producto de la primera línea: stock igual al de antes del intento</td>
+</tr>
+<tr>
+<td><code>productoId</code> inexistente en una línea</td>
+<td><code>404 Not Found</code></td>
+<td><code>GET</code> del producto inexistente confirma que nunca existió</td>
+</tr>
+<tr>
+<td>Límites de módulo</td>
+<td><code>ModularityTests</code> en verde</td>
+<td>Ver 3.11</td>
+</tr>
+</tbody>
+</table>
+<h3 id="311-verificar-los-limites-de-modulo-con-modularitytests">3.11 Verificar los límites de módulo con <code>ModularityTests</code><a class="headerlink" href="#311-verificar-los-limites-de-modulo-con-modularitytests" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> confirmación de que <code>ventas</code> solo accede a <code>catalogo</code> a través de <code>ProductoService</code>/<code>ProductoResponse</code>, nunca a <code>ProductoRepository</code> ni a la entidad <code>Producto</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="p">.\</span><span class="n">mvnw</span><span class="p">.</span><span class="n">cmd</span> <span class="n">test</span> <span class="n">-Dtest</span><span class="p">=</span><span class="n">ModularityTests</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>./mvnw<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-Dtest<span class="o">=</span>ModularityTests
+</code></pre></div>
+<p>Si en algún momento un archivo de <code>ventas</code> importa <code>pe.edu.upeu.bomerp.catalogo.producto.entity.Producto</code> o <code>...repository.ProductoRepository</code> directamente, <code>ModularityTests</code> falla la build con un mensaje que señala exactamente esa dependencia no permitida — antes de que nadie tenga que descubrirlo revisando código a mano.</p>
+<h3 id="312-relacionar-con-ads-y-bd2">3.12 Relacionar con ADS y BD2<a class="headerlink" href="#312-relacionar-con-ads-y-bd2" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> matriz de integración actualizada.</p>
+<p><strong>Tabla 3. Matriz de integración LP2-ADS-BD2 (S4)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Endpoint/Componente LP2</th>
+<th>Componente ADS</th>
+<th>Objeto BD2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>POST /api/v1/ventas</code> (cabecera-detalle, transaccional)</td>
+<td>Arquitecturas modernas: ACID por defecto en monolito modular (ADS S4, 2.6)</td>
+<td><code>VENTAS</code>/<code>DETALLE_VENTAS</code> en <code>BOM_VENTAS</code> (BD2, previsto)</td>
+</tr>
+<tr>
+<td><code>ProductoService.descontarStock</code> (regla de negocio, no de forma)</td>
+<td>—</td>
+<td><code>CK_PRODUCTO_STOCK</code> sobre <code>PRODUCTOS</code> (BD2 S1), última línea de defensa</td>
+</tr>
+<tr>
+<td><code>@NamedInterface</code> en <code>catalogo.producto.service</code>/<code>dto</code></td>
+<td>Acyclic Dependencies Principle (ADS S4, 2.6)</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>Sesión equivalente en los otros dos cursos, misma semana: ADS y BD2 todavía no publican su guía de S4 propia con este alcance específico en este repositorio.</p>
+<p><strong>Evidencia de aprendizaje:</strong></p>
+<ul>
+<li><code>Venta</code>-<code>DetalleVenta</code> con cálculo de subtotales y total correcto.</li>
+<li>Caso de éxito probado, con stock descontado exactamente lo pedido.</li>
+<li>Caso de rollback probado, con stock sin cambios en las líneas previas a la que falló.</li>
+<li><code>StockInsuficienteException</code> manejada por <code>GlobalExceptionHandler</code>, respondiendo <code>409</code>.</li>
+<li><code>ModularityTests</code> en verde, con <code>@NamedInterface</code> expuesto explícitamente.</li>
+</ul>
+<h2 id="4-crea-actividad-autonoma">4. Crea: actividad autónoma<a class="headerlink" href="#4-crea-actividad-autonoma" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 2h fuera del aula.</p>
+<h3 id="41-actividad">4.1 Actividad<a class="headerlink" href="#41-actividad" title="Permanent link">&para;</a></h3>
+<p>Replicación autónoma de una operación cabecera-detalle sobre el dominio elegido por el equipo, documentada en evidencia individual.</p>
+<p>Completa y evidencia estas tareas:</p>
+<ol>
+<li>Definir la cabecera y el detalle de tu propia operación de dominio (equivalente a <code>Venta</code>/<code>DetalleVenta</code>).</li>
+<li>Identificar al menos una regla de negocio real (no de forma) que tu operación deba cumplir, equivalente al control de stock.</li>
+<li>Implementar la operación completa dentro de una única transacción, con sus cálculos.</li>
+<li>Probar un caso de éxito y un caso de rollback provocado a propósito.</li>
+<li>Si tu operación cruza dos módulos, exponer el servicio necesario con <code>@NamedInterface</code> y verificar con <code>ModularityTests</code>.</li>
+</ol>
+<h3 id="42-proposito">4.2 Propósito<a class="headerlink" href="#42-proposito" title="Permanent link">&para;</a></h3>
+<p>Que cada estudiante demuestre, de forma individual y fuera del aula, que puede construir una operación transaccional con una regla de negocio real, sin el acompañamiento del docente.</p>
+<p>Cada estudiante documenta la operación cabecera-detalle de su propio dominio.</p>
+<h3 id="43-indicaciones">4.3 Indicaciones<a class="headerlink" href="#43-indicaciones" title="Permanent link">&para;</a></h3>
+<p>Entrega un PDF con el siguiente nombre:</p>
+<div class="highlight"><pre><span></span><code>S04_LP2_Equipo##_ApellidoNombre.pdf
+</code></pre></div>
+<p>Cada captura de pantalla del informe debe mostrar, sin recortar, el reloj del sistema (fecha y hora) y tu usuario o foto de perfil (Windows, VS Code o navegador) visibles en pantalla — es lo que permite verificar que la evidencia es tuya y que corresponde al momento real de tu trabajo.</p>
+<h4 id="431-estructura-del-informe">4.3.1 Estructura del informe<a class="headerlink" href="#431-estructura-del-informe" title="Permanent link">&para;</a></h4>
+<p><strong>Datos del estudiante</strong></p>
+<ul>
+<li>Nombre:</li>
+<li>Equipo:</li>
+<li>Sesión: S04 - Operación Cabecera-Detalle</li>
+<li>Rol o aporte realizado:</li>
+<li>Link de GitHub:</li>
+</ul>
+<p><strong>Evidencia técnica</strong></p>
+<p>Incluye capturas o salidas de consola con una breve explicación debajo de cada una, organizadas en los mismos 4 bloques de la rúbrica (4.6):</p>
+<ol>
+<li><em>Modelo cabecera-detalle y cálculos</em><ul>
+<li>Entidades de cabecera y detalle, con el cálculo de totales evidenciado.</li>
+</ul>
+</li>
+<li><em>Regla de negocio real</em><ul>
+<li>La regla identificada, con su código y un caso que la activa.</li>
+</ul>
+</li>
+<li><em>Transacción atómica</em><ul>
+<li>Caso de éxito y caso de rollback, con el estado de los datos antes y después de cada uno.</li>
+</ul>
+</li>
+<li><em>Límites de módulo (si aplica)</em><ul>
+<li><code>@NamedInterface</code> y <code>ModularityTests</code> en verde, si tu operación cruza dos módulos.</li>
+</ul>
+</li>
+</ol>
+<p><strong>Error o hallazgo</strong></p>
+<p>Describe al menos un hallazgo real: un caso donde el rollback no se comportó como esperabas, una regla de negocio que olvidaste cubrir, o un límite de módulo que tuviste que exponer.</p>
+<p><strong>Reflexión técnica breve</strong></p>
+<p>Responde en 5 a 8 líneas:</p>
+<div class="highlight"><pre><span></span><code>¿Por qué una regla como "hay stock suficiente" no se puede expresar con
+Bean Validation, y qué capa sí puede validarla?
+</code></pre></div>
+<p><strong>Anexo: Feedback de la sesión</strong></p>
+<p>Pega esta página como la última hoja del PDF, con tus respuestas.</p>
+<ol>
+<li>¿Cuál es el aprendizaje más importante que te llevas de la clase de hoy?</li>
+<li>¿Qué punto de la clase te resultó más confuso o te dejó con dudas?</li>
+<li>¿Tienes alguna pregunta que te gustaría que sea respondida la siguiente clase?</li>
+<li>Sobre tu nivel de comprensión de la clase de hoy, marca una opción:<ul>
+<li>¡Entendido! - Lo domino y podría explicarlo.</li>
+<li>Más o menos. - Entendí la idea general, pero tengo dudas.</li>
+<li>Necesito ayuda. - Me siento perdido/a con este tema.</li>
+</ul>
+</li>
+<li>¿Cómo puedo ayudarte a comprender mejor el tema?</li>
+<li>Pensando en tu participación y esfuerzo en la clase de hoy, ¿cómo te autoevaluarías? Marca una opción:<ul>
+<li>Muy Comprometido/a: Me esforcé al máximo.</li>
+<li>Comprometido/a: Sé que podría haberme esforzado un poco más.</li>
+<li>Poco Comprometido/a: Hoy no di mi mejor esfuerzo.</li>
+</ul>
+</li>
+<li>Mi satisfacción con la clase fue... (califica del 1 al 10, donde 1 es insatisfecho y 10 es muy satisfecho).</li>
+</ol>
+<h3 id="44-criterios-minimos-de-aceptacion">4.4 Criterios mínimos de aceptación<a class="headerlink" href="#44-criterios-minimos-de-aceptacion" title="Permanent link">&para;</a></h3>
+<p>La evidencia individual se considera completa si:</p>
+<ul>
+<li>El archivo respeta el nombre solicitado.</li>
+<li>Implementa una operación cabecera-detalle con al menos una colección de líneas.</li>
+<li>Calcula subtotales y un total, con el resultado evidenciado.</li>
+<li>Implementa al menos una regla de negocio real (no de forma), con una excepción propia manejada por <code>GlobalExceptionHandler</code>.</li>
+<li>Prueba un caso de éxito y un caso de rollback, con el estado de los datos verificado antes y después.</li>
+<li>Si la operación cruza dos módulos, expone el servicio necesario con <code>@NamedInterface</code> y <code>ModularityTests</code> está en verde.</li>
+<li>Cada captura de la evidencia técnica muestra el reloj del sistema y el usuario/perfil visible, sin recortar.</li>
+<li>Las fechas y horas de las capturas son coherentes con el historial de commits de su repositorio en GitHub.</li>
+<li>Incluye un error o hallazgo técnico diagnosticado.</li>
+<li>Incluye la reflexión técnica breve solicitada.</li>
+<li>Incluye el Anexo de feedback de la sesión respondido, como última página del PDF.</li>
+</ul>
+<h3 id="45-preguntas-de-defensa">4.5 Preguntas de defensa<a class="headerlink" href="#45-preguntas-de-defensa" title="Permanent link">&para;</a></h3>
+<ol>
+<li>¿Por qué <code>DetalleVenta</code> guarda una copia del nombre y del precio del producto, en vez de consultarlos siempre en vivo desde <code>catalogo</code>?</li>
+<li>¿Qué pasaría si <code>descontarStock</code> no estuviera anotada <code>@Transactional</code> y el método <code>crear()</code> de <code>VentaServiceImpl</code> sí?</li>
+<li>¿Por qué "hay stock suficiente" es una regla de negocio y no una validación de forma?</li>
+<li>¿Qué error concreto habría dado <code>ModularityTests</code> si hubieras olvidado el <code>@NamedInterface</code> de <code>catalogo.producto.service</code>?</li>
+<li>Si tu operación autónoma (4.1) no cruza dos módulos, ¿qué evidencia reemplaza el requisito de <code>ModularityTests</code>?</li>
+</ol>
+<h3 id="46-rubrica-de-evaluacion">4.6 Rúbrica de evaluación<a class="headerlink" href="#46-rubrica-de-evaluacion" title="Permanent link">&para;</a></h3>
+<p><strong>Tabla 4. Rúbrica de evaluación</strong></p>
+<table>
+<thead>
+<tr>
+<th>Criterio</th>
+<th style="text-align: right;">Peso (%)</th>
+<th>A (20 pts)</th>
+<th>B (15 pts)</th>
+<th>C (10 pts)</th>
+<th>D (5 pts)</th>
+<th style="text-align: right;">Nivel obtenido</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Modelo cabecera-detalle y cálculos*</td>
+<td style="text-align: right;">25</td>
+<td>Cabecera y detalle correctos, cálculos de subtotal/total exactos y evidenciados.</td>
+<td>Modelo correcto, con algún cálculo impreciso o sin evidenciar del todo.</td>
+<td>Modelo incompleto o cálculos incorrectos.</td>
+<td>No presenta modelo cabecera-detalle.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>2. Regla de negocio real*</td>
+<td style="text-align: right;">25</td>
+<td>Regla de negocio real implementada y probada, con excepción propia manejada por <code>GlobalExceptionHandler</code>.</td>
+<td>Regla implementada, con manejo de error parcial.</td>
+<td>Regla presente pero no verificable con evidencia.</td>
+<td>No implementa ninguna regla de negocio real.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>3. Transacción atómica*</td>
+<td style="text-align: right;">25</td>
+<td>Caso de éxito y caso de rollback probados, con el estado de los datos verificado antes y después de cada uno.</td>
+<td>Uno de los dos casos probado con evidencia sólida.</td>
+<td>Transacción presente, sin evidencia clara de rollback.</td>
+<td>No hay evidencia de comportamiento transaccional.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>4. Límites de módulo (si aplica)*</td>
+<td style="text-align: right;">25</td>
+<td><code>@NamedInterface</code> correcto y <code>ModularityTests</code> en verde, evidenciado.</td>
+<td>Límite de módulo respetado, sin evidencia de <code>ModularityTests</code>.</td>
+<td>Límite de módulo violado o resuelto sin <code>@NamedInterface</code>.</td>
+<td>No aplica ningún criterio de módulo (operación en un solo módulo, sin justificar por qué).</td>
+<td style="text-align: right;"></td>
+</tr>
+</tbody>
+</table>
+<p>* Agregado manual.</p>
+<p>Nota final = suma de (<code>Peso</code> / 100 × <code>Puntos del nivel obtenido</code>) = ____ / 20.</p>
+<p>Para usar la rúbrica con IA, solicita:</p>
+<div class="highlight"><pre><span></span><code>Evalúa el PDF usando la rúbrica de la sesión.
+Para cada criterio selecciona el nivel obtenido usando la escala A=20, B=15, C=10, D=5 puntos.
+Justifica brevemente cada nivel asignado.
+Verifica que cada captura muestre reloj del sistema y usuario/perfil visible, y que las fechas sean coherentes con el historial de commits de GitHub. Si falta esta evidencia o hay inconsistencias, indícalo explícitamente antes de calificar.
+Calcula la nota final con la fórmula: suma de (Peso/100 × Puntos del nivel obtenido), directamente sobre 20.
+Indica 2 fortalezas y 2 recomendaciones.
+</code></pre></div>
+<h2 id="5-cierre">5. Cierre<a class="headerlink" href="#5-cierre" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 5 min.</p>
+<p><strong>Resumen breve:</strong> hoy BomERP ganó su segundo módulo de negocio, <code>ventas</code>, con una operación cabecera-detalle real: <code>Venta</code>-<code>DetalleVenta</code>, con cálculos, una regla de negocio genuina (stock, no forma), una transacción atómica probada con éxito y con rollback, y comunicación entre módulos verificada mecánicamente con <code>@NamedInterface</code> y <code>ModularityTests</code> — no solo documentada.</p>
+<p><strong>Dinámica participativa:</strong> en una ronda rápida, cada estudiante comparte en una frase qué le sorprendió más al provocar el rollback a propósito.</p>
+<p><strong>Metacognición:</strong> cada estudiante responde el Anexo de feedback de la sesión, incluido en su evidencia individual (ver 4.3.1). El docente analiza esas respuestas con IA para identificar temas recurrentes o dudas comunes del equipo, y con esos indicadores construye el cierre real de la sesión — que se entrega al inicio de S5, no al final de esta clase.</p>
+<p><strong>Proyección:</strong> S5 construye consultas y reportes sobre <code>Venta</code>, <code>DetalleVenta</code> y <code>Producto</code> juntos — proyecciones y agregaciones que solo tienen sentido ahora que existe una operación real que generó datos para consultar.</p>
+<h2 id="bibliografia">Bibliografía<a class="headerlink" href="#bibliografia" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Spring. (2024). <em>Declarative Transaction Management</em>. VMware. https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative.html</li>
+<li>Spring. (2024). <em>Transaction Propagation</em>. VMware. https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/tx-propagation.html</li>
+<li>Spring Modulith. (2024). <em>Working with Application Modules — Named Interfaces</em>. VMware. https://docs.spring.io/spring-modulith/reference/fundamentals.html</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Angel Sullon @asullom - UPeU 2026
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.top", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
