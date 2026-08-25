@@ -357,9 +357,39 @@ flowchart TB
 
 Cada base de datos le pertenece a un solo servicio — ningún otro servicio la consulta directo, ni siquiera para leer; si `Ventas` necesita un dato de `Catalogo`, se lo pide por red (`S2 -.-> S1`), nunca leyendo la base de `Catalogo` directamente. Esa regla es la misma que un monolito modular impone entre módulos (2.3) — la diferencia es que acá se aplica por proceso y por red, no dentro de un mismo ejecutable.
 
+**Escalabilidad independiente, la otra cara de separar en procesos.** A diferencia de un monolito modular (2.3), donde toda la aplicación escala junta — más instancias del ejecutable completo —, en microservicios cada servicio escala según su propia carga: si el `Servicio Catalogo` recibe mil veces más tráfico de lectura que el `Servicio Seguridad`, se agregan instancias solo de `Catalogo`, sin tocar el resto. Esa independencia es la ganancia real que compensa la complejidad operacional (2.2, Tabla 3) — sin ella, separar en procesos no tendría sentido.
+
+**El costo real: teorema CAP.** El teorema CAP dice que un sistema distribuido no puede garantizar al mismo tiempo tres propiedades: **Consistencia** (todas las réplicas ven el mismo dato al mismo tiempo), **Disponibilidad** (toda petición recibe una respuesta) y **Tolerancia a particiones** (el sistema sigue funcionando aunque falle la red entre nodos). En microservicios, la partición de red **va a ocurrir** — dos servicios se comunican por red, y la red falla tarde o temprano —, así que la P no es negociable; la decisión real está entre C y A cuando eso pasa.
+
+**Tabla 4. Teorema CAP: la decisión real en microservicios**
+
+| Si prioriza | Qué gana | Qué pierde | Ejemplo típico |
+|---|---|---|---|
+| Consistencia (CP) | Todos los servicios ven siempre el mismo dato | Ante una partición de red, el sistema puede rechazar peticiones hasta poder confirmar el dato real | Un servicio de inventario que no acepta una venta si no puede confirmar el stock exacto con `Catalogo` en ese instante |
+| Disponibilidad (AP) | El sistema sigue respondiendo aunque haya partición de red | Los datos pueden quedar temporalmente desactualizados entre servicios | `Ventas` acepta un pedido con el precio que tenía cacheado de `Catalogo`, aunque haya cambiado hace unos segundos |
+
+La mayoría de sistemas de microservicios reales eligen AP con **consistencia eventual**: cada servicio sigue respondiendo con los datos que tiene, y la inconsistencia temporal se reconcilia después — por ejemplo, con eventos (`Catalogo` publica "el precio cambió", `Ventas` actualiza su copia cuando el evento le llega). El patrón que coordina operaciones que cruzan varios servicios sin una transacción distribuida real se llama **Saga**: una secuencia de pasos locales, cada uno con su propia compensación si algo falla más adelante, en vez de una única transacción ACID sobre varias bases de datos.
+
+**Figura 12. Consistencia fuerte vs. consistencia eventual, si BomERP migrara a microservicios**
+
+```mermaid
+flowchart TB
+    subgraph Fuerte["Consistencia fuerte (CP): transaccion distribuida"]
+        direction LR
+        V1["Servicio Ventas"] -->|"1. pide bloquear stock"| C1["Servicio Catalogo"]
+        C1 -->|"2. espera confirmar en ambas bases antes de responder"| V1
+        V1 -.->|"si Catalogo no responde a tiempo"| X1["Pedido rechazado"]
+    end
+    subgraph Eventual["Consistencia eventual (AP): lo que elegiria BomERP, si migrara"]
+        direction LR
+        V2["Servicio Ventas<br/>(precio cacheado localmente)"] -->|"3. confirma el pedido con el dato que tiene"| OK2["Pedido aceptado"]
+        C2["Servicio Catalogo<br/>(el precio cambio)"] -.->|"4. publica evento 'precio actualizado'"| V2
+    end
+```
+
 **Dónde se usa en la práctica:** organizaciones grandes, con muchos equipos trabajando en paralelo que necesitan desplegar sin coordinarse entre sí, y servicios con necesidades de escala muy distintas entre ellos (por ejemplo, un servicio de búsqueda que recibe mil veces más tráfico que uno de facturación) — casos frecuentemente citados son Netflix, Amazon y Uber, documentados en sus propios blogs de ingeniería.
 
-**Ejemplo de referencia (LP2).** BomERP no usa microservicios — el ADR-001 de LP2 lo dice explícitamente: el costo (red, bases de datos distribuidas, versionado de contratos) no tiene ninguna ganancia real a cambio en un proyecto de equipo pequeño con un solo ciclo de despliegue.
+**Ejemplo de referencia (LP2).** BomERP no usa microservicios — el ADR-001 de LP2 lo dice explícitamente: el costo (red, bases de datos distribuidas, versionado de contratos, y ahora también CAP y consistencia eventual) no tiene ninguna ganancia real a cambio en un proyecto de equipo pequeño con un solo ciclo de despliegue. Con una sola Oracle compartida, `ProductoServiceImpl` y `CategoriaServiceImpl` (LP2 S3) leen el dato real dentro de la misma transacción — no hay partición de red que resolver, ni necesidad de elegir entre C y A. Esa es la ganancia concreta de no separar en procesos todavía: no es que el equipo no sepa resolver consistencia eventual, es que el proyecto no paga ese costo si no lo necesita.
 
 ### 2.8 Escalabilidad horizontal y diseño *stateless*
 
@@ -371,7 +401,7 @@ Los dos conceptos están relacionados pero no son lo mismo: *stateless* es una p
 
 **Ejemplo de referencia (LP2).** LP2 ya demostró esto con evidencia real, no como ejercicio teórico: S1 (3.3) levantó dos instancias de `bomerp-backend` en paralelo (puertos `8080` y `8081`), ambas conectadas a la misma Oracle, y verificó que cualquiera de las dos responde `/api/v1/hello` y `/actuator/health` sin ninguna coordinación entre ellas. Eso funciona porque el backend nunca guardó estado de cliente en memoria — ni siquiera hay autenticación todavía (JWT se difiere a S10, ver ADR-004 de LP2), así que no hay sesión que sincronizar entre instancias. Cuando JWT llegue en S10, seguirá siendo *stateless*: un JWT es un token autocontenido que el cliente reenvía en cada petición — ninguna instancia necesita recordar quién inició sesión.
 
-**Figura 12. Por qué el diseño *stateless* es lo que permite escalar horizontalmente**
+**Figura 13. Por qué el diseño *stateless* es lo que permite escalar horizontalmente**
 
 ```mermaid
 flowchart TB
@@ -422,7 +452,7 @@ Tiempo: 2h.
 
 **Producto del paso:** tabla de trade-offs de los cinco estilos, aplicada a BomERP.
 
-**Tabla 4. Trade-offs de los cinco estilos, aplicados a BomERP**
+**Tabla 5. Trade-offs de los cinco estilos, aplicados a BomERP**
 
 | Estilo | ¿Aplica a BomERP hoy? | Trade-off que se ganaría | Trade-off que se pagaría |
 |---|---|---|---|
@@ -440,7 +470,7 @@ Esta tabla profundiza la Tabla 5 de S1 (que solo respondía sí/no) agregando ex
 
 Repasa LP2 S1 (3.3, Figura 7): dos instancias de `bomerp-backend`, puertos `8080` y `8081`, ambas conectadas a la misma Oracle. Si tienes el proyecto de LP2 disponible, reproduce los comandos de 3.3.1-3.3.2 de esa guía y confirma que ambas instancias responden de forma independiente.
 
-**Tabla 5. Evidencia de escalabilidad horizontal**
+**Tabla 6. Evidencia de escalabilidad horizontal**
 
 | Verificación | Resultado esperado (LP2 S1, 3.3.2) |
 |---|---|
@@ -463,7 +493,7 @@ Revisa el código real de `ProductoServiceImpl`/`CategoriaServiceImpl` (LP2 S1-S
 
 Revisa `catalogo/categoria` y `catalogo/producto` (LP2 S1-S3): CRUD, una validación de referencia, sin reglas de negocio que dependan de cálculos complejos o de invariantes multi-entidad. Compáralo con lo que se anticipa para `ventas/Venta-DetalleVenta` (LP2 S4, todavía no implementado): cabecera-detalle con cálculos, control de stock y una operación atómica — más cerca de un agregado DDD real.
 
-**Tabla 6. ¿El dominio ya justifica hexagonal o Clean Architecture?**
+**Tabla 7. ¿El dominio ya justifica hexagonal o Clean Architecture?**
 
 | Módulo | Complejidad real hoy | ¿Justifica aislar el dominio? |
 |---|---|---|
@@ -480,7 +510,7 @@ A diferencia de S3 (donde el hallazgo esperado era una tensión de diseño), ac�
 
 **Producto del paso:** matriz de integración de la sesión.
 
-**Tabla 7. Matriz de integración ADS-LP2-BD2 (S4)**
+**Tabla 8. Matriz de integración ADS-LP2-BD2 (S4)**
 
 | Criterio evaluado | Evidencia real en LP2 | Relación con BD2 |
 |---|---|---|
@@ -611,7 +641,7 @@ La evidencia individual se considera completa si:
 
 ### 4.6 Rúbrica de evaluación
 
-**Tabla 8. Rúbrica de evaluación**
+**Tabla 9. Rúbrica de evaluación**
 
 | Criterio | Peso (%) | A (20 pts) | B (15 pts) | C (10 pts) | D (5 pts) | Nivel obtenido |
 |---|---:|---|---|---|---|---:|
@@ -656,3 +686,4 @@ Tiempo: 5 min.
 5. Cockburn, A. (2005). *Hexagonal Architecture*. https://alistair.cockburn.us/hexagonal-architecture/
 6. Thoughtworks. (2024). *Hexagonal architecture explained through a practical example*. https://www.thoughtworks.com/insights/blog/architecture/hexagonal-architecture-explained-practical-example
 7. Google. (2025). *Guide to app architecture*. Android Developers. https://developer.android.com/topic/architecture
+8. Gilbert, S., & Lynch, N. (2002). Brewer's conjecture and the feasibility of consistent, available, partition-tolerant web services. *ACM SIGACT News*, 33(2), 51-59.
