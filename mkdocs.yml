@@ -34,6 +34,7 @@ nav:
   - Inicio: index.md
   - Guía del Proyecto Integrador:
       - Alineamiento: proyecto-integrador/index.md
+      - Brief técnico (plantilla): proyecto-integrador/brief.md
       - 1. Diseño técnico, motor transaccional y backend inicial:
           - Producto integrado U1: proyecto-integrador/u1/index.md
           - ADS Producto U1: proyecto-integrador/u1/ads-producto.md
