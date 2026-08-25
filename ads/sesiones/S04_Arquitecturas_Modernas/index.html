@@ -1753,6 +1753,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#37-spike-opcional-envolver-productoserviceimpl-con-puertos-hexagonales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 Spike opcional: envolver ProductoServiceImpl con puertos hexagonales
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3109,6 +3120,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#37-spike-opcional-envolver-productoserviceimpl-con-puertos-hexagonales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 Spike opcional: envolver ProductoServiceImpl con puertos hexagonales
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3713,6 +3735,8 @@
 <p><strong>Ejemplo de referencia (LP2).</strong> BomERP no usa microservicios — el ADR-001 de LP2 lo dice explícitamente: el costo (red, bases de datos distribuidas, versionado de contratos, y ahora también CAP y consistencia eventual) no tiene ninguna ganancia real a cambio en un proyecto de equipo pequeño con un solo ciclo de despliegue. Con una sola Oracle compartida, <code>ProductoServiceImpl</code> y <code>CategoriaServiceImpl</code> (LP2 S3) leen el dato real dentro de la misma transacción — no hay partición de red que resolver, ni necesidad de elegir entre C y A. Esa es la ganancia concreta de no separar en procesos todavía: no es que el equipo no sepa resolver consistencia eventual, es que el proyecto no paga ese costo si no lo necesita.</p>
 <h3 id="28-serverless-en-profundidad">2.8 Serverless, en profundidad<a class="headerlink" href="#28-serverless-en-profundidad" title="Permanent link">&para;</a></h3>
 <p>Serverless (o <em>Function as a Service</em>, FaaS) lleva la independencia de piezas un paso más allá que microservicios (2.7): en vez de desplegar un proceso que corre todo el tiempo, se despliega una <strong>función individual</strong> que el proveedor cloud ejecuta solo cuando un evento la dispara (una petición HTTP, un mensaje en cola, un archivo subido) — y se apaga apenas termina. El equipo no administra servidores ni contenedores, ni siquiera el ciclo de vida del proceso: solo el código de la función.</p>
+<p><strong>Nube no es sinónimo de serverless.</strong> "Ir a la nube" es una decisión distinta, en un eje que ni la Figura 3 (2.2) cubre: no es "cuántas piezas independientes hay" ni "cómo se organiza el código dentro de una pieza", es <strong>quién opera cada pieza de infraestructura</strong>. Un monolito modular puede desplegarse en la nube sin volverse serverless — el mismo <code>bomerp-backend</code>, el mismo proceso, corriendo en una VM o un contenedor administrado (AWS ECS, Azure App Service, Google Cloud Run) en vez de un servidor propio. Serverless siempre implica nube; nube no implica serverless.</p>
+<p>Dentro de "ir a la nube" hay todavía otra decisión, independiente de la anterior: <strong>IaaS</strong> (la nube solo da la máquina virtual vacía; el equipo instala y opera su propio Kafka, su propia base de datos, su propio Grafana, igual que lo haría on-premise) frente a <strong>servicios administrados</strong> (el proveedor ya tiene Kafka, la base de datos o el <em>gateway</em> como producto — el equipo solo los consume, no los opera). Migrar de un Kafka propio a uno administrado (AWS MSK, Confluent Cloud) reduce la carga operativa, pero cuesta <em>vendor lock-in</em>: portar ese Kafka administrado a otro proveedor no es tan simple como mover una VM de un lado a otro.</p>
 <p><strong>Figura 14. Diagrama típico de serverless (FaaS)</strong></p>
 <pre class="mermaid"><code>flowchart LR
     subgraph Eventos["Eventos que disparan funciones"]
@@ -3769,7 +3793,7 @@
 <p>Tiempo: 2h.</p>
 <p><strong>Actividad:</strong> comparación guiada de los siete estilos arquitectónicos contra BomERP, con trade-offs, evidencia de escalabilidad horizontal, diseño <em>stateless</em> y orientación DDD (Producto de la sesión en 1.4).</p>
 <p><strong>Propósito de la actividad:</strong> justificar con evidencia real, no con preferencia, el estilo arquitectónico ya elegido para el proyecto — confirmándolo donde corresponda y documentando explícitamente por qué las alternativas no aplican todavía.</p>
-<p><strong>Orientaciones metodológicas:</strong> en el laboratorio, el docente evalúa cada estilo contra BomERP paso a paso frente a la clase, con el código y los ADR reales de LP2 abiertos; los estudiantes replican la misma evaluación sobre el proyecto de su propio equipo (sección 4).</p>
+<p><strong>Orientaciones metodológicas:</strong> en el laboratorio, el docente evalúa cada estilo contra BomERP paso a paso frente a la clase, con el código y los ADR reales de LP2 abiertos, <strong>como ejemplo de referencia</strong> — no todos los equipos llevan LP2 en este ciclo. Los pasos 3.2-3.4 y 3.6 usan LP2 porque ya tiene código real que verificar; si tu equipo no lleva LP2, aplica el mismo criterio ahora mismo sobre tu propio backend (los puntos equivalentes están en 4.1, numerados igual) en vez de esperar a la actividad autónoma.</p>
 <p><strong>Actividades para realizar:</strong></p>
 <ul>
 <li><strong>3.1</strong> Profundizar la evaluación de estilos arquitectónicos.</li>
@@ -3778,6 +3802,7 @@
 <li><strong>3.4</strong> Evaluar si DDD orienta hacia hexagonal o Clean Architecture.</li>
 <li><strong>3.5</strong> Documentar el hallazgo o la confirmación.</li>
 <li><strong>3.6</strong> Relacionar con LP2 y BD2.</li>
+<li><strong>3.7</strong> (opcional) Spike de arquitectura hexagonal.</li>
 </ul>
 <h3 id="31-profundizar-la-evaluacion-de-estilos-arquitectonicos">3.1 Profundizar la evaluación de estilos arquitectónicos<a class="headerlink" href="#31-profundizar-la-evaluacion-de-estilos-arquitectonicos" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> tabla de trade-offs de los siete estilos, aplicada a BomERP.</p>
@@ -3838,9 +3863,15 @@
 </table>
 <p>Esta tabla profundiza la Tabla 5 de S1 (que solo respondía sí/no) agregando explícitamente qué se gana y qué se paga en cada caso — la justificación real está en esas dos columnas, no en el sí/no.</p>
 <p>Dos filas no se llenan igual que las demás: la de <strong>Monolito modular</strong> se justifica citando ACID y ADP (2.6), no solo "es más simple"; la de <strong>Microservicios</strong> se justifica citando el teorema CAP (2.7), no solo "más complejidad operacional". Repetir la conclusión sin nombrar el concepto que la sostiene cuenta como trade-off superficial en la rúbrica (4.6).</p>
+<p><strong>Cómo verificar ACID y ADP con evidencia, no solo de memoria:</strong></p>
+<ul>
+<li><strong>ACID</strong>: identifica en el código la operación que escribe más de una entidad relacionada en un mismo caso de uso (en LP2, <code>ProductoServiceImpl.crear()</code>, que guarda <code>Producto</code> y resuelve <code>Categoria</code>) y confirma que está cubierta por <code>@Transactional</code> de principio a fin. Si tu equipo no lleva LP2, aplica el mismo chequeo sobre tu propio service layer: busca el método que más entidades toca en una sola operación y verifica si tu framework la envuelve en una transacción.</li>
+<li><strong>ADP</strong>: en LP2, corre <code>mvnw test -Dtest=ModularityTests</code> y confirma que pasa — esa prueba falla la build si algún módulo introduce un ciclo de dependencias. Si tu proyecto usa Spring Modulith, corre el equivalente; si no tiene una herramienta que lo verifique, revisa manualmente los <code>import</code> de tus paquetes de módulo y confirma que ninguno importa de vuelta a un módulo que ya depende de él.</li>
+</ul>
 <h3 id="32-verificar-escalabilidad-horizontal-con-evidencia-real">3.2 Verificar escalabilidad horizontal con evidencia real<a class="headerlink" href="#32-verificar-escalabilidad-horizontal-con-evidencia-real" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> confirmación de que BomERP escala horizontalmente, con evidencia real de LP2.</p>
 <p>Repasa LP2 S1 (3.3, Figura 7): dos instancias de <code>bomerp-backend</code>, puertos <code>8080</code> y <code>8081</code>, ambas conectadas a la misma Oracle. Si tienes el proyecto de LP2 disponible, reproduce los comandos de 3.3.1-3.3.2 de esa guía y confirma que ambas instancias responden de forma independiente.</p>
+<p>Si tu equipo no lleva LP2, aplica el mismo chequeo ahora sobre tu propio backend: levanta dos instancias en paralelo si tu stack lo permite, o justifica explícitamente por qué no aplica todavía (4.1, punto 2) — no lo dejes para la actividad autónoma.</p>
 <p><strong>Tabla 7. Evidencia de escalabilidad horizontal</strong></p>
 <table>
 <thead>
@@ -3871,10 +3902,12 @@
 <h3 id="33-verificar-el-diseno-stateless">3.3 Verificar el diseño <em>stateless</em><a class="headerlink" href="#33-verificar-el-diseno-stateless" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> confirmación explícita de por qué BomERP es <em>stateless</em> hoy.</p>
 <p>Revisa el código real de <code>ProductoServiceImpl</code>/<code>CategoriaServiceImpl</code> (LP2 S1-S3): ningún método guarda datos en un campo de instancia entre peticiones — cada método recibe todo lo que necesita como parámetro, y el único estado que persiste vive en Oracle. Revisa también ADR-004 de LP2: JWT (cuando llegue en S10) es un token autocontenido, verificado en cada petición, sin sesión guardada en el servidor.</p>
+<p>Si tu equipo no lleva LP2, revisa tu propio service layer con el mismo criterio: ¿algún campo de instancia guarda datos de un cliente entre peticiones? (4.1, punto 3).</p>
 <p><strong>Error frecuente</strong>: confundir "no tiene autenticación todavía" con "es <em>stateless</em> por eso". BomERP es <em>stateless</em> por diseño (nada de estado de cliente en memoria), no porque le falte JWT — y seguirá siendo <em>stateless</em> cuando JWT se implemente en S10.</p>
 <h3 id="34-evaluar-si-ddd-orienta-hacia-hexagonal-o-clean-architecture">3.4 Evaluar si DDD orienta hacia hexagonal o Clean Architecture<a class="headerlink" href="#34-evaluar-si-ddd-orienta-hacia-hexagonal-o-clean-architecture" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> evaluación honesta de la complejidad real del dominio de BomERP hoy.</p>
 <p>Revisa <code>catalogo/categoria</code> y <code>catalogo/producto</code> (LP2 S1-S3): CRUD, una validación de referencia, sin reglas de negocio que dependan de cálculos complejos o de invariantes multi-entidad. Compáralo con lo que se anticipa para <code>ventas/Venta-DetalleVenta</code> (LP2 S4, todavía no implementado): cabecera-detalle con cálculos, control de stock y una operación atómica — más cerca de un agregado DDD real.</p>
+<p>Si tu equipo no lleva LP2, aplica el mismo análisis sobre los módulos de tu propio dominio: ¿cuál es hoy el más simple (CRUD) y cuál el más cercano a un agregado real? (4.1, punto 4).</p>
 <p><strong>Tabla 8. ¿El dominio ya justifica hexagonal o Clean Architecture?</strong></p>
 <table>
 <thead>
@@ -3935,6 +3968,7 @@
 </tbody>
 </table>
 <p>Sesión equivalente en los otros dos cursos, misma semana: LP2 y BD2 todavía no publican su guía de S4 en este repositorio.</p>
+<p>Esta matriz es específica de BomERP, donde ADS, BD2 y LP2 comparten el mismo repositorio. Si tu equipo trabaja un proyecto distinto, documenta la matriz equivalente entre tus propios artefactos de ADS y el código o la base de datos que tu equipo sí construya — la estructura (criterio, evidencia real, relación con la base de datos) es la que importa, no los nombres de LP2/BD2.</p>
 <p><strong>Evidencia de aprendizaje:</strong></p>
 <ul>
 <li>Tabla de trade-offs de los siete estilos arquitectónicos, aplicada a BomERP.</li>
@@ -3944,6 +3978,14 @@
 <li>Conclusión documentada (confirmación o hallazgo), con su justificación.</li>
 <li>Matriz de integración con LP2 y BD2.</li>
 </ul>
+<h3 id="37-spike-opcional-envolver-productoserviceimpl-con-puertos-hexagonales">3.7 Spike opcional: envolver <code>ProductoServiceImpl</code> con puertos hexagonales<a class="headerlink" href="#37-spike-opcional-envolver-productoserviceimpl-con-puertos-hexagonales" title="Permanent link">&para;</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Opcional</p>
+<p>Este paso no forma parte de las tareas obligatorias (3.1-3.6) ni de la rúbrica (4.6). Complétalo solo si te queda tiempo en el laboratorio.</p>
+</div>
+<p><strong>Producto del paso (opcional):</strong> una implementación mínima y descartable de los puertos que bosqueja la Figura 7 (2.4), solo para sentir la indirección real de hexagonal — no se integra al proyecto.</p>
+<p>Si tienes LP2 disponible (o tu propio proyecto tiene una estructura similar controller/service/repository), en una rama descartable: crea una interfaz <code>ProductoUseCase</code> (puerto de entrada) y una interfaz <code>ProductoRepositoryPort</code> (puerto de salida), y haz que <code>ProductoServiceImpl</code> implemente la primera y dependa de la segunda en vez de depender directo de <code>ProductoRepository</code>. No hace falta más que eso — ni pruebas nuevas, ni integrarlo a <code>main</code>.</p>
+<p><strong>Reflexión esperada (2-3 líneas):</strong> ¿Cuánto código cambió realmente? ¿Qué ganaste a cambio de esa indirección, y se sintió proporcional al beneficio para la complejidad real de <code>catalogo/producto</code> hoy (2.11)?</p>
 <h2 id="4-crea-actividad-autonoma">4. Crea: actividad autónoma<a class="headerlink" href="#4-crea-actividad-autonoma" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 2h fuera del aula.</p>
 <h3 id="41-actividad">4.1 Actividad<a class="headerlink" href="#41-actividad" title="Permanent link">&para;</a></h3>
