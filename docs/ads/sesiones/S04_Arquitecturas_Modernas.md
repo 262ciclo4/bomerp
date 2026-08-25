@@ -125,7 +125,7 @@ Ningún estilo elimina el trade-off del anterior — lo cambia por otro. Monolit
 ```mermaid
 flowchart LR
     Capas["Arquitectura en capas<br/>(base de todos)"]
-    Mono["Monolito modular<br/>(BomERP, real)"]
+    Mono["Monolito modular<br/>(BomERP, decision actual)"]
     Hex["Arquitectura hexagonal"]
     Clean["Clean Architecture"]
     Micro["Microservicios"]
@@ -181,16 +181,19 @@ La arquitectura en capas organiza el código en niveles horizontales — cada ca
 
 ```mermaid
 flowchart TB
+    Vista["Capa de vista<br/>(UI - navegador, SPA)"]
     Pres["Capa de presentacion<br/>(Controller)"]
     Neg["Capa de negocio<br/>(Service)"]
     Datos["Capa de acceso a datos<br/>(Repository)"]
     BD[("Base de datos")]
 
-    Pres --> Neg --> Datos --> BD
+    Vista --> Pres --> Neg --> Datos --> BD
 
     classDef today fill:#ffe08a,stroke:#9a6b00,stroke-width:2px,color:#111;
     class Pres,Neg,Datos today;
 ```
+
+La capa de vista es la única que no vive dentro del backend — es quien consume la API (un navegador, una SPA, otra aplicación). Las tres capas resaltadas sí son las que Spring Boot organiza como código: `Controller` (presentación), `Service` (negocio) y `Repository` (acceso a datos).
 
 **Dónde se usa en la práctica:** es la base casi universal de cualquier aplicación empresarial — no compite con los otros cuatro estilos, vive **dentro** de ellos. Un monolito modular tiene capas dentro de cada módulo (como BomERP); un microservicio tiene capas dentro de cada servicio; incluso hexagonal y Clean Architecture son, en el fondo, una forma más estricta de organizar capas, con una regla extra sobre la dirección de las dependencias.
 
