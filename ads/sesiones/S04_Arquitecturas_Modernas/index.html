@@ -3358,7 +3358,7 @@
 <p><strong>Figura 3. Los cinco estilos, de menos a más piezas independientes</strong></p>
 <pre class="mermaid"><code>flowchart LR
     Capas["Arquitectura en capas&lt;br/&gt;(base de todos)"]
-    Mono["Monolito modular&lt;br/&gt;(BomERP, real)"]
+    Mono["Monolito modular&lt;br/&gt;(BomERP, decision actual)"]
     Hex["Arquitectura hexagonal"]
     Clean["Clean Architecture"]
     Micro["Microservicios"]
@@ -3397,15 +3397,17 @@
 <p>La arquitectura en capas organiza el código en niveles horizontales — cada capa depende solo de la que tiene inmediatamente debajo, nunca al revés, y nunca se salta una capa para llegar directo a otra más abajo.</p>
 <p><strong>Figura 5. Diagrama típico de arquitectura en capas</strong></p>
 <pre class="mermaid"><code>flowchart TB
+    Vista["Capa de vista&lt;br/&gt;(UI - navegador, SPA)"]
     Pres["Capa de presentacion&lt;br/&gt;(Controller)"]
     Neg["Capa de negocio&lt;br/&gt;(Service)"]
     Datos["Capa de acceso a datos&lt;br/&gt;(Repository)"]
     BD[("Base de datos")]
 
-    Pres --&gt; Neg --&gt; Datos --&gt; BD
+    Vista --&gt; Pres --&gt; Neg --&gt; Datos --&gt; BD
 
     classDef today fill:#ffe08a,stroke:#9a6b00,stroke-width:2px,color:#111;
     class Pres,Neg,Datos today;</code></pre>
+<p>La capa de vista es la única que no vive dentro del backend — es quien consume la API (un navegador, una SPA, otra aplicación). Las tres capas resaltadas sí son las que Spring Boot organiza como código: <code>Controller</code> (presentación), <code>Service</code> (negocio) y <code>Repository</code> (acceso a datos).</p>
 <p><strong>Dónde se usa en la práctica:</strong> es la base casi universal de cualquier aplicación empresarial — no compite con los otros cuatro estilos, vive <strong>dentro</strong> de ellos. Un monolito modular tiene capas dentro de cada módulo (como BomERP); un microservicio tiene capas dentro de cada servicio; incluso hexagonal y Clean Architecture son, en el fondo, una forma más estricta de organizar capas, con una regla extra sobre la dirección de las dependencias.</p>
 <p><strong>Error frecuente:</strong> confundir "capas" con "monolito" — son ejes distintos. Capas responde "¿cómo se organiza el código dentro de una pieza?"; monolito modular / microservicios responde "¿cuántas piezas desplegables hay?". BomERP usa las dos a la vez: capas dentro de cada módulo, monolito modular como forma de desplegar todos los módulos juntos.</p>
 <p><strong>Ejemplo de referencia (LP2).</strong> <code>catalogo/producto/{controller,service,repository,entity}</code> (LP2, desde S1) sigue este flujo exacto: <code>ProductoController</code> nunca llama a <code>ProductoRepository</code> directo, siempre pasa por <code>ProductoService</code> (ADR-001 de LP2).</p>
