@@ -3570,14 +3570,55 @@
     S3 --&gt; DB3[("BD Seguridad")]
     S2 -.-&gt;|"HTTP o mensajeria"| S1</code></pre>
 <p>Cada base de datos le pertenece a un solo servicio — ningún otro servicio la consulta directo, ni siquiera para leer; si <code>Ventas</code> necesita un dato de <code>Catalogo</code>, se lo pide por red (<code>S2 -.-&gt; S1</code>), nunca leyendo la base de <code>Catalogo</code> directamente. Esa regla es la misma que un monolito modular impone entre módulos (2.3) — la diferencia es que acá se aplica por proceso y por red, no dentro de un mismo ejecutable.</p>
+<p><strong>Escalabilidad independiente, la otra cara de separar en procesos.</strong> A diferencia de un monolito modular (2.3), donde toda la aplicación escala junta — más instancias del ejecutable completo —, en microservicios cada servicio escala según su propia carga: si el <code>Servicio Catalogo</code> recibe mil veces más tráfico de lectura que el <code>Servicio Seguridad</code>, se agregan instancias solo de <code>Catalogo</code>, sin tocar el resto. Esa independencia es la ganancia real que compensa la complejidad operacional (2.2, Tabla 3) — sin ella, separar en procesos no tendría sentido.</p>
+<p><strong>El costo real: teorema CAP.</strong> El teorema CAP dice que un sistema distribuido no puede garantizar al mismo tiempo tres propiedades: <strong>Consistencia</strong> (todas las réplicas ven el mismo dato al mismo tiempo), <strong>Disponibilidad</strong> (toda petición recibe una respuesta) y <strong>Tolerancia a particiones</strong> (el sistema sigue funcionando aunque falle la red entre nodos). En microservicios, la partición de red <strong>va a ocurrir</strong> — dos servicios se comunican por red, y la red falla tarde o temprano —, así que la P no es negociable; la decisión real está entre C y A cuando eso pasa.</p>
+<p><strong>Tabla 4. Teorema CAP: la decisión real en microservicios</strong></p>
+<table>
+<thead>
+<tr>
+<th>Si prioriza</th>
+<th>Qué gana</th>
+<th>Qué pierde</th>
+<th>Ejemplo típico</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Consistencia (CP)</td>
+<td>Todos los servicios ven siempre el mismo dato</td>
+<td>Ante una partición de red, el sistema puede rechazar peticiones hasta poder confirmar el dato real</td>
+<td>Un servicio de inventario que no acepta una venta si no puede confirmar el stock exacto con <code>Catalogo</code> en ese instante</td>
+</tr>
+<tr>
+<td>Disponibilidad (AP)</td>
+<td>El sistema sigue respondiendo aunque haya partición de red</td>
+<td>Los datos pueden quedar temporalmente desactualizados entre servicios</td>
+<td><code>Ventas</code> acepta un pedido con el precio que tenía cacheado de <code>Catalogo</code>, aunque haya cambiado hace unos segundos</td>
+</tr>
+</tbody>
+</table>
+<p>La mayoría de sistemas de microservicios reales eligen AP con <strong>consistencia eventual</strong>: cada servicio sigue respondiendo con los datos que tiene, y la inconsistencia temporal se reconcilia después — por ejemplo, con eventos (<code>Catalogo</code> publica "el precio cambió", <code>Ventas</code> actualiza su copia cuando el evento le llega). El patrón que coordina operaciones que cruzan varios servicios sin una transacción distribuida real se llama <strong>Saga</strong>: una secuencia de pasos locales, cada uno con su propia compensación si algo falla más adelante, en vez de una única transacción ACID sobre varias bases de datos.</p>
+<p><strong>Figura 12. Consistencia fuerte vs. consistencia eventual, si BomERP migrara a microservicios</strong></p>
+<pre class="mermaid"><code>flowchart TB
+    subgraph Fuerte["Consistencia fuerte (CP): transaccion distribuida"]
+        direction LR
+        V1["Servicio Ventas"] --&gt;|"1. pide bloquear stock"| C1["Servicio Catalogo"]
+        C1 --&gt;|"2. espera confirmar en ambas bases antes de responder"| V1
+        V1 -.-&gt;|"si Catalogo no responde a tiempo"| X1["Pedido rechazado"]
+    end
+    subgraph Eventual["Consistencia eventual (AP): lo que elegiria BomERP, si migrara"]
+        direction LR
+        V2["Servicio Ventas&lt;br/&gt;(precio cacheado localmente)"] --&gt;|"3. confirma el pedido con el dato que tiene"| OK2["Pedido aceptado"]
+        C2["Servicio Catalogo&lt;br/&gt;(el precio cambio)"] -.-&gt;|"4. publica evento 'precio actualizado'"| V2
+    end</code></pre>
 <p><strong>Dónde se usa en la práctica:</strong> organizaciones grandes, con muchos equipos trabajando en paralelo que necesitan desplegar sin coordinarse entre sí, y servicios con necesidades de escala muy distintas entre ellos (por ejemplo, un servicio de búsqueda que recibe mil veces más tráfico que uno de facturación) — casos frecuentemente citados son Netflix, Amazon y Uber, documentados en sus propios blogs de ingeniería.</p>
-<p><strong>Ejemplo de referencia (LP2).</strong> BomERP no usa microservicios — el ADR-001 de LP2 lo dice explícitamente: el costo (red, bases de datos distribuidas, versionado de contratos) no tiene ninguna ganancia real a cambio en un proyecto de equipo pequeño con un solo ciclo de despliegue.</p>
+<p><strong>Ejemplo de referencia (LP2).</strong> BomERP no usa microservicios — el ADR-001 de LP2 lo dice explícitamente: el costo (red, bases de datos distribuidas, versionado de contratos, y ahora también CAP y consistencia eventual) no tiene ninguna ganancia real a cambio en un proyecto de equipo pequeño con un solo ciclo de despliegue. Con una sola Oracle compartida, <code>ProductoServiceImpl</code> y <code>CategoriaServiceImpl</code> (LP2 S3) leen el dato real dentro de la misma transacción — no hay partición de red que resolver, ni necesidad de elegir entre C y A. Esa es la ganancia concreta de no separar en procesos todavía: no es que el equipo no sepa resolver consistencia eventual, es que el proyecto no paga ese costo si no lo necesita.</p>
 <h3 id="28-escalabilidad-horizontal-y-diseno-stateless">2.8 Escalabilidad horizontal y diseño <em>stateless</em><a class="headerlink" href="#28-escalabilidad-horizontal-y-diseno-stateless" title="Permanent link">&para;</a></h3>
 <p><strong>Escalabilidad horizontal</strong>: la capacidad de atender más carga agregando más copias idénticas de la aplicación (más instancias), en vez de agregarle más recursos a una sola instancia (escalar verticalmente). Para que escalar horizontalmente funcione, cualquier petición debe poder ser atendida por <strong>cualquier</strong> instancia, indistintamente.</p>
 <p><strong>Diseño <em>stateless</em></strong>: que ninguna instancia guarde en memoria información específica de un cliente entre una petición y la siguiente (por ejemplo, datos de sesión). Si una instancia guardara ese estado, las peticiones de ese cliente tendrían que ir siempre a la misma instancia (<em>sticky session</em>) — lo que rompe la promesa de "cualquier instancia atiende cualquier petición" y limita cuánto se puede escalar.</p>
 <p>Los dos conceptos están relacionados pero no son lo mismo: <em>stateless</em> es una propiedad del diseño (nadie guarda estado por cliente); escalabilidad horizontal es la consecuencia práctica que ese diseño hace posible.</p>
 <p><strong>Ejemplo de referencia (LP2).</strong> LP2 ya demostró esto con evidencia real, no como ejercicio teórico: S1 (3.3) levantó dos instancias de <code>bomerp-backend</code> en paralelo (puertos <code>8080</code> y <code>8081</code>), ambas conectadas a la misma Oracle, y verificó que cualquiera de las dos responde <code>/api/v1/hello</code> y <code>/actuator/health</code> sin ninguna coordinación entre ellas. Eso funciona porque el backend nunca guardó estado de cliente en memoria — ni siquiera hay autenticación todavía (JWT se difiere a S10, ver ADR-004 de LP2), así que no hay sesión que sincronizar entre instancias. Cuando JWT llegue en S10, seguirá siendo <em>stateless</em>: un JWT es un token autocontenido que el cliente reenvía en cada petición — ninguna instancia necesita recordar quién inició sesión.</p>
-<p><strong>Figura 12. Por qué el diseño <em>stateless</em> es lo que permite escalar horizontalmente</strong></p>
+<p><strong>Figura 13. Por qué el diseño <em>stateless</em> es lo que permite escalar horizontalmente</strong></p>
 <pre class="mermaid"><code>flowchart TB
     subgraph ConEstado["Con estado en memoria (rompe el escalamiento)"]
         direction LR
@@ -3612,7 +3653,7 @@
 </ul>
 <h3 id="31-profundizar-la-evaluacion-de-estilos-arquitectonicos">3.1 Profundizar la evaluación de estilos arquitectónicos<a class="headerlink" href="#31-profundizar-la-evaluacion-de-estilos-arquitectonicos" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> tabla de trade-offs de los cinco estilos, aplicada a BomERP.</p>
-<p><strong>Tabla 4. Trade-offs de los cinco estilos, aplicados a BomERP</strong></p>
+<p><strong>Tabla 5. Trade-offs de los cinco estilos, aplicados a BomERP</strong></p>
 <table>
 <thead>
 <tr>
@@ -3659,7 +3700,7 @@
 <h3 id="32-verificar-escalabilidad-horizontal-con-evidencia-real">3.2 Verificar escalabilidad horizontal con evidencia real<a class="headerlink" href="#32-verificar-escalabilidad-horizontal-con-evidencia-real" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> confirmación de que BomERP escala horizontalmente, con evidencia real de LP2.</p>
 <p>Repasa LP2 S1 (3.3, Figura 7): dos instancias de <code>bomerp-backend</code>, puertos <code>8080</code> y <code>8081</code>, ambas conectadas a la misma Oracle. Si tienes el proyecto de LP2 disponible, reproduce los comandos de 3.3.1-3.3.2 de esa guía y confirma que ambas instancias responden de forma independiente.</p>
-<p><strong>Tabla 5. Evidencia de escalabilidad horizontal</strong></p>
+<p><strong>Tabla 6. Evidencia de escalabilidad horizontal</strong></p>
 <table>
 <thead>
 <tr>
@@ -3693,7 +3734,7 @@
 <h3 id="34-evaluar-si-ddd-orienta-hacia-hexagonal-o-clean-architecture">3.4 Evaluar si DDD orienta hacia hexagonal o Clean Architecture<a class="headerlink" href="#34-evaluar-si-ddd-orienta-hacia-hexagonal-o-clean-architecture" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> evaluación honesta de la complejidad real del dominio de BomERP hoy.</p>
 <p>Revisa <code>catalogo/categoria</code> y <code>catalogo/producto</code> (LP2 S1-S3): CRUD, una validación de referencia, sin reglas de negocio que dependan de cálculos complejos o de invariantes multi-entidad. Compáralo con lo que se anticipa para <code>ventas/Venta-DetalleVenta</code> (LP2 S4, todavía no implementado): cabecera-detalle con cálculos, control de stock y una operación atómica — más cerca de un agregado DDD real.</p>
-<p><strong>Tabla 6. ¿El dominio ya justifica hexagonal o Clean Architecture?</strong></p>
+<p><strong>Tabla 7. ¿El dominio ya justifica hexagonal o Clean Architecture?</strong></p>
 <table>
 <thead>
 <tr>
@@ -3720,7 +3761,7 @@
 <p>A diferencia de S3 (donde el hallazgo esperado era una tensión de diseño), acá el resultado más probable es una <strong>confirmación</strong>: monolito modular con Spring Modulith sigue siendo la elección correcta para BomERP, con evidencia real de escalabilidad horizontal y diseño <em>stateless</em>, y sin que el dominio actual justifique todavía hexagonal o Clean Architecture. Documentar una confirmación bien justificada es tan válido como documentar un hallazgo — lo que se evalúa es la calidad del razonamiento, no que aparezca un problema donde no lo hay.</p>
 <h3 id="36-relacionar-con-lp2-y-bd2">3.6 Relacionar con LP2 y BD2<a class="headerlink" href="#36-relacionar-con-lp2-y-bd2" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> matriz de integración de la sesión.</p>
-<p><strong>Tabla 7. Matriz de integración ADS-LP2-BD2 (S4)</strong></p>
+<p><strong>Tabla 8. Matriz de integración ADS-LP2-BD2 (S4)</strong></p>
 <table>
 <thead>
 <tr>
@@ -3862,7 +3903,7 @@ revisarse con evidencia, en vez de darse por cerrada?
 <li>¿Por qué "microservicios" y "Aplicaciones Distribuidas" no son lo mismo que esta sesión de ADS?</li>
 </ol>
 <h3 id="46-rubrica-de-evaluacion">4.6 Rúbrica de evaluación<a class="headerlink" href="#46-rubrica-de-evaluacion" title="Permanent link">&para;</a></h3>
-<p><strong>Tabla 8. Rúbrica de evaluación</strong></p>
+<p><strong>Tabla 9. Rúbrica de evaluación</strong></p>
 <table>
 <thead>
 <tr>
@@ -3939,6 +3980,7 @@ Indica 2 fortalezas y 2 recomendaciones.
 <li>Cockburn, A. (2005). <em>Hexagonal Architecture</em>. https://alistair.cockburn.us/hexagonal-architecture/</li>
 <li>Thoughtworks. (2024). <em>Hexagonal architecture explained through a practical example</em>. https://www.thoughtworks.com/insights/blog/architecture/hexagonal-architecture-explained-practical-example</li>
 <li>Google. (2025). <em>Guide to app architecture</em>. Android Developers. https://developer.android.com/topic/architecture</li>
+<li>Gilbert, S., &amp; Lynch, N. (2002). Brewer's conjecture and the feasibility of consistent, available, partition-tolerant web services. <em>ACM SIGACT News</em>, 33(2), 51-59.</li>
 </ol>
 
 
