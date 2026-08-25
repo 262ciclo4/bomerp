@@ -201,11 +201,29 @@ La capa de vista es la única que no vive dentro del backend — es quien consum
 
 **Ejemplo de referencia (LP2).** `catalogo/producto/{controller,service,repository,entity}` (LP2, desde S1) sigue este flujo exacto: `ProductoController` nunca llama a `ProductoRepository` directo, siempre pasa por `ProductoService` (ADR-001 de LP2).
 
+**Figura 6. La Figura 5, con las clases reales de LP2**
+
+```mermaid
+flowchart TB
+    Vista["SPA / Swagger / cliente REST"]
+    Pres["ProductoController"]
+    Neg["ProductoServiceImpl"]
+    Datos["ProductoRepository"]
+    BD[("Oracle - BOM_CATALOGO.PRODUCTOS")]
+
+    Vista --> Pres --> Neg --> Datos --> BD
+
+    classDef today fill:#ffe08a,stroke:#9a6b00,stroke-width:2px,color:#111;
+    class Pres,Neg,Datos today;
+```
+
+Mismo diagrama, mismas cuatro cajas — la única diferencia con la Figura 5 es que acá cada capa tiene su nombre de clase real, no una etiqueta genérica.
+
 ### 2.5 Arquitectura hexagonal (puertos y adaptadores), en profundidad
 
 La arquitectura hexagonal pone el dominio (las reglas de negocio) en el centro, sin que conozca nada de la tecnología que lo rodea. La comunicación con el exterior pasa por **puertos** (interfaces que el dominio define, según lo que necesita) y **adaptadores** (implementaciones concretas de esos puertos, una por cada tecnología externa: REST, base de datos, mensajería).
 
-**Figura 6. Diagrama típico de arquitectura hexagonal**
+**Figura 7. Diagrama típico de arquitectura hexagonal**
 
 ```mermaid
 flowchart TB
@@ -232,17 +250,33 @@ La flecha siempre entra al núcleo por un puerto de entrada y sale por un puerto
 
 **Ejemplo de referencia (LP2).** `catalogo/producto` no tiene esta estructura, y no debería tenerla todavía — `ProductoServiceImpl` llama directo a `ProductoRepository` (Spring Data JPA), sin un puerto de por medio. No es un error: es que hoy no hay lógica de negocio compleja que justifique la indirección.
 
-**Tabla 3. Equivalencia: clases reales de LP2 vs. roles hexagonales**
+**Figura 8. Cómo quedaría `catalogo/producto` si se migrara a hexagonal**
 
-| Rol hexagonal | ¿Qué clase real cumple ese rol hoy? | Qué cambiaría si se migrara |
-|---|---|---|
-| Puerto de entrada | No existe — `ProductoController` llama directo a `ProductoService` | Se crearía una interfaz nueva (ej. `ProductoUseCase`); `ProductoController` pasaría a depender de ella, no de `ProductoService` directamente |
-| Lógica de negocio pura | `ProductoServiceImpl`, parcialmente — hoy conoce `ProductoRepository` (Spring Data JPA) | Dejaría de depender de Spring Data JPA directo; dependería solo de un puerto de salida propio del dominio |
-| Puerto de salida | No existe — `ProductoRepository` se inyecta directo en el service | Se crearía una interfaz nueva (ej. `ProductoRepositoryPort`); `ProductoRepository` pasaría a implementarla, en vez de ser inyectada directo |
-| Adaptador REST (entrada) | `ProductoController` | Implementaría el puerto de entrada, en vez de ser la única puerta al servicio |
-| Adaptador de persistencia (salida) | `ProductoRepository` (Spring Data JPA) | Implementaría el puerto de salida, quedando como un detalle de infraestructura reemplazable |
+```mermaid
+flowchart TB
+    subgraph Adaptadores["Adaptadores (infraestructura, reemplazables)"]
+        RestAdapter["Adaptador REST<br/>(ProductoController)"]
+        DbAdapter["Adaptador de persistencia Producto<br/>(ProductoRepository)"]
+        CatAdapter["Adaptador de persistencia Categoria<br/>(CategoriaRepository)"]
+    end
+    subgraph Core["Nucleo del dominio (no conoceria nada de afuera)"]
+        Puerto1["Puerto de entrada<br/>(interfaz nueva: ProductoUseCase)"]
+        Logica["Logica de negocio pura<br/>(ProductoServiceImpl, sin Spring ni JPA)"]
+        Puerto2["Puerto de salida Producto<br/>(interfaz nueva: ProductoRepositoryPort)"]
+        Puerto3["Puerto de salida Categoria<br/>(interfaz nueva: CategoriaLookupPort)"]
+        Puerto1 --> Logica
+        Logica --> Puerto2
+        Logica --> Puerto3
+    end
 
-`ProductoServiceImpl` hoy cumple *aproximadamente* el rol de "lógica de negocio" de la Figura 6, pero sin los puertos que la aislarían de verdad — sigue conociendo Spring Data JPA por su nombre real (`ProductoRepository`), no por una interfaz que el propio dominio hubiera definido.
+    RestAdapter --> Puerto1
+    Puerto2 --> DbAdapter
+    Puerto3 --> CatAdapter
+```
+
+`CategoriaRepository` aparece como un segundo adaptador de salida porque `ProductoServiceImpl` real ya depende de él (para validar `categoriaId`, LP2 S3, 3.9) — no solo de `ProductoRepository`. Una migración a hexagonal tendría que aislar esa dependencia también, con su propio puerto.
+
+`ProductoServiceImpl` hoy cumple *aproximadamente* el rol de "lógica de negocio" de la Figura 7, pero sin los puertos que la aislarían de verdad. Migrar no movería mucho código: `ProductoController` y `ProductoRepository` se quedan donde están, solo pasan a implementar una interfaz nueva en vez de ser llamados directo.
 
 ### 2.6 Microservicios, en profundidad
 
@@ -250,7 +284,7 @@ En microservicios, cada módulo de negocio es un **proceso independiente**, con 
 
 La definición es más simple de lo que parece si no se mezcla con otra pregunta distinta: microservicios solo decide **cuántos procesos independientes hay y dónde están sus límites** — no dice nada sobre cómo se organiza el código *dentro* de cada uno. Cada microservicio, por separado, puede construirse con capas (2.4), con arquitectura hexagonal (2.5), con Clean Architecture (2.7), o incluso sin ninguna disciplina interna — son decisiones independientes. Es común, de hecho, que un microservicio con lógica de negocio compleja use hexagonal por dentro, mientras otro más simple (un CRUD) use solo capas.
 
-**Figura 7. Diagrama típico de microservicios**
+**Figura 9. Diagrama típico de microservicios**
 
 ```mermaid
 flowchart TB
@@ -274,7 +308,7 @@ Cada base de datos le pertenece a un solo servicio — ningún otro servicio la 
 
 Clean Architecture generaliza la idea de hexagonal en **círculos concéntricos**: entidades del dominio en el centro, casos de uso alrededor, adaptadores de interfaz más afuera, y frameworks/herramientas en el borde exterior. La regla que lo sostiene todo es la **regla de dependencia**: el código de un círculo solo puede depender de círculos más internos, nunca de uno más externo.
 
-**Figura 8. Diagrama típico de Clean Architecture (círculos concéntricos)**
+**Figura 10. Diagrama típico de Clean Architecture (círculos concéntricos)**
 
 ```mermaid
 flowchart TB
@@ -293,16 +327,20 @@ La flecha de dependencia siempre apunta hacia adentro: `Frameworks` puede conoce
 
 **Ejemplo de referencia (LP2).** Igual que con hexagonal, BomERP aplica los *principios* de separación de capas (Tabla 5 de S1: "parcialmente") sin adoptar la estructura formal completa de círculos — el mismo criterio de 2.9 (DDD) decide si algún módulo llega a justificarlo más adelante.
 
-**Tabla 4. Equivalencia: clases reales de LP2 vs. círculos de Clean Architecture**
+**Figura 11. Dónde caería cada clase real de LP2 en los círculos de Clean Architecture**
 
-| Círculo (de adentro hacia afuera) | ¿Qué clase real cumple ese rol hoy? | Qué cambiaría si se migrara |
-|---|---|---|
-| Entidades | `Producto`, `Categoria` — hoy son entidades JPA, ya acopladas a Hibernate (`@Entity`, `@Column`) | Se separarían en objetos de dominio puros, sin ninguna anotación de persistencia |
-| Casos de uso | `ProductoServiceImpl`, parcialmente — hoy depende de Spring (`@Service`, `@Transactional`) y de Spring Data JPA | Se independizaría del framework; solo conocería interfaces propias del dominio |
-| Adaptadores de interfaz | `ProductoController`, `ProductoMapper`, la entidad JPA real de `Producto` | Se mantendrían tal cual están hoy, pero como una capa explícitamente separada del caso de uso |
-| Frameworks y drivers | Spring Boot, Spring Data JPA, Oracle | Sin cambios — es la capa que ya rodea todo, incluso hoy |
+```mermaid
+flowchart TB
+    subgraph Frameworks["Frameworks y drivers: Spring Boot, Spring Data JPA, Oracle (sin cambios)"]
+        subgraph Adapters["Adaptadores de interfaz: ProductoController, ProductoMapper"]
+            subgraph UseCases["Casos de uso: ProductoServiceImpl (hoy acoplado a Spring/JPA)"]
+                Entities["Entidades: Producto, Categoria (hoy son @Entity, acopladas a Hibernate)"]
+            end
+        end
+    end
+```
 
-Esta tabla es casi la misma que la Tabla 3 (hexagonal) con otros nombres — no es casualidad (2.7): Clean Architecture es la misma idea de aislar el dominio, expresada como círculos en vez de puertos y adaptadores.
+Es casi el mismo ejercicio que la Figura 8 (hexagonal) con otro vocabulario — no es casualidad (2.7): Clean Architecture es la misma idea de aislar el dominio, expresada como círculos en vez de puertos y adaptadores. Lo que hoy "no encaja" en el círculo que le tocaría es siempre lo mismo: `ProductoServiceImpl` (caso de uso) y `Producto`/`Categoria` (entidades) todavía dependen de Spring y de Hibernate — la migración movería esa dependencia hacia afuera, no las reescribiría desde cero.
 
 ### 2.8 Escalabilidad horizontal y diseño *stateless*
 
@@ -314,7 +352,7 @@ Los dos conceptos están relacionados pero no son lo mismo: *stateless* es una p
 
 **Ejemplo de referencia (LP2).** LP2 ya demostró esto con evidencia real, no como ejercicio teórico: S1 (3.3) levantó dos instancias de `bomerp-backend` en paralelo (puertos `8080` y `8081`), ambas conectadas a la misma Oracle, y verificó que cualquiera de las dos responde `/api/v1/hello` y `/actuator/health` sin ninguna coordinación entre ellas. Eso funciona porque el backend nunca guardó estado de cliente en memoria — ni siquiera hay autenticación todavía (JWT se difiere a S10, ver ADR-004 de LP2), así que no hay sesión que sincronizar entre instancias. Cuando JWT llegue en S10, seguirá siendo *stateless*: un JWT es un token autocontenido que el cliente reenvía en cada petición — ninguna instancia necesita recordar quién inició sesión.
 
-**Figura 9. Por qué el diseño *stateless* es lo que permite escalar horizontalmente**
+**Figura 12. Por qué el diseño *stateless* es lo que permite escalar horizontalmente**
 
 ```mermaid
 flowchart TB
@@ -365,7 +403,7 @@ Tiempo: 2h.
 
 **Producto del paso:** tabla de trade-offs de los cinco estilos, aplicada a BomERP.
 
-**Tabla 5. Trade-offs de los cinco estilos, aplicados a BomERP**
+**Tabla 3. Trade-offs de los cinco estilos, aplicados a BomERP**
 
 | Estilo | ¿Aplica a BomERP hoy? | Trade-off que se ganaría | Trade-off que se pagaría |
 |---|---|---|---|
@@ -383,7 +421,7 @@ Esta tabla profundiza la Tabla 5 de S1 (que solo respondía sí/no) agregando ex
 
 Repasa LP2 S1 (3.3, Figura 7): dos instancias de `bomerp-backend`, puertos `8080` y `8081`, ambas conectadas a la misma Oracle. Si tienes el proyecto de LP2 disponible, reproduce los comandos de 3.3.1-3.3.2 de esa guía y confirma que ambas instancias responden de forma independiente.
 
-**Tabla 6. Evidencia de escalabilidad horizontal**
+**Tabla 4. Evidencia de escalabilidad horizontal**
 
 | Verificación | Resultado esperado (LP2 S1, 3.3.2) |
 |---|---|
@@ -406,7 +444,7 @@ Revisa el código real de `ProductoServiceImpl`/`CategoriaServiceImpl` (LP2 S1-S
 
 Revisa `catalogo/categoria` y `catalogo/producto` (LP2 S1-S3): CRUD, una validación de referencia, sin reglas de negocio que dependan de cálculos complejos o de invariantes multi-entidad. Compáralo con lo que se anticipa para `ventas/Venta-DetalleVenta` (LP2 S4, todavía no implementado): cabecera-detalle con cálculos, control de stock y una operación atómica — más cerca de un agregado DDD real.
 
-**Tabla 7. ¿El dominio ya justifica hexagonal o Clean Architecture?**
+**Tabla 5. ¿El dominio ya justifica hexagonal o Clean Architecture?**
 
 | Módulo | Complejidad real hoy | ¿Justifica aislar el dominio? |
 |---|---|---|
@@ -423,7 +461,7 @@ A diferencia de S3 (donde el hallazgo esperado era una tensión de diseño), ac�
 
 **Producto del paso:** matriz de integración de la sesión.
 
-**Tabla 8. Matriz de integración ADS-LP2-BD2 (S4)**
+**Tabla 6. Matriz de integración ADS-LP2-BD2 (S4)**
 
 | Criterio evaluado | Evidencia real en LP2 | Relación con BD2 |
 |---|---|---|
@@ -554,7 +592,7 @@ La evidencia individual se considera completa si:
 
 ### 4.6 Rúbrica de evaluación
 
-**Tabla 9. Rúbrica de evaluación**
+**Tabla 7. Rúbrica de evaluación**
 
 | Criterio | Peso (%) | A (20 pts) | B (15 pts) | C (10 pts) | D (5 pts) | Nivel obtenido |
 |---|---:|---|---|---|---|---:|
