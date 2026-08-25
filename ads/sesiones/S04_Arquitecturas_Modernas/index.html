@@ -3411,9 +3411,22 @@
 <p><strong>Dónde se usa en la práctica:</strong> es la base casi universal de cualquier aplicación empresarial — no compite con los otros cuatro estilos, vive <strong>dentro</strong> de ellos. Un monolito modular tiene capas dentro de cada módulo (como BomERP); un microservicio tiene capas dentro de cada servicio; incluso hexagonal y Clean Architecture son, en el fondo, una forma más estricta de organizar capas, con una regla extra sobre la dirección de las dependencias.</p>
 <p><strong>Error frecuente:</strong> confundir "capas" con "monolito" — son ejes distintos. Capas responde "¿cómo se organiza el código dentro de una pieza?"; monolito modular / microservicios responde "¿cuántas piezas desplegables hay?". BomERP usa las dos a la vez: capas dentro de cada módulo, monolito modular como forma de desplegar todos los módulos juntos.</p>
 <p><strong>Ejemplo de referencia (LP2).</strong> <code>catalogo/producto/{controller,service,repository,entity}</code> (LP2, desde S1) sigue este flujo exacto: <code>ProductoController</code> nunca llama a <code>ProductoRepository</code> directo, siempre pasa por <code>ProductoService</code> (ADR-001 de LP2).</p>
+<p><strong>Figura 6. La Figura 5, con las clases reales de LP2</strong></p>
+<pre class="mermaid"><code>flowchart TB
+    Vista["SPA / Swagger / cliente REST"]
+    Pres["ProductoController"]
+    Neg["ProductoServiceImpl"]
+    Datos["ProductoRepository"]
+    BD[("Oracle - BOM_CATALOGO.PRODUCTOS")]
+
+    Vista --&gt; Pres --&gt; Neg --&gt; Datos --&gt; BD
+
+    classDef today fill:#ffe08a,stroke:#9a6b00,stroke-width:2px,color:#111;
+    class Pres,Neg,Datos today;</code></pre>
+<p>Mismo diagrama, mismas cuatro cajas — la única diferencia con la Figura 5 es que acá cada capa tiene su nombre de clase real, no una etiqueta genérica.</p>
 <h3 id="25-arquitectura-hexagonal-puertos-y-adaptadores-en-profundidad">2.5 Arquitectura hexagonal (puertos y adaptadores), en profundidad<a class="headerlink" href="#25-arquitectura-hexagonal-puertos-y-adaptadores-en-profundidad" title="Permanent link">&para;</a></h3>
 <p>La arquitectura hexagonal pone el dominio (las reglas de negocio) en el centro, sin que conozca nada de la tecnología que lo rodea. La comunicación con el exterior pasa por <strong>puertos</strong> (interfaces que el dominio define, según lo que necesita) y <strong>adaptadores</strong> (implementaciones concretas de esos puertos, una por cada tecnología externa: REST, base de datos, mensajería).</p>
-<p><strong>Figura 6. Diagrama típico de arquitectura hexagonal</strong></p>
+<p><strong>Figura 7. Diagrama típico de arquitectura hexagonal</strong></p>
 <pre class="mermaid"><code>flowchart TB
     subgraph Adaptadores["Adaptadores (infraestructura, reemplazables)"]
         RestAdapter["Adaptador REST"]
@@ -3433,48 +3446,32 @@
 <p>La flecha siempre entra al núcleo por un puerto de entrada y sale por un puerto de salida — nunca un adaptador llama directo a <code>Logica</code>, y <code>Logica</code> nunca importa una clase de <code>RestAdapter</code> ni de <code>DbAdapter</code>. Eso es lo que permite probar <code>Logica</code> con pruebas unitarias puras, sin levantar servidor HTTP ni base de datos, y lo que permite cambiar de tecnología (por ejemplo, de REST a mensajería) sin tocar el dominio — solo se escribe un adaptador nuevo.</p>
 <p><strong>Dónde se usa en la práctica:</strong> dominios con reglas de negocio genuinamente complejas que deben sobrevivir a cambios de tecnología — sistemas bancarios centrales, motores de tarificación de seguros, o cualquier núcleo de negocio que un equipo espera mantener por años, mientras la infraestructura de alrededor cambia varias veces.</p>
 <p><strong>Ejemplo de referencia (LP2).</strong> <code>catalogo/producto</code> no tiene esta estructura, y no debería tenerla todavía — <code>ProductoServiceImpl</code> llama directo a <code>ProductoRepository</code> (Spring Data JPA), sin un puerto de por medio. No es un error: es que hoy no hay lógica de negocio compleja que justifique la indirección.</p>
-<p><strong>Tabla 3. Equivalencia: clases reales de LP2 vs. roles hexagonales</strong></p>
-<table>
-<thead>
-<tr>
-<th>Rol hexagonal</th>
-<th>¿Qué clase real cumple ese rol hoy?</th>
-<th>Qué cambiaría si se migrara</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Puerto de entrada</td>
-<td>No existe — <code>ProductoController</code> llama directo a <code>ProductoService</code></td>
-<td>Se crearía una interfaz nueva (ej. <code>ProductoUseCase</code>); <code>ProductoController</code> pasaría a depender de ella, no de <code>ProductoService</code> directamente</td>
-</tr>
-<tr>
-<td>Lógica de negocio pura</td>
-<td><code>ProductoServiceImpl</code>, parcialmente — hoy conoce <code>ProductoRepository</code> (Spring Data JPA)</td>
-<td>Dejaría de depender de Spring Data JPA directo; dependería solo de un puerto de salida propio del dominio</td>
-</tr>
-<tr>
-<td>Puerto de salida</td>
-<td>No existe — <code>ProductoRepository</code> se inyecta directo en el service</td>
-<td>Se crearía una interfaz nueva (ej. <code>ProductoRepositoryPort</code>); <code>ProductoRepository</code> pasaría a implementarla, en vez de ser inyectada directo</td>
-</tr>
-<tr>
-<td>Adaptador REST (entrada)</td>
-<td><code>ProductoController</code></td>
-<td>Implementaría el puerto de entrada, en vez de ser la única puerta al servicio</td>
-</tr>
-<tr>
-<td>Adaptador de persistencia (salida)</td>
-<td><code>ProductoRepository</code> (Spring Data JPA)</td>
-<td>Implementaría el puerto de salida, quedando como un detalle de infraestructura reemplazable</td>
-</tr>
-</tbody>
-</table>
-<p><code>ProductoServiceImpl</code> hoy cumple <em>aproximadamente</em> el rol de "lógica de negocio" de la Figura 6, pero sin los puertos que la aislarían de verdad — sigue conociendo Spring Data JPA por su nombre real (<code>ProductoRepository</code>), no por una interfaz que el propio dominio hubiera definido.</p>
+<p><strong>Figura 8. Cómo quedaría <code>catalogo/producto</code> si se migrara a hexagonal</strong></p>
+<pre class="mermaid"><code>flowchart TB
+    subgraph Adaptadores["Adaptadores (infraestructura, reemplazables)"]
+        RestAdapter["Adaptador REST&lt;br/&gt;(ProductoController)"]
+        DbAdapter["Adaptador de persistencia Producto&lt;br/&gt;(ProductoRepository)"]
+        CatAdapter["Adaptador de persistencia Categoria&lt;br/&gt;(CategoriaRepository)"]
+    end
+    subgraph Core["Nucleo del dominio (no conoceria nada de afuera)"]
+        Puerto1["Puerto de entrada&lt;br/&gt;(interfaz nueva: ProductoUseCase)"]
+        Logica["Logica de negocio pura&lt;br/&gt;(ProductoServiceImpl, sin Spring ni JPA)"]
+        Puerto2["Puerto de salida Producto&lt;br/&gt;(interfaz nueva: ProductoRepositoryPort)"]
+        Puerto3["Puerto de salida Categoria&lt;br/&gt;(interfaz nueva: CategoriaLookupPort)"]
+        Puerto1 --&gt; Logica
+        Logica --&gt; Puerto2
+        Logica --&gt; Puerto3
+    end
+
+    RestAdapter --&gt; Puerto1
+    Puerto2 --&gt; DbAdapter
+    Puerto3 --&gt; CatAdapter</code></pre>
+<p><code>CategoriaRepository</code> aparece como un segundo adaptador de salida porque <code>ProductoServiceImpl</code> real ya depende de él (para validar <code>categoriaId</code>, LP2 S3, 3.9) — no solo de <code>ProductoRepository</code>. Una migración a hexagonal tendría que aislar esa dependencia también, con su propio puerto.</p>
+<p><code>ProductoServiceImpl</code> hoy cumple <em>aproximadamente</em> el rol de "lógica de negocio" de la Figura 7, pero sin los puertos que la aislarían de verdad. Migrar no movería mucho código: <code>ProductoController</code> y <code>ProductoRepository</code> se quedan donde están, solo pasan a implementar una interfaz nueva en vez de ser llamados directo.</p>
 <h3 id="26-microservicios-en-profundidad">2.6 Microservicios, en profundidad<a class="headerlink" href="#26-microservicios-en-profundidad" title="Permanent link">&para;</a></h3>
 <p>En microservicios, cada módulo de negocio es un <strong>proceso independiente</strong>, con su propia base de datos, su propio ciclo de despliegue y, generalmente, su propio repositorio de código. La comunicación entre servicios es siempre por red (HTTP, mensajería), nunca por llamada directa en memoria.</p>
 <p>La definición es más simple de lo que parece si no se mezcla con otra pregunta distinta: microservicios solo decide <strong>cuántos procesos independientes hay y dónde están sus límites</strong> — no dice nada sobre cómo se organiza el código <em>dentro</em> de cada uno. Cada microservicio, por separado, puede construirse con capas (2.4), con arquitectura hexagonal (2.5), con Clean Architecture (2.7), o incluso sin ninguna disciplina interna — son decisiones independientes. Es común, de hecho, que un microservicio con lógica de negocio compleja use hexagonal por dentro, mientras otro más simple (un CRUD) use solo capas.</p>
-<p><strong>Figura 7. Diagrama típico de microservicios</strong></p>
+<p><strong>Figura 9. Diagrama típico de microservicios</strong></p>
 <pre class="mermaid"><code>flowchart TB
     Cliente["Cliente"] --&gt; GW["API Gateway"]
     GW --&gt; S1["Servicio Catalogo"]
@@ -3489,7 +3486,7 @@
 <p><strong>Ejemplo de referencia (LP2).</strong> BomERP no usa microservicios — el ADR-001 de LP2 lo dice explícitamente: el costo (red, bases de datos distribuidas, versionado de contratos) no tiene ninguna ganancia real a cambio en un proyecto de equipo pequeño con un solo ciclo de despliegue.</p>
 <h3 id="27-clean-architecture-en-profundidad">2.7 Clean Architecture, en profundidad<a class="headerlink" href="#27-clean-architecture-en-profundidad" title="Permanent link">&para;</a></h3>
 <p>Clean Architecture generaliza la idea de hexagonal en <strong>círculos concéntricos</strong>: entidades del dominio en el centro, casos de uso alrededor, adaptadores de interfaz más afuera, y frameworks/herramientas en el borde exterior. La regla que lo sostiene todo es la <strong>regla de dependencia</strong>: el código de un círculo solo puede depender de círculos más internos, nunca de uno más externo.</p>
-<p><strong>Figura 8. Diagrama típico de Clean Architecture (círculos concéntricos)</strong></p>
+<p><strong>Figura 10. Diagrama típico de Clean Architecture (círculos concéntricos)</strong></p>
 <pre class="mermaid"><code>flowchart TB
     subgraph Frameworks["Frameworks y drivers (mas externo: Spring, JPA, HTTP)"]
         subgraph Adapters["Adaptadores de interfaz (Controller, Repository impl.)"]
@@ -3501,45 +3498,22 @@
 <p>La flecha de dependencia siempre apunta hacia adentro: <code>Frameworks</code> puede conocer <code>Adapters</code>, <code>Adapters</code> puede conocer <code>UseCases</code>, <code>UseCases</code> puede conocer <code>Entities</code> — pero <code>Entities</code> no conoce nada de lo que está afuera. Es la misma idea de hexagonal (2.5), expresada como niveles en vez de puertos/adaptadores; en la práctica, muchos equipos usan los dos términos de forma casi intercambiable.</p>
 <p><strong>Dónde se usa en la práctica:</strong> sistemas grandes y de vida larga, donde el equipo espera que la lógica de negocio sobreviva a más de un cambio de framework — es un patrón frecuente en apps Android/iOS grandes (para que la lógica de negocio no dependa del framework de UI) y en sistemas empresariales que ya pasaron por al menos una migración de tecnología dolorosa.</p>
 <p><strong>Ejemplo de referencia (LP2).</strong> Igual que con hexagonal, BomERP aplica los <em>principios</em> de separación de capas (Tabla 5 de S1: "parcialmente") sin adoptar la estructura formal completa de círculos — el mismo criterio de 2.9 (DDD) decide si algún módulo llega a justificarlo más adelante.</p>
-<p><strong>Tabla 4. Equivalencia: clases reales de LP2 vs. círculos de Clean Architecture</strong></p>
-<table>
-<thead>
-<tr>
-<th>Círculo (de adentro hacia afuera)</th>
-<th>¿Qué clase real cumple ese rol hoy?</th>
-<th>Qué cambiaría si se migrara</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Entidades</td>
-<td><code>Producto</code>, <code>Categoria</code> — hoy son entidades JPA, ya acopladas a Hibernate (<code>@Entity</code>, <code>@Column</code>)</td>
-<td>Se separarían en objetos de dominio puros, sin ninguna anotación de persistencia</td>
-</tr>
-<tr>
-<td>Casos de uso</td>
-<td><code>ProductoServiceImpl</code>, parcialmente — hoy depende de Spring (<code>@Service</code>, <code>@Transactional</code>) y de Spring Data JPA</td>
-<td>Se independizaría del framework; solo conocería interfaces propias del dominio</td>
-</tr>
-<tr>
-<td>Adaptadores de interfaz</td>
-<td><code>ProductoController</code>, <code>ProductoMapper</code>, la entidad JPA real de <code>Producto</code></td>
-<td>Se mantendrían tal cual están hoy, pero como una capa explícitamente separada del caso de uso</td>
-</tr>
-<tr>
-<td>Frameworks y drivers</td>
-<td>Spring Boot, Spring Data JPA, Oracle</td>
-<td>Sin cambios — es la capa que ya rodea todo, incluso hoy</td>
-</tr>
-</tbody>
-</table>
-<p>Esta tabla es casi la misma que la Tabla 3 (hexagonal) con otros nombres — no es casualidad (2.7): Clean Architecture es la misma idea de aislar el dominio, expresada como círculos en vez de puertos y adaptadores.</p>
+<p><strong>Figura 11. Dónde caería cada clase real de LP2 en los círculos de Clean Architecture</strong></p>
+<pre class="mermaid"><code>flowchart TB
+    subgraph Frameworks["Frameworks y drivers: Spring Boot, Spring Data JPA, Oracle (sin cambios)"]
+        subgraph Adapters["Adaptadores de interfaz: ProductoController, ProductoMapper"]
+            subgraph UseCases["Casos de uso: ProductoServiceImpl (hoy acoplado a Spring/JPA)"]
+                Entities["Entidades: Producto, Categoria (hoy son @Entity, acopladas a Hibernate)"]
+            end
+        end
+    end</code></pre>
+<p>Es casi el mismo ejercicio que la Figura 8 (hexagonal) con otro vocabulario — no es casualidad (2.7): Clean Architecture es la misma idea de aislar el dominio, expresada como círculos en vez de puertos y adaptadores. Lo que hoy "no encaja" en el círculo que le tocaría es siempre lo mismo: <code>ProductoServiceImpl</code> (caso de uso) y <code>Producto</code>/<code>Categoria</code> (entidades) todavía dependen de Spring y de Hibernate — la migración movería esa dependencia hacia afuera, no las reescribiría desde cero.</p>
 <h3 id="28-escalabilidad-horizontal-y-diseno-stateless">2.8 Escalabilidad horizontal y diseño <em>stateless</em><a class="headerlink" href="#28-escalabilidad-horizontal-y-diseno-stateless" title="Permanent link">&para;</a></h3>
 <p><strong>Escalabilidad horizontal</strong>: la capacidad de atender más carga agregando más copias idénticas de la aplicación (más instancias), en vez de agregarle más recursos a una sola instancia (escalar verticalmente). Para que escalar horizontalmente funcione, cualquier petición debe poder ser atendida por <strong>cualquier</strong> instancia, indistintamente.</p>
 <p><strong>Diseño <em>stateless</em></strong>: que ninguna instancia guarde en memoria información específica de un cliente entre una petición y la siguiente (por ejemplo, datos de sesión). Si una instancia guardara ese estado, las peticiones de ese cliente tendrían que ir siempre a la misma instancia (<em>sticky session</em>) — lo que rompe la promesa de "cualquier instancia atiende cualquier petición" y limita cuánto se puede escalar.</p>
 <p>Los dos conceptos están relacionados pero no son lo mismo: <em>stateless</em> es una propiedad del diseño (nadie guarda estado por cliente); escalabilidad horizontal es la consecuencia práctica que ese diseño hace posible.</p>
 <p><strong>Ejemplo de referencia (LP2).</strong> LP2 ya demostró esto con evidencia real, no como ejercicio teórico: S1 (3.3) levantó dos instancias de <code>bomerp-backend</code> en paralelo (puertos <code>8080</code> y <code>8081</code>), ambas conectadas a la misma Oracle, y verificó que cualquiera de las dos responde <code>/api/v1/hello</code> y <code>/actuator/health</code> sin ninguna coordinación entre ellas. Eso funciona porque el backend nunca guardó estado de cliente en memoria — ni siquiera hay autenticación todavía (JWT se difiere a S10, ver ADR-004 de LP2), así que no hay sesión que sincronizar entre instancias. Cuando JWT llegue en S10, seguirá siendo <em>stateless</em>: un JWT es un token autocontenido que el cliente reenvía en cada petición — ninguna instancia necesita recordar quién inició sesión.</p>
-<p><strong>Figura 9. Por qué el diseño <em>stateless</em> es lo que permite escalar horizontalmente</strong></p>
+<p><strong>Figura 12. Por qué el diseño <em>stateless</em> es lo que permite escalar horizontalmente</strong></p>
 <pre class="mermaid"><code>flowchart TB
     subgraph ConEstado["Con estado en memoria (rompe el escalamiento)"]
         direction LR
@@ -3574,7 +3548,7 @@
 </ul>
 <h3 id="31-profundizar-la-evaluacion-de-estilos-arquitectonicos">3.1 Profundizar la evaluación de estilos arquitectónicos<a class="headerlink" href="#31-profundizar-la-evaluacion-de-estilos-arquitectonicos" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> tabla de trade-offs de los cinco estilos, aplicada a BomERP.</p>
-<p><strong>Tabla 5. Trade-offs de los cinco estilos, aplicados a BomERP</strong></p>
+<p><strong>Tabla 3. Trade-offs de los cinco estilos, aplicados a BomERP</strong></p>
 <table>
 <thead>
 <tr>
@@ -3621,7 +3595,7 @@
 <h3 id="32-verificar-escalabilidad-horizontal-con-evidencia-real">3.2 Verificar escalabilidad horizontal con evidencia real<a class="headerlink" href="#32-verificar-escalabilidad-horizontal-con-evidencia-real" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> confirmación de que BomERP escala horizontalmente, con evidencia real de LP2.</p>
 <p>Repasa LP2 S1 (3.3, Figura 7): dos instancias de <code>bomerp-backend</code>, puertos <code>8080</code> y <code>8081</code>, ambas conectadas a la misma Oracle. Si tienes el proyecto de LP2 disponible, reproduce los comandos de 3.3.1-3.3.2 de esa guía y confirma que ambas instancias responden de forma independiente.</p>
-<p><strong>Tabla 6. Evidencia de escalabilidad horizontal</strong></p>
+<p><strong>Tabla 4. Evidencia de escalabilidad horizontal</strong></p>
 <table>
 <thead>
 <tr>
@@ -3655,7 +3629,7 @@
 <h3 id="34-evaluar-si-ddd-orienta-hacia-hexagonal-o-clean-architecture">3.4 Evaluar si DDD orienta hacia hexagonal o Clean Architecture<a class="headerlink" href="#34-evaluar-si-ddd-orienta-hacia-hexagonal-o-clean-architecture" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> evaluación honesta de la complejidad real del dominio de BomERP hoy.</p>
 <p>Revisa <code>catalogo/categoria</code> y <code>catalogo/producto</code> (LP2 S1-S3): CRUD, una validación de referencia, sin reglas de negocio que dependan de cálculos complejos o de invariantes multi-entidad. Compáralo con lo que se anticipa para <code>ventas/Venta-DetalleVenta</code> (LP2 S4, todavía no implementado): cabecera-detalle con cálculos, control de stock y una operación atómica — más cerca de un agregado DDD real.</p>
-<p><strong>Tabla 7. ¿El dominio ya justifica hexagonal o Clean Architecture?</strong></p>
+<p><strong>Tabla 5. ¿El dominio ya justifica hexagonal o Clean Architecture?</strong></p>
 <table>
 <thead>
 <tr>
@@ -3682,7 +3656,7 @@
 <p>A diferencia de S3 (donde el hallazgo esperado era una tensión de diseño), acá el resultado más probable es una <strong>confirmación</strong>: monolito modular con Spring Modulith sigue siendo la elección correcta para BomERP, con evidencia real de escalabilidad horizontal y diseño <em>stateless</em>, y sin que el dominio actual justifique todavía hexagonal o Clean Architecture. Documentar una confirmación bien justificada es tan válido como documentar un hallazgo — lo que se evalúa es la calidad del razonamiento, no que aparezca un problema donde no lo hay.</p>
 <h3 id="36-relacionar-con-lp2-y-bd2">3.6 Relacionar con LP2 y BD2<a class="headerlink" href="#36-relacionar-con-lp2-y-bd2" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> matriz de integración de la sesión.</p>
-<p><strong>Tabla 8. Matriz de integración ADS-LP2-BD2 (S4)</strong></p>
+<p><strong>Tabla 6. Matriz de integración ADS-LP2-BD2 (S4)</strong></p>
 <table>
 <thead>
 <tr>
@@ -3824,7 +3798,7 @@ revisarse con evidencia, en vez de darse por cerrada?
 <li>¿Por qué "microservicios" y "Aplicaciones Distribuidas" no son lo mismo que esta sesión de ADS?</li>
 </ol>
 <h3 id="46-rubrica-de-evaluacion">4.6 Rúbrica de evaluación<a class="headerlink" href="#46-rubrica-de-evaluacion" title="Permanent link">&para;</a></h3>
-<p><strong>Tabla 9. Rúbrica de evaluación</strong></p>
+<p><strong>Tabla 7. Rúbrica de evaluación</strong></p>
 <table>
 <thead>
 <tr>
