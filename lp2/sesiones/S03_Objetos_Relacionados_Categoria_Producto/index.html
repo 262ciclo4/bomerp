@@ -1351,6 +1351,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S04_Arquitecturas_Modernas.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S4 - Arquitecturas modernas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -3399,9 +3427,26 @@
     Repo --&gt; DB
     Service --&gt; Controller
     Controller --&gt;|"ProductoResponse{categoria}"| Client</code></pre>
-<p>Lectura del diagrama: el service <strong>resuelve</strong> la categoría antes de mapear — el mapper nunca consulta la base de datos, solo transforma objetos que ya recibió resueltos. Esa separación es la misma de S2 (2.4, punto 4): el service es la única capa que valida algo que depende del estado actual del sistema, no de la forma del dato. Esta es la forma general del patrón — el paso a paso exacto de cuántas veces se llama a cada capa se construye en 3.9 (Figura 10), cuando toca escribir el código.</p>
+<p>Lectura del diagrama: el service <strong>resuelve</strong> la categoría antes de mapear — el mapper nunca consulta la base de datos, solo transforma objetos que ya recibió resueltos. Esa separación es la misma de S2 (2.4, punto 4): el service es la única capa que valida algo que depende del estado actual del sistema, no de la forma del dato. Esta es la forma general del patrón — el paso a paso exacto de cuántas veces se llama a cada capa se construye en 3.9 (Figura 11), cuando toca escribir el código.</p>
 <h3 id="22-asociacion-de-entidades-y-dto-relacionados">2.2 Asociación de entidades y DTO relacionados<a class="headerlink" href="#22-asociacion-de-entidades-y-dto-relacionados" title="Permanent link">&para;</a></h3>
 <p><strong>Asociación de entidades (ORM):</strong> cuando dos entidades del dominio están relacionadas en la base de datos mediante una llave foránea, el ORM necesita una anotación que declare esa relación también en el lado Java — sin ella, la columna existe en la tabla pero ninguna consulta JPA la usa. La anotación para el lado "muchos" de una relación uno-a-muchos indica, además, qué columna física guarda la referencia.</p>
+<p><strong>Figura 3. Esquema real en Oracle: <code>CATEGORIAS</code> y <code>PRODUCTOS</code></strong></p>
+<pre class="mermaid"><code>erDiagram
+    CATEGORIAS o|--o{ PRODUCTOS : "FK_PRODUCTO_CATEGORIA"
+    CATEGORIAS {
+        NUMBER ID PK
+        VARCHAR2 NOMBRE
+        VARCHAR2 DESCRIPCION
+    }
+    PRODUCTOS {
+        NUMBER ID PK
+        NUMBER ID_CATEGORIA FK
+        VARCHAR2 NOMBRE
+        NUMBER PRECIO
+        NUMBER STOCK
+    }</code></pre>
+<p>Este esquema no es una propuesta de esta sesión — ya existe en Oracle desde S1 (<code>S01_02_tablas.sql</code>, 1.5), con <code>FK_PRODUCTO_CATEGORIA</code> protegiendo la integridad referencial desde el primer día. Lo que esta sesión hace es llevar al código Java una relación que la base de datos ya conocía (1.6.1) — el <code>@ManyToOne</code>/<code>@JoinColumn</code> de 3.6 es, literalmente, la traducción de esta misma flecha (<code>ID_CATEGORIA</code>) al lado de la aplicación.</p>
+<p>El lado de <code>CATEGORIAS</code> lleva <code>o|</code> (cero o uno), no <code>||</code> (exactamente uno): <code>ID_CATEGORIA</code> en Oracle <strong>no tiene <code>NOT NULL</code></strong> — un producto podría, a nivel de base de datos, no tener categoría. <code>@JoinColumn(nullable = false)</code> (3.6) sí exige que sea obligatorio, pero esa es una regla del lado Java, más estricta que lo que Oracle realmente permite — este esquema representa lo que la base de datos hace cumplir hoy, no lo que la aplicación decide exigir además.</p>
 <p><strong>DTO relacionados:</strong> cuando el DTO de salida de una entidad principal necesita mostrar información de su entidad relacionada, hay dos caminos: reutilizar el DTO que ya existe para esa entidad relacionada, o crear uno más chico, pensado solo para lo que se necesita mostrar embebido (por ejemplo, un combo o una etiqueta). El segundo camino no es obligatorio ni es, necesariamente, para ocultar datos sensibles — es una decisión de <strong>desacoplar contratos</strong>: que el DTO de salida de una entidad no cambie de forma solo porque el DTO de la entidad relacionada cambió por una razón que no tiene nada que ver con la primera.</p>
 <p><strong>Ejemplo de referencia (LP2).</strong> <code>@ManyToOne</code> declara "muchos <code>Producto</code> pueden apuntar a una <code>Categoria</code>"; <code>@JoinColumn(name = "ID_CATEGORIA")</code> le dice a Hibernate qué columna física de <code>PRODUCTOS</code> guarda esa referencia — la misma que ya existe en Oracle desde S1 (1.5). La relación es <strong>unidireccional</strong>: <code>Producto</code> conoce a su <code>Categoria</code>, pero <code>Categoria</code> no mantiene una lista de sus <code>Producto</code> como campo de la entidad. Eso no es una limitación, es una decisión — se retoma en 2.4. Del lado del DTO, en vez de reutilizar <code>CategoriaResponse</code> (que ya existe, con <code>id</code>, <code>nombre</code> y <code>descripcion</code>), esta sesión introduce <code>CategoriaResumen</code> — un <code>record</code> con solo <code>id</code> y <code>nombre</code> —, para que el contrato de <code>/productos</code> no dependa de todo lo que <code>CategoriaResponse</code> decida mostrar en el futuro. Como <code>descripcion</code> no es un dato sensible, la razón no es ocultarlo: es que el contrato de un producto no debería cambiar de forma solo porque el contrato de una categoría cambió por un motivo ajeno a los productos.</p>
 <p><strong>Qué cambia en el código al introducir un DTO relacionado nuevo:</strong></p>
@@ -3413,11 +3458,13 @@
 <li>Nada cambia en la entidad <code>Categoria</code> ni en <code>CategoriaController</code>: el DTO relacionado es un asunto exclusivo de cómo <code>Producto</code> expone su categoría, no de cómo <code>Categoria</code> se expone a sí misma.</li>
 </ol>
 <p>Esta cadena — DTO nuevo, mapper con un método más, mapper compuesto vía <code>uses</code> — se repite cada vez que una entidad necesita mostrar una versión reducida de otra; se construye paso a paso en 3.2, 3.3, 3.7 y 3.8.</p>
-<p><strong>Figura 3. Asociación de entidades (ORM) vs. asociación de DTO</strong></p>
+<p><strong>Figura 4. Diagrama de clases completo: entidades, DTO y mappers de <code>catalogo</code></strong></p>
 <pre class="mermaid"><code>classDiagram
     class Producto {
         -Long id
         -String nombre
+        -BigDecimal precio
+        -Integer stock
         -Categoria categoria
     }
     class Categoria {
@@ -3425,10 +3472,27 @@
         -String nombre
         -String descripcion
     }
+    class ProductoRequest {
+        -String nombre
+        -BigDecimal precio
+        -Integer stock
+        -Long categoriaId
+    }
     class ProductoResponse {
         -Long id
         -String nombre
+        -BigDecimal precio
+        -Integer stock
         -CategoriaResumen categoria
+    }
+    class CategoriaRequest {
+        -String nombre
+        -String descripcion
+    }
+    class CategoriaResponse {
+        -Long id
+        -String nombre
+        -String descripcion
     }
     class CategoriaResumen {
         -Long id
@@ -3436,13 +3500,18 @@
     }
 
     Producto "muchos" --&gt; "uno" Categoria : @ManyToOne, unidireccional
-    ProductoResponse --&gt; CategoriaResumen : DTO relacionado</code></pre>
-<p>Las dos flechas de la Figura 3 no son la misma relación vista dos veces: la de arriba (<code>Producto</code> → <code>Categoria</code>) es la asociación ORM, mapeada a <code>ID_CATEGORIA</code>; la de abajo (<code>ProductoResponse</code> → <code>CategoriaResumen</code>) es una asociación distinta, entre DTO, que existe solo para la API — <code>CategoriaResumen</code> ni siquiera tiene <code>descripcion</code>, aunque <code>Categoria</code> sí.</p>
+    ProductoRequest ..&gt; Producto : ProductoMapper.toEntity
+    Producto ..&gt; ProductoResponse : ProductoMapper.toResponse
+    ProductoResponse --&gt; CategoriaResumen : DTO relacionado
+    CategoriaRequest ..&gt; Categoria : CategoriaMapper.toEntity
+    Categoria ..&gt; CategoriaResponse : CategoriaMapper.toResponse
+    Categoria ..&gt; CategoriaResumen : CategoriaMapper.toResumen</code></pre>
+<p>La flecha sólida (<code>Producto</code> → <code>Categoria</code>) es la única asociación real entre entidades — mapeada a <code>ID_CATEGORIA</code> (Figura 3), unidireccional (se retoma en 2.4). Todas las demás flechas son punteadas porque no son asociaciones del dominio: son conversiones que hacen los mappers, en un solo sentido, entre un DTO y una entidad, o entre una entidad y otro DTO. <code>ProductoResponse</code> → <code>CategoriaResumen</code> es la única flecha entre dos DTO — el DTO relacionado explicado arriba, que existe solo para la API y ni siquiera tiene <code>descripcion</code>, aunque <code>Categoria</code> sí.</p>
 <h3 id="23-validacion-de-referencias">2.3 Validación de referencias<a class="headerlink" href="#23-validacion-de-referencias" title="Permanent link">&para;</a></h3>
 <p>Que un campo llegue con un valor (<code>@NotNull</code>) no significa que ese valor corresponda a un registro real — validar que el id recibido exista en la base es responsabilidad de la capa de servicio, no de Bean Validation, que solo valida la forma del dato, nunca su existencia.</p>
 <p><strong>Ejemplo de referencia (LP2).</strong> <code>ProductoRequest</code> declara <code>categoriaId</code> con <code>@NotNull</code> — eso solo garantiza que el campo no llegue vacío, no que el id corresponda a una <code>Categoria</code> real. Esa segunda verificación es responsabilidad del service (mismo criterio de S2, 2.3, punto 4): antes de guardar o actualizar un <code>Producto</code>, <code>ProductoServiceImpl</code> busca la <code>Categoria</code> por id y lanza <code>ResourceNotFoundException</code> (ya creada en S2, 3.2.1) si no existe — el mismo manejador global responde <code>404</code>, sin código nuevo en <code>GlobalExceptionHandler</code>.</p>
 <p>Esta búsqueda no es solo para tener el objeto <code>Categoria</code> que pide <code>@ManyToOne</code> — es lo que evita que un <code>categoriaId</code> inválido llegue a violar <code>FK_PRODUCTO_CATEGORIA</code> directamente en el <code>INSERT</code>. Si esa validación no existiera, Oracle igual rechazaría el dato (la restricción sigue ahí), pero el error llegaría como <code>DataIntegrityViolationException</code> sin traducir — exactamente el mismo hueco que <code>DELETE /api/v1/categorias/{id}</code> sí deja sin resolver hoy (3.4, "Error frecuente"). <code>crear</code>/<code>actualizar</code> responden <code>404</code> limpio; <code>eliminar</code> responde <code>500</code> crudo — la diferencia es solo esta validación explícita, no la restricción de la base de datos, que en ambos casos es la misma.</p>
-<p><strong>Figura 4. Validación de referencias, paso a paso</strong></p>
+<p><strong>Figura 5. Validación de referencias, paso a paso</strong></p>
 <pre class="mermaid"><code>flowchart TD
     Req["ProductoRequest.categoriaId"]
     NotNull{"@NotNull cumplido?"}
@@ -3467,7 +3536,7 @@
 <li><strong>Ninguna entidad se serializa directamente</strong>: el patrón Controller-Service-Mapper-DTO (S2, 2.1) ya garantiza que Jackson nunca ve una <code>Producto</code> ni una <code>Categoria</code> — siempre ve un <code>ProductoResponse</code>/<code>CategoriaResponse</code>, construidos a mano (o por MapStruct) campo por campo.</li>
 </ol>
 <p><strong>Error frecuente</strong>: agregar <code>@OneToMany</code> en <code>Categoria</code> "por si se necesita después" es exactamente el tipo de anticipación que este curso evita (ver <code>CLAUDE.md</code>, "no adelantar alcance") — y además reintroduce el riesgo de ciclo que esta sesión evitó a propósito. Si una sesión futura necesita navegar de <code>Categoria</code> a sus <code>Producto</code>, la forma correcta es una consulta explícita (2.5), no una colección cargada automáticamente en la entidad.</p>
-<p><strong>Figura 5. Por qué no hay ciclo posible</strong></p>
+<p><strong>Figura 6. Por qué no hay ciclo posible</strong></p>
 <pre class="mermaid"><code>flowchart LR
     DTO["ProductoResponse"]
     P["Producto"]
@@ -3475,11 +3544,11 @@
 
     DTO -.-&gt;|"nunca serializa la entidad"| P
     P --&gt;|"@ManyToOne"| C</code></pre>
-<p>Las dos flechas de la Figura 5 son las dos decisiones de arriba: la sólida (<code>Producto</code> → <code>Categoria</code>, unidireccional) es la primera; la punteada (<code>ProductoResponse</code> nunca serializa la entidad) es la segunda. Ninguna de las dos puede retroalimentarse a sí misma — por eso no hay ciclo posible.</p>
+<p>Las dos flechas de la Figura 6 son las dos decisiones de arriba: la sólida (<code>Producto</code> → <code>Categoria</code>, unidireccional) es la primera; la punteada (<code>ProductoResponse</code> nunca serializa la entidad) es la segunda. Ninguna de las dos puede retroalimentarse a sí misma — por eso no hay ciclo posible.</p>
 <h3 id="25-navegacion-controlada-y-crud-completo-de-categoria">2.5 Navegación controlada y CRUD completo de <code>Categoria</code><a class="headerlink" href="#25-navegacion-controlada-y-crud-completo-de-categoria" title="Permanent link">&para;</a></h3>
 <p><strong>Navegación controlada</strong> significa: para ir de una entidad a las instancias de otra que la referencian, se expone una consulta explícita bajo demanda (un endpoint dedicado), nunca una colección que el ORM carga automáticamente cada vez que se lee la entidad principal — eso sería costoso si esa lista rara vez se necesita, y reintroduce el riesgo de ciclo evitado en 2.4.</p>
 <p><strong>Ejemplo de referencia (LP2).</strong> <code>GET /api/v1/productos?categoriaId={id}</code> es esa consulta explícita — no una colección cargada dentro de la entidad <code>Categoria</code>. Es un filtro sobre la colección de <code>Producto</code>, no un recurso anidado de <code>Categoria</code>: <code>Producto</code> tiene existencia propia (su propio CRUD completo, desde S2), no le pertenece a <code>Categoria</code> como una línea le pertenece a un pedido — por eso la consulta vive en <code>ProductoController</code>, no en <code>CategoriaController</code> (3.9). De paso, <code>Categoria</code> completa en esta sesión el mismo patrón CRUD que S2 aplicó a <code>Producto</code>: <code>CategoriaRequest</code> (entrada validada), <code>CategoriaResponse</code> (salida, ahora clase con <code>@Builder</code> en vez de <code>record</code> — mismo motivo que S2 documentó para <code>Producto</code>, 2.2), y <code>CategoriaMapper</code>.</p>
-<p><strong>Figura 6. Navegación controlada: consulta explícita, no colección automática</strong></p>
+<p><strong>Figura 7. Navegación controlada: consulta explícita, no colección automática</strong></p>
 <pre class="mermaid"><code>flowchart LR
     subgraph Evitado["Evitado: coleccion automatica en la entidad"]
         direction LR
@@ -3524,7 +3593,7 @@
 </tbody>
 </table>
 <p><strong>Ejemplo de referencia (LP2).</strong> <code>ProductoServiceImpl.listar()</code> (3.9) llama a <code>productoRepository.findAll()</code>, y el mapper después pide <code>categoria.getNombre()</code> para cada producto al construir su <code>CategoriaResumen</code> — una consulta extra por producto, el N+1 de arriba. Se soluciona en 3.10 agregando <code>@EntityGraph</code> al método, sin cambiar el service ni el mapper.</p>
-<p><strong>Figura 7. Una sola consulta con <code>@EntityGraph</code> vs. N+1</strong></p>
+<p><strong>Figura 8. Una sola consulta con <code>@EntityGraph</code> vs. N+1</strong></p>
 <pre class="mermaid"><code>flowchart TB
     subgraph UnaSola["Una sola consulta: con EntityGraph"]
         direction TB
@@ -3582,7 +3651,7 @@ select c1_0.id, c1_0.descripcion, c1_0.nombre from categorias c1_0 where c1_0.id
 <p>Sin <code>@Transactional</code> en el método de servicio, cada llamada a un repositorio de Spring Data JPA abre y cierra su propia transacción por separado — el método en sí no tiene ninguna transacción propia que las una. Si ese método necesita leer una relación <code>LAZY</code> <strong>después</strong> de que el repositorio que la resolvió ya cerró su transacción, la sesión ya no existe para completarla.</p>
 <p><strong>Regla práctica:</strong> cualquier método de servicio que toca una relación <code>LAZY</code> y necesita leerla para construir la respuesta (por ejemplo, al mapear a un DTO) debe llevar <code>@Transactional</code> — de forma que la transacción cubra desde la primera consulta hasta que termina de construirse esa respuesta, no solo una llamada aislada al repositorio. Los métodos de solo lectura usan <code>@Transactional(readOnly = true)</code> (una optimización, ver 2.6); los que escriben (<code>crear</code>, <code>actualizar</code>, <code>eliminar</code>) usan <code>@Transactional</code> sin ese atributo.</p>
 <p><strong>Ejemplo de referencia (LP2).</strong> <code>ProductoServiceImpl.crear()</code> (3.9) hace tres cosas que deben ocurrir en la misma sesión: resolver la <code>Categoria</code> (<code>buscarCategoriaOFallar</code>), guardar el <code>Producto</code>, y mapear la respuesta (<code>toResponse</code>, que lee <code>categoria.getNombre()</code> para el <code>CategoriaResumen</code>, 2.2). Sin <code>@Transactional</code> en <code>crear()</code>, las dos primeras corren en transacciones separadas, y la tercera se queda sin sesión — este fue un error real, no hipotético, al probar esta sesión.</p>
-<p><strong>Figura 8. Una transacción por método, no una por llamada</strong></p>
+<p><strong>Figura 9. Una transacción por método, no una por llamada</strong></p>
 <pre class="mermaid"><code>flowchart TB
     subgraph SinTx["Sin @Transactional: tres sesiones separadas"]
         direction LR
@@ -3958,7 +4027,7 @@ select c1_0.id, c1_0.descripcion, c1_0.nombre from categorias c1_0 where c1_0.id
 </code></pre></div>
 <p><code>ProductoRequest</code> y <code>Categoria</code> <strong>ambos</strong> tienen un campo <code>nombre</code> — MapStruct no puede adivinar de cuál de los dos parámetros viene el <code>nombre</code> de <code>Producto</code>. Con un solo parámetro fuente (como en S2) esto nunca pasa, porque no hay ambigüedad posible. La solución es la de arriba: <code>@Mapping(target = "nombre", source = "request.nombre")</code> desambigua explícitamente, calificando el origen con el nombre del parámetro (<code>request.nombre</code>, no solo <code>nombre</code>).</p>
 <p><code>precio</code> y <code>stock</code> <strong>no</strong> necesitan <code>@Mapping</code>: solo existen en <code>request</code>, así que no hay ninguna ambigüedad que resolver — MapStruct los mapea solo. <code>categoria</code>, en cambio, sí necesita su propio <code>@Mapping</code>, pero por una razón distinta: no es un campo ambiguo, es un parámetro completo (<code>categoria</code>) que debe asignarse directo a un campo del mismo nombre en <code>Producto</code>. MapStruct no hace esa conexión automáticamente — sin <code>@Mapping(target = "categoria", source = "categoria")</code>, el compilador solo avisa con una advertencia (<code>Unmapped target property: categoria</code>), no con un error, y <code>producto.categoria</code> queda <code>null</code> en silencio.</p>
-<p><strong>Figura 9. Por qué <code>nombre</code> es ambiguo, y cómo se resuelve</strong></p>
+<p><strong>Figura 10. Por qué <code>nombre</code> es ambiguo, y cómo se resuelve</strong></p>
 <pre class="mermaid"><code>flowchart TD
     PR["ProductoRequest.nombre"]
     Cat["Categoria.nombre"]
@@ -3973,7 +4042,7 @@ select c1_0.id, c1_0.descripcion, c1_0.nombre from categorias c1_0 where c1_0.id
 <p>La ambigüedad no es un error de MapStruct — es correcto que se detenga: con dos parámetros fuente y un campo <code>nombre</code> en ambos, no hay forma automática de saber cuál querías. <code>@Mapping</code> es la respuesta explícita a esa pregunta, campo por campo.</p>
 <h3 id="39-validar-la-referencia-y-habilitar-la-navegacion-controlada">3.9 Validar la referencia y habilitar la navegación controlada<a class="headerlink" href="#39-validar-la-referencia-y-habilitar-la-navegacion-controlada" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> <code>ProductoServiceImpl</code> resuelve y valida <code>categoriaId</code> antes de guardar; <code>listarPorCategoria</code> y el filtro en <code>ProductoController</code> para la navegación controlada de 2.5.</p>
-<p><strong>Figura 10. <code>ProductoServiceImpl.crear()</code>, paso a paso — lo que el código de abajo implementa</strong></p>
+<p><strong>Figura 11. <code>ProductoServiceImpl.crear()</code>, paso a paso — lo que el código de abajo implementa</strong></p>
 <pre class="mermaid"><code>flowchart LR
     Req["ProductoRequest{categoriaId}"]
     CatRepo["CategoriaRepository"]
