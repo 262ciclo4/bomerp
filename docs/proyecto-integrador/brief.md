@@ -25,6 +25,7 @@ Cada equipo llena una sola copia de este brief, la publica en su repositorio (o 
 - Nombre del proyecto:
 - Problema o necesidad que resuelve (2-4 líneas):
 - Dominio de negocio (breve):
+- Usuarios / actores principales (roles que interactúan con el sistema, ej. cliente, administrador, vendedor — mapa completo de stakeholders en ADS S1, 3.2):
 - ¿Continúa un proyecto de un ciclo anterior, o es un dominio nuevo? Si continúa, indicar cuál:
 
 ## 3. Módulos de negocio y alcance full-stack esperado
@@ -62,21 +63,9 @@ Cada equipo llena una sola copia de este brief, la publica en su repositorio (o 
 - Qué SÍ cubre este proyecto en conjunto:
 - Qué NO cubre — fuera de alcance, explícito (mismo criterio que BomERP delimita `inventario`/`compras` sin implementarlos):
 
-## 4. Arquitectura inicial (ADS)
+**Pendiente para S3:** arquitectura inicial (ADS), recursos REST iniciales previstos (LP2) y objetos Oracle iniciales previstos (BD2) — este brief todavía no los pide porque ese contenido recién lo entrega cada curso esa misma semana; se completan como anexo a este mismo documento en S3, no antes.
 
-- Estilo arquitectónico elegido para el backend (ej. monolito modular) y por qué:
-- Justificación breve (1-3 líneas, trade-offs considerados):
-
-## 5. Recursos REST iniciales previstos (LP2)
-
-- Lista de endpoints/recursos iniciales previstos (ej. `GET`/`POST` sobre la entidad principal):
-
-## 6. Objetos Oracle iniciales previstos (BD2)
-
-- Esquema(s) previsto(s), uno por módulo funcional:
-- Tablas iniciales previstas:
-
-## 7. Aprobación
+## 4. Aprobación
 
 - Docente ADS:
 - Docente BD2:
