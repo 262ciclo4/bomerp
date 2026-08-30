@@ -2687,6 +2687,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#313-opcional-anexo-exponer-metricas-de-bomerp-backend-para-prometheus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.13 (opcional, anexo) Exponer métricas de bomerp-backend para Prometheus
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#314-opcional-anexo-enviar-logs-de-bomerp-backend-a-loki-y-verificarlos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.14 (opcional, anexo) Enviar logs de bomerp-backend a Loki y verificarlos
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3191,6 +3213,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#313-opcional-anexo-exponer-metricas-de-bomerp-backend-para-prometheus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.13 (opcional, anexo) Exponer métricas de bomerp-backend para Prometheus
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#314-opcional-anexo-enviar-logs-de-bomerp-backend-a-loki-y-verificarlos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.14 (opcional, anexo) Enviar logs de bomerp-backend a Loki y verificarlos
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3494,6 +3538,8 @@
 <li><strong>3.10</strong> Probar la operación completa, incluido el rollback.</li>
 <li><strong>3.11</strong> Verificar los límites de módulo con <code>ModularityTests</code>.</li>
 <li><strong>3.12</strong> Relacionar con ADS y BD2.</li>
+<li><strong>3.13</strong> (opcional, anexo) Exponer métricas de <code>bomerp-backend</code> para Prometheus.</li>
+<li><strong>3.14</strong> (opcional, anexo) Enviar logs de <code>bomerp-backend</code> a Loki y verificarlos.</li>
 </ul>
 <h3 id="31-verificar-el-punto-de-partida">3.1 Verificar el punto de partida<a class="headerlink" href="#31-verificar-el-punto-de-partida" title="Permanent link">&para;</a></h3>
 <p><strong>Punto de partida común:</strong> todo el equipo debe comenzar exactamente desde donde quedó S3, no desde su propio avance individual. Clona la rama <code>s03-objetos-relacionados</code> (el snapshot de cierre de S3):</p>
@@ -3965,10 +4011,15 @@
 </code></pre></div>
 <p>Verifica: la respuesta trae <code>201</code>, un <code>total</code> calculado, y el stock de los productos 1 y 2 bajó exactamente en 2 y 1.</p>
 <p><strong>Caso de rollback</strong> — una de las líneas pide más cantidad de la que hay en stock:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:8080/api/v1/ventas"</span> <span class="n">-ContentType</span> <span class="s2">"application/json"</span> <span class="n">-Body</span> <span class="s1">'{"detalles":[{"productoId":1,"cantidad":1},{"productoId":2,"cantidad":999999}]}'</span>
+<div class="highlight"><pre><span></span><code><span class="k">try</span> <span class="p">{</span>
+    <span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:8080/api/v1/ventas"</span> <span class="n">-ContentType</span> <span class="s2">"application/json"</span> <span class="n">-Body</span> <span class="s1">'{"detalles":[{"productoId":1,"cantidad":1},{"productoId":2,"cantidad":999999}]}'</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+    <span class="nv">$_</span><span class="p">.</span><span class="n">ErrorDetails</span><span class="p">.</span><span class="n">Message</span>
+<span class="p">}</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-i<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8080/api/v1/ventas<span class="w"> </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span>-d<span class="w"> </span><span class="s1">'{"detalles":[{"productoId":1,"cantidad":1},{"productoId":2,"cantidad":999999}]}'</span>
 </code></pre></div>
+<p><strong>Error frecuente</strong>: <code>Invoke-RestMethod</code> lanza una excepción ante cualquier respuesta que no sea 2xx (a diferencia de <code>curl</code>, que siempre muestra el cuerpo) — sin el <code>try</code>/<code>catch</code>, PowerShell solo muestra "Error en el servidor remoto: (409) Conflicto" y esconde el <code>message</code> real (<code>Stock insuficiente para...</code>) que sí viajó en el cuerpo de la respuesta. <code>$_.ErrorDetails.Message</code> es lo que lo recupera.</p>
 <p>Verifica: la respuesta trae <code>409</code>, <strong>ninguna</strong> venta nueva aparece en <code>GET /api/v1/ventas</code>, y el stock del producto 1 (la línea que sí tenía stock suficiente) queda <strong>exactamente igual</strong> que antes de este intento — la prueba real de que la transacción se revirtió completa, no solo la línea que falló.</p>
 <p><strong>Tabla 2. Verificación de la operación antes de continuar</strong></p>
 <table>
@@ -4043,7 +4094,7 @@
 </tr>
 </tbody>
 </table>
-<p>Sesión equivalente en los otros dos cursos, misma semana: ADS y BD2 todavía no publican su guía de S4 propia con este alcance específico en este repositorio.</p>
+<p>Sesión equivalente en los otros dos cursos, misma semana: <a href="../../../ads/sesiones/S04_Arquitecturas_Modernas/">ADS - S4 Arquitecturas Modernas</a> y <a href="../../../bd2/sesiones/S04_Optimizacion_Consultas_SQL/">BD2 - S4 Optimización de Consultas SQL</a>.</p>
 <p><strong>Evidencia de aprendizaje:</strong></p>
 <ul>
 <li><code>Venta</code>-<code>DetalleVenta</code> con cálculo de subtotales y total correcto.</li>
@@ -4052,6 +4103,116 @@
 <li><code>StockInsuficienteException</code> manejada por <code>GlobalExceptionHandler</code>, respondiendo <code>409</code>.</li>
 <li><code>ModularityTests</code> en verde, con <code>@NamedInterface</code> expuesto explícitamente.</li>
 </ul>
+<h3 id="313-opcional-anexo-exponer-metricas-de-bomerp-backend-para-prometheus">3.13 (opcional, anexo) Exponer métricas de <code>bomerp-backend</code> para Prometheus<a class="headerlink" href="#313-opcional-anexo-exponer-metricas-de-bomerp-backend-para-prometheus" title="Permanent link">&para;</a></h3>
+<div class="admonition note">
+<p class="admonition-title">3.13 es opcional</p>
+<p>El alcance evaluado de S4 termina en 3.12 (4.4, 4.6). Levantar Prometheus junto con Oracle y <code>bomerp-backend</code> puede exigir más memoria de la que tiene la laptop de un estudiante que además lleva DIST o BigData corriendo — por eso este paso queda como anexo, no como requisito. Quien lo complete deja evidencia real de observabilidad sobre su propio backend, con el mismo patrón que DIST (pagatu S3, 3.10-3.11), pero en puertos distintos para poder correr los dos a la vez.</p>
+</div>
+<p><strong>Producto del paso:</strong> <code>bomerp-backend</code> exponiendo un endpoint de métricas en formato Prometheus, y un Prometheus propio corriendo en paralelo al de DIST sin chocar puertos.</p>
+<p>Agrega la dependencia en <code>lp2/bomerp-backend/pom.xml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>io.micrometer<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>micrometer-registry-prometheus<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;scope&gt;</span>runtime<span class="nt">&lt;/scope&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div>
+<p>En <code>application-dev.yml</code>, agrega <code>prometheus</code> a los endpoints ya expuestos:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">management</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">endpoints</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">web</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">exposure</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">include</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">health,info,metrics,prometheus</span>
+</code></pre></div>
+<p>Reinicia <code>bomerp-backend</code> y verifica:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Get</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:8080/actuator/prometheus"</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://localhost:8080/actuator/prometheus
+</code></pre></div>
+<p>Resultado esperado: una respuesta en texto plano, con métricas como <code>process_uptime_seconds</code> o <code>http_server_requests_seconds_count</code> — igual que en DIST (pagatu S3, 3.10).</p>
+<p><strong>Diferencia real con DIST:</strong> <code>bomerp-backend</code> es un único proceso, no varias instancias registradas en un service registry — no hay Eureka de por medio. Prometheus no necesita descubrir nada, apunta directo a un solo <em>target</em> fijo.</p>
+<p>Crea <code>lp2/obs/prometheus/prometheus-dev.yml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">global</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">scrape_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15s</span>
+
+<span class="nt">scrape_configs</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">job_name</span><span class="p">:</span><span class="w"> </span><span class="s">"bomerp-backend"</span>
+<span class="w">    </span><span class="nt">static_configs</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">targets</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"host.docker.internal:8080"</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">metrics_path</span><span class="p">:</span><span class="w"> </span><span class="s">"/actuator/prometheus"</span>
+</code></pre></div>
+<p>Crea <code>lp2/obs/compose-dev.yml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bomerp-obs-dev</span>
+
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">bomerp-prometheus</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prom/prometheus:v3.14.0</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bomerp-prometheus-dev</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"39090:9090"</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./prometheus/prometheus-dev.yml:/etc/prometheus/prometheus.yml:ro</span>
+<span class="w">    </span><span class="nt">extra_hosts</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"host.docker.internal:host-gateway"</span>
+</code></pre></div>
+<p><strong>El puerto <code>39090</code> es la parte que importa aquí.</strong> DIST ya usa el rango <code>9090</code> dos veces: <code>19090</code> para su Prometheus de DEV y <code>29090</code> para el de PROD (pagatu S3, <code>obs/compose-dev.yml</code> y <code>obs/compose.yml</code>, 3.15) — si <code>bomerp-obs-dev</code> reutilizara cualquiera de los dos, el segundo <code>docker compose up</code> fallaría con el puerto ya ocupado, o peor, uno de los dos Prometheus terminaría sirviendo datos del otro proyecto. <code>39090</code> deja los dos puertos de DIST intactos. El <code>name: bomerp-obs-dev</code> (distinto de <code>pagatu-obs-dev</code>) evita el mismo choque de identidad de proyecto Compose que ya se explicó en DIST (S3, 3.11): Compose identifica contenedores por <em>proyecto + servicio</em>, no por <code>container_name</code>.</p>
+<p>Levanta el contenedor:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>lp2/obs
+docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>compose-dev.yml<span class="w"> </span>up<span class="w"> </span>-d
+</code></pre></div>
+<p>Verifica en el navegador: <code>http://localhost:39090/targets</code> — el target <code>bomerp-backend</code> debe aparecer en estado <code>UP</code>. Con el Prometheus de DIST corriendo en <code>19090</code> (DEV) o <code>29090</code> (PROD) al mismo tiempo, los dos deben convivir sin interferirse.</p>
+<h3 id="314-opcional-anexo-enviar-logs-de-bomerp-backend-a-loki-y-verificarlos">3.14 (opcional, anexo) Enviar logs de <code>bomerp-backend</code> a Loki y verificarlos<a class="headerlink" href="#314-opcional-anexo-enviar-logs-de-bomerp-backend-a-loki-y-verificarlos" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> Promtail leyendo los logs que <code>bomerp-backend</code> ya escribe a archivo (<code>logback-spring.xml</code>, desde S1), y enviándolos a un Loki propio, en paralelo al de DIST.</p>
+<p><code>bomerp-backend</code> ya escribe a <code>logs/bomerp.log</code> (rotado diariamente a <code>logs/bomerp-AAAA-MM-DD.log</code>, <code>maxHistory: 7</code>) — el mismo mecanismo que <code>pagatu-catalogo-ms</code> (DIST S3, 3.13), y de hecho un poco más completo: <code>LOG_PATTERN</code> ya incluye <code>[%X{traceId}]</code> desde el inicio, sin necesitar el paso extra que DIST agregó en 3.14 para rastrear una petición específica.</p>
+<p>Crea <code>lp2/obs/promtail/promtail-config-dev.yml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">server</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">http_listen_port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9080</span>
+
+<span class="nt">positions</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/tmp/positions.yaml</span>
+
+<span class="nt">clients</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://bomerp-loki:3100/loki/api/v1/push</span>
+
+<span class="nt">scrape_configs</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">job_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bomerp-backend</span>
+<span class="w">    </span><span class="nt">static_configs</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">targets</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">localhost</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">application</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bomerp-backend</span>
+<span class="w">          </span><span class="nt">__path__</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/var/log/bomerp-backend/*.log</span>
+</code></pre></div>
+<p>Agrega Loki y Promtail a <code>lp2/obs/compose-dev.yml</code> (junto a <code>bomerp-prometheus</code>, 3.13):</p>
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="nt">bomerp-loki</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grafana/loki:3.7.6</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bomerp-loki-dev</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"33100:3100"</span>
+
+<span class="w">  </span><span class="nt">bomerp-promtail</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grafana/promtail:3.6.8</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bomerp-promtail-dev</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./promtail/promtail-config-dev.yml:/etc/promtail/config.yml:ro</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">../bomerp-backend/logs:/var/log/bomerp-backend:ro</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-config.file=/etc/promtail/config.yml</span>
+<span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bomerp-loki</span>
+</code></pre></div>
+<p>Igual que con Prometheus, el puerto de host es el que evita el choque: DIST ya usa <code>13100</code> (Loki DEV) y <code>23100</code> (Loki PROD) — <code>33100</code> deja los dos intactos.</p>
+<p>Vuelve a levantar el stack con el archivo actualizado:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>lp2/obs
+docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>compose-dev.yml<span class="w"> </span>up<span class="w"> </span>-d
+</code></pre></div>
+<p>Reinicia <code>bomerp-backend</code> (para que Promtail, al arrancar, empiece a leer el archivo activo desde el final) y confirma que los logs llegan a Loki:</p>
+<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Get</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:33100/loki/api/v1/query_range?query={application=</span><span class="se">`"</span><span class="s2">bomerp-backend</span><span class="se">`"</span><span class="s2">}"</span><span class="p">)</span> <span class="p">|</span> <span class="nb">ConvertTo-Json</span> <span class="n">-Depth</span> <span class="n">10</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-G<span class="w"> </span>http://localhost:33100/loki/api/v1/query_range<span class="w"> </span>--data-urlencode<span class="w"> </span><span class="s1">'query={application="bomerp-backend"}'</span>
+</code></pre></div>
+<p>Resultado esperado: una respuesta JSON con líneas de log reales de <code>bomerp-backend</code> (por ejemplo, el mensaje de arranque de Tomcat en el puerto <code>8080</code>). Con el Loki de DIST corriendo en <code>13100</code>/<code>23100</code> al mismo tiempo, los dos deben convivir sin interferirse.</p>
+<p><strong>Nota de puertos ocupados:</strong> <code>lp2/obs/</code> también incluye un <code>compose.yml</code> de PROD (placeholder, <code>49090</code>/<code>43100</code>), a la espera de que exista un PROD real de <code>bomerp-backend</code> — no se ejecuta hasta entonces (ADR-002, "no crear por si acaso"). Cuando BigData (lambda26) construya su propio <code>obs/</code> (previsto para su S6+), el siguiente puerto libre es <code>59090</code> (Prometheus) / <code>53100</code> (Loki) — se decide en ese momento, no antes.</p>
 <h2 id="4-crea-actividad-autonoma">4. Crea: actividad autónoma<a class="headerlink" href="#4-crea-actividad-autonoma" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 2h fuera del aula.</p>
 <h3 id="41-actividad">4.1 Actividad<a class="headerlink" href="#41-actividad" title="Permanent link">&para;</a></h3>
