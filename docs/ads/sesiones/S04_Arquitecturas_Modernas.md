@@ -251,7 +251,7 @@ La flecha siempre entra al dominio por un puerto primario (invocando un *use cas
 
 - Más clases y capas que una arquitectura simple — *overhead* real para sistemas con lógica trivial.
 - El límite del dominio es una disciplina activa, no algo que el compilador garantice solo: es fácil romperlo por un atajo bajo presión de fecha de entrega.
-- *Over-engineering* para CRUDs simples sin lógica de dominio real — no todo módulo necesita esta estructura (ver 3.9 sobre `catalogo/producto`).
+- *Over-engineering* para CRUDs simples sin lógica de dominio real — no todo módulo necesita esta estructura (ver 3.4 sobre `catalogo/producto`).
 - Curva de aprendizaje para equipos acostumbrados a arquitectura en capas tradicional (2.3).
 
 **Errores comunes al implementarlo (SACAViX, 2026a):**
@@ -261,7 +261,7 @@ La flecha siempre entra al dominio por un puerto primario (invocando un *use cas
 - Puertos demasiado genéricos, como una interfaz `Repository<T>` que no expresa ninguna intención concreta del dominio.
 - Aplicar hexagonal a toda la aplicación, incluidos los módulos que son CRUD puro sin reglas de negocio que proteger.
 
-**Dónde se usa en la práctica:** dominios con reglas de negocio genuinamente complejas que deben sobrevivir a cambios de tecnología — cualquier núcleo de negocio que un equipo espera mantener por años, mientras la infraestructura de alrededor (proveedor de pagos, base de datos, mensajería) cambia varias veces sin que el dominio se entere. ThoughtWorks (consultora de arquitectura, ver Bibliografía) documenta este mismo criterio con un caso didáctico: separar la lógica de negocio de un pedido (reglas, cálculos) de sus adaptadores externos (pagos, notificaciones, persistencia), justamente para poder cambiar cualquiera de esos proveedores sin tocar la regla de negocio.
+**Dónde se usa en la práctica:** dominios con reglas de negocio genuinamente complejas que deben sobrevivir a cambios de tecnología — cualquier núcleo de negocio que un equipo espera mantener por años, mientras la infraestructura de alrededor (proveedor de pagos, base de datos, mensajería) cambia varias veces sin que el dominio se entere. Thoughtworks (consultora de arquitectura, ver Bibliografía) documenta este mismo criterio con un caso didáctico: separar la lógica de negocio de un pedido (reglas, cálculos) de sus adaptadores externos (pagos, notificaciones, persistencia), justamente para poder cambiar cualquiera de esos proveedores sin tocar la regla de negocio.
 
 **Ejemplo de referencia (LP2).** `catalogo/producto` no tiene esta estructura, y no debería tenerla todavía — `ProductoServiceImpl` llama directo a `ProductoRepository` (Spring Data JPA), sin un puerto de por medio. No es un error: es que hoy no hay lógica de negocio compleja que justifique la indirección.
 
