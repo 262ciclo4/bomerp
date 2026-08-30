@@ -510,6 +510,23 @@ public void descontarStock(Long id, Integer cantidad) {
 
 `buscarOFallar(id)` ya existe en `ProductoServiceImpl` desde S2 — `descontarStock` lo reutiliza, no lo repite.
 
+**Error frecuente**: la extensión de Spring Boot en el IDE marca `StockInsuficienteException` con `MODULITH_TYPE_REF_VIOLATION` ("Invalid reference to non-exposed type of module 'exception'") al guardar. No es un error en el código que acabas de escribir — es Spring Modulith haciendo exactamente lo que hace desde S1 (ADR-002): trata **cada paquete directo bajo la raíz** (`pe.edu.upeu.bomerp.*`) como su propio módulo, y eso incluye `exception`, aunque nunca lo pensaste como un "módulo de negocio".
+
+La diferencia con `catalogo.producto.service` (3.2) es que ahí expusiste una interfaz puntual con `@NamedInterface`, porque `ventas` necesita consumir *ese* servicio específico. `exception` es distinto: es un paquete transversal que **todos** los módulos deben poder usar, no la API propia de uno solo. Para ese caso, Spring Modulith ofrece un mecanismo dedicado — marcar el paquete completo como **abierto**:
+
+**`exception/package-info.java`**
+
+```java
+/**
+ * Paquete transversal: excepciones y su manejo son compartidos por todos
+ * los modulos, no la API de uno solo (a diferencia de @NamedInterface).
+ */
+@org.springframework.modulith.ApplicationModule(type = org.springframework.modulith.ApplicationModule.Type.OPEN)
+package pe.edu.upeu.bomerp.exception;
+```
+
+Con esto, `StockInsuficienteException`, `ResourceNotFoundException` y `GlobalExceptionHandler` quedan visibles para cualquier módulo sin necesitar un `@NamedInterface` por cada uno — y de paso limpia la misma advertencia que `ResourceNotFoundException` ya arrastraba desde S2, solo que nadie la había mirado con dos módulos de negocio a la vez. Corre `mvnw test -Dtest=ModularityTests` para confirmar que ya no aparece.
+
 ### 3.6 Crear `VentaMapper`
 
 **Producto del paso:** conversión entre `Venta`/`DetalleVenta` y sus DTO, en ambas direcciones — sin recibir la entidad `Producto`, solo `ProductoResponse` (el DTO expuesto de `catalogo`).
