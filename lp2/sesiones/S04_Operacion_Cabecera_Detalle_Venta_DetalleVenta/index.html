@@ -4129,7 +4129,7 @@
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://localhost:8080/actuator/prometheus
 </code></pre></div>
 <p>Resultado esperado: una respuesta en texto plano, con métricas como <code>process_uptime_seconds</code> o <code>http_server_requests_seconds_count</code> — igual que en DIST (pagatu S3, 3.10).</p>
-<p><strong>Diferencia real con DIST:</strong> <code>bomerp-backend</code> es un único proceso, no varias instancias registradas en un service registry — no hay Eureka de por medio. Prometheus no necesita descubrir nada, apunta directo a un solo <em>target</em> fijo.</p>
+<p><strong>Diferencia real con DIST:</strong> <code>bomerp-backend</code> no tiene un service registry — no hay Eureka de por medio. Prometheus no puede <em>descubrir</em> instancias preguntándole a nadie; alguien tiene que decirle dónde están, a mano, en <code>static_configs</code>. Si solo corres una instancia (<code>8080</code>), un único <em>target</em> alcanza. Si tienes dos (<code>8080</code>/<code>8081</code>, como en LP2 S1, 3.3), agrégalas ambas a la lista — es la forma correcta de hacerlo aquí, no un rodeo: sin registro, cada instancia nueva se agrega manualmente al archivo, y Prometheus la recoge en el siguiente <em>scrape</em>, sin reiniciar nada.</p>
 <p>Crea <code>lp2/obs/prometheus/prometheus-dev.yml</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">global</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">scrape_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15s</span>
@@ -4137,9 +4137,10 @@
 <span class="nt">scrape_configs</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">job_name</span><span class="p">:</span><span class="w"> </span><span class="s">"bomerp-backend"</span>
 <span class="w">    </span><span class="nt">static_configs</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">targets</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"host.docker.internal:8080"</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">targets</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"host.docker.internal:8080"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"host.docker.internal:8081"</span><span class="p p-Indicator">]</span>
 <span class="w">    </span><span class="nt">metrics_path</span><span class="p">:</span><span class="w"> </span><span class="s">"/actuator/prometheus"</span>
 </code></pre></div>
+<p><strong>Si más adelante cansa editar el archivo a mano</strong> (muchas instancias, o que suban y bajen seguido), el siguiente paso — sin llegar a montar un Eureka completo solo para esto — es <code>file_sd_configs</code>: Prometheus lee la lista de <em>targets</em> desde un archivo JSON/YAML aparte, y basta con reescribir ese archivo (a mano o con un script) para que el siguiente <em>scrape</em> ya vea el cambio, sin tocar la configuración principal de Prometheus ni reiniciar el contenedor. Sigue siendo alguien escribiendo la lista — no es descubrimiento real como el de DIST — pero separa "qué instancias existen ahora" de la configuración fija de Prometheus. Fuera del alcance de este anexo; queda como referencia si la necesitas.</p>
 <p>Crea <code>lp2/obs/compose-dev.yml</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bomerp-obs-dev</span>
 
@@ -4160,7 +4161,16 @@
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>lp2/obs
 docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>compose-dev.yml<span class="w"> </span>up<span class="w"> </span>-d
 </code></pre></div>
-<p>Verifica en el navegador: <code>http://localhost:39090/targets</code> — el target <code>bomerp-backend</code> debe aparecer en estado <code>UP</code>. Con el Prometheus de DIST corriendo en <code>19090</code> (DEV) o <code>29090</code> (PROD) al mismo tiempo, los dos deben convivir sin interferirse.</p>
+<p>Verifica en el navegador: <code>http://localhost:39090/targets</code> — el target <code>bomerp-backend</code> debe aparecer en estado <code>UP</code> (o <code>1/2 up</code> si solo tienes una de las dos instancias de 3.13 corriendo — la otra queda en <code>DOWN</code> con "connection refused", esperado, no un error de configuración).</p>
+<p>Con el target en <code>UP</code>, abre <code>http://localhost:39090/query</code> y prueba estas consultas — el mismo criterio que DIST (S3, 3.12): ¿la instancia está realmente sana, no solo "arriba"?</p>
+<ul>
+<li><code>up{job="bomerp-backend"}</code> — <code>1</code> si Prometheus pudo scrapear esa instancia en el último intento, <code>0</code> si no. Con las dos instancias de 3.13, deberías ver dos series, una por <code>instance</code> (<code>host.docker.internal:8080</code> y <code>:8081</code>).</li>
+<li><code>application_ready_time_seconds</code> — cuánto tardó cada instancia en quedar lista.</li>
+<li><code>process_uptime_seconds</code> — cuánto tiempo lleva corriendo cada instancia.</li>
+<li><code>http_server_requests_seconds_count</code> — cuántas peticiones ha atendido cada instancia, separadas por <code>uri</code>, <code>status</code> y <code>outcome</code> — la evidencia de que <code>POST /api/v1/ventas</code> (3.10) realmente sirvió tráfico.</li>
+<li><code>sum(rate(http_server_requests_seconds_count{status=~"5.."}[5m])) by (instance)</code> — tasa de errores 5xx por instancia. Si nunca respondiste un 500, esta consulta devuelve <strong>"Empty query result"</strong>, no <code>0</code> — esa serie recién existe la primera vez que ocurre un 500 de verdad. "Empty" es la respuesta correcta de un servicio sano.</li>
+<li><code>hikaricp_connections_active</code> frente a <code>hikaricp_connections_max</code> — conexiones a Oracle en uso ahora mismo, contra el máximo configurado (a diferencia de DIST, que mide esto contra PostgreSQL — la métrica es la misma, la base de datos detrás cambia).</li>
+</ul>
 <h3 id="314-opcional-anexo-enviar-logs-de-bomerp-backend-a-loki-y-verificarlos">3.14 (opcional, anexo) Enviar logs de <code>bomerp-backend</code> a Loki y verificarlos<a class="headerlink" href="#314-opcional-anexo-enviar-logs-de-bomerp-backend-a-loki-y-verificarlos" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> Promtail leyendo los logs que <code>bomerp-backend</code> ya escribe a archivo (<code>logback-spring.xml</code>, desde S1), y enviándolos a un Loki propio, en paralelo al de DIST.</p>
 <p><code>bomerp-backend</code> ya escribe a <code>logs/bomerp.log</code> (rotado diariamente a <code>logs/bomerp-AAAA-MM-DD.log</code>, <code>maxHistory: 7</code>) — el mismo mecanismo que <code>pagatu-catalogo-ms</code> (DIST S3, 3.13), y de hecho un poco más completo: <code>LOG_PATTERN</code> ya incluye <code>[%X{traceId}]</code> desde el inicio, sin necesitar el paso extra que DIST agregó en 3.14 para rastrear una petición específica.</p>
@@ -4212,6 +4222,14 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-G<span class="w"> </span>http://localhost:33100/loki/api/v1/query_range<span class="w"> </span>--data-urlencode<span class="w"> </span><span class="s1">'query={application="bomerp-backend"}'</span>
 </code></pre></div>
 <p>Resultado esperado: una respuesta JSON con líneas de log reales de <code>bomerp-backend</code> (por ejemplo, el mensaje de arranque de Tomcat en el puerto <code>8080</code>). Con el Loki de DIST corriendo en <code>13100</code>/<code>23100</code> al mismo tiempo, los dos deben convivir sin interferirse.</p>
+<p>Con los logs llegando, prueba estas consultas — mismo criterio que DIST (S3, 3.14), adaptadas a lo que esta sesión realmente construyó:</p>
+<ul>
+<li><code>{application="bomerp-backend"} |= "Started BomerpBackendApplication"</code> — la línea "Started ... in X seconds" de cada arranque. El número de segundos debería coincidir con <code>application_ready_time_seconds</code> de esa misma instancia en Prometheus (3.13): es la misma medición, solo que aquí la ves como texto y allá como métrica.</li>
+<li><code>{application="bomerp-backend"} |= "HikariPool"</code> — cuándo el pool de conexiones abrió o cerró conexiones a Oracle. Corrobora los valores de <code>hikaricp_connections_active</code> frente a <code>hikaricp_connections_max</code> que consultaste en Prometheus.</li>
+<li><code>{application="bomerp-backend"} |= "StockInsuficienteException"</code> — el rollback de esta sesión (3.10), visto desde el log en vez del <code>409</code> que ya viste en PowerShell. Debería aparecer una línea <code>WARN</code> por cada intento de venta con stock insuficiente que hayas provocado.</li>
+<li><code>{application="bomerp-backend", detected_level="error"}</code> — errores de arranque o de ejecución. Esta es la consulta que Prometheus <strong>no puede</strong> responder: si una instancia nunca llegó a levantar, jamás va a existir una métrica suya — no hay proceso vivo del cual medir nada. El log es la única forma de saber <em>por qué</em> nunca apareció como target.</li>
+</ul>
+<p>A diferencia de DIST, no hay una consulta equivalente a <code>EurekaServiceRegistry</code> — <code>bomerp-backend</code> no se registra en ningún lado (2.4, más arriba: sin service registry, sin altas ni bajas que loguear).</p>
 <p><strong>Nota de puertos ocupados:</strong> <code>lp2/obs/</code> también incluye un <code>compose.yml</code> de PROD (placeholder, <code>49090</code>/<code>43100</code>), a la espera de que exista un PROD real de <code>bomerp-backend</code> — no se ejecuta hasta entonces (ADR-002, "no crear por si acaso"). Cuando BigData (lambda26) construya su propio <code>obs/</code> (previsto para su S6+), el siguiente puerto libre es <code>59090</code> (Prometheus) / <code>53100</code> (Loki) — se decide en ese momento, no antes.</p>
 <h2 id="4-crea-actividad-autonoma">4. Crea: actividad autónoma<a class="headerlink" href="#4-crea-actividad-autonoma" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 2h fuera del aula.</p>
