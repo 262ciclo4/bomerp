@@ -11,7 +11,9 @@ import pe.edu.upeu.bomerp.ventas.venta.dto.VentaRequest;
 import pe.edu.upeu.bomerp.ventas.venta.dto.VentaResponse;
 import pe.edu.upeu.bomerp.ventas.venta.service.VentaService;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Tag(name = "Ventas")
 @RestController
 @RequestMapping("/api/v1/ventas")
@@ -22,6 +24,7 @@ public class VentaController {
     @Operation(summary = "Lista las ventas registradas")
     @GetMapping
     public ResponseEntity<List<VentaResponse>> listar() {
+        log.info("Listando ventas");
         return ResponseEntity.ok(ventaService.listar());
     }
 
