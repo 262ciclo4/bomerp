@@ -202,7 +202,7 @@ git clone --branch s03-objetos-relacionados https://github.com/262ciclo4/bomerp.
 
 **Requisito antes de continuar:** confirma que `http://localhost:8080/api/v1/productos` responde con datos antes de continuar. Si falla, el problema es de una sesión anterior, no de esta.
 
-**Requisito adicional para esta sesión:** el esquema `BOM_VENTAS` (tablas `VENTAS` y `DETALLE_VENTAS`) no lo crea este backend — es responsabilidad de BD2 S04 (3.12, Tabla 3). Antes de escribir las entidades `Venta`/`DetalleVenta` (3.3) o de intentar levantar la aplicación, confirma con tu equipo de BD2 que ese esquema ya existe en Oracle. Si arrancas el backend sin él, Hibernate falla al iniciar con `SchemaManagementException: Schema validation: missing table [bom_ventas.detalle_ventas]` — no es un error en tu código Java, es que la tabla física todavía no existe.
+**Requisito adicional para esta sesión:** el esquema `BOM_VENTAS` (tablas `VENTAS` y `DETALLE_VENTAS`) no lo crea este backend — es responsabilidad de BD2 S04 (3.2). Crea el esquema y las tablas de ventas ejecutando, en orden, [`S04_01_esquemas.sql`](../../proyecto-integrador/u1/oracle/S04_01_esquemas.sql) y [`S04_02_tablas.sql`](../../proyecto-integrador/u1/oracle/S04_02_tablas.sql) (scripts de BD2 — detalle completo si lo necesitas: [BD2 S4](../../bd2/sesiones/S04_Optimizacion_Consultas_SQL.md)), antes de escribir las entidades `Venta`/`DetalleVenta` (3.3) o de intentar levantar la aplicación. Si arrancas el backend sin ese esquema, Hibernate falla al iniciar con `SchemaManagementException: Schema validation: missing table [bom_ventas.detalle_ventas]` — no es un error en tu código Java, es que la tabla física todavía no existe.
 
 ### 3.2 Exponer `ProductoService` a otros módulos con `@NamedInterface`
 

@@ -174,7 +174,7 @@ Tiempo: 2h.
 - **3.7** Capturar el `EXPLAIN PLAN` después y comparar.
 - **3.8** Relacionar con ADS y LP2.
 
-**Script completo, listo para ejecutar** (los pasos siguientes explican cada bloque): [`S04_optimizacion_consultas.sql`](../../proyecto-integrador/u1/oracle/S04_optimizacion_consultas.sql).
+**Scripts completos, listos para ejecutar** (los pasos siguientes explican cada bloque): [`S04_01_esquemas.sql`](../../proyecto-integrador/u1/oracle/S04_01_esquemas.sql), [`S04_02_tablas.sql`](../../proyecto-integrador/u1/oracle/S04_02_tablas.sql) y [`S04_optimizacion_consultas.sql`](../../proyecto-integrador/u1/oracle/S04_optimizacion_consultas.sql) (volumen, `EXPLAIN PLAN`, `DBMS_STATS` y reescritura).
 
 ### 3.1 Definir la consulta representativa a optimizar
 
@@ -192,6 +192,8 @@ Tiempo: 2h.
 ### 3.2 Crear el esquema `BOM_VENTAS` y sus tablas
 
 **Producto del paso:** esquema `BOM_VENTAS` con `VENTAS`/`DETALLE_VENTAS` operativas, y `BOMERP_APP` con permisos sobre ambas — igual que ya tiene sobre `BOM_CATALOGO` desde S1.
+
+Mismo criterio que en S1: el esquema y las tablas se pueden crear ejecutando, en orden, [`S04_01_esquemas.sql`](../../proyecto-integrador/u1/oracle/S04_01_esquemas.sql) y [`S04_02_tablas.sql`](../../proyecto-integrador/u1/oracle/S04_02_tablas.sql), conectado como `system` de principio a fin — o pegando manualmente los bloques que siguen, si prefieres ir paso a paso.
 
 Con una cuenta DBA, crea el usuario propietario del nuevo esquema, con la misma contraseña fija de ambiente DEV que ya usa `BOM_CATALOGO` (S1, 3.2):
 
