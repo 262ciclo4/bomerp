@@ -301,20 +301,24 @@ Martin (2017, ver Bibliografía) abre el libro que le da nombre a este estilo co
 
 **Figura 8. Diagrama típico de Clean Architecture (círculos concéntricos)**
 
-```mermaid
-flowchart TB
-    subgraph Frameworks["Frameworks y drivers (mas externo: Spring, JPA, HTTP)"]
-        subgraph Adapters["Adaptadores de interfaz (Controller, Repository impl.)"]
-            subgraph UseCases["Casos de uso (logica de aplicacion)"]
-                Entities["Entidades del dominio (mas interno)"]
-            end
-        end
-    end
-```
+<svg viewBox="0 0 500 540" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto;display:block;margin:0 auto;font-family:inherit;">
+<circle cx="250" cy="280" r="240" fill="#fafafa" stroke="#666" stroke-width="2"/>
+<circle cx="250" cy="280" r="180" fill="#eaeaea" stroke="#888" stroke-width="2"/>
+<circle cx="250" cy="280" r="115" fill="#d8d8d8" stroke="#999" stroke-width="2"/>
+<circle cx="250" cy="280" r="55" fill="#a8e6b0" stroke="#2f7d3c" stroke-width="2"/>
+<text x="250" y="60" text-anchor="middle" font-size="14" fill="#444">Frameworks y drivers</text>
+<text x="250" y="78" text-anchor="middle" font-size="12" fill="#444">(mas externo: Spring, JPA, HTTP)</text>
+<text x="250" y="120" text-anchor="middle" font-size="13" fill="#444">Adaptadores de interfaz</text>
+<text x="250" y="137" text-anchor="middle" font-size="11" fill="#444">(Controller, Repository impl.)</text>
+<text x="250" y="185" text-anchor="middle" font-size="13" fill="#333">Casos de uso</text>
+<text x="250" y="202" text-anchor="middle" font-size="11" fill="#333">(logica de aplicacion)</text>
+<text x="250" y="276" text-anchor="middle" font-size="13" font-weight="bold" fill="#1c3d22">Entidades del</text>
+<text x="250" y="294" text-anchor="middle" font-size="13" font-weight="bold" fill="#1c3d22">dominio</text>
+</svg>
 
 *Nota.* Concepto de Clean Architecture (círculos concéntricos) según Martin (2017, ver Bibliografía); diagrama de elaboración propia.
 
-La flecha de dependencia siempre apunta hacia adentro: `Frameworks` puede conocer `Adapters`, `Adapters` puede conocer `UseCases`, `UseCases` puede conocer `Entities` — pero `Entities` no conoce nada de lo que está afuera. Es la misma idea de hexagonal (2.4), expresada como niveles en vez de puertos/adaptadores; en la práctica, muchos equipos usan los dos términos de forma casi intercambiable. SACAViX Tech (Yoandy, ver Bibliografía) lo plantea de forma más directa: hexagonal puede verse como un caso concreto de aplicación de Clean Architecture, no como un patrón aparte con reglas propias — los *puertos* de hexagonal son la forma que toma la *regla de dependencia* de Clean cuando se expresa como interfaces en vez de círculos.
+La flecha de dependencia siempre apunta hacia adentro: Frameworks puede conocer Adaptadores, Adaptadores puede conocer Casos de uso, Casos de uso puede conocer Entidades — pero Entidades no conoce nada de los anillos que la rodean. Es la misma idea de hexagonal (2.4), expresada como niveles en vez de puertos/adaptadores; en la práctica, muchos equipos usan los dos términos de forma casi intercambiable. SACAViX Tech (Yoandy, ver Bibliografía) lo plantea de forma más directa: hexagonal puede verse como un caso concreto de aplicación de Clean Architecture, no como un patrón aparte con reglas propias — los *puertos* de hexagonal son la forma que toma la *regla de dependencia* de Clean cuando se expresa como interfaces en vez de círculos.
 
 **Dónde se usa en la práctica:** sistemas grandes y de vida larga, donde el equipo espera que la lógica de negocio sobreviva a más de un cambio de framework. El caso más verificable es la propia **Guía de arquitectura de apps de Google para Android** (`developer.android.com`, ver Bibliografía), inspirada explícitamente en Clean Architecture — con un matiz honesto: Google organiza sus capas `Presentación → Dominio → Datos` (dependencia en un solo sentido), mientras que la Clean Architecture original de Martin invierte también la capa de Datos (`Presentación → Dominio ← Datos`, la capa de Datos implementa interfaces que define el Dominio). Es una adaptación pragmática de la idea, no una copia literal de la regla de dependencia — y es exactamente el tipo de decisión que esta sesión pide justificar, no copiar sin cuestionar.
 
