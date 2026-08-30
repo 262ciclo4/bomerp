@@ -869,7 +869,7 @@ curl http://localhost:8080/actuator/prometheus
 
 Resultado esperado: una respuesta en texto plano, con métricas como `process_uptime_seconds` o `http_server_requests_seconds_count` — igual que en DIST (pagatu S3, 3.10).
 
-**Diferencia real con DIST:** `bomerp-backend` es un único proceso, no varias instancias registradas en un service registry — no hay Eureka de por medio. Prometheus no necesita descubrir nada, apunta directo a un solo *target* fijo.
+**Diferencia real con DIST:** `bomerp-backend` no tiene un service registry — no hay Eureka de por medio. Prometheus no puede *descubrir* instancias preguntándole a nadie; alguien tiene que decirle dónde están, a mano, en `static_configs`. Si solo corres una instancia (`8080`), un único *target* alcanza. Si tienes dos (`8080`/`8081`, como en LP2 S1, 3.3), agrégalas ambas a la lista — es la forma correcta de hacerlo aquí, no un rodeo: sin registro, cada instancia nueva se agrega manualmente al archivo, y Prometheus la recoge en el siguiente *scrape*, sin reiniciar nada.
 
 Crea `lp2/obs/prometheus/prometheus-dev.yml`:
 
@@ -880,9 +880,11 @@ global:
 scrape_configs:
   - job_name: "bomerp-backend"
     static_configs:
-      - targets: ["host.docker.internal:8080"]
+      - targets: ["host.docker.internal:8080", "host.docker.internal:8081"]
     metrics_path: "/actuator/prometheus"
 ```
+
+**Si más adelante cansa editar el archivo a mano** (muchas instancias, o que suban y bajen seguido), el siguiente paso — sin llegar a montar un Eureka completo solo para esto — es `file_sd_configs`: Prometheus lee la lista de *targets* desde un archivo JSON/YAML aparte, y basta con reescribir ese archivo (a mano o con un script) para que el siguiente *scrape* ya vea el cambio, sin tocar la configuración principal de Prometheus ni reiniciar el contenedor. Sigue siendo alguien escribiendo la lista — no es descubrimiento real como el de DIST — pero separa "qué instancias existen ahora" de la configuración fija de Prometheus. Fuera del alcance de este anexo; queda como referencia si la necesitas.
 
 Crea `lp2/obs/compose-dev.yml`:
 
@@ -911,7 +913,16 @@ cd lp2/obs
 docker compose -f compose-dev.yml up -d
 ```
 
-Verifica en el navegador: `http://localhost:39090/targets` — el target `bomerp-backend` debe aparecer en estado `UP`. Con el Prometheus de DIST corriendo en `19090` (DEV) o `29090` (PROD) al mismo tiempo, los dos deben convivir sin interferirse.
+Verifica en el navegador: `http://localhost:39090/targets` — el target `bomerp-backend` debe aparecer en estado `UP` (o `1/2 up` si solo tienes una de las dos instancias de 3.13 corriendo — la otra queda en `DOWN` con "connection refused", esperado, no un error de configuración).
+
+Con el target en `UP`, abre `http://localhost:39090/query` y prueba estas consultas — el mismo criterio que DIST (S3, 3.12): ¿la instancia está realmente sana, no solo "arriba"?
+
+- `up{job="bomerp-backend"}` — `1` si Prometheus pudo scrapear esa instancia en el último intento, `0` si no. Con las dos instancias de 3.13, deberías ver dos series, una por `instance` (`host.docker.internal:8080` y `:8081`).
+- `application_ready_time_seconds` — cuánto tardó cada instancia en quedar lista.
+- `process_uptime_seconds` — cuánto tiempo lleva corriendo cada instancia.
+- `http_server_requests_seconds_count` — cuántas peticiones ha atendido cada instancia, separadas por `uri`, `status` y `outcome` — la evidencia de que `POST /api/v1/ventas` (3.10) realmente sirvió tráfico.
+- `sum(rate(http_server_requests_seconds_count{status=~"5.."}[5m])) by (instance)` — tasa de errores 5xx por instancia. Si nunca respondiste un 500, esta consulta devuelve **"Empty query result"**, no `0` — esa serie recién existe la primera vez que ocurre un 500 de verdad. "Empty" es la respuesta correcta de un servicio sano.
+- `hikaricp_connections_active` frente a `hikaricp_connections_max` — conexiones a Oracle en uso ahora mismo, contra el máximo configurado (a diferencia de DIST, que mide esto contra PostgreSQL — la métrica es la misma, la base de datos detrás cambia).
 
 ### 3.14 (opcional, anexo) Enviar logs de `bomerp-backend` a Loki y verificarlos
 
@@ -982,6 +993,15 @@ curl -G http://localhost:33100/loki/api/v1/query_range --data-urlencode 'query={
 ```
 
 Resultado esperado: una respuesta JSON con líneas de log reales de `bomerp-backend` (por ejemplo, el mensaje de arranque de Tomcat en el puerto `8080`). Con el Loki de DIST corriendo en `13100`/`23100` al mismo tiempo, los dos deben convivir sin interferirse.
+
+Con los logs llegando, prueba estas consultas — mismo criterio que DIST (S3, 3.14), adaptadas a lo que esta sesión realmente construyó:
+
+- `{application="bomerp-backend"} |= "Started BomerpBackendApplication"` — la línea "Started ... in X seconds" de cada arranque. El número de segundos debería coincidir con `application_ready_time_seconds` de esa misma instancia en Prometheus (3.13): es la misma medición, solo que aquí la ves como texto y allá como métrica.
+- `{application="bomerp-backend"} |= "HikariPool"` — cuándo el pool de conexiones abrió o cerró conexiones a Oracle. Corrobora los valores de `hikaricp_connections_active` frente a `hikaricp_connections_max` que consultaste en Prometheus.
+- `{application="bomerp-backend"} |= "StockInsuficienteException"` — el rollback de esta sesión (3.10), visto desde el log en vez del `409` que ya viste en PowerShell. Debería aparecer una línea `WARN` por cada intento de venta con stock insuficiente que hayas provocado.
+- `{application="bomerp-backend", detected_level="error"}` — errores de arranque o de ejecución. Esta es la consulta que Prometheus **no puede** responder: si una instancia nunca llegó a levantar, jamás va a existir una métrica suya — no hay proceso vivo del cual medir nada. El log es la única forma de saber *por qué* nunca apareció como target.
+
+A diferencia de DIST, no hay una consulta equivalente a `EurekaServiceRegistry` — `bomerp-backend` no se registra en ningún lado (2.4, más arriba: sin service registry, sin altas ni bajas que loguear).
 
 **Nota de puertos ocupados:** `lp2/obs/` también incluye un `compose.yml` de PROD (placeholder, `49090`/`43100`), a la espera de que exista un PROD real de `bomerp-backend` — no se ejecuta hasta entonces (ADR-002, "no crear por si acaso"). Cuando BigData (lambda26) construya su propio `obs/` (previsto para su S6+), el siguiente puerto libre es `59090` (Prometheus) / `53100` (Loki) — se decide en ese momento, no antes.
 
