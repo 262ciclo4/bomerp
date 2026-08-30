@@ -225,7 +225,7 @@ flowchart TB
     end
     subgraph Dominio["Nucleo del dominio (no conoce nada de afuera)"]
         PrimaryPort["Primary Port (interfaz de use case)"]
-        UseCase["Use Case + Entidades<br/>Logica de negocio pura"]
+        UseCase{{"Use Case + Entidades<br/>Logica de negocio pura"}}
         SecondaryPort["Secondary Port (interfaz)"]
         PrimaryPort --> UseCase --> SecondaryPort
     end
@@ -241,6 +241,9 @@ flowchart TB
     SecondaryPort --> DbAdapter
     SecondaryPort --> ApiAdapter
     SecondaryPort --> EmailAdapter
+
+    classDef dominio fill:#a8e6b0,stroke:#2f7d3c,stroke-width:2px,color:#111;
+    class UseCase dominio;
 ```
 
 *Nota.* Adaptado de SACAViX (2026a, ver Bibliografía), sobre el concepto original de Cockburn (2005); diagrama de elaboración propia.
@@ -274,7 +277,7 @@ flowchart TB
     end
     subgraph Dominio["Nucleo del dominio (no conoceria nada de afuera)"]
         PrimaryPort["Primary Port<br/>(interfaz nueva: ProductoUseCase)"]
-        Logica["Use Case + Entidades<br/>(ProductoServiceImpl, sin Spring ni JPA)"]
+        Logica{{"Use Case + Entidades<br/>(ProductoServiceImpl, sin Spring ni JPA)"}}
         SecPortProducto["Secondary Port Producto<br/>(interfaz nueva: ProductoRepositoryPort)"]
         SecPortCategoria["Secondary Port Categoria<br/>(interfaz nueva: CategoriaLookupPort)"]
         PrimaryPort --> Logica
@@ -289,6 +292,9 @@ flowchart TB
     RestAdapter --> PrimaryPort
     SecPortProducto --> DbAdapter
     SecPortCategoria --> CatAdapter
+
+    classDef dominio fill:#a8e6b0,stroke:#2f7d3c,stroke-width:2px,color:#111;
+    class Logica dominio;
 ```
 
 `CategoriaRepository` aparece como un segundo adaptador secundario porque `ProductoServiceImpl` real ya depende de él (para validar `categoriaId`, LP2 S3, 3.9) — no solo de `ProductoRepository`. Una migración a hexagonal tendría que aislar esa dependencia también, con su propio *secondary port* (`CategoriaLookupPort`).
