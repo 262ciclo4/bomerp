@@ -189,6 +189,8 @@ Tiempo: 2h.
 - **3.10** Probar la operación completa, incluido el rollback.
 - **3.11** Verificar los límites de módulo con `ModularityTests`.
 - **3.12** Relacionar con ADS y BD2.
+- **3.13** (opcional, anexo) Exponer métricas de `bomerp-backend` para Prometheus.
+- **3.14** (opcional, anexo) Enviar logs de `bomerp-backend` a Loki y verificarlos.
 
 ### 3.1 Verificar el punto de partida
 
@@ -767,12 +769,18 @@ Verifica: la respuesta trae `201`, un `total` calculado, y el stock de los produ
 **Caso de rollback** — una de las líneas pide más cantidad de la que hay en stock:
 
 ```powershell
-Invoke-RestMethod -Method Post -Uri "http://localhost:8080/api/v1/ventas" -ContentType "application/json" -Body '{"detalles":[{"productoId":1,"cantidad":1},{"productoId":2,"cantidad":999999}]}'
+try {
+    Invoke-RestMethod -Method Post -Uri "http://localhost:8080/api/v1/ventas" -ContentType "application/json" -Body '{"detalles":[{"productoId":1,"cantidad":1},{"productoId":2,"cantidad":999999}]}'
+} catch {
+    $_.ErrorDetails.Message
+}
 ```
 
 ```bash
 curl -i -X POST http://localhost:8080/api/v1/ventas -H "Content-Type: application/json" -d '{"detalles":[{"productoId":1,"cantidad":1},{"productoId":2,"cantidad":999999}]}'
 ```
+
+**Error frecuente**: `Invoke-RestMethod` lanza una excepción ante cualquier respuesta que no sea 2xx (a diferencia de `curl`, que siempre muestra el cuerpo) — sin el `try`/`catch`, PowerShell solo muestra "Error en el servidor remoto: (409) Conflicto" y esconde el `message` real (`Stock insuficiente para...`) que sí viajó en el cuerpo de la respuesta. `$_.ErrorDetails.Message` es lo que lo recupera.
 
 Verifica: la respuesta trae `409`, **ninguna** venta nueva aparece en `GET /api/v1/ventas`, y el stock del producto 1 (la línea que sí tenía stock suficiente) queda **exactamente igual** que antes de este intento — la prueba real de que la transacción se revirtió completa, no solo la línea que falló.
 
@@ -812,7 +820,7 @@ Si en algún momento un archivo de `ventas` importa `pe.edu.upeu.bomerp.catalogo
 | `ProductoService.descontarStock` (regla de negocio, no de forma) | — | `CK_PRODUCTO_STOCK` sobre `PRODUCTOS` (BD2 S1), última línea de defensa |
 | `@NamedInterface` en `catalogo.producto.service`/`dto` | Acyclic Dependencies Principle (ADS S4, 2.6) | — |
 
-Sesión equivalente en los otros dos cursos, misma semana: ADS y BD2 todavía no publican su guía de S4 propia con este alcance específico en este repositorio.
+Sesión equivalente en los otros dos cursos, misma semana: [ADS - S4 Arquitecturas Modernas](../../ads/sesiones/S04_Arquitecturas_Modernas.md) y [BD2 - S4 Optimización de Consultas SQL](../../bd2/sesiones/S04_Optimizacion_Consultas_SQL.md).
 
 **Evidencia de aprendizaje:**
 
@@ -821,6 +829,161 @@ Sesión equivalente en los otros dos cursos, misma semana: ADS y BD2 todavía no
 - Caso de rollback probado, con stock sin cambios en las líneas previas a la que falló.
 - `StockInsuficienteException` manejada por `GlobalExceptionHandler`, respondiendo `409`.
 - `ModularityTests` en verde, con `@NamedInterface` expuesto explícitamente.
+
+### 3.13 (opcional, anexo) Exponer métricas de `bomerp-backend` para Prometheus
+
+!!! note "3.13 es opcional"
+    El alcance evaluado de S4 termina en 3.12 (4.4, 4.6). Levantar Prometheus junto con Oracle y `bomerp-backend` puede exigir más memoria de la que tiene la laptop de un estudiante que además lleva DIST o BigData corriendo — por eso este paso queda como anexo, no como requisito. Quien lo complete deja evidencia real de observabilidad sobre su propio backend, con el mismo patrón que DIST (pagatu S3, 3.10-3.11), pero en puertos distintos para poder correr los dos a la vez.
+
+**Producto del paso:** `bomerp-backend` exponiendo un endpoint de métricas en formato Prometheus, y un Prometheus propio corriendo en paralelo al de DIST sin chocar puertos.
+
+Agrega la dependencia en `lp2/bomerp-backend/pom.xml`:
+
+```xml
+<dependency>
+    <groupId>io.micrometer</groupId>
+    <artifactId>micrometer-registry-prometheus</artifactId>
+    <scope>runtime</scope>
+</dependency>
+```
+
+En `application-dev.yml`, agrega `prometheus` a los endpoints ya expuestos:
+
+```yaml
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+```
+
+Reinicia `bomerp-backend` y verifica:
+
+```powershell
+Invoke-RestMethod -Method Get -Uri "http://localhost:8080/actuator/prometheus"
+```
+
+```bash
+curl http://localhost:8080/actuator/prometheus
+```
+
+Resultado esperado: una respuesta en texto plano, con métricas como `process_uptime_seconds` o `http_server_requests_seconds_count` — igual que en DIST (pagatu S3, 3.10).
+
+**Diferencia real con DIST:** `bomerp-backend` es un único proceso, no varias instancias registradas en un service registry — no hay Eureka de por medio. Prometheus no necesita descubrir nada, apunta directo a un solo *target* fijo.
+
+Crea `lp2/obs/prometheus/prometheus-dev.yml`:
+
+```yaml
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: "bomerp-backend"
+    static_configs:
+      - targets: ["host.docker.internal:8080"]
+    metrics_path: "/actuator/prometheus"
+```
+
+Crea `lp2/obs/compose-dev.yml`:
+
+```yaml
+name: bomerp-obs-dev
+
+services:
+  bomerp-prometheus:
+    image: prom/prometheus:v3.14.0
+    container_name: bomerp-prometheus-dev
+    restart: unless-stopped
+    ports:
+      - "39090:9090"
+    volumes:
+      - ./prometheus/prometheus-dev.yml:/etc/prometheus/prometheus.yml:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+```
+
+**El puerto `39090` es la parte que importa aquí.** DIST ya usa el rango `9090` dos veces: `19090` para su Prometheus de DEV y `29090` para el de PROD (pagatu S3, `obs/compose-dev.yml` y `obs/compose.yml`, 3.15) — si `bomerp-obs-dev` reutilizara cualquiera de los dos, el segundo `docker compose up` fallaría con el puerto ya ocupado, o peor, uno de los dos Prometheus terminaría sirviendo datos del otro proyecto. `39090` deja los dos puertos de DIST intactos. El `name: bomerp-obs-dev` (distinto de `pagatu-obs-dev`) evita el mismo choque de identidad de proyecto Compose que ya se explicó en DIST (S3, 3.11): Compose identifica contenedores por *proyecto + servicio*, no por `container_name`.
+
+Levanta el contenedor:
+
+```bash
+cd lp2/obs
+docker compose -f compose-dev.yml up -d
+```
+
+Verifica en el navegador: `http://localhost:39090/targets` — el target `bomerp-backend` debe aparecer en estado `UP`. Con el Prometheus de DIST corriendo en `19090` (DEV) o `29090` (PROD) al mismo tiempo, los dos deben convivir sin interferirse.
+
+### 3.14 (opcional, anexo) Enviar logs de `bomerp-backend` a Loki y verificarlos
+
+**Producto del paso:** Promtail leyendo los logs que `bomerp-backend` ya escribe a archivo (`logback-spring.xml`, desde S1), y enviándolos a un Loki propio, en paralelo al de DIST.
+
+`bomerp-backend` ya escribe a `logs/bomerp.log` (rotado diariamente a `logs/bomerp-AAAA-MM-DD.log`, `maxHistory: 7`) — el mismo mecanismo que `pagatu-catalogo-ms` (DIST S3, 3.13), y de hecho un poco más completo: `LOG_PATTERN` ya incluye `[%X{traceId}]` desde el inicio, sin necesitar el paso extra que DIST agregó en 3.14 para rastrear una petición específica.
+
+Crea `lp2/obs/promtail/promtail-config-dev.yml`:
+
+```yaml
+server:
+  http_listen_port: 9080
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://bomerp-loki:3100/loki/api/v1/push
+
+scrape_configs:
+  - job_name: bomerp-backend
+    static_configs:
+      - targets: [localhost]
+        labels:
+          application: bomerp-backend
+          __path__: /var/log/bomerp-backend/*.log
+```
+
+Agrega Loki y Promtail a `lp2/obs/compose-dev.yml` (junto a `bomerp-prometheus`, 3.13):
+
+```yaml
+  bomerp-loki:
+    image: grafana/loki:3.7.6
+    container_name: bomerp-loki-dev
+    restart: unless-stopped
+    ports:
+      - "33100:3100"
+
+  bomerp-promtail:
+    image: grafana/promtail:3.6.8
+    container_name: bomerp-promtail-dev
+    restart: unless-stopped
+    volumes:
+      - ./promtail/promtail-config-dev.yml:/etc/promtail/config.yml:ro
+      - ../bomerp-backend/logs:/var/log/bomerp-backend:ro
+    command: -config.file=/etc/promtail/config.yml
+    depends_on:
+      - bomerp-loki
+```
+
+Igual que con Prometheus, el puerto de host es el que evita el choque: DIST ya usa `13100` (Loki DEV) y `23100` (Loki PROD) — `33100` deja los dos intactos.
+
+Vuelve a levantar el stack con el archivo actualizado:
+
+```bash
+cd lp2/obs
+docker compose -f compose-dev.yml up -d
+```
+
+Reinicia `bomerp-backend` (para que Promtail, al arrancar, empiece a leer el archivo activo desde el final) y confirma que los logs llegan a Loki:
+
+```powershell
+(Invoke-RestMethod -Method Get -Uri "http://localhost:33100/loki/api/v1/query_range?query={application=`"bomerp-backend`"}") | ConvertTo-Json -Depth 10
+```
+
+```bash
+curl -G http://localhost:33100/loki/api/v1/query_range --data-urlencode 'query={application="bomerp-backend"}'
+```
+
+Resultado esperado: una respuesta JSON con líneas de log reales de `bomerp-backend` (por ejemplo, el mensaje de arranque de Tomcat en el puerto `8080`). Con el Loki de DIST corriendo en `13100`/`23100` al mismo tiempo, los dos deben convivir sin interferirse.
+
+**Nota de puertos ocupados:** `lp2/obs/` también incluye un `compose.yml` de PROD (placeholder, `49090`/`43100`), a la espera de que exista un PROD real de `bomerp-backend` — no se ejecuta hasta entonces (ADR-002, "no crear por si acaso"). Cuando BigData (lambda26) construya su propio `obs/` (previsto para su S6+), el siguiente puerto libre es `59090` (Prometheus) / `53100` (Loki) — se decide en ese momento, no antes.
 
 ## 4. Crea: actividad autónoma
 
