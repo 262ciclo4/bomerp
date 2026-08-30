@@ -4230,6 +4230,75 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <li><code>{application="bomerp-backend", detected_level="error"}</code> — errores de arranque o de ejecución. Esta es la consulta que Prometheus <strong>no puede</strong> responder: si una instancia nunca llegó a levantar, jamás va a existir una métrica suya — no hay proceso vivo del cual medir nada. El log es la única forma de saber <em>por qué</em> nunca apareció como target.</li>
 </ul>
 <p>A diferencia de DIST, no hay una consulta equivalente a <code>EurekaServiceRegistry</code> — <code>bomerp-backend</code> no se registra en ningún lado (2.4, más arriba: sin service registry, sin altas ni bajas que loguear).</p>
+<p>Su equivalente para pegar directo en el navegador — no hace falta codificar comillas ni espacios a mano, el navegador los codifica solo al pegar la URL:</p>
+<div class="highlight"><pre><span></span><code>http://localhost:33100/loki/api/v1/query_range?query={application="bomerp-backend"} |= "Started BomerpBackendApplication"
+
+http://localhost:33100/loki/api/v1/query_range?query={application="bomerp-backend"} |= "HikariPool"
+
+http://localhost:33100/loki/api/v1/query_range?query={application="bomerp-backend"} |= "StockInsuficienteException"
+
+http://localhost:33100/loki/api/v1/query_range?query={application="bomerp-backend", detected_level="error"}
+</code></pre></div>
+<p><strong>Rastrear una petición específica por traceId (opcional)</strong></p>
+<p>El mecanismo para esto ya existe desde S1 (<code>CorrelationIdFilter</code>): cada request que llega ya recibe un <code>traceId</code> (UUID) guardado en el MDC y devuelto como header <code>X-Trace-ID</code> en la respuesta — el propio <code>LOG_PATTERN</code> de <code>logback-spring.xml</code> ya lo imprime (<code>[%X{traceId}]</code>, ver más arriba). Lo único que falta es una línea de log real durante el request — sin eso, el <code>traceId</code> viaja pero no queda escrito en ningún lado. Agrega <code>@Slf4j</code> (Lombok, ya está en el <code>pom.xml</code> desde S1) y una línea <code>log.info(...)</code> a <code>VentaController.listar()</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.controller</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">io.swagger.v3.oas.annotations.Operation</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io.swagger.v3.oas.annotations.tags.Tag</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.validation.Valid</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.RequiredArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.extern.slf4j.Slf4j</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.http.HttpStatus</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.http.ResponseEntity</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.bind.annotation.*</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.dto.VentaRequest</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.dto.VentaResponse</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.service.VentaService</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+
+<span class="nd">@Slf4j</span>
+<span class="nd">@Tag</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Ventas"</span><span class="p">)</span>
+<span class="nd">@RestController</span>
+<span class="nd">@RequestMapping</span><span class="p">(</span><span class="s">"/api/v1/ventas"</span><span class="p">)</span>
+<span class="nd">@RequiredArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">VentaController</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">VentaService</span><span class="w"> </span><span class="n">ventaService</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Operation</span><span class="p">(</span><span class="n">summary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Lista las ventas registradas"</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@GetMapping</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">VentaResponse</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="nf">listar</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">log</span><span class="p">.</span><span class="na">info</span><span class="p">(</span><span class="s">"Listando ventas"</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">ok</span><span class="p">(</span><span class="n">ventaService</span><span class="p">.</span><span class="na">listar</span><span class="p">());</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Operation</span><span class="p">(</span><span class="n">summary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Consulta una venta por id, con sus detalles"</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@GetMapping</span><span class="p">(</span><span class="s">"/{id}"</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">VentaResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">obtener</span><span class="p">(</span><span class="nd">@PathVariable</span><span class="w"> </span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">ok</span><span class="p">(</span><span class="n">ventaService</span><span class="p">.</span><span class="na">obtener</span><span class="p">(</span><span class="n">id</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Operation</span><span class="p">(</span><span class="n">summary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Registra una venta con sus detalles, descontando stock"</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@PostMapping</span>
+<span class="w">    </span><span class="nd">@ResponseStatus</span><span class="p">(</span><span class="n">HttpStatus</span><span class="p">.</span><span class="na">CREATED</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">VentaResponse</span><span class="w"> </span><span class="nf">crear</span><span class="p">(</span><span class="nd">@Valid</span><span class="w"> </span><span class="nd">@RequestBody</span><span class="w"> </span><span class="n">VentaRequest</span><span class="w"> </span><span class="n">request</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ventaService</span><span class="p">.</span><span class="na">crear</span><span class="p">(</span><span class="n">request</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Solo cambió el <code>@Slf4j</code> de la clase y el <code>log.info(...)</code> dentro de <code>listar()</code> — el resto del archivo queda igual. Reinicia <code>bomerp-backend</code> y haz el request capturando el header de respuesta (<code>Invoke-WebRequest</code>, no <code>Invoke-RestMethod</code> — este último no expone los headers):</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$resp</span> <span class="p">=</span> <span class="nb">Invoke-WebRequest</span> <span class="n">-Method</span> <span class="n">Get</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:8080/api/v1/ventas"</span>
+<span class="nv">$traceId</span> <span class="p">=</span> <span class="nv">$resp</span><span class="p">.</span><span class="n">Headers</span><span class="p">[</span><span class="s1">'X-Trace-ID'</span><span class="p">]</span>
+<span class="nv">$traceId</span>
+</code></pre></div>
+<p>Con el <code>traceId</code> capturado, filtra Loki por ese valor exacto — vas a ver únicamente la línea de este request, no las de arranque:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$query</span> <span class="p">=</span> <span class="s2">"{application=</span><span class="se">`"</span><span class="s2">bomerp-backend</span><span class="se">`"</span><span class="s2">} |= </span><span class="se">`"</span><span class="s2">$traceId</span><span class="se">`"</span><span class="s2">"</span>
+<span class="nv">$uri</span> <span class="p">=</span> <span class="s2">"http://localhost:33100/loki/api/v1/query_range?query=</span><span class="p">$(</span><span class="no">[uri]</span><span class="p">::</span><span class="n">EscapeDataString</span><span class="p">(</span><span class="nv">$query</span><span class="p">))</span><span class="s2">"</span>
+<span class="p">(</span><span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Get</span> <span class="n">-Uri</span> <span class="nv">$uri</span><span class="p">)</span> <span class="p">|</span> <span class="nb">ConvertTo-Json</span> <span class="n">-Depth</span> <span class="n">10</span>
+</code></pre></div>
+<p>O directo en el navegador, filtrando por el texto del propio <code>log.info(...)</code> en vez del <code>traceId</code> (más simple si solo quieres confirmar que la línea llegó a Loki):</p>
+<div class="highlight"><pre><span></span><code>http://localhost:33100/loki/api/v1/query_range?query={application="bomerp-backend"} |= "Listando"
+</code></pre></div>
+<p>Esto solo rastrea el <code>traceId</code> <strong>dentro de <code>bomerp-backend</code></strong> — como todavía es un único proceso (2.4, más arriba), no hay ningún otro servicio al que propagárselo.</p>
 <p><strong>Nota de puertos ocupados:</strong> <code>lp2/obs/</code> también incluye un <code>compose.yml</code> de PROD (placeholder, <code>49090</code>/<code>43100</code>), a la espera de que exista un PROD real de <code>bomerp-backend</code> — no se ejecuta hasta entonces (ADR-002, "no crear por si acaso"). Cuando BigData (lambda26) construya su propio <code>obs/</code> (previsto para su S6+), el siguiente puerto libre es <code>59090</code> (Prometheus) / <code>53100</code> (Loki) — se decide en ese momento, no antes.</p>
 <h2 id="4-crea-actividad-autonoma">4. Crea: actividad autónoma<a class="headerlink" href="#4-crea-actividad-autonoma" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 2h fuera del aula.</p>
