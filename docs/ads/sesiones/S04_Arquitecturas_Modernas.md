@@ -144,7 +144,7 @@ Ningún estilo elimina el trade-off del anterior — lo cambia por otro. Monolit
 **Figura 3. Dos ejes independientes: organización interna vs. alcance de despliegue**
 
 ```mermaid
-flowchart TB
+flowchart LR
     subgraph Organizacion["Organizacion interna del codigo (dentro de una pieza)"]
         direction LR
         Capas["Arquitectura en capas<br/>(base de todas)"] --> Hex["Arquitectura hexagonal"] --> Clean["Clean Architecture"]
@@ -247,14 +247,14 @@ flowchart TB
 
 La flecha siempre entra al dominio por un puerto primario (invocando un *use case*) y sale por un puerto secundario (cuando ese *use case* necesita algo externo) — nunca un adaptador llama directo a un *use case* saltándose el puerto, y el dominio nunca importa una clase de ningún adaptador, ni primario ni secundario. Eso es lo que permite probar los *use cases* con pruebas unitarias puras, sin levantar servidor HTTP ni base de datos (con un `FakeOrderRepository` en vez del adaptador real, por ejemplo), y lo que permite cambiar de tecnología (de PostgreSQL a otro motor, o exponer el mismo *use case* por REST y por Kafka a la vez) sin tocar el dominio — solo se escribe un adaptador nuevo.
 
-**Trade-offs (SACAViX, 2026a):**
+**Trade-offs:**
 
 - Más clases y capas que una arquitectura simple — *overhead* real para sistemas con lógica trivial.
 - El límite del dominio es una disciplina activa, no algo que el compilador garantice solo: es fácil romperlo por un atajo bajo presión de fecha de entrega.
 - *Over-engineering* para CRUDs simples sin lógica de dominio real — no todo módulo necesita esta estructura (ver 3.4 sobre `catalogo/producto`).
 - Curva de aprendizaje para equipos acostumbrados a arquitectura en capas tradicional (2.3).
 
-**Errores comunes al implementarlo (SACAViX, 2026a):**
+**Errores comunes al implementarlo:**
 
 - Implementar la estructura de carpetas, pero que el *use case* llame a JPA/`EntityManager` directamente — rompe el aislamiento aunque el nombre del paquete diga "dominio".
 - Adaptadores con lógica de negocio que debería vivir en el dominio (validaciones, cálculos) — el adaptador debe limitarse a traducir, no a decidir.
@@ -398,7 +398,7 @@ flowchart LR
 - La disciplina de mantener los límites entre módulos debe ser activa — el código tiende naturalmente al acoplamiento si nadie la vigila.
 - Un solo lenguaje y stack tecnológico para todos los módulos — no se puede elegir la herramienta óptima por módulo, como sí podría un microservicio independiente.
 
-**Errores comunes al implementarlo (SACAViX, 2026b):**
+**Errores comunes al implementarlo:**
 
 - Módulos que acceden a la base de datos o a la lógica interna de otro módulo — rompe el límite aunque el código compile sin errores.
 - No definir interfaces públicas explícitas: todo queda accesible a todo, y la "modularidad" es solo de nombre.
@@ -447,7 +447,7 @@ La mayoría de sistemas de microservicios reales eligen AP con **consistencia ev
 **Figura 13. Consistencia fuerte vs. consistencia eventual, si BomERP migrara a microservicios**
 
 ```mermaid
-flowchart TB
+flowchart LR
     subgraph Fuerte["Consistencia fuerte (CP): transaccion distribuida"]
         direction LR
         V1["Servicio Ventas"] -->|"1. pide bloquear stock"| C1["Servicio Catalogo"]
@@ -530,7 +530,7 @@ Los dos conceptos están relacionados pero no son lo mismo: *stateless* es una p
 **Figura 16. Por qué el diseño *stateless* es lo que permite escalar horizontalmente**
 
 ```mermaid
-flowchart TB
+flowchart LR
     subgraph ConEstado["Con estado en memoria (rompe el escalamiento)"]
         direction LR
         C1["Cliente"] -->|"peticion 1"| I1["Instancia A - guarda el carrito en memoria"]
