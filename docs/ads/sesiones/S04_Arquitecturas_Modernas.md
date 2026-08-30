@@ -212,30 +212,54 @@ Mismo diagrama, mismas cuatro cajas — la única diferencia con la Figura 4 es 
 
 ### 2.4 Arquitectura hexagonal (puertos y adaptadores), en profundidad
 
-La arquitectura hexagonal pone el dominio (las reglas de negocio) en el centro, sin que conozca nada de la tecnología que lo rodea. La comunicación con el exterior pasa por **puertos** (interfaces que el dominio define, según lo que necesita) y **adaptadores** (implementaciones concretas de esos puertos, una por cada tecnología externa: REST, base de datos, mensajería).
+La arquitectura hexagonal pone el dominio (las reglas de negocio) en el centro, sin que conozca nada de la tecnología que lo rodea. La comunicación con el exterior pasa por **puertos** — **primarios** (interfaces que el exterior invoca, normalmente interfaces de casos de uso) y **secundarios** (interfaces que el dominio define para lo que necesita: un repositorio, un servicio externo) — implementados por **adaptadores** — **primarios** (llaman al dominio: REST, CLI, un listener de eventos) y **secundarios** (implementan lo que el dominio pidió: base de datos, una API externa, correo).
 
 **Figura 6. Diagrama típico de arquitectura hexagonal**
 
 ```mermaid
 flowchart TB
-    subgraph Adaptadores["Adaptadores (infraestructura, reemplazables)"]
-        RestAdapter["Adaptador REST"]
-        DbAdapter["Adaptador de persistencia"]
-        MsgAdapter["Adaptador de mensajeria"]
+    subgraph Primarios["Adaptadores primarios (¿como me invocan?)"]
+        RestAdapter["REST Adapter"]
+        CliAdapter["CLI Adapter"]
+        EventAdapter["Event Adapter"]
     end
-    subgraph Core["Nucleo del dominio (no conoce nada de afuera)"]
-        Puerto1["Puerto de entrada (interfaz)"]
-        Logica["Logica de negocio pura"]
-        Puerto2["Puerto de salida (interfaz)"]
-        Puerto1 --> Logica --> Puerto2
+    subgraph Dominio["Nucleo del dominio (no conoce nada de afuera)"]
+        PrimaryPort["Primary Port (interfaz de use case)"]
+        UseCase["Use Case + Entidades<br/>Logica de negocio pura"]
+        SecondaryPort["Secondary Port (interfaz)"]
+        PrimaryPort --> UseCase --> SecondaryPort
+    end
+    subgraph Secundarios["Adaptadores secundarios (¿que necesito?)"]
+        DbAdapter["PostgreSQL Adapter"]
+        ApiAdapter["External API Adapter"]
+        EmailAdapter["Email Adapter"]
     end
 
-    RestAdapter --> Puerto1
-    Puerto2 --> DbAdapter
-    Puerto2 --> MsgAdapter
+    RestAdapter --> PrimaryPort
+    CliAdapter --> PrimaryPort
+    EventAdapter --> PrimaryPort
+    SecondaryPort --> DbAdapter
+    SecondaryPort --> ApiAdapter
+    SecondaryPort --> EmailAdapter
 ```
 
-La flecha siempre entra al núcleo por un puerto de entrada y sale por un puerto de salida — nunca un adaptador llama directo a `Logica`, y `Logica` nunca importa una clase de `RestAdapter` ni de `DbAdapter`. Eso es lo que permite probar `Logica` con pruebas unitarias puras, sin levantar servidor HTTP ni base de datos, y lo que permite cambiar de tecnología (por ejemplo, de REST a mensajería) sin tocar el dominio — solo se escribe un adaptador nuevo.
+*Nota.* Adaptado de SACAViX (2026, ver Bibliografía), sobre el concepto original de Cockburn (2005).
+
+La flecha siempre entra al dominio por un puerto primario (invocando un *use case*) y sale por un puerto secundario (cuando ese *use case* necesita algo externo) — nunca un adaptador llama directo a un *use case* saltándose el puerto, y el dominio nunca importa una clase de ningún adaptador, ni primario ni secundario. Eso es lo que permite probar los *use cases* con pruebas unitarias puras, sin levantar servidor HTTP ni base de datos (con un `FakeOrderRepository` en vez del adaptador real, por ejemplo), y lo que permite cambiar de tecnología (de PostgreSQL a otro motor, o exponer el mismo *use case* por REST y por Kafka a la vez) sin tocar el dominio — solo se escribe un adaptador nuevo.
+
+**Trade-offs (SACAViX, 2026):**
+
+- Más clases y capas que una arquitectura simple — *overhead* real para sistemas con lógica trivial.
+- El límite del dominio es una disciplina activa, no algo que el compilador garantice solo: es fácil romperlo por un atajo bajo presión de fecha de entrega.
+- *Over-engineering* para CRUDs simples sin lógica de dominio real — no todo módulo necesita esta estructura (ver 3.9 sobre `catalogo/producto`).
+- Curva de aprendizaje para equipos acostumbrados a arquitectura en capas tradicional (2.3).
+
+**Errores comunes al implementarlo (SACAViX, 2026):**
+
+- Implementar la estructura de carpetas, pero que el *use case* llame a JPA/`EntityManager` directamente — rompe el aislamiento aunque el nombre del paquete diga "dominio".
+- Adaptadores con lógica de negocio que debería vivir en el dominio (validaciones, cálculos) — el adaptador debe limitarse a traducir, no a decidir.
+- Puertos demasiado genéricos, como una interfaz `Repository<T>` que no expresa ninguna intención concreta del dominio.
+- Aplicar hexagonal a toda la aplicación, incluidos los módulos que son CRUD puro sin reglas de negocio que proteger.
 
 **Dónde se usa en la práctica:** dominios con reglas de negocio genuinamente complejas que deben sobrevivir a cambios de tecnología — cualquier núcleo de negocio que un equipo espera mantener por años, mientras la infraestructura de alrededor (proveedor de pagos, base de datos, mensajería) cambia varias veces sin que el dominio se entere. ThoughtWorks (consultora de arquitectura, ver Bibliografía) documenta este mismo criterio con un caso didáctico: separar la lógica de negocio de un pedido (reglas, cálculos) de sus adaptadores externos (pagos, notificaciones, persistencia), justamente para poder cambiar cualquiera de esos proveedores sin tocar la regla de negocio.
 
@@ -245,29 +269,31 @@ La flecha siempre entra al núcleo por un puerto de entrada y sale por un puerto
 
 ```mermaid
 flowchart TB
-    subgraph Adaptadores["Adaptadores (infraestructura, reemplazables)"]
+    subgraph Primarios["Adaptadores primarios (infraestructura, reemplazables)"]
         RestAdapter["Adaptador REST<br/>(ProductoController)"]
+    end
+    subgraph Dominio["Nucleo del dominio (no conoceria nada de afuera)"]
+        PrimaryPort["Primary Port<br/>(interfaz nueva: ProductoUseCase)"]
+        Logica["Use Case + Entidades<br/>(ProductoServiceImpl, sin Spring ni JPA)"]
+        SecPortProducto["Secondary Port Producto<br/>(interfaz nueva: ProductoRepositoryPort)"]
+        SecPortCategoria["Secondary Port Categoria<br/>(interfaz nueva: CategoriaLookupPort)"]
+        PrimaryPort --> Logica
+        Logica --> SecPortProducto
+        Logica --> SecPortCategoria
+    end
+    subgraph Secundarios["Adaptadores secundarios (infraestructura, reemplazables)"]
         DbAdapter["Adaptador de persistencia Producto<br/>(ProductoRepository)"]
         CatAdapter["Adaptador de persistencia Categoria<br/>(CategoriaRepository)"]
     end
-    subgraph Core["Nucleo del dominio (no conoceria nada de afuera)"]
-        Puerto1["Puerto de entrada<br/>(interfaz nueva: ProductoUseCase)"]
-        Logica["Logica de negocio pura<br/>(ProductoServiceImpl, sin Spring ni JPA)"]
-        Puerto2["Puerto de salida Producto<br/>(interfaz nueva: ProductoRepositoryPort)"]
-        Puerto3["Puerto de salida Categoria<br/>(interfaz nueva: CategoriaLookupPort)"]
-        Puerto1 --> Logica
-        Logica --> Puerto2
-        Logica --> Puerto3
-    end
 
-    RestAdapter --> Puerto1
-    Puerto2 --> DbAdapter
-    Puerto3 --> CatAdapter
+    RestAdapter --> PrimaryPort
+    SecPortProducto --> DbAdapter
+    SecPortCategoria --> CatAdapter
 ```
 
-`CategoriaRepository` aparece como un segundo adaptador de salida porque `ProductoServiceImpl` real ya depende de él (para validar `categoriaId`, LP2 S3, 3.9) — no solo de `ProductoRepository`. Una migración a hexagonal tendría que aislar esa dependencia también, con su propio puerto.
+`CategoriaRepository` aparece como un segundo adaptador secundario porque `ProductoServiceImpl` real ya depende de él (para validar `categoriaId`, LP2 S3, 3.9) — no solo de `ProductoRepository`. Una migración a hexagonal tendría que aislar esa dependencia también, con su propio *secondary port* (`CategoriaLookupPort`).
 
-`ProductoServiceImpl` hoy cumple *aproximadamente* el rol de "lógica de negocio" de la Figura 6, pero sin los puertos que la aislarían de verdad. Migrar no movería mucho código: `ProductoController` y `ProductoRepository` se quedan donde están, solo pasan a implementar una interfaz nueva en vez de ser llamados directo.
+`ProductoServiceImpl` hoy cumple *aproximadamente* el rol del *use case* de la Figura 6, pero sin los puertos que lo aislarían de verdad. Migrar no movería mucho código: `ProductoController` y `ProductoRepository` se quedan donde están, solo pasan a implementar una interfaz nueva en vez de ser llamados/llamar directo.
 
 ### 2.5 Clean Architecture, en profundidad
 
@@ -795,14 +821,16 @@ Tiempo: 5 min.
 ## Bibliografía
 
 1. Amazon Web Services. (2014). *AWS Lambda* [anuncio de producto]. AWS re:Invent, noviembre de 2014. https://press.aboutamazon.com/2014/11/amazon-web-services-announces-aws-lambda
-2. Cockburn, A. (2005). *Hexagonal Architecture*. https://alistair.cockburn.us/hexagonal-architecture/
-3. Evans, E. (2003). *Domain-Driven Design: Tackling Complexity in the Heart of Software*. Addison-Wesley.
-4. Fowler, M. (2015). *Microservices*. martinfowler.com. https://martinfowler.com/articles/microservices.html
-5. Fowler, M. (2015). *MonolithFirst*. martinfowler.com. https://martinfowler.com/bliki/MonolithFirst.html
-6. Gilbert, S., & Lynch, N. (2002). Brewer's conjecture and the feasibility of consistent, available, partition-tolerant web services. *ACM SIGACT News*, 33(2), 51-59.
-7. Google. (2025). *Guide to app architecture*. Android Developers. https://developer.android.com/topic/architecture
-8. Jackson, C. (2019). *Micro Frontends*. martinfowler.com. https://martinfowler.com/articles/micro-frontends.html
-9. Martin, R. C. (1996). Granularity. *C++ Report*, 8(10) — origen del Acyclic Dependencies Principle (ADP), Common Closure Principle (CCP) y Common Reuse Principle (CRP).
-10. Martin, R. C. (2017). *Clean Architecture: A Craftsman's Guide to Software Structure and Design*. Prentice Hall.
-11. Pritchett, D. (2008). BASE: An ACID alternative. *ACM Queue*, 6(3), 48-55. https://queue.acm.org/detail.cfm?id=1394128
-12. Thoughtworks. (2024). *Hexagonal architecture explained through a practical example*. https://www.thoughtworks.com/insights/blog/architecture/hexagonal-architecture-explained-practical-example
+2. BSoft Group. (2026). *Arquitecturas modernas* [material de curso]. Educate. https://bsoftgroup.com/educate/#/mcontainer/container/mcursos/bcursos/cursos/1736471448631?ARQ=ARQ&JAV=JAV
+3. Cockburn, A. (2005). *Hexagonal Architecture*. https://alistair.cockburn.us/hexagonal-architecture/
+4. Evans, E. (2003). *Domain-Driven Design: Tackling Complexity in the Heart of Software*. Addison-Wesley.
+5. Fowler, M. (2015). *Microservices*. martinfowler.com. https://martinfowler.com/articles/microservices.html
+6. Fowler, M. (2015). *MonolithFirst*. martinfowler.com. https://martinfowler.com/bliki/MonolithFirst.html
+7. Gilbert, S., & Lynch, N. (2002). Brewer's conjecture and the feasibility of consistent, available, partition-tolerant web services. *ACM SIGACT News*, 33(2), 51-59.
+8. Google. (2025). *Guide to app architecture*. Android Developers. https://developer.android.com/topic/architecture
+9. Jackson, C. (2019). *Micro Frontends*. martinfowler.com. https://martinfowler.com/articles/micro-frontends.html
+10. Martin, R. C. (1996). Granularity. *C++ Report*, 8(10) — origen del Acyclic Dependencies Principle (ADP), Common Closure Principle (CCP) y Common Reuse Principle (CRP).
+11. Martin, R. C. (2017). *Clean Architecture: A Craftsman's Guide to Software Structure and Design*. Prentice Hall.
+12. Pritchett, D. (2008). BASE: An ACID alternative. *ACM Queue*, 6(3), 48-55. https://queue.acm.org/detail.cfm?id=1394128
+13. SACAViX. (2026). *Hexagonal Architecture*. SACAViX System Design — Patterns. https://systemdesign.sacavix.com/patterns/hexagonal-architecture
+14. Thoughtworks. (2024). *Hexagonal architecture explained through a practical example*. https://www.thoughtworks.com/insights/blog/architecture/hexagonal-architecture-explained-practical-example
