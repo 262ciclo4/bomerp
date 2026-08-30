@@ -164,7 +164,7 @@ Microfrontend no aparece en ninguno de los dos ejes porque no es una decisión s
 
 La Tabla 3 resume los siete estilos en una fila cada uno — suficiente para compararlos, pero no para reconocer el diagrama típico de cada uno ni para saber dónde se usa en la práctica. Los siguientes siete apartados profundizan uno por uno, en el mismo orden.
 
-### 2.3 Arquitectura en capas, en profundidad
+### 2.3 Arquitectura en capas
 
 La arquitectura en capas organiza el código en niveles horizontales — cada capa depende solo de la que tiene inmediatamente debajo, nunca al revés, y nunca se salta una capa para llegar directo a otra más abajo.
 
@@ -210,7 +210,7 @@ flowchart TB
 
 Mismo diagrama, mismas cuatro cajas — la única diferencia con la Figura 4 es que acá cada capa tiene su nombre de clase real, no una etiqueta genérica.
 
-### 2.4 Arquitectura hexagonal (puertos y adaptadores), en profundidad
+### 2.4 Arquitectura hexagonal (puertos y adaptadores)
 
 La arquitectura hexagonal pone el dominio (las reglas de negocio) en el centro, sin que conozca nada de la tecnología que lo rodea. La comunicación con el exterior pasa por **puertos** — **primarios** (interfaces que el exterior invoca, normalmente interfaces de casos de uso) y **secundarios** (interfaces que el dominio define para lo que necesita: un repositorio, un servicio externo) — implementados por **adaptadores** — **primarios** (llaman al dominio: REST, CLI, un listener de eventos) y **secundarios** (implementan lo que el dominio pidió: base de datos, una API externa, correo).
 
@@ -243,18 +243,18 @@ flowchart TB
     SecondaryPort --> EmailAdapter
 ```
 
-*Nota.* Adaptado de SACAViX (2026, ver Bibliografía), sobre el concepto original de Cockburn (2005).
+*Nota.* Adaptado de SACAViX (2026a, ver Bibliografía), sobre el concepto original de Cockburn (2005); diagrama de elaboración propia.
 
 La flecha siempre entra al dominio por un puerto primario (invocando un *use case*) y sale por un puerto secundario (cuando ese *use case* necesita algo externo) — nunca un adaptador llama directo a un *use case* saltándose el puerto, y el dominio nunca importa una clase de ningún adaptador, ni primario ni secundario. Eso es lo que permite probar los *use cases* con pruebas unitarias puras, sin levantar servidor HTTP ni base de datos (con un `FakeOrderRepository` en vez del adaptador real, por ejemplo), y lo que permite cambiar de tecnología (de PostgreSQL a otro motor, o exponer el mismo *use case* por REST y por Kafka a la vez) sin tocar el dominio — solo se escribe un adaptador nuevo.
 
-**Trade-offs (SACAViX, 2026):**
+**Trade-offs (SACAViX, 2026a):**
 
 - Más clases y capas que una arquitectura simple — *overhead* real para sistemas con lógica trivial.
 - El límite del dominio es una disciplina activa, no algo que el compilador garantice solo: es fácil romperlo por un atajo bajo presión de fecha de entrega.
 - *Over-engineering* para CRUDs simples sin lógica de dominio real — no todo módulo necesita esta estructura (ver 3.9 sobre `catalogo/producto`).
 - Curva de aprendizaje para equipos acostumbrados a arquitectura en capas tradicional (2.3).
 
-**Errores comunes al implementarlo (SACAViX, 2026):**
+**Errores comunes al implementarlo (SACAViX, 2026a):**
 
 - Implementar la estructura de carpetas, pero que el *use case* llame a JPA/`EntityManager` directamente — rompe el aislamiento aunque el nombre del paquete diga "dominio".
 - Adaptadores con lógica de negocio que debería vivir en el dominio (validaciones, cálculos) — el adaptador debe limitarse a traducir, no a decidir.
@@ -295,9 +295,9 @@ flowchart TB
 
 `ProductoServiceImpl` hoy cumple *aproximadamente* el rol del *use case* de la Figura 6, pero sin los puertos que lo aislarían de verdad. Migrar no movería mucho código: `ProductoController` y `ProductoRepository` se quedan donde están, solo pasan a implementar una interfaz nueva en vez de ser llamados/llamar directo.
 
-### 2.5 Clean Architecture, en profundidad
+### 2.5 Clean Architecture
 
-Clean Architecture generaliza la idea de hexagonal en **círculos concéntricos**: entidades del dominio en el centro, casos de uso alrededor, adaptadores de interfaz más afuera, y frameworks/herramientas en el borde exterior. La regla que lo sostiene todo es la **regla de dependencia**: el código de un círculo solo puede depender de círculos más internos, nunca de uno más externo.
+Martin (2017, ver Bibliografía) abre el libro que le da nombre a este estilo con una pregunta simple: ¿qué hace que un diseño sea bueno? Su respuesta es una lista de objetivos, no de reglas — minimizar el costo de mantener el software durante toda su vida, facilitar su desarrollo y su mantenimiento, y mantenerlo "suave" (fácil de cambiar) alejando la lógica de negocio de los detalles técnicos que van a cambiar con el tiempo: el framework, la base de datos, el protocolo de red. Clean Architecture es la respuesta concreta a ese último objetivo — generaliza la idea de hexagonal en **círculos concéntricos**: entidades del dominio en el centro, casos de uso alrededor, adaptadores de interfaz más afuera, y frameworks/herramientas en el borde exterior. La regla que lo sostiene todo es la **regla de dependencia**: el código de un círculo solo puede depender de círculos más internos, nunca de uno más externo.
 
 **Figura 8. Diagrama típico de Clean Architecture (círculos concéntricos)**
 
@@ -314,7 +314,7 @@ flowchart TB
 
 *Nota.* Concepto de Clean Architecture (círculos concéntricos) según Martin (2017, ver Bibliografía); diagrama de elaboración propia.
 
-La flecha de dependencia siempre apunta hacia adentro: `Frameworks` puede conocer `Adapters`, `Adapters` puede conocer `UseCases`, `UseCases` puede conocer `Entities` — pero `Entities` no conoce nada de lo que está afuera. Es la misma idea de hexagonal (2.4), expresada como niveles en vez de puertos/adaptadores; en la práctica, muchos equipos usan los dos términos de forma casi intercambiable.
+La flecha de dependencia siempre apunta hacia adentro: `Frameworks` puede conocer `Adapters`, `Adapters` puede conocer `UseCases`, `UseCases` puede conocer `Entities` — pero `Entities` no conoce nada de lo que está afuera. Es la misma idea de hexagonal (2.4), expresada como niveles en vez de puertos/adaptadores; en la práctica, muchos equipos usan los dos términos de forma casi intercambiable. SACAViX Tech (Yoandy, ver Bibliografía) lo plantea de forma más directa: hexagonal puede verse como un caso concreto de aplicación de Clean Architecture, no como un patrón aparte con reglas propias — los *puertos* de hexagonal son la forma que toma la *regla de dependencia* de Clean cuando se expresa como interfaces en vez de círculos.
 
 **Dónde se usa en la práctica:** sistemas grandes y de vida larga, donde el equipo espera que la lógica de negocio sobreviva a más de un cambio de framework. El caso más verificable es la propia **Guía de arquitectura de apps de Google para Android** (`developer.android.com`, ver Bibliografía), inspirada explícitamente en Clean Architecture — con un matiz honesto: Google organiza sus capas `Presentación → Dominio → Datos` (dependencia en un solo sentido), mientras que la Clean Architecture original de Martin invierte también la capa de Datos (`Presentación → Dominio ← Datos`, la capa de Datos implementa interfaces que define el Dominio). Es una adaptación pragmática de la idea, no una copia literal de la regla de dependencia — y es exactamente el tipo de decisión que esta sesión pide justificar, no copiar sin cuestionar.
 
@@ -335,7 +335,7 @@ flowchart TB
 
 Es casi el mismo ejercicio que la Figura 7 (hexagonal) con otro vocabulario — no es casualidad (2.5): Clean Architecture es la misma idea de aislar el dominio, expresada como círculos en vez de puertos y adaptadores. Lo que hoy "no encaja" en el círculo que le tocaría es siempre lo mismo: `ProductoServiceImpl` (caso de uso) y `Producto`/`Categoria` (entidades) todavía dependen de Spring y de Hibernate — la migración movería esa dependencia hacia afuera, no las reescribiría desde cero.
 
-### 2.6 Monolito modular, en profundidad
+### 2.6 Monolito modular
 
 Un monolito modular es **un solo proceso desplegable**, pero organizado por dentro en módulos con límites explícitos — la diferencia con un monolito "a secas" (todo mezclado, sin límites) es justamente esa organización interna, verificada por herramientas, no solo por convención de carpetas.
 
@@ -354,7 +354,7 @@ flowchart TB
         end
         VenS -.->|"solo el Service publico"| CatS
     end
-    DB[("Base de datos")]
+    DB[("Base de datos<br/>schemas separados por modulo")]
     CatR --> DB
     VenR --> DB
 
@@ -391,11 +391,25 @@ flowchart LR
     end
 ```
 
+**Trade-offs (SACAViX, 2026b):**
+
+- Escalar componentes individualmente es imposible — se escala todo el proceso, aunque solo un módulo esté bajo carga.
+- Un bug crítico puede derribar toda la aplicación: sin aislamiento de fallos entre módulos, como sí lo tendría cada microservicio en su propio proceso.
+- La disciplina de mantener los límites entre módulos debe ser activa — el código tiende naturalmente al acoplamiento si nadie la vigila.
+- Un solo lenguaje y stack tecnológico para todos los módulos — no se puede elegir la herramienta óptima por módulo, como sí podría un microservicio independiente.
+
+**Errores comunes al implementarlo (SACAViX, 2026b):**
+
+- Módulos que acceden a la base de datos o a la lógica interna de otro módulo — rompe el límite aunque el código compile sin errores.
+- No definir interfaces públicas explícitas: todo queda accesible a todo, y la "modularidad" es solo de nombre.
+- Usar el monolito como excusa para no separar responsabilidades — "total, es un solo proceso" no es una razón válida para mezclar dominios.
+- No planificar la eventual extracción cuando el sistema y el equipo escalen — los módulos bien definidos (como los que exige ADP) son justamente los que se pueden extraer a microservicio con bajo esfuerzo el día que haga falta.
+
 **Dónde se usa en la práctica:** equipos pequeños o medianos, productos con un solo ciclo de despliegue, o empresas que empiezan como monolito modular y solo separan un módulo en microservicio el día que un problema real (no anticipado) lo justifica — Shopify es un caso frecuentemente citado en la industria de un monolito modular a gran escala, mantenido así de forma deliberada.
 
 **Ejemplo de referencia (LP2).** Esta es exactamente la arquitectura real de BomERP hoy — la Figura 10 no es un ejemplo genérico, es el diagrama de `lp2/bomerp-backend` (ADR-001 de LP2), con `catalogo` como único módulo real hasta ahora y `ventas` previsto para LP2 S4. La ganancia de ACID tampoco es teórica: el bug de `LazyInitializationException` que corrigió LP2 S3 se resolvió agregando `@Transactional` a `ProductoServiceImpl.crear()` — guardar `Producto`, resolver `Categoria` y construir la respuesta corren dentro de una única transacción, sin coordinar nada entre procesos porque no hay más de uno. Y el límite entre módulos (ADP) no se sostiene por convención: `ModularityTests` (LP2, desde S1) ejecuta `ApplicationModules.of(BomErpApplication.class).verify()` y falla la build si algún módulo introduce un ciclo de dependencias.
 
-### 2.7 Microservicios, en profundidad
+### 2.7 Microservicios
 
 En microservicios, cada módulo de negocio es un **proceso independiente**, con su propia base de datos, su propio ciclo de despliegue y, generalmente, su propio repositorio de código. La comunicación entre servicios es siempre por red (HTTP, mensajería), nunca por llamada directa en memoria.
 
@@ -451,7 +465,7 @@ flowchart TB
 
 **Ejemplo de referencia (LP2).** BomERP no usa microservicios — el ADR-001 de LP2 lo dice explícitamente: el costo (red, bases de datos distribuidas, versionado de contratos, y ahora también CAP y consistencia eventual) no tiene ninguna ganancia real a cambio en un proyecto de equipo pequeño con un solo ciclo de despliegue. Con una sola Oracle compartida, `ProductoServiceImpl` y `CategoriaServiceImpl` (LP2 S3) leen el dato real dentro de la misma transacción — no hay partición de red que resolver, ni necesidad de elegir entre C y A. Esa es la ganancia concreta de no separar en procesos todavía: no es que el equipo no sepa resolver consistencia eventual, es que el proyecto no paga ese costo si no lo necesita.
 
-### 2.8 Serverless, en profundidad
+### 2.8 Serverless
 
 Serverless (o *Function as a Service*, FaaS) lleva la independencia de piezas un paso más allá que microservicios (2.7): en vez de desplegar un proceso que corre todo el tiempo, se despliega una **función individual** que el proveedor cloud ejecuta solo cuando un evento la dispara (una petición HTTP, un mensaje en cola, un archivo subido) — y se apaga apenas termina. El equipo no administra servidores ni contenedores, ni siquiera el ciclo de vida del proceso: solo el código de la función.
 
@@ -482,7 +496,7 @@ flowchart LR
 
 **Ejemplo de referencia (LP2).** BomERP no usa serverless, y no le falta hoy: cada endpoint de `catalogo/producto` corre en un proceso que ya está activo (`bomerp-backend`), sin picos de carga esporádicos que justifiquen pagar solo por invocación. Si en algún momento apareciera una tarea puntual y poco frecuente (por ejemplo, generar un reporte mensual pesado), sería un candidato razonable para extraerla como función serverless, sin migrar el resto del backend — la misma lógica de "extraer solo lo que lo justifica" que ya aplica microservicios (2.7) o hexagonal (2.4).
 
-### 2.9 Microfrontend, en profundidad
+### 2.9 Microfrontend
 
 Microfrontend aplica la misma idea de microservicios (2.7) — piezas independientes, con su propio ciclo de despliegue — pero a la **capa de presentación**, no al backend. Cada equipo puede construir, probar y desplegar un fragmento de la interfaz (por ejemplo, "catálogo" y "ventas" como fragmentos separados) que se ensamblan en una sola aplicación visible para el usuario final.
 
@@ -538,6 +552,8 @@ En el bloque de arriba, la segunda petición del cliente cae en una instancia di
 DDD (introducido como adelanto en S2, 2.5) distingue el dominio (las reglas de negocio) de todo lo demás (frameworks, base de datos, HTTP). Cuando ese dominio es simple — pocas reglas, poca lógica que no sea CRUD — separar el dominio del resto con puertos y adaptadores (hexagonal) o con círculos concéntricos (Clean Architecture) agrega una indirección que no paga su costo: más interfaces, más mapeos, más código para el mismo resultado.
 
 La orientación cambia cuando el dominio gana complejidad real: reglas de negocio que no dependen de ninguna tecnología concreta, lógica que debe poder probarse sin levantar base de datos ni servidor HTTP, o un **agregado** (límite de consistencia de DDD) con invariantes que deben protegerse sin importar quién lo modifique. Ahí, aislar el dominio deja de ser indirección innecesaria y pasa a ser lo que hace posible probar y mantener esa lógica sin arrastrar infraestructura.
+
+**¿Y si toca elegir entre las dos?** Hexagonal es el punto de partida más barato: logra el mismo objetivo (aislar el dominio de los detalles técnicos) con menos ceremonia — dos zonas (dominio + adaptadores), sin los cuatro anillos formales de Clean ni la separación explícita entre Entidades y Casos de uso que Clean exige incluso cuando el módulo todavía no la necesita. Clean solo se justifica *sobre* Hexagonal cuando el volumen de casos de uso crece tanto que separar reglas atómicas del dominio (Entidades) de la orquestación entre varias entidades (Casos de uso) aporta claridad real — y eso, según los Errores comunes de SACAViX (2.4), casi nunca ocurre antes de tener ese volumen.
 
 **Ejemplo de referencia (LP2).** Hoy, `catalogo/producto` es esencialmente CRUD con una validación de referencia (LP2 S3) — no hay lógica de negocio compleja que aislar del framework todavía. Eso confirma la Tabla 5 de S1: hexagonal y Clean Architecture no aplican "para este corte". Pero `ventas/Venta-DetalleVenta` (LP2 S4, cabecera-detalle con cálculos y control de stock) es un candidato más real a agregado DDD — si su lógica de cálculo y consistencia creciera lo suficiente, sería el primer módulo de BomERP donde valdría la pena evaluar aislarlo del framework con un puerto explícito. Hoy todavía no se justifica: la complejidad real hay que verla en el código antes de pagar el costo de la indirección, no anticiparla.
 
@@ -834,5 +850,7 @@ Tiempo: 5 min.
 10. Martin, R. C. (1996). Granularity. *C++ Report*, 8(10) — origen del Acyclic Dependencies Principle (ADP), Common Closure Principle (CCP) y Common Reuse Principle (CRP).
 11. Martin, R. C. (2017). *Clean Architecture: A Craftsman's Guide to Software Structure and Design*. Prentice Hall.
 12. Pritchett, D. (2008). BASE: An ACID alternative. *ACM Queue*, 6(3), 48-55. https://queue.acm.org/detail.cfm?id=1394128
-13. SACAViX. (2026). *Hexagonal Architecture*. SACAViX System Design — Patterns. https://systemdesign.sacavix.com/patterns/hexagonal-architecture
-14. Thoughtworks. (2024). *Hexagonal architecture explained through a practical example*. https://www.thoughtworks.com/insights/blog/architecture/hexagonal-architecture-explained-practical-example
+13. SACAViX. (2026a). *Hexagonal Architecture*. SACAViX System Design — Patterns. https://systemdesign.sacavix.com/patterns/hexagonal-architecture
+14. SACAViX. (2026b). *Modular Monolith*. SACAViX System Design — Patterns. https://systemdesign.sacavix.com/patterns/modular-monolith
+15. SACAViX Tech (Yoandy). (s.f.). *Arquitectura Limpia: Un ejemplo práctico con Spring Boot* [video]. YouTube. https://www.youtube.com/watch?v=GDXrdZlzdHg
+16. Thoughtworks. (2024). *Hexagonal architecture explained through a practical example*. https://www.thoughtworks.com/insights/blog/architecture/hexagonal-architecture-explained-practical-example
