@@ -3582,7 +3582,7 @@
 <p>Ningún estilo elimina el trade-off del anterior — lo cambia por otro. Monolito modular cambia "no puedo escalar un módulo por separado" por "no tengo que operar red ni bases de datos distribuidas"; microservicios hace exactamente el cambio contrario.</p>
 <p><strong>Ejemplo de referencia (LP2).</strong> BomERP usa monolito modular con arquitectura en capas dentro de cada módulo (<code>catalogo/producto/{controller,service,repository,entity}</code>, ver ADR-001 de LP2) — no hexagonal, no microservicios. La razón documentada en el ADR no es "monolito es más fácil" en abstracto: es que el sílabo de LP2 no evalúa despliegue distribuido, el equipo es pequeño, y todo el sistema se despliega como un único ejecutable — el trade-off de microservicios (complejidad operacional) no tendría ninguna ganancia real a cambio, en este proyecto. Microservicios se estudia conceptualmente aquí, en ADS, y se practica de verdad en el curso de Aplicaciones Distribuidas (una etapa posterior de la cadena BomERP), con un proyecto de referencia propio (<code>producto-ms</code>, un reactor Maven multi-módulo) — dos cursos distintos, con el mismo nombre corto de tres letras, pero contenidos y proyectos diferentes.</p>
 <p><strong>Figura 3. Dos ejes independientes: organización interna vs. alcance de despliegue</strong></p>
-<pre class="mermaid"><code>flowchart TB
+<pre class="mermaid"><code>flowchart LR
     subgraph Organizacion["Organizacion interna del codigo (dentro de una pieza)"]
         direction LR
         Capas["Arquitectura en capas&lt;br/&gt;(base de todas)"] --&gt; Hex["Arquitectura hexagonal"] --&gt; Clean["Clean Architecture"]
@@ -3657,14 +3657,14 @@
     SecondaryPort --&gt; EmailAdapter</code></pre>
 <p><em>Nota.</em> Adaptado de SACAViX (2026a, ver Bibliografía), sobre el concepto original de Cockburn (2005); diagrama de elaboración propia.</p>
 <p>La flecha siempre entra al dominio por un puerto primario (invocando un <em>use case</em>) y sale por un puerto secundario (cuando ese <em>use case</em> necesita algo externo) — nunca un adaptador llama directo a un <em>use case</em> saltándose el puerto, y el dominio nunca importa una clase de ningún adaptador, ni primario ni secundario. Eso es lo que permite probar los <em>use cases</em> con pruebas unitarias puras, sin levantar servidor HTTP ni base de datos (con un <code>FakeOrderRepository</code> en vez del adaptador real, por ejemplo), y lo que permite cambiar de tecnología (de PostgreSQL a otro motor, o exponer el mismo <em>use case</em> por REST y por Kafka a la vez) sin tocar el dominio — solo se escribe un adaptador nuevo.</p>
-<p><strong>Trade-offs (SACAViX, 2026a):</strong></p>
+<p><strong>Trade-offs:</strong></p>
 <ul>
 <li>Más clases y capas que una arquitectura simple — <em>overhead</em> real para sistemas con lógica trivial.</li>
 <li>El límite del dominio es una disciplina activa, no algo que el compilador garantice solo: es fácil romperlo por un atajo bajo presión de fecha de entrega.</li>
 <li><em>Over-engineering</em> para CRUDs simples sin lógica de dominio real — no todo módulo necesita esta estructura (ver 3.4 sobre <code>catalogo/producto</code>).</li>
 <li>Curva de aprendizaje para equipos acostumbrados a arquitectura en capas tradicional (2.3).</li>
 </ul>
-<p><strong>Errores comunes al implementarlo (SACAViX, 2026a):</strong></p>
+<p><strong>Errores comunes al implementarlo:</strong></p>
 <ul>
 <li>Implementar la estructura de carpetas, pero que el <em>use case</em> llame a JPA/<code>EntityManager</code> directamente — rompe el aislamiento aunque el nombre del paquete diga "dominio".</li>
 <li>Adaptadores con lógica de negocio que debería vivir en el dominio (validaciones, cálculos) — el adaptador debe limitarse a traducir, no a decidir.</li>
@@ -3791,7 +3791,7 @@
 <li>La disciplina de mantener los límites entre módulos debe ser activa — el código tiende naturalmente al acoplamiento si nadie la vigila.</li>
 <li>Un solo lenguaje y stack tecnológico para todos los módulos — no se puede elegir la herramienta óptima por módulo, como sí podría un microservicio independiente.</li>
 </ul>
-<p><strong>Errores comunes al implementarlo (SACAViX, 2026b):</strong></p>
+<p><strong>Errores comunes al implementarlo:</strong></p>
 <ul>
 <li>Módulos que acceden a la base de datos o a la lógica interna de otro módulo — rompe el límite aunque el código compile sin errores.</li>
 <li>No definir interfaces públicas explícitas: todo queda accesible a todo, y la "modularidad" es solo de nombre.</li>
@@ -3843,7 +3843,7 @@
 </table>
 <p>La mayoría de sistemas de microservicios reales eligen AP con <strong>consistencia eventual</strong>: cada servicio sigue respondiendo con los datos que tiene, y la inconsistencia temporal se reconcilia después — por ejemplo, con eventos (<code>Catalogo</code> publica "el precio cambió", <code>Ventas</code> actualiza su copia cuando el evento le llega). El patrón que coordina operaciones que cruzan varios servicios sin una transacción distribuida real se llama <strong>Saga</strong>: una secuencia de pasos locales, cada uno con su propia compensación si algo falla más adelante, en vez de una única transacción ACID sobre varias bases de datos.</p>
 <p><strong>Figura 13. Consistencia fuerte vs. consistencia eventual, si BomERP migrara a microservicios</strong></p>
-<pre class="mermaid"><code>flowchart TB
+<pre class="mermaid"><code>flowchart LR
     subgraph Fuerte["Consistencia fuerte (CP): transaccion distribuida"]
         direction LR
         V1["Servicio Ventas"] --&gt;|"1. pide bloquear stock"| C1["Servicio Catalogo"]
@@ -3895,7 +3895,7 @@
 <p>Los dos conceptos están relacionados pero no son lo mismo: <em>stateless</em> es una propiedad del diseño (nadie guarda estado por cliente); escalabilidad horizontal es la consecuencia práctica que ese diseño hace posible.</p>
 <p><strong>Ejemplo de referencia (LP2).</strong> LP2 ya demostró esto con evidencia real, no como ejercicio teórico: S1 (3.3) levantó dos instancias de <code>bomerp-backend</code> en paralelo (puertos <code>8080</code> y <code>8081</code>), ambas conectadas a la misma Oracle, y verificó que cualquiera de las dos responde <code>/api/v1/hello</code> y <code>/actuator/health</code> sin ninguna coordinación entre ellas. Eso funciona porque el backend nunca guardó estado de cliente en memoria — ni siquiera hay autenticación todavía (JWT se difiere a S10, ver ADR-004 de LP2), así que no hay sesión que sincronizar entre instancias. Cuando JWT llegue en S10, seguirá siendo <em>stateless</em>: un JWT es un token autocontenido que el cliente reenvía en cada petición — ninguna instancia necesita recordar quién inició sesión.</p>
 <p><strong>Figura 16. Por qué el diseño <em>stateless</em> es lo que permite escalar horizontalmente</strong></p>
-<pre class="mermaid"><code>flowchart TB
+<pre class="mermaid"><code>flowchart LR
     subgraph ConEstado["Con estado en memoria (rompe el escalamiento)"]
         direction LR
         C1["Cliente"] --&gt;|"peticion 1"| I1["Instancia A - guarda el carrito en memoria"]
