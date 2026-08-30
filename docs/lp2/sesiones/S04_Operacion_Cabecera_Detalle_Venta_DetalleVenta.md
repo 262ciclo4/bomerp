@@ -1003,6 +1003,92 @@ Con los logs llegando, prueba estas consultas — mismo criterio que DIST (S3, 3
 
 A diferencia de DIST, no hay una consulta equivalente a `EurekaServiceRegistry` — `bomerp-backend` no se registra en ningún lado (2.4, más arriba: sin service registry, sin altas ni bajas que loguear).
 
+Su equivalente para pegar directo en el navegador — no hace falta codificar comillas ni espacios a mano, el navegador los codifica solo al pegar la URL:
+
+```text
+http://localhost:33100/loki/api/v1/query_range?query={application="bomerp-backend"} |= "Started BomerpBackendApplication"
+
+http://localhost:33100/loki/api/v1/query_range?query={application="bomerp-backend"} |= "HikariPool"
+
+http://localhost:33100/loki/api/v1/query_range?query={application="bomerp-backend"} |= "StockInsuficienteException"
+
+http://localhost:33100/loki/api/v1/query_range?query={application="bomerp-backend", detected_level="error"}
+```
+
+**Rastrear una petición específica por traceId (opcional)**
+
+El mecanismo para esto ya existe desde S1 (`CorrelationIdFilter`): cada request que llega ya recibe un `traceId` (UUID) guardado en el MDC y devuelto como header `X-Trace-ID` en la respuesta — el propio `LOG_PATTERN` de `logback-spring.xml` ya lo imprime (`[%X{traceId}]`, ver más arriba). Lo único que falta es una línea de log real durante el request — sin eso, el `traceId` viaja pero no queda escrito en ningún lado. Agrega `@Slf4j` (Lombok, ya está en el `pom.xml` desde S1) y una línea `log.info(...)` a `VentaController.listar()`:
+
+```java
+package pe.edu.upeu.bomerp.ventas.venta.controller;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import pe.edu.upeu.bomerp.ventas.venta.dto.VentaRequest;
+import pe.edu.upeu.bomerp.ventas.venta.dto.VentaResponse;
+import pe.edu.upeu.bomerp.ventas.venta.service.VentaService;
+import java.util.List;
+
+@Slf4j
+@Tag(name = "Ventas")
+@RestController
+@RequestMapping("/api/v1/ventas")
+@RequiredArgsConstructor
+public class VentaController {
+    private final VentaService ventaService;
+
+    @Operation(summary = "Lista las ventas registradas")
+    @GetMapping
+    public ResponseEntity<List<VentaResponse>> listar() {
+        log.info("Listando ventas");
+        return ResponseEntity.ok(ventaService.listar());
+    }
+
+    @Operation(summary = "Consulta una venta por id, con sus detalles")
+    @GetMapping("/{id}")
+    public ResponseEntity<VentaResponse> obtener(@PathVariable Long id) {
+        return ResponseEntity.ok(ventaService.obtener(id));
+    }
+
+    @Operation(summary = "Registra una venta con sus detalles, descontando stock")
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public VentaResponse crear(@Valid @RequestBody VentaRequest request) {
+        return ventaService.crear(request);
+    }
+}
+```
+
+Solo cambió el `@Slf4j` de la clase y el `log.info(...)` dentro de `listar()` — el resto del archivo queda igual. Reinicia `bomerp-backend` y haz el request capturando el header de respuesta (`Invoke-WebRequest`, no `Invoke-RestMethod` — este último no expone los headers):
+
+```powershell
+$resp = Invoke-WebRequest -Method Get -Uri "http://localhost:8080/api/v1/ventas"
+$traceId = $resp.Headers['X-Trace-ID']
+$traceId
+```
+
+Con el `traceId` capturado, filtra Loki por ese valor exacto — vas a ver únicamente la línea de este request, no las de arranque:
+
+```powershell
+$query = "{application=`"bomerp-backend`"} |= `"$traceId`""
+$uri = "http://localhost:33100/loki/api/v1/query_range?query=$([uri]::EscapeDataString($query))"
+(Invoke-RestMethod -Method Get -Uri $uri) | ConvertTo-Json -Depth 10
+```
+
+O directo en el navegador, filtrando por el texto del propio `log.info(...)` en vez del `traceId` (más simple si solo quieres confirmar que la línea llegó a Loki):
+
+```text
+http://localhost:33100/loki/api/v1/query_range?query={application="bomerp-backend"} |= "Listando"
+```
+
+Esto solo rastrea el `traceId` **dentro de `bomerp-backend`** — como todavía es un único proceso (2.4, más arriba), no hay ningún otro servicio al que propagárselo.
+
 **Nota de puertos ocupados:** `lp2/obs/` también incluye un `compose.yml` de PROD (placeholder, `49090`/`43100`), a la espera de que exista un PROD real de `bomerp-backend` — no se ejecuta hasta entonces (ADR-002, "no crear por si acaso"). Cuando BigData (lambda26) construya su propio `obs/` (previsto para su S6+), el siguiente puerto libre es `59090` (Prometheus) / `53100` (Loki) — se decide en ese momento, no antes.
 
 ## 4. Crea: actividad autónoma
