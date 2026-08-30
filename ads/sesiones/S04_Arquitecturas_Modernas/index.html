@@ -3639,7 +3639,7 @@
     end
     subgraph Dominio["Nucleo del dominio (no conoce nada de afuera)"]
         PrimaryPort["Primary Port (interfaz de use case)"]
-        UseCase["Use Case + Entidades&lt;br/&gt;Logica de negocio pura"]
+        UseCase{{"Use Case + Entidades&lt;br/&gt;Logica de negocio pura"}}
         SecondaryPort["Secondary Port (interfaz)"]
         PrimaryPort --&gt; UseCase --&gt; SecondaryPort
     end
@@ -3654,7 +3654,10 @@
     EventAdapter --&gt; PrimaryPort
     SecondaryPort --&gt; DbAdapter
     SecondaryPort --&gt; ApiAdapter
-    SecondaryPort --&gt; EmailAdapter</code></pre>
+    SecondaryPort --&gt; EmailAdapter
+
+    classDef dominio fill:#a8e6b0,stroke:#2f7d3c,stroke-width:2px,color:#111;
+    class UseCase dominio;</code></pre>
 <p><em>Nota.</em> Adaptado de SACAViX (2026a, ver Bibliografía), sobre el concepto original de Cockburn (2005); diagrama de elaboración propia.</p>
 <p>La flecha siempre entra al dominio por un puerto primario (invocando un <em>use case</em>) y sale por un puerto secundario (cuando ese <em>use case</em> necesita algo externo) — nunca un adaptador llama directo a un <em>use case</em> saltándose el puerto, y el dominio nunca importa una clase de ningún adaptador, ni primario ni secundario. Eso es lo que permite probar los <em>use cases</em> con pruebas unitarias puras, sin levantar servidor HTTP ni base de datos (con un <code>FakeOrderRepository</code> en vez del adaptador real, por ejemplo), y lo que permite cambiar de tecnología (de PostgreSQL a otro motor, o exponer el mismo <em>use case</em> por REST y por Kafka a la vez) sin tocar el dominio — solo se escribe un adaptador nuevo.</p>
 <p><strong>Trade-offs:</strong></p>
@@ -3680,7 +3683,7 @@
     end
     subgraph Dominio["Nucleo del dominio (no conoceria nada de afuera)"]
         PrimaryPort["Primary Port&lt;br/&gt;(interfaz nueva: ProductoUseCase)"]
-        Logica["Use Case + Entidades&lt;br/&gt;(ProductoServiceImpl, sin Spring ni JPA)"]
+        Logica{{"Use Case + Entidades&lt;br/&gt;(ProductoServiceImpl, sin Spring ni JPA)"}}
         SecPortProducto["Secondary Port Producto&lt;br/&gt;(interfaz nueva: ProductoRepositoryPort)"]
         SecPortCategoria["Secondary Port Categoria&lt;br/&gt;(interfaz nueva: CategoriaLookupPort)"]
         PrimaryPort --&gt; Logica
@@ -3694,7 +3697,10 @@
 
     RestAdapter --&gt; PrimaryPort
     SecPortProducto --&gt; DbAdapter
-    SecPortCategoria --&gt; CatAdapter</code></pre>
+    SecPortCategoria --&gt; CatAdapter
+
+    classDef dominio fill:#a8e6b0,stroke:#2f7d3c,stroke-width:2px,color:#111;
+    class Logica dominio;</code></pre>
 <p><code>CategoriaRepository</code> aparece como un segundo adaptador secundario porque <code>ProductoServiceImpl</code> real ya depende de él (para validar <code>categoriaId</code>, LP2 S3, 3.9) — no solo de <code>ProductoRepository</code>. Una migración a hexagonal tendría que aislar esa dependencia también, con su propio <em>secondary port</em> (<code>CategoriaLookupPort</code>).</p>
 <p><code>ProductoServiceImpl</code> hoy cumple <em>aproximadamente</em> el rol del <em>use case</em> de la Figura 6, pero sin los puertos que lo aislarían de verdad. Migrar no movería mucho código: <code>ProductoController</code> y <code>ProductoRepository</code> se quedan donde están, solo pasan a implementar una interfaz nueva en vez de ser llamados/llamar directo.</p>
 <h3 id="25-clean-architecture">2.5 Clean Architecture<a class="headerlink" href="#25-clean-architecture" title="Permanent link">&para;</a></h3>
