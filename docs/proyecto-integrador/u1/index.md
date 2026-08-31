@@ -10,6 +10,8 @@ El corte de Unidad 1 demuestra que el equipo transformó el sistema MVC heredado
 
 El sistema MVC de Ciclo 3 ya gestiona `Producto`, `Categoria`, `Venta`, `DetalleVenta` y `Usuario`. En Ciclo 4 se conserva ese flujo, se organiza el backend mediante módulos de negocio, se expone mediante una API REST conectada a Oracle y se prepara su consumo desde una SPA empresarial. Catálogo y Ventas constituyen el alcance funcional obligatorio; Inventario, Compras y Seguridad quedan delimitados para evolucionar sin mezclar responsabilidades.
 
+**BomERP es el ejemplo del docente, no el dominio obligatorio.** Cada sede (Lima, Juliaca, Tarapoto) y cada grupo dentro de una misma sede declara su propio dominio en su [brief.md](../brief.md) de S2, con su propio módulo transaccional (equivalente a `ventas`) y su módulo no transaccional (equivalente a `catalogo`). Las secciones siguientes (Evidencia mínima, Pruebas mínimas y Transición) usan los nombres de BomERP solo como referencia concreta; cada equipo los lee en clave de sus propios módulos.
+
 ## Producto integrado U1
 
 **Arquitectura modular base + motor transaccional Oracle optimizado + una aplicación Spring Boot REST funcional y preparada para la SPA.**

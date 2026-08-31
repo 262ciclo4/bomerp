@@ -1,5 +1,7 @@
 # LP2 - Producto de Unidad 1
 
+**Este documento es el ejemplo BomERP del docente, no una plantilla obligatoria.** Cada sede (Lima, Juliaca, Tarapoto) y cada grupo dentro de una misma sede tiene su propio dominio, definido en su propio [brief.md](../brief.md) de S2 — los endpoints, DTO y módulos concretos de este documento (`catalogo`/`ventas`) son los del ejemplo BomERP; cada equipo los reemplaza por sus propios módulos transaccional y no transaccional. Lo exigible a todos es la estructura: monolito modular verificado con Spring Modulith, un módulo transaccional con cabecera-detalle real, persistencia, consultas, CORS, logs y pruebas.
+
 ## Producto
 
 **Backend REST modular ensamblado como una sola aplicación Spring Boot, conectado a Oracle, con persistencia ORM, CRUD, una operación cabecera–detalle, consultas, CORS, logs y pruebas.**

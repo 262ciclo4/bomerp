@@ -1,5 +1,7 @@
 # BD2 - Producto de Unidad 1
 
+**Este documento es el ejemplo BomERP del docente, no una plantilla obligatoria.** Cada sede (Lima, Juliaca, Tarapoto) y cada grupo dentro de una misma sede tiene su propio dominio, definido en su propio [brief.md](../brief.md) de S2 — los esquemas, tablas, paquetes PL/SQL y triggers concretos de este documento son los del ejemplo BomERP; cada equipo los reemplaza por los de su propio proyecto. Lo exigible a todos es la estructura: motor transaccional con reglas de negocio en PL/SQL, manejo de excepciones, auditoría y optimización con índices y `EXPLAIN PLAN`.
+
 ## Producto
 
 **Motor transaccional Oracle optimizado.**

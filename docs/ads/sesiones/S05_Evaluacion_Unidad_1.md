@@ -17,9 +17,11 @@ Del sílabo, el producto de la Unidad I es:
 
 Ese producto ya existe como [`docs/proyecto-integrador/u1/ads-producto.md`](../../proyecto-integrador/u1/ads-producto.md). Esta sección lo reproduce completo para que la sesión sea autocontenida; `ads-producto.md` sigue siendo la fuente única — si hay una edición futura, se hace ahí y se refleja aquí.
 
+**Lo que sigue (2.1-2.6) es el ejemplo BomERP del docente, no una plantilla obligatoria.** Cada sede (Lima, Juliaca, Tarapoto) y cada grupo dentro de una misma sede tiene su propio dominio, definido en su propio `brief.md` de S2 — no todos siguen CoMarket/BomERP. Lo que sí es exigible a todos es la estructura: contexto técnico, atributos de calidad, vistas C1-C3, principios de diseño, ADR y trazabilidad técnica U1, cada uno con el contenido real de su propio proyecto.
+
 ### 2.1 Contexto técnico
 
-**Tabla 1. Contexto técnico del producto U1**
+**Tabla 1. Contexto técnico del producto U1 (ejemplo BomERP)**
 
 | Elemento | Definición |
 |---|---|
@@ -32,7 +34,7 @@ Ese producto ya existe como [`docs/proyecto-integrador/u1/ads-producto.md`](../.
 
 ### 2.2 Atributos de calidad
 
-**Tabla 2. Atributos de calidad del producto U1**
+**Tabla 2. Atributos de calidad del producto U1 (ejemplo BomERP)**
 
 | Atributo | Decisión inicial | Evidencia |
 |---|---|---|
@@ -45,7 +47,7 @@ Ese producto ya existe como [`docs/proyecto-integrador/u1/ads-producto.md`](../.
 
 ### 2.3 Vistas arquitectónicas
 
-**Figura 1. Vista C1 - Contexto**
+**Figura 1. Vista C1 - Contexto (ejemplo BomERP)**
 
 ```mermaid
 flowchart TB
@@ -59,7 +61,7 @@ flowchart TB
     A -->|Notifica aprobaciones futuras| S
 ```
 
-**Figura 2. Vista C2 - Contenedores**
+**Figura 2. Vista C2 - Contenedores (ejemplo BomERP)**
 
 ```mermaid
 flowchart TB
@@ -75,7 +77,7 @@ flowchart TB
     API -->|HTTP / SDK| EXT
 ```
 
-**Figura 3. Vista C3 - Componentes backend**
+**Figura 3. Vista C3 - Componentes backend (ejemplo BomERP)**
 
 ```mermaid
 flowchart LR
@@ -104,7 +106,7 @@ flowchart LR
 
 Al cierre de U1 (S6) solo existen `catalogo` y `ventas` como paquetes reales — `inventario`, `compras` y `seguridad` se dibujan como módulos futuros para no adelantar alcance de sesiones que todavía no llegaron (mismo criterio que ADR-001).
 
-Reglas de la vista, exigibles durante la sustentación:
+Reglas de la vista: son el patrón arquitectónico exigible a todos (monolito modular verificado con Spring Modulith), aunque los nombres de proyecto y de módulo (`bomerp-backend`, `catalogo`, `ventas`) son los del ejemplo BomERP — cada equipo los reemplaza por los propios.
 
 - Un solo proyecto Maven (`bomerp-backend`), sin reactor multi-módulo; `BomErpApplication` es su única clase de arranque y genera el único artefacto ejecutable.
 - Cada módulo de negocio es un paquete directo bajo el paquete raíz (`catalogo`, `ventas`, ...), verificado como módulo de aplicación por **Spring Modulith**, no por límites de artefacto Maven.
@@ -117,7 +119,7 @@ Reglas de la vista, exigibles durante la sustentación:
 
 ### 2.4 Principios de diseño aplicados
 
-**Tabla 3. Principios de diseño aplicados**
+**Tabla 3. Principios de diseño aplicados (ejemplo BomERP)**
 
 | Principio | Aplicación |
 |---|---|
@@ -131,7 +133,7 @@ Reglas de la vista, exigibles durante la sustentación:
 
 Las decisiones ya están formalizadas como ADR reales en `docs/lp2/adr/` — verificadas contra el código (`mvnw test`), no solo documentadas:
 
-**Tabla 4. ADR reales, verificados contra el código**
+**Tabla 4. ADR reales, verificados contra el código (ejemplo BomERP)**
 
 | ADR real | Decisión | Justificación |
 |---|---|---|
@@ -139,7 +141,7 @@ Las decisiones ya están formalizadas como ADR reales en `docs/lp2/adr/` — ver
 | [ADR-002](../../lp2/adr/ADR-002-spring-modulith.md) | Módulos de negocio verificados con Spring Modulith. | Verifica límites de dependencia automáticamente (`ModularityTests`), no solo por convención documentada. |
 | [ADR-003](../../lp2/adr/ADR-003-spring-boot-4.md) | Spring Boot exacto en 4.0.7. | Versión que exige SpringDoc OpenAPI dentro del rango compatible, verificada contra `start.spring.io`. |
 
-**Tabla 5. Decisiones previstas, aún no formalizadas como ADR de código**
+**Tabla 5. Decisiones previstas, aún no formalizadas como ADR de código (ejemplo BomERP)**
 
 | Código previsto | Decisión | Se formaliza en |
 |---|---|---|
@@ -148,7 +150,7 @@ Las decisiones ya están formalizadas como ADR reales en `docs/lp2/adr/` — ver
 
 ### 2.6 Trazabilidad técnica U1
 
-**Tabla 6. Trazabilidad técnica U1**
+**Tabla 6. Trazabilidad técnica U1 (ejemplo BomERP)**
 
 | Decisión ADS | Evidencia BD2 | Evidencia LP2 |
 |---|---|---|
@@ -166,18 +168,18 @@ Cubre los cuatro temas dictados antes de esta sesión. El docente puede tomarla 
 | Sesión | Tema | Qué puede evaluar el docente |
 |---|---|---|
 | S1 | Fundamentos de arquitectura de software | Rol de la arquitectura, stakeholders, atributos de calidad y su relación con los requerimientos. |
-| S2 | Modelo C4 y vistas arquitectónicas | Diferencia entre C1, C2, C3 y C4; qué información pertenece a cada nivel y por qué C3 de este producto no expone el detalle hexagonal/capas de `ventas`. |
-| S3 | Diseño estructural y principios SOLID | Aplicación de SOLID, cohesión, acoplamiento, modularidad y abstracción sobre `catalogo`/`ventas` reales. |
+| S2 | Modelo C4 y vistas arquitectónicas | Diferencia entre C1, C2, C3 y C4; qué información pertenece a cada nivel y por qué la vista C3 del propio proyecto no expone el detalle hexagonal/capas de su módulo transaccional. |
+| S3 | Diseño estructural y principios SOLID | Aplicación de SOLID, cohesión, acoplamiento, modularidad y abstracción sobre los módulos reales del propio proyecto (equivalentes a `catalogo`/`ventas` en el ejemplo BomERP). |
 | S4 | Arquitecturas modernas | Monolito modular vs. microservicios vs. hexagonal vs. Clean Architecture, cuándo DDD orienta hacia hexagonal/Clean, y los errores comunes de cada estilo. |
 
 Preguntas de referencia (el docente puede formular equivalentes):
 
-1. ¿Por qué el producto U1 usa monolito modular con capas internas y no microservicios ni hexagonal desde el inicio?
+1. ¿Por qué tu producto U1 usa monolito modular con capas internas y no microservicios ni hexagonal desde el inicio?
 2. Un módulo pone `@Entity` en su clase de dominio y la llama "hexagonal". ¿Por qué eso no es hexagonal?
 3. Un método solo hace `repository.save(entidad)` sin ninguna regla de negocio. ¿Por qué llamarlo "caso de uso" es incorrecto?
-4. Aplica la prueba del papel y lápiz a una regla de `ventas`: ¿es una entidad o un caso de uso?
+4. Aplica la prueba del papel y lápiz a una regla de negocio de tu propio módulo transaccional: ¿es una entidad o un caso de uso?
 5. ¿Qué verifica `ModularityTests` que una simple convención documentada no puede garantizar?
-6. ¿Qué cambiaría en la Figura 3 (C3) si `ventas` migrara a hexagonal? ¿Ese cambio afectaría la Figura 2 (C2)?
+6. ¿Qué cambiaría en tu vista C3 si tu módulo transaccional migrara a hexagonal? ¿Ese cambio afectaría tu vista C2?
 
 ## 4. Sustentación de la arquitectura
 
