@@ -2728,8 +2728,9 @@
 <p>Arquitectura documentada con vistas de contexto, contenedores, componentes, principios de diseño aplicados y justificación del estilo arquitectónico elegido.</p>
 </blockquote>
 <p>Ese producto ya existe como <a href="../../../proyecto-integrador/u1/ads-producto/"><code>docs/proyecto-integrador/u1/ads-producto.md</code></a>. Esta sección lo reproduce completo para que la sesión sea autocontenida; <code>ads-producto.md</code> sigue siendo la fuente única — si hay una edición futura, se hace ahí y se refleja aquí.</p>
+<p><strong>Lo que sigue (2.1-2.6) es el ejemplo BomERP del docente, no una plantilla obligatoria.</strong> Cada sede (Lima, Juliaca, Tarapoto) y cada grupo dentro de una misma sede tiene su propio dominio, definido en su propio <code>brief.md</code> de S2 — no todos siguen CoMarket/BomERP. Lo que sí es exigible a todos es la estructura: contexto técnico, atributos de calidad, vistas C1-C3, principios de diseño, ADR y trazabilidad técnica U1, cada uno con el contenido real de su propio proyecto.</p>
 <h3 id="21-contexto-tecnico">2.1 Contexto técnico<a class="headerlink" href="#21-contexto-tecnico" title="Permanent link">&para;</a></h3>
-<p><strong>Tabla 1. Contexto técnico del producto U1</strong></p>
+<p><strong>Tabla 1. Contexto técnico del producto U1 (ejemplo BomERP)</strong></p>
 <table>
 <thead>
 <tr>
@@ -2765,7 +2766,7 @@
 </tbody>
 </table>
 <h3 id="22-atributos-de-calidad">2.2 Atributos de calidad<a class="headerlink" href="#22-atributos-de-calidad" title="Permanent link">&para;</a></h3>
-<p><strong>Tabla 2. Atributos de calidad del producto U1</strong></p>
+<p><strong>Tabla 2. Atributos de calidad del producto U1 (ejemplo BomERP)</strong></p>
 <table>
 <thead>
 <tr>
@@ -2808,7 +2809,7 @@
 </tbody>
 </table>
 <h3 id="23-vistas-arquitectonicas">2.3 Vistas arquitectónicas<a class="headerlink" href="#23-vistas-arquitectonicas" title="Permanent link">&para;</a></h3>
-<p><strong>Figura 1. Vista C1 - Contexto</strong></p>
+<p><strong>Figura 1. Vista C1 - Contexto (ejemplo BomERP)</strong></p>
 <pre class="mermaid"><code>flowchart TB
     U[Usuario administrativo]
     A[Base Full-Stack de BomERP]
@@ -2818,7 +2819,7 @@
     U --&gt;|Gestiona catálogo, inventario, ventas y compras| A
     A --&gt;|Persistencia y logica transaccional| O
     A --&gt;|Notifica aprobaciones futuras| S</code></pre>
-<p><strong>Figura 2. Vista C2 - Contenedores</strong></p>
+<p><strong>Figura 2. Vista C2 - Contenedores (ejemplo BomERP)</strong></p>
 <pre class="mermaid"><code>flowchart TB
     SPA[Una SPA modular&lt;br/&gt;Unidad 2]
     API[Un proyecto Spring Boot único&lt;br/&gt;bomerp-backend]
@@ -2830,7 +2831,7 @@
     API --&gt; MOD
     MOD --&gt;|JPA / SQL / PL-SQL&lt;br/&gt;un datasource| DB
     API --&gt;|HTTP / SDK| EXT</code></pre>
-<p><strong>Figura 3. Vista C3 - Componentes backend</strong></p>
+<p><strong>Figura 3. Vista C3 - Componentes backend (ejemplo BomERP)</strong></p>
 <pre class="mermaid"><code>flowchart LR
     APP[BomErpApplication&lt;br/&gt;arranque y configuración]
     CAT[catalogo&lt;br/&gt;Categoria–Producto]
@@ -2854,7 +2855,7 @@
     CAT --&gt; SCAT
     VEN --&gt; SVEN</code></pre>
 <p>Al cierre de U1 (S6) solo existen <code>catalogo</code> y <code>ventas</code> como paquetes reales — <code>inventario</code>, <code>compras</code> y <code>seguridad</code> se dibujan como módulos futuros para no adelantar alcance de sesiones que todavía no llegaron (mismo criterio que ADR-001).</p>
-<p>Reglas de la vista, exigibles durante la sustentación:</p>
+<p>Reglas de la vista: son el patrón arquitectónico exigible a todos (monolito modular verificado con Spring Modulith), aunque los nombres de proyecto y de módulo (<code>bomerp-backend</code>, <code>catalogo</code>, <code>ventas</code>) son los del ejemplo BomERP — cada equipo los reemplaza por los propios.</p>
 <ul>
 <li>Un solo proyecto Maven (<code>bomerp-backend</code>), sin reactor multi-módulo; <code>BomErpApplication</code> es su única clase de arranque y genera el único artefacto ejecutable.</li>
 <li>Cada módulo de negocio es un paquete directo bajo el paquete raíz (<code>catalogo</code>, <code>ventas</code>, ...), verificado como módulo de aplicación por <strong>Spring Modulith</strong>, no por límites de artefacto Maven.</li>
@@ -2866,7 +2867,7 @@
 <li>Las FK entre esquemas se permiten con una dirección controlada hacia Catálogo y Seguridad, evitando ciclos.</li>
 </ul>
 <h3 id="24-principios-de-diseno-aplicados">2.4 Principios de diseño aplicados<a class="headerlink" href="#24-principios-de-diseno-aplicados" title="Permanent link">&para;</a></h3>
-<p><strong>Tabla 3. Principios de diseño aplicados</strong></p>
+<p><strong>Tabla 3. Principios de diseño aplicados (ejemplo BomERP)</strong></p>
 <table>
 <thead>
 <tr>
@@ -2899,7 +2900,7 @@
 </table>
 <h3 id="25-decisiones-de-arquitectura-adr">2.5 Decisiones de arquitectura (ADR)<a class="headerlink" href="#25-decisiones-de-arquitectura-adr" title="Permanent link">&para;</a></h3>
 <p>Las decisiones ya están formalizadas como ADR reales en <code>docs/lp2/adr/</code> — verificadas contra el código (<code>mvnw test</code>), no solo documentadas:</p>
-<p><strong>Tabla 4. ADR reales, verificados contra el código</strong></p>
+<p><strong>Tabla 4. ADR reales, verificados contra el código (ejemplo BomERP)</strong></p>
 <table>
 <thead>
 <tr>
@@ -2926,7 +2927,7 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Tabla 5. Decisiones previstas, aún no formalizadas como ADR de código</strong></p>
+<p><strong>Tabla 5. Decisiones previstas, aún no formalizadas como ADR de código (ejemplo BomERP)</strong></p>
 <table>
 <thead>
 <tr>
@@ -2949,7 +2950,7 @@
 </tbody>
 </table>
 <h3 id="26-trazabilidad-tecnica-u1">2.6 Trazabilidad técnica U1<a class="headerlink" href="#26-trazabilidad-tecnica-u1" title="Permanent link">&para;</a></h3>
-<p><strong>Tabla 6. Trazabilidad técnica U1</strong></p>
+<p><strong>Tabla 6. Trazabilidad técnica U1 (ejemplo BomERP)</strong></p>
 <table>
 <thead>
 <tr>
@@ -3001,12 +3002,12 @@
 <tr>
 <td>S2</td>
 <td>Modelo C4 y vistas arquitectónicas</td>
-<td>Diferencia entre C1, C2, C3 y C4; qué información pertenece a cada nivel y por qué C3 de este producto no expone el detalle hexagonal/capas de <code>ventas</code>.</td>
+<td>Diferencia entre C1, C2, C3 y C4; qué información pertenece a cada nivel y por qué la vista C3 del propio proyecto no expone el detalle hexagonal/capas de su módulo transaccional.</td>
 </tr>
 <tr>
 <td>S3</td>
 <td>Diseño estructural y principios SOLID</td>
-<td>Aplicación de SOLID, cohesión, acoplamiento, modularidad y abstracción sobre <code>catalogo</code>/<code>ventas</code> reales.</td>
+<td>Aplicación de SOLID, cohesión, acoplamiento, modularidad y abstracción sobre los módulos reales del propio proyecto (equivalentes a <code>catalogo</code>/<code>ventas</code> en el ejemplo BomERP).</td>
 </tr>
 <tr>
 <td>S4</td>
@@ -3017,12 +3018,12 @@
 </table>
 <p>Preguntas de referencia (el docente puede formular equivalentes):</p>
 <ol>
-<li>¿Por qué el producto U1 usa monolito modular con capas internas y no microservicios ni hexagonal desde el inicio?</li>
+<li>¿Por qué tu producto U1 usa monolito modular con capas internas y no microservicios ni hexagonal desde el inicio?</li>
 <li>Un módulo pone <code>@Entity</code> en su clase de dominio y la llama "hexagonal". ¿Por qué eso no es hexagonal?</li>
 <li>Un método solo hace <code>repository.save(entidad)</code> sin ninguna regla de negocio. ¿Por qué llamarlo "caso de uso" es incorrecto?</li>
-<li>Aplica la prueba del papel y lápiz a una regla de <code>ventas</code>: ¿es una entidad o un caso de uso?</li>
+<li>Aplica la prueba del papel y lápiz a una regla de negocio de tu propio módulo transaccional: ¿es una entidad o un caso de uso?</li>
 <li>¿Qué verifica <code>ModularityTests</code> que una simple convención documentada no puede garantizar?</li>
-<li>¿Qué cambiaría en la Figura 3 (C3) si <code>ventas</code> migrara a hexagonal? ¿Ese cambio afectaría la Figura 2 (C2)?</li>
+<li>¿Qué cambiaría en tu vista C3 si tu módulo transaccional migrara a hexagonal? ¿Ese cambio afectaría tu vista C2?</li>
 </ol>
 <h2 id="4-sustentacion-de-la-arquitectura">4. Sustentación de la arquitectura<a class="headerlink" href="#4-sustentacion-de-la-arquitectura" title="Permanent link">&para;</a></h2>
 <p><strong>Tabla 8. Distribución de tiempo por integrante</strong></p>
