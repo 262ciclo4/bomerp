@@ -16,6 +16,8 @@
         <link rel="prev" href="../S03_Objetos_Relacionados_Categoria_Producto/">
       
       
+        <link rel="next" href="../S05_Consultas_Empresariales_Reportes_CORS/">
+      
       
         
       
@@ -1804,6 +1806,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S05_Indices_Optimizacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S5 - Índices para optimización
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2737,6 +2767,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#315-opcional-anexo-visualizar-metricas-y-logs-juntos-en-grafana" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.15 (opcional, anexo) Visualizar métricas y logs juntos en Grafana
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2868,6 +2909,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S05_Consultas_Empresariales_Reportes_CORS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S5 - Consultas empresariales, reportes REST y CORS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -3263,6 +3332,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#315-opcional-anexo-visualizar-metricas-y-logs-juntos-en-grafana" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.15 (opcional, anexo) Visualizar métricas y logs juntos en Grafana
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3517,8 +3597,68 @@
 <p>Lectura del diagrama: <code>VentaServiceImpl</code> vive en <code>ventas</code>, pero no toca <code>ProductoRepository</code> ni la entidad <code>Producto</code> directamente — pasa siempre por <code>ProductoService</code>, el mismo límite que ya impone Spring Modulith dentro de un solo módulo (S3, <code>ProductoServiceImpl</code> nunca llama a <code>CategoriaRepository</code>), ahora entre dos módulos distintos.</p>
 <h3 id="22-dto-compuesto-y-coleccion-de-detalles">2.2 DTO compuesto y colección de detalles<a class="headerlink" href="#22-dto-compuesto-y-coleccion-de-detalles" title="Permanent link">&para;</a></h3>
 <p>Una <strong>cabecera</strong> (<code>Venta</code>) agrupa datos que aplican a toda la operación (fecha, estado, total); un <strong>detalle</strong> (<code>DetalleVenta</code>) es cada línea individual (qué producto, cuánto, a qué precio). La relación es uno a muchos: una <code>Venta</code> tiene varios <code>DetalleVenta</code>, y cada <code>DetalleVenta</code> pertenece exactamente a una <code>Venta</code> — el mismo patrón <code>@OneToMany</code>/<code>@ManyToOne</code> de S3, aplicado ahora dentro de un mismo módulo nuevo en vez de entre <code>Categoria</code> y <code>Producto</code>.</p>
-<p><strong>Decisión de diseño: <code>DetalleVenta</code> no referencia la entidad <code>Producto</code>.</strong> Podría parecer natural agregar <code>@ManyToOne private Producto producto;</code> en <code>DetalleVenta</code>, igual que <code>Producto</code> referencia <code>Categoria</code> en <code>catalogo</code> — pero <code>Producto</code> es una entidad de <strong>otro módulo</strong>. Una relación JPA directa obligaría a <code>ventas</code> a conocer el mapeo interno de <code>catalogo</code> (su tabla, sus columnas, su ciclo de vida), justo el acoplamiento que Spring Modulith existe para evitar (ADR-002). En vez de eso, <code>DetalleVenta</code> guarda <code>productoId</code> (un <code>Long</code> simple, sin relación JPA) más una <strong>copia</strong> de <code>nombreProducto</code> y <code>precioUnitario</code> tomada en el momento de la venta.</p>
+<p><strong>Figura 3. Esquema real en Oracle: <code>VENTAS</code> y <code>DETALLE_VENTAS</code></strong></p>
+<pre class="mermaid"><code>erDiagram
+    VENTAS ||--o{ DETALLE_VENTAS : "FK_DETALLE_VENTA"
+    PRODUCTOS ||--o{ DETALLE_VENTAS : "ID_PRODUCTO, sin FK fisica"
+    VENTAS {
+        NUMBER ID PK
+        TIMESTAMP FECHA
+        VARCHAR2 ESTADO
+        NUMBER TOTAL
+    }
+    DETALLE_VENTAS {
+        NUMBER ID PK
+        NUMBER ID_VENTA FK
+        NUMBER ID_PRODUCTO
+        VARCHAR2 NOMBRE_PRODUCTO
+        NUMBER PRECIO_UNITARIO
+        NUMBER CANTIDAD
+        NUMBER SUBTOTAL
+    }
+    PRODUCTOS {
+        NUMBER ID PK
+        NUMBER ID_CATEGORIA FK
+        VARCHAR2 NOMBRE
+        NUMBER PRECIO
+        NUMBER STOCK
+    }</code></pre>
+<p>Este esquema no lo crea este backend: lo crea BD2 (3.1, más abajo; <a href="../../../bd2/sesiones/S04_Optimizacion_Consultas_SQL/">BD2 S4</a>, 3.2), antes de que exista una sola línea de <code>Venta</code>/<code>DetalleVenta</code> en Java. <code>ID_VENTA</code> sí lleva <code>FOREIGN KEY</code> (<code>FK_DETALLE_VENTA</code>, con <code>o{</code> porque la base de datos no exige que una venta tenga al menos un detalle) — la cabecera-detalle es una relación interna a <code>BOM_VENTAS</code>, un solo esquema. <code>PRODUCTOS</code> aparece en el diagrama porque es el sentido real del negocio: <code>DETALLE_VENTAS</code> es la tabla asociativa que resuelve el muchos-a-muchos entre una venta (varios productos) y un producto (vendido en varias ventas) — pero esa relación con <code>PRODUCTOS</code> (otro esquema, <code>BOM_CATALOGO</code>) no tiene <code>FOREIGN KEY</code> física, por eso la etiqueta lo dice explícitamente ("sin FK física"): es la misma decisión que el párrafo siguiente explica del lado del código Java, ya tomada del lado de la base de datos.</p>
+<p><strong>Decisión de diseño: <code>DetalleVenta</code> no referencia la entidad <code>Producto</code>.</strong> Podría parecer natural agregar <code>@ManyToOne private Producto producto;</code> en <code>DetalleVenta</code>, igual que <code>Producto</code> referencia <code>Categoria</code> en <code>catalogo</code> — pero <code>Producto</code> es una entidad de <strong>otro módulo</strong>, y la base de datos que sostiene esa relación (Figura 3, más arriba) ya decidió no forzarla con una <code>FOREIGN KEY</code> física: si se eliminara un producto que ya tiene ventas registradas, esa <code>FOREIGN KEY</code> bloquearía el borrado (o, peor, lo dejaría huérfano) — un registro de venta debe seguir siendo válido aunque el producto que describe ya no exista en el catálogo. Una relación JPA directa, además, obligaría a <code>ventas</code> a conocer el mapeo interno de <code>catalogo</code> (su tabla, sus columnas, su ciclo de vida), justo el acoplamiento que Spring Modulith existe para evitar (ADR-002). En vez de eso, <code>DetalleVenta</code> guarda <code>productoId</code> (un <code>Long</code> simple, sin relación JPA) más una <strong>copia</strong> de <code>nombreProducto</code> y <code>precioUnitario</code> tomada en el momento de la venta.</p>
 <p>Esa copia no es una limitación — es correcta para el dominio: si <code>Producto.precio</code> cambia la próxima semana, una venta ya registrada no debe recalcularse sola. El precio de una venta pasada es el que se cobró ese día, no el que el producto tenga hoy.</p>
+<p><strong>No es una regla general contra las relaciones entre módulos — depende de dos condiciones a la vez, no de "ser de otro módulo" por sí solo:</strong></p>
+<p><strong>Tabla 2. Cuándo una relación lleva <code>FOREIGN KEY</code>/<code>@ManyToOne</code> y cuándo no</strong></p>
+<table>
+<thead>
+<tr>
+<th>Relación</th>
+<th>¿Mismo esquema/módulo?</th>
+<th>¿El lado que referencia es un registro histórico?</th>
+<th>¿<code>FOREIGN KEY</code>/<code>@ManyToOne</code>?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Venta</code> → <code>DetalleVenta</code></td>
+<td>Sí (<code>ventas</code>)</td>
+<td>—</td>
+<td>Sí (<code>@OneToMany</code>/<code>@ManyToOne</code>)</td>
+</tr>
+<tr>
+<td><code>Producto</code> → <code>Categoria</code></td>
+<td>Sí (<code>catalogo</code>)</td>
+<td>No, es catálogo vivo</td>
+<td>Sí (<code>@ManyToOne</code>)</td>
+</tr>
+<tr>
+<td><code>DetalleVenta</code> → <code>Producto</code></td>
+<td>No, cruza módulo</td>
+<td>Sí, venta ya cerrada</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<p>Dentro de un mismo módulo, la relación JPA sigue siendo la norma — así quedan <code>Venta</code>-<code>DetalleVenta</code> (arriba) y <code>Producto</code>-<code>Categoria</code> (S3): ninguna de las dos es un registro histórico que deba sobrevivir a que el otro lado cambie o desaparezca. La ausencia de relación directa es la excepción, no el punto de partida, y solo se justifica cuando cruza el límite de módulo <strong>y</strong> el lado que referencia es un registro transaccional que no debe depender de que el otro dato siga existiendo igual — exactamente el mismo criterio, ya explicado del lado de Oracle en la Tabla 2 de <a href="../../../bd2/sesiones/S04_Optimizacion_Consultas_SQL/">BD2 S4</a>, 2.2.</p>
 <h3 id="23-calculos-y-estados">2.3 Cálculos y estados<a class="headerlink" href="#23-calculos-y-estados" title="Permanent link">&para;</a></h3>
 <p>Cada <code>DetalleVenta</code> calcula su <code>subtotal</code> como <code>precioUnitario × cantidad</code>; el <code>total</code> de la <code>Venta</code> es la suma de todos los <code>subtotal</code> de sus detalles. Ambos cálculos ocurren en el service, no en el controller ni en la entidad — la entidad <code>Venta</code>/<code>DetalleVenta</code> solo almacena el resultado, no lo recalcula por sí sola cada vez que se lee.</p>
 <p>Cada <code>Venta</code> también tiene un <strong>estado</strong> (<code>EstadoVenta</code>) — hoy con un único valor posible, <code>REGISTRADA</code>: toda venta creada en esta sesión queda ahí, sin operación de anulación todavía (3.3). El campo existe desde ahora porque una operación cabecera-detalle real casi siempre necesita más de un estado con el tiempo (por ejemplo, <code>ANULADA</code>, con su propia reversión de stock) — aunque esta sesión no lo explote todavía, extenderlo más adelante es agregar un valor al enum y la lógica que lo use, no rediseñar la entidad.</p>
@@ -3536,7 +3676,7 @@
 <li>Si <code>crear()</code> deja escapar una excepción sin capturarla, el proxy hace <code>rollback()</code>.</li>
 </ul>
 <p><strong>La regla exacta que activa el rollback, sin ninguna configuración extra:</strong> por defecto, Spring solo revierte la transacción ante excepciones <strong><em>unchecked</em></strong> (las que extienden <code>RuntimeException</code> o <code>Error</code>) — una excepción <strong><em>checked</em></strong> (que extiende <code>Exception</code> directamente) deja que el proxy haga <code>commit()</code> igual, aunque haya interrumpido el método a medio camino. <code>StockInsuficienteException</code> (3.5, de esta sesión) y <code>ResourceNotFoundException</code> (S2, 3.2.1) extienden <code>RuntimeException</code> justamente por esto: no es una elección de estilo, es la condición que hace posible el rollback automático de esta sesión sin escribir una sola línea de manejo de transacciones. Si algún día una regla de negocio se expresara con una excepción <em>checked</em>, el rollback automático dejaría de funcionar a menos que se declare explícito: <code>@Transactional(rollbackFor = Exception.class)</code>.</p>
-<p><strong>Figura 3. Transacción atómica: caso de éxito vs. caso de rollback</strong></p>
+<p><strong>Figura 4. Transacción atómica: caso de éxito vs. caso de rollback</strong></p>
 <pre class="mermaid"><code>flowchart TB
     subgraph Exito["Caso de exito: las tres lineas tienen stock"]
         direction TB
@@ -3568,6 +3708,7 @@
 <li><strong>3.12</strong> Relacionar con ADS y BD2.</li>
 <li><strong>3.13</strong> (opcional, anexo) Exponer métricas de <code>bomerp-backend</code> para Prometheus.</li>
 <li><strong>3.14</strong> (opcional, anexo) Enviar logs de <code>bomerp-backend</code> a Loki y verificarlos.</li>
+<li><strong>3.15</strong> (opcional, anexo) Visualizar métricas y logs juntos en Grafana.</li>
 </ul>
 <h3 id="31-verificar-el-punto-de-partida">3.1 Verificar el punto de partida<a class="headerlink" href="#31-verificar-el-punto-de-partida" title="Permanent link">&para;</a></h3>
 <p><strong>Punto de partida común:</strong> todo el equipo debe comenzar exactamente desde donde quedó S3, no desde su propio avance individual. Clona la rama <code>s03-objetos-relacionados</code> (el snapshot de cierre de S3):</p>
@@ -4049,7 +4190,7 @@
 </code></pre></div>
 <p><strong>Error frecuente</strong>: <code>Invoke-RestMethod</code> lanza una excepción ante cualquier respuesta que no sea 2xx (a diferencia de <code>curl</code>, que siempre muestra el cuerpo) — sin el <code>try</code>/<code>catch</code>, PowerShell solo muestra "Error en el servidor remoto: (409) Conflicto" y esconde el <code>message</code> real (<code>Stock insuficiente para...</code>) que sí viajó en el cuerpo de la respuesta. <code>$_.ErrorDetails.Message</code> es lo que lo recupera.</p>
 <p>Verifica: la respuesta trae <code>409</code>, <strong>ninguna</strong> venta nueva aparece en <code>GET /api/v1/ventas</code>, y el stock del producto 1 (la línea que sí tenía stock suficiente) queda <strong>exactamente igual</strong> que antes de este intento — la prueba real de que la transacción se revirtió completa, no solo la línea que falló.</p>
-<p><strong>Tabla 2. Verificación de la operación antes de continuar</strong></p>
+<p><strong>Tabla 3. Verificación de la operación antes de continuar</strong></p>
 <table>
 <thead>
 <tr>
@@ -4095,7 +4236,7 @@
 <p>Si en algún momento un archivo de <code>ventas</code> importa <code>pe.edu.upeu.bomerp.catalogo.producto.entity.Producto</code> o <code>...repository.ProductoRepository</code> directamente, <code>ModularityTests</code> falla la build con un mensaje que señala exactamente esa dependencia no permitida — antes de que nadie tenga que descubrirlo revisando código a mano.</p>
 <h3 id="312-relacionar-con-ads-y-bd2">3.12 Relacionar con ADS y BD2<a class="headerlink" href="#312-relacionar-con-ads-y-bd2" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> matriz de integración actualizada.</p>
-<p><strong>Tabla 3. Matriz de integración LP2-ADS-BD2 (S4)</strong></p>
+<p><strong>Tabla 4. Matriz de integración LP2-ADS-BD2 (S4)</strong></p>
 <table>
 <thead>
 <tr>
@@ -4328,6 +4469,56 @@ http://localhost:33100/loki/api/v1/query_range?query={application="bomerp-backen
 </code></pre></div>
 <p>Esto solo rastrea el <code>traceId</code> <strong>dentro de <code>bomerp-backend</code></strong> — como todavía es un único proceso (2.4, más arriba), no hay ningún otro servicio al que propagárselo.</p>
 <p><strong>Nota de puertos ocupados:</strong> <code>lp2/obs/</code> también incluye un <code>compose.yml</code> de PROD (placeholder, <code>49090</code>/<code>43100</code>), a la espera de que exista un PROD real de <code>bomerp-backend</code> — no se ejecuta hasta entonces (ADR-002, "no crear por si acaso"). Cuando BigData (lambda26) construya su propio <code>obs/</code> (previsto para su S6+), el siguiente puerto libre es <code>59090</code> (Prometheus) / <code>53100</code> (Loki) — se decide en ese momento, no antes.</p>
+<h3 id="315-opcional-anexo-visualizar-metricas-y-logs-juntos-en-grafana">3.15 (opcional, anexo) Visualizar métricas y logs juntos en Grafana<a class="headerlink" href="#315-opcional-anexo-visualizar-metricas-y-logs-juntos-en-grafana" title="Permanent link">&para;</a></h3>
+<div class="admonition note">
+<p class="admonition-title">3.15 es opcional</p>
+<p>Depende de 3.13 y 3.14: sin Prometheus ni Loki corriendo, Grafana no tiene qué mostrar. El alcance evaluado de S4 sigue terminando en 3.12 (4.4, 4.6); este paso es para quien ya completó los dos anteriores y quiere verlos juntos en un solo tablero, en vez de alternar entre la UI de Prometheus y las consultas de Loki por separado.</p>
+</div>
+<p><strong>Producto del paso:</strong> un Grafana propio, con Prometheus y Loki agregados como fuentes de datos automáticamente (sin configurarlos a mano desde la UI), corriendo en paralelo al resto del stack.</p>
+<p>Crea <code>lp2/obs/grafana/provisioning/datasources/datasources.yml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+
+<span class="nt">datasources</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Prometheus</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prometheus</span>
+<span class="w">    </span><span class="nt">access</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">proxy</span>
+<span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://bomerp-prometheus:9090</span>
+<span class="w">    </span><span class="nt">isDefault</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Loki</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">loki</span>
+<span class="w">    </span><span class="nt">access</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">proxy</span>
+<span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://bomerp-loki:3100</span>
+</code></pre></div>
+<p><code>url</code> usa el nombre del servicio de Docker Compose (<code>bomerp-prometheus</code>, <code>bomerp-loki</code>), no <code>localhost</code>: Grafana consulta a los otros contenedores por la red interna que Compose crea automáticamente, la misma razón por la que <code>prometheus-dev.yml</code> (3.13) usa <code>host.docker.internal</code> para llegar a <code>bomerp-backend</code>, que corre fuera de Docker.</p>
+<p>Agrega Grafana a <code>lp2/obs/compose-dev.yml</code> (junto a <code>bomerp-prometheus</code>, <code>bomerp-loki</code> y <code>bomerp-promtail</code>):</p>
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="nt">bomerp-grafana</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grafana/grafana:11.4.0</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bomerp-grafana-dev</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"33000:3000"</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GF_SECURITY_ADMIN_PASSWORD=admin</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./grafana/provisioning:/etc/grafana/provisioning:ro</span>
+<span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bomerp-prometheus</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bomerp-loki</span>
+</code></pre></div>
+<p><code>33000</code> sigue el mismo criterio de puertos que Prometheus (<code>39090</code>) y Loki (<code>33100</code>): el prefijo <code>3</code> identifica a LP2 DEV, evitando cualquier Grafana que DIST agregue después en <code>1????</code>/<code>2????</code>.</p>
+<p>Vuelve a levantar el stack con el archivo actualizado:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>lp2/obs
+docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>compose-dev.yml<span class="w"> </span>up<span class="w"> </span>-d
+</code></pre></div>
+<p>Abre <code>http://localhost:33000</code> (usuario <code>admin</code>, contraseña <code>admin</code> — Grafana pide cambiarla al primer ingreso; en DEV puedes omitirlo). Ve a <strong>Connections → Data sources</strong> y confirma que <code>Prometheus</code> y <code>Loki</code> ya aparecen configurados, sin haberlos agregado a mano — eso es lo que hizo <code>datasources.yml</code> al arrancar el contenedor.</p>
+<p>Para verificar que ambas fuentes responden, crea un panel nuevo (<strong>Dashboards → New → New dashboard → Add visualization</strong>) y prueba una consulta de cada una:</p>
+<ul>
+<li>Con la fuente <code>Prometheus</code>: <code>up{job="bomerp-backend"}</code> (3.13) — el mismo dato que ya viste en la UI de Prometheus, ahora dentro de Grafana.</li>
+<li>Con la fuente <code>Loki</code>: <code>{application="bomerp-backend"} |= "Started BomerpBackendApplication"</code> (3.14) — el mismo log, con el mismo lenguaje de consulta (LogQL) que ya usaste por API.</li>
+</ul>
+<p>Lo que cambia no es el dato ni la consulta — es tener ambas fuentes, métricas y logs, en el mismo tablero, algo que ni Prometheus ni Loki ofrecen por separado.</p>
+<p><strong>Nota de puertos ocupados (actualizada):</strong> con Grafana, LP2 DEV ocupa <code>39090</code> (Prometheus), <code>33100</code> (Loki) y <code>33000</code> (Grafana) — los tres bajo el prefijo <code>3</code>. Si más adelante DIST agrega su propio Grafana, el puerto que le corresponde por el mismo criterio es <code>13000</code> (prefijo <code>1</code>, DEV) o <code>23000</code> (prefijo <code>2</code>, PROD); si BigData agrega el suyo, <code>53000</code> (prefijo <code>5</code>).</p>
 <h2 id="4-crea-actividad-autonoma">4. Crea: actividad autónoma<a class="headerlink" href="#4-crea-actividad-autonoma" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 2h fuera del aula.</p>
 <h3 id="41-actividad">4.1 Actividad<a class="headerlink" href="#41-actividad" title="Permanent link">&para;</a></h3>
@@ -4429,7 +4620,7 @@ Bean Validation, y qué capa sí puede validarla?
 <li>Si tu operación autónoma (4.1) no cruza dos módulos, ¿qué evidencia reemplaza el requisito de <code>ModularityTests</code>?</li>
 </ol>
 <h3 id="46-rubrica-de-evaluacion">4.6 Rúbrica de evaluación<a class="headerlink" href="#46-rubrica-de-evaluacion" title="Permanent link">&para;</a></h3>
-<p><strong>Tabla 4. Rúbrica de evaluación</strong></p>
+<p><strong>Tabla 5. Rúbrica de evaluación</strong></p>
 <table>
 <thead>
 <tr>

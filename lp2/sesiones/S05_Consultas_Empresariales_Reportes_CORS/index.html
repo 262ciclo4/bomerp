@@ -1,0 +1,4058 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Entorno integrado de desarrollo academico para construir modulos ERP con ADS, BD2 y LP2.">
+      
+      
+        <meta name="author" content="UPeU">
+      
+      
+      
+        <link rel="prev" href="../S04_Operacion_Cabecera_Detalle_Venta_DetalleVenta/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+  
+    <title>BOM ERP - S5 - Consultas empresariales, reportes REST y CORS</title>
+  
+
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#s5-consultas-empresariales-reportes-rest-y-cors" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../../.." title="BOM ERP" class="md-header__button md-logo" aria-label="BOM ERP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            BOM ERP
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              S5 - Consultas empresariales, reportes REST y CORS
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/262ciclo4/bomerp" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    262ciclo4/bomerp
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Pestañas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Inicio
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../proyecto-integrador/" class="md-tabs__link">
+          
+  
+  
+  Guía del Proyecto Integrador
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../ads/" class="md-tabs__link">
+          
+  
+  
+  ADS
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../bd2/" class="md-tabs__link">
+          
+  
+  
+  BD2
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../" class="md-tabs__link">
+          
+  
+  
+  LP2
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="BOM ERP" class="md-nav__button md-logo" aria-label="BOM ERP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    BOM ERP
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/262ciclo4/bomerp" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    262ciclo4/bomerp
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guía del Proyecto Integrador
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guía del Proyecto Integrador
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Alineamiento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/brief/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brief técnico (plantilla)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Diseño técnico, motor transaccional y backend inicial
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    1. Diseño técnico, motor transaccional y backend inicial
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/lp2-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Demo U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Modelado UML, administración Oracle y SPA segura
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    2. Modelado UML, administración Oracle y SPA segura
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/lp2-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Demo U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Diseño consolidado, operación Oracle y Full-Stack integrado
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    3. Diseño consolidado, operación Oracle y Full-Stack integrado
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/lp2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/checklist-final/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Checklist final
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/guia-sustentacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guía de sustentación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ADS
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/silabo_ads_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/silabo_ads_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Arquitectura y Diseño Estructural
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Arquitectura y Diseño Estructural
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S01_Fundamentos_Arquitectura_Software/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - Fundamentos de arquitectura de software
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S02_Modelo_C4_Vistas_Arquitectonicas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - Modelo C4 y vistas arquitectónicas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S03_Diseno_Estructural_Principios_SOLID/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S3 - Diseño estructural y principios SOLID
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S04_Arquitecturas_Modernas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S4 - Arquitecturas modernas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S05_Evaluacion_Unidad_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S5 - Evaluación de la Unidad I
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    BD2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/silabo_bd2_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/silabo_bd2_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Programación y optimización (Oracle XE)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Programación y optimización (Oracle XE)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - PL/SQL aplicado al negocio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S02_Triggers_DML_Auditoria/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - Triggers DML y auditoría
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S03_Excepciones_Robustez/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S3 - Manejo de excepciones y robustez
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S04_Optimizacion_Consultas_SQL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S4 - Optimización de consultas SQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S05_Indices_Optimizacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S5 - Índices para optimización
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    LP2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../silabo_lp2_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../silabo_lp2_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Decisiones de arquitectura
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Decisiones de arquitectura
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/ADR-001-arquitectura-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-001 - Arquitectura del backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/ADR-002-spring-modulith/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-002 - Spring Modulith
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/ADR-003-spring-boot-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-003 - Versión exacta de Spring Boot 4.0.7
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/ADR-004-jwt-diferido/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-004 - JWT diferido a S10
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Base backend REST modular de BomERP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Base backend REST modular de BomERP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S01_Arquitectura_Backend_REST_Profesional/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - Arquitectura backend REST profesional
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S02_CRUD_REST_Completo_Producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - CRUD REST completo de Producto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S03_Objetos_Relacionados_Categoria_Producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S3 - Objetos relacionados Categoria-Producto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S04_Operacion_Cabecera_Detalle_Venta_DetalleVenta/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S4 - Operación cabecera-detalle Venta-DetalleVenta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S5 - Consultas empresariales, reportes REST y CORS
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S5 - Consultas empresariales, reportes REST y CORS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-introduccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Introducción
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Introducción">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-presentacion-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Presentación de la sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-indice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Índice
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-proposito-de-aprendizaje" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Propósito de aprendizaje
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-producto-de-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Producto de sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-metodologia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Metodología
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16-motivacion-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6 Motivación de la sesión
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.6 Motivación de la sesión">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#161-caso-el-reporte-que-devolvio-null" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6.1 Caso: el reporte que devolvió null
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#17-ubicacion-en-el-curso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.7 Ubicación en el curso
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-explica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Explica
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Explica">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-arquitectura-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Arquitectura de la sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-filtros-combinados-con-parametros-opcionales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Filtros combinados con parámetros opcionales
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-ordenamiento-con-sort" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Ordenamiento con Sort
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-proyecciones-dto-de-reporte-en-vez-de-la-entidad-completa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Proyecciones: DTO de reporte en vez de la entidad completa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-agregaciones-con-funciones-jpql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Agregaciones con funciones JPQL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-cors-que-protege-el-navegador-y-que-no-protege" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 CORS: qué protege el navegador y qué no protege
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-aplica-actividad-practica-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Aplica: actividad práctica guiada
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Aplica: actividad práctica guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-verificar-el-punto-de-partida" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Verificar el punto de partida
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-ampliar-ventarepository-con-filtros-orden-proyeccion-y-agregado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Ampliar VentaRepository con filtros, orden, proyección y agregado
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-crear-los-dto-de-reporte-ventaresumen-ventaagregado-y-ventareporte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Crear los DTO de reporte: VentaResumen, VentaAgregado y VentaReporte
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-ampliar-ventaserviceventaserviceimpl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Ampliar VentaService/VentaServiceImpl
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-ampliar-ventacontroller" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Ampliar VentaController
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-configurar-cors-para-el-futuro-frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Configurar CORS para el futuro frontend
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37-probar-filtros-ordenamiento-y-el-reporte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 Probar filtros, ordenamiento y el reporte
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#38-probar-cors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 Probar CORS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#39-relacionar-con-ads-y-bd2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.9 Relacionar con ADS y BD2
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-crea-actividad-autonoma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Crea: actividad autónoma
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Crea: actividad autónoma">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-actividad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Actividad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-proposito" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Propósito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-indicaciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Indicaciones
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.3 Indicaciones">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#431-estructura-del-informe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3.1 Estructura del informe
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-criterios-minimos-de-aceptacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Criterios mínimos de aceptación
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-preguntas-de-defensa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Preguntas de defensa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-rubrica-de-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 Rúbrica de evaluación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-cierre" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Cierre
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bibliografia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bibliografía
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-introduccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Introducción
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Introducción">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-presentacion-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Presentación de la sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-indice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Índice
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-proposito-de-aprendizaje" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Propósito de aprendizaje
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-producto-de-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Producto de sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-metodologia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Metodología
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16-motivacion-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6 Motivación de la sesión
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.6 Motivación de la sesión">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#161-caso-el-reporte-que-devolvio-null" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6.1 Caso: el reporte que devolvió null
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#17-ubicacion-en-el-curso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.7 Ubicación en el curso
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-explica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Explica
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Explica">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-arquitectura-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Arquitectura de la sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-filtros-combinados-con-parametros-opcionales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Filtros combinados con parámetros opcionales
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-ordenamiento-con-sort" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Ordenamiento con Sort
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-proyecciones-dto-de-reporte-en-vez-de-la-entidad-completa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Proyecciones: DTO de reporte en vez de la entidad completa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-agregaciones-con-funciones-jpql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Agregaciones con funciones JPQL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-cors-que-protege-el-navegador-y-que-no-protege" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 CORS: qué protege el navegador y qué no protege
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-aplica-actividad-practica-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Aplica: actividad práctica guiada
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Aplica: actividad práctica guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-verificar-el-punto-de-partida" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Verificar el punto de partida
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-ampliar-ventarepository-con-filtros-orden-proyeccion-y-agregado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Ampliar VentaRepository con filtros, orden, proyección y agregado
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-crear-los-dto-de-reporte-ventaresumen-ventaagregado-y-ventareporte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Crear los DTO de reporte: VentaResumen, VentaAgregado y VentaReporte
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-ampliar-ventaserviceventaserviceimpl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Ampliar VentaService/VentaServiceImpl
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-ampliar-ventacontroller" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Ampliar VentaController
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-configurar-cors-para-el-futuro-frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Configurar CORS para el futuro frontend
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37-probar-filtros-ordenamiento-y-el-reporte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 Probar filtros, ordenamiento y el reporte
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#38-probar-cors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 Probar CORS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#39-relacionar-con-ads-y-bd2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.9 Relacionar con ADS y BD2
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-crea-actividad-autonoma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Crea: actividad autónoma
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Crea: actividad autónoma">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-actividad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Actividad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-proposito" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Propósito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-indicaciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Indicaciones
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.3 Indicaciones">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#431-estructura-del-informe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3.1 Estructura del informe
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-criterios-minimos-de-aceptacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Criterios mínimos de aceptación
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-preguntas-de-defensa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Preguntas de defensa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-rubrica-de-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 Rúbrica de evaluación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-cierre" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Cierre
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bibliografia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bibliografía
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="s5-consultas-empresariales-reportes-rest-y-cors">S5 - Consultas Empresariales, Reportes REST y CORS<a class="headerlink" href="#s5-consultas-empresariales-reportes-rest-y-cors" title="Permanent link">&para;</a></h1>
+<p><em>Por: Angel Sullon Macalupu @asullom - 2026</em></p>
+<h2 id="1-introduccion">1. Introducción<a class="headerlink" href="#1-introduccion" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 20 min.</p>
+<h3 id="11-presentacion-de-la-sesion">1.1 Presentación de la sesión<a class="headerlink" href="#11-presentacion-de-la-sesion" title="Permanent link">&para;</a></h3>
+<p>La operación transaccional construida la sesión anterior ya registra datos reales — pero leerlos todos, sin filtros ni orden, deja de servir en cuanto el volumen crece: alcanza con tres registros de prueba, no con miles. Esta sesión no agrega un nuevo módulo de negocio: enseña a consultar bien lo que el módulo anterior ya escribe, con filtros combinados, ordenamiento y una proyección más liviana pensada para reportes — y cierra habilitando el acceso desde otro origen, la primera pieza que existe únicamente porque, dos sesiones más adelante, un navegador va a llamar a esta API desde fuera.</p>
+<h3 id="12-indice">1.2 Índice<a class="headerlink" href="#12-indice" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Filtros combinados y ordenamiento.</li>
+<li>Proyecciones: DTO de reporte en vez de la entidad completa.</li>
+<li>Agregaciones con funciones JPQL.</li>
+<li>CORS para el futuro frontend.</li>
+</ol>
+<h3 id="13-proposito-de-aprendizaje">1.3 Propósito de aprendizaje<a class="headerlink" href="#13-proposito-de-aprendizaje" title="Permanent link">&para;</a></h3>
+<p>Al concluir la clase, estarás en condiciones de:</p>
+<ul>
+<li><strong>Construir y probar</strong> consultas REST con filtros combinados opcionales, ordenamiento configurable, una proyección ligera para reporte y un endpoint de agregados sobre datos reales generados por la operación transaccional de S4, y <strong>configurar CORS</strong> para que el futuro frontend (S7) pueda consumir la API sin que el navegador lo bloquee.</li>
+</ul>
+<h3 id="14-producto-de-sesion">1.4 Producto de sesión<a class="headerlink" href="#14-producto-de-sesion" title="Permanent link">&para;</a></h3>
+<p><code>GET /api/v1/ventas</code> ampliado con filtros combinados (<code>estado</code>, rango de fechas) y ordenamiento configurable, un nuevo <code>GET /api/v1/ventas/resumen</code> que devuelve agregados (conteo, monto total, ticket promedio) junto con un detalle resumido, y CORS configurado para el origen del futuro frontend.</p>
+<h3 id="15-metodologia">1.5 Metodología<a class="headerlink" href="#15-metodologia" title="Permanent link">&para;</a></h3>
+<p><strong>Tabla 1. Metodología de la sesión</strong></p>
+<table>
+<thead>
+<tr>
+<th>Actividades a Realizar en el Periodo</th>
+<th>Orientaciones generales (Orientaciones Metodológicas)</th>
+<th>Material de estudio recomendado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Revisión previa individual</td>
+<td>Repasar <code>VentaRepository</code>/<code>VentaServiceImpl</code> (S4) y <code>ProductoRepository.findByCategoriaId</code> (S1, S3) como caso de filtro simple. Trabajo individual, antes de clase.</td>
+<td>S1 (3.4.2), S3 (3.9), S4 (3.7-3.8).</td>
+</tr>
+<tr>
+<td>Clase presencial</td>
+<td>Construcción guiada de filtros combinados con parámetros opcionales, ordenamiento con <code>Sort</code>, proyecciones con expresión de constructor, agregaciones JPQL y configuración de CORS. Trabajo individual en la propia laptop, siguiendo al docente paso a paso.</td>
+<td>Backend ejecutable (S1-S4), cliente REST para verificar endpoints.</td>
+</tr>
+<tr>
+<td>Evaluación formativa</td>
+<td>Verificación en clase de <code>GET /api/v1/ventas</code> con distintas combinaciones de filtros y orden, y de <code>GET /api/v1/ventas/resumen</code> con y sin resultados. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4.</td>
+<td>Indicaciones de entrega (4.3), rúbrica de evaluación (4.6).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="16-motivacion-de-la-sesion">1.6 Motivación de la sesión<a class="headerlink" href="#16-motivacion-de-la-sesion" title="Permanent link">&para;</a></h3>
+<h4 id="161-caso-el-reporte-que-devolvio-null">1.6.1 Caso: el reporte que devolvió null<a class="headerlink" href="#161-caso-el-reporte-que-devolvio-null" title="Permanent link">&para;</a></h4>
+<p>Un gerente revisa el dashboard de ventas del mes y filtra por una fecha en la que, esa semana, todavía no se registró ninguna venta. La pantalla muestra <code>montoTotal: null</code> en vez de <code>montoTotal: 0</code>. El frontend, que esperaba un número para hacer un cálculo, se rompe silenciosamente o muestra <code>NaN</code>. Nadie programó ese error a propósito: <code>SUM()</code> en SQL simplemente devuelve <code>NULL</code> cuando no hay filas que sumar, no <code>0</code> — es una propiedad conocida y documentada del lenguaje, no un bug de la base de datos.</p>
+<p>Esta sesión no solo construye el reporte: prueba explícitamente el caso sin resultados, el que casi nunca se prueba, y lo obliga a devolver <code>0</code>, no <code>null</code>.</p>
+<p><strong>Preguntas de análisis</strong></p>
+<p><strong>Activación de conocimientos previos</strong></p>
+<ol>
+<li>En S3, <code>ProductoRepository.findByCategoriaId(Long)</code> ya filtraba por un solo criterio, siempre obligatorio. ¿Qué cambia cuando el filtro combina varios criterios, todos opcionales?</li>
+</ol>
+<p><strong>Comprensión de proyecciones y agregaciones</strong></p>
+<ol>
+<li>Si no hay ninguna venta en el rango de fechas consultado, ¿qué debería devolver <code>montoTotal</code>: <code>null</code> o <code>0</code>? ¿Por qué le importa esa diferencia a quien consume la API?</li>
+<li><code>SIZE(v.detalles)</code> en una proyección de resumen no carga la colección <code>detalles</code> en memoria. ¿Por qué eso hace la consulta más liviana que <code>GET /api/v1/ventas/{id}</code>?</li>
+</ol>
+<h3 id="17-ubicacion-en-el-curso">1.7 Ubicación en el curso<a class="headerlink" href="#17-ubicacion-en-el-curso" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Unidad: U1 - Base backend REST modular de BomERP.</li>
+<li>Producto del curso: base Full-Stack modular de BomERP.</li>
+<li>Producto de unidad: base backend modular de BomERP, con módulos de Catálogo, Inventario, Ventas y Compras delimitados.</li>
+<li>Avance del producto en esta sesión: <code>ventas</code> gana consultas con filtros, orden y reporte agregado; el backend queda listo para que un frontend (S7) lo consuma sin bloqueo de CORS.</li>
+</ul>
+<p>Roadmap del producto de la unidad:</p>
+<p><strong>Figura 1. Roadmap del producto de la unidad</strong></p>
+<pre class="mermaid"><code>flowchart TB
+    S1["`**S1:** Arquitectura backend REST profesional`"]
+    S2["`**S2:** CRUD REST completo de Producto`"]
+    S3["`**S3:** Objetos relacionados Categoria-Producto`"]
+    S4["`**S4:** Operación cabecera-detalle`"]
+    S5["`**S5:** Consultas y reportes`"]
+    S6["`**S6:** Producto U1`"]
+
+    S1 --&gt; S2 --&gt; S3 --&gt; S4 --&gt; S5 --&gt; S6
+
+    classDef today fill:#ffe08a,stroke:#9a6b00,stroke-width:2px,color:#111;
+    class S5 today;</code></pre>
+<h2 id="2-explica">2. Explica<a class="headerlink" href="#2-explica" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 30 min.</p>
+<h3 id="21-arquitectura-de-la-sesion">2.1 Arquitectura de la sesión<a class="headerlink" href="#21-arquitectura-de-la-sesion" title="Permanent link">&para;</a></h3>
+<p><strong>Figura 2. Flujo de consulta filtrada y de reporte agregado</strong></p>
+<pre class="mermaid"><code>flowchart TB
+    C[Cliente HTTP&lt;br/&gt;navegador o consola]
+    CORS[CorsConfig&lt;br/&gt;valida el origen]
+    VC[VentaController]
+    VS[VentaServiceImpl]
+    VR[VentaRepository]
+    DB[(BOM_VENTAS)]
+
+    C --&gt;|"preflight OPTIONS, si es cross-origin"| CORS
+    CORS --&gt; VC
+    VC --&gt;|"GET /api/v1/ventas?filtros"| VS
+    VC --&gt;|"GET /api/v1/ventas/resumen?filtros"| VS
+    VS --&gt;|"buscar(): entidades + Sort"| VR
+    VS --&gt;|"agregados() + buscarResumen(): proyecciones"| VR
+    VR --&gt;|"JPQL con parametros opcionales"| DB</code></pre>
+<p><code>GET /api/v1/ventas</code> sigue devolviendo la entidad completa mapeada (con sus <code>detalles</code>), ahora filtrable y ordenable. <code>GET /api/v1/ventas/resumen</code> no reutiliza esa consulta: usa dos proyecciones distintas, más livianas, pensadas solo para lectura de reporte.</p>
+<h3 id="22-filtros-combinados-con-parametros-opcionales">2.2 Filtros combinados con parámetros opcionales<a class="headerlink" href="#22-filtros-combinados-con-parametros-opcionales" title="Permanent link">&para;</a></h3>
+<p>Hasta ahora (S1-S4), cada consulta se resolvió con el nombre del método (<code>findByCategoriaId</code>, S3): Spring Data genera solo la consulta a partir de ese nombre, sin escribir nada más. Un filtro combinado y opcional ya no se puede expresar con un nombre de método — necesita su propia consulta, escrita a mano con <code>@Query</code>.</p>
+<p><code>@Query</code> recibe JPQL (<em>Jakarta Persistence Query Language</em>), no SQL: <code>FROM Venta v</code> nombra la <strong>entidad</strong> Java <code>Venta</code>, no la tabla Oracle <code>VENTAS</code>; <code>v.estado</code> nombra un <strong>atributo</strong> de esa entidad, no una columna — Spring Data traduce esa JPQL a SQL real recién al ejecutarla, el mismo motor de traducción que ya usa por detrás cualquier método derivado. Los <code>:estado</code>, <code>:desde</code> y <code>:hasta</code> que aparecen en el texto de la consulta son parámetros con nombre; <code>@Param("estado")</code> en la firma del método es lo que conecta cada uno con su parámetro Java — sin <code>@Param</code>, Spring Data no sabría qué valor corresponde a cada nombre dentro del texto.</p>
+<p>Encadenar métodos derivados (<code>findByEstado</code>, <code>findByFechaBetween</code>, <code>findByEstadoAndFechaBetween</code>...) por cada combinación de filtros crece combinatoriamente: tres filtros opcionales ya son ocho combinaciones posibles. La alternativa es una sola consulta JPQL donde cada filtro se auto-anula cuando no se envía:</p>
+<div class="highlight"><pre><span></span><code>WHERE (:estado IS NULL OR v.estado = :estado)
+  AND (:desde IS NULL OR v.fecha &gt;= :desde)
+  AND (:hasta IS NULL OR v.fecha &lt;= :hasta)
+</code></pre></div>
+<p>Cuando un parámetro llega <code>null</code>, la condición <code>:param IS NULL</code> es verdadera y esa cláusula no filtra nada; cuando llega con valor, filtra normalmente. Una sola consulta cubre las ocho combinaciones.</p>
+<p><strong><code>@EntityGraph</code> sobre una consulta propia, no solo sobre un método heredado.</strong> S3 (2.6) ya usó <code>@EntityGraph</code> para evitar el problema N+1, siempre sobre un método que Spring Data generaba solo (<code>findAll()</code>). La consulta de filtros combina las dos cosas: el texto de la consulta lo escribes tú (<code>@Query</code>, arriba), y la carga optimizada de la colección <code>detalles</code> la sigue resolviendo <code>@EntityGraph</code>, aplicada sobre el resultado de esa misma consulta — no hace falta escribir <code>JOIN FETCH</code> a mano para lograr lo mismo que ya resolvía S3.</p>
+<h3 id="23-ordenamiento-con-sort">2.3 Ordenamiento con <code>Sort</code><a class="headerlink" href="#23-ordenamiento-con-sort" title="Permanent link">&para;</a></h3>
+<p>Un método de repositorio anotado con <code>@Query</code> puede recibir un parámetro <code>Sort</code> adicional: Spring Data lo traduce en una cláusula <code>ORDER BY</code> sobre el <strong>tipo de la entidad consultada</strong>, no sobre el DTO de salida. Pedir orden por un campo que no existe en <code>Venta</code> (por ejemplo, un campo que solo existe en la proyección de resumen) falla en tiempo de ejecución, no en compilación — se retoma en 3.7 como error frecuente.</p>
+<h3 id="24-proyecciones-dto-de-reporte-en-vez-de-la-entidad-completa">2.4 Proyecciones: DTO de reporte en vez de la entidad completa<a class="headerlink" href="#24-proyecciones-dto-de-reporte-en-vez-de-la-entidad-completa" title="Permanent link">&para;</a></h3>
+<p>Una expresión de constructor JPQL (<code>SELECT new paquete.Clase(...)</code>) arma directamente un DTO desde la consulta, sin pasar por la entidad ni por su grafo de relaciones:</p>
+<div class="highlight"><pre><span></span><code>SELECT new pe.edu.upeu.bomerp.ventas.venta.dto.VentaResumen(
+    v.id, v.fecha, v.estado, v.total, SIZE(v.detalles))
+FROM Venta v
+</code></pre></div>
+<p><code>SIZE(v.detalles)</code> cuenta las filas de <code>DETALLE_VENTAS</code> en la propia base de datos; nunca carga la colección en memoria. Usa la entidad completa (<code>VentaResponse</code>, con <code>detalles</code>) cuando el cliente necesita accionar sobre cada línea; usa una proyección cuando solo necesita leer un resumen — un reporte de cien ventas con detalle completo carga cientos de filas de <code>DETALLE_VENTAS</code> que nadie va a mostrar.</p>
+<p>Por la misma razón, esta consulta no lleva <code>@EntityGraph</code> (2.2): no devuelve la entidad <code>Venta</code> con su colección <code>detalles</code>, devuelve un DTO ya armado por la propia consulta — no hay ninguna colección perezosa que optimizar, porque no hay ninguna colección en el resultado.</p>
+<h3 id="25-agregaciones-con-funciones-jpql">2.5 Agregaciones con funciones JPQL<a class="headerlink" href="#25-agregaciones-con-funciones-jpql" title="Permanent link">&para;</a></h3>
+<p><code>COUNT</code>, <code>SUM</code> y <code>AVG</code> también pueden combinarse en una expresión de constructor, siempre que la consulta no mezcle columnas agregadas con columnas sueltas sin <code>GROUP BY</code>:</p>
+<div class="highlight"><pre><span></span><code>SELECT new pe.edu.upeu.bomerp.ventas.venta.dto.VentaAgregado(
+    COUNT(v), COALESCE(SUM(v.total), 0), COALESCE(AVG(v.total), 0))
+FROM Venta v
+</code></pre></div>
+<p><code>COALESCE(expresion, 0)</code> devuelve <code>0</code> cuando <code>expresion</code> es <code>NULL</code> — exactamente el caso de 1.6.1: sin filas que sumar, <code>SUM</code>/<code>AVG</code> son <code>NULL</code> por definición del lenguaje, y <code>COALESCE</code> es lo que evita propagar ese <code>null</code> hasta el cliente.</p>
+<h3 id="26-cors-que-protege-el-navegador-y-que-no-protege">2.6 CORS: qué protege el navegador y qué no protege<a class="headerlink" href="#26-cors-que-protege-el-navegador-y-que-no-protege" title="Permanent link">&para;</a></h3>
+<p>CORS (<em>Cross-Origin Resource Sharing</em>) es una restricción que aplica el <strong>navegador</strong>, no el servidor. Cuando una página cargada desde un origen (por ejemplo, <code>http://localhost:4200</code>) hace <code>fetch</code> a otro origen (<code>http://localhost:8080</code>), el navegador exige que el servidor declare explícitamente ese origen como permitido; si no lo hace, el navegador descarta la respuesta antes de que el JavaScript de la página la vea — la petición HTTP sí llegó y sí se ejecutó en el servidor, la protección ocurre después, en el navegador.</p>
+<p>Por eso <code>curl</code>, Postman o <code>Invoke-RestMethod</code> nunca muestran un error de CORS: ninguno de los dos es un navegador ejecutando JavaScript de una página, así que ninguno aplica esa restricción. Confirmar CORS exige probar desde un navegador real (3.8).</p>
+<h2 id="3-aplica-actividad-practica-guiada">3. Aplica: actividad práctica guiada<a class="headerlink" href="#3-aplica-actividad-practica-guiada" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 90 min.</p>
+<h3 id="31-verificar-el-punto-de-partida">3.1 Verificar el punto de partida<a class="headerlink" href="#31-verificar-el-punto-de-partida" title="Permanent link">&para;</a></h3>
+<p><strong>Punto de partida común:</strong> todo el equipo debe comenzar exactamente desde donde quedó S4, no desde su propio avance individual. Clona la rama <code>s04-operacion-cabecera-detalle</code> (el snapshot de cierre de S4):</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>--branch<span class="w"> </span>s04-operacion-cabecera-detalle<span class="w"> </span>https://github.com/262ciclo4/bomerp.git
+</code></pre></div>
+<p><strong>Producto del paso:</strong> confirmación de que <code>POST /api/v1/ventas</code> sigue registrando ventas correctamente antes de tocar código nuevo.</p>
+<p><strong>Requisito antes de continuar:</strong> confirma que <code>http://localhost:8080/api/v1/ventas</code> responde con datos antes de continuar. Si falla, el problema es de una sesión anterior, no de esta.</p>
+<p><strong>Dato de prueba necesario para esta sesión:</strong> los filtros y el reporte solo se pueden verificar con datos que los distingan. Registra al menos tres ventas más con <code>POST /api/v1/ventas</code> (3.10 de S4), variando la cantidad de detalles y dejando que ocurran en momentos distintos, para tener suficiente variedad al filtrar y ordenar en 3.7.</p>
+<h3 id="32-ampliar-ventarepository-con-filtros-orden-proyeccion-y-agregado">3.2 Ampliar <code>VentaRepository</code> con filtros, orden, proyección y agregado<a class="headerlink" href="#32-ampliar-ventarepository-con-filtros-orden-proyeccion-y-agregado" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> tres métodos nuevos en el repositorio: consulta filtrable/ordenable de entidades completas, proyección de resumen y agregado.</p>
+<p><strong><code>ventas/venta/repository/VentaRepository.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.repository</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.data.domain.Sort</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.data.jpa.repository.EntityGraph</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.data.jpa.repository.JpaRepository</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.data.jpa.repository.Query</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.data.repository.query.Param</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.dto.VentaAgregado</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.dto.VentaResumen</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.entity.EstadoVenta</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.entity.Venta</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.time.LocalDateTime</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Optional</span><span class="p">;</span>
+
+<span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">VentaRepository</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">JpaRepository</span><span class="o">&lt;</span><span class="n">Venta</span><span class="p">,</span><span class="w"> </span><span class="n">Long</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="nd">@EntityGraph</span><span class="p">(</span><span class="n">attributePaths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"detalles"</span><span class="p">)</span>
+<span class="w">    </span><span class="n">Optional</span><span class="o">&lt;</span><span class="n">Venta</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">findById</span><span class="p">(</span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">);</span>
+
+<span class="w">    </span><span class="nd">@EntityGraph</span><span class="p">(</span><span class="n">attributePaths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"detalles"</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@Query</span><span class="p">(</span><span class="s">"""</span>
+<span class="s">        SELECT v FROM Venta v</span>
+<span class="s">        WHERE (:estado IS NULL OR v.estado = :estado)</span>
+<span class="s">          AND (:desde IS NULL OR v.fecha &gt;= :desde)</span>
+<span class="s">          AND (:hasta IS NULL OR v.fecha &lt;= :hasta)</span>
+<span class="s">        """</span><span class="p">)</span>
+<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Venta</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">buscar</span><span class="p">(</span><span class="nd">@Param</span><span class="p">(</span><span class="s">"estado"</span><span class="p">)</span><span class="w"> </span><span class="n">EstadoVenta</span><span class="w"> </span><span class="n">estado</span><span class="p">,</span>
+<span class="w">                        </span><span class="nd">@Param</span><span class="p">(</span><span class="s">"desde"</span><span class="p">)</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">desde</span><span class="p">,</span>
+<span class="w">                        </span><span class="nd">@Param</span><span class="p">(</span><span class="s">"hasta"</span><span class="p">)</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">hasta</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">Sort</span><span class="w"> </span><span class="n">sort</span><span class="p">);</span>
+
+<span class="w">    </span><span class="nd">@Query</span><span class="p">(</span><span class="s">"""</span>
+<span class="s">        SELECT new pe.edu.upeu.bomerp.ventas.venta.dto.VentaResumen(</span>
+<span class="s">            v.id, v.fecha, v.estado, v.total, SIZE(v.detalles))</span>
+<span class="s">        FROM Venta v</span>
+<span class="s">        WHERE (:estado IS NULL OR v.estado = :estado)</span>
+<span class="s">          AND (:desde IS NULL OR v.fecha &gt;= :desde)</span>
+<span class="s">          AND (:hasta IS NULL OR v.fecha &lt;= :hasta)</span>
+<span class="s">        """</span><span class="p">)</span>
+<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">VentaResumen</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">buscarResumen</span><span class="p">(</span><span class="nd">@Param</span><span class="p">(</span><span class="s">"estado"</span><span class="p">)</span><span class="w"> </span><span class="n">EstadoVenta</span><span class="w"> </span><span class="n">estado</span><span class="p">,</span>
+<span class="w">                                      </span><span class="nd">@Param</span><span class="p">(</span><span class="s">"desde"</span><span class="p">)</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">desde</span><span class="p">,</span>
+<span class="w">                                      </span><span class="nd">@Param</span><span class="p">(</span><span class="s">"hasta"</span><span class="p">)</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">hasta</span><span class="p">,</span>
+<span class="w">                                      </span><span class="n">Sort</span><span class="w"> </span><span class="n">sort</span><span class="p">);</span>
+
+<span class="w">    </span><span class="nd">@Query</span><span class="p">(</span><span class="s">"""</span>
+<span class="s">        SELECT new pe.edu.upeu.bomerp.ventas.venta.dto.VentaAgregado(</span>
+<span class="s">            COUNT(v), COALESCE(SUM(v.total), 0), COALESCE(AVG(v.total), 0))</span>
+<span class="s">        FROM Venta v</span>
+<span class="s">        WHERE (:estado IS NULL OR v.estado = :estado)</span>
+<span class="s">          AND (:desde IS NULL OR v.fecha &gt;= :desde)</span>
+<span class="s">          AND (:hasta IS NULL OR v.fecha &lt;= :hasta)</span>
+<span class="s">        """</span><span class="p">)</span>
+<span class="w">    </span><span class="n">VentaAgregado</span><span class="w"> </span><span class="nf">agregados</span><span class="p">(</span><span class="nd">@Param</span><span class="p">(</span><span class="s">"estado"</span><span class="p">)</span><span class="w"> </span><span class="n">EstadoVenta</span><span class="w"> </span><span class="n">estado</span><span class="p">,</span>
+<span class="w">                             </span><span class="nd">@Param</span><span class="p">(</span><span class="s">"desde"</span><span class="p">)</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">desde</span><span class="p">,</span>
+<span class="w">                             </span><span class="nd">@Param</span><span class="p">(</span><span class="s">"hasta"</span><span class="p">)</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">hasta</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>findAll()</code> (S4) desaparece: <code>buscar()</code> con los tres parámetros en <code>null</code> produce el mismo resultado (todas las ventas, sin filtrar), así que ya no hace falta mantener las dos consultas por separado.</p>
+<h3 id="33-crear-los-dto-de-reporte-ventaresumen-ventaagregado-y-ventareporte">3.3 Crear los DTO de reporte: <code>VentaResumen</code>, <code>VentaAgregado</code> y <code>VentaReporte</code><a class="headerlink" href="#33-crear-los-dto-de-reporte-ventaresumen-ventaagregado-y-ventareporte" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> los tres DTO que arman las expresiones de constructor de 3.2 y la respuesta final del endpoint de reporte.</p>
+<p><strong><code>ventas/venta/dto/VentaResumen.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.dto</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Getter</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.entity.EstadoVenta</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.math.BigDecimal</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.time.LocalDateTime</span><span class="p">;</span>
+
+<span class="nd">@Getter</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">VentaResumen</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">fecha</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">estado</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">total</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">cantidadDetalles</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">VentaResumen</span><span class="p">(</span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">fecha</span><span class="p">,</span><span class="w"> </span><span class="n">EstadoVenta</span><span class="w"> </span><span class="n">estado</span><span class="p">,</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">total</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">cantidadDetalles</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">fecha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fecha</span><span class="p">;</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">estado</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">estado</span><span class="p">.</span><span class="na">name</span><span class="p">();</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">total</span><span class="p">;</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">cantidadDetalles</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cantidadDetalles</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong><code>ventas/venta/dto/VentaAgregado.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.dto</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.AllArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Getter</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.math.BigDecimal</span><span class="p">;</span>
+
+<span class="nd">@Getter</span>
+<span class="nd">@AllArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">VentaAgregado</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">totalVentas</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">montoTotal</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">ticketPromedio</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong><code>ventas/venta/dto/VentaReporte.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.dto</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.AllArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Getter</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+
+<span class="nd">@Getter</span>
+<span class="nd">@AllArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">VentaReporte</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">VentaAgregado</span><span class="w"> </span><span class="n">agregado</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">VentaResumen</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ventas</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>VentaResumen</code> recibe <code>EstadoVenta</code> en el constructor (el tipo real de la columna en la consulta JPQL) y lo convierte a <code>String</code> con <code>.name()</code> para exponerlo — el mismo criterio que ya usa <code>VentaResponse</code> (S4).</p>
+<h3 id="34-ampliar-ventaserviceventaserviceimpl">3.4 Ampliar <code>VentaService</code>/<code>VentaServiceImpl</code><a class="headerlink" href="#34-ampliar-ventaserviceventaserviceimpl" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> <code>listar()</code> se reemplaza por <code>buscar()</code> con filtros y orden; se agrega <code>reporte()</code>.</p>
+<p><strong><code>ventas/venta/service/VentaService.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.service</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.dto.VentaReporte</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.dto.VentaRequest</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.dto.VentaResponse</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.entity.EstadoVenta</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.time.LocalDateTime</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+
+<span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">VentaService</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">VentaResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">buscar</span><span class="p">(</span><span class="n">EstadoVenta</span><span class="w"> </span><span class="n">estado</span><span class="p">,</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">desde</span><span class="p">,</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">hasta</span><span class="p">,</span>
+<span class="w">                                </span><span class="n">String</span><span class="w"> </span><span class="n">ordenarPor</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">direccion</span><span class="p">);</span>
+<span class="w">    </span><span class="n">VentaResponse</span><span class="w"> </span><span class="nf">obtener</span><span class="p">(</span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">);</span>
+<span class="w">    </span><span class="n">VentaResponse</span><span class="w"> </span><span class="nf">crear</span><span class="p">(</span><span class="n">VentaRequest</span><span class="w"> </span><span class="n">request</span><span class="p">);</span>
+<span class="w">    </span><span class="n">VentaReporte</span><span class="w"> </span><span class="nf">reporte</span><span class="p">(</span><span class="n">EstadoVenta</span><span class="w"> </span><span class="n">estado</span><span class="p">,</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">desde</span><span class="p">,</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">hasta</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong><code>ventas/venta/service/VentaServiceImpl.java</code></strong> (agrega estos dos métodos y quita <code>listar()</code>; <code>obtener()</code> y <code>crear()</code> no cambian)</p>
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="nd">@Transactional</span><span class="p">(</span><span class="n">readOnly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">VentaResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">buscar</span><span class="p">(</span><span class="n">EstadoVenta</span><span class="w"> </span><span class="n">estado</span><span class="p">,</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">desde</span><span class="p">,</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">hasta</span><span class="p">,</span>
+<span class="w">                                       </span><span class="n">String</span><span class="w"> </span><span class="n">ordenarPor</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">direccion</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Sort</span><span class="p">.</span><span class="na">Direction</span><span class="w"> </span><span class="n">dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"ASC"</span><span class="p">.</span><span class="na">equalsIgnoreCase</span><span class="p">(</span><span class="n">direccion</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">Sort</span><span class="p">.</span><span class="na">Direction</span><span class="p">.</span><span class="na">ASC</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Sort</span><span class="p">.</span><span class="na">Direction</span><span class="p">.</span><span class="na">DESC</span><span class="p">;</span>
+<span class="w">        </span><span class="n">Sort</span><span class="w"> </span><span class="n">sort</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Sort</span><span class="p">.</span><span class="na">by</span><span class="p">(</span><span class="n">dir</span><span class="p">,</span><span class="w"> </span><span class="n">ordenarPor</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ventaRepository</span><span class="p">.</span><span class="na">buscar</span><span class="p">(</span><span class="n">estado</span><span class="p">,</span><span class="w"> </span><span class="n">desde</span><span class="p">,</span><span class="w"> </span><span class="n">hasta</span><span class="p">,</span><span class="w"> </span><span class="n">sort</span><span class="p">).</span><span class="na">stream</span><span class="p">().</span><span class="na">map</span><span class="p">(</span><span class="n">ventaMapper</span><span class="p">::</span><span class="n">toResponse</span><span class="p">).</span><span class="na">toList</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="nd">@Transactional</span><span class="p">(</span><span class="n">readOnly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">VentaReporte</span><span class="w"> </span><span class="nf">reporte</span><span class="p">(</span><span class="n">EstadoVenta</span><span class="w"> </span><span class="n">estado</span><span class="p">,</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">desde</span><span class="p">,</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">hasta</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">VentaAgregado</span><span class="w"> </span><span class="n">agregado</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ventaRepository</span><span class="p">.</span><span class="na">agregados</span><span class="p">(</span><span class="n">estado</span><span class="p">,</span><span class="w"> </span><span class="n">desde</span><span class="p">,</span><span class="w"> </span><span class="n">hasta</span><span class="p">);</span>
+<span class="w">        </span><span class="n">Sort</span><span class="w"> </span><span class="n">sort</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Sort</span><span class="p">.</span><span class="na">by</span><span class="p">(</span><span class="n">Sort</span><span class="p">.</span><span class="na">Direction</span><span class="p">.</span><span class="na">DESC</span><span class="p">,</span><span class="w"> </span><span class="s">"fecha"</span><span class="p">);</span>
+<span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="n">VentaResumen</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ventas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ventaRepository</span><span class="p">.</span><span class="na">buscarResumen</span><span class="p">(</span><span class="n">estado</span><span class="p">,</span><span class="w"> </span><span class="n">desde</span><span class="p">,</span><span class="w"> </span><span class="n">hasta</span><span class="p">,</span><span class="w"> </span><span class="n">sort</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">VentaReporte</span><span class="p">(</span><span class="n">agregado</span><span class="p">,</span><span class="w"> </span><span class="n">ventas</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+<p>Agrega los imports que falten: <code>org.springframework.data.domain.Sort</code>, <code>pe.edu.upeu.bomerp.ventas.venta.dto.VentaAgregado</code>, <code>pe.edu.upeu.bomerp.ventas.venta.dto.VentaReporte</code> y <code>pe.edu.upeu.bomerp.ventas.venta.dto.VentaResumen</code>.</p>
+<p><code>reporte()</code> hace dos consultas, no una: <code>agregados()</code> (una fila con <code>COUNT</code>/<code>SUM</code>/<code>AVG</code>) y <code>buscarResumen()</code> (una fila por venta) no se pueden combinar en una sola consulta JPQL sin <code>GROUP BY</code> — mezclar una columna agregada con columnas sueltas de la misma fila no es válido en SQL/JPQL.</p>
+<h3 id="35-ampliar-ventacontroller">3.5 Ampliar <code>VentaController</code><a class="headerlink" href="#35-ampliar-ventacontroller" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> <code>GET /api/v1/ventas</code> acepta filtros y orden opcionales; nuevo <code>GET /api/v1/ventas/resumen</code>.</p>
+<p><strong><code>ventas/venta/controller/VentaController.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.controller</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">io.swagger.v3.oas.annotations.Operation</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io.swagger.v3.oas.annotations.tags.Tag</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.validation.Valid</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.RequiredArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.extern.slf4j.Slf4j</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.format.annotation.DateTimeFormat</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.http.HttpStatus</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.http.ResponseEntity</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.bind.annotation.*</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.dto.VentaReporte</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.dto.VentaRequest</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.dto.VentaResponse</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.entity.EstadoVenta</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.service.VentaService</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.time.LocalDateTime</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+
+<span class="nd">@Slf4j</span>
+<span class="nd">@Tag</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Ventas"</span><span class="p">)</span>
+<span class="nd">@RestController</span>
+<span class="nd">@RequestMapping</span><span class="p">(</span><span class="s">"/api/v1/ventas"</span><span class="p">)</span>
+<span class="nd">@RequiredArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">VentaController</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">VentaService</span><span class="w"> </span><span class="n">ventaService</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Operation</span><span class="p">(</span><span class="n">summary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Consulta ventas con filtros combinados y ordenamiento opcionales"</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@GetMapping</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">VentaResponse</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="nf">buscar</span><span class="p">(</span>
+<span class="w">            </span><span class="nd">@RequestParam</span><span class="p">(</span><span class="n">required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span><span class="w"> </span><span class="n">EstadoVenta</span><span class="w"> </span><span class="n">estado</span><span class="p">,</span>
+<span class="w">            </span><span class="nd">@RequestParam</span><span class="p">(</span><span class="n">required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span><span class="w"> </span><span class="nd">@DateTimeFormat</span><span class="p">(</span><span class="n">iso</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DateTimeFormat</span><span class="p">.</span><span class="na">ISO</span><span class="p">.</span><span class="na">DATE_TIME</span><span class="p">)</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">desde</span><span class="p">,</span>
+<span class="w">            </span><span class="nd">@RequestParam</span><span class="p">(</span><span class="n">required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span><span class="w"> </span><span class="nd">@DateTimeFormat</span><span class="p">(</span><span class="n">iso</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DateTimeFormat</span><span class="p">.</span><span class="na">ISO</span><span class="p">.</span><span class="na">DATE_TIME</span><span class="p">)</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">hasta</span><span class="p">,</span>
+<span class="w">            </span><span class="nd">@RequestParam</span><span class="p">(</span><span class="n">defaultValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"fecha"</span><span class="p">)</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">ordenarPor</span><span class="p">,</span>
+<span class="w">            </span><span class="nd">@RequestParam</span><span class="p">(</span><span class="n">defaultValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"DESC"</span><span class="p">)</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">direccion</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">log</span><span class="p">.</span><span class="na">info</span><span class="p">(</span><span class="s">"Consultando ventas estado={} desde={} hasta={} ordenarPor={} direccion={}"</span><span class="p">,</span>
+<span class="w">                </span><span class="n">estado</span><span class="p">,</span><span class="w"> </span><span class="n">desde</span><span class="p">,</span><span class="w"> </span><span class="n">hasta</span><span class="p">,</span><span class="w"> </span><span class="n">ordenarPor</span><span class="p">,</span><span class="w"> </span><span class="n">direccion</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">ok</span><span class="p">(</span><span class="n">ventaService</span><span class="p">.</span><span class="na">buscar</span><span class="p">(</span><span class="n">estado</span><span class="p">,</span><span class="w"> </span><span class="n">desde</span><span class="p">,</span><span class="w"> </span><span class="n">hasta</span><span class="p">,</span><span class="w"> </span><span class="n">ordenarPor</span><span class="p">,</span><span class="w"> </span><span class="n">direccion</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Operation</span><span class="p">(</span><span class="n">summary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Genera un reporte de ventas: agregados y detalle resumido"</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@GetMapping</span><span class="p">(</span><span class="s">"/resumen"</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">VentaReporte</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">resumen</span><span class="p">(</span>
+<span class="w">            </span><span class="nd">@RequestParam</span><span class="p">(</span><span class="n">required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span><span class="w"> </span><span class="n">EstadoVenta</span><span class="w"> </span><span class="n">estado</span><span class="p">,</span>
+<span class="w">            </span><span class="nd">@RequestParam</span><span class="p">(</span><span class="n">required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span><span class="w"> </span><span class="nd">@DateTimeFormat</span><span class="p">(</span><span class="n">iso</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DateTimeFormat</span><span class="p">.</span><span class="na">ISO</span><span class="p">.</span><span class="na">DATE_TIME</span><span class="p">)</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">desde</span><span class="p">,</span>
+<span class="w">            </span><span class="nd">@RequestParam</span><span class="p">(</span><span class="n">required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span><span class="w"> </span><span class="nd">@DateTimeFormat</span><span class="p">(</span><span class="n">iso</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DateTimeFormat</span><span class="p">.</span><span class="na">ISO</span><span class="p">.</span><span class="na">DATE_TIME</span><span class="p">)</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">hasta</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">ok</span><span class="p">(</span><span class="n">ventaService</span><span class="p">.</span><span class="na">reporte</span><span class="p">(</span><span class="n">estado</span><span class="p">,</span><span class="w"> </span><span class="n">desde</span><span class="p">,</span><span class="w"> </span><span class="n">hasta</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Operation</span><span class="p">(</span><span class="n">summary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Consulta una venta por id, con sus detalles"</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@GetMapping</span><span class="p">(</span><span class="s">"/{id}"</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">VentaResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">obtener</span><span class="p">(</span><span class="nd">@PathVariable</span><span class="w"> </span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">ok</span><span class="p">(</span><span class="n">ventaService</span><span class="p">.</span><span class="na">obtener</span><span class="p">(</span><span class="n">id</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Operation</span><span class="p">(</span><span class="n">summary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Registra una venta con sus detalles, descontando stock"</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@PostMapping</span>
+<span class="w">    </span><span class="nd">@ResponseStatus</span><span class="p">(</span><span class="n">HttpStatus</span><span class="p">.</span><span class="na">CREATED</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">VentaResponse</span><span class="w"> </span><span class="nf">crear</span><span class="p">(</span><span class="nd">@Valid</span><span class="w"> </span><span class="nd">@RequestBody</span><span class="w"> </span><span class="n">VentaRequest</span><span class="w"> </span><span class="n">request</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ventaService</span><span class="p">.</span><span class="na">crear</span><span class="p">(</span><span class="n">request</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>El método que antes se llamaba <code>listar()</code> ahora es <code>buscar()</code>, con los mismos parámetros que el servicio. <code>obtener()</code> y <code>crear()</code> no cambian.</p>
+<h3 id="36-configurar-cors-para-el-futuro-frontend">3.6 Configurar CORS para el futuro frontend<a class="headerlink" href="#36-configurar-cors-para-el-futuro-frontend" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> el backend acepta peticiones cross-origin desde <code>http://localhost:4200</code> (el puerto por defecto de Angular, que se usará desde S7), configurable por ambiente.</p>
+<p><strong><code>application-dev.yml</code></strong> (agrega al final)</p>
+<div class="highlight"><pre><span></span><code><span class="nt">bomerp</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">cors</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">allowed-origin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://localhost:4200</span>
+</code></pre></div>
+<p><strong><code>CorsConfig.java</code></strong> (nuevo, en la raíz del paquete <code>pe.edu.upeu.bomerp</code>, junto a <code>OpenApiConfig</code>)</p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.beans.factory.annotation.Value</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.context.annotation.Configuration</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.servlet.config.annotation.CorsRegistry</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.servlet.config.annotation.WebMvcConfigurer</span><span class="p">;</span>
+
+<span class="nd">@Configuration</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">CorsConfig</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">WebMvcConfigurer</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@Value</span><span class="p">(</span><span class="s">"${bomerp.cors.allowed-origin}"</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">allowedOrigin</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">addCorsMappings</span><span class="p">(</span><span class="n">CorsRegistry</span><span class="w"> </span><span class="n">registry</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">registry</span><span class="p">.</span><span class="na">addMapping</span><span class="p">(</span><span class="s">"/api/**"</span><span class="p">)</span>
+<span class="w">                </span><span class="p">.</span><span class="na">allowedOrigins</span><span class="p">(</span><span class="n">allowedOrigin</span><span class="p">)</span>
+<span class="w">                </span><span class="p">.</span><span class="na">allowedMethods</span><span class="p">(</span><span class="s">"GET"</span><span class="p">,</span><span class="w"> </span><span class="s">"POST"</span><span class="p">,</span><span class="w"> </span><span class="s">"PUT"</span><span class="p">,</span><span class="w"> </span><span class="s">"PATCH"</span><span class="p">,</span><span class="w"> </span><span class="s">"DELETE"</span><span class="p">)</span>
+<span class="w">                </span><span class="p">.</span><span class="na">allowedHeaders</span><span class="p">(</span><span class="s">"*"</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>El origen permitido queda en <code>application-dev.yml</code>, no fijo en el código: en producción va a ser otro dominio, y esta clase no debería cambiar entre ambientes — solo la propiedad. <code>allowedOrigins</code> exige un valor explícito y nunca <code>"*"</code> en este proyecto: S10 incorpora JWT, y un origen comodín es incompatible con credenciales (cookies o cabeceras de autenticación) en la especificación CORS.</p>
+<h3 id="37-probar-filtros-ordenamiento-y-el-reporte">3.7 Probar filtros, ordenamiento y el reporte<a class="headerlink" href="#37-probar-filtros-ordenamiento-y-el-reporte" title="Permanent link">&para;</a></h3>
+<p>Con el backend corriendo y al menos cuatro ventas registradas (3.1):</p>
+<div class="highlight"><pre><span></span><code><span class="c"># Sin filtros: todas las ventas, ordenadas por fecha descendente (valor por defecto)</span>
+<span class="nb">Invoke-RestMethod</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:8080/api/v1/ventas"</span>
+
+<span class="c"># Filtrar por estado</span>
+<span class="nb">Invoke-RestMethod</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:8080/api/v1/ventas?estado=REGISTRADA"</span>
+
+<span class="c"># Filtrar por rango de fechas (formato ISO completo, con hora)</span>
+<span class="nb">Invoke-RestMethod</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:8080/api/v1/ventas?desde=2026-09-01T00:00:00&amp;hasta=2026-09-30T23:59:59"</span>
+
+<span class="c"># Ordenar por total, ascendente</span>
+<span class="nb">Invoke-RestMethod</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:8080/api/v1/ventas?ordenarPor=total&amp;direccion=ASC"</span>
+
+<span class="c"># Reporte agregado de todas las ventas</span>
+<span class="nb">Invoke-RestMethod</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:8080/api/v1/ventas/resumen"</span>
+
+<span class="c"># Reporte agregado de un rango sin ventas (verifica que monto y ticket sean 0, no null)</span>
+<span class="nb">Invoke-RestMethod</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:8080/api/v1/ventas/resumen?desde=2020-01-01T00:00:00&amp;hasta=2020-01-02T00:00:00"</span>
+</code></pre></div>
+<p><strong>Error frecuente</strong>: pedir <code>ordenarPor=cantidadDetalles</code>. <code>cantidadDetalles</code> existe en <code>VentaResumen</code> (la proyección), no en <code>Venta</code> (la entidad que consulta <code>buscar()</code>); Spring Data valida <code>Sort</code> contra los campos de <code>Venta</code>, y responde con un error 500 y un mensaje de la forma <code>PropertyReferenceException: No property 'cantidadDetalles' found for type 'Venta'</code>. Los valores válidos de <code>ordenarPor</code> para <code>GET /api/v1/ventas</code> son los campos de <code>Venta</code>: <code>id</code>, <code>fecha</code>, <code>estado</code>, <code>total</code>.</p>
+<p><strong>Error frecuente</strong>: enviar <code>desde=2026-09-01</code> sin la hora. <code>@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)</code> exige el formato completo (<code>2026-09-01T00:00:00</code>); una fecha sin hora falla la conversión del parámetro y Spring responde <code>400 Bad Request</code> antes de que la petición llegue al controlador.</p>
+<h3 id="38-probar-cors">3.8 Probar CORS<a class="headerlink" href="#38-probar-cors" title="Permanent link">&para;</a></h3>
+<p>Ni <code>Invoke-RestMethod</code> ni Postman muestran un error de CORS (2.6) — hace falta un navegador ejecutando JavaScript desde otro origen. Como el frontend real recién se construye en S7, simula un origen distinto con un servidor estático mínimo:</p>
+<div class="highlight"><pre><span></span><code>mkdir<span class="w"> </span>origen-prueba
+<span class="nb">cd</span><span class="w"> </span>origen-prueba
+python<span class="w"> </span>-m<span class="w"> </span>http.server<span class="w"> </span><span class="m">5500</span>
+</code></pre></div>
+<p>Abre <code>http://localhost:5500</code> en el navegador, abre las herramientas de desarrollador (consola) y ejecuta:</p>
+<div class="highlight"><pre><span></span><code><span class="nx">fetch</span><span class="p">(</span><span class="s2">"http://localhost:8080/api/v1/ventas"</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="nx">r</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">r</span><span class="p">.</span><span class="nx">json</span><span class="p">()).</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
+</code></pre></div>
+<p><strong>Con <code>allowed-origin: http://localhost:4200</code></strong> (3.6), esta llamada desde <code>http://localhost:5500</code> debe fallar en la consola con un mensaje que menciona CORS y <code>Access-Control-Allow-Origin</code>. Cambia temporalmente la propiedad a <code>http://localhost:5500</code>, reinicia el backend y repite el <code>fetch</code>: ahora debe completarse y mostrar el arreglo de ventas en consola. Vuelve a dejar la propiedad en <code>http://localhost:4200</code> antes de continuar — es el puerto real que va a usar la SPA desde S7.</p>
+<h3 id="39-relacionar-con-ads-y-bd2">3.9 Relacionar con ADS y BD2<a class="headerlink" href="#39-relacionar-con-ads-y-bd2" title="Permanent link">&para;</a></h3>
+<p>Sesión equivalente en los otros dos cursos, misma semana: <a href="../../../ads/sesiones/S05_Evaluacion_Unidad_1/">ADS - S5 Evaluación de la Unidad I</a> evalúa lo construido en S1-S4, sin contenido nuevo esta semana. BD2 S5 construye índices B-Tree y por selectividad — los mismos campos que esta sesión usa para filtrar y ordenar (<code>ESTADO</code>, <code>FECHA</code>) son los candidatos naturales a indexar; sin ese índice, <code>GET /api/v1/ventas?estado=REGISTRADA</code> funciona igual desde el backend, pero Oracle recorre toda la tabla para resolverlo. BD2 todavía no publica su guía de S5.</p>
+<h2 id="4-crea-actividad-autonoma">4. Crea: actividad autónoma<a class="headerlink" href="#4-crea-actividad-autonoma" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 2h fuera del aula.</p>
+<h3 id="41-actividad">4.1 Actividad<a class="headerlink" href="#41-actividad" title="Permanent link">&para;</a></h3>
+<p>Replicación autónoma de consultas con filtros combinados, ordenamiento, proyección de reporte y CORS sobre el dominio elegido por el equipo, documentada en evidencia individual.</p>
+<p>Completa y evidencia estas tareas:</p>
+<ol>
+<li>Ampliar la consulta principal de tu propia operación con al menos dos filtros opcionales combinables y ordenamiento configurable.</li>
+<li>Crear una proyección de resumen (DTO con expresión de constructor) distinta de la entidad completa.</li>
+<li>Crear un endpoint de reporte agregado (conteo y al menos una función <code>SUM</code> o <code>AVG</code>), probando explícitamente el caso sin resultados.</li>
+<li>Configurar CORS para tu backend, con el origen leído desde configuración, no fijo en el código.</li>
+<li>Probar CORS desde un navegador real, no solo desde consola o Postman.</li>
+</ol>
+<h3 id="42-proposito">4.2 Propósito<a class="headerlink" href="#42-proposito" title="Permanent link">&para;</a></h3>
+<p>Que cada estudiante demuestre, de forma individual y fuera del aula, que puede construir consultas filtrables, proyecciones de reporte y CORS sin el acompañamiento del docente.</p>
+<p>Cada estudiante documenta las consultas y el reporte de su propio dominio.</p>
+<h3 id="43-indicaciones">4.3 Indicaciones<a class="headerlink" href="#43-indicaciones" title="Permanent link">&para;</a></h3>
+<p>Entrega un PDF con el siguiente nombre:</p>
+<div class="highlight"><pre><span></span><code>S05_LP2_Equipo##_ApellidoNombre.pdf
+</code></pre></div>
+<p>Cada captura de pantalla del informe debe mostrar, sin recortar, el reloj del sistema (fecha y hora) y tu usuario o foto de perfil (Windows, VS Code o navegador) visibles en pantalla — es lo que permite verificar que la evidencia es tuya y que corresponde al momento real de tu trabajo.</p>
+<h4 id="431-estructura-del-informe">4.3.1 Estructura del informe<a class="headerlink" href="#431-estructura-del-informe" title="Permanent link">&para;</a></h4>
+<p><strong>Datos del estudiante</strong></p>
+<ul>
+<li>Nombre:</li>
+<li>Equipo:</li>
+<li>Sesión: S05 - Consultas Empresariales, Reportes REST y CORS</li>
+<li>Rol o aporte realizado:</li>
+<li>Link de GitHub:</li>
+</ul>
+<p><strong>Evidencia técnica</strong></p>
+<p>Incluye capturas o salidas de consola con una breve explicación debajo de cada una, organizadas en los mismos 4 bloques de la rúbrica (4.6):</p>
+<ol>
+<li><em>Filtros combinados y ordenamiento</em><ul>
+<li>Al menos tres combinaciones de filtros distintas y un cambio de orden, con resultados evidenciados.</li>
+</ul>
+</li>
+<li><em>Proyección de resumen</em><ul>
+<li>El DTO de resumen y la consulta que lo arma con expresión de constructor.</li>
+</ul>
+</li>
+<li><em>Reporte agregado</em><ul>
+<li>El caso con resultados y el caso sin resultados (monto y promedio en <code>0</code>, no <code>null</code>).</li>
+</ul>
+</li>
+<li><em>CORS</em><ul>
+<li>El bloqueo desde un origen no permitido y la llamada exitosa desde el origen configurado, ambos desde un navegador real.</li>
+</ul>
+</li>
+</ol>
+<p><strong>Error o hallazgo</strong></p>
+<p>Describe al menos un hallazgo real: un filtro que no se combinó como esperabas, un <code>ordenarPor</code> inválido, un <code>null</code> que se filtró hasta la respuesta, o un bloqueo de CORS que tardaste en diagnosticar.</p>
+<p><strong>Reflexión técnica breve</strong></p>
+<p>Responde en 5 a 8 líneas:</p>
+<div class="highlight"><pre><span></span><code>¿Por qué CORS no protege tu API de un ataque hecho con curl o Postman,
+y qué SÍ protege entonces?
+</code></pre></div>
+<p><strong>Anexo: Feedback de la sesión</strong></p>
+<p>Pega esta página como la última hoja del PDF, con tus respuestas.</p>
+<ol>
+<li>¿Cuál es el aprendizaje más importante que te llevas de la clase de hoy?</li>
+<li>¿Qué punto de la clase te resultó más confuso o te dejó con dudas?</li>
+<li>¿Tienes alguna pregunta que te gustaría que sea respondida la siguiente clase?</li>
+<li>Sobre tu nivel de comprensión de la clase de hoy, marca una opción:<ul>
+<li>¡Entendido! - Lo domino y podría explicarlo.</li>
+<li>Más o menos. - Entendí la idea general, pero tengo dudas.</li>
+<li>Necesito ayuda. - Me siento perdido/a con este tema.</li>
+</ul>
+</li>
+<li>¿Cómo puedo ayudarte a comprender mejor el tema?</li>
+<li>Pensando en tu participación y esfuerzo en la clase de hoy, ¿cómo te autoevaluarías? Marca una opción:<ul>
+<li>Muy Comprometido/a: Me esforcé al máximo.</li>
+<li>Comprometido/a: Sé que podría haberme esforzado un poco más.</li>
+<li>Poco Comprometido/a: Hoy no di mi mejor esfuerzo.</li>
+</ul>
+</li>
+<li>Mi satisfacción con la clase fue... (califica del 1 al 10, donde 1 es insatisfecho y 10 es muy satisfecho).</li>
+</ol>
+<h3 id="44-criterios-minimos-de-aceptacion">4.4 Criterios mínimos de aceptación<a class="headerlink" href="#44-criterios-minimos-de-aceptacion" title="Permanent link">&para;</a></h3>
+<p>La evidencia individual se considera completa si:</p>
+<ul>
+<li>El archivo respeta el nombre solicitado.</li>
+<li>Implementa al menos dos filtros combinables opcionales y ordenamiento configurable, con resultados evidenciados.</li>
+<li>Implementa una proyección de resumen distinta de la entidad completa, con expresión de constructor.</li>
+<li>Implementa un reporte agregado, probando el caso con resultados y el caso sin resultados (<code>0</code>, no <code>null</code>).</li>
+<li>Configura CORS con el origen leído desde configuración, no fijo en el código.</li>
+<li>Prueba CORS desde un navegador real: un caso bloqueado y un caso permitido.</li>
+<li>Cada captura de la evidencia técnica muestra el reloj del sistema y el usuario/perfil visible, sin recortar.</li>
+<li>Las fechas y horas de las capturas son coherentes con el historial de commits de su repositorio en GitHub.</li>
+<li>Incluye un error o hallazgo técnico diagnosticado.</li>
+<li>Incluye la reflexión técnica breve solicitada.</li>
+<li>Incluye el Anexo de feedback de la sesión respondido, como última página del PDF.</li>
+</ul>
+<h3 id="45-preguntas-de-defensa">4.5 Preguntas de defensa<a class="headerlink" href="#45-preguntas-de-defensa" title="Permanent link">&para;</a></h3>
+<ol>
+<li>¿Por qué <code>(:estado IS NULL OR v.estado = :estado)</code> evita escribir una consulta por cada combinación de filtros?</li>
+<li>¿Por qué <code>Sort</code> valida sus propiedades contra <code>Venta</code> y no contra <code>VentaResumen</code>, si ambos aparecen en el mismo repositorio?</li>
+<li>¿Por qué <code>agregados()</code> y <code>buscarResumen()</code> son dos consultas separadas y no una sola?</li>
+<li>¿Por qué un bloqueo de CORS nunca aparece al probar con <code>Invoke-RestMethod</code> o Postman?</li>
+<li>Si tu operación autónoma (4.1) no usa <code>SUM</code> ni <code>AVG</code>, ¿qué otra función de agregación JPQL usaste, y por qué era la adecuada para tu dominio?</li>
+</ol>
+<h3 id="46-rubrica-de-evaluacion">4.6 Rúbrica de evaluación<a class="headerlink" href="#46-rubrica-de-evaluacion" title="Permanent link">&para;</a></h3>
+<p><strong>Tabla 2. Rúbrica de evaluación</strong></p>
+<table>
+<thead>
+<tr>
+<th>Criterio</th>
+<th style="text-align: right;">Peso (%)</th>
+<th>A (20 pts)</th>
+<th>B (15 pts)</th>
+<th>C (10 pts)</th>
+<th>D (5 pts)</th>
+<th style="text-align: right;">Nivel obtenido</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Filtros combinados y ordenamiento*</td>
+<td style="text-align: right;">25</td>
+<td>Al menos dos filtros combinables y orden configurable, evidenciados con resultados correctos.</td>
+<td>Filtros y orden presentes, con alguna combinación no evidenciada.</td>
+<td>Filtros u orden incompletos o parcialmente correctos.</td>
+<td>No implementa filtros combinables ni orden.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>2. Proyección y reporte agregado*</td>
+<td style="text-align: right;">25</td>
+<td>Proyección de resumen y reporte agregado correctos, con el caso sin resultados devolviendo <code>0</code>, no <code>null</code>.</td>
+<td>Proyección y reporte correctos, sin evidenciar el caso sin resultados.</td>
+<td>Proyección o reporte presentes pero con <code>null</code> sin resolver.</td>
+<td>No implementa proyección ni reporte agregado.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>3. CORS configurado y probado*</td>
+<td style="text-align: right;">25</td>
+<td>Origen configurado por propiedad, con caso bloqueado y caso permitido probados desde un navegador real.</td>
+<td>CORS configurado correctamente, con evidencia parcial de la prueba en navegador.</td>
+<td>CORS configurado pero probado solo con Postman/consola, sin navegador.</td>
+<td>No configura CORS.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>4. Evidencia y trazabilidad*</td>
+<td style="text-align: right;">25</td>
+<td>Evidencia completa, verificable y coherente con el historial de commits; hallazgo real diagnosticado.</td>
+<td>Evidencia mayormente completa, con alguna captura sin verificar.</td>
+<td>Evidencia parcial o poco verificable.</td>
+<td>No presenta evidencia suficiente.</td>
+<td style="text-align: right;"></td>
+</tr>
+</tbody>
+</table>
+<p>* Agregado manual.</p>
+<p>Nota final = suma de (<code>Peso</code> / 100 × <code>Puntos del nivel obtenido</code>) = ____ / 20.</p>
+<p>Para usar la rúbrica con IA, solicita:</p>
+<div class="highlight"><pre><span></span><code>Evalúa el PDF usando la rúbrica de la sesión.
+Para cada criterio selecciona el nivel obtenido usando la escala A=20, B=15, C=10, D=5 puntos.
+Justifica brevemente cada nivel asignado.
+Verifica que cada captura muestre reloj del sistema y usuario/perfil visible, y que las fechas sean coherentes con el historial de commits de GitHub. Si falta esta evidencia o hay inconsistencias, indícalo explícitamente antes de calificar.
+Calcula la nota final con la fórmula: suma de (Peso/100 × Puntos del nivel obtenido), directamente sobre 20.
+Indica 2 fortalezas y 2 recomendaciones.
+</code></pre></div>
+<h2 id="5-cierre">5. Cierre<a class="headerlink" href="#5-cierre" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 5 min.</p>
+<p><strong>Resumen breve:</strong> hoy <code>ventas</code> ganó consultas con filtros combinados y orden configurable, una proyección de reporte más liviana que la entidad completa, un endpoint de agregados que resuelve explícitamente el caso sin resultados, y CORS configurado por propiedad — probado desde un navegador real, no solo desde consola o Postman.</p>
+<p><strong>Dinámica participativa:</strong> en una ronda rápida, cada estudiante comparte en una frase el filtro o el orden que más le costó combinar correctamente.</p>
+<p><strong>Metacognición:</strong> cada estudiante responde el Anexo de feedback de la sesión, incluido en su evidencia individual (ver 4.3.1). El docente analiza esas respuestas con IA para identificar temas recurrentes o dudas comunes del equipo, y con esos indicadores construye el cierre real de la sesión — que se entrega al inicio de S6, no al final de esta clase.</p>
+<p><strong>Proyección:</strong> S6 no agrega funcionalidad nueva: integra <code>catalogo</code> y <code>ventas</code> como un solo producto de Unidad I y evalúa lo construido en S1-S5, en la misma semana en que ADS y BD2 ya cerraron o cierran su propia Unidad I.</p>
+<h2 id="bibliografia">Bibliografía<a class="headerlink" href="#bibliografia" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Spring Data. (2024). <em>Query Methods</em>. VMware. https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html</li>
+<li>Spring Data. (2024). <em>Projections</em>. VMware. https://docs.spring.io/spring-data/jpa/reference/repositories/projections.html</li>
+<li>Spring. (2024). <em>CORS</em>. VMware. https://docs.spring.io/spring-framework/reference/web/webmvc-cors.html</li>
+<li>MDN Web Docs. (2024). <em>Cross-Origin Resource Sharing (CORS)</em>. Mozilla. https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Angel Sullon @asullom - UPeU 2026
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.top", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

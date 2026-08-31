@@ -13,10 +13,10 @@
       
       
       
-        <link rel="prev" href="../../silabo_bd2_2026_2/">
+        <link rel="prev" href="../S04_Optimizacion_Consultas_SQL/">
       
       
-        <link rel="next" href="../S02_Triggers_DML_Auditoria/">
+        <link rel="next" href="../../../lp2/">
       
       
         
@@ -27,7 +27,7 @@
     
     
   
-    <title>BOM ERP - S1 - PL/SQL aplicado al negocio</title>
+    <title>BOM ERP - S5 - Índices para optimización</title>
   
 
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#s1-plsql-aplicado-al-negocio" class="md-skip">
+        <a href="#s5-indices-para-optimizacion" class="md-skip">
           Saltar a contenido
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              S1 - PL/SQL aplicado al negocio
+              S5 - Índices para optimización
             
           </span>
         </div>
@@ -1705,6 +1705,118 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../S01_PLSQL_Aplicado_Negocio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - PL/SQL aplicado al negocio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S02_Triggers_DML_Auditoria/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - Triggers DML y auditoría
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S03_Excepciones_Robustez/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S3 - Manejo de excepciones y robustez
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S04_Optimizacion_Consultas_SQL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S4 - Optimización de consultas SQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -1724,7 +1836,7 @@
   <span class="md-ellipsis">
     
   
-    S1 - PL/SQL aplicado al negocio
+    S5 - Índices para optimización
   
 
     
@@ -1742,7 +1854,7 @@
   <span class="md-ellipsis">
     
   
-    S1 - PL/SQL aplicado al negocio
+    S5 - Índices para optimización
   
 
     
@@ -1847,10 +1959,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#161-caso-catalogo-de-bomerp-categoriaproducto" class="md-nav__link">
+  <a href="#161-caso-el-indice-que-el-optimizador-nunca-uso" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1.6.1 Caso: catálogo de BomERP (Categoria–Producto)
+        1.6.1 Caso: el índice que el optimizador nunca usó
       
     </span>
   </a>
@@ -1902,10 +2014,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#22-creacion-del-esquema-y-las-tablas-base-del-caso-empresarial" class="md-nav__link">
+  <a href="#22-selectividad-la-metrica-que-decide-no-la-intuicion" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.2 Creación del esquema y las tablas base del caso empresarial
+        2.2 Selectividad: la métrica que decide, no la intuición
       
     </span>
   </a>
@@ -1913,10 +2025,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#23-procedimientos-plsql" class="md-nav__link">
+  <a href="#23-indice-b-tree" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.3 Procedimientos PL/SQL
+        2.3 Índice B-Tree
       
     </span>
   </a>
@@ -1924,10 +2036,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#24-funciones-plsql" class="md-nav__link">
+  <a href="#24-indice-bitmap" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.4 Funciones PL/SQL
+        2.4 Índice Bitmap
       
     </span>
   </a>
@@ -1935,10 +2047,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#25-parametros-in-out-e-in-out" class="md-nav__link">
+  <a href="#25-indice-function-based" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.5 Parámetros IN, OUT e IN OUT
+        2.5 Índice Function-Based
       
     </span>
   </a>
@@ -1963,10 +2075,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#31-definir-operacion-transaccional" class="md-nav__link">
+  <a href="#31-cargar-volumen-adicional-en-log_errores" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.1 Definir operación transaccional
+        3.1 Cargar volumen adicional en LOG_ERRORES
       
     </span>
   </a>
@@ -1974,22 +2086,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#32-crear-el-esquema-y-las-tablas-del-catalogo" class="md-nav__link">
+  <a href="#32-medir-la-selectividad-de-las-columnas-candidatas" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.2 Crear el esquema y las tablas del catálogo
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="3.2 Crear el esquema y las tablas del catálogo">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#ver-el-esquema-bom_catalogo-desde-el-cliente-grafico" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Ver el esquema BOM_CATALOGO desde el cliente gráfico
+        3.2 Medir la selectividad de las columnas candidatas
       
     </span>
   </a>
@@ -1997,10 +2097,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#si-necesitas-borrar-y-volver-a-crear-el-esquema" class="md-nav__link">
+  <a href="#33-crear-el-indice-b-tree-sobre-ventasfecha-y-comparar" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Si necesitas borrar y volver a crear el esquema
+        3.3 Crear el índice B-Tree sobre VENTAS.FECHA y comparar
       
     </span>
   </a>
@@ -2008,10 +2108,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#verificar-desde-terminal-sin-depender-del-cliente-grafico" class="md-nav__link">
+  <a href="#34-crear-el-indice-bitmap-sobre-log_erroresobjeto-y-comparar" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Verificar desde terminal, sin depender del cliente gráfico
+        3.4 Crear el índice Bitmap sobre LOG_ERRORES.OBJETO y comparar
       
     </span>
   </a>
@@ -2019,26 +2119,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ver-la-lista-de-tablas-creadas" class="md-nav__link">
+  <a href="#35-crear-el-indice-function-based-sobre-truncventasfecha-y-comparar" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Ver la lista de tablas creadas
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#33-crear-la-funcion-de-negocio-parametros-in" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3.3 Crear la función de negocio (parámetros IN)
+        3.5 Crear el índice Function-Based sobre TRUNC(VENTAS.FECHA) y comparar
       
     </span>
   </a>
@@ -2046,32 +2130,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#34-crear-el-procedimiento-de-registro-parametros-in-y-out" class="md-nav__link">
+  <a href="#36-verificar-un-indice-que-no-conviene-ventasestado" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.4 Crear el procedimiento de registro (parámetros IN y OUT)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#35-crear-el-procedimiento-de-ajuste-de-precio-parametro-in-out" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3.5 Crear el procedimiento de ajuste de precio (parámetro IN OUT)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#36-probar-funcion-y-procedimientos" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3.6 Probar función y procedimientos
+        3.6 Verificar un índice que no conviene: VENTAS.ESTADO
       
     </span>
   </a>
@@ -2220,118 +2282,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../S02_Triggers_DML_Auditoria/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    S2 - Triggers DML y auditoría
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../S03_Excepciones_Robustez/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    S3 - Manejo de excepciones y robustez
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../S04_Optimizacion_Consultas_SQL/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    S4 - Optimización de consultas SQL
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../S05_Indices_Optimizacion/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    S5 - Índices para optimización
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -3025,10 +2975,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#161-caso-catalogo-de-bomerp-categoriaproducto" class="md-nav__link">
+  <a href="#161-caso-el-indice-que-el-optimizador-nunca-uso" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1.6.1 Caso: catálogo de BomERP (Categoria–Producto)
+        1.6.1 Caso: el índice que el optimizador nunca usó
       
     </span>
   </a>
@@ -3080,10 +3030,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#22-creacion-del-esquema-y-las-tablas-base-del-caso-empresarial" class="md-nav__link">
+  <a href="#22-selectividad-la-metrica-que-decide-no-la-intuicion" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.2 Creación del esquema y las tablas base del caso empresarial
+        2.2 Selectividad: la métrica que decide, no la intuición
       
     </span>
   </a>
@@ -3091,10 +3041,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#23-procedimientos-plsql" class="md-nav__link">
+  <a href="#23-indice-b-tree" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.3 Procedimientos PL/SQL
+        2.3 Índice B-Tree
       
     </span>
   </a>
@@ -3102,10 +3052,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#24-funciones-plsql" class="md-nav__link">
+  <a href="#24-indice-bitmap" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.4 Funciones PL/SQL
+        2.4 Índice Bitmap
       
     </span>
   </a>
@@ -3113,10 +3063,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#25-parametros-in-out-e-in-out" class="md-nav__link">
+  <a href="#25-indice-function-based" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.5 Parámetros IN, OUT e IN OUT
+        2.5 Índice Function-Based
       
     </span>
   </a>
@@ -3141,10 +3091,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#31-definir-operacion-transaccional" class="md-nav__link">
+  <a href="#31-cargar-volumen-adicional-en-log_errores" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.1 Definir operación transaccional
+        3.1 Cargar volumen adicional en LOG_ERRORES
       
     </span>
   </a>
@@ -3152,22 +3102,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#32-crear-el-esquema-y-las-tablas-del-catalogo" class="md-nav__link">
+  <a href="#32-medir-la-selectividad-de-las-columnas-candidatas" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.2 Crear el esquema y las tablas del catálogo
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="3.2 Crear el esquema y las tablas del catálogo">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#ver-el-esquema-bom_catalogo-desde-el-cliente-grafico" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Ver el esquema BOM_CATALOGO desde el cliente gráfico
+        3.2 Medir la selectividad de las columnas candidatas
       
     </span>
   </a>
@@ -3175,10 +3113,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#si-necesitas-borrar-y-volver-a-crear-el-esquema" class="md-nav__link">
+  <a href="#33-crear-el-indice-b-tree-sobre-ventasfecha-y-comparar" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Si necesitas borrar y volver a crear el esquema
+        3.3 Crear el índice B-Tree sobre VENTAS.FECHA y comparar
       
     </span>
   </a>
@@ -3186,10 +3124,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#verificar-desde-terminal-sin-depender-del-cliente-grafico" class="md-nav__link">
+  <a href="#34-crear-el-indice-bitmap-sobre-log_erroresobjeto-y-comparar" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Verificar desde terminal, sin depender del cliente gráfico
+        3.4 Crear el índice Bitmap sobre LOG_ERRORES.OBJETO y comparar
       
     </span>
   </a>
@@ -3197,26 +3135,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ver-la-lista-de-tablas-creadas" class="md-nav__link">
+  <a href="#35-crear-el-indice-function-based-sobre-truncventasfecha-y-comparar" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Ver la lista de tablas creadas
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#33-crear-la-funcion-de-negocio-parametros-in" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3.3 Crear la función de negocio (parámetros IN)
+        3.5 Crear el índice Function-Based sobre TRUNC(VENTAS.FECHA) y comparar
       
     </span>
   </a>
@@ -3224,32 +3146,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#34-crear-el-procedimiento-de-registro-parametros-in-y-out" class="md-nav__link">
+  <a href="#36-verificar-un-indice-que-no-conviene-ventasestado" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.4 Crear el procedimiento de registro (parámetros IN y OUT)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#35-crear-el-procedimiento-de-ajuste-de-precio-parametro-in-out" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3.5 Crear el procedimiento de ajuste de precio (parámetro IN OUT)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#36-probar-funcion-y-procedimientos" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3.6 Probar función y procedimientos
+        3.6 Verificar un índice que no conviene: VENTAS.ESTADO
       
     </span>
   </a>
@@ -3414,25 +3314,25 @@
   
 
 
-<h1 id="s1-plsql-aplicado-al-negocio">S1 - PL/SQL Aplicado al Negocio<a class="headerlink" href="#s1-plsql-aplicado-al-negocio" title="Permanent link">&para;</a></h1>
+<h1 id="s5-indices-para-optimizacion">S5 - Índices para Optimización<a class="headerlink" href="#s5-indices-para-optimizacion" title="Permanent link">&para;</a></h1>
 <h2 id="1-introduccion">1. Introducción<a class="headerlink" href="#1-introduccion" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 20 min.</p>
 <h3 id="11-presentacion-de-la-sesion">1.1 Presentación de la sesión<a class="headerlink" href="#11-presentacion-de-la-sesion" title="Permanent link">&para;</a></h3>
-<p>Esta sesión abre la Unidad 1: crea el esquema y las tablas base del caso empresarial en Oracle, e inicia el motor transaccional con procedimientos y funciones PL/SQL. El porqué de resolver reglas de negocio también del lado de la base de datos, y no solo en el backend, se desarrolla en 1.6, a partir del caso del cálculo de inventario y precio.</p>
+<p>La sesión anterior mejoró una consulta sin tocar ningún índice — estadísticas actualizadas y una reescritura ya cambiaron el plan. Esta sesión retoma esa misma consulta, y suma una tabla de diagnóstico ya construida antes, para decidir qué índice concreto crear — y también cuándo <strong>no</strong> crear uno. La decisión no se toma por intuición ni por copiar lo que otro proyecto hizo: se mide la selectividad real de cada columna candidata, y esa medición dice si conviene un B-Tree, un Bitmap, un Function-Based Index, o ningún índice en absoluto.</p>
 <h3 id="12-indice">1.2 Índice<a class="headerlink" href="#12-indice" title="Permanent link">&para;</a></h3>
 <ol>
-<li>Creación del esquema y las tablas base del caso empresarial.</li>
-<li>Procedimientos PL/SQL.</li>
-<li>Funciones PL/SQL.</li>
-<li>Parámetros <code>IN</code>, <code>OUT</code> e <code>IN OUT</code>.</li>
+<li>Selectividad: la métrica que decide.</li>
+<li>Índice B-Tree.</li>
+<li>Índice Bitmap.</li>
+<li>Índice Function-Based.</li>
 </ol>
 <h3 id="13-proposito-de-aprendizaje">1.3 Propósito de aprendizaje<a class="headerlink" href="#13-proposito-de-aprendizaje" title="Permanent link">&para;</a></h3>
 <p>Al concluir la clase, estarás en condiciones de:</p>
 <ul>
-<li><strong>Crear y entregar</strong> el esquema y las tablas base de un caso empresarial en Oracle, con procedimientos y funciones PL/SQL que validan reglas básicas del negocio usando parámetros <code>IN</code>, <code>OUT</code> e <code>IN OUT</code>.</li>
+<li><strong>Medir la selectividad real de una columna y, con esa medición, decidir y crear el tipo de índice adecuado</strong> (B-Tree, Bitmap o Function-Based), verificando con el plan de ejecución si el optimizador efectivamente lo usa — y reconocer cuándo un índice no conviene, aunque exista.</li>
 </ul>
 <h3 id="14-producto-de-sesion">1.4 Producto de sesión<a class="headerlink" href="#14-producto-de-sesion" title="Permanent link">&para;</a></h3>
-<p>Esquema <code>BOM_CATALOGO</code> con sus tablas base, más procedimientos y funciones iniciales para registrar operaciones transaccionales del ERP.</p>
+<p>Tres índices creados sobre datos reales del proyecto — B-Tree (<code>VENTAS.FECHA</code>), Bitmap (<code>LOG_ERRORES.OBJETO</code>) y Function-Based (<code>TRUNC(VENTAS.FECHA)</code>) —, cada uno elegido con selectividad medida y con <code>EXPLAIN PLAN</code> capturado antes y después; más evidencia de un índice que, medido, no conviene crear (<code>VENTAS.ESTADO</code>).</p>
 <h3 id="15-metodologia">1.5 Metodología<a class="headerlink" href="#15-metodologia" title="Permanent link">&para;</a></h3>
 <p><strong>Tabla 1. Metodología de la sesión</strong></p>
 <table>
@@ -3446,42 +3346,41 @@
 <tbody>
 <tr>
 <td>Revisión previa individual</td>
-<td>Instalar/verificar acceso a Oracle XE y revisar el caso BomERP (ver 1.6). Trabajo individual, antes de clase.</td>
-<td>Acceso a Oracle, sílabo BD2 U1.</td>
+<td>Repasar <code>EXPLAIN PLAN</code>/<code>DBMS_STATS</code> (S4) y la estructura de <code>LOG_ERRORES</code> (S3). Trabajo individual, antes de clase; anotar cuántos registros tiene hoy <code>LOG_ERRORES</code> en tu propia base.</td>
+<td>S3 (3.2), S4 (2.2-2.4).</td>
 </tr>
 <tr>
 <td>Clase presencial</td>
-<td>Creación guiada del esquema y tablas del catálogo, seguida de la función y los procedimientos PL/SQL. Trabajo individual en la propia laptop, siguiendo al docente paso a paso; consulta inmediata ante errores de compilación.</td>
-<td>Scripts <code>S01_01_esquemas.sql</code>, <code>S01_02_tablas.sql</code>, <code>S01_03_plsql.sql</code>.</td>
+<td>Medición guiada de selectividad, creación de un índice B-Tree, uno Bitmap y uno Function-Based, cada uno verificado con <code>EXPLAIN PLAN</code>, y verificación de un índice que no conviene. Trabajo individual en la propia laptop, siguiendo al docente paso a paso.</td>
+<td>Script <code>S05_indices_optimizacion.sql</code>.</td>
 </tr>
 <tr>
 <td>Evaluación formativa</td>
-<td>Verificación en clase de la ejecución de la función y los procedimientos con datos válidos. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4.</td>
+<td>Verificación en clase de los tres índices creados, con <code>EXPLAIN PLAN</code> mostrando su uso (o su no uso, en el caso de <code>ESTADO</code>), y la selectividad medida que justifica cada decisión. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4.</td>
 <td>Indicaciones de entrega (4.3), rúbrica de evaluación (4.6).</td>
 </tr>
 </tbody>
 </table>
 <h3 id="16-motivacion-de-la-sesion">1.6 Motivación de la sesión<a class="headerlink" href="#16-motivacion-de-la-sesion" title="Permanent link">&para;</a></h3>
-<h4 id="161-caso-catalogo-de-bomerp-categoriaproducto">1.6.1 Caso: catálogo de BomERP (<code>Categoria</code>–<code>Producto</code>)<a class="headerlink" href="#161-caso-catalogo-de-bomerp-categoriaproducto" title="Permanent link">&para;</a></h4>
-<p>¿Dónde debería vivir la regla que calcula el valor de inventario de un producto, o la que ajusta su precio: en el backend de la aplicación, o en la propia base de datos? El backend puede validar datos, pero hay cálculos y reglas del negocio que conviene resolver también del lado de Oracle — centralizados en un procedimiento o función PL/SQL, disponibles sin importar qué cliente los invoque.</p>
+<h4 id="161-caso-el-indice-que-el-optimizador-nunca-uso">1.6.1 Caso: el índice que el optimizador nunca usó<a class="headerlink" href="#161-caso-el-indice-que-el-optimizador-nunca-uso" title="Permanent link">&para;</a></h4>
+<p>Un equipo crea un índice sobre <code>VENTAS.ESTADO</code>, convencido de que va a acelerar los reportes filtrados por estado. Después de crearlo, <code>EXPLAIN PLAN</code> sigue mostrando <code>TABLE ACCESS FULL</code> — exactamente el mismo plan que sin el índice. No es un error del optimizador: hoy, <code>EstadoVenta</code> (LP2, S4) solo tiene un valor posible, <code>REGISTRADA</code> — todas las filas de <code>VENTAS</code> comparten el mismo estado. Un índice sobre una columna con un único valor no ayuda a descartar ninguna fila; el optimizador, correctamente, prefiere leer la tabla completa antes que leer un índice que apunta a <em>todas</em> las filas y después ir a buscarlas una por una.</p>
+<p>El índice no estaba mal escrito — estaba mal elegido. Esta sesión mide selectividad <strong>antes</strong> de crear cualquier índice, precisamente para no repetir este caso.</p>
 <p><strong>Preguntas de análisis</strong></p>
 <p><strong>Activación de conocimientos previos</strong></p>
 <ol>
-<li>¿Qué diferencia hay entre calcular <code>precio * stock</code> en el backend Java y calcularlo en una función PL/SQL?</li>
-<li>¿Cómo se evidencia que los productos de esta sesión no son ejercicios aislados, sino el motor transaccional detrás del esquema <code>BOM_CATALOGO</code>?</li>
+<li>En S4, ¿qué le pasaba al plan de una consulta cuando el CBO tenía estadísticas desactualizadas? ¿En qué se parece eso a un índice sobre una columna de un solo valor?</li>
 </ol>
-<p><strong>Comprensión de PL/SQL</strong></p>
+<p><strong>Comprensión de selectividad e índices</strong></p>
 <ol>
-<li>¿Qué procedimiento podría invocar (o replicar) un backend REST como el de LP2?</li>
-<li>¿Qué función permite centralizar un cálculo del negocio sin repetirlo en cada consulta?</li>
-<li>¿Por qué un parámetro <code>IN OUT</code> es distinto de tener un <code>IN</code> y un <code>OUT</code> por separado?</li>
+<li>Si <code>VENTAS.ESTADO</code> tuviera cinco valores posibles en vez de uno, ¿el índice sobre <code>ESTADO</code> automáticamente empezaría a ayudar? ¿Qué más tendría que ser cierto?</li>
+<li><code>LOG_ERRORES.OBJETO</code> (S3) también tiene pocos valores distintos, igual que <code>ESTADO</code> — y sin embargo esta sesión sí le crea un índice. ¿Qué tipo de índice, y por qué la misma "poca selectividad" que descartó un índice en <code>ESTADO</code> no descarta uno en <code>OBJETO</code>?</li>
 </ol>
 <h3 id="17-ubicacion-en-el-curso">1.7 Ubicación en el curso<a class="headerlink" href="#17-ubicacion-en-el-curso" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Unidad: U1 - Programación y optimización (Oracle XE).</li>
 <li>Producto del curso: base de datos empresarial Oracle operativa, administrada, optimizada, auditada y resiliente.</li>
 <li>Producto de unidad: motor transaccional Oracle optimizado.</li>
-<li>Avance del producto en esta sesión: procedimientos, funciones y reglas iniciales del motor transaccional.</li>
+<li>Avance del producto en esta sesión: tres índices reales creados con selectividad medida, más evidencia de un índice descartado por la misma medición.</li>
 </ul>
 <p>Roadmap del producto de la unidad:</p>
 <p><strong>Figura 1. Roadmap del producto de la unidad</strong></p>
@@ -3496,311 +3395,237 @@
     S1 --&gt; S2 --&gt; S3 --&gt; S4 --&gt; S5 --&gt; S6
 
     classDef today fill:#ffe08a,stroke:#9a6b00,stroke-width:2px,color:#111;
-    class S1 today;</code></pre>
+    class S5 today;</code></pre>
 <h2 id="2-explica">2. Explica<a class="headerlink" href="#2-explica" title="Permanent link">&para;</a></h2>
-<p>Tiempo: 25 min.</p>
+<p>Tiempo: 30 min.</p>
 <h3 id="21-arquitectura-de-la-sesion">2.1 Arquitectura de la sesión<a class="headerlink" href="#21-arquitectura-de-la-sesion" title="Permanent link">&para;</a></h3>
-<p><strong>Figura 2. Arquitectura del esquema <code>BOM_CATALOGO</code> y su motor transaccional PL/SQL</strong></p>
-<pre class="mermaid"><code>flowchart TB
-    subgraph ORA["Motor transaccional Oracle - esquema BOM_CATALOGO"]
-        SP1[SP_REGISTRAR_PRODUCTO]
-        SP2[SP_APLICAR_DESCUENTO_PRODUCTO]
-        FN[FN_VALOR_INVENTARIO_PRODUCTO]
-        T[(producto)]
+<p><strong>Figura 2. De la selectividad medida al índice elegido</strong></p>
+<pre class="mermaid"><code>flowchart LR
+    Col["Columna candidata"]
+    Sel["Selectividad medida&lt;br/&gt;DISTINCT / COUNT(*)"]
+    Alta["Alta&lt;br/&gt;(cercana a 1)"]
+    Baja["Baja&lt;br/&gt;(cercana a 0)"]
+    Func["Se filtra/agrupa&lt;br/&gt;por una expresion"]
+    BTree["Indice B-Tree"]
+    Bitmap["Indice Bitmap"]
+    FBI["Indice Function-Based"]
+    Plan["EXPLAIN PLAN&lt;br/&gt;confirma o descarta el uso"]
 
-        SP1 --&gt; T
-        SP2 --&gt; T
-        FN -.-&gt;|lee valores para calcular| T
-    end
-
-    APP["`Aplicación cliente (cualquiera: backend, otro script, SQL directo)`"]
-    APP --&gt; SP1
-    APP --&gt; FN
-    APP --&gt; SP2</code></pre>
-<p>Lectura del diagrama:</p>
-<ul>
-<li>El procedimiento de registro (<code>SP_REGISTRAR_PRODUCTO</code>) y el de ajuste de precio (<code>SP_APLICAR_DESCUENTO_PRODUCTO</code>) escriben sobre <code>PRODUCTOS</code>; la función (<code>FN_VALOR_INVENTARIO_PRODUCTO</code>) solo lee y calcula, no modifica nada.</li>
-<li>Esta lógica vive en Oracle y protege la regla <strong>sin importar quién la invoque</strong>: un backend Java, otro cliente, o alguien ejecutando SQL directo — nadie puede saltarse la validación entrando por otro camino. <strong>Error frecuente</strong>: dejar todo del lado del backend sin definir qué reglas son realmente críticas — esas reglas se mueven a PL/SQL o a restricciones de la tabla.</li>
-<li>Integración (referencia, no requisito para esta sesión): LP2 (S2) ya implementa una regla equivalente en <code>ProductoServiceImpl</code> vía JPA/Hibernate — este procedimiento es la versión Oracle de esa misma regla, útil incluso para quien no esté llevando LP2 en paralelo. ADS documenta esta separación como decisión arquitectónica (atributo "Integridad"). <strong>Error frecuente</strong>: trabajar PL/SQL como ejercicio aislado, sin relacionarlo con la entidad transaccional real del proyecto.</li>
-</ul>
-<p>Este diagrama es el mapa que guía el resto de la explicación: cada apartado siguiente desarrolla uno de sus componentes, en el mismo orden del Índice (1.2).</p>
-<h3 id="22-creacion-del-esquema-y-las-tablas-base-del-caso-empresarial">2.2 Creación del esquema y las tablas base del caso empresarial<a class="headerlink" href="#22-creacion-del-esquema-y-las-tablas-base-del-caso-empresarial" title="Permanent link">&para;</a></h3>
-<p>PL/SQL permite ubicar lógica transaccional cerca de los datos. En un sistema empresarial, esto ayuda a proteger reglas críticas, mejorar consistencia y preparar operaciones que pueden ser consumidas por servicios backend — pero primero necesita un esquema propio y tablas base sobre las cuales operar.</p>
-<p><strong>Figura 3. Esquema real en Oracle: <code>CATEGORIAS</code> y <code>PRODUCTOS</code></strong></p>
-<pre class="mermaid"><code>erDiagram
-    CATEGORIAS o|--o{ PRODUCTOS : "FK_PRODUCTO_CATEGORIA"
-    CATEGORIAS {
-        NUMBER ID PK
-        VARCHAR2 NOMBRE
-        VARCHAR2 DESCRIPCION
-    }
-    PRODUCTOS {
-        NUMBER ID PK
-        NUMBER ID_CATEGORIA FK
-        VARCHAR2 NOMBRE
-        NUMBER PRECIO
-        NUMBER STOCK
-    }</code></pre>
-<p>Este esquema es la base que LP2 conecta desde su propio S1 — primero solo <code>PRODUCTOS</code> (S1-S2, sin relación); <code>FK_PRODUCTO_CATEGORIA</code> ya existe en Oracle desde hoy, pero LP2 no la traduce a <code>@ManyToOne</code> hasta su S3 (<a href="../../../lp2/sesiones/S03_Objetos_Relacionados_Categoria_Producto/">LP2 S3</a>, Figura 3) — la base de datos conoce la relación antes de que el código Java la use.</p>
-<p><strong>Error frecuente</strong>: nombrar objetos de forma genérica en vez de usar nombres empresariales que reflejen el proceso real (esquema, tablas, procedimientos y funciones).</p>
-<p>Alcance metodológico de S1:</p>
-<div class="highlight"><pre><span></span><code>En S1 se construye la primera lógica transaccional.
-Todavía no se trabaja auditoría avanzada, excepciones completas,
-optimización ni administración Oracle.
-
-Esos aspectos se desarrollan progresivamente durante la unidad.
+    Col --&gt; Sel
+    Sel --&gt; Alta --&gt; BTree --&gt; Plan
+    Sel --&gt; Baja --&gt; Bitmap --&gt; Plan
+    Col --&gt; Func --&gt; FBI --&gt; Plan</code></pre>
+<p>Ningún índice se crea antes de medir. La selectividad decide entre B-Tree y Bitmap; si además la consulta necesita filtrar o agrupar por una expresión (no por la columna cruda), el candidato es un Function-Based Index, sin importar qué tan selectiva sea la columna de base. <code>EXPLAIN PLAN</code> es el mismo criterio de verificación de S4: no basta con crear el índice, hay que confirmar que el optimizador lo elige para la consulta real.</p>
+<h3 id="22-selectividad-la-metrica-que-decide-no-la-intuicion">2.2 Selectividad: la métrica que decide, no la intuición<a class="headerlink" href="#22-selectividad-la-metrica-que-decide-no-la-intuicion" title="Permanent link">&para;</a></h3>
+<p>La selectividad de una columna es la proporción de valores distintos frente al total de filas:</p>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">columna</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">SELECTIVIDAD</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">tabla</span><span class="p">;</span>
 </code></pre></div>
-<h3 id="23-procedimientos-plsql">2.3 Procedimientos PL/SQL<a class="headerlink" href="#23-procedimientos-plsql" title="Permanent link">&para;</a></h3>
-<p>Un <strong>procedimiento almacenado</strong> ejecuta una acción (registrar, actualizar) y puede declarar <strong>variables locales</strong> para procesar datos antes de escribirlos, aplicando <strong>validación de reglas</strong> del negocio antes de cualquier <code>INSERT</code> o <code>UPDATE</code>.</p>
-<p><strong>Error frecuente</strong>: no devolver el identificador generado con un parámetro <code>OUT</code> — sin él, el backend u otro cliente no puede continuar su flujo (por ejemplo, no sabe qué producto acaba de registrar).</p>
-<h3 id="24-funciones-plsql">2.4 Funciones PL/SQL<a class="headerlink" href="#24-funciones-plsql" title="Permanent link">&para;</a></h3>
-<p>Una <strong>función</strong> PL/SQL calcula y retorna un valor (por ejemplo, el valor de inventario de un producto) sin modificar datos — a diferencia de un procedimiento, siempre se ejecuta dentro de una expresión y siempre retorna algo.</p>
-<p><strong>Error frecuente</strong>: asumir que el cálculo funciona sin probarlo — toda función se ejecuta con casos válidos e inválidos antes de darla por buena.</p>
-<h3 id="25-parametros-in-out-e-in-out">2.5 Parámetros <code>IN</code>, <code>OUT</code> e <code>IN OUT</code><a class="headerlink" href="#25-parametros-in-out-e-in-out" title="Permanent link">&para;</a></h3>
-<p>Un parámetro <code>IN</code> recibe un valor sin modificarlo, un <code>OUT</code> devuelve un resultado sin necesitar un valor de entrada, y un <code>IN OUT</code> hace ambas cosas sobre la misma variable (por ejemplo, ajustar un precio recibido y devolver el precio ya ajustado en el mismo parámetro).</p>
-<p><strong>Error frecuente</strong>: insertar datos con valores fijos en vez de recibirlos como parámetros — sin <code>IN</code>, <code>OUT</code> e <code>IN OUT</code>, el procedimiento no es reutilizable ni conectable desde otro cliente.</p>
+<p>Un valor cercano a <code>1</code> significa que casi cada fila tiene un valor distinto (alta selectividad: un id, una fecha con hora, un correo). Un valor cercano a <code>0</code> significa que pocos valores se repiten en muchas filas (baja selectividad: un estado con dos o tres opciones, un booleano, una categoría amplia). El caso de 1.6.1 (<code>ESTADO</code> con un único valor) es el extremo: selectividad <code>1 / N</code>, prácticamente <code>0</code>.</p>
+<p><strong>La selectividad de la columna no es lo único que importa.</strong> Un índice puede existir sobre una columna de alta selectividad y aun así no usarse para una consulta puntual, si esa consulta filtra una fracción grande de la tabla (por ejemplo, "el último trimestre" sobre una tabla de un año). Lo que el optimizador evalúa en cada consulta es la selectividad <strong>del predicado</strong> — cuántas filas concretas devuelve <em>ese</em> <code>WHERE</code>, no solo cuántos valores distintos tiene la columna en general. Por eso 3.3 mide ambas cosas: la columna, y la consulta concreta que se va a ejecutar contra ella.</p>
+<h3 id="23-indice-b-tree">2.3 Índice B-Tree<a class="headerlink" href="#23-indice-b-tree" title="Permanent link">&para;</a></h3>
+<p>Es el índice por defecto de Oracle (<code>CREATE INDEX</code>, sin calificarlo). Organiza los valores en un árbol balanceado, ideal para columnas de alta selectividad consultadas por igualdad o por rango (<code>=</code>, <code>&gt;</code>, <code>&lt;</code>, <code>BETWEEN</code>). <code>VENTAS.FECHA</code> es el candidato natural: cada venta ocurre en un instante distinto, y S4 ya construyó una consulta que filtra por rango de fechas.</p>
+<h3 id="24-indice-bitmap">2.4 Índice Bitmap<a class="headerlink" href="#24-indice-bitmap" title="Permanent link">&para;</a></h3>
+<p>Representa cada valor distinto de la columna como un mapa de bits (uno por fila: pertenece o no pertenece a ese valor), no como un árbol de punteros. Es eficiente exactamente donde el B-Tree deja de serlo: <strong>baja</strong> selectividad — pocos valores distintos repetidos en muchas filas —, típico de columnas de categoría, estado o tipo en tablas de reporte o auditoría.</p>
+<p><strong>No es gratis en todos los escenarios.</strong> Un índice Bitmap no es recomendable sobre tablas con alta concurrencia de escritura: actualizar un solo bit de un mapa de bits puede bloquear, a nivel de motor, muchas más filas de las que el <code>UPDATE</code> realmente tocó. <code>LOG_ERRORES</code> es exactamente el tipo de tabla donde sí conviene: se inserta, casi nunca se actualiza, y se consulta mucho para reportes de diagnóstico.</p>
+<h3 id="25-indice-function-based">2.5 Índice Function-Based<a class="headerlink" href="#25-indice-function-based" title="Permanent link">&para;</a></h3>
+<p>Un índice normal indexa el valor tal como está guardado en la columna. Cuando una consulta necesita filtrar o agrupar por el <strong>resultado de una función</strong> sobre la columna (<code>TRUNC(FECHA)</code>, <code>UPPER(NOMBRE)</code>), un índice normal sobre la columna cruda no ayuda — la Tabla 2 de S4 ya lo adelantó: "envolver la columna en una función... invalida el uso de un índice sobre esa columna". La solución no siempre es reescribir la consulta como hizo S4 (3.6): a veces la función es el requisito real del negocio (un reporte por <em>día calendario</em>, no por rango continuo), y ahí un índice creado directamente sobre esa expresión es la respuesta correcta:</p>
+<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">ix_ventas_fecha_dia</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">VENTAS</span><span class="w"> </span><span class="p">(</span><span class="n">TRUNC</span><span class="p">(</span><span class="n">FECHA</span><span class="p">));</span>
+</code></pre></div>
+<p><strong>Tabla 2. Cuándo usar cada tipo de índice</strong></p>
+<table>
+<thead>
+<tr>
+<th>Tipo</th>
+<th>Selectividad de la columna</th>
+<th>Se usa cuando</th>
+<th>Candidato de esta sesión</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>B-Tree</td>
+<td>Alta</td>
+<td>Igualdad o rango sobre la columna tal como está guardada.</td>
+<td><code>VENTAS.FECHA</code></td>
+</tr>
+<tr>
+<td>Bitmap</td>
+<td>Baja</td>
+<td>Pocos valores distintos, tabla de lectura intensiva y baja concurrencia de escritura.</td>
+<td><code>LOG_ERRORES.OBJETO</code></td>
+</tr>
+<tr>
+<td>Function-Based</td>
+<td>La de la expresión, no la de la columna base</td>
+<td>El filtro o agrupamiento real necesita el resultado de una función, no la columna cruda.</td>
+<td><code>TRUNC(VENTAS.FECHA)</code></td>
+</tr>
+</tbody>
+</table>
 <h2 id="3-aplica-actividad-practica-guiada">3. Aplica: actividad práctica guiada<a class="headerlink" href="#3-aplica-actividad-practica-guiada" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 2h.</p>
-<p><strong>Actividad:</strong> creación guiada del esquema <code>BOM_CATALOGO</code> y su primer motor transaccional con procedimientos y funciones PL/SQL (Producto de la sesión en 1.4).</p>
-<p><strong>Propósito de la actividad:</strong> construir el esquema <code>BOM_CATALOGO</code> con sus tablas base y el primer motor transaccional del negocio — una función y dos procedimientos PL/SQL que validan reglas del negocio con parámetros <code>IN</code>, <code>OUT</code> e <code>IN OUT</code> — verificando cada incremento antes de continuar al siguiente.</p>
-<p><strong>Orientaciones metodológicas:</strong> en el laboratorio, el docente guía la creación del esquema y las tablas del catálogo, seguida de la función y los procedimientos PL/SQL, paso a paso frente a la clase; los estudiantes replican cada paso en su propio equipo, verificando la compilación y la ejecución antes de avanzar al siguiente.</p>
+<p><strong>Actividad:</strong> medición de selectividad real y creación guiada de un índice B-Tree, uno Bitmap y uno Function-Based sobre datos del proyecto, cada uno verificado con <code>EXPLAIN PLAN</code> (Producto de la sesión en 1.4).</p>
+<p><strong>Propósito de la actividad:</strong> decidir cada índice con una medición concreta, no con intuición, y confirmar con evidencia si el optimizador realmente lo usa — incluyendo el caso de un índice que, medido, no conviene.</p>
+<p><strong>Orientaciones metodológicas:</strong> en el laboratorio, el docente mide selectividad, crea cada índice y compara el plan paso a paso frente a la clase; los estudiantes replican cada paso en su propio equipo, capturando su propia selectividad y su propio <code>EXPLAIN PLAN</code> (los valores exactos variarán entre equipos según el volumen real cargado en S4 — lo que se evalúa es la decisión tomada a partir de la medición, no un número exacto).</p>
 <p><strong>Actividades para realizar:</strong></p>
 <ul>
-<li><strong>3.1</strong> Definir operación transaccional.</li>
-<li><strong>3.2</strong> Crear el esquema y las tablas del catálogo.</li>
-<li><strong>3.3</strong> Crear la función de negocio (parámetros <code>IN</code>).</li>
-<li><strong>3.4</strong> Crear el procedimiento de registro (parámetros <code>IN</code> y <code>OUT</code>).</li>
-<li><strong>3.5</strong> Crear el procedimiento de ajuste de precio (parámetro <code>IN OUT</code>).</li>
-<li><strong>3.6</strong> Probar función y procedimientos.</li>
+<li><strong>3.1</strong> Cargar volumen adicional en <code>LOG_ERRORES</code>.</li>
+<li><strong>3.2</strong> Medir la selectividad de las columnas candidatas.</li>
+<li><strong>3.3</strong> Crear el índice B-Tree sobre <code>VENTAS.FECHA</code> y comparar.</li>
+<li><strong>3.4</strong> Crear el índice Bitmap sobre <code>LOG_ERRORES.OBJETO</code> y comparar.</li>
+<li><strong>3.5</strong> Crear el índice Function-Based sobre <code>TRUNC(VENTAS.FECHA)</code> y comparar.</li>
+<li><strong>3.6</strong> Verificar un índice que no conviene: <code>VENTAS.ESTADO</code>.</li>
 <li><strong>3.7</strong> Relacionar con ADS y LP2.</li>
 </ul>
-<p><strong>Scripts completos, listos para ejecutar en este orden</strong> (los pasos siguientes explican cada uno):</p>
-<ol>
-<li><a href="../../../proyecto-integrador/u1/oracle/S01_01_esquemas.sql"><code>S01_01_esquemas.sql</code></a> — usuarios <code>BOM_CATALOGO</code> y <code>BOMERP_APP</code>.</li>
-<li><a href="../../../proyecto-integrador/u1/oracle/S01_02_tablas.sql"><code>S01_02_tablas.sql</code></a> — tablas <code>CATEGORIAS</code> y <code>PRODUCTOS</code>.</li>
-<li><a href="../../../proyecto-integrador/u1/oracle/S01_03_plsql.sql"><code>S01_03_plsql.sql</code></a> — la función y los dos procedimientos de esta sesión.</li>
-</ol>
-<h3 id="31-definir-operacion-transaccional">3.1 Definir operación transaccional<a class="headerlink" href="#31-definir-operacion-transaccional" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> operación principal del motor Oracle.</p>
-<p><strong>Tabla 2. Operación transaccional del motor Oracle</strong></p>
+<p><strong>Script completo, listo para ejecutar</strong> (los pasos siguientes explican cada bloque): <a href="../../../proyecto-integrador/u1/oracle/S05_indices_optimizacion.sql"><code>S05_indices_optimizacion.sql</code></a>.</p>
+<h3 id="31-cargar-volumen-adicional-en-log_errores">3.1 Cargar volumen adicional en <code>LOG_ERRORES</code><a class="headerlink" href="#31-cargar-volumen-adicional-en-log_errores" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> suficiente volumen en <code>LOG_ERRORES</code> (S3) para que medir su selectividad tenga sentido — con solo tres filas (una por caso de S3, 3.6), cualquier medición es anecdótica.</p>
+<p>Conectado como <code>BOM_CATALOGO</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">BEGIN</span>
+<span class="w">    </span><span class="k">FOR</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="mi">1</span><span class="p">..</span><span class="mi">300</span><span class="w"> </span><span class="n">LOOP</span>
+<span class="w">        </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">LOG_ERRORES</span><span class="w"> </span><span class="p">(</span><span class="n">OBJETO</span><span class="p">,</span><span class="w"> </span><span class="n">CODIGO_ERROR</span><span class="p">,</span><span class="w"> </span><span class="n">MENSAJE_ERROR</span><span class="p">)</span>
+<span class="w">        </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span>
+<span class="w">            </span><span class="k">CASE</span><span class="w"> </span><span class="k">MOD</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+<span class="w">                </span><span class="k">WHEN</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="s1">'SP_REGISTRAR_PRODUCTO'</span>
+<span class="w">                </span><span class="k">WHEN</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="s1">'SP_APLICAR_DESCUENTO_PRODUCTO'</span>
+<span class="w">                </span><span class="k">ELSE</span><span class="w"> </span><span class="s1">'FN_OBTENER_PRECIO_PRODUCTO'</span>
+<span class="w">            </span><span class="k">END</span><span class="p">,</span>
+<span class="w">            </span><span class="o">-</span><span class="mi">20010</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="k">MOD</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">),</span>
+<span class="w">            </span><span class="s1">'Volumen de prueba para selectividad (S5)'</span>
+<span class="w">        </span><span class="p">);</span>
+<span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="n">LOOP</span><span class="p">;</span>
+<span class="w">    </span><span class="k">COMMIT</span><span class="p">;</span>
+<span class="k">END</span><span class="p">;</span>
+<span class="o">/</span>
+</code></pre></div>
+<p>Verifica el volumen cargado:</p>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">TOTAL_LOG</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">LOG_ERRORES</span><span class="p">;</span>
+</code></pre></div>
+<p>Igual que con <code>VENTAS</code> en S4 (3.3), el volumen sintético no reemplaza la necesidad real de la tabla — solo le da al optimizador algo genuino que medir.</p>
+<p><strong>Error frecuente</strong>: medir selectividad o capturar <code>EXPLAIN PLAN</code> inmediatamente después de esta carga, sin actualizar estadísticas (S4, 2.4). Repite <code>DBMS_STATS.GATHER_TABLE_STATS</code> sobre <code>LOG_ERRORES</code> antes de continuar:</p>
+<div class="highlight"><pre><span></span><code><span class="k">EXEC</span><span class="w"> </span><span class="n">DBMS_STATS</span><span class="p">.</span><span class="n">GATHER_TABLE_STATS</span><span class="p">(</span><span class="s1">'BOM_CATALOGO'</span><span class="p">,</span><span class="w"> </span><span class="s1">'LOG_ERRORES'</span><span class="p">);</span>
+</code></pre></div>
+<h3 id="32-medir-la-selectividad-de-las-columnas-candidatas">3.2 Medir la selectividad de las columnas candidatas<a class="headerlink" href="#32-medir-la-selectividad-de-las-columnas-candidatas" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> la selectividad real de las tres columnas que el resto de la sesión indexa (o no indexa).</p>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="s1">'VENTAS.FECHA'</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">COLUMNA</span><span class="p">,</span>
+<span class="w">       </span><span class="k">COUNT</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">FECHA</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">DISTINTOS</span><span class="p">,</span>
+<span class="w">       </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">TOTAL</span><span class="p">,</span>
+<span class="w">       </span><span class="n">ROUND</span><span class="p">(</span><span class="k">COUNT</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">FECHA</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">),</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">SELECTIVIDAD</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">VENTAS</span>
+<span class="k">UNION</span><span class="w"> </span><span class="k">ALL</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="s1">'VENTAS.ESTADO'</span><span class="p">,</span>
+<span class="w">       </span><span class="k">COUNT</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ESTADO</span><span class="p">),</span>
+<span class="w">       </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">),</span>
+<span class="w">       </span><span class="n">ROUND</span><span class="p">(</span><span class="k">COUNT</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ESTADO</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">),</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">VENTAS</span>
+<span class="k">UNION</span><span class="w"> </span><span class="k">ALL</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="s1">'LOG_ERRORES.OBJETO'</span><span class="p">,</span>
+<span class="w">       </span><span class="k">COUNT</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">OBJETO</span><span class="p">),</span>
+<span class="w">       </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">),</span>
+<span class="w">       </span><span class="n">ROUND</span><span class="p">(</span><span class="k">COUNT</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">OBJETO</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">),</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">LOG_ERRORES</span><span class="p">;</span>
+</code></pre></div>
+<p><strong>Tabla 3. Selectividad medida (completa con tus propios valores)</strong></p>
 <table>
 <thead>
 <tr>
-<th>Elemento</th>
-<th>Respuesta</th>
+<th>Columna</th>
+<th style="text-align: right;">Distintos</th>
+<th style="text-align: right;">Total</th>
+<th style="text-align: right;">Selectividad</th>
+<th>Decisión</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Proceso principal</td>
-<td>Registro y valorización del catálogo de productos</td>
+<td><code>VENTAS.FECHA</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td>B-Tree (3.3)</td>
 </tr>
 <tr>
-<td>Entidad transaccional</td>
-<td><code>BOM_CATALOGO.PRODUCTOS</code></td>
+<td><code>VENTAS.ESTADO</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td>Ninguno (3.6)</td>
 </tr>
 <tr>
-<td>Acción PL/SQL inicial</td>
-<td>Función de cálculo + procedimiento de registro + procedimiento de ajuste de precio</td>
-</tr>
-<tr>
-<td>Regla crítica</td>
-<td>El precio y el stock nunca deben quedar negativos</td>
+<td><code>LOG_ERRORES.OBJETO</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td>Bitmap (3.4)</td>
 </tr>
 </tbody>
 </table>
-<h3 id="32-crear-el-esquema-y-las-tablas-del-catalogo">3.2 Crear el esquema y las tablas del catálogo<a class="headerlink" href="#32-crear-el-esquema-y-las-tablas-del-catalogo" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> esquema <code>BOM_CATALOGO</code> y las tablas <code>CATEGORIAS</code>/<code>PRODUCTOS</code> operativas en Oracle — la base sobre la que esta sesión construye PL/SQL y sobre la que LP2 conecta su backend (S1-S2).</p>
-<p><strong>Nota sobre versión y edición:</strong> esta unidad (U1) trabaja contra el mismo
-contenedor Oracle que levanta LP2 en su S1 (<code>gvenzl/oracle-free:23-slim</code> —
-Oracle Database 23ai <strong>Free</strong>, no Oracle 19c). Alcanza para lo que pide el
-sílabo en U1 (Oracle XE). U2-U3 exige Oracle 19c <strong>Enterprise Edition</strong> +
-Oracle Linux para temas exclusivos de EE (AWR, particionamiento) que este
-contenedor no soporta — ese ambiente todavía no está operacionalizado en
-el repo (ver <code>bd2/README.md</code>).</p>
-<p>Con una cuenta DBA, crea el usuario propietario del catálogo (<code>BOM_CATALOGO</code>) y el usuario técnico que usará el backend de LP2 (<code>BOMERP_APP</code>). Las contraseñas se piden en tiempo de ejecución; no se versionan:</p>
-<div class="highlight"><pre><span></span><code><span class="n">ACCEPT</span><span class="w"> </span><span class="n">pwd_catalogo</span><span class="w"> </span><span class="nb">CHAR</span><span class="w"> </span><span class="n">PROMPT</span><span class="w"> </span><span class="s1">'Password BOM_CATALOGO: '</span><span class="w"> </span><span class="n">HIDE</span>
-<span class="n">ACCEPT</span><span class="w"> </span><span class="n">pwd_app</span><span class="w"> </span><span class="nb">CHAR</span><span class="w"> </span><span class="n">PROMPT</span><span class="w"> </span><span class="s1">'Password BOMERP_APP: '</span><span class="w"> </span><span class="n">HIDE</span>
+<p>Esta tabla es la que justifica cada decisión de índice del resto de la sesión — sin ella, crear un índice sería, otra vez, por intuición.</p>
+<h3 id="33-crear-el-indice-b-tree-sobre-ventasfecha-y-comparar">3.3 Crear el índice B-Tree sobre <code>VENTAS.FECHA</code> y comparar<a class="headerlink" href="#33-crear-el-indice-b-tree-sobre-ventasfecha-y-comparar" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> <code>VENTAS.FECHA</code> indexado, con <code>EXPLAIN PLAN</code> confirmando que el optimizador lo usa para una consulta suficientemente selectiva.</p>
+<p>Conectado como <code>BOM_VENTAS</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">ix_ventas_fecha</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">VENTAS</span><span class="w"> </span><span class="p">(</span><span class="n">FECHA</span><span class="p">);</span>
+</code></pre></div>
+<p>A diferencia de <code>DBMS_STATS</code> sobre una tabla (S4), Oracle calcula las estadísticas del índice automáticamente al crearlo — no hace falta un paso adicional para que el CBO sepa que existe.</p>
+<p>La consulta de S4 (3.7) filtra 30 días de un rango de 90 — una fracción demasiado grande para que un índice sea siempre la mejor opción (2.2). Para verificar el índice con un predicado claramente selectivo, usa un reporte más acotado, igual de real: ventas de hoy.</p>
+<div class="highlight"><pre><span></span><code><span class="k">EXPLAIN</span><span class="w"> </span><span class="n">PLAN</span><span class="w"> </span><span class="k">FOR</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">NOMBRE</span><span class="p">,</span><span class="w"> </span><span class="k">SUM</span><span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">CANTIDAD</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">TOTAL_UNIDADES</span><span class="p">,</span><span class="w"> </span><span class="k">SUM</span><span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">SUBTOTAL</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">TOTAL_VENDIDO</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">DETALLE_VENTAS</span><span class="w"> </span><span class="n">d</span>
+<span class="k">JOIN</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">VENTAS</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">ID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">ID_VENTA</span>
+<span class="k">JOIN</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTOS</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">ID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">ID_PRODUCTO</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">FECHA</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">TRUNC</span><span class="p">(</span><span class="n">SYSDATE</span><span class="p">)</span>
+<span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">NOMBRE</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">TOTAL_VENDIDO</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
 
-<span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="w"> </span><span class="n">IDENTIFIED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="ss">"&amp;pwd_catalogo"</span><span class="w"> </span><span class="n">QUOTA</span><span class="w"> </span><span class="n">UNLIMITED</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">USERS</span><span class="p">;</span>
-<span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">BOMERP_APP</span><span class="w"> </span><span class="n">IDENTIFIED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="ss">"&amp;pwd_app"</span><span class="p">;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="k">TABLE</span><span class="p">(</span><span class="n">DBMS_XPLAN</span><span class="p">.</span><span class="n">DISPLAY</span><span class="p">);</span>
+</code></pre></div>
+<p>Con una fracción pequeña del total de filas (un día de 90), lo esperable es ver <code>INDEX RANGE SCAN</code> sobre <code>IX_VENTAS_FECHA</code> en vez de <code>TABLE ACCESS FULL</code> sobre <code>VENTAS</code>. Repite la consulta original de 3.7 de S4 (30 días) y compara: es posible — y correcto — que el optimizador siga prefiriendo <code>TABLE ACCESS FULL</code> ahí, porque un tercio de la tabla ya no es una fracción pequeña (2.2).</p>
+<h3 id="34-crear-el-indice-bitmap-sobre-log_erroresobjeto-y-comparar">3.4 Crear el índice Bitmap sobre <code>LOG_ERRORES.OBJETO</code> y comparar<a class="headerlink" href="#34-crear-el-indice-bitmap-sobre-log_erroresobjeto-y-comparar" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> <code>LOG_ERRORES.OBJETO</code> indexado con Bitmap, con <code>EXPLAIN PLAN</code> confirmando su uso en un reporte de diagnóstico.</p>
+<p>Conectado como <code>BOM_CATALOGO</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="n">BITMAP</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">ix_log_errores_objeto</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">LOG_ERRORES</span><span class="w"> </span><span class="p">(</span><span class="n">OBJETO</span><span class="p">);</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">EXPLAIN</span><span class="w"> </span><span class="n">PLAN</span><span class="w"> </span><span class="k">FOR</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">OBJETO</span><span class="p">,</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">TOTAL_ERRORES</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">LOG_ERRORES</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">OBJETO</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'SP_REGISTRAR_PRODUCTO'</span>
+<span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">OBJETO</span><span class="p">;</span>
 
-<span class="k">GRANT</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">SESSION</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">VIEW</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">PROCEDURE</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">TRIGGER</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">;</span>
-<span class="k">GRANT</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">SESSION</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">BOMERP_APP</span><span class="p">;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="k">TABLE</span><span class="p">(</span><span class="n">DBMS_XPLAN</span><span class="p">.</span><span class="n">DISPLAY</span><span class="p">);</span>
+</code></pre></div>
+<p>Busca <code>BITMAP INDEX SINGLE VALUE</code> (o <code>BITMAP CONVERSION</code>) en la columna <code>OPERATION</code> de la salida — es el equivalente Bitmap del <code>INDEX RANGE SCAN</code> que ya reconoces de un B-Tree (3.3).</p>
+<p><strong>Error frecuente</strong>: crear el índice Bitmap conectado como un usuario sin privilegios sobre el esquema de la tabla (por ejemplo, <code>BOM_VENTAS</code> intentando indexar una tabla de <code>BOM_CATALOGO</code>). Igual que cualquier <code>CREATE INDEX</code>, requiere estar conectado como el propietario del esquema o tener el privilegio <code>CREATE ANY INDEX</code>.</p>
+<h3 id="35-crear-el-indice-function-based-sobre-truncventasfecha-y-comparar">3.5 Crear el índice Function-Based sobre <code>TRUNC(VENTAS.FECHA)</code> y comparar<a class="headerlink" href="#35-crear-el-indice-function-based-sobre-truncventasfecha-y-comparar" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> un reporte por día calendario, resuelto con un índice sobre la expresión, no sobre la columna cruda.</p>
+<p>Conectado como <code>BOM_VENTAS</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">ix_ventas_fecha_dia</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">VENTAS</span><span class="w"> </span><span class="p">(</span><span class="n">TRUNC</span><span class="p">(</span><span class="n">FECHA</span><span class="p">));</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">EXPLAIN</span><span class="w"> </span><span class="n">PLAN</span><span class="w"> </span><span class="k">FOR</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">TRUNC</span><span class="p">(</span><span class="n">FECHA</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">DIA</span><span class="p">,</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">VENTAS_DEL_DIA</span><span class="p">,</span><span class="w"> </span><span class="k">SUM</span><span class="p">(</span><span class="n">TOTAL</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">MONTO_DEL_DIA</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">VENTAS</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">TRUNC</span><span class="p">(</span><span class="n">FECHA</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TRUNC</span><span class="p">(</span><span class="n">SYSDATE</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">5</span>
+<span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">TRUNC</span><span class="p">(</span><span class="n">FECHA</span><span class="p">);</span>
 
-<span class="n">UNDEFINE</span><span class="w"> </span><span class="n">pwd_catalogo</span>
-<span class="n">UNDEFINE</span><span class="w"> </span><span class="n">pwd_app</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="k">TABLE</span><span class="p">(</span><span class="n">DBMS_XPLAN</span><span class="p">.</span><span class="n">DISPLAY</span><span class="p">);</span>
 </code></pre></div>
-<p><code>ACCEPT ... HIDE</code> es útil cuando cada quien pone su propia contraseña. Pero en el ambiente <strong>DEV</strong> de este proyecto (laptop de desarrollo, sin secretos que proteger) conviene que todos usen exactamente la misma credencial, para que nadie se quede sin poder conectar el backend por una contraseña distinta a la de <code>application-dev.yml</code>. Por eso, en el script real (<code>S01_01_esquemas.sql</code>) se usa contraseña fija en texto plano — mismo criterio que <code>application-dev.yml</code>/<code>compose-dev.yml</code> (ver <code>lp2/CLAUDE.md</code>, sección "Ambientes"):</p>
-<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="w"> </span><span class="n">IDENTIFIED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="ss">"123456"</span><span class="w"> </span><span class="n">QUOTA</span><span class="w"> </span><span class="n">UNLIMITED</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">USERS</span><span class="p">;</span>
-<span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">BOMERP_APP</span><span class="w"> </span><span class="n">IDENTIFIED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="ss">"123456"</span><span class="p">;</span>
+<p>Esta consulta no se puede reescribir para "liberar" la columna como hizo S4 (3.6): el reporte pide explícitamente un día calendario, no un rango continuo — la función es parte del requisito, no un descuido de escritura. <code>ix_ventas_fecha_dia</code> es la respuesta a ese requisito, no a un error evitable.</p>
+<h3 id="36-verificar-un-indice-que-no-conviene-ventasestado">3.6 Verificar un índice que no conviene: <code>VENTAS.ESTADO</code><a class="headerlink" href="#36-verificar-un-indice-que-no-conviene-ventasestado" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> evidencia reproducible del caso de 1.6.1 — un índice creado que el optimizador correctamente ignora.</p>
+<p>Conectado como <code>BOM_VENTAS</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">ix_ventas_estado</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">VENTAS</span><span class="w"> </span><span class="p">(</span><span class="n">ESTADO</span><span class="p">);</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">EXPLAIN</span><span class="w"> </span><span class="n">PLAN</span><span class="w"> </span><span class="k">FOR</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">VENTAS</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ESTADO</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'REGISTRADA'</span><span class="p">;</span>
 
-<span class="k">GRANT</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">SESSION</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">VIEW</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">PROCEDURE</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">TRIGGER</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">;</span>
-<span class="k">GRANT</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">SESSION</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">BOMERP_APP</span><span class="p">;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="k">TABLE</span><span class="p">(</span><span class="n">DBMS_XPLAN</span><span class="p">.</span><span class="n">DISPLAY</span><span class="p">);</span>
 </code></pre></div>
-<p>La contraseña de <code>BOMERP_APP</code> debe coincidir exactamente con la de <code>application-dev.yml</code>.</p>
-<h4 id="ver-el-esquema-bom_catalogo-desde-el-cliente-grafico">Ver el esquema <code>BOM_CATALOGO</code> desde el cliente gráfico<a class="headerlink" href="#ver-el-esquema-bom_catalogo-desde-el-cliente-grafico" title="Permanent link">&para;</a></h4>
-<p>Con la conexión de <code>system</code> (ver LP2 S1, 3.2.2) normalmente solo ves los objetos de <code>SYSTEM</code>, no los de <code>BOM_CATALOGO</code>, aunque ya exista. Agrega una segunda conexión, igual que ya hiciste con <code>BOMERP_APP</code>:</p>
-<p><strong>Tabla 3. Conexión al esquema <code>BOM_CATALOGO</code></strong></p>
-<table>
-<thead>
-<tr>
-<th>Campo</th>
-<th>Valor</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Host</td>
-<td><code>127.0.0.1</code></td>
-</tr>
-<tr>
-<td>Port</td>
-<td><code>1521</code></td>
-</tr>
-<tr>
-<td>Username</td>
-<td><code>BOM_CATALOGO</code></td>
-</tr>
-<tr>
-<td>Password</td>
-<td><code>123456</code></td>
-</tr>
-<tr>
-<td>Database</td>
-<td><code>FREEPDB1</code></td>
-</tr>
-</tbody>
-</table>
-<p>Con esa conexión entras directo como ese usuario y ves su propio árbol (<code>CATEGORIAS</code>, <code>PRODUCTOS</code> una vez creadas), sin depender de que el cliente muestre o no otros esquemas.</p>
-<h4 id="si-necesitas-borrar-y-volver-a-crear-el-esquema">Si necesitas borrar y volver a crear el esquema<a class="headerlink" href="#si-necesitas-borrar-y-volver-a-crear-el-esquema" title="Permanent link">&para;</a></h4>
-<p>Si algo quedó a medio configurar (por ejemplo, corriste <code>S01_01_esquemas.sql</code> dos veces y salió <code>ORA-01920</code>, usuario ya existente), lo más simple en DEV es borrar y recrear desde cero — conectado como <code>system</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">DROP</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
-<span class="k">DROP</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">BOMERP_APP</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+<p>Con la selectividad de <code>ESTADO</code> medida en 3.2 (cercana a <code>0</code>, un único valor para todas las filas), lo esperable es <code>TABLE ACCESS FULL</code>, con o sin el índice — el optimizador no tiene ninguna razón para preferirlo, porque el índice no descarta ninguna fila. Elimina el índice: no aporta beneficio y sí agrega costo de mantenimiento en cada <code>INSERT</code> sobre <code>VENTAS</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="k">DROP</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">ix_ventas_estado</span><span class="p">;</span>
 </code></pre></div>
-<p><code>CASCADE</code> borra también cualquier objeto que ese usuario ya tuviera (tablas, funciones, procedimientos), para no arrastrar nada a medio crear. Después, vuelve a ejecutar <code>S01_01_esquemas.sql</code> completo.</p>
-<h4 id="verificar-desde-terminal-sin-depender-del-cliente-grafico">Verificar desde terminal, sin depender del cliente gráfico<a class="headerlink" href="#verificar-desde-terminal-sin-depender-del-cliente-grafico" title="Permanent link">&para;</a></h4>
-<p>Si el cliente gráfico no muestra un esquema que debería existir (o al revés, quieres confirmar un <code>ORA-01920</code> antes de asumir que ya existe), verifica directo con <code>sqlplus</code> dentro del contenedor — te da la respuesta real de la base, sin caché de ningún cliente de por medio:</p>
-<div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">exec</span> <span class="n">-it</span> <span class="n">bomerp-oracle</span> <span class="n">sqlplus</span> <span class="n">system</span><span class="p">/</span><span class="n">123456</span><span class="nv">@localhost</span><span class="p">:</span><span class="n">1521</span><span class="p">/</span><span class="n">FREEPDB1</span>
-</code></pre></div>
-<p>Eso deja un prompt <code>SQL&gt;</code> dentro del contenedor. Ahí escribes la consulta, terminando con <code>;</code>, y Enter — esta consulta muestra el <strong>usuario en sí</strong>, no sus tablas (que todavía no existen en este punto de la sesión):</p>
-<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="n">username</span><span class="p">,</span><span class="w"> </span><span class="n">account_status</span><span class="p">,</span><span class="w"> </span><span class="n">default_tablespace</span><span class="p">,</span><span class="w"> </span><span class="n">temporary_tablespace</span><span class="p">,</span><span class="w"> </span><span class="n">created</span>
-<span class="k">FROM</span><span class="w"> </span><span class="n">dba_users</span>
-<span class="k">WHERE</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'BOM_CATALOGO'</span><span class="p">;</span>
-</code></pre></div>
-<p>Salida esperada (confirma que el usuario existe, con estado <code>OPEN</code> y tablespace por defecto <code>USERS</code>):</p>
-<div class="highlight"><pre><span></span><code>USERNAME                       ACCOUNT_STATUS   DEFAULT_TABLESPACE   TEMPORARY_TABLESPACE   CREATED
------------------------------- ---------------- -------------------- ---------------------- -----------
-BOM_CATALOGO                   OPEN             USERS                TEMP                   02-AUG-26
-</code></pre></div>
-<p>Para salir de la sesión: <code>exit;</code></p>
-<p>Luego las tablas del catálogo, propiedad de <code>BOM_CATALOGO</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">CATEGORIAS</span><span class="w"> </span><span class="p">(</span>
-<span class="w">    </span><span class="n">ID</span><span class="w"> </span><span class="nb">NUMBER</span><span class="w"> </span><span class="k">GENERATED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">IDENTITY</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
-<span class="w">    </span><span class="n">NOMBRE</span><span class="w"> </span><span class="n">VARCHAR2</span><span class="p">(</span><span class="mi">80</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">UNIQUE</span><span class="p">,</span>
-<span class="w">    </span><span class="n">DESCRIPCION</span><span class="w"> </span><span class="n">VARCHAR2</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
-<span class="p">);</span>
-
-<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTOS</span><span class="w"> </span><span class="p">(</span>
-<span class="w">    </span><span class="n">ID</span><span class="w"> </span><span class="nb">NUMBER</span><span class="w"> </span><span class="k">GENERATED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">IDENTITY</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
-<span class="w">    </span><span class="n">ID_CATEGORIA</span><span class="w"> </span><span class="nb">NUMBER</span><span class="p">,</span>
-<span class="w">    </span><span class="n">NOMBRE</span><span class="w"> </span><span class="n">VARCHAR2</span><span class="p">(</span><span class="mi">120</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
-<span class="w">    </span><span class="n">PRECIO</span><span class="w"> </span><span class="nb">NUMBER</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
-<span class="w">    </span><span class="n">STOCK</span><span class="w"> </span><span class="nb">NUMBER</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
-<span class="w">    </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">FK_PRODUCTO_CATEGORIA</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">ID_CATEGORIA</span><span class="p">)</span>
-<span class="w">        </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">CATEGORIAS</span><span class="p">(</span><span class="n">ID</span><span class="p">),</span>
-<span class="w">    </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">CK_PRODUCTO_PRECIO</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">PRECIO</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
-<span class="w">    </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">CK_PRODUCTO_STOCK</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">STOCK</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
-<span class="p">);</span>
-
-<span class="c1">-- BOMERP_APP ejecuta el backend de LP2, pero no es propietario de los objetos.</span>
-<span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="p">,</span><span class="w"> </span><span class="k">INSERT</span><span class="p">,</span><span class="w"> </span><span class="k">UPDATE</span><span class="p">,</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">CATEGORIAS</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">BOMERP_APP</span><span class="p">;</span>
-<span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="p">,</span><span class="w"> </span><span class="k">INSERT</span><span class="p">,</span><span class="w"> </span><span class="k">UPDATE</span><span class="p">,</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTOS</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">BOMERP_APP</span><span class="p">;</span>
-</code></pre></div>
-<p>Tablas en plural y <code>ID</code> genérico como columna primaria — mismo estándar que usa Distribuidas (<code>categorias</code>, <code>productos</code>, <code>id</code>, aunque Postgres sí distingue mayúsculas/minúsculas por defecto; Oracle no: guarda todo identificador sin comillas en mayúsculas sin importar cómo se escriba, así que aquí se escribe ya en mayúsculas para que el código coincida con lo que Oracle realmente almacena) en su migración Flyway (S1 de DIST, 3.5.1). La columna que sí conserva el prefijo es la llave foránea (<code>ID_CATEGORIA</code> en <code>PRODUCTOS</code>), porque ahí el prefijo identifica a qué tabla apunta.</p>
-<p><strong><code>ID_CATEGORIA</code> queda nullable a propósito, a diferencia de Distribuidas</strong> (donde <code>Producto</code> lleva la relación con <code>Categoria</code> completa desde su propia S1): en LP2 esa relación se construye recién en S3 ("Gestión de objetos relacionados mediante REST y ORM"). Hasta entonces, <code>Producto</code> en LP2 (entidad, DTO y CRUD de S1-S2) no conoce <code>Categoria</code> en absoluto — si la columna fuera <code>NOT NULL</code>, cualquier <code>INSERT</code> sin categoría (incluido el <code>POST</code> que S2 construye) fallaría contra Oracle. En S3, cuando la entidad <code>Producto</code> ya mapee la relación y el DTO la exija, ahí se vuelve a evaluar si conviene forzar <code>NOT NULL</code> a nivel de base de datos — no antes.</p>
-<p>Verifica:</p>
-<div class="highlight"><pre><span></span><code><span class="k">DESC</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTOS</span><span class="p">;</span>
-
-<span class="k">SELECT</span><span class="w"> </span><span class="n">ID</span><span class="p">,</span><span class="w"> </span><span class="n">NOMBRE</span><span class="p">,</span><span class="w"> </span><span class="n">PRECIO</span><span class="p">,</span><span class="w"> </span><span class="n">STOCK</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTOS</span><span class="p">;</span>
-</code></pre></div>
-<h4 id="ver-la-lista-de-tablas-creadas">Ver la lista de tablas creadas<a class="headerlink" href="#ver-la-lista-de-tablas-creadas" title="Permanent link">&para;</a></h4>
-<p>Si quieres confirmar qué tablas existen (no una en particular, sino la lista completa), la consulta depende de con quién estés conectado:</p>
-<p>Conectado como <code>system</code> (ve tablas de cualquier usuario, filtrando por dueño):</p>
-<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">dba_tables</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="k">owner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'BOM_CATALOGO'</span><span class="p">;</span>
-</code></pre></div>
-<p>Conectado como <code>BOM_CATALOGO</code> (ve solo lo suyo, sin filtrar):</p>
-<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">user_tables</span><span class="p">;</span>
-</code></pre></div>
-<p>Deberían aparecer <code>CATEGORIAS</code> y <code>PRODUCTOS</code>. Si prefieres verlas en el <strong>árbol</strong> del cliente gráfico: usa la conexión con <code>Username: BOM_CATALOGO</code> (ver más arriba), refresca esa conexión (botón de reconectar, no solo refresh) y expande el nodo "Tables" — ahí deberían listarse directamente, sin necesitar SQL.</p>
-<p><strong>Nota de alcance:</strong> esta sesión crea únicamente el esquema <code>BOM_CATALOGO</code> y sus dos tablas — lo que LP2 S1-S2 necesitan. Los esquemas <code>BOM_VENTAS</code> y <code>BOM_SEGURIDAD</code> (y sus tablas) se crean recién en las sesiones de BD2 que los necesitan por primera vez (cuando LP2 llegue a <code>Venta</code> en S4, y a seguridad en S10) — mismo criterio de "no crear por si acaso" que ya aplica la arquitectura de LP2 a sus módulos (ver <a href="../../../lp2/adr/ADR-002-spring-modulith/">ADR-002</a>).</p>
-<h3 id="33-crear-la-funcion-de-negocio-parametros-in">3.3 Crear la función de negocio (parámetros <code>IN</code>)<a class="headerlink" href="#33-crear-la-funcion-de-negocio-parametros-in" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> función PL/SQL reutilizable, con dos parámetros <code>IN</code>.</p>
-<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">FN_VALOR_INVENTARIO_PRODUCTO</span><span class="p">(</span>
-<span class="w">    </span><span class="n">p_precio</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="nb">NUMBER</span><span class="p">,</span>
-<span class="w">    </span><span class="n">p_stock</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="nb">NUMBER</span>
-<span class="p">)</span><span class="w"> </span><span class="k">RETURN</span><span class="w"> </span><span class="nb">NUMBER</span><span class="w"> </span><span class="k">IS</span>
-<span class="k">BEGIN</span>
-<span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="n">p_precio</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">p_stock</span><span class="p">;</span>
-<span class="k">END</span><span class="p">;</span>
-<span class="o">/</span>
-</code></pre></div>
-<h3 id="34-crear-el-procedimiento-de-registro-parametros-in-y-out">3.4 Crear el procedimiento de registro (parámetros <code>IN</code> y <code>OUT</code>)<a class="headerlink" href="#34-crear-el-procedimiento-de-registro-parametros-in-y-out" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> procedimiento con parámetros <code>IN</code> y <code>OUT</code>.</p>
-<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">PROCEDURE</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">SP_REGISTRAR_PRODUCTO</span><span class="p">(</span>
-<span class="w">    </span><span class="n">p_id_categoria</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="nb">NUMBER</span><span class="p">,</span>
-<span class="w">    </span><span class="n">p_nombre</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="n">VARCHAR2</span><span class="p">,</span>
-<span class="w">    </span><span class="n">p_precio</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="nb">NUMBER</span><span class="p">,</span>
-<span class="w">    </span><span class="n">p_stock</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="nb">NUMBER</span><span class="p">,</span>
-<span class="w">    </span><span class="n">p_id_producto</span><span class="w"> </span><span class="k">OUT</span><span class="w"> </span><span class="nb">NUMBER</span>
-<span class="p">)</span><span class="w"> </span><span class="k">IS</span>
-<span class="k">BEGIN</span>
-<span class="w">    </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTOS</span><span class="w"> </span><span class="p">(</span><span class="n">ID_CATEGORIA</span><span class="p">,</span><span class="w"> </span><span class="n">NOMBRE</span><span class="p">,</span><span class="w"> </span><span class="n">PRECIO</span><span class="p">,</span><span class="w"> </span><span class="n">STOCK</span><span class="p">)</span>
-<span class="w">    </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="n">p_id_categoria</span><span class="p">,</span><span class="w"> </span><span class="n">p_nombre</span><span class="p">,</span><span class="w"> </span><span class="n">p_precio</span><span class="p">,</span><span class="w"> </span><span class="n">p_stock</span><span class="p">)</span>
-<span class="w">    </span><span class="n">RETURNING</span><span class="w"> </span><span class="n">ID</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">p_id_producto</span><span class="p">;</span>
-<span class="k">END</span><span class="p">;</span>
-<span class="o">/</span>
-</code></pre></div>
-<h3 id="35-crear-el-procedimiento-de-ajuste-de-precio-parametro-in-out">3.5 Crear el procedimiento de ajuste de precio (parámetro <code>IN OUT</code>)<a class="headerlink" href="#35-crear-el-procedimiento-de-ajuste-de-precio-parametro-in-out" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> procedimiento con un parámetro <code>IN OUT</code>, distinto de tener un <code>IN</code> y un <code>OUT</code> separados: el mismo parámetro entra con el precio actual y sale con el precio ya ajustado.</p>
-<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">PROCEDURE</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">SP_APLICAR_DESCUENTO_PRODUCTO</span><span class="p">(</span>
-<span class="w">    </span><span class="n">p_precio</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="k">OUT</span><span class="w"> </span><span class="nb">NUMBER</span><span class="p">,</span>
-<span class="w">    </span><span class="n">p_porcentaje_descuento</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="nb">NUMBER</span>
-<span class="p">)</span><span class="w"> </span><span class="k">IS</span>
-<span class="k">BEGIN</span>
-<span class="w">    </span><span class="n">p_precio</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">p_precio</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="n">p_precio</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">p_porcentaje_descuento</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">100</span><span class="p">);</span>
-<span class="k">END</span><span class="p">;</span>
-<span class="o">/</span>
-</code></pre></div>
-<h3 id="36-probar-funcion-y-procedimientos">3.6 Probar función y procedimientos<a class="headerlink" href="#36-probar-funcion-y-procedimientos" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> evidencia de ejecución.</p>
-<p><code>SP_REGISTRAR_PRODUCTO</code> exige una categoría existente (<code>FK_PRODUCTO_CATEGORIA</code>). Si <code>CATEGORIAS</code> está vacía todavía (por ejemplo, si solo ejecutaste 3.2-3.5 sin datos de prueba), la prueba siguiente falla con <code>ORA-02291: integrity constraint ... violated - parent key not found</code>. Antes de probar, registra al menos una categoría:</p>
-<div class="highlight"><pre><span></span><code><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">CATEGORIAS</span><span class="w"> </span><span class="p">(</span><span class="n">NOMBRE</span><span class="p">,</span><span class="w"> </span><span class="n">DESCRIPCION</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">'Perifericos'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Perifericos de computo'</span><span class="p">);</span>
-<span class="k">COMMIT</span><span class="p">;</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="k">DECLARE</span>
-<span class="w">    </span><span class="n">v_id_producto</span><span class="w">  </span><span class="nb">NUMBER</span><span class="p">;</span>
-<span class="w">    </span><span class="n">v_precio</span><span class="w">       </span><span class="nb">NUMBER</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="mi">180</span><span class="p">.</span><span class="mi">50</span><span class="p">;</span>
-<span class="w">    </span><span class="n">v_valor_inv</span><span class="w">    </span><span class="nb">NUMBER</span><span class="p">;</span>
-<span class="k">BEGIN</span>
-<span class="w">    </span><span class="c1">-- IN + OUT: registrar un producto nuevo</span>
-<span class="w">    </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">SP_REGISTRAR_PRODUCTO</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s1">'Teclado mecánico'</span><span class="p">,</span><span class="w"> </span><span class="mi">180</span><span class="p">.</span><span class="mi">50</span><span class="p">,</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span><span class="w"> </span><span class="n">v_id_producto</span><span class="p">);</span>
-<span class="w">    </span><span class="n">DBMS_OUTPUT</span><span class="p">.</span><span class="n">PUT_LINE</span><span class="p">(</span><span class="s1">'Producto registrado: '</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">v_id_producto</span><span class="p">);</span>
-
-<span class="w">    </span><span class="c1">-- IN, IN: calcular el valor de inventario</span>
-<span class="w">    </span><span class="n">v_valor_inv</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">FN_VALOR_INVENTARIO_PRODUCTO</span><span class="p">(</span><span class="mi">180</span><span class="p">.</span><span class="mi">50</span><span class="p">,</span><span class="w"> </span><span class="mi">25</span><span class="p">);</span>
-<span class="w">    </span><span class="n">DBMS_OUTPUT</span><span class="p">.</span><span class="n">PUT_LINE</span><span class="p">(</span><span class="s1">'Valor de inventario: '</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">v_valor_inv</span><span class="p">);</span>
-
-<span class="w">    </span><span class="c1">-- IN OUT: ajustar el precio en la misma variable</span>
-<span class="w">    </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">SP_APLICAR_DESCUENTO_PRODUCTO</span><span class="p">(</span><span class="n">v_precio</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">);</span>
-<span class="w">    </span><span class="n">DBMS_OUTPUT</span><span class="p">.</span><span class="n">PUT_LINE</span><span class="p">(</span><span class="s1">'Precio con 10% de descuento: '</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">v_precio</span><span class="p">);</span>
-<span class="k">END</span><span class="p">;</span>
-<span class="o">/</span>
-</code></pre></div>
-<p>Resultado esperado: <code>Producto registrado: &lt;id&gt;</code>, <code>Valor de inventario: 4512.5</code>, <code>Precio con 10% de descuento: 162.45</code>.</p>
+<p><strong>Error frecuente</strong>: dejar creado un índice que la medición ya mostró que no ayuda, "por si acaso". Cada índice adicional hace más lento cada <code>INSERT</code>/<code>UPDATE</code>/<code>DELETE</code> sobre esa tabla (Oracle también tiene que mantener el índice actualizado) y ocupa espacio — un costo real, permanente, a cambio de un beneficio que la Tabla 3 ya midió como inexistente.</p>
 <h3 id="37-relacionar-con-ads-y-lp2">3.7 Relacionar con ADS y LP2<a class="headerlink" href="#37-relacionar-con-ads-y-lp2" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> matriz de integración.</p>
-<p><strong>Tabla 4. Matriz de integración BD2-ADS-LP2</strong></p>
+<p><strong>Tabla 4. Matriz de integración BD2-ADS-LP2 (S5)</strong></p>
 <table>
 <thead>
 <tr>
@@ -3811,48 +3636,48 @@ BOM_CATALOGO                   OPEN             USERS                TEMP       
 </thead>
 <tbody>
 <tr>
-<td><code>SP_REGISTRAR_PRODUCTO</code></td>
-<td>Integridad: reglas transaccionales en servicio y Oracle</td>
-<td><code>POST /api/v1/productos</code> (S2), regla equivalente</td>
+<td><code>ix_ventas_fecha</code> (B-Tree)</td>
+<td>Atributo de rendimiento (ADS S1, atributos de calidad)</td>
+<td><code>GET /api/v1/ventas?desde=&amp;hasta=</code> (LP2 S5)</td>
 </tr>
 <tr>
-<td><code>FN_VALOR_INVENTARIO_PRODUCTO</code></td>
-<td>Centralizar regla de cálculo del negocio</td>
-<td>Cálculo que también podría exponerse en un reporte (S4-S5)</td>
+<td><code>ix_log_errores_objeto</code> (Bitmap)</td>
+<td>—</td>
+<td>Diagnóstico técnico, sin endpoint propio expuesto</td>
 </tr>
 <tr>
-<td><code>SP_APLICAR_DESCUENTO_PRODUCTO</code></td>
-<td>Mantenibilidad: lógica reutilizable, no repetida</td>
-<td><code>PUT /api/v1/productos/{id}</code> (S2), regla equivalente</td>
+<td><code>ix_ventas_fecha_dia</code> (Function-Based)</td>
+<td>—</td>
+<td>Reporte agregado <code>GET /api/v1/ventas/resumen</code> (LP2 S5)</td>
 </tr>
 </tbody>
 </table>
-<p>Sesión equivalente en los otros dos cursos, misma semana: <a href="../../../ads/sesiones/S01_Fundamentos_Arquitectura_Software/">ADS - S1 Fundamentos de Arquitectura de Software</a> y <a href="../../../lp2/sesiones/S01_Arquitectura_Backend_REST_Profesional/">LP2 - S1 Arquitectura Backend REST Profesional</a>.</p>
+<p>Sesión equivalente en los otros dos cursos, misma semana: <a href="../../../ads/sesiones/S05_Evaluacion_Unidad_1/">ADS - S5 Evaluación de la Unidad I</a> evalúa lo construido en S1-S4, sin contenido nuevo esta semana. <a href="../../../lp2/sesiones/S05_Consultas_Empresariales_Reportes_CORS/">LP2 - S5 Consultas Empresariales, Reportes REST y CORS</a> construye, esta misma semana, los filtros y el reporte que estos índices sostienen del lado de Oracle.</p>
 <p><strong>Evidencia de aprendizaje:</strong></p>
 <ul>
-<li>Esquema y tablas del catálogo (<code>CATEGORIAS</code>, <code>PRODUCTOS</code>) creados en Oracle.</li>
-<li>Función y procedimientos PL/SQL (<code>IN</code>, <code>IN</code>/<code>OUT</code>, <code>IN OUT</code>) probados con resultados correctos.</li>
+<li>Selectividad medida de <code>VENTAS.FECHA</code>, <code>VENTAS.ESTADO</code> y <code>LOG_ERRORES.OBJETO</code>.</li>
+<li>Índice B-Tree, Bitmap y Function-Based creados, cada uno con <code>EXPLAIN PLAN</code> confirmando su uso.</li>
+<li>Evidencia del índice descartado sobre <code>ESTADO</code>, con la medición que lo justifica.</li>
 <li>Matriz de integración con ADS y LP2.</li>
 </ul>
 <h2 id="4-crea-actividad-autonoma">4. Crea: actividad autónoma<a class="headerlink" href="#4-crea-actividad-autonoma" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 2h fuera del aula.</p>
 <h3 id="41-actividad">4.1 Actividad<a class="headerlink" href="#41-actividad" title="Permanent link">&para;</a></h3>
-<p>Creación autónoma del esquema y el motor transaccional PL/SQL para la entidad transaccional del proyecto propio del equipo, documentada en evidencia individual.</p>
+<p>Decisión e implementación autónoma de índices sobre tablas del proyecto propio del equipo, documentada en evidencia individual.</p>
 <p>Completa y evidencia estas tareas:</p>
 <ol>
-<li>Definir la operación transaccional del proyecto.</li>
-<li>Crear el esquema (usuario propietario) y las tablas mínimas de prueba.</li>
-<li>Crear una función PL/SQL de cálculo o validación.</li>
-<li>Crear un procedimiento con parámetros <code>IN</code> y <code>OUT</code>.</li>
-<li>Ejecutar al menos un caso válido.</li>
-<li>Registrar una mejora que se implementará en S2 o S3.</li>
+<li>Elegir al menos dos columnas candidatas de tu propio proyecto, de tablas y consultas reales (no de <code>VENTAS</code>/<code>LOG_ERRORES</code>).</li>
+<li>Medir la selectividad real de cada una.</li>
+<li>Crear al menos un índice B-Tree y uno Bitmap, cada uno justificado por la selectividad medida — o un Function-Based, si tu proyecto tiene una consulta real que filtra/agrupa por una expresión.</li>
+<li>Verificar con <code>EXPLAIN PLAN</code> que el optimizador usa cada índice creado.</li>
+<li>Identificar al menos una columna candidata donde la medición desaconseja crear un índice, y documentar por qué.</li>
 </ol>
 <h3 id="42-proposito">4.2 Propósito<a class="headerlink" href="#42-proposito" title="Permanent link">&para;</a></h3>
-<p>Que cada estudiante demuestre, de forma individual y fuera del aula, que puede reproducir el patrón construido en clase sin el acompañamiento del docente.</p>
-<p>Cada estudiante adapta el ejemplo a la entidad transaccional de su equipo.</p>
+<p>Que cada estudiante demuestre, de forma individual y fuera del aula, que puede decidir y verificar un índice con selectividad medida, sin el acompañamiento del docente.</p>
+<p>Cada estudiante adapta el ejemplo a columnas y consultas representativas de su propio proyecto.</p>
 <h3 id="43-indicaciones">4.3 Indicaciones<a class="headerlink" href="#43-indicaciones" title="Permanent link">&para;</a></h3>
 <p>Entrega un PDF con el siguiente nombre:</p>
-<div class="highlight"><pre><span></span><code>S01_BD2_Equipo##_ApellidoNombre.pdf
+<div class="highlight"><pre><span></span><code>S05_BD2_Equipo##_ApellidoNombre.pdf
 </code></pre></div>
 <p>Cada captura de pantalla del informe debe mostrar, sin recortar, el reloj del sistema (fecha y hora) y tu usuario o foto de perfil (Windows, VS Code o navegador) visibles en pantalla — es lo que permite verificar que la evidencia es tuya y que corresponde al momento real de tu trabajo.</p>
 <h4 id="431-estructura-del-informe">4.3.1 Estructura del informe<a class="headerlink" href="#431-estructura-del-informe" title="Permanent link">&para;</a></h4>
@@ -3860,61 +3685,79 @@ BOM_CATALOGO                   OPEN             USERS                TEMP       
 <ul>
 <li>Nombre:</li>
 <li>Equipo:</li>
-<li>Sesión: S01 - PL/SQL Aplicado al Negocio</li>
+<li>Sesión: S05 - Índices para Optimización</li>
 <li>Rol o aporte realizado:</li>
 <li>Link de GitHub:</li>
 </ul>
 <p><strong>Evidencia técnica</strong></p>
-<p>Incluye capturas o salidas con una breve explicación debajo de cada una, organizadas en los mismos 5 bloques de la rúbrica (4.6) — así queda claro qué evidencia corresponde a cada criterio evaluado:</p>
+<p>Incluye capturas o salidas con una breve explicación debajo de cada una, organizadas en los mismos 4 bloques de la rúbrica (4.6):</p>
 <ol>
-<li><em>Esquema y tablas del proyecto propio</em><ul>
-<li>Script SQL de creación del esquema y las tablas base.</li>
+<li><em>Selectividad medida</em><ul>
+<li>Tabla de selectividad de al menos dos columnas candidatas, con la consulta usada para medirla.</li>
 </ul>
 </li>
-<li><em>Operación transaccional</em><ul>
-<li>Breve explicación de la operación transaccional definida para el proyecto.</li>
+<li><em>Índice B-Tree o Function-Based</em><ul>
+<li>Índice creado, con <code>EXPLAIN PLAN</code> antes y después mostrando su uso.</li>
 </ul>
 </li>
-<li><em>Función PL/SQL</em><ul>
-<li>Script de la función PL/SQL.</li>
+<li><em>Índice Bitmap</em><ul>
+<li>Índice creado, con <code>EXPLAIN PLAN</code> antes y después mostrando su uso.</li>
 </ul>
 </li>
-<li><em>Procedimiento PL/SQL</em><ul>
-<li>Script del procedimiento PL/SQL, con breve explicación.</li>
-</ul>
-</li>
-<li><em>Evidencia de ejecución</em><ul>
-<li>Captura o salida de ejecución.</li>
-<li>Resultado de consulta a la tabla.</li>
+<li><em>Índice descartado</em><ul>
+<li>Columna candidata donde la medición desaconseja el índice, con la justificación.</li>
 </ul>
 </li>
 </ol>
 <p><strong>Error o hallazgo</strong></p>
-<p>Describe un error técnico encontrado: compilación, tipos, parámetros, claves, reglas o pruebas.</p>
+<p>Describe un hallazgo real: un índice que esperabas que se usara y no se usó, una selectividad que te sorprendió, o un índice que sí ayudó pero no en la consulta que esperabas.</p>
 <p><strong>Reflexión técnica breve</strong></p>
 <p>Responde en 5 a 8 líneas:</p>
-<div class="highlight"><pre><span></span><code>¿Qué regla del negocio conviene proteger en Oracle y por qué no debería quedar solo en el backend?
+<div class="highlight"><pre><span></span><code>¿Por qué crear un índice sobre cada columna que aparece en un WHERE
+no es una buena práctica, aunque técnicamente sea posible?
 </code></pre></div>
+<p><strong>Anexo: Feedback de la sesión</strong></p>
+<p>Pega esta página como la última hoja del PDF, con tus respuestas.</p>
+<ol>
+<li>¿Cuál es el aprendizaje más importante que te llevas de la clase de hoy?</li>
+<li>¿Qué punto de la clase te resultó más confuso o te dejó con dudas?</li>
+<li>¿Tienes alguna pregunta que te gustaría que sea respondida la siguiente clase?</li>
+<li>Sobre tu nivel de comprensión de la clase de hoy, marca una opción:<ul>
+<li>¡Entendido! - Lo domino y podría explicarlo.</li>
+<li>Más o menos. - Entendí la idea general, pero tengo dudas.</li>
+<li>Necesito ayuda. - Me siento perdido/a con este tema.</li>
+</ul>
+</li>
+<li>¿Cómo puedo ayudarte a comprender mejor el tema?</li>
+<li>Pensando en tu participación y esfuerzo en la clase de hoy, ¿cómo te autoevaluarías? Marca una opción:<ul>
+<li>Muy Comprometido/a: Me esforcé al máximo.</li>
+<li>Comprometido/a: Sé que podría haberme esforzado un poco más.</li>
+<li>Poco Comprometido/a: Hoy no di mi mejor esfuerzo.</li>
+</ul>
+</li>
+<li>Mi satisfacción con la clase fue... (califica del 1 al 10, donde 1 es insatisfecho y 10 es muy satisfecho).</li>
+</ol>
 <h3 id="44-criterios-minimos-de-aceptacion">4.4 Criterios mínimos de aceptación<a class="headerlink" href="#44-criterios-minimos-de-aceptacion" title="Permanent link">&para;</a></h3>
 <p>La evidencia individual se considera completa si:</p>
 <ul>
 <li>El archivo respeta el nombre solicitado.</li>
-<li>Crea el esquema/usuario propietario y las tablas base antes de la lógica PL/SQL.</li>
-<li>Presenta función y procedimiento compilables.</li>
-<li>Usa parámetros <code>IN</code> y <code>OUT</code>.</li>
-<li>Ejecuta un caso válido.</li>
-<li>Incluye evidencia de ejecución.</li>
+<li>Mide la selectividad real de al menos dos columnas candidatas, con la consulta usada.</li>
+<li>Crea al menos un índice B-Tree o Function-Based, con <code>EXPLAIN PLAN</code> confirmando su uso.</li>
+<li>Crea al menos un índice Bitmap, con <code>EXPLAIN PLAN</code> confirmando su uso.</li>
+<li>Identifica al menos una columna donde la medición desaconseja crear un índice, con justificación.</li>
 <li>Cada captura de la evidencia técnica muestra el reloj del sistema y el usuario/perfil visible, sin recortar.</li>
 <li>Las fechas y horas de las capturas son coherentes con el historial de commits de su repositorio en GitHub.</li>
 <li>Incluye un error o hallazgo técnico diagnosticado.</li>
 <li>Incluye la reflexión técnica breve solicitada.</li>
+<li>Incluye el Anexo de feedback de la sesión respondido, como última página del PDF.</li>
 </ul>
 <h3 id="45-preguntas-de-defensa">4.5 Preguntas de defensa<a class="headerlink" href="#45-preguntas-de-defensa" title="Permanent link">&para;</a></h3>
 <ol>
-<li>¿Qué operación transaccional implementaste?</li>
-<li>¿Por qué creaste una función y no solo un procedimiento?</li>
-<li>¿Qué parámetro <code>OUT</code> devuelve tu procedimiento?</li>
-<li>¿Qué validación falta mejorar en S2 o S3?</li>
+<li>¿Por qué la selectividad de una columna no es suficiente por sí sola para decidir si un índice se va a usar en una consulta concreta?</li>
+<li>¿Por qué un índice Bitmap no es recomendable sobre una tabla con alta concurrencia de escritura?</li>
+<li>¿Por qué <code>TRUNC(VENTAS.FECHA)</code> necesita un Function-Based Index y no basta con el B-Tree ya creado sobre <code>FECHA</code>?</li>
+<li>En el caso de 1.6.1, ¿qué tendría que cambiar en los datos de <code>VENTAS.ESTADO</code> para que un índice sobre esa columna empiece a tener sentido?</li>
+<li>Si tu operación autónoma (4.1) no encontró ninguna columna con baja selectividad, ¿cómo lo verificaste, y qué columna consideraste y descartaste como candidata a Bitmap?</li>
 </ol>
 <h3 id="46-rubrica-de-evaluacion">4.6 Rúbrica de evaluación<a class="headerlink" href="#46-rubrica-de-evaluacion" title="Permanent link">&para;</a></h3>
 <p><strong>Tabla 5. Rúbrica de evaluación</strong></p>
@@ -3932,48 +3775,39 @@ BOM_CATALOGO                   OPEN             USERS                TEMP       
 </thead>
 <tbody>
 <tr>
-<td>1. Esquema y tablas del proyecto propio*</td>
-<td style="text-align: right;">20</td>
-<td>Esquema y tablas propias creados correctamente, con permisos mínimos definidos para el usuario de aplicación.</td>
-<td>Esquema y tablas funcionales, con detalles menores.</td>
-<td>Esquema o tablas incompletos.</td>
-<td>No crea esquema ni tablas.</td>
+<td>1. Selectividad medida*</td>
+<td style="text-align: right;">25</td>
+<td>Selectividad de al menos dos columnas medida con consulta real, y usada explícitamente para decidir.</td>
+<td>Selectividad medida, con la decisión parcialmente justificada.</td>
+<td>Selectividad mencionada sin medición real.</td>
+<td>No mide selectividad.</td>
 <td style="text-align: right;"></td>
 </tr>
 <tr>
-<td>2. Operación transaccional*</td>
-<td style="text-align: right;">20</td>
-<td>Define una operación transaccional clara y alineada al proyecto propio del equipo.</td>
-<td>Define una operación comprensible.</td>
-<td>Operación parcial o poco conectada.</td>
-<td>No define operación.</td>
+<td>2. Índice B-Tree o Function-Based*</td>
+<td style="text-align: right;">25</td>
+<td>Índice creado y verificado con <code>EXPLAIN PLAN</code> mostrando su uso real.</td>
+<td>Índice creado, con verificación parcial del plan.</td>
+<td>Índice creado sin verificar su uso.</td>
+<td>No crea ningún índice B-Tree ni Function-Based.</td>
 <td style="text-align: right;"></td>
 </tr>
 <tr>
-<td>3. Función PL/SQL*</td>
-<td style="text-align: right;">20</td>
-<td>Función correcta, reutilizable y probada.</td>
-<td>Función funcional con detalles menores.</td>
-<td>Función incompleta o poco probada.</td>
-<td>No presenta función.</td>
+<td>3. Índice Bitmap*</td>
+<td style="text-align: right;">25</td>
+<td>Índice creado sobre una columna de baja selectividad real, verificado con <code>EXPLAIN PLAN</code>.</td>
+<td>Índice creado, con verificación parcial.</td>
+<td>Índice creado sobre una columna de selectividad inadecuada.</td>
+<td>No crea ningún índice Bitmap.</td>
 <td style="text-align: right;"></td>
 </tr>
 <tr>
-<td>4. Procedimiento PL/SQL*</td>
-<td style="text-align: right;">20</td>
-<td>Procedimiento correcto con parámetros <code>IN</code>/<code>OUT</code> y registro exitoso.</td>
-<td>Procedimiento funcional con detalles menores.</td>
-<td>Procedimiento parcial o con errores.</td>
-<td>No presenta procedimiento.</td>
-<td style="text-align: right;"></td>
-</tr>
-<tr>
-<td>5. Evidencia de ejecución*</td>
-<td style="text-align: right;">20</td>
-<td>Presenta ejecución y consulta verificable del caso de prueba.</td>
-<td>Presenta evidencia suficiente.</td>
-<td>Evidencia incompleta.</td>
-<td>No evidencia ejecución.</td>
+<td>4. Índice descartado y justificación*</td>
+<td style="text-align: right;">25</td>
+<td>Columna candidata descartada con medición y justificación técnica clara.</td>
+<td>Columna descartada, con justificación parcial.</td>
+<td>Menciona un descarte sin medición real.</td>
+<td>No identifica ningún índice descartado.</td>
 <td style="text-align: right;"></td>
 </tr>
 </tbody>
@@ -3990,14 +3824,15 @@ Indica 2 fortalezas y 2 recomendaciones.
 </code></pre></div>
 <h2 id="5-cierre">5. Cierre<a class="headerlink" href="#5-cierre" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 5 min.</p>
-<p><strong>Resumen breve:</strong> hoy el esquema <code>BOM_CATALOGO</code> pasó de no existir a tener tablas base y su primer motor transaccional: una función y un procedimiento PL/SQL que validan reglas del negocio con parámetros <code>IN</code> y <code>OUT</code> — la base sobre la que LP2 conecta su backend.</p>
-<p><strong>Dinámica participativa:</strong> en una ronda rápida (o con una herramienta digital tipo formulario o encuesta en vivo), cada estudiante comparte en una frase qué validación implementó en su función o procedimiento.</p>
-<p><strong>Metacognición:</strong> cada estudiante responde en voz alta o por escrito: ¿qué parte de la sesión te costó más entender, y cómo la resolviste?</p>
-<p><strong>Proyección:</strong> el motor transaccional de hoy se amplía en S2 con triggers y auditoría, y el hábito de proteger reglas de negocio en la base de datos aplica a cualquier sistema profesional donde varios clientes (no solo un backend) necesiten confiar en los mismos datos.</p>
+<p><strong>Resumen breve:</strong> hoy el proyecto ganó tres índices reales — B-Tree sobre <code>VENTAS.FECHA</code>, Bitmap sobre <code>LOG_ERRORES.OBJETO</code> y Function-Based sobre <code>TRUNC(VENTAS.FECHA)</code> —, cada uno decidido con selectividad medida y verificado con <code>EXPLAIN PLAN</code>, más la evidencia de un índice que, medido, no convenía crear.</p>
+<p><strong>Dinámica participativa:</strong> en una ronda rápida, cada estudiante comparte en una frase qué columna de su propio proyecto tiene la selectividad más baja, y por qué.</p>
+<p><strong>Metacognición:</strong> cada estudiante responde el Anexo de feedback de la sesión, incluido en su evidencia individual (ver 4.3.1). El docente analiza esas respuestas con IA para identificar temas recurrentes o dudas comunes del equipo, y con esos indicadores construye el cierre real de la sesión — que se entrega al inicio de S6, no al final de esta clase.</p>
+<p><strong>Proyección:</strong> S6 no agrega índices nuevos: integra <code>BOM_CATALOGO</code> y <code>BOM_VENTAS</code> como un solo motor transaccional optimizado y evalúa lo construido en S1-S5, en la misma semana en que ADS ya cerró su propia Unidad I y LP2 evalúa la suya.</p>
 <h2 id="bibliografia">Bibliografía<a class="headerlink" href="#bibliografia" title="Permanent link">&para;</a></h2>
 <ol>
-<li>Oracle Corporation. (2024). <em>Oracle Database Free 23ai documentation</em>. https://docs.oracle.com/en/database/oracle/oracle-database/23/</li>
-<li>Oracle Corporation. (2024). <em>Database PL/SQL language reference</em>. https://docs.oracle.com/en/database/oracle/oracle-database/23/lnpls/</li>
+<li>Oracle Corporation. (2024). <em>Database SQL Tuning Guide — Using Indexes and Clusters</em>. https://docs.oracle.com/en/database/oracle/oracle-database/23/tgsql/</li>
+<li>Oracle Corporation. (2024). <em>Database Concepts — Indexes and Index-Organized Tables</em>. https://docs.oracle.com/en/database/oracle/oracle-database/23/cncpt/</li>
+<li>Oracle Corporation. (2024). <em>DBMS_STATS package reference</em>. https://docs.oracle.com/en/database/oracle/oracle-database/23/arpls/DBMS_STATS.html</li>
 </ol>
 
 

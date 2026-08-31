@@ -16,7 +16,7 @@
         <link rel="prev" href="../S03_Excepciones_Robustez/">
       
       
-        <link rel="next" href="../../../lp2/">
+        <link rel="next" href="../S05_Indices_Optimizacion/">
       
       
         
@@ -2270,6 +2270,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S05_Indices_Optimizacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S5 - Índices para optimización
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2796,6 +2824,34 @@
     
   
     S4 - Operación cabecera-detalle Venta-DetalleVenta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S05_Consultas_Empresariales_Reportes_CORS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S5 - Consultas empresariales, reportes REST y CORS
   
 
     
@@ -3379,8 +3435,68 @@
 <p>Este diagrama es el mapa que guía el resto de la explicación: cada apartado siguiente desarrolla uno de sus componentes, en el mismo orden del Índice (1.2).</p>
 <h3 id="22-cost-based-optimizer-cbo">2.2 Cost Based Optimizer (CBO)<a class="headerlink" href="#22-cost-based-optimizer-cbo" title="Permanent link">&para;</a></h3>
 <p><code>BOM_VENTAS</code> es el segundo esquema del proyecto, con el mismo criterio de "un esquema por módulo funcional" que ya estableció <code>BOM_CATALOGO</code> en S1 — se crea recién ahora porque LP2 llega a su módulo <code>ventas</code> esta misma semana (LP2 S4), con volumen de prueba real cargado sobre él: sin datos, no hay nada que el optimizador tenga que decidir de verdad.</p>
+<p><strong>Figura 3. Esquema real en Oracle: <code>VENTAS</code> y <code>DETALLE_VENTAS</code></strong></p>
+<pre class="mermaid"><code>erDiagram
+    VENTAS ||--o{ DETALLE_VENTAS : "FK_DETALLE_VENTA"
+    PRODUCTOS ||--o{ DETALLE_VENTAS : "ID_PRODUCTO, sin FK fisica"
+    VENTAS {
+        NUMBER ID PK
+        TIMESTAMP FECHA
+        VARCHAR2 ESTADO
+        NUMBER TOTAL
+    }
+    DETALLE_VENTAS {
+        NUMBER ID PK
+        NUMBER ID_VENTA FK
+        NUMBER ID_PRODUCTO
+        VARCHAR2 NOMBRE_PRODUCTO
+        NUMBER PRECIO_UNITARIO
+        NUMBER CANTIDAD
+        NUMBER SUBTOTAL
+    }
+    PRODUCTOS {
+        NUMBER ID PK
+        NUMBER ID_CATEGORIA FK
+        VARCHAR2 NOMBRE
+        NUMBER PRECIO
+        NUMBER STOCK
+    }</code></pre>
+<p>Mismo esquema que 3.2 crea en Oracle — este diagrama es su vista de conjunto, antes del detalle tabla por tabla. <code>PRODUCTOS</code> (esquema <code>BOM_CATALOGO</code>, creado en S1) aparece para mostrar el sentido real del negocio: <code>DETALLE_VENTAS</code> es la tabla asociativa que resuelve el muchos-a-muchos entre una venta (varios productos) y un producto (vendido en varias ventas). Esa relación con <code>PRODUCTOS</code> no tiene <code>FOREIGN KEY</code> física — por eso la etiqueta lo dice explícitamente ("sin FK física"); la ausencia es intencional, no un olvido (ver el párrafo siguiente).</p>
 <p>El <strong>Cost Based Optimizer</strong> es el componente de Oracle que decide, para cada consulta, el plan de ejecución con el menor costo estimado — no necesariamente el más rápido en la realidad, sino el que el CBO <em>cree</em> más barato según las estadísticas que tiene disponibles en ese momento (qué tabla recorrer primero, qué método de <em>join</em> usar, si conviene un <code>FULL TABLE SCAN</code>). Esa decisión es exactamente lo que el resto de esta sesión analiza y, cuando corresponde, ayuda a mejorar.</p>
-<p><strong>Decisión de diseño: <code>DETALLE_VENTAS.ID_PRODUCTO</code> no lleva <code>FOREIGN KEY</code> hacia <code>BOM_CATALOGO.PRODUCTOS</code>.</strong> Podría parecer natural agregarla — Oracle sí permite claves foráneas entre esquemas distintos, con los privilegios adecuados — pero eso acoplaría el DDL de <code>BOM_VENTAS</code> a la estructura interna de <code>BOM_CATALOGO</code>, exactamente lo que la separación por esquemas busca evitar. <code>DETALLE_VENTAS</code> guarda <code>ID_PRODUCTO</code> como número simple, más una copia de <code>NOMBRE_PRODUCTO</code> y <code>PRECIO_UNITARIO</code> al momento de la venta — es el mismo criterio, a nivel de esquema Oracle, que LP2 aplica a nivel de módulo Java con <code>@NamedInterface</code> (LP2 S4, 2.4): ninguno de los dos referencia directamente el objeto interno del otro módulo/esquema.</p>
+<p><strong>Decisión de diseño: <code>DETALLE_VENTAS.ID_PRODUCTO</code> no lleva <code>FOREIGN KEY</code> hacia <code>BOM_CATALOGO.PRODUCTOS</code>.</strong> Técnicamente Oracle sí lo permite: ambos esquemas viven en la misma base de datos, y una <code>FOREIGN KEY</code> entre esquemas distintos, con los privilegios adecuados, es una operación normal — la razón para no crearla es de diseño, no una limitación técnica. Si existiera, borrar un producto que ya tiene ventas asociadas quedaría bloqueado por Oracle (<code>ON DELETE RESTRICT</code>, el comportamiento por defecto): el catálogo nunca podría depurar productos discontinuados sin arrastrar el problema hasta ventas ya cerradas. La alternativa, <code>ON DELETE CASCADE</code>, sería peor todavía: borrar un producto borraría, o dejaría huérfano, el detalle de ventas reales — destruyendo evidencia histórica que ya ocurrió. <code>DETALLE_VENTAS</code> guarda <code>ID_PRODUCTO</code> como número simple, más una copia de <code>NOMBRE_PRODUCTO</code> y <code>PRECIO_UNITARIO</code> al momento de la venta, precisamente para no depender de que <code>PRODUCTOS</code> siga existiendo: un registro de venta debe seguir siendo válido aunque el producto que describe ya no exista en el catálogo. Además, esa <code>FOREIGN KEY</code> acoplaría el DDL de <code>BOM_VENTAS</code> a la estructura interna de <code>BOM_CATALOGO</code>, exactamente lo que la separación por esquemas busca evitar — es el mismo criterio, a nivel de esquema Oracle, que LP2 aplica a nivel de módulo Java con <code>@NamedInterface</code> (LP2 S4, 2.4): ninguno de los dos referencia directamente el objeto interno del otro módulo/esquema.</p>
+<p><strong>No es una regla general contra las <code>FOREIGN KEY</code> entre esquemas — depende de dos condiciones a la vez, no de "cruzar esquema" por sí solo:</strong></p>
+<p><strong>Tabla 2. Cuándo una relación lleva <code>FOREIGN KEY</code> física y cuándo no</strong></p>
+<table>
+<thead>
+<tr>
+<th>Relación</th>
+<th>¿Mismo esquema/módulo?</th>
+<th>¿El lado que referencia es un registro histórico?</th>
+<th>¿<code>FOREIGN KEY</code> física?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>VENTAS</code> → <code>DETALLE_VENTAS</code></td>
+<td>Sí (<code>BOM_VENTAS</code>)</td>
+<td>—</td>
+<td>Sí (<code>FK_DETALLE_VENTA</code>)</td>
+</tr>
+<tr>
+<td><code>PRODUCTOS</code> → <code>CATEGORIAS</code></td>
+<td>Sí (<code>BOM_CATALOGO</code>)</td>
+<td>No, es catálogo vivo</td>
+<td>Sí (<code>FK_PRODUCTO_CATEGORIA</code>)</td>
+</tr>
+<tr>
+<td><code>DETALLE_VENTAS</code> → <code>PRODUCTOS</code></td>
+<td>No, cruza esquema</td>
+<td>Sí, venta ya cerrada</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<p>Dentro de un mismo esquema, la <code>FOREIGN KEY</code> sigue siendo la norma — así quedan <code>VENTAS</code>-<code>DETALLE_VENTAS</code> (arriba) y <code>PRODUCTOS</code>-<code>CATEGORIAS</code> (S1): ninguna de las dos es un registro histórico que deba sobrevivir a que el otro lado cambie o desaparezca. La ausencia de <code>FOREIGN KEY</code> es la excepción, no el punto de partida, y solo se justifica cuando la relación cruza el límite de módulo <strong>y</strong> el lado que referencia es un registro transaccional que no debe depender de que el otro dato siga existiendo igual.</p>
 <h3 id="23-explain-plan">2.3 Explain Plan<a class="headerlink" href="#23-explain-plan" title="Permanent link">&para;</a></h3>
 <p><code>EXPLAIN PLAN</code> muestra la decisión del CBO sin ejecutar la consulta:</p>
 <div class="highlight"><pre><span></span><code><span class="k">EXPLAIN</span><span class="w"> </span><span class="n">PLAN</span><span class="w"> </span><span class="k">FOR</span>
@@ -3398,7 +3514,7 @@
 <p><strong>Error frecuente</strong>: cargar un volumen grande de datos de prueba y ejecutar <code>EXPLAIN PLAN</code> inmediatamente después, sin correr <code>DBMS_STATS</code> — el plan que se ve todavía puede estar basado en estadísticas de cuando la tabla estaba casi vacía (o sin estadísticas en absoluto), no en el volumen real que se acaba de cargar.</p>
 <h3 id="25-buenas-practicas-sql-que-cambian-el-plan-de-ejecucion">2.5 Buenas prácticas SQL que cambian el plan de ejecución<a class="headerlink" href="#25-buenas-practicas-sql-que-cambian-el-plan-de-ejecucion" title="Permanent link">&para;</a></h3>
 <p>No toda mejora de una consulta requiere un índice nuevo (eso es S5) — cómo se <strong>escribe</strong> la consulta también le da o le quita información al CBO. Dos prácticas concretas, aplicables desde hoy:</p>
-<p><strong>Tabla 2. Buenas prácticas SQL que afectan el plan, sin tocar índices</strong></p>
+<p><strong>Tabla 3. Buenas prácticas SQL que afectan el plan, sin tocar índices</strong></p>
 <table>
 <thead>
 <tr>
@@ -3445,7 +3561,7 @@
 <p><strong>Scripts completos, listos para ejecutar</strong> (los pasos siguientes explican cada bloque): <a href="../../../proyecto-integrador/u1/oracle/S04_01_esquemas.sql"><code>S04_01_esquemas.sql</code></a>, <a href="../../../proyecto-integrador/u1/oracle/S04_02_tablas.sql"><code>S04_02_tablas.sql</code></a> y <a href="../../../proyecto-integrador/u1/oracle/S04_optimizacion_consultas.sql"><code>S04_optimizacion_consultas.sql</code></a> (volumen, <code>EXPLAIN PLAN</code>, <code>DBMS_STATS</code> y reescritura).</p>
 <h3 id="31-definir-la-consulta-representativa-a-optimizar">3.1 Definir la consulta representativa a optimizar<a class="headerlink" href="#31-definir-la-consulta-representativa-a-optimizar" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> la consulta que esta sesión analiza y mejora de punta a punta.</p>
-<p><strong>Tabla 3. Consulta representativa de esta sesión</strong></p>
+<p><strong>Tabla 4. Consulta representativa de esta sesión</strong></p>
 <table>
 <thead>
 <tr>
@@ -3578,7 +3694,7 @@
 </code></pre></div>
 <p>Compara <code>ROWS</code> y <code>COST</code> de este plan contra el de 3.4 — con la tabla recién cargada y sin estadísticas previas, es común que el CBO haya estimado con valores por defecto o desactualizados en 3.4; después de <code>DBMS_STATS</code>, la estimación de <code>ROWS</code> debería acercarse más al volumen real que verificaste en 3.3.</p>
 <h3 id="36-reescribir-la-consulta-aplicando-una-buena-practica-sql">3.6 Reescribir la consulta aplicando una buena práctica SQL<a class="headerlink" href="#36-reescribir-la-consulta-aplicando-una-buena-practica-sql" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> la misma consulta, con el filtro de fecha reescrito para no envolver la columna en una función (2.5, Tabla 2).</p>
+<p><strong>Producto del paso:</strong> la misma consulta, con el filtro de fecha reescrito para no envolver la columna en una función (2.5, Tabla 3).</p>
 <div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">NOMBRE</span><span class="p">,</span><span class="w"> </span><span class="k">SUM</span><span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">CANTIDAD</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">TOTAL_UNIDADES</span><span class="p">,</span><span class="w"> </span><span class="k">SUM</span><span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">SUBTOTAL</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">TOTAL_VENDIDO</span>
 <span class="k">FROM</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">DETALLE_VENTAS</span><span class="w"> </span><span class="n">d</span>
 <span class="k">JOIN</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">VENTAS</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">ID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">ID_VENTA</span>
@@ -3602,7 +3718,7 @@
 
 <span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="k">TABLE</span><span class="p">(</span><span class="n">DBMS_XPLAN</span><span class="p">.</span><span class="n">DISPLAY</span><span class="p">);</span>
 </code></pre></div>
-<p><strong>Tabla 4. Comparación antes/después (completa con tus propios valores)</strong></p>
+<p><strong>Tabla 5. Comparación antes/después (completa con tus propios valores)</strong></p>
 <table>
 <thead>
 <tr>
@@ -3640,7 +3756,7 @@
 <p>Los tres planes de esta tabla son tu evidencia principal (4.3.1) — sin ellos, no hay forma de sustentar que algo cambió, más allá de "corrió rápido".</p>
 <h3 id="38-relacionar-con-ads-y-lp2">3.8 Relacionar con ADS y LP2<a class="headerlink" href="#38-relacionar-con-ads-y-lp2" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> matriz de integración.</p>
-<p><strong>Tabla 5. Matriz de integración BD2-ADS-LP2 (S4)</strong></p>
+<p><strong>Tabla 6. Matriz de integración BD2-ADS-LP2 (S4)</strong></p>
 <table>
 <thead>
 <tr>
@@ -3685,8 +3801,8 @@
 <li>Cargar (o confirmar que ya existe) volumen de prueba suficiente para que la comparación tenga sentido.</li>
 <li>Capturar el <code>EXPLAIN PLAN</code> inicial.</li>
 <li>Actualizar estadísticas con <code>DBMS_STATS</code> y volver a capturar el plan.</li>
-<li>Reescribir la consulta aplicando al menos una buena práctica SQL (2.5, Tabla 2) y capturar el plan final.</li>
-<li>Completar una tabla comparativa con los tres momentos, igual que la Tabla 4 de esta guía.</li>
+<li>Reescribir la consulta aplicando al menos una buena práctica SQL (2.5, Tabla 3) y capturar el plan final.</li>
+<li>Completar una tabla comparativa con los tres momentos, igual que la Tabla 5 de esta guía.</li>
 </ol>
 <h3 id="42-proposito">4.2 Propósito<a class="headerlink" href="#42-proposito" title="Permanent link">&para;</a></h3>
 <p>Que cada estudiante demuestre, de forma individual y fuera del aula, que puede analizar y mejorar el plan de ejecución de una consulta real sin el acompañamiento del docente.</p>
@@ -3780,7 +3896,7 @@ en esa diferencia?
 <li>¿Qué esperarías que cambiara en el plan de esta consulta cuando S5 agregue un índice sobre <code>VENTAS.FECHA</code>?</li>
 </ol>
 <h3 id="46-rubrica-de-evaluacion">4.6 Rúbrica de evaluación<a class="headerlink" href="#46-rubrica-de-evaluacion" title="Permanent link">&para;</a></h3>
-<p><strong>Tabla 6. Rúbrica de evaluación</strong></p>
+<p><strong>Tabla 7. Rúbrica de evaluación</strong></p>
 <table>
 <thead>
 <tr>
