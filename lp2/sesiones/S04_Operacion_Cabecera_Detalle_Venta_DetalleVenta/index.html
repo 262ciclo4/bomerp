@@ -3656,9 +3656,21 @@
 <td>Sí, venta ya cerrada</td>
 <td>No</td>
 </tr>
+<tr>
+<td><code>Venta</code> → <code>Cliente</code>*</td>
+<td>No, cruza módulo</td>
+<td>Sí, venta ya cerrada</td>
+<td>No</td>
+</tr>
 </tbody>
 </table>
+<p>* Caso hipotético: <code>personas</code>/<code>Cliente</code> todavía no existe en el proyecto — se incluye aquí solo para probar el criterio contra un caso distinto a <code>Producto</code>.</p>
 <p>Dentro de un mismo módulo, la relación JPA sigue siendo la norma — así quedan <code>Venta</code>-<code>DetalleVenta</code> (arriba) y <code>Producto</code>-<code>Categoria</code> (S3): ninguna de las dos es un registro histórico que deba sobrevivir a que el otro lado cambie o desaparezca. La ausencia de relación directa es la excepción, no el punto de partida, y solo se justifica cuando cruza el límite de módulo <strong>y</strong> el lado que referencia es un registro transaccional que no debe depender de que el otro dato siga existiendo igual — exactamente el mismo criterio, ya explicado del lado de Oracle en la Tabla 2 de <a href="../../../bd2/sesiones/S04_Optimizacion_Consultas_SQL/">BD2 S4</a>, 2.2.</p>
+<p><strong>El criterio para copiar un campo no es "podría cambiar" — es "forma parte del documento legal".</strong> Con <code>Cliente</code> esto se nota mejor que con <code>Producto</code>: el DNI o RUC de una persona prácticamente no cambia nunca, y aun así habría que copiarlo — no por temor a que cambie, sino porque una boleta o factura electrónica es un documento legal autocontenido, y el nombre/razón social y el número de documento son parte de ese documento tal como se emitió, no una referencia que se resuelve consultando <code>Cliente</code> cada vez que alguien la revisa:</p>
+<ul>
+<li><strong>Se copian en <code>Venta</code></strong> (identifican al documento en sí, sin importar qué tan seguido cambien): tipo y número de documento (DNI/RUC), nombre completo o razón social.</li>
+<li><strong>No se copian en <code>Venta</code></strong>: dirección, teléfono, correo — datos de contacto que sí cambian con más frecuencia, pero que no forman parte de la boleta/factura. Si algún día se necesitara "la dirección del cliente al momento de esta venta", eso no se resuelve copiando la dirección en cada venta: se resuelve con una tabla de auditoría propia sobre <code>Cliente</code> en Oracle (mismo patrón que <code>PRODUCTO_AUDITORIA</code>, BD2 S2, 3.2 — antes/después con fecha), consultada por fecha, no con una copia repetida en cada transacción que lo mencione.</li>
+</ul>
 <h3 id="23-calculos-y-estados">2.3 Cálculos y estados<a class="headerlink" href="#23-calculos-y-estados" title="Permanent link">&para;</a></h3>
 <p>Cada <code>DetalleVenta</code> calcula su <code>subtotal</code> como <code>precioUnitario × cantidad</code>; el <code>total</code> de la <code>Venta</code> es la suma de todos los <code>subtotal</code> de sus detalles. Ambos cálculos ocurren en el service, no en el controller ni en la entidad — la entidad <code>Venta</code>/<code>DetalleVenta</code> solo almacena el resultado, no lo recalcula por sí sola cada vez que se lee.</p>
 <p>Cada <code>Venta</code> también tiene un <strong>estado</strong> (<code>EstadoVenta</code>) — hoy con un único valor posible, <code>REGISTRADA</code>: toda venta creada en esta sesión queda ahí, sin operación de anulación todavía (3.3). El campo existe desde ahora porque una operación cabecera-detalle real casi siempre necesita más de un estado con el tiempo (por ejemplo, <code>ANULADA</code>, con su propia reversión de stock) — aunque esta sesión no lo explote todavía, extenderlo más adelante es agregar un valor al enum y la lógica que lo use, no rediseñar la entidad.</p>
