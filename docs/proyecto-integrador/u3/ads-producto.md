@@ -1,5 +1,7 @@
 ﻿# ADS - Producto de Unidad 3
 
+**Este documento es el ejemplo BomERP del docente, no una plantilla obligatoria.** Cada sede (Lima, Juliaca, Tarapoto) y cada grupo dentro de una misma sede cierra su propio diseño técnico sobre su propio dominio, definido desde S2 y consolidado en sus propios productos U1/U2. Los ADR y la matriz de trazabilidad de este documento son los del ejemplo BomERP; cada equipo los reemplaza por los suyos, con sus propios códigos si ya vienen de U1/U2. Lo exigible a todos es la estructura: arquitectura final, modelo de dominio, catálogo UML, patrones, ADR y trazabilidad completa.
+
 ## Producto
 
 **Diseño Técnico Profesional Documentado.**

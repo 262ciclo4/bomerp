@@ -1,5 +1,7 @@
 ﻿# LP2 - Producto de Unidad 3
 
+**Este documento es el ejemplo BomERP del docente, no una plantilla obligatoria.** Cada sede (Lima, Juliaca, Tarapoto) y cada grupo dentro de una misma sede estabiliza y sustenta su propia base full-stack sobre su propio dominio. Los módulos y casos de prueba concretos de este documento (`catalogo`/`ventas`) son los del ejemplo BomERP; cada equipo los reemplaza por los suyos. Lo exigible a todos es la estructura: backend y frontend modular funcionando integrado, seguridad, optimización, caché, observabilidad, paginación, auditoría, pruebas y estabilización.
+
 ## Producto
 
 **Base Full-Stack modular de BomERP —una SPA, una aplicación Spring Boot única (módulos verificados con Spring Modulith) y una base Oracle organizada por esquemas funcionales— integrada, optimizada, monitoreada y estabilizada.**

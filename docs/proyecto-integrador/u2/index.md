@@ -4,6 +4,8 @@
 
 El corte de Unidad 2 demuestra que el diseño técnico, la base Oracle administrada y la aplicación full-stack modular ya funcionan como un sistema integrado sobre `Producto`, `Categoria`, `Venta`, `DetalleVenta` y `Usuario`. ADS consolida UML, patrones e integración; BD2 administra, asegura y optimiza Oracle; LP2 integra una sola SPA modular y segura con la aplicación Spring Boot.
 
+**BomERP es el ejemplo del docente, no el dominio obligatorio.** Cada sede (Lima, Juliaca, Tarapoto) y cada grupo dentro de una misma sede sustenta su propio dominio, declarado desde el [brief.md](../brief.md) de S2. Las secciones siguientes usan los nombres de BomERP solo como referencia concreta; cada equipo los lee en clave de sus propios módulos.
+
 ## Producto integrado U2
 
 **Aplicación full-stack funcional con diseño de integración y base Oracle administrada, optimizada y asegurada.**

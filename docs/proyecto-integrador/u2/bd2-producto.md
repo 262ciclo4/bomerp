@@ -1,5 +1,7 @@
 ﻿# BD2 - Producto de Unidad 2
 
+**Este documento es el ejemplo BomERP del docente, no una plantilla obligatoria.** Cada sede (Lima, Juliaca, Tarapoto) y cada grupo dentro de una misma sede administra su propio esquema Oracle, definido desde su propio [brief.md](../brief.md) de S2. Los scripts y roles concretos de este documento son los del ejemplo BomERP; cada equipo los reemplaza por los de su propio proyecto. Lo exigible a todos es la estructura: seguridad (usuarios, roles, privilegios), almacenamiento y auditoría, y particionamiento/rendimiento.
+
 ## Producto
 
 **Base de datos empresarial administrada, optimizada y asegurada.**

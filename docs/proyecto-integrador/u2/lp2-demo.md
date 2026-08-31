@@ -1,5 +1,7 @@
 ﻿# LP2 - Producto de Unidad 2
 
+**Este documento es el ejemplo BomERP del docente, no una plantilla obligatoria.** Cada sede (Lima, Juliaca, Tarapoto) y cada grupo dentro de una misma sede construye su propia SPA sobre su propio dominio, definido desde su propio [brief.md](../brief.md) de S2. Los módulos, formularios y endpoints concretos de este documento (`catalogo`/`ventas`) son los del ejemplo BomERP; cada equipo los reemplaza por sus propios módulos. Lo exigible a todos es la estructura: SPA con `core`/`shared`/`features`, CRUD independiente y dependiente, un formulario cabecera-detalle real, seguridad backend/frontend y control de acceso.
+
 ## Producto
 
 **Una SPA empresarial modular y segura, conectada al único backend Spring Boot de BomERP, con navegación por funcionalidades, CRUD, formulario transaccional, consultas, reportes y control de acceso.**

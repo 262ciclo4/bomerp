@@ -1,5 +1,7 @@
 ﻿# Checklist final del Proyecto Integrador
 
+Los ítems que mencionan `Producto`, `Categoria`, `Venta` o `DetalleVenta` usan la nomenclatura del ejemplo BomERP; cada equipo los lee en clave de su propio módulo transaccional y no transaccional.
+
 ## 1. Producto integrado
 
 | Ítem | Cumple | Evidencia |
@@ -43,7 +45,7 @@
 | Los módulos no comparten repositorios ni usan llamadas HTTP internas. |  |  |
 | Seguridad backend/frontend. |  |  |
 | CRUD maestro y dependiente. |  |  |
-| Producto–Categoria y Venta–DetalleVenta operativos. |  |  |
+| Módulo no transaccional y módulo transaccional propios operativos (equivalentes a Producto–Categoria y Venta–DetalleVenta en BomERP). |  |  |
 | Consultas y reportes de ventas protegidos. |  |  |
 | Lazy Loading o Code Splitting con build optimizado. |  |  |
 | Caché del navegador y decisión documentada sobre Redis. |  |  |

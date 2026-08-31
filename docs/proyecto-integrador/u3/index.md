@@ -10,6 +10,8 @@ La Unidad 3 consolida el producto final del ciclo. No repite la funcionalidad de
 
 Este producto evidencia que el equipo no solo construyó una aplicación funcional, sino que también cerró su diseño técnico, estabilizó el producto, preparó operación básica, documentó evidencias y puede sustentar decisiones de punta a punta.
 
+**BomERP es el ejemplo del docente, no el dominio obligatorio.** Cada sede (Lima, Juliaca, Tarapoto) y cada grupo dentro de una misma sede cierra su propio producto final sobre su propio dominio, declarado desde el [brief.md](../brief.md) de S2. Las secciones siguientes usan los nombres de BomERP solo como referencia concreta; cada equipo los lee en clave de sus propios módulos.
+
 ## Productos por curso
 
 | Curso | Producto U3 | Archivo |

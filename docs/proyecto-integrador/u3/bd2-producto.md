@@ -1,5 +1,7 @@
 ﻿# BD2 - Producto de Unidad 3
 
+**Este documento es el ejemplo BomERP del docente, no una plantilla obligatoria.** Cada sede (Lima, Juliaca, Tarapoto) y cada grupo dentro de una misma sede opera su propio esquema Oracle sobre su propio dominio. Los scripts y evidencias concretas de este documento son las del ejemplo BomERP; cada equipo las reemplaza por las de su propio proyecto. Lo exigible a todos es la estructura: backup, recovery, monitoreo, diagnóstico y seguridad/rendimiento final.
+
 ## Producto
 
 **Base Oracle operativa, administrada, optimizada, auditada y resiliente.**
