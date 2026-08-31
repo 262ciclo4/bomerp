@@ -116,9 +116,53 @@ Lectura del diagrama: `VentaServiceImpl` vive en `ventas`, pero no toca `Product
 
 Una **cabecera** (`Venta`) agrupa datos que aplican a toda la operación (fecha, estado, total); un **detalle** (`DetalleVenta`) es cada línea individual (qué producto, cuánto, a qué precio). La relación es uno a muchos: una `Venta` tiene varios `DetalleVenta`, y cada `DetalleVenta` pertenece exactamente a una `Venta` — el mismo patrón `@OneToMany`/`@ManyToOne` de S3, aplicado ahora dentro de un mismo módulo nuevo en vez de entre `Categoria` y `Producto`.
 
-**Decisión de diseño: `DetalleVenta` no referencia la entidad `Producto`.** Podría parecer natural agregar `@ManyToOne private Producto producto;` en `DetalleVenta`, igual que `Producto` referencia `Categoria` en `catalogo` — pero `Producto` es una entidad de **otro módulo**. Una relación JPA directa obligaría a `ventas` a conocer el mapeo interno de `catalogo` (su tabla, sus columnas, su ciclo de vida), justo el acoplamiento que Spring Modulith existe para evitar (ADR-002). En vez de eso, `DetalleVenta` guarda `productoId` (un `Long` simple, sin relación JPA) más una **copia** de `nombreProducto` y `precioUnitario` tomada en el momento de la venta.
+**Figura 3. Esquema real en Oracle: `VENTAS` y `DETALLE_VENTAS`**
+
+```mermaid
+erDiagram
+    VENTAS ||--o{ DETALLE_VENTAS : "FK_DETALLE_VENTA"
+    PRODUCTOS ||--o{ DETALLE_VENTAS : "ID_PRODUCTO, sin FK fisica"
+    VENTAS {
+        NUMBER ID PK
+        TIMESTAMP FECHA
+        VARCHAR2 ESTADO
+        NUMBER TOTAL
+    }
+    DETALLE_VENTAS {
+        NUMBER ID PK
+        NUMBER ID_VENTA FK
+        NUMBER ID_PRODUCTO
+        VARCHAR2 NOMBRE_PRODUCTO
+        NUMBER PRECIO_UNITARIO
+        NUMBER CANTIDAD
+        NUMBER SUBTOTAL
+    }
+    PRODUCTOS {
+        NUMBER ID PK
+        NUMBER ID_CATEGORIA FK
+        VARCHAR2 NOMBRE
+        NUMBER PRECIO
+        NUMBER STOCK
+    }
+```
+
+Este esquema no lo crea este backend: lo crea BD2 (3.1, más abajo; [BD2 S4](../../bd2/sesiones/S04_Optimizacion_Consultas_SQL.md), 3.2), antes de que exista una sola línea de `Venta`/`DetalleVenta` en Java. `ID_VENTA` sí lleva `FOREIGN KEY` (`FK_DETALLE_VENTA`, con `o{` porque la base de datos no exige que una venta tenga al menos un detalle) — la cabecera-detalle es una relación interna a `BOM_VENTAS`, un solo esquema. `PRODUCTOS` aparece en el diagrama porque es el sentido real del negocio: `DETALLE_VENTAS` es la tabla asociativa que resuelve el muchos-a-muchos entre una venta (varios productos) y un producto (vendido en varias ventas) — pero esa relación con `PRODUCTOS` (otro esquema, `BOM_CATALOGO`) no tiene `FOREIGN KEY` física, por eso la etiqueta lo dice explícitamente ("sin FK física"): es la misma decisión que el párrafo siguiente explica del lado del código Java, ya tomada del lado de la base de datos.
+
+**Decisión de diseño: `DetalleVenta` no referencia la entidad `Producto`.** Podría parecer natural agregar `@ManyToOne private Producto producto;` en `DetalleVenta`, igual que `Producto` referencia `Categoria` en `catalogo` — pero `Producto` es una entidad de **otro módulo**, y la base de datos que sostiene esa relación (Figura 3, más arriba) ya decidió no forzarla con una `FOREIGN KEY` física: si se eliminara un producto que ya tiene ventas registradas, esa `FOREIGN KEY` bloquearía el borrado (o, peor, lo dejaría huérfano) — un registro de venta debe seguir siendo válido aunque el producto que describe ya no exista en el catálogo. Una relación JPA directa, además, obligaría a `ventas` a conocer el mapeo interno de `catalogo` (su tabla, sus columnas, su ciclo de vida), justo el acoplamiento que Spring Modulith existe para evitar (ADR-002). En vez de eso, `DetalleVenta` guarda `productoId` (un `Long` simple, sin relación JPA) más una **copia** de `nombreProducto` y `precioUnitario` tomada en el momento de la venta.
 
 Esa copia no es una limitación — es correcta para el dominio: si `Producto.precio` cambia la próxima semana, una venta ya registrada no debe recalcularse sola. El precio de una venta pasada es el que se cobró ese día, no el que el producto tenga hoy.
+
+**No es una regla general contra las relaciones entre módulos — depende de dos condiciones a la vez, no de "ser de otro módulo" por sí solo:**
+
+**Tabla 2. Cuándo una relación lleva `FOREIGN KEY`/`@ManyToOne` y cuándo no**
+
+| Relación | ¿Mismo esquema/módulo? | ¿El lado que referencia es un registro histórico? | ¿`FOREIGN KEY`/`@ManyToOne`? |
+|---|---|---|---|
+| `Venta` → `DetalleVenta` | Sí (`ventas`) | — | Sí (`@OneToMany`/`@ManyToOne`) |
+| `Producto` → `Categoria` | Sí (`catalogo`) | No, es catálogo vivo | Sí (`@ManyToOne`) |
+| `DetalleVenta` → `Producto` | No, cruza módulo | Sí, venta ya cerrada | No |
+
+Dentro de un mismo módulo, la relación JPA sigue siendo la norma — así quedan `Venta`-`DetalleVenta` (arriba) y `Producto`-`Categoria` (S3): ninguna de las dos es un registro histórico que deba sobrevivir a que el otro lado cambie o desaparezca. La ausencia de relación directa es la excepción, no el punto de partida, y solo se justifica cuando cruza el límite de módulo **y** el lado que referencia es un registro transaccional que no debe depender de que el otro dato siga existiendo igual — exactamente el mismo criterio, ya explicado del lado de Oracle en la Tabla 2 de [BD2 S4](../../bd2/sesiones/S04_Optimizacion_Consultas_SQL.md), 2.2.
 
 ### 2.3 Cálculos y estados
 
@@ -149,7 +193,7 @@ Esa es la pieza que hace posible el rollback completo: si la línea 2 de 3 falla
 
 **La regla exacta que activa el rollback, sin ninguna configuración extra:** por defecto, Spring solo revierte la transacción ante excepciones ***unchecked*** (las que extienden `RuntimeException` o `Error`) — una excepción ***checked*** (que extiende `Exception` directamente) deja que el proxy haga `commit()` igual, aunque haya interrumpido el método a medio camino. `StockInsuficienteException` (3.5, de esta sesión) y `ResourceNotFoundException` (S2, 3.2.1) extienden `RuntimeException` justamente por esto: no es una elección de estilo, es la condición que hace posible el rollback automático de esta sesión sin escribir una sola línea de manejo de transacciones. Si algún día una regla de negocio se expresara con una excepción *checked*, el rollback automático dejaría de funcionar a menos que se declare explícito: `@Transactional(rollbackFor = Exception.class)`.
 
-**Figura 3. Transacción atómica: caso de éxito vs. caso de rollback**
+**Figura 4. Transacción atómica: caso de éxito vs. caso de rollback**
 
 ```mermaid
 flowchart TB
@@ -191,6 +235,7 @@ Tiempo: 2h.
 - **3.12** Relacionar con ADS y BD2.
 - **3.13** (opcional, anexo) Exponer métricas de `bomerp-backend` para Prometheus.
 - **3.14** (opcional, anexo) Enviar logs de `bomerp-backend` a Loki y verificarlos.
+- **3.15** (opcional, anexo) Visualizar métricas y logs juntos en Grafana.
 
 ### 3.1 Verificar el punto de partida
 
@@ -784,7 +829,7 @@ curl -i -X POST http://localhost:8080/api/v1/ventas -H "Content-Type: applicatio
 
 Verifica: la respuesta trae `409`, **ninguna** venta nueva aparece en `GET /api/v1/ventas`, y el stock del producto 1 (la línea que sí tenía stock suficiente) queda **exactamente igual** que antes de este intento — la prueba real de que la transacción se revirtió completa, no solo la línea que falló.
 
-**Tabla 2. Verificación de la operación antes de continuar**
+**Tabla 3. Verificación de la operación antes de continuar**
 
 | Caso | Resultado esperado | Cómo se verifica |
 |---|---|---|
@@ -812,7 +857,7 @@ Si en algún momento un archivo de `ventas` importa `pe.edu.upeu.bomerp.catalogo
 
 **Producto del paso:** matriz de integración actualizada.
 
-**Tabla 3. Matriz de integración LP2-ADS-BD2 (S4)**
+**Tabla 4. Matriz de integración LP2-ADS-BD2 (S4)**
 
 | Endpoint/Componente LP2 | Componente ADS | Objeto BD2 |
 |---|---|---|
@@ -1091,6 +1136,71 @@ Esto solo rastrea el `traceId` **dentro de `bomerp-backend`** — como todavía 
 
 **Nota de puertos ocupados:** `lp2/obs/` también incluye un `compose.yml` de PROD (placeholder, `49090`/`43100`), a la espera de que exista un PROD real de `bomerp-backend` — no se ejecuta hasta entonces (ADR-002, "no crear por si acaso"). Cuando BigData (lambda26) construya su propio `obs/` (previsto para su S6+), el siguiente puerto libre es `59090` (Prometheus) / `53100` (Loki) — se decide en ese momento, no antes.
 
+### 3.15 (opcional, anexo) Visualizar métricas y logs juntos en Grafana
+
+!!! note "3.15 es opcional"
+    Depende de 3.13 y 3.14: sin Prometheus ni Loki corriendo, Grafana no tiene qué mostrar. El alcance evaluado de S4 sigue terminando en 3.12 (4.4, 4.6); este paso es para quien ya completó los dos anteriores y quiere verlos juntos en un solo tablero, en vez de alternar entre la UI de Prometheus y las consultas de Loki por separado.
+
+**Producto del paso:** un Grafana propio, con Prometheus y Loki agregados como fuentes de datos automáticamente (sin configurarlos a mano desde la UI), corriendo en paralelo al resto del stack.
+
+Crea `lp2/obs/grafana/provisioning/datasources/datasources.yml`:
+
+```yaml
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://bomerp-prometheus:9090
+    isDefault: true
+
+  - name: Loki
+    type: loki
+    access: proxy
+    url: http://bomerp-loki:3100
+```
+
+`url` usa el nombre del servicio de Docker Compose (`bomerp-prometheus`, `bomerp-loki`), no `localhost`: Grafana consulta a los otros contenedores por la red interna que Compose crea automáticamente, la misma razón por la que `prometheus-dev.yml` (3.13) usa `host.docker.internal` para llegar a `bomerp-backend`, que corre fuera de Docker.
+
+Agrega Grafana a `lp2/obs/compose-dev.yml` (junto a `bomerp-prometheus`, `bomerp-loki` y `bomerp-promtail`):
+
+```yaml
+  bomerp-grafana:
+    image: grafana/grafana:11.4.0
+    container_name: bomerp-grafana-dev
+    restart: unless-stopped
+    ports:
+      - "33000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+    depends_on:
+      - bomerp-prometheus
+      - bomerp-loki
+```
+
+`33000` sigue el mismo criterio de puertos que Prometheus (`39090`) y Loki (`33100`): el prefijo `3` identifica a LP2 DEV, evitando cualquier Grafana que DIST agregue después en `1????`/`2????`.
+
+Vuelve a levantar el stack con el archivo actualizado:
+
+```bash
+cd lp2/obs
+docker compose -f compose-dev.yml up -d
+```
+
+Abre `http://localhost:33000` (usuario `admin`, contraseña `admin` — Grafana pide cambiarla al primer ingreso; en DEV puedes omitirlo). Ve a **Connections → Data sources** y confirma que `Prometheus` y `Loki` ya aparecen configurados, sin haberlos agregado a mano — eso es lo que hizo `datasources.yml` al arrancar el contenedor.
+
+Para verificar que ambas fuentes responden, crea un panel nuevo (**Dashboards → New → New dashboard → Add visualization**) y prueba una consulta de cada una:
+
+- Con la fuente `Prometheus`: `up{job="bomerp-backend"}` (3.13) — el mismo dato que ya viste en la UI de Prometheus, ahora dentro de Grafana.
+- Con la fuente `Loki`: `{application="bomerp-backend"} |= "Started BomerpBackendApplication"` (3.14) — el mismo log, con el mismo lenguaje de consulta (LogQL) que ya usaste por API.
+
+Lo que cambia no es el dato ni la consulta — es tener ambas fuentes, métricas y logs, en el mismo tablero, algo que ni Prometheus ni Loki ofrecen por separado.
+
+**Nota de puertos ocupados (actualizada):** con Grafana, LP2 DEV ocupa `39090` (Prometheus), `33100` (Loki) y `33000` (Grafana) — los tres bajo el prefijo `3`. Si más adelante DIST agrega su propio Grafana, el puerto que le corresponde por el mismo criterio es `13000` (prefijo `1`, DEV) o `23000` (prefijo `2`, PROD); si BigData agrega el suyo, `53000` (prefijo `5`).
+
 ## 4. Crea: actividad autónoma
 
 Tiempo: 2h fuera del aula.
@@ -1203,7 +1313,7 @@ La evidencia individual se considera completa si:
 
 ### 4.6 Rúbrica de evaluación
 
-**Tabla 4. Rúbrica de evaluación**
+**Tabla 5. Rúbrica de evaluación**
 
 | Criterio | Peso (%) | A (20 pts) | B (15 pts) | C (10 pts) | D (5 pts) | Nivel obtenido |
 |---|---:|---|---|---|---|---:|

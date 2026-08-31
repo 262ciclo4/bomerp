@@ -107,9 +107,53 @@ Este diagrama es el mapa que guía el resto de la explicación: cada apartado si
 
 `BOM_VENTAS` es el segundo esquema del proyecto, con el mismo criterio de "un esquema por módulo funcional" que ya estableció `BOM_CATALOGO` en S1 — se crea recién ahora porque LP2 llega a su módulo `ventas` esta misma semana (LP2 S4), con volumen de prueba real cargado sobre él: sin datos, no hay nada que el optimizador tenga que decidir de verdad.
 
+**Figura 3. Esquema real en Oracle: `VENTAS` y `DETALLE_VENTAS`**
+
+```mermaid
+erDiagram
+    VENTAS ||--o{ DETALLE_VENTAS : "FK_DETALLE_VENTA"
+    PRODUCTOS ||--o{ DETALLE_VENTAS : "ID_PRODUCTO, sin FK fisica"
+    VENTAS {
+        NUMBER ID PK
+        TIMESTAMP FECHA
+        VARCHAR2 ESTADO
+        NUMBER TOTAL
+    }
+    DETALLE_VENTAS {
+        NUMBER ID PK
+        NUMBER ID_VENTA FK
+        NUMBER ID_PRODUCTO
+        VARCHAR2 NOMBRE_PRODUCTO
+        NUMBER PRECIO_UNITARIO
+        NUMBER CANTIDAD
+        NUMBER SUBTOTAL
+    }
+    PRODUCTOS {
+        NUMBER ID PK
+        NUMBER ID_CATEGORIA FK
+        VARCHAR2 NOMBRE
+        NUMBER PRECIO
+        NUMBER STOCK
+    }
+```
+
+Mismo esquema que 3.2 crea en Oracle — este diagrama es su vista de conjunto, antes del detalle tabla por tabla. `PRODUCTOS` (esquema `BOM_CATALOGO`, creado en S1) aparece para mostrar el sentido real del negocio: `DETALLE_VENTAS` es la tabla asociativa que resuelve el muchos-a-muchos entre una venta (varios productos) y un producto (vendido en varias ventas). Esa relación con `PRODUCTOS` no tiene `FOREIGN KEY` física — por eso la etiqueta lo dice explícitamente ("sin FK física"); la ausencia es intencional, no un olvido (ver el párrafo siguiente).
+
 El **Cost Based Optimizer** es el componente de Oracle que decide, para cada consulta, el plan de ejecución con el menor costo estimado — no necesariamente el más rápido en la realidad, sino el que el CBO *cree* más barato según las estadísticas que tiene disponibles en ese momento (qué tabla recorrer primero, qué método de *join* usar, si conviene un `FULL TABLE SCAN`). Esa decisión es exactamente lo que el resto de esta sesión analiza y, cuando corresponde, ayuda a mejorar.
 
-**Decisión de diseño: `DETALLE_VENTAS.ID_PRODUCTO` no lleva `FOREIGN KEY` hacia `BOM_CATALOGO.PRODUCTOS`.** Podría parecer natural agregarla — Oracle sí permite claves foráneas entre esquemas distintos, con los privilegios adecuados — pero eso acoplaría el DDL de `BOM_VENTAS` a la estructura interna de `BOM_CATALOGO`, exactamente lo que la separación por esquemas busca evitar. `DETALLE_VENTAS` guarda `ID_PRODUCTO` como número simple, más una copia de `NOMBRE_PRODUCTO` y `PRECIO_UNITARIO` al momento de la venta — es el mismo criterio, a nivel de esquema Oracle, que LP2 aplica a nivel de módulo Java con `@NamedInterface` (LP2 S4, 2.4): ninguno de los dos referencia directamente el objeto interno del otro módulo/esquema.
+**Decisión de diseño: `DETALLE_VENTAS.ID_PRODUCTO` no lleva `FOREIGN KEY` hacia `BOM_CATALOGO.PRODUCTOS`.** Técnicamente Oracle sí lo permite: ambos esquemas viven en la misma base de datos, y una `FOREIGN KEY` entre esquemas distintos, con los privilegios adecuados, es una operación normal — la razón para no crearla es de diseño, no una limitación técnica. Si existiera, borrar un producto que ya tiene ventas asociadas quedaría bloqueado por Oracle (`ON DELETE RESTRICT`, el comportamiento por defecto): el catálogo nunca podría depurar productos discontinuados sin arrastrar el problema hasta ventas ya cerradas. La alternativa, `ON DELETE CASCADE`, sería peor todavía: borrar un producto borraría, o dejaría huérfano, el detalle de ventas reales — destruyendo evidencia histórica que ya ocurrió. `DETALLE_VENTAS` guarda `ID_PRODUCTO` como número simple, más una copia de `NOMBRE_PRODUCTO` y `PRECIO_UNITARIO` al momento de la venta, precisamente para no depender de que `PRODUCTOS` siga existiendo: un registro de venta debe seguir siendo válido aunque el producto que describe ya no exista en el catálogo. Además, esa `FOREIGN KEY` acoplaría el DDL de `BOM_VENTAS` a la estructura interna de `BOM_CATALOGO`, exactamente lo que la separación por esquemas busca evitar — es el mismo criterio, a nivel de esquema Oracle, que LP2 aplica a nivel de módulo Java con `@NamedInterface` (LP2 S4, 2.4): ninguno de los dos referencia directamente el objeto interno del otro módulo/esquema.
+
+**No es una regla general contra las `FOREIGN KEY` entre esquemas — depende de dos condiciones a la vez, no de "cruzar esquema" por sí solo:**
+
+**Tabla 2. Cuándo una relación lleva `FOREIGN KEY` física y cuándo no**
+
+| Relación | ¿Mismo esquema/módulo? | ¿El lado que referencia es un registro histórico? | ¿`FOREIGN KEY` física? |
+|---|---|---|---|
+| `VENTAS` → `DETALLE_VENTAS` | Sí (`BOM_VENTAS`) | — | Sí (`FK_DETALLE_VENTA`) |
+| `PRODUCTOS` → `CATEGORIAS` | Sí (`BOM_CATALOGO`) | No, es catálogo vivo | Sí (`FK_PRODUCTO_CATEGORIA`) |
+| `DETALLE_VENTAS` → `PRODUCTOS` | No, cruza esquema | Sí, venta ya cerrada | No |
+
+Dentro de un mismo esquema, la `FOREIGN KEY` sigue siendo la norma — así quedan `VENTAS`-`DETALLE_VENTAS` (arriba) y `PRODUCTOS`-`CATEGORIAS` (S1): ninguna de las dos es un registro histórico que deba sobrevivir a que el otro lado cambie o desaparezca. La ausencia de `FOREIGN KEY` es la excepción, no el punto de partida, y solo se justifica cuando la relación cruza el límite de módulo **y** el lado que referencia es un registro transaccional que no debe depender de que el otro dato siga existiendo igual.
 
 ### 2.3 Explain Plan
 
@@ -142,7 +186,7 @@ EXEC DBMS_STATS.GATHER_TABLE_STATS('BOM_VENTAS', 'DETALLE_VENTAS');
 
 No toda mejora de una consulta requiere un índice nuevo (eso es S5) — cómo se **escribe** la consulta también le da o le quita información al CBO. Dos prácticas concretas, aplicables desde hoy:
 
-**Tabla 2. Buenas prácticas SQL que afectan el plan, sin tocar índices**
+**Tabla 3. Buenas prácticas SQL que afectan el plan, sin tocar índices**
 
 | Práctica | Por qué importa |
 |---|---|
@@ -180,7 +224,7 @@ Tiempo: 2h.
 
 **Producto del paso:** la consulta que esta sesión analiza y mejora de punta a punta.
 
-**Tabla 3. Consulta representativa de esta sesión**
+**Tabla 4. Consulta representativa de esta sesión**
 
 | Elemento | Respuesta |
 |---|---|
@@ -337,7 +381,7 @@ Compara `ROWS` y `COST` de este plan contra el de 3.4 — con la tabla recién c
 
 ### 3.6 Reescribir la consulta aplicando una buena práctica SQL
 
-**Producto del paso:** la misma consulta, con el filtro de fecha reescrito para no envolver la columna en una función (2.5, Tabla 2).
+**Producto del paso:** la misma consulta, con el filtro de fecha reescrito para no envolver la columna en una función (2.5, Tabla 3).
 
 ```sql
 SELECT p.NOMBRE, SUM(d.CANTIDAD) AS TOTAL_UNIDADES, SUM(d.SUBTOTAL) AS TOTAL_VENDIDO
@@ -370,7 +414,7 @@ ORDER BY TOTAL_VENDIDO DESC;
 SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY);
 ```
 
-**Tabla 4. Comparación antes/después (completa con tus propios valores)**
+**Tabla 5. Comparación antes/después (completa con tus propios valores)**
 
 | Momento | Cambio aplicado | `COST` | `OPERATION` relevante | Observación |
 |---|---|---|---|---|
@@ -384,7 +428,7 @@ Los tres planes de esta tabla son tu evidencia principal (4.3.1) — sin ellos, 
 
 **Producto del paso:** matriz de integración.
 
-**Tabla 5. Matriz de integración BD2-ADS-LP2 (S4)**
+**Tabla 6. Matriz de integración BD2-ADS-LP2 (S4)**
 
 | Objeto BD2 | Decisión ADS | Endpoint o servicio LP2 |
 |---|---|---|
@@ -415,8 +459,8 @@ Completa y evidencia estas tareas:
 2. Cargar (o confirmar que ya existe) volumen de prueba suficiente para que la comparación tenga sentido.
 3. Capturar el `EXPLAIN PLAN` inicial.
 4. Actualizar estadísticas con `DBMS_STATS` y volver a capturar el plan.
-5. Reescribir la consulta aplicando al menos una buena práctica SQL (2.5, Tabla 2) y capturar el plan final.
-6. Completar una tabla comparativa con los tres momentos, igual que la Tabla 4 de esta guía.
+5. Reescribir la consulta aplicando al menos una buena práctica SQL (2.5, Tabla 3) y capturar el plan final.
+6. Completar una tabla comparativa con los tres momentos, igual que la Tabla 5 de esta guía.
 
 ### 4.2 Propósito
 
@@ -517,7 +561,7 @@ La evidencia individual se considera completa si:
 
 ### 4.6 Rúbrica de evaluación
 
-**Tabla 6. Rúbrica de evaluación**
+**Tabla 7. Rúbrica de evaluación**
 
 | Criterio | Peso (%) | A (20 pts) | B (15 pts) | C (10 pts) | D (5 pts) | Nivel obtenido |
 |---|---:|---|---|---|---|---:|

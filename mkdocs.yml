@@ -73,6 +73,7 @@ nav:
           - S2 - Triggers DML y auditoría: bd2/sesiones/S02_Triggers_DML_Auditoria.md
           - S3 - Manejo de excepciones y robustez: bd2/sesiones/S03_Excepciones_Robustez.md
           - S4 - Optimización de consultas SQL: bd2/sesiones/S04_Optimizacion_Consultas_SQL.md
+          - S5 - Índices para optimización: bd2/sesiones/S05_Indices_Optimizacion.md
   - LP2:
       - Inicio: lp2/index.md
       - Silabos:
@@ -88,3 +89,4 @@ nav:
           - S2 - CRUD REST completo de Producto: lp2/sesiones/S02_CRUD_REST_Completo_Producto.md
           - S3 - Objetos relacionados Categoria-Producto: lp2/sesiones/S03_Objetos_Relacionados_Categoria_Producto.md
           - S4 - Operación cabecera-detalle Venta-DetalleVenta: lp2/sesiones/S04_Operacion_Cabecera_Detalle_Venta_DetalleVenta.md
+          - S5 - Consultas empresariales, reportes REST y CORS: lp2/sesiones/S05_Consultas_Empresariales_Reportes_CORS.md

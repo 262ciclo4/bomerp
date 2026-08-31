@@ -119,6 +119,27 @@ Este diagrama es el mapa que guía el resto de la explicación: cada apartado si
 
 PL/SQL permite ubicar lógica transaccional cerca de los datos. En un sistema empresarial, esto ayuda a proteger reglas críticas, mejorar consistencia y preparar operaciones que pueden ser consumidas por servicios backend — pero primero necesita un esquema propio y tablas base sobre las cuales operar.
 
+**Figura 3. Esquema real en Oracle: `CATEGORIAS` y `PRODUCTOS`**
+
+```mermaid
+erDiagram
+    CATEGORIAS o|--o{ PRODUCTOS : "FK_PRODUCTO_CATEGORIA"
+    CATEGORIAS {
+        NUMBER ID PK
+        VARCHAR2 NOMBRE
+        VARCHAR2 DESCRIPCION
+    }
+    PRODUCTOS {
+        NUMBER ID PK
+        NUMBER ID_CATEGORIA FK
+        VARCHAR2 NOMBRE
+        NUMBER PRECIO
+        NUMBER STOCK
+    }
+```
+
+Este esquema es la base que LP2 conecta desde su propio S1 — primero solo `PRODUCTOS` (S1-S2, sin relación); `FK_PRODUCTO_CATEGORIA` ya existe en Oracle desde hoy, pero LP2 no la traduce a `@ManyToOne` hasta su S3 ([LP2 S3](../../lp2/sesiones/S03_Objetos_Relacionados_Categoria_Producto.md), Figura 3) — la base de datos conoce la relación antes de que el código Java la use.
+
 **Error frecuente**: nombrar objetos de forma genérica en vez de usar nombres empresariales que reflejen el proceso real (esquema, tablas, procedimientos y funciones).
 
 Alcance metodológico de S1:
