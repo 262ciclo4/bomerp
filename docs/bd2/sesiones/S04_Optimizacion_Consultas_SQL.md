@@ -152,8 +152,16 @@ El **Cost Based Optimizer** es el componente de Oracle que decide, para cada con
 | `VENTAS` → `DETALLE_VENTAS` | Sí (`BOM_VENTAS`) | — | Sí (`FK_DETALLE_VENTA`) |
 | `PRODUCTOS` → `CATEGORIAS` | Sí (`BOM_CATALOGO`) | No, es catálogo vivo | Sí (`FK_PRODUCTO_CATEGORIA`) |
 | `DETALLE_VENTAS` → `PRODUCTOS` | No, cruza esquema | Sí, venta ya cerrada | No |
+| `VENTAS` → `CLIENTES`* | No, cruza esquema | Sí, venta ya cerrada | No |
+
+\* Caso hipotético: `personas`/`CLIENTES` todavía no existe en el proyecto — se incluye aquí solo para probar el criterio contra un caso distinto a `PRODUCTOS`.
 
 Dentro de un mismo esquema, la `FOREIGN KEY` sigue siendo la norma — así quedan `VENTAS`-`DETALLE_VENTAS` (arriba) y `PRODUCTOS`-`CATEGORIAS` (S1): ninguna de las dos es un registro histórico que deba sobrevivir a que el otro lado cambie o desaparezca. La ausencia de `FOREIGN KEY` es la excepción, no el punto de partida, y solo se justifica cuando la relación cruza el límite de módulo **y** el lado que referencia es un registro transaccional que no debe depender de que el otro dato siga existiendo igual.
+
+**El criterio para copiar un campo no es "podría cambiar" — es "forma parte del documento legal".** Con `CLIENTES` esto se nota mejor que con `PRODUCTOS`: el DNI o RUC de una persona prácticamente no cambia nunca, y aun así hay que copiarlo — no por temor a que cambie, sino porque una boleta o factura electrónica es un documento legal autocontenido, y el nombre/razón social y el número de documento son parte de ese documento, tal como se emitió, no una referencia que se resuelve consultando `CLIENTES` cada vez que alguien la revisa:
+
+- **Se copian en la venta** (porque identifican al documento en sí, sin importar qué tan seguido cambien): tipo y número de documento (DNI/RUC), nombre completo o razón social.
+- **No se copian en la venta**: dirección, teléfono, correo — datos de contacto que sí cambian con más frecuencia, pero que no forman parte de la boleta/factura. Si algún día se necesita "la dirección del cliente al momento de esta venta", esa pregunta no se responde copiando la dirección en cada venta: se responde con una tabla de auditoría propia sobre `CLIENTES` (mismo patrón que `PRODUCTO_AUDITORIA`, S2, 3.2 — antes/después con fecha), consultada por fecha, no con una copia repetida en cada transacción que la mencione.
 
 ### 2.3 Explain Plan
 

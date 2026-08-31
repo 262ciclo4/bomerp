@@ -161,8 +161,16 @@ Esa copia no es una limitación — es correcta para el dominio: si `Producto.pr
 | `Venta` → `DetalleVenta` | Sí (`ventas`) | — | Sí (`@OneToMany`/`@ManyToOne`) |
 | `Producto` → `Categoria` | Sí (`catalogo`) | No, es catálogo vivo | Sí (`@ManyToOne`) |
 | `DetalleVenta` → `Producto` | No, cruza módulo | Sí, venta ya cerrada | No |
+| `Venta` → `Cliente`* | No, cruza módulo | Sí, venta ya cerrada | No |
+
+\* Caso hipotético: `personas`/`Cliente` todavía no existe en el proyecto — se incluye aquí solo para probar el criterio contra un caso distinto a `Producto`.
 
 Dentro de un mismo módulo, la relación JPA sigue siendo la norma — así quedan `Venta`-`DetalleVenta` (arriba) y `Producto`-`Categoria` (S3): ninguna de las dos es un registro histórico que deba sobrevivir a que el otro lado cambie o desaparezca. La ausencia de relación directa es la excepción, no el punto de partida, y solo se justifica cuando cruza el límite de módulo **y** el lado que referencia es un registro transaccional que no debe depender de que el otro dato siga existiendo igual — exactamente el mismo criterio, ya explicado del lado de Oracle en la Tabla 2 de [BD2 S4](../../bd2/sesiones/S04_Optimizacion_Consultas_SQL.md), 2.2.
+
+**El criterio para copiar un campo no es "podría cambiar" — es "forma parte del documento legal".** Con `Cliente` esto se nota mejor que con `Producto`: el DNI o RUC de una persona prácticamente no cambia nunca, y aun así habría que copiarlo — no por temor a que cambie, sino porque una boleta o factura electrónica es un documento legal autocontenido, y el nombre/razón social y el número de documento son parte de ese documento tal como se emitió, no una referencia que se resuelve consultando `Cliente` cada vez que alguien la revisa:
+
+- **Se copian en `Venta`** (identifican al documento en sí, sin importar qué tan seguido cambien): tipo y número de documento (DNI/RUC), nombre completo o razón social.
+- **No se copian en `Venta`**: dirección, teléfono, correo — datos de contacto que sí cambian con más frecuencia, pero que no forman parte de la boleta/factura. Si algún día se necesitara "la dirección del cliente al momento de esta venta", eso no se resuelve copiando la dirección en cada venta: se resuelve con una tabla de auditoría propia sobre `Cliente` en Oracle (mismo patrón que `PRODUCTO_AUDITORIA`, BD2 S2, 3.2 — antes/después con fecha), consultada por fecha, no con una copia repetida en cada transacción que lo mencione.
 
 ### 2.3 Cálculos y estados
 
