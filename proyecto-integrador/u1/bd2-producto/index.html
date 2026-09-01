@@ -695,10 +695,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-reglas-transaccionales" class="md-nav__link">
+  <a href="#3-reglas-de-negocio-y-transaccionales" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Reglas transaccionales
+        3. Reglas de negocio y transaccionales
       
     </span>
   </a>
@@ -717,10 +717,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#5-optimizacion-inicial" class="md-nav__link">
+  <a href="#5-selectividad-e-indices-s5" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. Optimizacion inicial
+        5. Selectividad e índices (S5)
       
     </span>
   </a>
@@ -731,7 +731,7 @@
   <a href="#6-evidencia-de-integracion" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6. Evidencia de integracion
+        6. Evidencia de integración
       
     </span>
   </a>
@@ -1965,6 +1965,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S06_Evaluacion_Unidad_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S6 - Evaluación de la Unidad I
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2532,6 +2560,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S06_Evaluacion_Unidad_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S6 - Evaluación de la Unidad I
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2607,10 +2663,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-reglas-transaccionales" class="md-nav__link">
+  <a href="#3-reglas-de-negocio-y-transaccionales" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Reglas transaccionales
+        3. Reglas de negocio y transaccionales
       
     </span>
   </a>
@@ -2629,10 +2685,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#5-optimizacion-inicial" class="md-nav__link">
+  <a href="#5-selectividad-e-indices-s5" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. Optimizacion inicial
+        5. Selectividad e índices (S5)
       
     </span>
   </a>
@@ -2643,7 +2699,7 @@
   <a href="#6-evidencia-de-integracion" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6. Evidencia de integracion
+        6. Evidencia de integración
       
     </span>
   </a>
@@ -2674,7 +2730,7 @@
 <p><strong>Este documento es el ejemplo BomERP del docente, no una plantilla obligatoria.</strong> Cada sede (Lima, Juliaca, Tarapoto) y cada grupo dentro de una misma sede tiene su propio dominio, definido en su propio <a href="../../brief/">brief.md</a> de S2 — los esquemas, tablas, paquetes PL/SQL y triggers concretos de este documento son los del ejemplo BomERP; cada equipo los reemplaza por los de su propio proyecto. Lo exigible a todos es la estructura: motor transaccional con reglas de negocio en PL/SQL, manejo de excepciones, auditoría y optimización con índices y <code>EXPLAIN PLAN</code>.</p>
 <h2 id="producto">Producto<a class="headerlink" href="#producto" title="Permanent link">&para;</a></h2>
 <p><strong>Motor transaccional Oracle optimizado.</strong></p>
-<p>Este producto implementa logica de negocio en Oracle mediante PL/SQL, triggers, excepciones, auditoria basica, consultas optimizadas e indices. La base no se trabaja como ejercicio aislado: soporta los endpoints y reglas del backend LP2.</p>
+<p>Este producto implementa lógica de negocio en Oracle mediante PL/SQL, triggers, excepciones, auditoría básica, consultas optimizadas e índices. La base no se trabaja como ejercicio aislado: soporta los endpoints y reglas del backend LP2.</p>
 <h2 id="1-scripts-del-producto">1. Scripts del producto<a class="headerlink" href="#1-scripts-del-producto" title="Permanent link">&para;</a></h2>
 <p>Los scripts se agregan <strong>por sesión de BD2</strong>, a medida que cada una les da contenido real — no se pre-crean tablas/objetos de sesiones que todavía no se dictaron (mismo criterio que la arquitectura de módulos de LP2, ver <a href="../../../lp2/adr/ADR-002-spring-modulith/">ADR-002</a>).</p>
 <table>
@@ -2704,82 +2760,112 @@
 <tr>
 <td><a href="../oracle/S02_triggers_dml_auditoria.sql">S02_triggers_dml_auditoria.sql</a></td>
 <td><a href="../../../bd2/sesiones/S02_Triggers_DML_Auditoria/">S2</a></td>
-<td>Tabla y trigger de auditoría de cambios de precio/stock en <code>PRODUCTOS</code>.</td>
+<td>Trigger de regla de negocio (<code>TRG_PRODUCTO_PRECIO_BU</code>) y trigger + tabla de auditoría de precio/stock (<code>TRG_PRODUCTO_AUDITORIA</code>, <code>PRODUCTO_AUDITORIA</code>).</td>
+</tr>
+<tr>
+<td>(excepciones agregadas directo sobre los procedimientos de S1)</td>
+<td><a href="../../../bd2/sesiones/S03_Excepciones_Robustez/">S3</a></td>
+<td>Manejo de excepciones personalizadas y tabla de registro de errores (<code>LOG_ERRORES</code>).</td>
+</tr>
+<tr>
+<td><a href="../oracle/S04_01_esquemas.sql">S04_01_esquemas.sql</a></td>
+<td><a href="../../../bd2/sesiones/S04_Optimizacion_Consultas_SQL/">S4</a></td>
+<td>Usuario <code>BOM_VENTAS</code>.</td>
+</tr>
+<tr>
+<td><a href="../oracle/S04_02_tablas.sql">S04_02_tablas.sql</a></td>
+<td><a href="../../../bd2/sesiones/S04_Optimizacion_Consultas_SQL/">S4</a></td>
+<td>Tablas <code>VENTAS</code>/<code>DETALLE_VENTAS</code>.</td>
+</tr>
+<tr>
+<td><a href="../oracle/S04_optimizacion_consultas.sql">S04_optimizacion_consultas.sql</a></td>
+<td><a href="../../../bd2/sesiones/S04_Optimizacion_Consultas_SQL/">S4</a></td>
+<td>Volumen de prueba, <code>EXPLAIN PLAN</code>, <code>DBMS_STATS</code> y reescritura de la consulta representativa.</td>
+</tr>
+<tr>
+<td><a href="../oracle/S05_indices_optimizacion.sql">S05_indices_optimizacion.sql</a></td>
+<td><a href="../../../bd2/sesiones/S05_Indices_Optimizacion/">S5</a></td>
+<td>Selectividad medida e índices B-Tree, Bitmap y Function-Based.</td>
 </tr>
 </tbody>
 </table>
-<p>Pendientes (se agregan cuando esas sesiones de BD2 se documenten): esquema <code>BOM_VENTAS</code> y tablas <code>venta</code>/<code>detalle_venta</code> (S3-S4 de LP2), paquete <code>pkg_venta</code> y trigger <code>trg_venta_estado_audit</code>, índice <code>idx_venta_estado_fecha</code>, esquema <code>BOM_SEGURIDAD</code> (S10 de LP2).</p>
+<p>Pendiente (se agrega cuando esa sesión de BD2 se documente): esquema <code>BOM_SEGURIDAD</code> (S10 de LP2).</p>
 <h2 id="2-objetos-oracle-u1">2. Objetos Oracle U1<a class="headerlink" href="#2-objetos-oracle-u1" title="Permanent link">&para;</a></h2>
-<p><strong>Estado al cierre de la Unidad 1 (S6), no al día de hoy</strong> (S1-S2 solo tienen creados <code>BOM_CATALOGO.CATEGORIAS</code>/<code>PRODUCTOS</code>, ver sección 1): las filas de <code>BOM_VENTAS</code> y <code>BOM_SEGURIDAD.usuario_app</code> son el objetivo de esta unidad, que se completa progresivamente en S3-S6.</p>
+<p><strong>Estado al cierre de la Unidad 1 (S6):</strong></p>
 <table>
 <thead>
 <tr>
 <th>Objeto</th>
-<th>Proposito</th>
-<th>Relacion con LP2</th>
+<th>Propósito</th>
+<th>Relación con LP2</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>BOM_CATALOGO.CATEGORIAS</code> y <code>PRODUCTOS</code></td>
+<td><code>BOM_CATALOGO.CATEGORIAS</code>/<code>PRODUCTOS</code></td>
 <td>Catálogo heredado de Ciclo 3.</td>
 <td>Recursos <code>/api/v1/categorias</code> y <code>/api/v1/productos</code>.</td>
 </tr>
 <tr>
-<td><code>BOM_VENTAS.venta</code> y <code>detalle_venta</code></td>
+<td><code>BOM_CATALOGO.LOG_ERRORES</code></td>
+<td>Registro de errores capturados por los procedimientos/función del catálogo (S3).</td>
+<td>Ninguno directo — el backend no consulta esta tabla.</td>
+</tr>
+<tr>
+<td><code>BOM_CATALOGO.PRODUCTO_AUDITORIA</code> + <code>TRG_PRODUCTO_AUDITORIA</code></td>
+<td>Auditoría de cambios de precio/stock.</td>
+<td><code>POST</code>/<code>PUT</code> sobre <code>/api/v1/productos</code> (cualquier alta o cambio la dispara).</td>
+</tr>
+<tr>
+<td><code>BOM_VENTAS.VENTAS</code>/<code>DETALLE_VENTAS</code></td>
 <td>Operación transaccional principal.</td>
 <td>Recurso <code>/api/v1/ventas</code>.</td>
 </tr>
 <tr>
-<td><code>BOM_SEGURIDAD.usuario_app</code></td>
-<td>Soporte para JWT, roles y trazabilidad.</td>
-<td>Identidad autenticada desde S10.</td>
+<td><code>IX_VENTAS_FECHA</code> (B-Tree)</td>
+<td>Consultas filtradas por rango de fecha.</td>
+<td><code>GET /api/v1/ventas?desde=&amp;hasta=</code>.</td>
 </tr>
 <tr>
-<td><code>BOM_VENTAS.venta_audit</code></td>
-<td>Auditoría de cambios de estado.</td>
-<td>Evidencia de anulación.</td>
+<td><code>IX_LOG_ERRORES_OBJETO</code> (Bitmap)</td>
+<td>Diagnóstico de errores agrupados por objeto que falló.</td>
+<td>Ninguno directo.</td>
 </tr>
 <tr>
-<td><code>BOM_VENTAS.pkg_venta</code></td>
-<td>Registro y anulación transaccional.</td>
-<td>Servicio backend coordina reglas equivalentes.</td>
-</tr>
-<tr>
-<td><code>idx_venta_estado_fecha</code></td>
-<td>Optimiza consultas por estado y fecha.</td>
-<td>Filtros de ventas.</td>
+<td><code>IX_VENTAS_FECHA_DIA</code> (Function-Based, sobre <code>TRUNC(FECHA)</code>)</td>
+<td>Reporte de ventas por día calendario.</td>
+<td><code>GET /api/v1/ventas/resumen</code>.</td>
 </tr>
 </tbody>
 </table>
-<h2 id="3-reglas-transaccionales">3. Reglas transaccionales<a class="headerlink" href="#3-reglas-transaccionales" title="Permanent link">&para;</a></h2>
+<h2 id="3-reglas-de-negocio-y-transaccionales">3. Reglas de negocio y transaccionales<a class="headerlink" href="#3-reglas-de-negocio-y-transaccionales" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Regla</th>
-<th>Implementacion Oracle</th>
+<th>Implementación Oracle</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Una venta inicia en estado <code>ACTIVA</code>.</td>
-<td>Valor por defecto y procedimiento <code>registrar_venta</code>.</td>
+<td>Un producto se registra con una categoría que debe existir.</td>
+<td><code>SP_REGISTRAR_PRODUCTO</code>, captura <code>ORA-02291</code> y la registra en <code>LOG_ERRORES</code>.</td>
 </tr>
 <tr>
-<td>La venta contiene al menos un detalle.</td>
-<td>Validación en paquete.</td>
+<td>Un descuento no puede dejar el precio fuera de rango razonable.</td>
+<td><code>TRG_PRODUCTO_PRECIO_BU</code> (<code>BEFORE UPDATE</code>), rechaza con <code>RAISE_APPLICATION_ERROR</code> antes de escribir.</td>
 </tr>
 <tr>
-<td>Cantidad no supera el stock.</td>
-<td>Bloqueo de producto y validación PL/SQL.</td>
+<td>Todo cambio de precio o stock queda auditado, sin que el backend lo sepa.</td>
+<td><code>TRG_PRODUCTO_AUDITORIA</code> (<code>AFTER INSERT</code>/<code>UPDATE</code>/<code>DELETE</code>), disparado por Oracle mismo.</td>
 </tr>
 <tr>
-<td>Sólo una venta activa puede anularse.</td>
-<td>Procedimiento <code>anular_venta</code>.</td>
+<td>Una venta no puede registrarse con stock insuficiente.</td>
+<td>Validado desde el servicio de <code>ventas</code> en LP2 (S4), consultando <code>catalogo</code> vía su servicio público — regla de estado, no de forma, por eso vive en el service y no en un <code>CHECK</code>.</td>
 </tr>
 <tr>
-<td>Todo cambio de estado queda auditado.</td>
-<td>Trigger <code>trg_venta_estado_audit</code>.</td>
+<td>Un producto inexistente al consultar su precio responde con causa clara.</td>
+<td><code>FN_OBTENER_PRECIO_PRODUCTO</code>, captura <code>NO_DATA_FOUND</code> y la registra en <code>LOG_ERRORES</code>.</td>
 </tr>
 </tbody>
 </table>
@@ -2787,34 +2873,59 @@
 <table>
 <thead>
 <tr>
-<th>Situacion</th>
-<th>Excepcion esperada</th>
+<th>Situación</th>
+<th>Excepción esperada</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Cabecera, detalle o cantidad inválida.</td>
-<td><code>raise_application_error(-20001/-20002, ...)</code>.</td>
+<td>Categoría inexistente al registrar un producto.</td>
+<td><code>ORA-02291</code> capturado, <code>RAISE_APPLICATION_ERROR(-20010, ...)</code>.</td>
 </tr>
 <tr>
-<td>Stock insuficiente.</td>
-<td><code>raise_application_error(-20003, ...)</code>.</td>
+<td>Porcentaje de descuento fuera de rango (0-100).</td>
+<td><code>RAISE_APPLICATION_ERROR(-20011, ...)</code>, sin código Oracle previo — la regla la crea el propio procedimiento.</td>
 </tr>
 <tr>
-<td>Venta inexistente o no anulable.</td>
-<td><code>raise_application_error(-20004/-20005, ...)</code>.</td>
+<td>Producto inexistente al consultar su precio.</td>
+<td><code>NO_DATA_FOUND</code> (código <code>100</code>), <code>RAISE_APPLICATION_ERROR(-20012, ...)</code>.</td>
 </tr>
 </tbody>
 </table>
-<h2 id="5-optimizacion-inicial">5. Optimizacion inicial<a class="headerlink" href="#5-optimizacion-inicial" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TB
-    A[Consulta frecuente&lt;br/&gt;ventas por estado y fecha]
-    B[Indice compuesto&lt;br/&gt;idx_venta_estado_fecha]
-    C[DBMS_STATS&lt;br/&gt;estadisticas actualizadas]
-    D[Explain Plan&lt;br/&gt;evidencia del plan]
-
-    A --&gt; B --&gt; C --&gt; D</code></pre>
-<h2 id="6-evidencia-de-integracion">6. Evidencia de integracion<a class="headerlink" href="#6-evidencia-de-integracion" title="Permanent link">&para;</a></h2>
+<h2 id="5-selectividad-e-indices-s5">5. Selectividad e índices (S5)<a class="headerlink" href="#5-selectividad-e-indices-s5" title="Permanent link">&para;</a></h2>
+<p>Ningún índice se crea sin medir selectividad primero (<code>COUNT(DISTINCT columna) / COUNT(*)</code>):</p>
+<table>
+<thead>
+<tr>
+<th>Columna candidata</th>
+<th>Selectividad</th>
+<th>Índice creado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>VENTAS.FECHA</code></td>
+<td>Alta (cercana a 1)</td>
+<td>B-Tree (<code>IX_VENTAS_FECHA</code>)</td>
+</tr>
+<tr>
+<td><code>LOG_ERRORES.OBJETO</code></td>
+<td>Baja (pocos valores distintos)</td>
+<td>Bitmap (<code>IX_LOG_ERRORES_OBJETO</code>)</td>
+</tr>
+<tr>
+<td><code>TRUNC(VENTAS.FECHA)</code></td>
+<td>La de la expresión, no la de la columna</td>
+<td>Function-Based (<code>IX_VENTAS_FECHA_DIA</code>)</td>
+</tr>
+<tr>
+<td><code>VENTAS.ESTADO</code></td>
+<td>Muy baja (un único valor, <code>EstadoVenta.REGISTRADA</code> en LP2 S4)</td>
+<td><strong>Ninguno</strong> — se creó, se confirmó que el optimizador no lo usaba, y se eliminó.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="6-evidencia-de-integracion">6. Evidencia de integración<a class="headerlink" href="#6-evidencia-de-integracion" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -2825,24 +2936,24 @@
 </thead>
 <tbody>
 <tr>
-<td>Paquete <code>pkg_venta</code></td>
-<td>Componente de lógica transaccional</td>
-<td>Servicio de ventas.</td>
-</tr>
-<tr>
-<td>Trigger de auditoría</td>
+<td><code>TRG_PRODUCTO_AUDITORIA</code></td>
 <td>Atributo de auditabilidad</td>
-<td>Acción anular venta.</td>
+<td><code>POST</code>/<code>PUT</code> sobre <code>/api/v1/productos</code>.</td>
 </tr>
 <tr>
-<td>Índice por estado-fecha</td>
+<td><code>IX_VENTAS_FECHA</code></td>
 <td>Atributo de rendimiento</td>
-<td>Filtro de ventas.</td>
+<td><code>GET /api/v1/ventas?desde=&amp;hasta=</code>.</td>
 </tr>
 <tr>
-<td>Excepciones PL/SQL</td>
+<td><code>LOG_ERRORES</code> + excepciones personalizadas</td>
 <td>Robustez del motor</td>
-<td>Manejo global de errores.</td>
+<td><code>GlobalExceptionHandler</code> (manejo global de errores).</td>
+</tr>
+<tr>
+<td><code>EXPLAIN PLAN</code>/<code>DBMS_STATS</code> sobre la consulta representativa (S4)</td>
+<td>—</td>
+<td>Consulta de reporte agregado (<code>GET /api/v1/ventas/resumen</code>, LP2 S5).</td>
 </tr>
 </tbody>
 </table>

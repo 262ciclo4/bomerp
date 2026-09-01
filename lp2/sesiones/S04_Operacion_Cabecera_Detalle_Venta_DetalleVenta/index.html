@@ -1834,6 +1834,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S06_Evaluacion_Unidad_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S6 - Evaluación de la Unidad I
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2767,17 +2795,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#315-opcional-anexo-visualizar-metricas-y-logs-juntos-en-grafana" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3.15 (opcional, anexo) Visualizar métricas y logs juntos en Grafana
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -2929,6 +2946,34 @@
     
   
     S5 - Consultas empresariales, reportes REST y CORS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S06_Evaluacion_Unidad_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S6 - Evaluación de la Unidad I
   
 
     
@@ -3332,17 +3377,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#315-opcional-anexo-visualizar-metricas-y-logs-juntos-en-grafana" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3.15 (opcional, anexo) Visualizar métricas y logs juntos en Grafana
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -3720,7 +3754,6 @@
 <li><strong>3.12</strong> Relacionar con ADS y BD2.</li>
 <li><strong>3.13</strong> (opcional, anexo) Exponer métricas de <code>bomerp-backend</code> para Prometheus.</li>
 <li><strong>3.14</strong> (opcional, anexo) Enviar logs de <code>bomerp-backend</code> a Loki y verificarlos.</li>
-<li><strong>3.15</strong> (opcional, anexo) Visualizar métricas y logs juntos en Grafana.</li>
 </ul>
 <h3 id="31-verificar-el-punto-de-partida">3.1 Verificar el punto de partida<a class="headerlink" href="#31-verificar-el-punto-de-partida" title="Permanent link">&para;</a></h3>
 <p><strong>Punto de partida común:</strong> todo el equipo debe comenzar exactamente desde donde quedó S3, no desde su propio avance individual. Clona la rama <code>s03-objetos-relacionados</code> (el snapshot de cierre de S3):</p>
@@ -4480,57 +4513,7 @@ http://localhost:33100/loki/api/v1/query_range?query={application="bomerp-backen
 <div class="highlight"><pre><span></span><code>http://localhost:33100/loki/api/v1/query_range?query={application="bomerp-backend"} |= "Listando"
 </code></pre></div>
 <p>Esto solo rastrea el <code>traceId</code> <strong>dentro de <code>bomerp-backend</code></strong> — como todavía es un único proceso (2.4, más arriba), no hay ningún otro servicio al que propagárselo.</p>
-<p><strong>Nota de puertos ocupados:</strong> <code>lp2/obs/</code> también incluye un <code>compose.yml</code> de PROD (placeholder, <code>49090</code>/<code>43100</code>), a la espera de que exista un PROD real de <code>bomerp-backend</code> — no se ejecuta hasta entonces (ADR-002, "no crear por si acaso"). Cuando BigData (lambda26) construya su propio <code>obs/</code> (previsto para su S6+), el siguiente puerto libre es <code>59090</code> (Prometheus) / <code>53100</code> (Loki) — se decide en ese momento, no antes.</p>
-<h3 id="315-opcional-anexo-visualizar-metricas-y-logs-juntos-en-grafana">3.15 (opcional, anexo) Visualizar métricas y logs juntos en Grafana<a class="headerlink" href="#315-opcional-anexo-visualizar-metricas-y-logs-juntos-en-grafana" title="Permanent link">&para;</a></h3>
-<div class="admonition note">
-<p class="admonition-title">3.15 es opcional</p>
-<p>Depende de 3.13 y 3.14: sin Prometheus ni Loki corriendo, Grafana no tiene qué mostrar. El alcance evaluado de S4 sigue terminando en 3.12 (4.4, 4.6); este paso es para quien ya completó los dos anteriores y quiere verlos juntos en un solo tablero, en vez de alternar entre la UI de Prometheus y las consultas de Loki por separado.</p>
-</div>
-<p><strong>Producto del paso:</strong> un Grafana propio, con Prometheus y Loki agregados como fuentes de datos automáticamente (sin configurarlos a mano desde la UI), corriendo en paralelo al resto del stack.</p>
-<p>Crea <code>lp2/obs/grafana/provisioning/datasources/datasources.yml</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
-
-<span class="nt">datasources</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Prometheus</span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prometheus</span>
-<span class="w">    </span><span class="nt">access</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">proxy</span>
-<span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://bomerp-prometheus:9090</span>
-<span class="w">    </span><span class="nt">isDefault</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Loki</span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">loki</span>
-<span class="w">    </span><span class="nt">access</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">proxy</span>
-<span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://bomerp-loki:3100</span>
-</code></pre></div>
-<p><code>url</code> usa el nombre del servicio de Docker Compose (<code>bomerp-prometheus</code>, <code>bomerp-loki</code>), no <code>localhost</code>: Grafana consulta a los otros contenedores por la red interna que Compose crea automáticamente, la misma razón por la que <code>prometheus-dev.yml</code> (3.13) usa <code>host.docker.internal</code> para llegar a <code>bomerp-backend</code>, que corre fuera de Docker.</p>
-<p>Agrega Grafana a <code>lp2/obs/compose-dev.yml</code> (junto a <code>bomerp-prometheus</code>, <code>bomerp-loki</code> y <code>bomerp-promtail</code>):</p>
-<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="nt">bomerp-grafana</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grafana/grafana:11.4.0</span>
-<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bomerp-grafana-dev</span>
-<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
-<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"33000:3000"</span>
-<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GF_SECURITY_ADMIN_PASSWORD=admin</span>
-<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./grafana/provisioning:/etc/grafana/provisioning:ro</span>
-<span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bomerp-prometheus</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bomerp-loki</span>
-</code></pre></div>
-<p><code>33000</code> sigue el mismo criterio de puertos que Prometheus (<code>39090</code>) y Loki (<code>33100</code>): el prefijo <code>3</code> identifica a LP2 DEV, evitando cualquier Grafana que DIST agregue después en <code>1????</code>/<code>2????</code>.</p>
-<p>Vuelve a levantar el stack con el archivo actualizado:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>lp2/obs
-docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>compose-dev.yml<span class="w"> </span>up<span class="w"> </span>-d
-</code></pre></div>
-<p>Abre <code>http://localhost:33000</code> (usuario <code>admin</code>, contraseña <code>admin</code> — Grafana pide cambiarla al primer ingreso; en DEV puedes omitirlo). Ve a <strong>Connections → Data sources</strong> y confirma que <code>Prometheus</code> y <code>Loki</code> ya aparecen configurados, sin haberlos agregado a mano — eso es lo que hizo <code>datasources.yml</code> al arrancar el contenedor.</p>
-<p>Para verificar que ambas fuentes responden, crea un panel nuevo (<strong>Dashboards → New → New dashboard → Add visualization</strong>) y prueba una consulta de cada una:</p>
-<ul>
-<li>Con la fuente <code>Prometheus</code>: <code>up{job="bomerp-backend"}</code> (3.13) — el mismo dato que ya viste en la UI de Prometheus, ahora dentro de Grafana.</li>
-<li>Con la fuente <code>Loki</code>: <code>{application="bomerp-backend"} |= "Started BomerpBackendApplication"</code> (3.14) — el mismo log, con el mismo lenguaje de consulta (LogQL) que ya usaste por API.</li>
-</ul>
-<p>Lo que cambia no es el dato ni la consulta — es tener ambas fuentes, métricas y logs, en el mismo tablero, algo que ni Prometheus ni Loki ofrecen por separado.</p>
-<p><strong>Nota de puertos ocupados (actualizada):</strong> con Grafana, LP2 DEV ocupa <code>39090</code> (Prometheus), <code>33100</code> (Loki) y <code>33000</code> (Grafana) — los tres bajo el prefijo <code>3</code>. Si más adelante DIST agrega su propio Grafana, el puerto que le corresponde por el mismo criterio es <code>13000</code> (prefijo <code>1</code>, DEV) o <code>23000</code> (prefijo <code>2</code>, PROD); si BigData agrega el suyo, <code>53000</code> (prefijo <code>5</code>).</p>
+<p><strong>Nota de puertos ocupados:</strong> <code>lp2/obs/</code> también incluye un <code>compose.yml</code> de PROD (placeholder, <code>49090</code>/<code>43100</code>), a la espera de que exista un PROD real de <code>bomerp-backend</code> — no se ejecuta hasta entonces (ADR-002, "no crear por si acaso"). Cuando BigData (lambda26) construya su propio <code>obs/</code> (previsto para su S6+), el siguiente puerto libre es <code>59090</code> (Prometheus) / <code>53100</code> (Loki) — se decide en ese momento, no antes. Grafana se agrega recién en <a href="../S05_Consultas_Empresariales_Reportes_CORS/">LP2 S5</a> (3.10), no en esta sesión.</p>
 <h2 id="4-crea-actividad-autonoma">4. Crea: actividad autónoma<a class="headerlink" href="#4-crea-actividad-autonoma" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 2h fuera del aula.</p>
 <h3 id="41-actividad">4.1 Actividad<a class="headerlink" href="#41-actividad" title="Permanent link">&para;</a></h3>

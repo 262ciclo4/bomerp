@@ -16,6 +16,8 @@
         <link rel="prev" href="../S04_Operacion_Cabecera_Detalle_Venta_DetalleVenta/">
       
       
+        <link rel="next" href="../S06_Evaluacion_Unidad_1/">
+      
       
         
       
@@ -1832,6 +1834,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S06_Evaluacion_Unidad_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S6 - Evaluación de la Unidad I
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2749,6 +2779,61 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#310-opcional-anexo-levantar-grafana-con-prometheus-y-loki-como-fuentes-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.10 (opcional, anexo) Levantar Grafana con Prometheus y Loki como fuentes de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#311-opcional-anexo-tablero-y-alertas-de-infraestructura" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.11 (opcional, anexo) Tablero y alertas de infraestructura
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#312-opcional-anexo-metricas-de-negocio-con-micrometer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.12 (opcional, anexo) Métricas de negocio con Micrometer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#313-opcional-anexo-disenar-el-tablero-de-ventas-en-tiempo-real" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.13 (opcional, anexo) Diseñar el tablero de ventas en tiempo real
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#314-opcional-anexo-guardar-los-tableros-como-codigo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.14 (opcional, anexo) Guardar los tableros como código
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2880,6 +2965,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S06_Evaluacion_Unidad_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S6 - Evaluación de la Unidad I
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -3225,6 +3338,61 @@
     <span class="md-ellipsis">
       
         3.9 Relacionar con ADS y BD2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#310-opcional-anexo-levantar-grafana-con-prometheus-y-loki-como-fuentes-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.10 (opcional, anexo) Levantar Grafana con Prometheus y Loki como fuentes de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#311-opcional-anexo-tablero-y-alertas-de-infraestructura" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.11 (opcional, anexo) Tablero y alertas de infraestructura
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#312-opcional-anexo-metricas-de-negocio-con-micrometer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.12 (opcional, anexo) Métricas de negocio con Micrometer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#313-opcional-anexo-disenar-el-tablero-de-ventas-en-tiempo-real" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.13 (opcional, anexo) Diseñar el tablero de ventas en tiempo real
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#314-opcional-anexo-guardar-los-tableros-como-codigo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.14 (opcional, anexo) Guardar los tableros como código
       
     </span>
   </a>
@@ -3813,6 +3981,275 @@ python<span class="w"> </span>-m<span class="w"> </span>http.server<span class="
 <p><strong>Con <code>allowed-origin: http://localhost:4200</code></strong> (3.6), esta llamada desde <code>http://localhost:5500</code> debe fallar en la consola con un mensaje que menciona CORS y <code>Access-Control-Allow-Origin</code>. Cambia temporalmente la propiedad a <code>http://localhost:5500</code>, reinicia el backend y repite el <code>fetch</code>: ahora debe completarse y mostrar el arreglo de ventas en consola. Vuelve a dejar la propiedad en <code>http://localhost:4200</code> antes de continuar — es el puerto real que va a usar la SPA desde S7.</p>
 <h3 id="39-relacionar-con-ads-y-bd2">3.9 Relacionar con ADS y BD2<a class="headerlink" href="#39-relacionar-con-ads-y-bd2" title="Permanent link">&para;</a></h3>
 <p>Sesión equivalente en los otros dos cursos, misma semana: <a href="../../../ads/sesiones/S05_Evaluacion_Unidad_1/">ADS - S5 Evaluación de la Unidad I</a> evalúa lo construido en S1-S4, sin contenido nuevo esta semana. BD2 S5 construye índices B-Tree y por selectividad — los mismos campos que esta sesión usa para filtrar y ordenar (<code>ESTADO</code>, <code>FECHA</code>) son los candidatos naturales a indexar; sin ese índice, <code>GET /api/v1/ventas?estado=REGISTRADA</code> funciona igual desde el backend, pero Oracle recorre toda la tabla para resolverlo. BD2 todavía no publica su guía de S5.</p>
+<h3 id="310-opcional-anexo-levantar-grafana-con-prometheus-y-loki-como-fuentes-de-datos">3.10 (opcional, anexo) Levantar Grafana con Prometheus y Loki como fuentes de datos<a class="headerlink" href="#310-opcional-anexo-levantar-grafana-con-prometheus-y-loki-como-fuentes-de-datos" title="Permanent link">&para;</a></h3>
+<div class="admonition note">
+<p class="admonition-title">3.10-3.14 son opcionales</p>
+<p>Dependen de 3.13 y 3.14 de S4: sin Prometheus ni Loki corriendo, Grafana no tiene qué mostrar. El alcance evaluado de S5 termina en 3.9 (4.4, 4.6); este paso es para quien ya completó los dos anteriores y quiere verlos juntos en un solo tablero, en vez de alternar entre la UI de Prometheus y las consultas de Loki por separado.</p>
+</div>
+<p><strong>Producto del paso:</strong> un Grafana propio, con Prometheus y Loki agregados como fuentes de datos automáticamente (sin configurarlos a mano desde la UI), corriendo en paralelo al resto del stack.</p>
+<p>Crea <code>lp2/obs/grafana/provisioning/datasources/datasources.yml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+
+<span class="nt">datasources</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Prometheus</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prometheus</span>
+<span class="w">    </span><span class="nt">access</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">proxy</span>
+<span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://bomerp-prometheus:9090</span>
+<span class="w">    </span><span class="nt">isDefault</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Loki</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">loki</span>
+<span class="w">    </span><span class="nt">access</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">proxy</span>
+<span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://bomerp-loki:3100</span>
+</code></pre></div>
+<p><code>url</code> usa el nombre del servicio de Docker Compose (<code>bomerp-prometheus</code>, <code>bomerp-loki</code>), no <code>localhost</code>: Grafana consulta a los otros contenedores por la red interna que Compose crea automáticamente, la misma razón por la que <code>prometheus-dev.yml</code> (S4, 3.13) usa <code>host.docker.internal</code> para llegar a <code>bomerp-backend</code>, que corre fuera de Docker.</p>
+<p>Agrega Grafana a <code>lp2/obs/compose-dev.yml</code> (junto a <code>bomerp-prometheus</code>, <code>bomerp-loki</code> y <code>bomerp-promtail</code>, ya construidos en S4):</p>
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="nt">bomerp-grafana</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grafana/grafana:11.4.0</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bomerp-grafana-dev</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"33000:3000"</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GF_SECURITY_ADMIN_PASSWORD=admin</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./grafana/provisioning:/etc/grafana/provisioning:ro</span>
+<span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bomerp-prometheus</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bomerp-loki</span>
+</code></pre></div>
+<p><code>33000</code> sigue el mismo criterio de puertos que Prometheus (<code>39090</code>) y Loki (<code>33100</code>): el prefijo <code>3</code> identifica a LP2 DEV, evitando cualquier Grafana que DIST agregue después en <code>1????</code>/<code>2????</code>. Si más adelante DIST agrega su propio Grafana, el puerto que le corresponde por el mismo criterio es <code>13000</code> (prefijo <code>1</code>, DEV) o <code>23000</code> (prefijo <code>2</code>, PROD); si BigData agrega el suyo, <code>53000</code> (prefijo <code>5</code>).</p>
+<p>Vuelve a levantar el stack con el archivo actualizado:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>lp2/obs
+docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>compose-dev.yml<span class="w"> </span>up<span class="w"> </span>-d
+</code></pre></div>
+<p>Abre <code>http://localhost:33000</code> (usuario <code>admin</code>, contraseña <code>admin</code> — Grafana pide cambiarla al primer ingreso; en DEV puedes omitirlo). Ve a <strong>Connections → Data sources</strong> y confirma que <code>Prometheus</code> y <code>Loki</code> ya aparecen configurados, sin haberlos agregado a mano — eso es lo que hizo <code>datasources.yml</code> al arrancar el contenedor.</p>
+<p>Para verificar que ambas fuentes responden, crea un panel nuevo (<strong>Dashboards → New → New dashboard → Add visualization</strong>) y prueba una consulta de cada una:</p>
+<ul>
+<li>Con la fuente <code>Prometheus</code>: <code>up{job="bomerp-backend"}</code> (S4, 3.13) — el mismo dato que ya viste en la UI de Prometheus, ahora dentro de Grafana.</li>
+<li>Con la fuente <code>Loki</code>: <code>{application="bomerp-backend"} |= "Started BomerpBackendApplication"</code> (S4, 3.14) — el mismo log, con el mismo lenguaje de consulta (LogQL) que ya usaste por API.</li>
+</ul>
+<p>Lo que cambia no es el dato ni la consulta — es tener ambas fuentes, métricas y logs, en el mismo tablero, algo que ni Prometheus ni Loki ofrecen por separado. Los pasos siguientes (3.11-3.14) construyen un tablero real sobre esta base, no solo un panel de prueba.</p>
+<h3 id="311-opcional-anexo-tablero-y-alertas-de-infraestructura">3.11 (opcional, anexo) Tablero y alertas de infraestructura<a class="headerlink" href="#311-opcional-anexo-tablero-y-alertas-de-infraestructura" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> un tablero de infraestructura con las métricas y los logs que ya construiste en S4 (3.13-3.14) — ahora visualizados en Grafana, no solo consultados por API —, más alertas que avisan solas cuando algo falla.</p>
+<p>Antes de construir nada de negocio (3.12-3.13), lo primero que un equipo real pone en un tablero es la salud de lo que ya tiene corriendo. Ninguna de las consultas de este paso es nueva: son exactamente las que S4 ya verificó por API o por navegador; lo único distinto es que ahora quedan visibles todo el tiempo, en un tablero, no una vez, en una terminal.</p>
+<p><strong>Cómo se agrega cada panel (primera vez en Grafana, sigue estos pasos para los seis paneles):</strong></p>
+<ol>
+<li>Abre <code>http://localhost:33000</code>. En el menú de la izquierda, entra a <strong>Dashboards</strong> → botón <strong>New</strong> (arriba a la derecha) → <strong>New dashboard</strong>.</li>
+<li>Clic en <strong>+ Add visualization</strong>. En el diálogo que aparece, elige la fuente de datos: <code>Prometheus</code> para métricas, <code>Loki</code> para logs.</li>
+<li>Se abre el editor de panel. En el campo de consulta, debajo del gráfico, pega la consulta del panel. Si el panel necesita una segunda consulta en el mismo gráfico (el Panel 3, más abajo), clic en <strong>+ Query</strong> para agregar una fila más.</li>
+<li>A la derecha del editor, en <strong>Panel options → Title</strong>, escribe el título del panel (por ejemplo, "Estado del backend").</li>
+<li>Justo arriba de <strong>Panel options</strong>, hay un selector de tipo de visualización — cámbialo a <strong>Stat</strong>, <strong>Time series</strong> o <strong>Logs</strong>, según lo que indica cada panel.</li>
+<li>Clic en <strong>Save</strong> (arriba a la derecha del editor) para volver al tablero, ya con el panel agregado.</li>
+<li>Para el siguiente panel, desde la vista del tablero, clic en <strong>+ Add</strong> (arriba) → <strong>Visualization</strong>, y repite desde el paso 2.</li>
+</ol>
+<p><strong>Panel 1 — Estado del backend (Stat):</strong></p>
+<div class="highlight"><pre><span></span><code><span class="nv">up</span><span class="p">{</span><span class="nl">job</span><span class="o">=</span><span class="p">"</span><span class="s">bomerp-backend</span><span class="p">"}</span>
+</code></pre></div>
+<p><strong>Panel 2 — Tiempo de actividad (Stat):</strong></p>
+<div class="highlight"><pre><span></span><code><span class="nv">process_uptime_seconds</span><span class="p">{</span><span class="nl">job</span><span class="o">=</span><span class="p">"</span><span class="s">bomerp-backend</span><span class="p">"}</span>
+</code></pre></div>
+<p><strong>Panel 3 — Conexiones a Oracle (Time series, dos consultas en el mismo panel):</strong></p>
+<div class="highlight"><pre><span></span><code><span class="nv">hikaricp_connections_active</span>
+<span class="nv">hikaricp_connections_max</span>
+</code></pre></div>
+<p><strong>Panel 4 — Peticiones HTTP por segundo (Time series):</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kr">rate</span><span class="o">(</span><span class="nv">http_server_requests_seconds_count</span><span class="p">{</span><span class="nl">job</span><span class="o">=</span><span class="p">"</span><span class="s">bomerp-backend</span><span class="p">"}[</span><span class="s">1m</span><span class="p">]</span><span class="o">)</span>
+</code></pre></div>
+<p><strong>Panel 5 — Logs recientes (Logs, fuente <code>Loki</code>):</strong></p>
+<div class="highlight"><pre><span></span><code>{application="bomerp-backend"}
+</code></pre></div>
+<p><strong>Panel 6 — Errores recientes (Logs, fuente <code>Loki</code>):</strong></p>
+<div class="highlight"><pre><span></span><code>{application="bomerp-backend", detected_level="error"}
+</code></pre></div>
+<p>Guarda el tablero con el nombre <code>BomERP - Infraestructura</code> — distinto del tablero de negocio que construyen 3.12-3.13.</p>
+<p><strong>Buscar una línea específica, sin pegar URLs a mano: <code>Explore</code>.</strong> S4 (3.14) encontró líneas puntuales pegando la consulta directo en la URL del navegador contra la API de Loki — funciona, pero es incómodo para explorar: cada búsqueda nueva significa editar la URL a mano. Grafana tiene una herramienta dedicada justo para esto:</p>
+<ol>
+<li>En el menú de la izquierda, entra a <strong>Explore</strong> (ícono de brújula).</li>
+<li>Elige la fuente <code>Loki</code> en el selector de arriba.</li>
+<li>En el campo de consulta, pega el mismo LogQL que ya usaste por API — por ejemplo, para encontrar el arranque de la sesión de traceId de S4 (3.14):</li>
+</ol>
+<div class="highlight"><pre><span></span><code>{application="bomerp-backend"} |= "Listando"
+</code></pre></div>
+<ol>
+<li>Clic en <strong>Run query</strong> (o Ctrl+Enter). Las líneas que contienen <code>"Listando"</code> aparecen resaltadas, con el término buscado marcado en el texto — la misma "aguja en el pajar" que antes tenías que encontrar leyendo el JSON crudo de la API.</li>
+</ol>
+<p>Prueba también el rollback de S4 (3.10 de S4), con la misma mecánica, solo cambiando el texto buscado:</p>
+<div class="highlight"><pre><span></span><code>{application="bomerp-backend"} |= "StockInsuficienteException"
+</code></pre></div>
+<p><code>Explore</code> no reemplaza los paneles del tablero (3.11, arriba): un panel muestra siempre lo mismo, para cualquiera que abra el tablero; <code>Explore</code> es para preguntas puntuales, del momento — la herramienta correcta cuando no sabes de antemano qué vas a buscar, en vez de crear un panel nuevo por cada búsqueda.</p>
+<p><strong>Alertas: que Grafana avise, no que alguien tenga que quedarse mirando el tablero.</strong> Un tablero sirve mientras alguien lo está viendo; una alerta sigue funcionando aunque nadie lo mire.</p>
+<p><strong>Cómo se crea cada regla de alerta (sigue estos pasos para las dos alertas):</strong></p>
+<ol>
+<li>En el menú de la izquierda, entra a <strong>Alerting</strong> → <strong>Alert rules</strong> → botón <strong>+ New alert rule</strong> (arriba a la derecha).</li>
+<li>En <strong>Enter alert rule name</strong>, escribe el nombre de la regla (por ejemplo, "Backend caído").</li>
+<li>En <strong>Define query and alert condition</strong>, confirma que la fuente sea <code>Prometheus</code> y pega la consulta en el editor de la consulta <strong>A</strong>.</li>
+<li>Debajo, en la pestaña <strong>Threshold</strong>, define la condición: elige el operador (<code>IS BELOW</code> o <code>IS ABOVE</code>, según la alerta) y escribe el valor.</li>
+<li>En <strong>Set evaluation behavior</strong>, crea una carpeta nueva escribiendo su nombre (por ejemplo, <code>BomERP</code>) y un grupo de evaluación; en <strong>Evaluate every</strong> define cada cuánto se revisa la condición, y en <strong>for</strong>, cuánto tiempo debe sostenerse antes de pasar a <em>Firing</em>.</li>
+<li>Sin tocar <strong>Configure labels and notifications</strong> (queda sin <em>contact point</em> por ahora, ver más abajo), clic en <strong>Save rule and exit</strong> (arriba a la derecha).</li>
+</ol>
+<p><strong>Alerta 1 — Backend caído:</strong></p>
+<ul>
+<li>Consulta (fuente <code>Prometheus</code>): <code>up{job="bomerp-backend"}</code></li>
+<li>Condición: <code>IS BELOW 1</code></li>
+<li>Evaluar cada <code>10s</code>, durante (<code>for</code>) <code>1m</code> antes de pasar a <em>Firing</em> — evita que una caída de un segundo (un reinicio normal) dispare la alerta de más.</li>
+</ul>
+<p><strong>Alerta 2 — Pool de conexiones cerca del límite:</strong></p>
+<ul>
+<li>Consulta (fuente <code>Prometheus</code>): <code>hikaricp_connections_active / hikaricp_connections_max</code></li>
+<li>Condición: <code>IS ABOVE 0.8</code></li>
+<li>Evaluar cada <code>30s</code>, durante <code>2m</code>.</li>
+</ul>
+<p>Sin <em>contact point</em> configurado, la alerta igual cambia de estado (<em>Normal</em> → <em>Pending</em> → <em>Firing</em>) y queda visible en <strong>Alerting → Alert rules</strong>, que alcanza para esta sesión. Conectar un canal real de notificación (correo, Slack) queda fuera de este anexo.</p>
+<p><strong>Prueba la Alerta 1 provocándola de verdad:</strong> detén <code>bomerp-backend</code> (<code>Ctrl+C</code> en la terminal donde corre) y observa el estado de la regla en <strong>Alerting → Alert rules</strong> — debería pasar de <em>Normal</em> a <em>Pending</em> y, pasado el minuto configurado, a <em>Firing</em>. Vuelve a levantar el backend y confirma que regresa solo a <em>Normal</em>.</p>
+<h3 id="312-opcional-anexo-metricas-de-negocio-con-micrometer">3.12 (opcional, anexo) Métricas de negocio con Micrometer<a class="headerlink" href="#312-opcional-anexo-metricas-de-negocio-con-micrometer" title="Permanent link">&para;</a></h3>
+<p>Con la infraestructura ya en su propio tablero y con alertas (3.11), esta es la pieza que le falta al negocio: métricas propias de lo que la aplicación hace, no de cómo está corriendo.</p>
+<p><strong>Producto del paso:</strong> <code>bomerp-backend</code> emitiendo métricas propias del negocio, listas para Prometheus.</p>
+<p><code>up{job="bomerp-backend"}</code> o <code>hikaricp_connections_active</code> (S4, 3.13) dicen si el backend está vivo y cuántas conexiones usa — nada sobre cuántas ventas se registraron ni cuántas se rechazaron. Esas preguntas no las responde ninguna métrica que Spring Boot exponga por defecto: hay que emitirlas explícitamente, en el momento exacto en que el evento de negocio ocurre.</p>
+<p><strong>Por qué no simplemente hacer que Grafana consulte Oracle cada pocos segundos:</strong> parecería más directo — el dato ya vive ahí —, pero convierte cada refresco del tablero en una consulta más contra la base de datos de producción, y no es así como Prometheus/Grafana están pensados para trabajar: un <code>Counter</code> en memoria, incrementado por la propia aplicación en el instante del evento, cuesta prácticamente nada, y Prometheus solo lo <em>raspa</em> (<code>scrape</code>) cada 15 segundos (<code>prometheus-dev.yml</code>, S4 3.13) — la aplicación nunca es consultada más seguido de lo que ella misma decide.</p>
+<p>Agrega <code>MeterRegistry</code> a <code>VentaServiceImpl</code> (registra una venta exitosa):</p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.service</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">io.micrometer.core.instrument.MeterRegistry</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.RequiredArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.stereotype.Service</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.transaction.annotation.Transactional</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoResponse</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.service.ProductoService</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.exception.ResourceNotFoundException</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.dto.*</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.entity.DetalleVenta</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.entity.EstadoVenta</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.entity.Venta</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.mapper.VentaMapper</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.repository.VentaRepository</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.math.BigDecimal</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.time.LocalDateTime</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+
+<span class="nd">@Service</span>
+<span class="nd">@RequiredArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">VentaServiceImpl</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">VentaService</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">VentaRepository</span><span class="w"> </span><span class="n">ventaRepository</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">ProductoService</span><span class="w"> </span><span class="n">productoService</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">VentaMapper</span><span class="w"> </span><span class="n">ventaMapper</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">MeterRegistry</span><span class="w"> </span><span class="n">meterRegistry</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// ... buscar(), obtener() sin cambios ...</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="nd">@Transactional</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">VentaResponse</span><span class="w"> </span><span class="nf">crear</span><span class="p">(</span><span class="n">VentaRequest</span><span class="w"> </span><span class="n">request</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Venta</span><span class="w"> </span><span class="n">venta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Venta</span><span class="p">();</span>
+<span class="w">        </span><span class="n">venta</span><span class="p">.</span><span class="na">setFecha</span><span class="p">(</span><span class="n">LocalDateTime</span><span class="p">.</span><span class="na">now</span><span class="p">());</span>
+<span class="w">        </span><span class="n">venta</span><span class="p">.</span><span class="na">setEstado</span><span class="p">(</span><span class="n">EstadoVenta</span><span class="p">.</span><span class="na">REGISTRADA</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BigDecimal</span><span class="p">.</span><span class="na">ZERO</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">DetalleVentaRequest</span><span class="w"> </span><span class="n">detalleRequest</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">request</span><span class="p">.</span><span class="na">getDetalles</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">ProductoResponse</span><span class="w"> </span><span class="n">producto</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">productoService</span><span class="p">.</span><span class="na">obtener</span><span class="p">(</span><span class="n">detalleRequest</span><span class="p">.</span><span class="na">getProductoId</span><span class="p">());</span>
+<span class="w">            </span><span class="n">productoService</span><span class="p">.</span><span class="na">descontarStock</span><span class="p">(</span><span class="n">detalleRequest</span><span class="p">.</span><span class="na">getProductoId</span><span class="p">(),</span><span class="w"> </span><span class="n">detalleRequest</span><span class="p">.</span><span class="na">getCantidad</span><span class="p">());</span>
+
+<span class="w">            </span><span class="n">DetalleVenta</span><span class="w"> </span><span class="n">detalle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ventaMapper</span><span class="p">.</span><span class="na">toDetalle</span><span class="p">(</span><span class="n">detalleRequest</span><span class="p">,</span><span class="w"> </span><span class="n">producto</span><span class="p">);</span>
+<span class="w">            </span><span class="n">detalle</span><span class="p">.</span><span class="na">setVenta</span><span class="p">(</span><span class="n">venta</span><span class="p">);</span>
+<span class="w">            </span><span class="n">venta</span><span class="p">.</span><span class="na">getDetalles</span><span class="p">().</span><span class="na">add</span><span class="p">(</span><span class="n">detalle</span><span class="p">);</span>
+<span class="w">            </span><span class="n">total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">total</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">detalle</span><span class="p">.</span><span class="na">getSubtotal</span><span class="p">());</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">venta</span><span class="p">.</span><span class="na">setTotal</span><span class="p">(</span><span class="n">total</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">VentaResponse</span><span class="w"> </span><span class="n">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ventaMapper</span><span class="p">.</span><span class="na">toResponse</span><span class="p">(</span><span class="n">ventaRepository</span><span class="p">.</span><span class="na">save</span><span class="p">(</span><span class="n">venta</span><span class="p">));</span>
+<span class="w">        </span><span class="n">meterRegistry</span><span class="p">.</span><span class="na">counter</span><span class="p">(</span><span class="s">"bomerp_ventas_registradas_total"</span><span class="p">).</span><span class="na">increment</span><span class="p">();</span>
+<span class="w">        </span><span class="n">meterRegistry</span><span class="p">.</span><span class="na">summary</span><span class="p">(</span><span class="s">"bomerp_ventas_monto"</span><span class="p">).</span><span class="na">record</span><span class="p">(</span><span class="n">total</span><span class="p">.</span><span class="na">doubleValue</span><span class="p">());</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">response</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Solo se agregó el campo <code>meterRegistry</code> (Spring lo inyecta solo: <code>micrometer-registry-prometheus</code> ya está en el <code>pom.xml</code> desde S4, 3.13) y dos líneas al final de <code>crear()</code> — el resto del método no cambia. <code>counter(...).increment()</code> suma uno cada vez que se llama; <code>summary(...).record(valor)</code> acumula el valor (aquí, el monto de cada venta), y Prometheus lo expone como dos series: <code>bomerp_ventas_monto_count</code> (cuántas ventas) y <code>bomerp_ventas_monto_sum</code> (cuánto sumaron en total) — de ahí se calculan tanto el total vendido como el ticket promedio (3.13).</p>
+<p>Registra el rechazo en <code>GlobalExceptionHandler</code> — un solo lugar captura <strong>todas</strong> las ventas rechazadas por stock insuficiente, sin importar desde qué método se dispare la excepción:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.exception</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">io.micrometer.core.instrument.MeterRegistry</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.RequiredArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.http.HttpStatus</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.http.ResponseEntity</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.bind.MethodArgumentNotValidException</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.bind.annotation.ExceptionHandler</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.bind.annotation.RestControllerAdvice</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.time.Instant</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.HashMap</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Map</span><span class="p">;</span>
+
+<span class="nd">@RestControllerAdvice</span>
+<span class="nd">@RequiredArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">GlobalExceptionHandler</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">MeterRegistry</span><span class="w"> </span><span class="n">meterRegistry</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// ... handleNotFound(), handleValidation() sin cambios ...</span>
+
+<span class="w">    </span><span class="nd">@ExceptionHandler</span><span class="p">(</span><span class="n">StockInsuficienteException</span><span class="p">.</span><span class="na">class</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="nf">handleStockInsuficiente</span><span class="p">(</span><span class="n">StockInsuficienteException</span><span class="w"> </span><span class="n">ex</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">meterRegistry</span><span class="p">.</span><span class="na">counter</span><span class="p">(</span><span class="s">"bomerp_ventas_rechazadas_total"</span><span class="p">,</span><span class="w"> </span><span class="s">"motivo"</span><span class="p">,</span><span class="w"> </span><span class="s">"stock_insuficiente"</span><span class="p">).</span><span class="na">increment</span><span class="p">();</span>
+
+<span class="w">        </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+<span class="w">        </span><span class="n">body</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">"timestamp"</span><span class="p">,</span><span class="w"> </span><span class="n">Instant</span><span class="p">.</span><span class="na">now</span><span class="p">().</span><span class="na">toString</span><span class="p">());</span>
+<span class="w">        </span><span class="n">body</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">"status"</span><span class="p">,</span><span class="w"> </span><span class="n">HttpStatus</span><span class="p">.</span><span class="na">CONFLICT</span><span class="p">.</span><span class="na">value</span><span class="p">());</span>
+<span class="w">        </span><span class="n">body</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">"error"</span><span class="p">,</span><span class="w"> </span><span class="s">"Conflict"</span><span class="p">);</span>
+<span class="w">        </span><span class="n">body</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">"message"</span><span class="p">,</span><span class="w"> </span><span class="n">ex</span><span class="p">.</span><span class="na">getMessage</span><span class="p">());</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">status</span><span class="p">(</span><span class="n">HttpStatus</span><span class="p">.</span><span class="na">CONFLICT</span><span class="p">).</span><span class="na">body</span><span class="p">(</span><span class="n">body</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>El <code>"motivo"</code> como etiqueta (<em>tag</em>), no como parte del nombre de la métrica, es lo que permite en 3.13 desglosar rechazos por causa sin crear una métrica nueva por cada una — hoy solo existe <code>"stock_insuficiente"</code>, pero si más adelante aparece otro motivo de rechazo, se suma como un valor más de la misma etiqueta.</p>
+<p>Reinicia <code>bomerp-backend</code>, genera al menos tres ventas exitosas (<code>POST /api/v1/ventas</code>, 3.10 de S4) y al menos una rechazada por stock insuficiente, y verifica que las métricas nuevas aparezcan:</p>
+<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="nb">Invoke-RestMethod</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:8080/actuator/prometheus"</span><span class="p">)</span> <span class="o">-match</span> <span class="s2">"bomerp_ventas"</span>
+</code></pre></div>
+<p>Resultado esperado: líneas con <code>bomerp_ventas_registradas_total</code>, <code>bomerp_ventas_monto_count</code>, <code>bomerp_ventas_monto_sum</code> y <code>bomerp_ventas_rechazadas_total{motivo="stock_insuficiente",...}</code>.</p>
+<h3 id="313-opcional-anexo-disenar-el-tablero-de-ventas-en-tiempo-real">3.13 (opcional, anexo) Diseñar el tablero de ventas en tiempo real<a class="headerlink" href="#313-opcional-anexo-disenar-el-tablero-de-ventas-en-tiempo-real" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> un tablero de Grafana con el negocio en vivo — ventas por minuto, monto vendido, ticket promedio y rechazos por motivo —, actualizándose solo.</p>
+<p>Abre <code>http://localhost:33000</code> (3.10, más arriba) y crea un tablero <strong>nuevo</strong>, distinto del de infraestructura (3.11): <strong>Dashboards → New → New dashboard</strong>. Cada panel se agrega con <strong>Add visualization</strong>, eligiendo la fuente <code>Prometheus</code>, pegando la consulta, y ajustando el tipo de visualización a la derecha.</p>
+<p><strong>Panel 1 — Ventas por minuto (Time series):</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kr">rate</span><span class="o">(</span><span class="nv">bomerp_ventas_registradas_total</span><span class="p">[</span><span class="s">1m</span><span class="p">]</span><span class="o">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">60</span>
+</code></pre></div>
+<p><code>rate()</code> calcula la velocidad de crecimiento del contador por segundo, dentro de la ventana <code>[1m]</code>; multiplicar por <code>60</code> la convierte a "ventas por minuto", una unidad que se lee de un vistazo — el mismo tipo de cálculo que ya usaste conceptualmente en BD2 (tasa sobre una ventana de tiempo), ahora en PromQL en vez de SQL.</p>
+<p><strong>Panel 2 — Monto vendido, últimos 5 minutos (Stat):</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kr">increase</span><span class="o">(</span><span class="nv">bomerp_ventas_monto_sum</span><span class="p">[</span><span class="s">5m</span><span class="p">]</span><span class="o">)</span>
+</code></pre></div>
+<p><code>increase()</code> es <code>rate()</code> sin normalizar a "por segundo" — directamente cuánto creció la suma dentro de la ventana. Este panel responde una versión en vivo, aproximada y barata, de lo que <code>GET /api/v1/ventas/resumen</code> (3.5) responde bajo demanda, exacto y consultando Oracle: son dos herramientas distintas para preguntas parecidas, no una que reemplaza a la otra.</p>
+<p><strong>Panel 3 — Ticket promedio, tiempo real (Gauge):</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kr">rate</span><span class="o">(</span><span class="nv">bomerp_ventas_monto_sum</span><span class="p">[</span><span class="s">5m</span><span class="p">]</span><span class="o">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="kr">rate</span><span class="o">(</span><span class="nv">bomerp_ventas_monto_count</span><span class="p">[</span><span class="s">5m</span><span class="p">]</span><span class="o">)</span>
+</code></pre></div>
+<p>Dividir la tasa de la suma entre la tasa del conteo da el promedio dentro de la ventana — el mismo <code>AVG(v.total)</code> de <code>VentaAgregado</code> (3.3), calculado aquí sin tocar la base de datos.</p>
+<p><strong>Panel 4 — Ventas rechazadas por motivo (Bar gauge):</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">sum</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="o">(</span><span class="nv">motivo</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="nv">bomerp_ventas_rechazadas_total</span><span class="o">)</span>
+</code></pre></div>
+<p><code>sum by (motivo)</code> agrupa por la etiqueta agregada en 3.12 — con un solo motivo hoy, la barra es una; el panel ya queda listo para el día en que exista un segundo motivo de rechazo, sin cambiar la consulta.</p>
+<p><strong>Actualización casi en vivo:</strong> en la esquina superior derecha del tablero, abre el selector de rango de tiempo y elige <strong>Last 30 minutes</strong>; al lado, en el selector de refresco, escribe <code>10s</code>. Con eso el tablero vuelve a consultar Prometheus cada 10 segundos — coherente con las ventanas <code>[1m]</code>/<code>[5m]</code> de las consultas: un refresco más lento que la ventana haría que el tablero se sintiera desactualizado; uno mucho más rápido no aporta nada, porque Prometheus solo tiene datos nuevos cada 15 segundos (el <code>scrape_interval</code> de <code>prometheus-dev.yml</code>).</p>
+<p>Guarda el tablero (ícono de guardar, arriba) con el nombre <code>BomERP - Ventas en tiempo real</code>.</p>
+<p><strong>Negocio e infraestructura, uno al lado del otro:</strong> con los dos tableros abiertos en pestañas distintas — <code>BomERP - Infraestructura</code> (3.11) y <code>BomERP - Ventas en tiempo real</code> (arriba) —, un salto en "Ventas rechazadas por motivo" se explica mirando, en el mismo rango de tiempo, el panel de errores del tablero de infraestructura: las líneas <code>StockInsuficienteException</code> reales del instante en que ocurrió el salto. Es la misma correlación métricas-logs de S4 (3.14), ahora visible sin cambiar de herramienta ni escribir una consulta nueva — solo cambiando de pestaña.</p>
+<h3 id="314-opcional-anexo-guardar-los-tableros-como-codigo">3.14 (opcional, anexo) Guardar los tableros como código<a class="headerlink" href="#314-opcional-anexo-guardar-los-tableros-como-codigo" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> los dos tableros (3.11 y 3.12-3.13) provisionados automáticamente, igual que ya están las fuentes de datos (3.10) — sobreviven a un <code>docker compose down</code> sin reconstruirlos a mano.</p>
+<p>Exporta el JSON de cada tablero por separado: ícono de engranaje (<strong>Dashboard settings</strong>) → <strong>JSON Model</strong> → copia el contenido completo. Guarda cada uno con su propio nombre:</p>
+<ul>
+<li><code>lp2/obs/grafana/provisioning/dashboards/bomerp-infraestructura.json</code> (3.11)</li>
+<li><code>lp2/obs/grafana/provisioning/dashboards/bomerp-ventas.json</code> (3.12-3.13)</li>
+</ul>
+<p>Las reglas de alerta (3.11) se exportan aparte, desde <strong>Alerting → Alert rules</strong>, con el mismo ícono de exportar de cada regla; guárdalas como <code>lp2/obs/grafana/provisioning/alerting/bomerp-alertas.yml</code> si quieres que también se autoprovisionen — opcional, no imprescindible para esta sesión.</p>
+<p>Crea <code>lp2/obs/grafana/provisioning/dashboards/dashboards.yml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+
+<span class="nt">providers</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BomERP</span>
+<span class="w">    </span><span class="nt">folder</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BomERP</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">file</span>
+<span class="w">    </span><span class="nt">options</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/etc/grafana/provisioning/dashboards</span>
+</code></pre></div>
+<p>Un único proveedor carga <strong>todos</strong> los archivos <code>.json</code> que encuentre en esa carpeta, sin necesitar una entrada por tablero. No hace falta agregar ningún volumen nuevo a <code>compose-dev.yml</code>: <code>./grafana/provisioning:/etc/grafana/provisioning:ro</code> (3.10, más arriba) ya monta toda la carpeta, incluidas estas subcarpetas nuevas.</p>
+<p>Reinicia el contenedor de Grafana y confirma que los dos tableros aparecen solos, en la carpeta <code>BomERP</code>, sin haberlos importado a mano:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>lp2/obs
+docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>compose-dev.yml<span class="w"> </span>restart<span class="w"> </span>bomerp-grafana
+</code></pre></div>
+<p>Con esto, el stack completo de observabilidad de LP2 (Prometheus, Loki, Grafana, datasources y los dos tableros) queda como código en el repositorio — reproducible por cualquier integrante del equipo con un solo <code>docker compose up</code>, sin pasos manuales en la UI.</p>
 <h2 id="4-crea-actividad-autonoma">4. Crea: actividad autónoma<a class="headerlink" href="#4-crea-actividad-autonoma" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 2h fuera del aula.</p>
 <h3 id="41-actividad">4.1 Actividad<a class="headerlink" href="#41-actividad" title="Permanent link">&para;</a></h3>

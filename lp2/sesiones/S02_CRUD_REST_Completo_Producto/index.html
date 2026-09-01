@@ -1834,6 +1834,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S06_Evaluacion_Unidad_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S6 - Evaluación de la Unidad I
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2442,10 +2470,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#161-caso-catalogo-de-bomerp-producto" class="md-nav__link">
+  <a href="#161-caso-el-catalogo-que-nadie-podia-corregir" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1.6.1 Caso: catálogo de BomERP (Producto)
+        1.6.1 Caso: el catálogo que nadie podía corregir
       
     </span>
   </a>
@@ -2926,6 +2954,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S06_Evaluacion_Unidad_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S6 - Evaluación de la Unidad I
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -3047,10 +3103,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#161-caso-catalogo-de-bomerp-producto" class="md-nav__link">
+  <a href="#161-caso-el-catalogo-que-nadie-podia-corregir" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1.6.1 Caso: catálogo de BomERP (Producto)
+        1.6.1 Caso: el catálogo que nadie podía corregir
       
     </span>
   </a>
@@ -3463,7 +3519,7 @@
 <h2 id="1-introduccion">1. Introducción<a class="headerlink" href="#1-introduccion" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 20 min.</p>
 <h3 id="11-presentacion-de-la-sesion">1.1 Presentación de la sesión<a class="headerlink" href="#11-presentacion-de-la-sesion" title="Permanent link">&para;</a></h3>
-<p>En S1, <code>Producto</code> (si se completó el 3.4.2 opcional) solo exponía un listado de solo lectura. Esta sesión lo convierte en un recurso REST completo: crear, consultar uno por id, actualizar y eliminar, con un DTO de entrada validado, mapeo explícito entre capas y el manejo global de errores (<code>GlobalExceptionHandler</code>, <code>CorrelationIdFilter</code>, creados en 3.2 de esta misma sesión) puesto a prueba con casos reales de validación y de recurso no encontrado.</p>
+<p>En la sesión 1, el recurso principal solo exponía un listado de solo lectura. Esta sesión lo convierte en un recurso REST completo: crear, consultar uno por id, actualizar y eliminar, con un DTO de entrada validado, mapeo explícito entre capas y manejo global de errores y trazabilidad de peticiones (construidos en 3.2 de esta misma sesión), puesto a prueba con casos reales de validación y de recurso no encontrado.</p>
 <h3 id="12-indice">1.2 Índice<a class="headerlink" href="#12-indice" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Excepciones y filtro de trazabilidad.</li>
@@ -3475,7 +3531,7 @@
 <h3 id="13-proposito-de-aprendizaje">1.3 Propósito de aprendizaje<a class="headerlink" href="#13-proposito-de-aprendizaje" title="Permanent link">&para;</a></h3>
 <p>Al concluir la clase, estarás en condiciones de:</p>
 <ul>
-<li><strong>Construir y probar</strong> un recurso REST completo (crear, consultar, actualizar, eliminar) sobre <code>Producto</code>, con DTO de entrada validado, mapeo explícito entidad-DTO mediante una clase <code>Mapper</code> dedicada, manejo global de errores verificado con casos reales, y trazabilidad por petición mediante logs.</li>
+<li><strong>Construir y probar</strong> un recurso REST completo (crear, consultar, actualizar, eliminar), con DTO de entrada validado, mapeo explícito entidad-DTO mediante una clase dedicada, manejo global de errores verificado con casos reales, y trazabilidad por petición mediante logs.</li>
 </ul>
 <h3 id="14-producto-de-sesion">1.4 Producto de sesión<a class="headerlink" href="#14-producto-de-sesion" title="Permanent link">&para;</a></h3>
 <p>API REST completa de <code>Producto</code> (<code>GET</code>, <code>GET /{id}</code>, <code>POST</code>, <code>PUT</code>, <code>DELETE</code>), con entidad, repositorio, DTO de entrada (<code>ProductoRequest</code>) y de salida (<code>ProductoResponse</code>), un <code>ProductoMapper</code> dedicado, validaciones con Bean Validation, y manejo de errores probado con casos válidos e inválidos.</p>
@@ -3508,12 +3564,12 @@
 </tbody>
 </table>
 <h3 id="16-motivacion-de-la-sesion">1.6 Motivación de la sesión<a class="headerlink" href="#16-motivacion-de-la-sesion" title="Permanent link">&para;</a></h3>
-<h4 id="161-caso-catalogo-de-bomerp-producto">1.6.1 Caso: catálogo de BomERP (<code>Producto</code>)<a class="headerlink" href="#161-caso-catalogo-de-bomerp-producto" title="Permanent link">&para;</a></h4>
-<p>En S1 bastaba con listar productos para verificar que el backend funcionaba. Pero un catálogo real no se mantiene solo — el equipo de compras necesita registrar productos nuevos, corregir un precio mal cargado, o dar de baja un producto discontinuado. Sin esas operaciones, <code>ventas</code> (S4) no tendría de dónde tomar un precio o un stock reales para descontar. Esta sesión completa ese ciclo de vida para <code>Producto</code>.</p>
+<h4 id="161-caso-el-catalogo-que-nadie-podia-corregir">1.6.1 Caso: el catálogo que nadie podía corregir<a class="headerlink" href="#161-caso-el-catalogo-que-nadie-podia-corregir" title="Permanent link">&para;</a></h4>
+<p>En la sesión 1 bastaba con listar productos para verificar que el backend funcionaba. Pero un catálogo real no se mantiene solo — el equipo de compras necesita registrar productos nuevos, corregir un precio mal cargado, o dar de baja un producto discontinuado. Sin esas operaciones, <code>ventas</code> (sesión 4) no tendría de dónde tomar un precio o un stock reales para descontar. Esta sesión completa ese ciclo de vida para <code>Producto</code>.</p>
 <p><strong>Preguntas de análisis</strong></p>
 <p><strong>Activación de conocimientos previos</strong></p>
 <ol>
-<li>En S1, <code>CategoriaResponse</code>/<code>ProductoResponse</code> eran <code>record</code>. ¿Por qué esta sesión los convierte en clases con <code>@Builder</code>?</li>
+<li>En la sesión 1, <code>CategoriaResponse</code>/<code>ProductoResponse</code> eran <code>record</code>. ¿Por qué esta sesión los convierte en clases con <code>@Builder</code>?</li>
 <li>Si dos peticiones actualizan el mismo producto casi al mismo tiempo, ¿qué garantiza JPA (y qué no garantiza) sobre cuál gana?</li>
 </ol>
 <p><strong>Comprensión de CRUD REST</strong></p>

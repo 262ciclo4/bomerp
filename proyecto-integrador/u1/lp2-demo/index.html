@@ -1976,6 +1976,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S06_Evaluacion_Unidad_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S6 - Evaluación de la Unidad I
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2543,6 +2571,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S06_Evaluacion_Unidad_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S6 - Evaluación de la Unidad I
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2747,12 +2803,6 @@
 <td>S4</td>
 </tr>
 <tr>
-<td><code>PATCH</code></td>
-<td><code>/api/v1/ventas/{id}/anular</code></td>
-<td>Anular venta y reponer existencias.</td>
-<td>S4-S5</td>
-</tr>
-<tr>
 <td><code>GET</code></td>
 <td><code>/api/v1/ventas</code></td>
 <td>Consultar ventas mediante filtros y ordenamiento.</td>
@@ -2768,7 +2818,6 @@
 </table>
 <h2 id="dto-principales">DTO principales<a class="headerlink" href="#dto-principales" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"cliente"</span><span class="p">:</span><span class="w"> </span><span class="s2">"María Quispe"</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">"detalles"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"productoId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">"cantidad"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">},</span>
 <span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"productoId"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nt">"cantidad"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="p">}</span>
@@ -2777,10 +2826,12 @@
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1001</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"cliente"</span><span class="p">:</span><span class="w"> </span><span class="s2">"María Quispe"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"fecha"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-09-01T10:15:00"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"estado"</span><span class="p">:</span><span class="w"> </span><span class="s2">"REGISTRADA"</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">"total"</span><span class="p">:</span><span class="w"> </span><span class="mf">145.50</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"estado"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACTIVA"</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"cantidadDetalles"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">  </span><span class="nt">"detalles"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"productoId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">"nombreProducto"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Producto de prueba"</span><span class="p">,</span><span class="w"> </span><span class="nt">"precioUnitario"</span><span class="p">:</span><span class="w"> </span><span class="mf">50.00</span><span class="p">,</span><span class="w"> </span><span class="nt">"cantidad"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nt">"subtotal"</span><span class="p">:</span><span class="w"> </span><span class="mf">100.00</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
 <h2 id="arquitectura-backend-u1">Arquitectura backend U1<a class="headerlink" href="#arquitectura-backend-u1" title="Permanent link">&para;</a></h2>
@@ -2827,23 +2878,18 @@
 </tr>
 <tr>
 <td>Crear venta válida</td>
-<td>Cliente y dos detalles válidos.</td>
-<td>Se registra venta <code>ACTIVA</code> con total y stock consistentes.</td>
+<td>Dos detalles válidos.</td>
+<td>Se registra venta <code>REGISTRADA</code> con total y stock consistentes.</td>
 </tr>
 <tr>
 <td>Crear venta inválida</td>
 <td>Cantidad cero o stock insuficiente.</td>
-<td>Se devuelve error <code>400</code> sin persistencia parcial.</td>
-</tr>
-<tr>
-<td>Anular venta</td>
-<td>Anular una venta activa.</td>
-<td>Cambia a <code>ANULADA</code>, repone stock y registra auditoría.</td>
+<td>Se devuelve error <code>400</code>/<code>409</code> sin persistencia parcial (rollback completo).</td>
 </tr>
 <tr>
 <td>Filtrar ventas</td>
-<td>Filtrar por estado, fecha o producto.</td>
-<td>La lista muestra coincidencias.</td>
+<td>Filtrar por estado y rango de fecha.</td>
+<td>La lista muestra solo las ventas coincidentes.</td>
 </tr>
 </tbody>
 </table>
@@ -2873,14 +2919,9 @@
 <td>Restricciones y excepciones PL/SQL.</td>
 </tr>
 <tr>
-<td>Anular venta</td>
-<td>Caso transaccional</td>
-<td>Trigger de auditoría.</td>
-</tr>
-<tr>
-<td>Filtros</td>
+<td>Filtros por fecha</td>
 <td>Atributo rendimiento</td>
-<td>Índice <code>idx_venta_estado_fecha</code>.</td>
+<td>Índice <code>IX_VENTAS_FECHA</code>.</td>
 </tr>
 </tbody>
 </table>

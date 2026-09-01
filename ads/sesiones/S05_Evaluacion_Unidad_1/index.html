@@ -2026,6 +2026,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S06_Evaluacion_Unidad_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S6 - Evaluación de la Unidad I
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2593,6 +2621,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S06_Evaluacion_Unidad_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S6 - Evaluación de la Unidad I
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2799,7 +2855,7 @@
 <li>Resolver la evaluación teórico-práctica de los temas de la Unidad I (sesiones 1 a 4).</li>
 <li>Presentar y sustentar la Arquitectura documentada mediante vistas arquitectónicas y principios de diseño aplicados.</li>
 </ol>
-<p><strong>Solo ADS evalúa su Unidad I en esta sesión.</strong> BD2 y LP2 sustentan su propia Unidad I recién en su S06: a ambos les queda todavía su propia S05 de trabajo (índices y evaluación del motor transaccional en BD2; consultas, reportes y trazabilidad en LP2) antes de estar listos para evaluarse. ADS evalúa primero porque su producto no es código ejecutable: es la arquitectura documentada que BD2 y LP2 ya vienen usando como base desde S01. El "Primer corte integrado" de los tres cursos (arquitectura + motor transaccional + backend REST) se sustenta conjuntamente en S06, según el cronograma del Proyecto Integrador.</p>
+<p><strong>Solo ADS evalúa su Unidad I en esta sesión.</strong> BD2 y LP2 sustentan su propia Unidad I recién en su sesión 6: a ambos les queda todavía su propia sesión 5 de trabajo (índices y evaluación del motor transaccional en BD2; consultas, reportes y trazabilidad en LP2) antes de estar listos para evaluarse. ADS evalúa primero porque su producto no es código ejecutable: es la arquitectura documentada que BD2 y LP2 ya vienen usando como base desde su sesión 1. El "Primer corte integrado" de los tres cursos (arquitectura + motor transaccional + backend REST) se sustenta conjuntamente en la sesión 6, según el cronograma del Proyecto Integrador.</p>
 <h2 id="2-producto-evaluado">2. Producto evaluado<a class="headerlink" href="#2-producto-evaluado" title="Permanent link">&para;</a></h2>
 <p>Del sílabo, el producto de la Unidad I es:</p>
 <blockquote>
@@ -2911,12 +2967,12 @@
 </tr>
 <tr>
 <td>Rendimiento</td>
-<td>Índices y consultas optimizadas por estado, usuario, producto y fecha.</td>
+<td>Índices y consultas optimizadas por fecha.</td>
 <td>Script BD2 e índices.</td>
 </tr>
 <tr>
 <td>Auditabilidad</td>
-<td>Trigger de auditoría de cambios de estado de venta.</td>
+<td>Trigger de auditoría de cambios de precio y stock de producto (<code>TRG_PRODUCTO_AUDITORIA</code>).</td>
 <td>Tabla y trigger de auditoría.</td>
 </tr>
 <tr>
@@ -3080,8 +3136,8 @@
 <tbody>
 <tr>
 <td>Auditoría de cambios</td>
-<td>Trigger <code>trg_venta_estado_audit</code></td>
-<td>Endpoint anular venta.</td>
+<td>Trigger <code>TRG_PRODUCTO_AUDITORIA</code> sobre precio/stock</td>
+<td><code>POST</code>/<code>PUT</code> sobre <code>/api/v1/productos</code> (cualquier alta o cambio dispara el trigger, sin que el backend lo sepa).</td>
 </tr>
 <tr>
 <td>Monolito modular y capas internas</td>
@@ -3095,8 +3151,8 @@
 </tr>
 <tr>
 <td>Rendimiento por consultas frecuentes</td>
-<td>Índices por estado, usuario, producto y fecha</td>
-<td>Filtros de consulta.</td>
+<td>Índice <code>IX_VENTAS_FECHA</code> sobre <code>FECHA</code></td>
+<td>Filtro <code>desde</code>/<code>hasta</code> en <code>GET /api/v1/ventas</code>.</td>
 </tr>
 </tbody>
 </table>
