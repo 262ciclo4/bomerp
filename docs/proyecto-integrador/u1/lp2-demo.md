@@ -37,7 +37,6 @@ Compras no es un segundo flujo obligatorio de U1. Su límite se documenta para e
 | `GET` | `/api/v1/productos` | Listar productos con categoría. | S1-S3 |
 | `POST` | `/api/v1/productos` | Registrar un producto. | S2 |
 | `POST` | `/api/v1/ventas` | Registrar cabecera y colección de detalles. | S4 |
-| `PATCH` | `/api/v1/ventas/{id}/anular` | Anular venta y reponer existencias. | S4-S5 |
 | `GET` | `/api/v1/ventas` | Consultar ventas mediante filtros y ordenamiento. | S5 |
 | `GET` | `/api/v1/ventas/resumen` | Devolver agregaciones y respuestas resumidas. | S5 |
 
@@ -45,7 +44,6 @@ Compras no es un segundo flujo obligatorio de U1. Su límite se documenta para e
 
 ```json
 {
-  "cliente": "María Quispe",
   "detalles": [
     { "productoId": 1, "cantidad": 2 },
     { "productoId": 2, "cantidad": 3 }
@@ -56,10 +54,12 @@ Compras no es un segundo flujo obligatorio de U1. Su límite se documenta para e
 ```json
 {
   "id": 1001,
-  "cliente": "María Quispe",
+  "fecha": "2026-09-01T10:15:00",
+  "estado": "REGISTRADA",
   "total": 145.50,
-  "estado": "ACTIVA",
-  "cantidadDetalles": 2
+  "detalles": [
+    { "productoId": 1, "nombreProducto": "Producto de prueba", "precioUnitario": 50.00, "cantidad": 2, "subtotal": 100.00 }
+  ]
 }
 ```
 
@@ -92,10 +92,9 @@ Todos los módulos se ejecutan en la misma JVM y utilizan un datasource. No exis
 | Verificar backend | Ejecutar con el ambiente local. | Conecta con Oracle y responde en `/health` o equivalente. |
 | Verificar límites | Revisar dependencias y paquetes de negocio. | Existe un solo ejecutable y ningún módulo accede a repositorios ajenos. |
 | CRUD maestro | Crear, consultar, actualizar y eliminar un producto. | Las operaciones persisten con respuestas HTTP consistentes. |
-| Crear venta válida | Cliente y dos detalles válidos. | Se registra venta `ACTIVA` con total y stock consistentes. |
-| Crear venta inválida | Cantidad cero o stock insuficiente. | Se devuelve error `400` sin persistencia parcial. |
-| Anular venta | Anular una venta activa. | Cambia a `ANULADA`, repone stock y registra auditoría. |
-| Filtrar ventas | Filtrar por estado, fecha o producto. | La lista muestra coincidencias. |
+| Crear venta válida | Dos detalles válidos. | Se registra venta `REGISTRADA` con total y stock consistentes. |
+| Crear venta inválida | Cantidad cero o stock insuficiente. | Se devuelve error `400`/`409` sin persistencia parcial (rollback completo). |
+| Filtrar ventas | Filtrar por estado y rango de fecha. | La lista muestra solo las ventas coincidentes. |
 
 ## Trazabilidad con ADS y BD2
 
@@ -104,5 +103,4 @@ Todos los módulos se ejecutan en la misma JVM y utilizan un datasource. No exis
 | Configuración por ambientes | Un ejecutable desplegable y configuración externa | Conexión Oracle sin credenciales versionadas. |
 | Monolito modular con capas internas | Vista C3, límites y dependencias | Esquemas y tablas con propiedad funcional definida. |
 | Validación de total y stock | Regla de integridad | Restricciones y excepciones PL/SQL. |
-| Anular venta | Caso transaccional | Trigger de auditoría. |
-| Filtros | Atributo rendimiento | Índice `idx_venta_estado_fecha`. |
+| Filtros por fecha | Atributo rendimiento | Índice `IX_VENTAS_FECHA`. |

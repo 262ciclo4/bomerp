@@ -6,7 +6,7 @@
 
 **Motor transaccional Oracle optimizado.**
 
-Este producto implementa logica de negocio en Oracle mediante PL/SQL, triggers, excepciones, auditoria basica, consultas optimizadas e indices. La base no se trabaja como ejercicio aislado: soporta los endpoints y reglas del backend LP2.
+Este producto implementa lógica de negocio en Oracle mediante PL/SQL, triggers, excepciones, auditoría básica, consultas optimizadas e índices. La base no se trabaja como ejercicio aislado: soporta los endpoints y reglas del backend LP2.
 
 ## 1. Scripts del producto
 
@@ -17,60 +17,65 @@ Los scripts se agregan **por sesión de BD2**, a medida que cada una les da cont
 | [S01_01_esquemas.sql](oracle/S01_01_esquemas.sql) | [S1](../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio.md) | Usuarios `BOM_CATALOGO` (propietario) y `BOMERP_APP` (técnico de LP2). |
 | [S01_02_tablas.sql](oracle/S01_02_tablas.sql) | [S1](../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio.md) | Tablas `CATEGORIAS`/`PRODUCTOS` y permisos de `BOMERP_APP` sobre ellas. |
 | [S01_03_plsql.sql](oracle/S01_03_plsql.sql) | [S1](../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio.md) | Función y procedimientos PL/SQL del catálogo. |
-| [S02_triggers_dml_auditoria.sql](oracle/S02_triggers_dml_auditoria.sql) | [S2](../../bd2/sesiones/S02_Triggers_DML_Auditoria.md) | Tabla y trigger de auditoría de cambios de precio/stock en `PRODUCTOS`. |
+| [S02_triggers_dml_auditoria.sql](oracle/S02_triggers_dml_auditoria.sql) | [S2](../../bd2/sesiones/S02_Triggers_DML_Auditoria.md) | Trigger de regla de negocio (`TRG_PRODUCTO_PRECIO_BU`) y trigger + tabla de auditoría de precio/stock (`TRG_PRODUCTO_AUDITORIA`, `PRODUCTO_AUDITORIA`). |
+| (excepciones agregadas directo sobre los procedimientos de S1) | [S3](../../bd2/sesiones/S03_Excepciones_Robustez.md) | Manejo de excepciones personalizadas y tabla de registro de errores (`LOG_ERRORES`). |
+| [S04_01_esquemas.sql](oracle/S04_01_esquemas.sql) | [S4](../../bd2/sesiones/S04_Optimizacion_Consultas_SQL.md) | Usuario `BOM_VENTAS`. |
+| [S04_02_tablas.sql](oracle/S04_02_tablas.sql) | [S4](../../bd2/sesiones/S04_Optimizacion_Consultas_SQL.md) | Tablas `VENTAS`/`DETALLE_VENTAS`. |
+| [S04_optimizacion_consultas.sql](oracle/S04_optimizacion_consultas.sql) | [S4](../../bd2/sesiones/S04_Optimizacion_Consultas_SQL.md) | Volumen de prueba, `EXPLAIN PLAN`, `DBMS_STATS` y reescritura de la consulta representativa. |
+| [S05_indices_optimizacion.sql](oracle/S05_indices_optimizacion.sql) | [S5](../../bd2/sesiones/S05_Indices_Optimizacion.md) | Selectividad medida e índices B-Tree, Bitmap y Function-Based. |
 
-Pendientes (se agregan cuando esas sesiones de BD2 se documenten): esquema `BOM_VENTAS` y tablas `venta`/`detalle_venta` (S3-S4 de LP2), paquete `pkg_venta` y trigger `trg_venta_estado_audit`, índice `idx_venta_estado_fecha`, esquema `BOM_SEGURIDAD` (S10 de LP2).
+Pendiente (se agrega cuando esa sesión de BD2 se documente): esquema `BOM_SEGURIDAD` (S10 de LP2).
 
 ## 2. Objetos Oracle U1
 
-**Estado al cierre de la Unidad 1 (S6), no al día de hoy** (S1-S2 solo tienen creados `BOM_CATALOGO.CATEGORIAS`/`PRODUCTOS`, ver sección 1): las filas de `BOM_VENTAS` y `BOM_SEGURIDAD.usuario_app` son el objetivo de esta unidad, que se completa progresivamente en S3-S6.
+**Estado al cierre de la Unidad 1 (S6):**
 
-| Objeto | Proposito | Relacion con LP2 |
+| Objeto | Propósito | Relación con LP2 |
 |---|---|---|
-| `BOM_CATALOGO.CATEGORIAS` y `PRODUCTOS` | Catálogo heredado de Ciclo 3. | Recursos `/api/v1/categorias` y `/api/v1/productos`. |
-| `BOM_VENTAS.venta` y `detalle_venta` | Operación transaccional principal. | Recurso `/api/v1/ventas`. |
-| `BOM_SEGURIDAD.usuario_app` | Soporte para JWT, roles y trazabilidad. | Identidad autenticada desde S10. |
-| `BOM_VENTAS.venta_audit` | Auditoría de cambios de estado. | Evidencia de anulación. |
-| `BOM_VENTAS.pkg_venta` | Registro y anulación transaccional. | Servicio backend coordina reglas equivalentes. |
-| `idx_venta_estado_fecha` | Optimiza consultas por estado y fecha. | Filtros de ventas. |
+| `BOM_CATALOGO.CATEGORIAS`/`PRODUCTOS` | Catálogo heredado de Ciclo 3. | Recursos `/api/v1/categorias` y `/api/v1/productos`. |
+| `BOM_CATALOGO.LOG_ERRORES` | Registro de errores capturados por los procedimientos/función del catálogo (S3). | Ninguno directo — el backend no consulta esta tabla. |
+| `BOM_CATALOGO.PRODUCTO_AUDITORIA` + `TRG_PRODUCTO_AUDITORIA` | Auditoría de cambios de precio/stock. | `POST`/`PUT` sobre `/api/v1/productos` (cualquier alta o cambio la dispara). |
+| `BOM_VENTAS.VENTAS`/`DETALLE_VENTAS` | Operación transaccional principal. | Recurso `/api/v1/ventas`. |
+| `IX_VENTAS_FECHA` (B-Tree) | Consultas filtradas por rango de fecha. | `GET /api/v1/ventas?desde=&hasta=`. |
+| `IX_LOG_ERRORES_OBJETO` (Bitmap) | Diagnóstico de errores agrupados por objeto que falló. | Ninguno directo. |
+| `IX_VENTAS_FECHA_DIA` (Function-Based, sobre `TRUNC(FECHA)`) | Reporte de ventas por día calendario. | `GET /api/v1/ventas/resumen`. |
 
-## 3. Reglas transaccionales
+## 3. Reglas de negocio y transaccionales
 
-| Regla | Implementacion Oracle |
+| Regla | Implementación Oracle |
 |---|---|
-| Una venta inicia en estado `ACTIVA`. | Valor por defecto y procedimiento `registrar_venta`. |
-| La venta contiene al menos un detalle. | Validación en paquete. |
-| Cantidad no supera el stock. | Bloqueo de producto y validación PL/SQL. |
-| Sólo una venta activa puede anularse. | Procedimiento `anular_venta`. |
-| Todo cambio de estado queda auditado. | Trigger `trg_venta_estado_audit`. |
+| Un producto se registra con una categoría que debe existir. | `SP_REGISTRAR_PRODUCTO`, captura `ORA-02291` y la registra en `LOG_ERRORES`. |
+| Un descuento no puede dejar el precio fuera de rango razonable. | `TRG_PRODUCTO_PRECIO_BU` (`BEFORE UPDATE`), rechaza con `RAISE_APPLICATION_ERROR` antes de escribir. |
+| Todo cambio de precio o stock queda auditado, sin que el backend lo sepa. | `TRG_PRODUCTO_AUDITORIA` (`AFTER INSERT`/`UPDATE`/`DELETE`), disparado por Oracle mismo. |
+| Una venta no puede registrarse con stock insuficiente. | Validado desde el servicio de `ventas` en LP2 (S4), consultando `catalogo` vía su servicio público — regla de estado, no de forma, por eso vive en el service y no en un `CHECK`. |
+| Un producto inexistente al consultar su precio responde con causa clara. | `FN_OBTENER_PRECIO_PRODUCTO`, captura `NO_DATA_FOUND` y la registra en `LOG_ERRORES`. |
 
 ## 4. Manejo de excepciones
 
-| Situacion | Excepcion esperada |
+| Situación | Excepción esperada |
 |---|---|
-| Cabecera, detalle o cantidad inválida. | `raise_application_error(-20001/-20002, ...)`. |
-| Stock insuficiente. | `raise_application_error(-20003, ...)`. |
-| Venta inexistente o no anulable. | `raise_application_error(-20004/-20005, ...)`. |
+| Categoría inexistente al registrar un producto. | `ORA-02291` capturado, `RAISE_APPLICATION_ERROR(-20010, ...)`. |
+| Porcentaje de descuento fuera de rango (0-100). | `RAISE_APPLICATION_ERROR(-20011, ...)`, sin código Oracle previo — la regla la crea el propio procedimiento. |
+| Producto inexistente al consultar su precio. | `NO_DATA_FOUND` (código `100`), `RAISE_APPLICATION_ERROR(-20012, ...)`. |
 
-## 5. Optimizacion inicial
+## 5. Selectividad e índices (S5)
 
-```mermaid
-flowchart TB
-    A[Consulta frecuente<br/>ventas por estado y fecha]
-    B[Indice compuesto<br/>idx_venta_estado_fecha]
-    C[DBMS_STATS<br/>estadisticas actualizadas]
-    D[Explain Plan<br/>evidencia del plan]
+Ningún índice se crea sin medir selectividad primero (`COUNT(DISTINCT columna) / COUNT(*)`):
 
-    A --> B --> C --> D
-```
+| Columna candidata | Selectividad | Índice creado |
+|---|---|---|
+| `VENTAS.FECHA` | Alta (cercana a 1) | B-Tree (`IX_VENTAS_FECHA`) |
+| `LOG_ERRORES.OBJETO` | Baja (pocos valores distintos) | Bitmap (`IX_LOG_ERRORES_OBJETO`) |
+| `TRUNC(VENTAS.FECHA)` | La de la expresión, no la de la columna | Function-Based (`IX_VENTAS_FECHA_DIA`) |
+| `VENTAS.ESTADO` | Muy baja (un único valor, `EstadoVenta.REGISTRADA` en LP2 S4) | **Ninguno** — se creó, se confirmó que el optimizador no lo usaba, y se eliminó. |
 
-## 6. Evidencia de integracion
+## 6. Evidencia de integración
 
 | BD2 | ADS | LP2 |
 |---|---|---|
-| Paquete `pkg_venta` | Componente de lógica transaccional | Servicio de ventas. |
-| Trigger de auditoría | Atributo de auditabilidad | Acción anular venta. |
-| Índice por estado-fecha | Atributo de rendimiento | Filtro de ventas. |
-| Excepciones PL/SQL | Robustez del motor | Manejo global de errores. |
+| `TRG_PRODUCTO_AUDITORIA` | Atributo de auditabilidad | `POST`/`PUT` sobre `/api/v1/productos`. |
+| `IX_VENTAS_FECHA` | Atributo de rendimiento | `GET /api/v1/ventas?desde=&hasta=`. |
+| `LOG_ERRORES` + excepciones personalizadas | Robustez del motor | `GlobalExceptionHandler` (manejo global de errores). |
+| `EXPLAIN PLAN`/`DBMS_STATS` sobre la consulta representativa (S4) | — | Consulta de reporte agregado (`GET /api/v1/ventas/resumen`, LP2 S5). |
 
 Las FK entre esquemas conservan la integridad porque todos los objetos pertenecen a una sola base Oracle. `BOMERP_APP` ejecuta la aplicación, pero no es propietario de tablas ni paquetes.

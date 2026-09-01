@@ -77,7 +77,7 @@ flowchart TB
 | CRUD maestro | Crear, consultar, actualizar y eliminar un producto con categoría. | Las operaciones persisten y responden con estados HTTP consistentes. | LP2 + BD2 |
 | Registro de venta válida | Cliente y dos detalles con cantidades válidas. | La venta se registra en estado `ACTIVA`, actualiza stock y calcula el total. | LP2 + BD2 |
 | Rechazo de cantidad invalida | Cantidad cero o negativa. | La API responde con error de validacion. | ADS + LP2 |
-| Cambio de estado | Anular una venta activa. | El estado cambia a `ANULADA`, se repone stock y queda evidencia de auditoría. | BD2 + LP2 |
+| Auditoría de cambios | Actualizar precio o stock de un producto. | El cambio queda registrado en `PRODUCTO_AUDITORIA` con los valores antes y después. | BD2 + LP2 |
 | Consulta filtrada | Filtrar ventas por fecha, estado, usuario o producto. | Se devuelven sólo ventas coincidentes. | BD2 + LP2 |
 | Trazabilidad | Seleccionar un endpoint y explicar su componente, tabla, paquete y regla. | El equipo demuestra relacion ADS-BD2-LP2. | ADS + BD2 + LP2 |
 

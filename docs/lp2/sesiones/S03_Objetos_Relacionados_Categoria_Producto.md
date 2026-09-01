@@ -8,7 +8,7 @@ Tiempo: 20 min.
 
 ### 1.1 Presentación de la sesión
 
-Un CRUD REST sobre una sola entidad, aislada, alcanza hasta que el dominio empieza a tener entidades relacionadas entre sí — la mayoría de los recursos reales de un ERP dependen de al menos otro (un producto pertenece a una categoría, una venta a un cliente, y así sucesivamente). Relacionar dos entidades trae preguntas nuevas que un CRUD aislado no enfrenta: cómo modelar la asociación en el ORM, qué forma darle al DTO relacionado que sale por la API, cómo navegar de una entidad a la otra sin cargar todo de una vez, cómo validar que la referencia recibida realmente exista, y cómo evitar que la relación produzca un ciclo infinito al serializar. Esta sesión construye esa asociación sobre `Producto` y `Categoria`, las dos entidades del proyecto que ya están en esa situación.
+Un CRUD REST sobre una sola entidad, aislada, alcanza hasta que el dominio empieza a tener entidades relacionadas entre sí — la mayoría de los recursos reales de un ERP dependen de al menos otro (un producto pertenece a una categoría, una venta a un cliente, y así sucesivamente). Relacionar dos entidades trae preguntas nuevas que un CRUD aislado no enfrenta: cómo modelar la asociación en el ORM, qué forma darle al DTO relacionado que sale por la API, cómo navegar de una entidad a la otra sin cargar todo de una vez, cómo validar que la referencia recibida realmente exista, y cómo evitar que la relación produzca un ciclo infinito al serializar. Esta sesión construye esa asociación sobre las dos entidades del proyecto que ya están en esa situación.
 
 ### 1.2 Índice
 
@@ -16,8 +16,8 @@ Un CRUD REST sobre una sola entidad, aislada, alcanza hasta que el dominio empie
 2. Validación de referencias.
 3. Prevención de ciclos de serialización.
 4. Navegación controlada y CRUD de la entidad relacionada.
-5. Consultas eficientes con relaciones: JPQL y `@EntityGraph`.
-6. Transacciones: por qué `@Transactional` debe cubrir toda la operación.
+5. Consultas eficientes entre entidades relacionadas.
+6. Transacciones que cubren toda la operación.
 
 ### 1.3 Propósito de aprendizaje
 
@@ -820,6 +820,7 @@ import pe.edu.upeu.bomerp.catalogo.producto.entity.Producto;
 @Mapper(componentModel = "spring", uses = CategoriaMapper.class)
 public interface ProductoMapper {
 
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "nombre", source = "request.nombre")
     @Mapping(target = "categoria", source = "categoria")
     Producto toEntity(ProductoRequest request, Categoria categoria);
@@ -837,6 +838,8 @@ public interface ProductoMapper {
 ```
 
 `ProductoRequest` y `Categoria` **ambos** tienen un campo `nombre` — MapStruct no puede adivinar de cuál de los dos parámetros viene el `nombre` de `Producto`. Con un solo parámetro fuente (como en S2) esto nunca pasa, porque no hay ambigüedad posible. La solución es la de arriba: `@Mapping(target = "nombre", source = "request.nombre")` desambigua explícitamente, calificando el origen con el nombre del parámetro (`request.nombre`, no solo `nombre`).
+
+**Error frecuente real, más peligroso que el anterior porque no avisa de ninguna forma:** sin `@Mapping(target = "id", ignore = true)`, el código compila limpio, sin error ni advertencia — y aun así `Producto.id` queda mal asignado. La diferencia con `nombre` es justamente la ausencia de ambigüedad: `ProductoRequest` no tiene ningún campo `id`, así que MapStruct no ve dos candidatos entre los que dudar — encuentra un único origen que calza por nombre, `Categoria.getId()`, y lo asigna a `Producto.id` sin preguntar nada. Cada producto nuevo nace, en silencio, con el `id` de su categoría en vez de `null`. Como `Producto.id` usa `GenerationType.IDENTITY` (S1), Hibernate espera que una entidad nueva llegue con `id` en `null` para dejar que Oracle lo genere; con el `id` ya poblado por este error, Hibernate deja de tratarla como una entidad nueva y el `save()` falla — el mensaje de error aparece recién ahí, al guardar, lejos de la causa real (el mapeo), que es justamente lo que hace este error difícil de encontrar a simple vista.
 
 `precio` y `stock` **no** necesitan `@Mapping`: solo existen en `request`, así que no hay ninguna ambigüedad que resolver — MapStruct los mapea solo. `categoria`, en cambio, sí necesita su propio `@Mapping`, pero por una razón distinta: no es un campo ambiguo, es un parámetro completo (`categoria`) que debe asignarse directo a un campo del mismo nombre en `Producto`. MapStruct no hace esa conexión automáticamente — sin `@Mapping(target = "categoria", source = "categoria")`, el compilador solo avisa con una advertencia (`Unmapped target property: categoria`), no con un error, y `producto.categoria` queda `null` en silencio.
 

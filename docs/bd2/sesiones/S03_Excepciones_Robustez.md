@@ -11,7 +11,7 @@ Un procedimiento o función PL/SQL que solo funciona cuando recibe datos correct
 ### 1.2 Índice
 
 1. Excepciones predefinidas de PL/SQL.
-2. Excepciones personalizadas: `PRAGMA EXCEPTION_INIT` y `RAISE_APPLICATION_ERROR`.
+2. Excepciones personalizadas.
 3. Registro de errores.
 4. Tolerancia a fallos.
 

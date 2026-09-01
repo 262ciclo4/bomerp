@@ -243,7 +243,6 @@ Tiempo: 2h.
 - **3.12** Relacionar con ADS y BD2.
 - **3.13** (opcional, anexo) Exponer métricas de `bomerp-backend` para Prometheus.
 - **3.14** (opcional, anexo) Enviar logs de `bomerp-backend` a Loki y verificarlos.
-- **3.15** (opcional, anexo) Visualizar métricas y logs juntos en Grafana.
 
 ### 3.1 Verificar el punto de partida
 
@@ -1142,72 +1141,7 @@ http://localhost:33100/loki/api/v1/query_range?query={application="bomerp-backen
 
 Esto solo rastrea el `traceId` **dentro de `bomerp-backend`** — como todavía es un único proceso (2.4, más arriba), no hay ningún otro servicio al que propagárselo.
 
-**Nota de puertos ocupados:** `lp2/obs/` también incluye un `compose.yml` de PROD (placeholder, `49090`/`43100`), a la espera de que exista un PROD real de `bomerp-backend` — no se ejecuta hasta entonces (ADR-002, "no crear por si acaso"). Cuando BigData (lambda26) construya su propio `obs/` (previsto para su S6+), el siguiente puerto libre es `59090` (Prometheus) / `53100` (Loki) — se decide en ese momento, no antes.
-
-### 3.15 (opcional, anexo) Visualizar métricas y logs juntos en Grafana
-
-!!! note "3.15 es opcional"
-    Depende de 3.13 y 3.14: sin Prometheus ni Loki corriendo, Grafana no tiene qué mostrar. El alcance evaluado de S4 sigue terminando en 3.12 (4.4, 4.6); este paso es para quien ya completó los dos anteriores y quiere verlos juntos en un solo tablero, en vez de alternar entre la UI de Prometheus y las consultas de Loki por separado.
-
-**Producto del paso:** un Grafana propio, con Prometheus y Loki agregados como fuentes de datos automáticamente (sin configurarlos a mano desde la UI), corriendo en paralelo al resto del stack.
-
-Crea `lp2/obs/grafana/provisioning/datasources/datasources.yml`:
-
-```yaml
-apiVersion: 1
-
-datasources:
-  - name: Prometheus
-    type: prometheus
-    access: proxy
-    url: http://bomerp-prometheus:9090
-    isDefault: true
-
-  - name: Loki
-    type: loki
-    access: proxy
-    url: http://bomerp-loki:3100
-```
-
-`url` usa el nombre del servicio de Docker Compose (`bomerp-prometheus`, `bomerp-loki`), no `localhost`: Grafana consulta a los otros contenedores por la red interna que Compose crea automáticamente, la misma razón por la que `prometheus-dev.yml` (3.13) usa `host.docker.internal` para llegar a `bomerp-backend`, que corre fuera de Docker.
-
-Agrega Grafana a `lp2/obs/compose-dev.yml` (junto a `bomerp-prometheus`, `bomerp-loki` y `bomerp-promtail`):
-
-```yaml
-  bomerp-grafana:
-    image: grafana/grafana:11.4.0
-    container_name: bomerp-grafana-dev
-    restart: unless-stopped
-    ports:
-      - "33000:3000"
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-    volumes:
-      - ./grafana/provisioning:/etc/grafana/provisioning:ro
-    depends_on:
-      - bomerp-prometheus
-      - bomerp-loki
-```
-
-`33000` sigue el mismo criterio de puertos que Prometheus (`39090`) y Loki (`33100`): el prefijo `3` identifica a LP2 DEV, evitando cualquier Grafana que DIST agregue después en `1????`/`2????`.
-
-Vuelve a levantar el stack con el archivo actualizado:
-
-```bash
-cd lp2/obs
-docker compose -f compose-dev.yml up -d
-```
-
-Abre `http://localhost:33000` (usuario `admin`, contraseña `admin` — Grafana pide cambiarla al primer ingreso; en DEV puedes omitirlo). Ve a **Connections → Data sources** y confirma que `Prometheus` y `Loki` ya aparecen configurados, sin haberlos agregado a mano — eso es lo que hizo `datasources.yml` al arrancar el contenedor.
-
-Para verificar que ambas fuentes responden, crea un panel nuevo (**Dashboards → New → New dashboard → Add visualization**) y prueba una consulta de cada una:
-
-- Con la fuente `Prometheus`: `up{job="bomerp-backend"}` (3.13) — el mismo dato que ya viste en la UI de Prometheus, ahora dentro de Grafana.
-- Con la fuente `Loki`: `{application="bomerp-backend"} |= "Started BomerpBackendApplication"` (3.14) — el mismo log, con el mismo lenguaje de consulta (LogQL) que ya usaste por API.
-
-Lo que cambia no es el dato ni la consulta — es tener ambas fuentes, métricas y logs, en el mismo tablero, algo que ni Prometheus ni Loki ofrecen por separado.
-
-**Nota de puertos ocupados (actualizada):** con Grafana, LP2 DEV ocupa `39090` (Prometheus), `33100` (Loki) y `33000` (Grafana) — los tres bajo el prefijo `3`. Si más adelante DIST agrega su propio Grafana, el puerto que le corresponde por el mismo criterio es `13000` (prefijo `1`, DEV) o `23000` (prefijo `2`, PROD); si BigData agrega el suyo, `53000` (prefijo `5`).
+**Nota de puertos ocupados:** `lp2/obs/` también incluye un `compose.yml` de PROD (placeholder, `49090`/`43100`), a la espera de que exista un PROD real de `bomerp-backend` — no se ejecuta hasta entonces (ADR-002, "no crear por si acaso"). Cuando BigData (lambda26) construya su propio `obs/` (previsto para su S6+), el siguiente puerto libre es `59090` (Prometheus) / `53100` (Loki) — se decide en ese momento, no antes. Grafana se agrega recién en [LP2 S5](../../lp2/sesiones/S05_Consultas_Empresariales_Reportes_CORS.md) (3.10), no en esta sesión.
 
 ## 4. Crea: actividad autónoma
 

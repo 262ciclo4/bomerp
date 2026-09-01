@@ -6,7 +6,7 @@ Tiempo: 20 min.
 
 ### 1.1 Presentación de la sesión
 
-En S1, `SP_APLICAR_DESCUENTO_PRODUCTO` ajusta el precio de un producto sin que quede registro de quién lo cambió, ni verificación de que el ajuste sea razonable — cualquier procedimiento, o incluso un `UPDATE` directo desde otro cliente, puede dejar el precio en cualquier valor sin dejar rastro. Esta sesión resuelve ambos problemas con **triggers DML**: uno que aplica una regla automática de negocio, y otro que registra auditoría básica — ambos disparados por Oracle mismo, sin depender de que el cliente que hizo el cambio se acuerde de invocarlos.
+En la sesión 1, un procedimiento ajusta el precio de un producto sin que quede registro de quién lo cambió, ni verificación de que el ajuste sea razonable — cualquier procedimiento, o incluso una actualización directa desde otro cliente, puede dejar el precio en cualquier valor sin dejar rastro. Esta sesión resuelve ambos problemas con **triggers DML**: uno que aplica una regla automática de negocio, y otro que registra auditoría básica — ambos disparados por Oracle mismo, sin depender de que el cliente que hizo el cambio se acuerde de invocarlos.
 
 ### 1.2 Índice
 
@@ -19,7 +19,7 @@ En S1, `SP_APLICAR_DESCUENTO_PRODUCTO` ajusta el precio de un producto sin que q
 
 Al concluir la clase, estarás en condiciones de:
 
-- **Implementar y probar** triggers DML que apliquen una regla automática de negocio y registren auditoría básica sobre `PRODUCTOS`, usando `:OLD` y `:NEW` para comparar el estado antes y después de cada operación.
+- **Implementar y probar** triggers DML que apliquen una regla automática de negocio y registren auditoría básica sobre la tabla principal del catálogo, usando `:OLD` y `:NEW` para comparar el estado antes y después de cada operación.
 
 ### 1.4 Producto de sesión
 

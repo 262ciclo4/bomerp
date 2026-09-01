@@ -8,7 +8,7 @@ Tiempo: 20 min.
 
 ### 1.1 Presentación de la sesión
 
-En S1, `Producto` (si se completó el 3.4.2 opcional) solo exponía un listado de solo lectura. Esta sesión lo convierte en un recurso REST completo: crear, consultar uno por id, actualizar y eliminar, con un DTO de entrada validado, mapeo explícito entre capas y el manejo global de errores (`GlobalExceptionHandler`, `CorrelationIdFilter`, creados en 3.2 de esta misma sesión) puesto a prueba con casos reales de validación y de recurso no encontrado.
+En la sesión 1, el recurso principal solo exponía un listado de solo lectura. Esta sesión lo convierte en un recurso REST completo: crear, consultar uno por id, actualizar y eliminar, con un DTO de entrada validado, mapeo explícito entre capas y manejo global de errores y trazabilidad de peticiones (construidos en 3.2 de esta misma sesión), puesto a prueba con casos reales de validación y de recurso no encontrado.
 
 ### 1.2 Índice
 
@@ -22,7 +22,7 @@ En S1, `Producto` (si se completó el 3.4.2 opcional) solo exponía un listado d
 
 Al concluir la clase, estarás en condiciones de:
 
-- **Construir y probar** un recurso REST completo (crear, consultar, actualizar, eliminar) sobre `Producto`, con DTO de entrada validado, mapeo explícito entidad-DTO mediante una clase `Mapper` dedicada, manejo global de errores verificado con casos reales, y trazabilidad por petición mediante logs.
+- **Construir y probar** un recurso REST completo (crear, consultar, actualizar, eliminar), con DTO de entrada validado, mapeo explícito entidad-DTO mediante una clase dedicada, manejo global de errores verificado con casos reales, y trazabilidad por petición mediante logs.
 
 ### 1.4 Producto de sesión
 
@@ -40,15 +40,15 @@ API REST completa de `Producto` (`GET`, `GET /{id}`, `POST`, `PUT`, `DELETE`), c
 
 ### 1.6 Motivación de la sesión
 
-#### 1.6.1 Caso: catálogo de BomERP (`Producto`)
+#### 1.6.1 Caso: el catálogo que nadie podía corregir
 
-En S1 bastaba con listar productos para verificar que el backend funcionaba. Pero un catálogo real no se mantiene solo — el equipo de compras necesita registrar productos nuevos, corregir un precio mal cargado, o dar de baja un producto discontinuado. Sin esas operaciones, `ventas` (S4) no tendría de dónde tomar un precio o un stock reales para descontar. Esta sesión completa ese ciclo de vida para `Producto`.
+En la sesión 1 bastaba con listar productos para verificar que el backend funcionaba. Pero un catálogo real no se mantiene solo — el equipo de compras necesita registrar productos nuevos, corregir un precio mal cargado, o dar de baja un producto discontinuado. Sin esas operaciones, `ventas` (sesión 4) no tendría de dónde tomar un precio o un stock reales para descontar. Esta sesión completa ese ciclo de vida para `Producto`.
 
 **Preguntas de análisis**
 
 **Activación de conocimientos previos**
 
-1. En S1, `CategoriaResponse`/`ProductoResponse` eran `record`. ¿Por qué esta sesión los convierte en clases con `@Builder`?
+1. En la sesión 1, `CategoriaResponse`/`ProductoResponse` eran `record`. ¿Por qué esta sesión los convierte en clases con `@Builder`?
 2. Si dos peticiones actualizan el mismo producto casi al mismo tiempo, ¿qué garantiza JPA (y qué no garantiza) sobre cuál gana?
 
 **Comprensión de CRUD REST**

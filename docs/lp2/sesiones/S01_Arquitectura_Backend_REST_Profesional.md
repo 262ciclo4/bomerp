@@ -8,7 +8,7 @@ Tiempo: 20 min.
 
 ### 1.1 Presentación de la sesión
 
-La arquitectura de un backend decide qué tan fácil es mantenerlo y hacerlo crecer sin romperse. Esta sesión instala Java 21, crea el proyecto backend como monolito modular conectado a Oracle, y define su contrato REST inicial (`Categoria`, `Producto`, versionado, OpenAPI).
+La arquitectura de un backend decide qué tan fácil es mantenerlo y hacerlo crecer sin romperse. Esta sesión instala el entorno de desarrollo, crea el proyecto backend como *monolito modular* conectado a Oracle, y define su contrato REST inicial, versionado y documentado.
 
 ### 1.2 Índice
 
@@ -21,11 +21,11 @@ La arquitectura de un backend decide qué tan fácil es mantenerlo y hacerlo cre
 
 Al concluir la clase, estarás en condiciones de:
 
-- **Crear y entregar** un proyecto backend ejecutable y reproducible, sobre Java 21 LTS, con conexión a Oracle verificada mediante ORM, endpoint de salud, listado de `Categoria` (`Producto`, opcional), módulos de negocio, DTO de salida, contrato y versionado básico de API, y documentación OpenAPI inicial.
+- **Crear y entregar** un proyecto backend ejecutable y reproducible, con conexión a Oracle verificada mediante ORM, endpoint de salud, listado de un recurso inicial (y de un segundo recurso relacionado, opcional), módulos de negocio, DTO de salida, contrato y versionado básico de API, y documentación inicial de la API.
 
 ### 1.4 Producto de sesión
 
-Proyecto backend ejecutable y reproducible, sobre Java 21 LTS, organizado como monolito modular y conectado a Oracle con su conexión verificada mediante ORM, con endpoint de salud, contrato y versionado básico de API definidos, y el listado de `Categoria` documentado mediante OpenAPI. De forma opcional, también el listado de `Producto` (su CRUD completo se construye en S2).
+Proyecto backend ejecutable y reproducible, sobre Java 21 LTS, organizado como monolito modular y conectado a Oracle con su conexión verificada mediante ORM, con endpoint de salud, contrato y versionado básico de API definidos, y el listado de tablas independientes — `Categoria`, y de forma opcional también `Producto` (su CRUD completo se construye en S2) — documentado mediante OpenAPI.
 
 ### 1.5 Metodología
 

@@ -74,6 +74,7 @@ nav:
           - S3 - Manejo de excepciones y robustez: bd2/sesiones/S03_Excepciones_Robustez.md
           - S4 - Optimización de consultas SQL: bd2/sesiones/S04_Optimizacion_Consultas_SQL.md
           - S5 - Índices para optimización: bd2/sesiones/S05_Indices_Optimizacion.md
+          - S6 - Evaluación de la Unidad I: bd2/sesiones/S06_Evaluacion_Unidad_1.md
   - LP2:
       - Inicio: lp2/index.md
       - Silabos:
@@ -90,3 +91,4 @@ nav:
           - S3 - Objetos relacionados Categoria-Producto: lp2/sesiones/S03_Objetos_Relacionados_Categoria_Producto.md
           - S4 - Operación cabecera-detalle Venta-DetalleVenta: lp2/sesiones/S04_Operacion_Cabecera_Detalle_Venta_DetalleVenta.md
           - S5 - Consultas empresariales, reportes REST y CORS: lp2/sesiones/S05_Consultas_Empresariales_Reportes_CORS.md
+          - S6 - Evaluación de la Unidad I: lp2/sesiones/S06_Evaluacion_Unidad_1.md

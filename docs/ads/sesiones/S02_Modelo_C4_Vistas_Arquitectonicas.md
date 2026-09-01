@@ -6,7 +6,7 @@ Tiempo: 20 min.
 
 ### 1.1 Presentación de la sesión
 
-En S1 el equipo definió dominio, stakeholders, atributos de calidad y un primer bosquejo arquitectónico. Esta sesión formaliza ese bosquejo con el **modelo C4**: contexto (C1), contenedores (C2), y una primera versión de componentes (C3) y código (C4) — las cuatro vistas que se elaboran hoy sobre BomERP. La vista de despliegue y su relación con UML se explican como panorama conceptual, para ubicar dónde encajan, y se detallan en sesiones posteriores.
+En la sesión 1 el equipo definió dominio, stakeholders, atributos de calidad y un primer bosquejo arquitectónico. Esta sesión formaliza ese bosquejo con el **modelo C4**: contexto (C1), contenedores (C2), y una primera versión de componentes (C3) y código (C4) — las cuatro vistas que se elaboran hoy. La vista de despliegue y su relación con UML se explican como panorama conceptual, para ubicar dónde encajan, y se detallan en sesiones posteriores.
 
 ### 1.2 Índice
 

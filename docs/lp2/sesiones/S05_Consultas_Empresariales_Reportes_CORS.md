@@ -534,6 +534,369 @@ fetch("http://localhost:8080/api/v1/ventas").then(r => r.json()).then(console.lo
 
 Sesión equivalente en los otros dos cursos, misma semana: [ADS - S5 Evaluación de la Unidad I](../../ads/sesiones/S05_Evaluacion_Unidad_1.md) evalúa lo construido en S1-S4, sin contenido nuevo esta semana. BD2 S5 construye índices B-Tree y por selectividad — los mismos campos que esta sesión usa para filtrar y ordenar (`ESTADO`, `FECHA`) son los candidatos naturales a indexar; sin ese índice, `GET /api/v1/ventas?estado=REGISTRADA` funciona igual desde el backend, pero Oracle recorre toda la tabla para resolverlo. BD2 todavía no publica su guía de S5.
 
+### 3.10 (opcional, anexo) Levantar Grafana con Prometheus y Loki como fuentes de datos
+
+!!! note "3.10-3.14 son opcionales"
+    Dependen de 3.13 y 3.14 de S4: sin Prometheus ni Loki corriendo, Grafana no tiene qué mostrar. El alcance evaluado de S5 termina en 3.9 (4.4, 4.6); este paso es para quien ya completó los dos anteriores y quiere verlos juntos en un solo tablero, en vez de alternar entre la UI de Prometheus y las consultas de Loki por separado.
+
+**Producto del paso:** un Grafana propio, con Prometheus y Loki agregados como fuentes de datos automáticamente (sin configurarlos a mano desde la UI), corriendo en paralelo al resto del stack.
+
+Crea `lp2/obs/grafana/provisioning/datasources/datasources.yml`:
+
+```yaml
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://bomerp-prometheus:9090
+    isDefault: true
+
+  - name: Loki
+    type: loki
+    access: proxy
+    url: http://bomerp-loki:3100
+```
+
+`url` usa el nombre del servicio de Docker Compose (`bomerp-prometheus`, `bomerp-loki`), no `localhost`: Grafana consulta a los otros contenedores por la red interna que Compose crea automáticamente, la misma razón por la que `prometheus-dev.yml` (S4, 3.13) usa `host.docker.internal` para llegar a `bomerp-backend`, que corre fuera de Docker.
+
+Agrega Grafana a `lp2/obs/compose-dev.yml` (junto a `bomerp-prometheus`, `bomerp-loki` y `bomerp-promtail`, ya construidos en S4):
+
+```yaml
+  bomerp-grafana:
+    image: grafana/grafana:11.4.0
+    container_name: bomerp-grafana-dev
+    restart: unless-stopped
+    ports:
+      - "33000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+    depends_on:
+      - bomerp-prometheus
+      - bomerp-loki
+```
+
+`33000` sigue el mismo criterio de puertos que Prometheus (`39090`) y Loki (`33100`): el prefijo `3` identifica a LP2 DEV, evitando cualquier Grafana que DIST agregue después en `1????`/`2????`. Si más adelante DIST agrega su propio Grafana, el puerto que le corresponde por el mismo criterio es `13000` (prefijo `1`, DEV) o `23000` (prefijo `2`, PROD); si BigData agrega el suyo, `53000` (prefijo `5`).
+
+Vuelve a levantar el stack con el archivo actualizado:
+
+```bash
+cd lp2/obs
+docker compose -f compose-dev.yml up -d
+```
+
+Abre `http://localhost:33000` (usuario `admin`, contraseña `admin` — Grafana pide cambiarla al primer ingreso; en DEV puedes omitirlo). Ve a **Connections → Data sources** y confirma que `Prometheus` y `Loki` ya aparecen configurados, sin haberlos agregado a mano — eso es lo que hizo `datasources.yml` al arrancar el contenedor.
+
+Para verificar que ambas fuentes responden, crea un panel nuevo (**Dashboards → New → New dashboard → Add visualization**) y prueba una consulta de cada una:
+
+- Con la fuente `Prometheus`: `up{job="bomerp-backend"}` (S4, 3.13) — el mismo dato que ya viste en la UI de Prometheus, ahora dentro de Grafana.
+- Con la fuente `Loki`: `{application="bomerp-backend"} |= "Started BomerpBackendApplication"` (S4, 3.14) — el mismo log, con el mismo lenguaje de consulta (LogQL) que ya usaste por API.
+
+Lo que cambia no es el dato ni la consulta — es tener ambas fuentes, métricas y logs, en el mismo tablero, algo que ni Prometheus ni Loki ofrecen por separado. Los pasos siguientes (3.11-3.14) construyen un tablero real sobre esta base, no solo un panel de prueba.
+
+### 3.11 (opcional, anexo) Tablero y alertas de infraestructura
+
+**Producto del paso:** un tablero de infraestructura con las métricas y los logs que ya construiste en S4 (3.13-3.14) — ahora visualizados en Grafana, no solo consultados por API —, más alertas que avisan solas cuando algo falla.
+
+Antes de construir nada de negocio (3.12-3.13), lo primero que un equipo real pone en un tablero es la salud de lo que ya tiene corriendo. Ninguna de las consultas de este paso es nueva: son exactamente las que S4 ya verificó por API o por navegador; lo único distinto es que ahora quedan visibles todo el tiempo, en un tablero, no una vez, en una terminal.
+
+**Cómo se agrega cada panel (primera vez en Grafana, sigue estos pasos para los seis paneles):**
+
+1. Abre `http://localhost:33000`. En el menú de la izquierda, entra a **Dashboards** → botón **New** (arriba a la derecha) → **New dashboard**.
+2. Clic en **+ Add visualization**. En el diálogo que aparece, elige la fuente de datos: `Prometheus` para métricas, `Loki` para logs.
+3. Se abre el editor de panel. En el campo de consulta, debajo del gráfico, pega la consulta del panel. Si el panel necesita una segunda consulta en el mismo gráfico (el Panel 3, más abajo), clic en **+ Query** para agregar una fila más.
+4. A la derecha del editor, en **Panel options → Title**, escribe el título del panel (por ejemplo, "Estado del backend").
+5. Justo arriba de **Panel options**, hay un selector de tipo de visualización — cámbialo a **Stat**, **Time series** o **Logs**, según lo que indica cada panel.
+6. Clic en **Save** (arriba a la derecha del editor) para volver al tablero, ya con el panel agregado.
+7. Para el siguiente panel, desde la vista del tablero, clic en **+ Add** (arriba) → **Visualization**, y repite desde el paso 2.
+
+**Panel 1 — Estado del backend (Stat):**
+
+```promql
+up{job="bomerp-backend"}
+```
+
+**Panel 2 — Tiempo de actividad (Stat):**
+
+```promql
+process_uptime_seconds{job="bomerp-backend"}
+```
+
+**Panel 3 — Conexiones a Oracle (Time series, dos consultas en el mismo panel):**
+
+```promql
+hikaricp_connections_active
+hikaricp_connections_max
+```
+
+**Panel 4 — Peticiones HTTP por segundo (Time series):**
+
+```promql
+rate(http_server_requests_seconds_count{job="bomerp-backend"}[1m])
+```
+
+**Panel 5 — Logs recientes (Logs, fuente `Loki`):**
+
+```logql
+{application="bomerp-backend"}
+```
+
+**Panel 6 — Errores recientes (Logs, fuente `Loki`):**
+
+```logql
+{application="bomerp-backend", detected_level="error"}
+```
+
+Guarda el tablero con el nombre `BomERP - Infraestructura` — distinto del tablero de negocio que construyen 3.12-3.13.
+
+**Buscar una línea específica, sin pegar URLs a mano: `Explore`.** S4 (3.14) encontró líneas puntuales pegando la consulta directo en la URL del navegador contra la API de Loki — funciona, pero es incómodo para explorar: cada búsqueda nueva significa editar la URL a mano. Grafana tiene una herramienta dedicada justo para esto:
+
+1. En el menú de la izquierda, entra a **Explore** (ícono de brújula).
+2. Elige la fuente `Loki` en el selector de arriba.
+3. En el campo de consulta, pega el mismo LogQL que ya usaste por API — por ejemplo, para encontrar el arranque de la sesión de traceId de S4 (3.14):
+
+```logql
+{application="bomerp-backend"} |= "Listando"
+```
+
+4. Clic en **Run query** (o Ctrl+Enter). Las líneas que contienen `"Listando"` aparecen resaltadas, con el término buscado marcado en el texto — la misma "aguja en el pajar" que antes tenías que encontrar leyendo el JSON crudo de la API.
+
+Prueba también el rollback de S4 (3.10 de S4), con la misma mecánica, solo cambiando el texto buscado:
+
+```logql
+{application="bomerp-backend"} |= "StockInsuficienteException"
+```
+
+`Explore` no reemplaza los paneles del tablero (3.11, arriba): un panel muestra siempre lo mismo, para cualquiera que abra el tablero; `Explore` es para preguntas puntuales, del momento — la herramienta correcta cuando no sabes de antemano qué vas a buscar, en vez de crear un panel nuevo por cada búsqueda.
+
+**Alertas: que Grafana avise, no que alguien tenga que quedarse mirando el tablero.** Un tablero sirve mientras alguien lo está viendo; una alerta sigue funcionando aunque nadie lo mire.
+
+**Cómo se crea cada regla de alerta (sigue estos pasos para las dos alertas):**
+
+1. En el menú de la izquierda, entra a **Alerting** → **Alert rules** → botón **+ New alert rule** (arriba a la derecha).
+2. En **Enter alert rule name**, escribe el nombre de la regla (por ejemplo, "Backend caído").
+3. En **Define query and alert condition**, confirma que la fuente sea `Prometheus` y pega la consulta en el editor de la consulta **A**.
+4. Debajo, en la pestaña **Threshold**, define la condición: elige el operador (`IS BELOW` o `IS ABOVE`, según la alerta) y escribe el valor.
+5. En **Set evaluation behavior**, crea una carpeta nueva escribiendo su nombre (por ejemplo, `BomERP`) y un grupo de evaluación; en **Evaluate every** define cada cuánto se revisa la condición, y en **for**, cuánto tiempo debe sostenerse antes de pasar a *Firing*.
+6. Sin tocar **Configure labels and notifications** (queda sin *contact point* por ahora, ver más abajo), clic en **Save rule and exit** (arriba a la derecha).
+
+**Alerta 1 — Backend caído:**
+
+- Consulta (fuente `Prometheus`): `up{job="bomerp-backend"}`
+- Condición: `IS BELOW 1`
+- Evaluar cada `10s`, durante (`for`) `1m` antes de pasar a *Firing* — evita que una caída de un segundo (un reinicio normal) dispare la alerta de más.
+
+**Alerta 2 — Pool de conexiones cerca del límite:**
+
+- Consulta (fuente `Prometheus`): `hikaricp_connections_active / hikaricp_connections_max`
+- Condición: `IS ABOVE 0.8`
+- Evaluar cada `30s`, durante `2m`.
+
+Sin *contact point* configurado, la alerta igual cambia de estado (*Normal* → *Pending* → *Firing*) y queda visible en **Alerting → Alert rules**, que alcanza para esta sesión. Conectar un canal real de notificación (correo, Slack) queda fuera de este anexo.
+
+**Prueba la Alerta 1 provocándola de verdad:** detén `bomerp-backend` (`Ctrl+C` en la terminal donde corre) y observa el estado de la regla en **Alerting → Alert rules** — debería pasar de *Normal* a *Pending* y, pasado el minuto configurado, a *Firing*. Vuelve a levantar el backend y confirma que regresa solo a *Normal*.
+
+### 3.12 (opcional, anexo) Métricas de negocio con Micrometer
+
+Con la infraestructura ya en su propio tablero y con alertas (3.11), esta es la pieza que le falta al negocio: métricas propias de lo que la aplicación hace, no de cómo está corriendo.
+
+**Producto del paso:** `bomerp-backend` emitiendo métricas propias del negocio, listas para Prometheus.
+
+`up{job="bomerp-backend"}` o `hikaricp_connections_active` (S4, 3.13) dicen si el backend está vivo y cuántas conexiones usa — nada sobre cuántas ventas se registraron ni cuántas se rechazaron. Esas preguntas no las responde ninguna métrica que Spring Boot exponga por defecto: hay que emitirlas explícitamente, en el momento exacto en que el evento de negocio ocurre.
+
+**Por qué no simplemente hacer que Grafana consulte Oracle cada pocos segundos:** parecería más directo — el dato ya vive ahí —, pero convierte cada refresco del tablero en una consulta más contra la base de datos de producción, y no es así como Prometheus/Grafana están pensados para trabajar: un `Counter` en memoria, incrementado por la propia aplicación en el instante del evento, cuesta prácticamente nada, y Prometheus solo lo *raspa* (`scrape`) cada 15 segundos (`prometheus-dev.yml`, S4 3.13) — la aplicación nunca es consultada más seguido de lo que ella misma decide.
+
+Agrega `MeterRegistry` a `VentaServiceImpl` (registra una venta exitosa):
+
+```java
+package pe.edu.upeu.bomerp.ventas.venta.service;
+
+import io.micrometer.core.instrument.MeterRegistry;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoResponse;
+import pe.edu.upeu.bomerp.catalogo.producto.service.ProductoService;
+import pe.edu.upeu.bomerp.exception.ResourceNotFoundException;
+import pe.edu.upeu.bomerp.ventas.venta.dto.*;
+import pe.edu.upeu.bomerp.ventas.venta.entity.DetalleVenta;
+import pe.edu.upeu.bomerp.ventas.venta.entity.EstadoVenta;
+import pe.edu.upeu.bomerp.ventas.venta.entity.Venta;
+import pe.edu.upeu.bomerp.ventas.venta.mapper.VentaMapper;
+import pe.edu.upeu.bomerp.ventas.venta.repository.VentaRepository;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class VentaServiceImpl implements VentaService {
+    private final VentaRepository ventaRepository;
+    private final ProductoService productoService;
+    private final VentaMapper ventaMapper;
+    private final MeterRegistry meterRegistry;
+
+    // ... buscar(), obtener() sin cambios ...
+
+    @Override
+    @Transactional
+    public VentaResponse crear(VentaRequest request) {
+        Venta venta = new Venta();
+        venta.setFecha(LocalDateTime.now());
+        venta.setEstado(EstadoVenta.REGISTRADA);
+
+        BigDecimal total = BigDecimal.ZERO;
+        for (DetalleVentaRequest detalleRequest : request.getDetalles()) {
+            ProductoResponse producto = productoService.obtener(detalleRequest.getProductoId());
+            productoService.descontarStock(detalleRequest.getProductoId(), detalleRequest.getCantidad());
+
+            DetalleVenta detalle = ventaMapper.toDetalle(detalleRequest, producto);
+            detalle.setVenta(venta);
+            venta.getDetalles().add(detalle);
+            total = total.add(detalle.getSubtotal());
+        }
+        venta.setTotal(total);
+
+        VentaResponse response = ventaMapper.toResponse(ventaRepository.save(venta));
+        meterRegistry.counter("bomerp_ventas_registradas_total").increment();
+        meterRegistry.summary("bomerp_ventas_monto").record(total.doubleValue());
+        return response;
+    }
+}
+```
+
+Solo se agregó el campo `meterRegistry` (Spring lo inyecta solo: `micrometer-registry-prometheus` ya está en el `pom.xml` desde S4, 3.13) y dos líneas al final de `crear()` — el resto del método no cambia. `counter(...).increment()` suma uno cada vez que se llama; `summary(...).record(valor)` acumula el valor (aquí, el monto de cada venta), y Prometheus lo expone como dos series: `bomerp_ventas_monto_count` (cuántas ventas) y `bomerp_ventas_monto_sum` (cuánto sumaron en total) — de ahí se calculan tanto el total vendido como el ticket promedio (3.13).
+
+Registra el rechazo en `GlobalExceptionHandler` — un solo lugar captura **todas** las ventas rechazadas por stock insuficiente, sin importar desde qué método se dispare la excepción:
+
+```java
+package pe.edu.upeu.bomerp.exception;
+
+import io.micrometer.core.instrument.MeterRegistry;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
+
+@RestControllerAdvice
+@RequiredArgsConstructor
+public class GlobalExceptionHandler {
+    private final MeterRegistry meterRegistry;
+
+    // ... handleNotFound(), handleValidation() sin cambios ...
+
+    @ExceptionHandler(StockInsuficienteException.class)
+    public ResponseEntity<Map<String, Object>> handleStockInsuficiente(StockInsuficienteException ex) {
+        meterRegistry.counter("bomerp_ventas_rechazadas_total", "motivo", "stock_insuficiente").increment();
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", Instant.now().toString());
+        body.put("status", HttpStatus.CONFLICT.value());
+        body.put("error", "Conflict");
+        body.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
+    }
+}
+```
+
+El `"motivo"` como etiqueta (*tag*), no como parte del nombre de la métrica, es lo que permite en 3.13 desglosar rechazos por causa sin crear una métrica nueva por cada una — hoy solo existe `"stock_insuficiente"`, pero si más adelante aparece otro motivo de rechazo, se suma como un valor más de la misma etiqueta.
+
+Reinicia `bomerp-backend`, genera al menos tres ventas exitosas (`POST /api/v1/ventas`, 3.10 de S4) y al menos una rechazada por stock insuficiente, y verifica que las métricas nuevas aparezcan:
+
+```powershell
+(Invoke-RestMethod -Uri "http://localhost:8080/actuator/prometheus") -match "bomerp_ventas"
+```
+
+Resultado esperado: líneas con `bomerp_ventas_registradas_total`, `bomerp_ventas_monto_count`, `bomerp_ventas_monto_sum` y `bomerp_ventas_rechazadas_total{motivo="stock_insuficiente",...}`.
+
+### 3.13 (opcional, anexo) Diseñar el tablero de ventas en tiempo real
+
+**Producto del paso:** un tablero de Grafana con el negocio en vivo — ventas por minuto, monto vendido, ticket promedio y rechazos por motivo —, actualizándose solo.
+
+Abre `http://localhost:33000` (3.10, más arriba) y crea un tablero **nuevo**, distinto del de infraestructura (3.11): **Dashboards → New → New dashboard**. Cada panel se agrega con **Add visualization**, eligiendo la fuente `Prometheus`, pegando la consulta, y ajustando el tipo de visualización a la derecha.
+
+**Panel 1 — Ventas por minuto (Time series):**
+
+```promql
+rate(bomerp_ventas_registradas_total[1m]) * 60
+```
+
+`rate()` calcula la velocidad de crecimiento del contador por segundo, dentro de la ventana `[1m]`; multiplicar por `60` la convierte a "ventas por minuto", una unidad que se lee de un vistazo — el mismo tipo de cálculo que ya usaste conceptualmente en BD2 (tasa sobre una ventana de tiempo), ahora en PromQL en vez de SQL.
+
+**Panel 2 — Monto vendido, últimos 5 minutos (Stat):**
+
+```promql
+increase(bomerp_ventas_monto_sum[5m])
+```
+
+`increase()` es `rate()` sin normalizar a "por segundo" — directamente cuánto creció la suma dentro de la ventana. Este panel responde una versión en vivo, aproximada y barata, de lo que `GET /api/v1/ventas/resumen` (3.5) responde bajo demanda, exacto y consultando Oracle: son dos herramientas distintas para preguntas parecidas, no una que reemplaza a la otra.
+
+**Panel 3 — Ticket promedio, tiempo real (Gauge):**
+
+```promql
+rate(bomerp_ventas_monto_sum[5m]) / rate(bomerp_ventas_monto_count[5m])
+```
+
+Dividir la tasa de la suma entre la tasa del conteo da el promedio dentro de la ventana — el mismo `AVG(v.total)` de `VentaAgregado` (3.3), calculado aquí sin tocar la base de datos.
+
+**Panel 4 — Ventas rechazadas por motivo (Bar gauge):**
+
+```promql
+sum by (motivo) (bomerp_ventas_rechazadas_total)
+```
+
+`sum by (motivo)` agrupa por la etiqueta agregada en 3.12 — con un solo motivo hoy, la barra es una; el panel ya queda listo para el día en que exista un segundo motivo de rechazo, sin cambiar la consulta.
+
+**Actualización casi en vivo:** en la esquina superior derecha del tablero, abre el selector de rango de tiempo y elige **Last 30 minutes**; al lado, en el selector de refresco, escribe `10s`. Con eso el tablero vuelve a consultar Prometheus cada 10 segundos — coherente con las ventanas `[1m]`/`[5m]` de las consultas: un refresco más lento que la ventana haría que el tablero se sintiera desactualizado; uno mucho más rápido no aporta nada, porque Prometheus solo tiene datos nuevos cada 15 segundos (el `scrape_interval` de `prometheus-dev.yml`).
+
+Guarda el tablero (ícono de guardar, arriba) con el nombre `BomERP - Ventas en tiempo real`.
+
+**Negocio e infraestructura, uno al lado del otro:** con los dos tableros abiertos en pestañas distintas — `BomERP - Infraestructura` (3.11) y `BomERP - Ventas en tiempo real` (arriba) —, un salto en "Ventas rechazadas por motivo" se explica mirando, en el mismo rango de tiempo, el panel de errores del tablero de infraestructura: las líneas `StockInsuficienteException` reales del instante en que ocurrió el salto. Es la misma correlación métricas-logs de S4 (3.14), ahora visible sin cambiar de herramienta ni escribir una consulta nueva — solo cambiando de pestaña.
+
+### 3.14 (opcional, anexo) Guardar los tableros como código
+
+**Producto del paso:** los dos tableros (3.11 y 3.12-3.13) provisionados automáticamente, igual que ya están las fuentes de datos (3.10) — sobreviven a un `docker compose down` sin reconstruirlos a mano.
+
+Exporta el JSON de cada tablero por separado: ícono de engranaje (**Dashboard settings**) → **JSON Model** → copia el contenido completo. Guarda cada uno con su propio nombre:
+
+- `lp2/obs/grafana/provisioning/dashboards/bomerp-infraestructura.json` (3.11)
+- `lp2/obs/grafana/provisioning/dashboards/bomerp-ventas.json` (3.12-3.13)
+
+Las reglas de alerta (3.11) se exportan aparte, desde **Alerting → Alert rules**, con el mismo ícono de exportar de cada regla; guárdalas como `lp2/obs/grafana/provisioning/alerting/bomerp-alertas.yml` si quieres que también se autoprovisionen — opcional, no imprescindible para esta sesión.
+
+Crea `lp2/obs/grafana/provisioning/dashboards/dashboards.yml`:
+
+```yaml
+apiVersion: 1
+
+providers:
+  - name: BomERP
+    folder: BomERP
+    type: file
+    options:
+      path: /etc/grafana/provisioning/dashboards
+```
+
+Un único proveedor carga **todos** los archivos `.json` que encuentre en esa carpeta, sin necesitar una entrada por tablero. No hace falta agregar ningún volumen nuevo a `compose-dev.yml`: `./grafana/provisioning:/etc/grafana/provisioning:ro` (3.10, más arriba) ya monta toda la carpeta, incluidas estas subcarpetas nuevas.
+
+Reinicia el contenedor de Grafana y confirma que los dos tableros aparecen solos, en la carpeta `BomERP`, sin haberlos importado a mano:
+
+```bash
+cd lp2/obs
+docker compose -f compose-dev.yml restart bomerp-grafana
+```
+
+Con esto, el stack completo de observabilidad de LP2 (Prometheus, Loki, Grafana, datasources y los dos tableros) queda como código en el repositorio — reproducible por cualquier integrante del equipo con un solo `docker compose up`, sin pasos manuales en la UI.
+
 ## 4. Crea: actividad autónoma
 
 Tiempo: 2h fuera del aula.

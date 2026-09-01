@@ -6,7 +6,7 @@ Tiempo: 20 min.
 
 ### 1.1 Presentación de la sesión
 
-En S2, el equipo definió la estructura del sistema con el modelo C4 (C1-C4), sin cuestionar todavía si esa estructura estaba bien diseñada — solo si estaba bien representada. Esta sesión aplica sobre esa misma estructura un criterio distinto: los cinco principios SOLID, más cohesión, acoplamiento, modularidad y abstracción — el vocabulario que permite distinguir una clase o un módulo bien diseñado de uno que solo se ve ordenado en el diagrama, y que sirve tanto para evaluar código que ya existe como para decidir cómo estructurar el que todavía no se ha escrito.
+En la sesión 2, el equipo definió la estructura del sistema con el modelo C4 (C1-C4), sin cuestionar todavía si esa estructura estaba bien diseñada — solo si estaba bien representada. Esta sesión aplica sobre esa misma estructura un criterio distinto: los cinco principios SOLID, más cohesión, acoplamiento, modularidad y abstracción — el vocabulario que permite distinguir una clase o un módulo bien diseñado de uno que solo se ve ordenado en el diagrama, y que sirve tanto para evaluar código que ya existe como para decidir cómo estructurar el que todavía no se ha escrito.
 
 ### 1.2 Índice
 

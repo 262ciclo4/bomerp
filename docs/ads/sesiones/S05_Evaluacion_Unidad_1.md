@@ -7,7 +7,7 @@ Esta sesión no enseña contenido nuevo: cierra la Unidad I de **ADS**. El síla
 1. Resolver la evaluación teórico-práctica de los temas de la Unidad I (sesiones 1 a 4).
 2. Presentar y sustentar la Arquitectura documentada mediante vistas arquitectónicas y principios de diseño aplicados.
 
-**Solo ADS evalúa su Unidad I en esta sesión.** BD2 y LP2 sustentan su propia Unidad I recién en su S06: a ambos les queda todavía su propia S05 de trabajo (índices y evaluación del motor transaccional en BD2; consultas, reportes y trazabilidad en LP2) antes de estar listos para evaluarse. ADS evalúa primero porque su producto no es código ejecutable: es la arquitectura documentada que BD2 y LP2 ya vienen usando como base desde S01. El "Primer corte integrado" de los tres cursos (arquitectura + motor transaccional + backend REST) se sustenta conjuntamente en S06, según el cronograma del Proyecto Integrador.
+**Solo ADS evalúa su Unidad I en esta sesión.** BD2 y LP2 sustentan su propia Unidad I recién en su sesión 6: a ambos les queda todavía su propia sesión 5 de trabajo (índices y evaluación del motor transaccional en BD2; consultas, reportes y trazabilidad en LP2) antes de estar listos para evaluarse. ADS evalúa primero porque su producto no es código ejecutable: es la arquitectura documentada que BD2 y LP2 ya vienen usando como base desde su sesión 1. El "Primer corte integrado" de los tres cursos (arquitectura + motor transaccional + backend REST) se sustenta conjuntamente en la sesión 6, según el cronograma del Proyecto Integrador.
 
 ## 2. Producto evaluado
 
@@ -57,8 +57,8 @@ Lo que sustentas en S05 es **tu arquitectura**: el estilo que tú elegiste en S4
 | Seguridad futura | Decisión de autenticación y autorización para U2. | ADR previsto; JWT no se implementa en el corte U1. |
 | Mantenibilidad | Un ejecutable Spring Boot único, con paquetes de módulo cohesionados por dominio y capas internas. | Límites, dependencias y componentes documentados; verificados por `ModularityTests`. |
 | Integridad | Reglas transaccionales en servicio y Oracle. | Paquetes PL/SQL y restricciones. |
-| Rendimiento | Índices y consultas optimizadas por estado, usuario, producto y fecha. | Script BD2 e índices. |
-| Auditabilidad | Trigger de auditoría de cambios de estado de venta. | Tabla y trigger de auditoría. |
+| Rendimiento | Índices y consultas optimizadas por fecha. | Script BD2 e índices. |
+| Auditabilidad | Trigger de auditoría de cambios de precio y stock de producto (`TRG_PRODUCTO_AUDITORIA`). | Tabla y trigger de auditoría. |
 | Escalabilidad inicial | API stateless preparada para SPA. | Decisión arquitectónica ADR-001. |
 
 ### 2.3 Vistas arquitectónicas
@@ -170,10 +170,10 @@ Las decisiones ya están formalizadas como ADR reales en `docs/lp2/adr/` — ver
 
 | Decisión ADS | Evidencia BD2 | Evidencia LP2 |
 |---|---|---|
-| Auditoría de cambios | Trigger `trg_venta_estado_audit` | Endpoint anular venta. |
+| Auditoría de cambios | Trigger `TRG_PRODUCTO_AUDITORIA` sobre precio/stock | `POST`/`PUT` sobre `/api/v1/productos` (cualquier alta o cambio dispara el trigger, sin que el backend lo sepa). |
 | Monolito modular y capas internas | Esquemas `BOM_CATALOGO` y `BOM_VENTAS` (los únicos que existen al cierre de U1; `BOM_INVENTARIO`, `BOM_COMPRAS` y `BOM_SEGURIDAD` se crean recién cuando su sesión los necesite) | Paquetes de módulo Spring Modulith, servicios públicos, controllers, services y repositories propios. |
 | Seguridad stateless prevista | Usuario/rol como soporte futuro | ADR y contrato para implementación en S10-S11. |
-| Rendimiento por consultas frecuentes | Índices por estado, usuario, producto y fecha | Filtros de consulta. |
+| Rendimiento por consultas frecuentes | Índice `IX_VENTAS_FECHA` sobre `FECHA` | Filtro `desde`/`hasta` en `GET /api/v1/ventas`. |
 
 ## 3. Evaluación teórico-práctica (S1-S4)
 

@@ -1,5 +1,7 @@
 # LP2 - Lenguaje de Programación II
 
+Durante este ciclo asumes el rol de desarrollador backend de un equipo que construye una aplicación empresarial Full Stack con tecnologías reales de la industria. Cada sesión suma un avance real del producto — desde la arquitectura inicial del backend hasta la seguridad, la SPA y la preparación para producción —, no ejercicios aislados que se descartan al terminar la clase.
+
 **Repositorio:** [262ciclo4/bomerp](https://github.com/262ciclo4/bomerp)
 
 BomERP no pretende cubrir todos los procesos de un ERP comercial. Es una base académica extensible que demuestra arquitectura, persistencia, transacciones, seguridad e integración mediante un flujo comercial acotado. Se implementa en un único repositorio, con un backend Spring Boot **único** (un solo proyecto Maven, sin reactor multi-módulo) organizado por paquetes de módulo verificados con **Spring Modulith**, una SPA organizada por funcionalidades y una base Oracle organizada mediante esquemas funcionales.
