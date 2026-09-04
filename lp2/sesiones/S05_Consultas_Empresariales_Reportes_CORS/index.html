@@ -3987,7 +3987,7 @@ python<span class="w"> </span>-m<span class="w"> </span>http.server<span class="
 <p>Dependen de 3.13 y 3.14 de S4: sin Prometheus ni Loki corriendo, Grafana no tiene qué mostrar. El alcance evaluado de S5 termina en 3.9 (4.4, 4.6); este paso es para quien ya completó los dos anteriores y quiere verlos juntos en un solo tablero, en vez de alternar entre la UI de Prometheus y las consultas de Loki por separado.</p>
 </div>
 <p><strong>Producto del paso:</strong> un Grafana propio, con Prometheus y Loki agregados como fuentes de datos automáticamente (sin configurarlos a mano desde la UI), corriendo en paralelo al resto del stack.</p>
-<p>Crea <code>lp2/obs/grafana/provisioning/datasources/datasources.yml</code>:</p>
+<p>Crea <code>lp2/obs/grafana/provisioning/datasources/datasources-dev.yml</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
 
 <span class="nt">datasources</span><span class="p">:</span>
@@ -4023,7 +4023,7 @@ python<span class="w"> </span>-m<span class="w"> </span>http.server<span class="
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>lp2/obs
 docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>compose-dev.yml<span class="w"> </span>up<span class="w"> </span>-d
 </code></pre></div>
-<p>Abre <code>http://localhost:33000</code> (usuario <code>admin</code>, contraseña <code>admin</code> — Grafana pide cambiarla al primer ingreso; en DEV puedes omitirlo). Ve a <strong>Connections → Data sources</strong> y confirma que <code>Prometheus</code> y <code>Loki</code> ya aparecen configurados, sin haberlos agregado a mano — eso es lo que hizo <code>datasources.yml</code> al arrancar el contenedor.</p>
+<p>Abre <code>http://localhost:33000</code> (usuario <code>admin</code>, contraseña <code>admin</code> — Grafana pide cambiarla al primer ingreso; en DEV puedes omitirlo). Ve a <strong>Connections → Data sources</strong> y confirma que <code>Prometheus</code> y <code>Loki</code> ya aparecen configurados, sin haberlos agregado a mano — eso es lo que hizo <code>datasources-dev.yml</code> al arrancar el contenedor.</p>
 <p>Para verificar que ambas fuentes responden, crea un panel nuevo (<strong>Dashboards → New → New dashboard → Add visualization</strong>) y prueba una consulta de cada una:</p>
 <ul>
 <li>Con la fuente <code>Prometheus</code>: <code>up{job="bomerp-backend"}</code> (S4, 3.13) — el mismo dato que ya viste en la UI de Prometheus, ahora dentro de Grafana.</li>
@@ -4233,8 +4233,8 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <li><code>lp2/obs/grafana/provisioning/dashboards/bomerp-infraestructura.json</code> (3.11)</li>
 <li><code>lp2/obs/grafana/provisioning/dashboards/bomerp-ventas.json</code> (3.12-3.13)</li>
 </ul>
-<p>Las reglas de alerta (3.11) se exportan aparte, desde <strong>Alerting → Alert rules</strong>, con el mismo ícono de exportar de cada regla; guárdalas como <code>lp2/obs/grafana/provisioning/alerting/bomerp-alertas.yml</code> si quieres que también se autoprovisionen — opcional, no imprescindible para esta sesión.</p>
-<p>Crea <code>lp2/obs/grafana/provisioning/dashboards/dashboards.yml</code>:</p>
+<p>Las reglas de alerta (3.11) se exportan aparte, desde <strong>Alerting → Alert rules</strong>, con el mismo ícono de exportar de cada regla; guárdalas como <code>lp2/obs/grafana/provisioning/alerting/bomerp-alertas-dev.yml</code> si quieres que también se autoprovisionen — opcional, no imprescindible para esta sesión.</p>
+<p>Crea <code>lp2/obs/grafana/provisioning/dashboards/dashboards-dev.yml</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
 
 <span class="nt">providers</span><span class="p">:</span>
