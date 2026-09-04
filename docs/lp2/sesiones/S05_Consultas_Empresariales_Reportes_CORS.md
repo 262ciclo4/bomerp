@@ -541,7 +541,7 @@ Sesión equivalente en los otros dos cursos, misma semana: [ADS - S5 Evaluación
 
 **Producto del paso:** un Grafana propio, con Prometheus y Loki agregados como fuentes de datos automáticamente (sin configurarlos a mano desde la UI), corriendo en paralelo al resto del stack.
 
-Crea `lp2/obs/grafana/provisioning/datasources/datasources.yml`:
+Crea `lp2/obs/grafana/provisioning/datasources/datasources-dev.yml`:
 
 ```yaml
 apiVersion: 1
@@ -588,7 +588,7 @@ cd lp2/obs
 docker compose -f compose-dev.yml up -d
 ```
 
-Abre `http://localhost:33000` (usuario `admin`, contraseña `admin` — Grafana pide cambiarla al primer ingreso; en DEV puedes omitirlo). Ve a **Connections → Data sources** y confirma que `Prometheus` y `Loki` ya aparecen configurados, sin haberlos agregado a mano — eso es lo que hizo `datasources.yml` al arrancar el contenedor.
+Abre `http://localhost:33000` (usuario `admin`, contraseña `admin` — Grafana pide cambiarla al primer ingreso; en DEV puedes omitirlo). Ve a **Connections → Data sources** y confirma que `Prometheus` y `Loki` ya aparecen configurados, sin haberlos agregado a mano — eso es lo que hizo `datasources-dev.yml` al arrancar el contenedor.
 
 Para verificar que ambas fuentes responden, crea un panel nuevo (**Dashboards → New → New dashboard → Add visualization**) y prueba una consulta de cada una:
 
@@ -871,9 +871,9 @@ Exporta el JSON de cada tablero por separado: ícono de engranaje (**Dashboard s
 - `lp2/obs/grafana/provisioning/dashboards/bomerp-infraestructura.json` (3.11)
 - `lp2/obs/grafana/provisioning/dashboards/bomerp-ventas.json` (3.12-3.13)
 
-Las reglas de alerta (3.11) se exportan aparte, desde **Alerting → Alert rules**, con el mismo ícono de exportar de cada regla; guárdalas como `lp2/obs/grafana/provisioning/alerting/bomerp-alertas.yml` si quieres que también se autoprovisionen — opcional, no imprescindible para esta sesión.
+Las reglas de alerta (3.11) se exportan aparte, desde **Alerting → Alert rules**, con el mismo ícono de exportar de cada regla; guárdalas como `lp2/obs/grafana/provisioning/alerting/bomerp-alertas-dev.yml` si quieres que también se autoprovisionen — opcional, no imprescindible para esta sesión.
 
-Crea `lp2/obs/grafana/provisioning/dashboards/dashboards.yml`:
+Crea `lp2/obs/grafana/provisioning/dashboards/dashboards-dev.yml`:
 
 ```yaml
 apiVersion: 1
