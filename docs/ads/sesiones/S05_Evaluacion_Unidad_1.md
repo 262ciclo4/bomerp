@@ -227,14 +227,14 @@ Secuencia sugerida de presentación:
 Criterios mínimos de aceptación:
 
 - Las tres vistas (C1, C2, C3) son coherentes entre sí y con el código real de LP2.
-- El estilo arquitectónico elegido está justificado frente a al menos una alternativa de S4.
+- El estilo arquitectónico elegido está justificado frente a al menos una alternativa de S4, citando al menos un atributo de calidad concreto de la Tabla 3 (sección 2.2).
 - Cada principio SOLID de la Tabla 4 se sustenta con un ejemplo real, no solo con la definición.
 - La evidencia de integración (Tabla 10) es verificable en vivo, no solo narrada.
 - Cada integrante responde individualmente al menos una pregunta de la Tabla 8 o de la sección 2.
 
 ## 5. Rúbrica de evaluación
 
-Los cinco criterios son cita literal del resultado de aprendizaje de la Unidad I en el sílabo de ADS.
+Los cinco criterios son cita literal del resultado de aprendizaje de la Unidad I en el sílabo de ADS. El criterio 4 exige explícitamente que el trade-off se sustente en atributos de calidad concretos (Tabla 3) — el sílabo enseña "atributos de calidad" en S1 pero no lo separa en un criterio propio; esta rúbrica lo evalúa dentro de este criterio en vez de dejarlo sin evaluación.
 
 **Tabla 11. Rúbrica de evaluación**
 
@@ -243,7 +243,7 @@ Los cinco criterios son cita literal del resultado de aprendizaje de la Unidad I
 | 1. Representa vistas arquitectónicas mediante C4 o equivalente | 20% | C1, C2 y C3 completas, coherentes entre sí y con el código real. | Las tres vistas están presentes, con alguna inconsistencia menor frente al código. | Falta una vista o hay inconsistencias relevantes. | No presenta vistas arquitectónicas verificables. | |
 | 2. Define límites, responsabilidades y componentes del sistema | 20% | Límites de módulo claros y verificados por `ModularityTests`; responsabilidades sin solapamiento. | Límites claros, verificación parcial. | Límites confusos o con solapamiento de responsabilidades. | No define límites ni responsabilidades. | |
 | 3. Aplica principios SOLID, cohesión, acoplamiento, modularidad y abstracción | 20% | Cada principio de la Tabla 4 se sustenta con un ejemplo real del código. | La mayoría de principios se sustenta con ejemplos reales. | Aplicación superficial o solo teórica. | No aplica los principios. | |
-| 4. Justifica estilos arquitectónicos y trade-offs | 20% | Justifica monolito modular con capas frente a al menos una alternativa de S4, citando trade-offs reales. | Justifica el estilo elegido con trade-offs generales. | Menciona el estilo sin justificar trade-offs. | No justifica el estilo elegido. | |
+| 4. Justifica estilos arquitectónicos y trade-offs | 20% | Justifica monolito modular con capas frente a al menos una alternativa de S4, citando trade-offs reales en términos de atributos de calidad concretos de la Tabla 3 (ej. mantenibilidad vs. escalabilidad). | Justifica el estilo elegido con trade-offs generales, mencionando al menos un atributo de calidad de la Tabla 3. | Menciona el estilo o los atributos de calidad sin conectar uno con otro. | No justifica el estilo elegido ni cita atributos de calidad. | |
 | 5. Mantiene coherencia con los requerimientos del negocio | 20% | La arquitectura resuelve el dominio de la Tabla 2 y la trazabilidad de la Tabla 7 es verificable en vivo. | La arquitectura resuelve el dominio; la trazabilidad es mayormente verificable. | Coherencia parcial con el dominio o trazabilidad débil. | No hay coherencia demostrable con el dominio. | |
 
 Nota final = suma de (`Peso` × `Puntos del nivel obtenido`) / 100 × 20 = ____.
