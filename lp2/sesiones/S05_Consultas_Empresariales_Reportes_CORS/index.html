@@ -2692,10 +2692,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#32-ampliar-ventarepository-con-filtros-orden-proyeccion-y-agregado" class="md-nav__link">
+  <a href="#32-crear-los-dto-de-reporte-ventaresumen-ventaagregado-y-ventareporte" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.2 Ampliar VentaRepository con filtros, orden, proyección y agregado
+        3.2 Crear los DTO de reporte: VentaResumen, VentaAgregado y VentaReporte
       
     </span>
   </a>
@@ -2703,10 +2703,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#33-crear-los-dto-de-reporte-ventaresumen-ventaagregado-y-ventareporte" class="md-nav__link">
+  <a href="#33-ampliar-ventarepository-con-filtros-orden-proyeccion-y-agregado" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.3 Crear los DTO de reporte: VentaResumen, VentaAgregado y VentaReporte
+        3.3 Ampliar VentaRepository con filtros, orden, proyección y agregado
       
     </span>
   </a>
@@ -3257,10 +3257,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#32-ampliar-ventarepository-con-filtros-orden-proyeccion-y-agregado" class="md-nav__link">
+  <a href="#32-crear-los-dto-de-reporte-ventaresumen-ventaagregado-y-ventareporte" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.2 Ampliar VentaRepository con filtros, orden, proyección y agregado
+        3.2 Crear los DTO de reporte: VentaResumen, VentaAgregado y VentaReporte
       
     </span>
   </a>
@@ -3268,10 +3268,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#33-crear-los-dto-de-reporte-ventaresumen-ventaagregado-y-ventareporte" class="md-nav__link">
+  <a href="#33-ampliar-ventarepository-con-filtros-orden-proyeccion-y-agregado" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.3 Crear los DTO de reporte: VentaResumen, VentaAgregado y VentaReporte
+        3.3 Ampliar VentaRepository con filtros, orden, proyección y agregado
       
     </span>
   </a>
@@ -3688,7 +3688,64 @@ FROM Venta v
 <p><strong>Producto del paso:</strong> confirmación de que <code>POST /api/v1/ventas</code> sigue registrando ventas correctamente antes de tocar código nuevo.</p>
 <p><strong>Requisito antes de continuar:</strong> confirma que <code>http://localhost:8080/api/v1/ventas</code> responde con datos antes de continuar. Si falla, el problema es de una sesión anterior, no de esta.</p>
 <p><strong>Dato de prueba necesario para esta sesión:</strong> los filtros y el reporte solo se pueden verificar con datos que los distingan. Registra al menos tres ventas más con <code>POST /api/v1/ventas</code> (3.10 de S4), variando la cantidad de detalles y dejando que ocurran en momentos distintos, para tener suficiente variedad al filtrar y ordenar en 3.7.</p>
-<h3 id="32-ampliar-ventarepository-con-filtros-orden-proyeccion-y-agregado">3.2 Ampliar <code>VentaRepository</code> con filtros, orden, proyección y agregado<a class="headerlink" href="#32-ampliar-ventarepository-con-filtros-orden-proyeccion-y-agregado" title="Permanent link">&para;</a></h3>
+<h3 id="32-crear-los-dto-de-reporte-ventaresumen-ventaagregado-y-ventareporte">3.2 Crear los DTO de reporte: <code>VentaResumen</code>, <code>VentaAgregado</code> y <code>VentaReporte</code><a class="headerlink" href="#32-crear-los-dto-de-reporte-ventaresumen-ventaagregado-y-ventareporte" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> los tres DTO que arman las expresiones de constructor de 3.3 y la respuesta final del endpoint de reporte. Se crean antes que el repositorio porque <code>VentaRepository</code> (3.3) los importa y los usa en sus expresiones <code>SELECT new ...</code>: sin ellos, ese archivo no compila.</p>
+<p><strong><code>ventas/venta/dto/VentaResumen.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.dto</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Getter</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.entity.EstadoVenta</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.math.BigDecimal</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.time.LocalDateTime</span><span class="p">;</span>
+
+<span class="nd">@Getter</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">VentaResumen</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">fecha</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">estado</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">total</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">cantidadDetalles</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">VentaResumen</span><span class="p">(</span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">fecha</span><span class="p">,</span><span class="w"> </span><span class="n">EstadoVenta</span><span class="w"> </span><span class="n">estado</span><span class="p">,</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">total</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">cantidadDetalles</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">fecha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fecha</span><span class="p">;</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">estado</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">estado</span><span class="p">.</span><span class="na">name</span><span class="p">();</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">total</span><span class="p">;</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">cantidadDetalles</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cantidadDetalles</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong><code>ventas/venta/dto/VentaAgregado.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.dto</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.AllArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Getter</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.math.BigDecimal</span><span class="p">;</span>
+
+<span class="nd">@Getter</span>
+<span class="nd">@AllArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">VentaAgregado</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">totalVentas</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">montoTotal</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">ticketPromedio</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong><code>ventas/venta/dto/VentaReporte.java</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.dto</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.AllArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Getter</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+
+<span class="nd">@Getter</span>
+<span class="nd">@AllArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">VentaReporte</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">VentaAgregado</span><span class="w"> </span><span class="n">agregado</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">VentaResumen</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ventas</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>VentaResumen</code> recibe <code>EstadoVenta</code> en el constructor (el tipo real de la columna en la consulta JPQL) y lo convierte a <code>String</code> con <code>.name()</code> para exponerlo — el mismo criterio que ya usa <code>VentaResponse</code> (S4).</p>
+<h3 id="33-ampliar-ventarepository-con-filtros-orden-proyeccion-y-agregado">3.3 Ampliar <code>VentaRepository</code> con filtros, orden, proyección y agregado<a class="headerlink" href="#33-ampliar-ventarepository-con-filtros-orden-proyeccion-y-agregado" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> tres métodos nuevos en el repositorio: consulta filtrable/ordenable de entidades completas, proyección de resumen y agregado.</p>
 <p><strong><code>ventas/venta/repository/VentaRepository.java</code></strong></p>
 <div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.repository</span><span class="p">;</span>
@@ -3751,63 +3808,6 @@ FROM Venta v
 <span class="p">}</span>
 </code></pre></div>
 <p><code>findAll()</code> (S4) desaparece: <code>buscar()</code> con los tres parámetros en <code>null</code> produce el mismo resultado (todas las ventas, sin filtrar), así que ya no hace falta mantener las dos consultas por separado.</p>
-<h3 id="33-crear-los-dto-de-reporte-ventaresumen-ventaagregado-y-ventareporte">3.3 Crear los DTO de reporte: <code>VentaResumen</code>, <code>VentaAgregado</code> y <code>VentaReporte</code><a class="headerlink" href="#33-crear-los-dto-de-reporte-ventaresumen-ventaagregado-y-ventareporte" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> los tres DTO que arman las expresiones de constructor de 3.2 y la respuesta final del endpoint de reporte.</p>
-<p><strong><code>ventas/venta/dto/VentaResumen.java</code></strong></p>
-<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.dto</span><span class="p">;</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Getter</span><span class="p">;</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.entity.EstadoVenta</span><span class="p">;</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">java.math.BigDecimal</span><span class="p">;</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">java.time.LocalDateTime</span><span class="p">;</span>
-
-<span class="nd">@Getter</span>
-<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">VentaResumen</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">fecha</span><span class="p">;</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">estado</span><span class="p">;</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">total</span><span class="p">;</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">cantidadDetalles</span><span class="p">;</span>
-
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">VentaResumen</span><span class="p">(</span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">fecha</span><span class="p">,</span><span class="w"> </span><span class="n">EstadoVenta</span><span class="w"> </span><span class="n">estado</span><span class="p">,</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">total</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">cantidadDetalles</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">fecha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fecha</span><span class="p">;</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">estado</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">estado</span><span class="p">.</span><span class="na">name</span><span class="p">();</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">total</span><span class="p">;</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">cantidadDetalles</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cantidadDetalles</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-<p><strong><code>ventas/venta/dto/VentaAgregado.java</code></strong></p>
-<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.dto</span><span class="p">;</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.AllArgsConstructor</span><span class="p">;</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Getter</span><span class="p">;</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">java.math.BigDecimal</span><span class="p">;</span>
-
-<span class="nd">@Getter</span>
-<span class="nd">@AllArgsConstructor</span>
-<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">VentaAgregado</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">totalVentas</span><span class="p">;</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">montoTotal</span><span class="p">;</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">ticketPromedio</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
-<p><strong><code>ventas/venta/dto/VentaReporte.java</code></strong></p>
-<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.ventas.venta.dto</span><span class="p">;</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.AllArgsConstructor</span><span class="p">;</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Getter</span><span class="p">;</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
-
-<span class="nd">@Getter</span>
-<span class="nd">@AllArgsConstructor</span>
-<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">VentaReporte</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">VentaAgregado</span><span class="w"> </span><span class="n">agregado</span><span class="p">;</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">VentaResumen</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ventas</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
-<p><code>VentaResumen</code> recibe <code>EstadoVenta</code> en el constructor (el tipo real de la columna en la consulta JPQL) y lo convierte a <code>String</code> con <code>.name()</code> para exponerlo — el mismo criterio que ya usa <code>VentaResponse</code> (S4).</p>
 <h3 id="34-ampliar-ventaserviceventaserviceimpl">3.4 Ampliar <code>VentaService</code>/<code>VentaServiceImpl</code><a class="headerlink" href="#34-ampliar-ventaserviceventaserviceimpl" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> <code>listar()</code> se reemplaza por <code>buscar()</code> con filtros y orden; se agrega <code>reporte()</code>.</p>
 <p><strong><code>ventas/venta/service/VentaService.java</code></strong></p>
@@ -4218,7 +4218,7 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <p><strong>Panel 3 — Ticket promedio, tiempo real (Gauge):</strong></p>
 <div class="highlight"><pre><span></span><code><span class="kr">rate</span><span class="o">(</span><span class="nv">bomerp_ventas_monto_sum</span><span class="p">[</span><span class="s">5m</span><span class="p">]</span><span class="o">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="kr">rate</span><span class="o">(</span><span class="nv">bomerp_ventas_monto_count</span><span class="p">[</span><span class="s">5m</span><span class="p">]</span><span class="o">)</span>
 </code></pre></div>
-<p>Dividir la tasa de la suma entre la tasa del conteo da el promedio dentro de la ventana — el mismo <code>AVG(v.total)</code> de <code>VentaAgregado</code> (3.3), calculado aquí sin tocar la base de datos.</p>
+<p>Dividir la tasa de la suma entre la tasa del conteo da el promedio dentro de la ventana — el mismo <code>AVG(v.total)</code> de <code>VentaAgregado</code> (3.2), calculado aquí sin tocar la base de datos.</p>
 <p><strong>Panel 4 — Ventas rechazadas por motivo (Bar gauge):</strong></p>
 <div class="highlight"><pre><span></span><code><span class="k">sum</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="o">(</span><span class="nv">motivo</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="nv">bomerp_ventas_rechazadas_total</span><span class="o">)</span>
 </code></pre></div>
