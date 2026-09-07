@@ -2,12 +2,12 @@
 
 ## 1. Propósito de la evaluación
 
-Esta sesión no enseña contenido nuevo: cierra la Unidad I de **ADS**. El sílabo (sesión 5) define dos actividades para esta evaluación:
+Esta sesión no enseña contenido nuevo: cierra la Unidad I de **ADS**. El sílabo (sesión 5) define dos actividades:
 
 1. Resolver la evaluación teórico-práctica de los temas de la Unidad I (sesiones 1 a 4).
 2. Presentar y sustentar la Arquitectura documentada mediante vistas arquitectónicas y principios de diseño aplicados.
 
-**Solo ADS evalúa su Unidad I en esta sesión.** BD2 y LP2 sustentan su propia Unidad I recién en su sesión 6: a ambos les queda todavía su propia sesión 5 de trabajo (índices y evaluación del motor transaccional en BD2; consultas, reportes y trazabilidad en LP2) antes de estar listos para evaluarse. ADS evalúa primero porque su producto no es código ejecutable: es la arquitectura documentada que BD2 y LP2 ya vienen usando como base desde su sesión 1. El "Primer corte integrado" de los tres cursos (arquitectura + motor transaccional + backend REST) se sustenta conjuntamente en la sesión 6, según el cronograma del Proyecto Integrador.
+Esta sesión evalúa únicamente el producto de ADS. La integración con el código real de BD2 y LP2 se verifica en la sesión 6 ("Primer corte integrado"), no aquí.
 
 ## 2. Producto evaluado
 
@@ -17,7 +17,7 @@ Del sílabo, el producto de la Unidad I es:
 
 Ese producto ya existe como [`docs/proyecto-integrador/u1/ads-producto.md`](../../proyecto-integrador/u1/ads-producto.md). Esta sección lo reproduce completo para que la sesión sea autocontenida; `ads-producto.md` sigue siendo la fuente única — si hay una edición futura, se hace ahí y se refleja aquí.
 
-**Lo que sigue (2.1-2.6) es el ejemplo BomERP del docente, no una plantilla obligatoria.** Cada sede (Lima, Juliaca, Tarapoto) y cada grupo dentro de una misma sede tiene su propio dominio, definido en su propio `brief.md` de S2 — no todos siguen CoMarket/BomERP. Lo que sí es exigible a todos es la estructura: contexto técnico, atributos de calidad, vistas C1-C3, principios de diseño, ADR y trazabilidad técnica U1, cada uno con el contenido real de su propio proyecto.
+**Lo que sigue (2.1-2.6) es la plantilla-ejemplo del producto de Unidad 1.** La estructura (contexto técnico, atributos de calidad, vistas C1-C3, principios de diseño, ADR y trazabilidad técnica U1) es exigible a todos; el contenido de BomERP es el ejemplo real que muestra cómo se ve terminada — cada sede (Lima, Juliaca, Tarapoto) y cada grupo reemplaza ese contenido por el de su propio dominio, definido en su propio `brief.md` de S2, sin cambiar la estructura.
 
 ### Lo que acumulaste sesión por sesión
 
@@ -203,16 +203,14 @@ Preguntas de referencia (el docente puede formular equivalentes):
 
 | Momento | Tiempo | Propósito |
 |---|---:|---|
-| Presentación técnica | 8 min | Explicar el producto (sección 2), las decisiones tomadas y su justificación. |
-| Evidencia de integración | 5 min | Mostrar cómo BD2 y LP2 respetan la arquitectura (Tabla 7): esquemas Oracle reales, paquetes Spring Modulith reales, `ModularityTests` en verde. |
-| Preguntas individuales | 5 min | Verificar dominio y aporte propio, con base en la Tabla 8 y las decisiones de la sección 2. |
+| Presentación técnica | 10 min | Explicar el producto (sección 2), las decisiones tomadas y su justificación. |
+| Preguntas individuales | 8 min | Verificar dominio y aporte propio, con base en la Tabla 8 y las decisiones de la sección 2. |
 
 **Tabla 10. Entregables obligatorios**
 
 | Entregable | Evidencia mínima | Criterio de aceptación |
 |---|---|---|
-| Producto de unidad | `ads-producto.md` (sección 2 de esta guía) completo | Coherente con el sílabo y con el código real de LP2/BD2 |
-| Evidencia de integración | Esquemas `BOM_CATALOGO`/`BOM_VENTAS` en Oracle, paquetes `catalogo`/`ventas` en el código, `ModularityTests` en verde | Trazabilidad verificable, no solo documentada |
+| Producto de unidad | `ads-producto.md` (sección 2 de esta guía) completo | Coherente con el sílabo y con el código real del proyecto |
 | Sustentación individual | Preguntas y defensa por integrante (sección 3 y Tabla 8) | Autoría demostrada |
 
 Secuencia sugerida de presentación:
@@ -220,21 +218,19 @@ Secuencia sugerida de presentación:
 1. Presentar el dominio y el problema técnico (Tabla 2).
 2. Recorrer las vistas C1, C2 y C3 (Figuras 1-3) explicando qué decisión arquitectónica sostiene cada una.
 3. Justificar el estilo elegido (monolito modular con capas internas) frente a las alternativas de S4, citando al menos un error común que se evitó.
-4. Mostrar los principios SOLID aplicados (Tabla 4) sobre código real de `catalogo` o `ventas`.
-5. Mostrar la evidencia de integración: `ModularityTests` en verde, esquemas Oracle creados, endpoints REST vivos.
-6. Cerrar con la trazabilidad técnica (Tabla 7) y los ADR previstos aún no formalizados (Tabla 6).
+4. Mostrar los principios SOLID aplicados (Tabla 4) sobre código real de `catalogo` o `ventas`, con `ModularityTests` en verde.
+5. Cerrar con la trazabilidad técnica (Tabla 7) y los ADR previstos aún no formalizados (Tabla 6).
 
 Criterios mínimos de aceptación:
 
-- Las tres vistas (C1, C2, C3) son coherentes entre sí y con el código real de LP2.
-- El estilo arquitectónico elegido está justificado frente a al menos una alternativa de S4, citando al menos un atributo de calidad concreto de la Tabla 3 (sección 2.2).
-- Cada principio SOLID de la Tabla 4 se sustenta con un ejemplo real, no solo con la definición.
-- La evidencia de integración (Tabla 10) es verificable en vivo, no solo narrada.
+- Las tres vistas (C1, C2, C3) son coherentes entre sí y con el código real del proyecto.
+- El estilo arquitectónico elegido está justificado frente a al menos una alternativa de S4.
+- Cada principio SOLID de la Tabla 4 se sustenta con un ejemplo real, no solo con la definición, con `ModularityTests` en verde.
 - Cada integrante responde individualmente al menos una pregunta de la Tabla 8 o de la sección 2.
 
 ## 5. Rúbrica de evaluación
 
-Los cinco criterios son cita literal del resultado de aprendizaje de la Unidad I en el sílabo de ADS. El criterio 4 exige explícitamente que el trade-off se sustente en atributos de calidad concretos (Tabla 3) — el sílabo enseña "atributos de calidad" en S1 pero no lo separa en un criterio propio; esta rúbrica lo evalúa dentro de este criterio en vez de dejarlo sin evaluación.
+Los cinco criterios son cita literal del resultado de aprendizaje de la Unidad I en el sílabo de ADS.
 
 **Tabla 11. Rúbrica de evaluación**
 
@@ -243,7 +239,7 @@ Los cinco criterios son cita literal del resultado de aprendizaje de la Unidad I
 | 1. Representa vistas arquitectónicas mediante C4 o equivalente | 20% | C1, C2 y C3 completas, coherentes entre sí y con el código real. | Las tres vistas están presentes, con alguna inconsistencia menor frente al código. | Falta una vista o hay inconsistencias relevantes. | No presenta vistas arquitectónicas verificables. | |
 | 2. Define límites, responsabilidades y componentes del sistema | 20% | Límites de módulo claros y verificados por `ModularityTests`; responsabilidades sin solapamiento. | Límites claros, verificación parcial. | Límites confusos o con solapamiento de responsabilidades. | No define límites ni responsabilidades. | |
 | 3. Aplica principios SOLID, cohesión, acoplamiento, modularidad y abstracción | 20% | Cada principio de la Tabla 4 se sustenta con un ejemplo real del código. | La mayoría de principios se sustenta con ejemplos reales. | Aplicación superficial o solo teórica. | No aplica los principios. | |
-| 4. Justifica estilos arquitectónicos y trade-offs | 20% | Justifica monolito modular con capas frente a al menos una alternativa de S4, citando trade-offs reales en términos de atributos de calidad concretos de la Tabla 3 (ej. mantenibilidad vs. escalabilidad). | Justifica el estilo elegido con trade-offs generales, mencionando al menos un atributo de calidad de la Tabla 3. | Menciona el estilo o los atributos de calidad sin conectar uno con otro. | No justifica el estilo elegido ni cita atributos de calidad. | |
+| 4. Justifica estilos arquitectónicos y trade-offs | 20% | Justifica monolito modular con capas frente a al menos una alternativa de S4, citando trade-offs reales. | Justifica el estilo elegido con trade-offs generales. | Menciona el estilo sin justificar trade-offs. | No justifica el estilo elegido. | |
 | 5. Mantiene coherencia con los requerimientos del negocio | 20% | La arquitectura resuelve el dominio de la Tabla 2 y la trazabilidad de la Tabla 7 es verificable en vivo. | La arquitectura resuelve el dominio; la trazabilidad es mayormente verificable. | Coherencia parcial con el dominio o trazabilidad débil. | No hay coherencia demostrable con el dominio. | |
 
 Nota final = suma de (`Peso` × `Puntos del nivel obtenido`) / 100 × 20 = ____.

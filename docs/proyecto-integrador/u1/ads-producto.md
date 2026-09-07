@@ -1,6 +1,6 @@
 # ADS - Producto de Unidad 1
 
-**Este documento es el ejemplo BomERP del docente, no una plantilla obligatoria.** Cada sede (Lima, Juliaca, Tarapoto) y cada grupo dentro de una misma sede tiene su propio dominio, definido en su propio [brief.md](../brief.md) de S2 — no todos siguen CoMarket/BomERP. Lo exigible a todos es la estructura de secciones (contexto técnico, atributos de calidad, vistas C1-C3, principios de diseño, ADR y trazabilidad técnica U1), cada una con el contenido real del propio proyecto.
+**Esta es la plantilla-ejemplo del producto de Unidad 1.** La estructura de secciones (contexto técnico, atributos de calidad, vistas C1-C3, principios de diseño, ADR y trazabilidad técnica U1) es exigible a todos; el contenido de BomERP es el ejemplo real que muestra cómo se ve terminada — cada sede (Lima, Juliaca, Tarapoto) y cada grupo reemplaza ese contenido por el de su propio dominio, definido en su propio [brief.md](../brief.md) de S2, sin cambiar la estructura.
 
 ## Producto
 
