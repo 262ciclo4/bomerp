@@ -130,7 +130,7 @@ Cuando un parámetro llega `null`, la condición `:param IS NULL` es verdadera y
 
 ### 2.3 Ordenamiento con `Sort`
 
-Un método de repositorio anotado con `@Query` puede recibir un parámetro `Sort` adicional: Spring Data lo traduce en una cláusula `ORDER BY` sobre el **tipo de la entidad consultada**, no sobre el DTO de salida. Pedir orden por un campo que no existe en `Venta` (por ejemplo, un campo que solo existe en la proyección de resumen) falla en tiempo de ejecución, no en compilación — se retoma en 3.7 como error frecuente.
+Un método de repositorio anotado con `@Query` puede recibir un parámetro `Sort` adicional: Spring Data lo traduce en una cláusula `ORDER BY` sobre el **tipo de la entidad consultada**, no sobre el DTO de salida. Pedir orden por un campo que no existe en `Venta` (por ejemplo, un campo que solo existe en la proyección de resumen) falla en tiempo de ejecución, no en compilación — se retoma en 3.6 como error frecuente.
 
 ### 2.4 Proyecciones: DTO de reporte en vez de la entidad completa
 
@@ -182,7 +182,7 @@ git clone --branch s04-operacion-cabecera-detalle https://github.com/262ciclo4/b
 
 **Requisito antes de continuar:** confirma que `http://localhost:8080/api/v1/ventas` responde con datos antes de continuar. Si falla, el problema es de una sesión anterior, no de esta.
 
-**Dato de prueba necesario para esta sesión:** los filtros y el reporte solo se pueden verificar con datos que los distingan. Registra al menos tres ventas más con `POST /api/v1/ventas` (3.10 de S4), variando la cantidad de detalles y dejando que ocurran en momentos distintos, para tener suficiente variedad al filtrar y ordenar en 3.7.
+**Dato de prueba necesario para esta sesión:** los filtros y el reporte solo se pueden verificar con datos que los distingan. Registra al menos tres ventas más con `POST /api/v1/ventas` (3.10 de S4), variando la cantidad de detalles y dejando que ocurran en momentos distintos, para tener suficiente variedad al filtrar y ordenar en 3.6.
 
 ### 3.2 Crear los DTO de reporte: `VentaResumen`, `VentaAgregado` y `VentaReporte`
 
@@ -519,49 +519,11 @@ public class VentaController {
 
 El método que antes se llamaba `listar()` ahora es `buscar()`, con los mismos parámetros que el servicio. `obtener()` y `crear()` no cambian.
 
-### 3.6 Configurar CORS para el futuro frontend
-
-**Producto del paso:** el backend acepta peticiones cross-origin desde `http://localhost:4200` (el puerto por defecto de Angular, que se usará desde S7), configurable por ambiente.
-
-**`application-dev.yml`** (agrega al final)
-
-```yaml
-bomerp:
-  cors:
-    allowed-origin: http://localhost:4200
-```
-
-**`CorsConfig.java`** (nuevo, en la raíz del paquete `pe.edu.upeu.bomerp`, junto a `OpenApiConfig`)
-
-```java
-package pe.edu.upeu.bomerp;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-@Configuration
-public class CorsConfig implements WebMvcConfigurer {
-
-    @Value("${bomerp.cors.allowed-origin}")
-    private String allowedOrigin;
-
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/api/**")
-                .allowedOrigins(allowedOrigin)
-                .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE")
-                .allowedHeaders("*");
-    }
-}
-```
-
-El origen permitido queda en `application-dev.yml`, no fijo en el código: en producción va a ser otro dominio, y esta clase no debería cambiar entre ambientes — solo la propiedad. `allowedOrigins` exige un valor explícito y nunca `"*"` en este proyecto: S10 incorpora JWT, y un origen comodín es incompatible con credenciales (cookies o cabeceras de autenticación) en la especificación CORS.
-
-### 3.7 Probar filtros, ordenamiento y el reporte
+### 3.6 Probar filtros, ordenamiento y el reporte
 
 **Formato de fecha para `desde`/`hasta`:** en Swagger UI y en PowerShell es el mismo, ISO 8601 completo con hora — `yyyy-MM-ddTHH:mm:ss`, por ejemplo `2026-09-01T00:00:00`. No es `dd/mm/yyyy` ni `dd-mm-yyyy`: la `T` en medio separa fecha de hora y es obligatoria (`@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)`, 3.5) — sin ella, o sin la hora, Spring responde `400 Bad Request` antes de llegar al controlador (ver "Error frecuente" más abajo).
+
+**Esto no es lo que un usuario final escribiría** (en Perú, `dd/mm/yyyy`), y no tiene por qué serlo: el backend/API se mantiene siempre en ISO 8601, el estándar entre sistemas, sin importar el país. La conversión de `dd/mm/yyyy` a ISO no ocurre aquí — ocurre en el frontend, cuando exista (Unidad 2, S7+): un `<input type="date">` HTML nativo, o un datepicker como el de Angular Material, siempre entregan y reciben su valor en ISO internamente, aunque lo *muestren* en el formato local del navegador; es el componente que llama a la API el que arma la URL con ese valor ISO, nunca con el texto que el usuario tecleó a simple vista. Por ahora, en S05, quien prueba la API (tú) hace ese mismo papel de conversión a mano.
 
 **Probar desde Swagger UI:**
 
@@ -601,6 +563,50 @@ Invoke-RestMethod -Uri "http://localhost:8080/api/v1/ventas/resumen?desde=2020-0
 
 **Error frecuente**: enviar `desde=2026-09-01` sin la hora. `@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)` exige el formato completo (`2026-09-01T00:00:00`); una fecha sin hora falla la conversión del parámetro y Spring responde `400 Bad Request` antes de que la petición llegue al controlador.
 
+### 3.7 Configurar CORS para el futuro frontend
+
+**Producto del paso:** el backend acepta peticiones cross-origin desde `http://localhost:4200` (el puerto por defecto de Angular, que se usará desde S7), configurable por ambiente y capaz de aceptar más de un origen a la vez.
+
+**`application-dev.yml`** (agrega al final)
+
+```yaml
+bomerp:
+  cors:
+    allowed-origins: http://localhost:4200
+```
+
+**`CorsConfig.java`** (nuevo, en la raíz del paquete `pe.edu.upeu.bomerp`, junto a `OpenApiConfig`)
+
+```java
+package pe.edu.upeu.bomerp;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import java.util.Arrays;
+
+@Configuration
+public class CorsConfig implements WebMvcConfigurer {
+
+    @Value("${bomerp.cors.allowed-origins}")
+    private String allowedOrigins;
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        String[] origins = Arrays.stream(allowedOrigins.split(","))
+                .map(String::trim)
+                .toArray(String[]::new);
+        registry.addMapping("/api/**")
+                .allowedOrigins(origins)
+                .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE")
+                .allowedHeaders("*");
+    }
+}
+```
+
+El origen permitido queda en `application-dev.yml`, no fijo en el código: en producción van a ser otros dominios, y esta clase no debería cambiar entre ambientes — solo la propiedad. `allowedOrigins(...)` acepta varios orígenes a la vez (recibe un arreglo, no un solo `String`); separar por comas en la propiedad (`http://localhost:4200,http://localhost:5500`) es lo que permite escribir más de uno sin tocar esta clase. El `.map(String::trim)` no es cosmético: si alguien escribe la lista con un espacio después de la coma (`4200, http://localhost:5500`), sin `trim()` ese origen queda como `" http://localhost:5500"` — no calza contra el `Origin` real que manda el navegador, y el bloqueo se ve idéntico a un origen mal escrito, sin ningún mensaje que apunte al espacio de más. La propiedad exige valores explícitos y nunca `"*"` en este proyecto: S10 incorpora JWT, y un origen comodín es incompatible con credenciales (cookies o cabeceras de autenticación) en la especificación CORS.
+
 ### 3.8 Probar CORS
 
 Ni `Invoke-RestMethod` ni Postman muestran un error de CORS (2.6) — hace falta un navegador ejecutando JavaScript desde otro origen. Como el frontend real recién se construye en S7, simula un origen distinto con un servidor estático mínimo:
@@ -617,7 +623,9 @@ Abre `http://localhost:5500` en el navegador, abre las herramientas de desarroll
 fetch("http://localhost:8080/api/v1/ventas").then(r => r.json()).then(console.log);
 ```
 
-**Con `allowed-origin: http://localhost:4200`** (3.6), esta llamada desde `http://localhost:5500` debe fallar en la consola con un mensaje que menciona CORS y `Access-Control-Allow-Origin`. Cambia temporalmente la propiedad a `http://localhost:5500`, reinicia el backend y repite el `fetch`: ahora debe completarse y mostrar el arreglo de ventas en consola. Vuelve a dejar la propiedad en `http://localhost:4200` antes de continuar — es el puerto real que va a usar la SPA desde S7.
+**Error frecuente**: pegar el código y no ver ningún resultado ni error de CORS, solo un aviso amarillo ("Don't paste code into the DevTools Console..."). No es un error de CORS: es la protección anti self-XSS de Chrome, que bloquea el pegado hasta que lo autorizas. Escribe `allow pasting` en la consola y presiona Enter, luego pega el `fetch` de nuevo — o escríbelo a mano, sin copiar/pegar, para evitarlo directamente.
+
+**Con `allowed-origins: http://localhost:4200`** (3.7), esta llamada desde `http://localhost:5500` debe fallar en la consola con un mensaje que menciona CORS y `Access-Control-Allow-Origin`. Agrega el segundo origen a la misma propiedad, separado por coma — `allowed-origins: http://localhost:4200,http://localhost:5500` —, reinicia el backend y repite el `fetch`: ahora debe completarse y mostrar el arreglo de ventas en consola, sin que `4200` haya dejado de estar permitido. Quita `http://localhost:5500` de la propiedad antes de continuar: fue el origen de prueba de esta sesión, no un origen real del sistema — dejarlo permitiría que cualquier página servida en ese puerto, en cualquier máquina, llame a la API.
 
 ### 3.9 Relacionar con ADS y BD2
 
