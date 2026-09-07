@@ -44,7 +44,7 @@ Cubre los cuatro temas dictados antes de esta sesión. El docente puede tomarla 
 | S1 | Fundamentos de arquitectura de software | Rol de la arquitectura, stakeholders, atributos de calidad y su relación con los requerimientos. |
 | S2 | Modelo C4 y vistas arquitectónicas | Diferencia entre C1, C2, C3 y C4; qué información pertenece a cada nivel y por qué la vista C3 del propio proyecto no expone el detalle hexagonal/capas de su módulo transaccional. |
 | S3 | Diseño estructural y principios SOLID | Aplicación de SOLID, cohesión, acoplamiento, modularidad y abstracción sobre los módulos reales del propio proyecto (equivalentes a `catalogo`/`ventas` en el ejemplo BomERP). |
-| S4 | Arquitecturas modernas | Monolito modular vs. microservicios vs. hexagonal vs. Clean Architecture, cuándo DDD orienta hacia hexagonal/Clean, y los errores comunes de cada estilo. |
+| S4 | Arquitecturas modernas | Monolito modular vs. microservicios vs. hexagonal vs. Clean Architecture, cuándo DDD orienta hacia hexagonal/Clean, los errores comunes de cada estilo, y qué es un ADR y por qué documentar una decisión arquitectónica. |
 
 Preguntas de referencia (el docente puede formular equivalentes):
 
@@ -54,6 +54,7 @@ Preguntas de referencia (el docente puede formular equivalentes):
 4. Aplica la prueba del papel y lápiz a una regla de negocio de tu propio módulo transaccional: ¿es una entidad o un caso de uso?
 5. ¿Qué verifica `ModularityTests` que una simple convención documentada no puede garantizar?
 6. ¿Qué cambiaría en tu vista C3 si tu módulo transaccional migrara a hexagonal? ¿Ese cambio afectaría tu vista C2?
+7. ¿Por qué un ADR debe registrar también las alternativas descartadas y no solo la decisión final?
 
 ## 4. Sustentación de la arquitectura
 
@@ -88,4 +89,4 @@ Criterios mínimos de aceptación:
 
 ## 5. Rúbrica de evaluación
 
-La rúbrica (5 criterios, cita literal del resultado de aprendizaje de la Unidad I) vive en [`ads-producto.md`](../../proyecto-integrador/u1/ads-producto.md#rubrica-de-evaluacion), junto con la plantilla del producto. Úsala directamente desde ahí para calificar la sustentación de esta sesión — no se duplica aquí.
+La rúbrica (5 criterios, cita literal del resultado de aprendizaje de la Unidad I) vive en [`ads-producto.md`](../../proyecto-integrador/u1/ads-producto.md#9-rubrica-de-evaluacion), junto con la plantilla del producto. Úsala directamente desde ahí para calificar la sustentación de esta sesión — no se duplica aquí.
