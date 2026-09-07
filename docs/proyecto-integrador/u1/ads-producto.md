@@ -73,28 +73,32 @@ flowchart TB
 **Figura 3. Vista C3 - Componentes backend**
 
 ```mermaid
-flowchart LR
+flowchart TB
     APP[BomErpApplication<br/>arranque y configuración]
-    CAT[catalogo<br/>Categoria–Producto]
-    VEN[ventas<br/>Venta–DetalleVenta]
 
-    subgraph FUT[Módulos futuros, aún sin crear en U1]
-        INV["inventario (sin sesión asignada aún)"]
-        COM["compras (delimitado, no obligatorio)"]
-        SEG["seguridad (S10, ya en U2)"]
+    subgraph REAL[Módulos reales al cierre de U1]
+        direction LR
+        CAT[catalogo<br/>Categoria–Producto]
+        VEN[ventas<br/>Venta–DetalleVenta]
     end
 
     SCAT[(BOM_CATALOGO)]
     SVEN[(BOM_VENTAS)]
 
+    subgraph FUT[Módulos futuros, aún sin crear en U1]
+        direction LR
+        INV[inventario<br/>sin sesión asignada aún]
+        COM[compras<br/>delimitado, no obligatorio]
+        SEG[seguridad<br/>S10, ya en U2]
+    end
+
     APP --> CAT
     APP --> VEN
-    APP -. se agregan cuando su sesión les da contenido .-> FUT
-
     VEN -->|servicio público| CAT
-
     CAT --> SCAT
     VEN --> SVEN
+
+    APP -. se agregan cuando su sesión les da contenido .-> FUT
 ```
 
 Al cierre de U1 (S6) solo existen `catalogo` y `ventas` como paquetes reales — `inventario`, `compras` y `seguridad` se dibujan como módulos futuros para no adelantar alcance de sesiones que todavía no llegaron (mismo criterio que [ADR-001](../../lp2/adr/ADR-001-arquitectura-backend.md)).
