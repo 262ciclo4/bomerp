@@ -2902,28 +2902,32 @@
     API --&gt;|HTTP / SDK| EXT</code></pre>
 <h2 id="5-vista-c3-componentes-backend">5. Vista C3 - Componentes backend<a class="headerlink" href="#5-vista-c3-componentes-backend" title="Permanent link">&para;</a></h2>
 <p><strong>Figura 3. Vista C3 - Componentes backend</strong></p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>flowchart TB
     APP[BomErpApplication&lt;br/&gt;arranque y configuración]
-    CAT[catalogo&lt;br/&gt;Categoria–Producto]
-    VEN[ventas&lt;br/&gt;Venta–DetalleVenta]
 
-    subgraph FUT[Módulos futuros, aún sin crear en U1]
-        INV["inventario (sin sesión asignada aún)"]
-        COM["compras (delimitado, no obligatorio)"]
-        SEG["seguridad (S10, ya en U2)"]
+    subgraph REAL[Módulos reales al cierre de U1]
+        direction LR
+        CAT[catalogo&lt;br/&gt;Categoria–Producto]
+        VEN[ventas&lt;br/&gt;Venta–DetalleVenta]
     end
 
     SCAT[(BOM_CATALOGO)]
     SVEN[(BOM_VENTAS)]
 
+    subgraph FUT[Módulos futuros, aún sin crear en U1]
+        direction LR
+        INV[inventario&lt;br/&gt;sin sesión asignada aún]
+        COM[compras&lt;br/&gt;delimitado, no obligatorio]
+        SEG[seguridad&lt;br/&gt;S10, ya en U2]
+    end
+
     APP --&gt; CAT
     APP --&gt; VEN
-    APP -. se agregan cuando su sesión les da contenido .-&gt; FUT
-
     VEN --&gt;|servicio público| CAT
-
     CAT --&gt; SCAT
-    VEN --&gt; SVEN</code></pre>
+    VEN --&gt; SVEN
+
+    APP -. se agregan cuando su sesión les da contenido .-&gt; FUT</code></pre>
 <p>Al cierre de U1 (S6) solo existen <code>catalogo</code> y <code>ventas</code> como paquetes reales — <code>inventario</code>, <code>compras</code> y <code>seguridad</code> se dibujan como módulos futuros para no adelantar alcance de sesiones que todavía no llegaron (mismo criterio que <a href="../../../lp2/adr/ADR-001-arquitectura-backend/">ADR-001</a>).</p>
 <p>Reglas de la vista:</p>
 <ul>
