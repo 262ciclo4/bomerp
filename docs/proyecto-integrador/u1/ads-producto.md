@@ -136,3 +136,17 @@ Decisiones adicionales, previstas pero **aún no formalizadas** como ADR de cód
 | Monolito modular y capas internas | Esquemas `BOM_CATALOGO` y `BOM_VENTAS` (los únicos que existen al cierre de U1; `BOM_INVENTARIO`, `BOM_COMPRAS` y `BOM_SEGURIDAD` se crean recién cuando su sesión los necesite) | Paquetes de módulo Spring Modulith, servicios públicos, controllers, services y repositories propios. |
 | Seguridad stateless prevista | Usuario/rol como soporte futuro | ADR y contrato para implementación en S10-S11. |
 | Rendimiento por consultas frecuentes | Índice `IX_VENTAS_FECHA` sobre `FECHA` | Filtro `desde`/`hasta` en `GET /api/v1/ventas`. |
+
+## Rúbrica de Evaluación
+
+Los cinco criterios son cita literal del resultado de aprendizaje de la Unidad I en el sílabo de ADS.
+
+| Criterio | Peso | A (20 pts) | B (15 pts) | C (10 pts) | D (5 pts) |
+|---|---:|---|---|---|---|
+| 1. Representa vistas arquitectónicas mediante C4 o equivalente | 20% | C1, C2 y C3 completas, coherentes entre sí y con el código real. | Las tres vistas están presentes, con alguna inconsistencia menor frente al código. | Falta una vista o hay inconsistencias relevantes. | No presenta vistas arquitectónicas verificables. |
+| 2. Define límites, responsabilidades y componentes del sistema | 20% | Límites de módulo claros y verificados por `ModularityTests`; responsabilidades sin solapamiento. | Límites claros, verificación parcial. | Límites confusos o con solapamiento de responsabilidades. | No define límites ni responsabilidades. |
+| 3. Aplica principios SOLID, cohesión, acoplamiento, modularidad y abstracción | 20% | Cada principio de la sección 6 se sustenta con un ejemplo real del código. | La mayoría de principios se sustenta con ejemplos reales. | Aplicación superficial o solo teórica. | No aplica los principios. |
+| 4. Justifica estilos arquitectónicos y trade-offs | 20% | Justifica el estilo elegido frente a al menos una alternativa, citando trade-offs reales. | Justifica el estilo elegido con trade-offs generales. | Menciona el estilo sin justificar trade-offs. | No justifica el estilo elegido. |
+| 5. Mantiene coherencia con los requerimientos del negocio | 20% | La arquitectura resuelve el dominio (sección 1) y la trazabilidad (sección 8) es verificable en vivo. | La arquitectura resuelve el dominio; la trazabilidad es mayormente verificable. | Coherencia parcial con el dominio o trazabilidad débil. | No hay coherencia demostrable con el dominio. |
+
+Nota final = suma de (`Peso` × `Puntos del nivel obtenido`) / 100 × 20.
