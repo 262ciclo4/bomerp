@@ -119,11 +119,12 @@ Todos los módulos se ejecutan en la misma JVM y utilizan un datasource. No exis
 
 | Criterio | Peso | A (20 pts) | B (15 pts) | C (10 pts) | D (5 pts) | Nivel obtenido |
 |---|---:|---|---|---|---|---:|
-| 1. Crea y configura el proyecto backend con ORM, conexión a la base de datos, recurso REST inicial, DTO y documentación de API | 20% | Proyecto ejecutable, conectado a Oracle, con contrato y versionado de API documentados y verificables en vivo. | Proyecto ejecutable y conectado, con documentación parcial. | Proyecto ejecutable con conexión o documentación incompleta. | No presenta un proyecto backend ejecutable. | |
-| 2. Implementa un CRUD REST completo, con validaciones, excepciones, logs y pruebas transversales | 20% | CRUD completo con validación, manejo de errores y trazabilidad probados con casos reales. | CRUD completo con validación parcial o trazabilidad incompleta. | CRUD incompleto o sin manejo de errores. | No presenta CRUD funcional. | |
-| 3. Gestiona objetos relacionados mediante ORM, DTO y reglas de asociación | 20% | Asociación entre entidades con DTO relacionado y navegación controlada, verificada en vivo. | Asociación funcional, con detalles menores en la navegación o el DTO. | Asociación incompleta o sin control de referencias. | No implementa objetos relacionados. | |
-| 4. Implementa una operación cabecera-detalle con registro atómico, cálculos, estados, consistencia, commit y rollback | 20% | Operación completa, con caso de éxito y caso de rollback probados y explicados. | Operación completa, con un caso probado. | Operación presente, sin evidencia clara de atomicidad. | No implementa la operación cabecera-detalle. | |
-| 5. Implementa consultas, filtros, ordenamiento, agregaciones, reportes y configuración CORS | 20% | Filtros combinados, reporte agregado y CORS configurado por propiedad, probados en vivo. | La mayoría de estos elementos funciona, con detalles menores. | Consultas o CORS incompletos. | No implementa consultas ni CORS. | |
+| 1. Crea y configura el proyecto backend con ORM, conexión a la base de datos, recurso REST inicial, DTO y documentación de API | 16% | Proyecto ejecutable, conectado a Oracle, con contrato y versionado de API documentados y verificables en vivo. | Proyecto ejecutable y conectado, con documentación parcial. | Proyecto ejecutable con conexión o documentación incompleta. | No presenta un proyecto backend ejecutable. | |
+| 2. Implementa un CRUD REST completo, con validaciones, excepciones, logs y pruebas transversales | 16% | CRUD completo con validación, manejo de errores y trazabilidad probados con casos reales. | CRUD completo con validación parcial o trazabilidad incompleta. | CRUD incompleto o sin manejo de errores. | No presenta CRUD funcional. | |
+| 3. Gestiona objetos relacionados mediante ORM, DTO y reglas de asociación | 16% | Asociación entre entidades con DTO relacionado y navegación controlada, verificada en vivo. | Asociación funcional, con detalles menores en la navegación o el DTO. | Asociación incompleta o sin control de referencias. | No implementa objetos relacionados. | |
+| 4. Implementa una operación cabecera-detalle con registro atómico, cálculos, estados, consistencia, commit y rollback | 16% | Operación completa, con caso de éxito y caso de rollback probados y explicados. | Operación completa, con un caso probado. | Operación presente, sin evidencia clara de atomicidad. | No implementa la operación cabecera-detalle. | |
+| 5. Implementa consultas, filtros, ordenamiento, agregaciones, reportes y configuración CORS | 16% | Filtros combinados, reporte agregado y CORS configurado por propiedad, probados en vivo. | La mayoría de estos elementos funciona, con detalles menores. | Consultas o CORS incompletos. | No implementa consultas ni CORS. | |
+| 6. Sustentación y defensa técnica | 20% | Explica y defiende con dominio las decisiones tomadas, respondiendo con precisión las preguntas individuales. | Explica con solvencia. | Explica con dificultad. | No sustenta. | |
 
 Nota final = suma de (`Peso` × `Puntos del nivel obtenido`) / 100 × 20.
 
@@ -139,6 +140,6 @@ Indica 2 fortalezas y 2 recomendaciones para lo que sigue en Unidad II.
 
 ## 9. Trazabilidad y procedencia de la rúbrica
 
-Los cinco criterios son cita literal del resultado de aprendizaje de la Unidad I en el sílabo de LP2.
+Los primeros cinco criterios son cita literal del resultado de aprendizaje de la Unidad I en el sílabo de LP2; el sexto corresponde a la sustentación exigida por el mismo sílabo (sesión 6, actividad 2).
 
-**Con la malla curricular:** los cinco criterios corresponden a la porción de backend REST del **Nivel 2 de CE023** (Programación) — la otra porción de ese nivel, el frontend SPA, la seguridad JWT y la integración full-stack completa, se completa en la Unidad 2 de LP2, no aquí.
+**Con la malla curricular:** los criterios 1-5 corresponden a la porción de backend REST del **Nivel 2 de CE023** (Programación) — la otra porción de ese nivel, el frontend SPA, la seguridad JWT y la integración full-stack completa, se completa en la Unidad 2 de LP2, no aquí. El criterio 6 (Sustentación y defensa técnica) es transversal y no forma parte de la definición de la competencia.

@@ -93,4 +93,4 @@ Criterios mínimos de aceptación:
 
 ## 5. Rúbrica de evaluación
 
-La rúbrica (5 criterios, cita literal del resultado de aprendizaje de la Unidad I en el sílabo de LP2) vive en [`lp2-demo.md`](../../proyecto-integrador/u1/lp2-demo.md#8-rubrica-de-evaluacion), junto con la plantilla del producto y su trazabilidad con la malla curricular (CE023 Nivel 2). Úsala directamente desde ahí para calificar la sustentación de esta sesión — no se duplica aquí.
+La rúbrica (6 criterios: 5 cita literal del resultado de aprendizaje de la Unidad I + sustentación) vive en [`lp2-demo.md`](../../proyecto-integrador/u1/lp2-demo.md#8-rubrica-de-evaluacion), junto con la plantilla del producto y su trazabilidad con la malla curricular (CE023 Nivel 2). Úsala directamente desde ahí para calificar la sustentación de esta sesión — no se duplica aquí.
