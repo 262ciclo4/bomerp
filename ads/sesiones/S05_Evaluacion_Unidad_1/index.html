@@ -2810,7 +2810,7 @@
 <li>Un módulo pone <code>@Entity</code> en su clase de dominio y la llama "hexagonal". ¿Por qué eso no es hexagonal?</li>
 <li>Un método solo hace <code>repository.save(entidad)</code> sin ninguna regla de negocio. ¿Por qué llamarlo "caso de uso" es incorrecto?</li>
 <li>Aplica la prueba del papel y lápiz a una regla de negocio de tu propio módulo transaccional: ¿es una entidad o un caso de uso?</li>
-<li>¿Qué verifica <code>ModularityTests</code> que una simple convención documentada no puede garantizar?</li>
+<li>¿Qué gana un proyecto al verificar automáticamente los límites entre módulos, en vez de solo documentarlos como convención?</li>
 <li>¿Qué cambiaría en tu vista C3 si tu módulo transaccional migrara a hexagonal? ¿Ese cambio afectaría tu vista C2?</li>
 <li>¿Por qué un ADR debe registrar también las alternativas descartadas y no solo la decisión final?</li>
 </ol>
@@ -2864,14 +2864,14 @@
 <li>Presentar el dominio y el problema técnico (sección 1, Contexto técnico).</li>
 <li>Recorrer las vistas C1, C2 y C3 (secciones 3-5) explicando qué decisión arquitectónica sostiene cada una.</li>
 <li>Justificar el estilo elegido (monolito modular con capas internas) frente a las alternativas de S4, citando al menos un error común que se evitó.</li>
-<li>Mostrar los principios SOLID aplicados (sección 6, Principios de diseño) sobre código real de <code>catalogo</code> o <code>ventas</code>, con <code>ModularityTests</code> en verde.</li>
+<li>Mostrar los principios SOLID aplicados (sección 6, Principios de diseño) sobre código real de <code>catalogo</code> o <code>ventas</code>, con verificación automática de límites en verde.</li>
 <li>Cerrar con la trazabilidad técnica (sección 8) y los ADR previstos aún no formalizados (sección 7).</li>
 </ol>
 <p>Criterios mínimos de aceptación:</p>
 <ul>
 <li>Las tres vistas (C1, C2, C3) son coherentes entre sí y con el código real del proyecto.</li>
 <li>El estilo arquitectónico elegido está justificado frente a al menos una alternativa de S4.</li>
-<li>Cada principio SOLID (sección 6 de <code>ads-producto.md</code>) se sustenta con un ejemplo real, no solo con la definición, con <code>ModularityTests</code> en verde.</li>
+<li>Cada principio SOLID (sección 6 de <code>ads-producto.md</code>) se sustenta con un ejemplo real, no solo con la definición, con verificación automática de límites en verde.</li>
 <li>Cada integrante responde individualmente al menos una pregunta de la Tabla 2 o de <code>ads-producto.md</code>.</li>
 </ul>
 <h2 id="5-rubrica-de-evaluacion">5. Rúbrica de evaluación<a class="headerlink" href="#5-rubrica-de-evaluacion" title="Permanent link">&para;</a></h2>
