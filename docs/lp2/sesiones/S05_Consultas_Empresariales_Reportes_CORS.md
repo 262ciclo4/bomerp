@@ -182,7 +182,76 @@ git clone --branch s04-operacion-cabecera-detalle https://github.com/262ciclo4/b
 
 **Dato de prueba necesario para esta sesión:** los filtros y el reporte solo se pueden verificar con datos que los distingan. Registra al menos tres ventas más con `POST /api/v1/ventas` (3.10 de S4), variando la cantidad de detalles y dejando que ocurran en momentos distintos, para tener suficiente variedad al filtrar y ordenar en 3.7.
 
-### 3.2 Ampliar `VentaRepository` con filtros, orden, proyección y agregado
+### 3.2 Crear los DTO de reporte: `VentaResumen`, `VentaAgregado` y `VentaReporte`
+
+**Producto del paso:** los tres DTO que arman las expresiones de constructor de 3.3 y la respuesta final del endpoint de reporte. Se crean antes que el repositorio porque `VentaRepository` (3.3) los importa y los usa en sus expresiones `SELECT new ...`: sin ellos, ese archivo no compila.
+
+**`ventas/venta/dto/VentaResumen.java`**
+
+```java
+package pe.edu.upeu.bomerp.ventas.venta.dto;
+
+import lombok.Getter;
+import pe.edu.upeu.bomerp.ventas.venta.entity.EstadoVenta;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+@Getter
+public class VentaResumen {
+    private final Long id;
+    private final LocalDateTime fecha;
+    private final String estado;
+    private final BigDecimal total;
+    private final long cantidadDetalles;
+
+    public VentaResumen(Long id, LocalDateTime fecha, EstadoVenta estado, BigDecimal total, long cantidadDetalles) {
+        this.id = id;
+        this.fecha = fecha;
+        this.estado = estado.name();
+        this.total = total;
+        this.cantidadDetalles = cantidadDetalles;
+    }
+}
+```
+
+**`ventas/venta/dto/VentaAgregado.java`**
+
+```java
+package pe.edu.upeu.bomerp.ventas.venta.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import java.math.BigDecimal;
+
+@Getter
+@AllArgsConstructor
+public class VentaAgregado {
+    private final long totalVentas;
+    private final BigDecimal montoTotal;
+    private final BigDecimal ticketPromedio;
+}
+```
+
+**`ventas/venta/dto/VentaReporte.java`**
+
+```java
+package pe.edu.upeu.bomerp.ventas.venta.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import java.util.List;
+
+@Getter
+@AllArgsConstructor
+public class VentaReporte {
+    private final VentaAgregado agregado;
+    private final List<VentaResumen> ventas;
+}
+```
+
+`VentaResumen` recibe `EstadoVenta` en el constructor (el tipo real de la columna en la consulta JPQL) y lo convierte a `String` con `.name()` para exponerlo — el mismo criterio que ya usa `VentaResponse` (S4).
+
+### 3.3 Ampliar `VentaRepository` con filtros, orden, proyección y agregado
 
 **Producto del paso:** tres métodos nuevos en el repositorio: consulta filtrable/ordenable de entidades completas, proyección de resumen y agregado.
 
@@ -250,75 +319,6 @@ public interface VentaRepository extends JpaRepository<Venta, Long> {
 ```
 
 `findAll()` (S4) desaparece: `buscar()` con los tres parámetros en `null` produce el mismo resultado (todas las ventas, sin filtrar), así que ya no hace falta mantener las dos consultas por separado.
-
-### 3.3 Crear los DTO de reporte: `VentaResumen`, `VentaAgregado` y `VentaReporte`
-
-**Producto del paso:** los tres DTO que arman las expresiones de constructor de 3.2 y la respuesta final del endpoint de reporte.
-
-**`ventas/venta/dto/VentaResumen.java`**
-
-```java
-package pe.edu.upeu.bomerp.ventas.venta.dto;
-
-import lombok.Getter;
-import pe.edu.upeu.bomerp.ventas.venta.entity.EstadoVenta;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-
-@Getter
-public class VentaResumen {
-    private final Long id;
-    private final LocalDateTime fecha;
-    private final String estado;
-    private final BigDecimal total;
-    private final long cantidadDetalles;
-
-    public VentaResumen(Long id, LocalDateTime fecha, EstadoVenta estado, BigDecimal total, long cantidadDetalles) {
-        this.id = id;
-        this.fecha = fecha;
-        this.estado = estado.name();
-        this.total = total;
-        this.cantidadDetalles = cantidadDetalles;
-    }
-}
-```
-
-**`ventas/venta/dto/VentaAgregado.java`**
-
-```java
-package pe.edu.upeu.bomerp.ventas.venta.dto;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import java.math.BigDecimal;
-
-@Getter
-@AllArgsConstructor
-public class VentaAgregado {
-    private final long totalVentas;
-    private final BigDecimal montoTotal;
-    private final BigDecimal ticketPromedio;
-}
-```
-
-**`ventas/venta/dto/VentaReporte.java`**
-
-```java
-package pe.edu.upeu.bomerp.ventas.venta.dto;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import java.util.List;
-
-@Getter
-@AllArgsConstructor
-public class VentaReporte {
-    private final VentaAgregado agregado;
-    private final List<VentaResumen> ventas;
-}
-```
-
-`VentaResumen` recibe `EstadoVenta` en el constructor (el tipo real de la columna en la consulta JPQL) y lo convierte a `String` con `.name()` para exponerlo — el mismo criterio que ya usa `VentaResponse` (S4).
 
 ### 3.4 Ampliar `VentaService`/`VentaServiceImpl`
 
@@ -846,7 +846,7 @@ increase(bomerp_ventas_monto_sum[5m])
 rate(bomerp_ventas_monto_sum[5m]) / rate(bomerp_ventas_monto_count[5m])
 ```
 
-Dividir la tasa de la suma entre la tasa del conteo da el promedio dentro de la ventana — el mismo `AVG(v.total)` de `VentaAgregado` (3.3), calculado aquí sin tocar la base de datos.
+Dividir la tasa de la suma entre la tasa del conteo da el promedio dentro de la ventana — el mismo `AVG(v.total)` de `VentaAgregado` (3.2), calculado aquí sin tocar la base de datos.
 
 **Panel 4 — Ventas rechazadas por motivo (Bar gauge):**
 
