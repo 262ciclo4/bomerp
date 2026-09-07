@@ -1,6 +1,6 @@
 # BD2 - Producto de Unidad 1
 
-**Este documento es el ejemplo BomERP del docente, no una plantilla obligatoria.** Cada sede (Lima, Juliaca, Tarapoto) y cada grupo dentro de una misma sede tiene su propio dominio, definido en su propio [brief.md](../brief.md) de S2 — los esquemas, tablas, paquetes PL/SQL y triggers concretos de este documento son los del ejemplo BomERP; cada equipo los reemplaza por los de su propio proyecto. Lo exigible a todos es la estructura: motor transaccional con reglas de negocio en PL/SQL, manejo de excepciones, auditoría y optimización con índices y `EXPLAIN PLAN`.
+**Esta es la plantilla-ejemplo del producto de Unidad 1 de BD2.** La estructura (objetos Oracle, reglas de negocio y transaccionales, manejo de excepciones, selectividad e índices, evidencia de integración) es exigible a todos: motor transaccional con reglas de negocio en PL/SQL, manejo de excepciones, auditoría y optimización con índices según selectividad medida. El contenido de BomERP (esquemas, tablas, paquetes PL/SQL y triggers concretos) es el ejemplo real que muestra cómo se ve terminada — cada sede (Lima, Juliaca, Tarapoto) y cada grupo reemplaza ese contenido por el de su propio proyecto, definido en su propio [brief.md](../brief.md) de S2, sin cambiar la estructura.
 
 ## Producto
 
@@ -11,6 +11,8 @@ Este producto implementa lógica de negocio en Oracle mediante PL/SQL, triggers,
 ## 1. Scripts del producto
 
 Los scripts se agregan **por sesión de BD2**, a medida que cada una les da contenido real — no se pre-crean tablas/objetos de sesiones que todavía no se dictaron (mismo criterio que la arquitectura de módulos de LP2, ver [ADR-002](../../lp2/adr/ADR-002-spring-modulith.md)).
+
+**Tabla 1. Scripts del producto**
 
 | Script | Sesión BD2 | Uso |
 |---|---|---|
@@ -30,6 +32,8 @@ Pendiente (se agrega cuando esa sesión de BD2 se documente): esquema `BOM_SEGUR
 
 **Estado al cierre de la Unidad 1 (S6):**
 
+**Tabla 2. Objetos Oracle U1**
+
 | Objeto | Propósito | Relación con LP2 |
 |---|---|---|
 | `BOM_CATALOGO.CATEGORIAS`/`PRODUCTOS` | Catálogo heredado de Ciclo 3. | Recursos `/api/v1/categorias` y `/api/v1/productos`. |
@@ -42,6 +46,8 @@ Pendiente (se agrega cuando esa sesión de BD2 se documente): esquema `BOM_SEGUR
 
 ## 3. Reglas de negocio y transaccionales
 
+**Tabla 3. Reglas de negocio y transaccionales**
+
 | Regla | Implementación Oracle |
 |---|---|
 | Un producto se registra con una categoría que debe existir. | `SP_REGISTRAR_PRODUCTO`, captura `ORA-02291` y la registra en `LOG_ERRORES`. |
@@ -51,6 +57,8 @@ Pendiente (se agrega cuando esa sesión de BD2 se documente): esquema `BOM_SEGUR
 | Un producto inexistente al consultar su precio responde con causa clara. | `FN_OBTENER_PRECIO_PRODUCTO`, captura `NO_DATA_FOUND` y la registra en `LOG_ERRORES`. |
 
 ## 4. Manejo de excepciones
+
+**Tabla 4. Manejo de excepciones**
 
 | Situación | Excepción esperada |
 |---|---|
@@ -62,6 +70,8 @@ Pendiente (se agrega cuando esa sesión de BD2 se documente): esquema `BOM_SEGUR
 
 Ningún índice se crea sin medir selectividad primero (`COUNT(DISTINCT columna) / COUNT(*)`):
 
+**Tabla 5. Selectividad e índices**
+
 | Columna candidata | Selectividad | Índice creado |
 |---|---|---|
 | `VENTAS.FECHA` | Alta (cercana a 1) | B-Tree (`IX_VENTAS_FECHA`) |
@@ -71,6 +81,8 @@ Ningún índice se crea sin medir selectividad primero (`COUNT(DISTINCT columna)
 
 ## 6. Evidencia de integración
 
+**Tabla 6. Evidencia de integración con ADS y LP2**
+
 | BD2 | ADS | LP2 |
 |---|---|---|
 | `TRG_PRODUCTO_AUDITORIA` | Atributo de auditabilidad | `POST`/`PUT` sobre `/api/v1/productos`. |
@@ -79,3 +91,33 @@ Ningún índice se crea sin medir selectividad primero (`COUNT(DISTINCT columna)
 | `EXPLAIN PLAN`/`DBMS_STATS` sobre la consulta representativa (S4) | — | Consulta de reporte agregado (`GET /api/v1/ventas/resumen`, LP2 S5). |
 
 Las FK entre esquemas conservan la integridad porque todos los objetos pertenecen a una sola base Oracle. `BOMERP_APP` ejecuta la aplicación, pero no es propietario de tablas ni paquetes.
+
+## 7. Rúbrica de Evaluación
+
+**Tabla 7. Rúbrica de evaluación de la Unidad 1**
+
+| Criterio | Peso | A (20 pts) | B (15 pts) | C (10 pts) | D (5 pts) | Nivel obtenido |
+|---|---:|---|---|---|---|---:|
+| 1. Implementa procedimientos y funciones PL/SQL alineados al negocio | 20% | Procedimientos y funciones correctos, probados con casos válidos e inválidos, alineados a una regla real del proyecto. | Procedimientos y funciones correctos, con pruebas parciales. | Procedimientos incompletos o sin alineación clara al negocio. | No presenta procedimientos ni funciones PL/SQL. | |
+| 2. Automatiza reglas mediante triggers DML | 20% | Al menos un trigger de regla de negocio y uno de auditoría, disparados y verificados en vivo. | Triggers presentes, con verificación parcial. | Un solo trigger funcional, o sin verificación clara. | No presenta triggers. | |
+| 3. Controla errores mediante manejo de excepciones | 20% | Excepciones predefinidas y personalizadas, con registro de errores probado con casos reales. | Manejo de excepciones presente, con registro parcial. | Manejo de excepciones incompleto o sin registro. | No maneja excepciones. | |
+| 4. Analiza y mejora consultas mediante Explain Plan, CBO y DBMS_STATS | 20% | Comparación completa (antes/después de estadísticas y de una reescritura), con `COST`/`ROWS` interpretados correctamente. | Comparación presente, con interpretación parcial. | Un solo `EXPLAIN PLAN` capturado, sin comparación real. | No presenta `EXPLAIN PLAN`. | |
+| 5. Aplica estrategias de indexación según selectividad y necesidades de consulta | 20% | Selectividad medida antes de crear cada índice, con al menos un caso de índice correctamente descartado. | Índices creados con selectividad medida, sin caso de descarte. | Índices creados sin medir selectividad. | No presenta índices ni selectividad medida. | |
+
+Nota final = suma de (`Peso` × `Puntos del nivel obtenido`) / 100 × 20.
+
+Para usar la rúbrica con IA, solicita:
+
+```text
+Evalúa la sustentación y el producto (bd2-producto.md o la sección 2 de la guía S06) usando la rúbrica de esta sección.
+Para cada criterio selecciona el nivel obtenido: A=20, B=15, C=10, D=5.
+Justifica brevemente cada nivel con evidencia concreta (objetos Oracle, planes de ejecución, selectividad).
+Calcula la nota final con la fórmula: suma de (Peso × Puntos del nivel obtenido) / 100 × 20.
+Indica 2 fortalezas y 2 recomendaciones para lo que sigue en Unidad II.
+```
+
+## 8. Trazabilidad y procedencia de la rúbrica
+
+Los cinco criterios son cita literal del resultado de aprendizaje de la Unidad I en el sílabo de BD2.
+
+**Con la malla curricular:** los cinco criterios corresponden al **Nivel 1 de CE023** (Programación) — la rama de esa competencia que se satisface programando el motor transaccional del lado del servidor (Unidad 1 de BD2), distinta de la rama que otros cursos (`FP`, `POO`, `LP1`) satisfacen construyendo una plataforma completa de otro tipo. La administración de la instancia Oracle a escala empresarial (**Nivel 2 de CE022**, Ingeniería de la Información) no se evalúa aquí: se completa en las Unidades 2 y 3 de BD2.
