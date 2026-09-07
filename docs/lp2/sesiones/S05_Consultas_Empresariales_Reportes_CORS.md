@@ -148,15 +148,17 @@ Por la misma razón, esta consulta no lleva `@EntityGraph` (2.2): no devuelve la
 
 ### 2.5 Agregaciones con funciones JPQL
 
-`COUNT`, `SUM` y `AVG` también pueden combinarse en una expresión de constructor, siempre que la consulta no mezcle columnas agregadas con columnas sueltas sin `GROUP BY`:
+`COUNT` y `SUM` se combinan en una expresión de constructor, siempre que la consulta no mezcle columnas agregadas con columnas sueltas sin `GROUP BY`:
 
 ```jpql
 SELECT new pe.edu.upeu.bomerp.ventas.venta.dto.VentaAgregado(
-    COUNT(v), COALESCE(SUM(v.total), 0), COALESCE(AVG(v.total), 0))
+    COUNT(v), COALESCE(SUM(v.total), 0BD))
 FROM Venta v
 ```
 
-`COALESCE(expresion, 0)` devuelve `0` cuando `expresion` es `NULL` — exactamente el caso de 1.6.1: sin filas que sumar, `SUM`/`AVG` son `NULL` por definición del lenguaje, y `COALESCE` es lo que evita propagar ese `null` hasta el cliente.
+`COALESCE(expresion, 0BD)` devuelve `0` cuando `expresion` es `NULL` — exactamente el caso de 1.6.1: sin filas que sumar, `SUM` es `NULL` por definición del lenguaje, y `COALESCE` es lo que evita propagar ese `null` hasta el cliente. El sufijo `BD` fuerza el literal a `BigDecimal`: sin él, `0` es un `int` y Hibernate no logra unificarlo con el `BigDecimal` que devuelve `SUM(v.total)` dentro del mismo `COALESCE` — el síntoma es un `SemanticException: Missing constructor` al arrancar la aplicación, no un error de compilación de Java.
+
+**Por qué el ticket promedio no se calcula con `AVG`.** `AVG` en JPQL siempre devuelve `Double`, sin importar el tipo de la columna que promedia (es una regla fija de la especificación JPA, no una particularidad de Oracle) — no hay forma de que encaje en un parámetro `BigDecimal` del constructor. La alternativa correcta no es forzar un `cast`: es no promediar en la base de datos y calcular `ticketPromedio` en Java, a partir de `totalVentas` y `montoTotal` que sí llegan como tipos exactos (3.2).
 
 ### 2.6 CORS: qué protege el navegador y qué no protege
 
@@ -219,18 +221,27 @@ public class VentaResumen {
 ```java
 package pe.edu.upeu.bomerp.ventas.venta.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Getter
-@AllArgsConstructor
 public class VentaAgregado {
     private final long totalVentas;
     private final BigDecimal montoTotal;
     private final BigDecimal ticketPromedio;
+
+    public VentaAgregado(long totalVentas, BigDecimal montoTotal) {
+        this.totalVentas = totalVentas;
+        this.montoTotal = montoTotal;
+        this.ticketPromedio = totalVentas == 0
+                ? BigDecimal.ZERO
+                : montoTotal.divide(BigDecimal.valueOf(totalVentas), 2, RoundingMode.HALF_UP);
+    }
 }
 ```
+
+Este constructor recibe solo `totalVentas` y `montoTotal` — los dos valores que sí llegan de la consulta JPQL (3.3) — y calcula `ticketPromedio` él mismo, en Java, con la misma guarda contra `0` que evita dividir entre cero cuando no hay ventas en el rango consultado.
 
 **`ventas/venta/dto/VentaReporte.java`**
 
@@ -306,7 +317,7 @@ public interface VentaRepository extends JpaRepository<Venta, Long> {
 
     @Query("""
         SELECT new pe.edu.upeu.bomerp.ventas.venta.dto.VentaAgregado(
-            COUNT(v), COALESCE(SUM(v.total), 0), COALESCE(AVG(v.total), 0))
+            COUNT(v), COALESCE(SUM(v.total), 0BD))
         FROM Venta v
         WHERE (:estado IS NULL OR v.estado = :estado)
           AND (:desde IS NULL OR v.fecha >= :desde)
@@ -431,7 +442,9 @@ public class VentaServiceImpl implements VentaService {
 
 Frente a la versión de S4, lo único que cambia es: `listar()` desaparece (`buscar()` la reemplaza), se agrega `reporte()` al final, y suben dos imports nuevos (`org.springframework.data.domain.Sort` y `pe.edu.upeu.bomerp.ventas.venta.dto.VentaAgregado`/`VentaReporte`/`VentaResumen`) — `obtener()` y `crear()` quedan idénticos a S4, cópialos tal cual si ya los tenías.
 
-`reporte()` hace dos consultas, no una: `agregados()` (una fila con `COUNT`/`SUM`/`AVG`) y `buscarResumen()` (una fila por venta) no se pueden combinar en una sola consulta JPQL sin `GROUP BY` — mezclar una columna agregada con columnas sueltas de la misma fila no es válido en SQL/JPQL.
+`reporte()` hace dos consultas, no una: `agregados()` (una fila con `COUNT`/`SUM`) y `buscarResumen()` (una fila por venta) no se pueden combinar en una sola consulta JPQL sin `GROUP BY` — mezclar una columna agregada con columnas sueltas de la misma fila no es válido en SQL/JPQL.
+
+**El proyecto no compila todavía si lo construyes ahora**: `VentaController` (S4) sigue llamando a `ventaService.listar()`, un método que `VentaService` ya no declara. Es un error esperado en este punto exacto — se resuelve en el siguiente paso, no antes.
 
 ### 3.5 Ampliar `VentaController`
 
@@ -908,7 +921,7 @@ increase(bomerp_ventas_monto_sum[5m])
 rate(bomerp_ventas_monto_sum[5m]) / rate(bomerp_ventas_monto_count[5m])
 ```
 
-Dividir la tasa de la suma entre la tasa del conteo da el promedio dentro de la ventana — el mismo `AVG(v.total)` de `VentaAgregado` (3.2), calculado aquí sin tocar la base de datos.
+Dividir la tasa de la suma entre la tasa del conteo da el promedio dentro de la ventana — el mismo `ticketPromedio` de `VentaAgregado` (3.2), calculado aquí en PromQL en vez de en Java, sin tocar la base de datos.
 
 **Panel 4 — Ventas rechazadas por motivo (Bar gauge):**
 
@@ -971,7 +984,7 @@ Completa y evidencia estas tareas:
 
 1. Ampliar la consulta principal de tu propia operación con al menos dos filtros opcionales combinables y ordenamiento configurable.
 2. Crear una proyección de resumen (DTO con expresión de constructor) distinta de la entidad completa.
-3. Crear un endpoint de reporte agregado (conteo y al menos una función `SUM` o `AVG`), probando explícitamente el caso sin resultados.
+3. Crear un endpoint de reporte agregado (conteo y `SUM`), probando explícitamente el caso sin resultados. Si usas `AVG`, recuerda que en JPQL siempre devuelve `Double` — no lo combines en el mismo constructor con campos `BigDecimal` (2.5); si necesitas ese tipo, calcúlalo en Java a partir de la suma y el conteo, como hace `VentaAgregado` (3.2).
 4. Configurar CORS para tu backend, con el origen leído desde configuración, no fijo en el código.
 5. Probar CORS desde un navegador real, no solo desde consola o Postman.
 
