@@ -1941,50 +1941,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#21-objetos-oracle-ejemplo-bomerp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2.1 Objetos Oracle (ejemplo BomERP)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#22-reglas-de-negocio-y-transaccionales-ejemplo-bomerp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2.2 Reglas de negocio y transaccionales (ejemplo BomERP)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#23-manejo-de-excepciones-ejemplo-bomerp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2.3 Manejo de excepciones (ejemplo BomERP)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#24-selectividad-e-indices-ejemplo-bomerp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2.4 Selectividad e índices (ejemplo BomERP)
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -2702,50 +2658,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#21-objetos-oracle-ejemplo-bomerp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2.1 Objetos Oracle (ejemplo BomERP)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#22-reglas-de-negocio-y-transaccionales-ejemplo-bomerp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2.2 Reglas de negocio y transaccionales (ejemplo BomERP)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#23-manejo-de-excepciones-ejemplo-bomerp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2.3 Manejo de excepciones (ejemplo BomERP)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#24-selectividad-e-indices-ejemplo-bomerp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2.4 Selectividad e índices (ejemplo BomERP)
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -2817,8 +2729,7 @@
 <blockquote>
 <p>Motor transaccional implementado en Oracle XE con PL/SQL, triggers, excepciones, optimización de consultas e índices documentados y sustentados.</p>
 </blockquote>
-<p>Ese producto ya existe como <a href="../../../proyecto-integrador/u1/bd2-producto/"><code>docs/proyecto-integrador/u1/bd2-producto.md</code></a>. Esta sección lo reproduce completo para que la sesión sea autocontenida; <code>bd2-producto.md</code> sigue siendo la fuente única — si hay una edición futura, se hace ahí y se refleja aquí.</p>
-<p><strong>Lo que sigue (2.1-2.4) es el ejemplo BomERP del docente, no una plantilla obligatoria.</strong> Cada sede (Lima, Juliaca, Tarapoto) y cada grupo dentro de una misma sede tiene su propio dominio, definido en su propio <code>brief.md</code> de S2 — los esquemas, tablas, paquetes PL/SQL y triggers concretos de esta sección son los del ejemplo BomERP; cada equipo los reemplaza por los de su propio proyecto. Lo exigible a todos es la estructura: motor transaccional con reglas de negocio en PL/SQL, manejo de excepciones, auditoría y optimización con índices según selectividad medida.</p>
+<p>El producto completo — plantilla-ejemplo con el contenido de BomERP — vive en <a href="../../../proyecto-integrador/u1/bd2-producto/"><code>bd2-producto.md</code></a>: scripts, objetos Oracle, reglas de negocio y transaccionales, manejo de excepciones, selectividad e índices, y evidencia de integración con ADS y LP2. La estructura es exigible a todos (motor transaccional con reglas de negocio en PL/SQL, manejo de excepciones, auditoría y optimización con índices según selectividad medida); el contenido de BomERP se reemplaza por el del propio proyecto de cada equipo.</p>
 <h3 id="lo-que-acumulaste-sesion-por-sesion">Lo que acumulaste sesión por sesión<a class="headerlink" href="#lo-que-acumulaste-sesion-por-sesion" title="Permanent link">&para;</a></h3>
 <p>Este producto no se construye en S06: se ensambla con lo que cada sesión anterior ya te pidió sobre tu propio proyecto.</p>
 <p><strong>Tabla 1. De la sesión al motor transaccional evaluado</strong></p>
@@ -2827,34 +2738,34 @@
 <tr>
 <th>Sesión</th>
 <th>Qué produjiste (tu propio proyecto)</th>
-<th>Dónde queda en tu motor evaluado</th>
+<th>Dónde queda en <code>bd2-producto.md</code></th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>S1</td>
 <td>Esquema y tablas base, con procedimientos y funciones PL/SQL para tus operaciones.</td>
-<td>2.1 Objetos Oracle</td>
+<td>2. Objetos Oracle U1</td>
 </tr>
 <tr>
 <td>S2</td>
 <td>Triggers para automatizar una regla de negocio y registrar auditoría básica.</td>
-<td>2.1 Objetos Oracle y 2.2 Reglas de negocio</td>
+<td>2. Objetos Oracle U1 y 3. Reglas de negocio</td>
 </tr>
 <tr>
 <td>S3</td>
 <td>Manejo de excepciones predefinidas y personalizadas, con registro de errores.</td>
-<td>2.3 Manejo de excepciones</td>
+<td>4. Manejo de excepciones</td>
 </tr>
 <tr>
 <td>S4</td>
 <td>Una consulta representativa optimizada con <code>EXPLAIN PLAN</code> y <code>DBMS_STATS</code>.</td>
-<td>2.1 Objetos Oracle</td>
+<td>2. Objetos Oracle U1</td>
 </tr>
 <tr>
 <td>S5</td>
 <td>Selectividad medida e índices B-Tree, Bitmap y Function-Based creados según esa medición.</td>
-<td>2.4 Selectividad e índices</td>
+<td>5. Selectividad e índices</td>
 </tr>
 <tr>
 <td>S6 (esta sesión)</td>
@@ -2863,149 +2774,10 @@
 </tr>
 </tbody>
 </table>
-<p>Lo que sustentas en S06 es <strong>tu motor transaccional</strong>: los objetos que tú construiste, con las reglas y los datos de tu propio dominio — no el de BomERP. Las secciones 2.1-2.4 muestran cómo se ve ese motor terminado usando el ejemplo del docente; tu entregable real tiene la misma estructura, pero con el contenido que tú construiste en S1-S5.</p>
-<h3 id="21-objetos-oracle-ejemplo-bomerp">2.1 Objetos Oracle (ejemplo BomERP)<a class="headerlink" href="#21-objetos-oracle-ejemplo-bomerp" title="Permanent link">&para;</a></h3>
-<p><strong>Estado al cierre de la Unidad 1 (S6):</strong></p>
-<p><strong>Tabla 2. Objetos Oracle U1 (ejemplo BomERP)</strong></p>
-<table>
-<thead>
-<tr>
-<th>Objeto</th>
-<th>Propósito</th>
-<th>Relación con LP2</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>BOM_CATALOGO.CATEGORIAS</code>/<code>PRODUCTOS</code></td>
-<td>Catálogo heredado de Ciclo 3.</td>
-<td>Recursos <code>/api/v1/categorias</code> y <code>/api/v1/productos</code>.</td>
-</tr>
-<tr>
-<td><code>BOM_CATALOGO.LOG_ERRORES</code></td>
-<td>Registro de errores capturados por los procedimientos/función del catálogo (S3).</td>
-<td>Ninguno directo — el backend no consulta esta tabla.</td>
-</tr>
-<tr>
-<td><code>BOM_CATALOGO.PRODUCTO_AUDITORIA</code> + <code>TRG_PRODUCTO_AUDITORIA</code></td>
-<td>Auditoría de cambios de precio/stock.</td>
-<td><code>POST</code>/<code>PUT</code> sobre <code>/api/v1/productos</code> (cualquier alta o cambio la dispara).</td>
-</tr>
-<tr>
-<td><code>BOM_VENTAS.VENTAS</code>/<code>DETALLE_VENTAS</code></td>
-<td>Operación transaccional principal.</td>
-<td>Recurso <code>/api/v1/ventas</code>.</td>
-</tr>
-<tr>
-<td><code>IX_VENTAS_FECHA</code> (B-Tree)</td>
-<td>Consultas filtradas por rango de fecha.</td>
-<td><code>GET /api/v1/ventas?desde=&amp;hasta=</code>.</td>
-</tr>
-<tr>
-<td><code>IX_LOG_ERRORES_OBJETO</code> (Bitmap)</td>
-<td>Diagnóstico de errores agrupados por objeto que falló.</td>
-<td>Ninguno directo.</td>
-</tr>
-<tr>
-<td><code>IX_VENTAS_FECHA_DIA</code> (Function-Based, sobre <code>TRUNC(FECHA)</code>)</td>
-<td>Reporte de ventas por día calendario.</td>
-<td><code>GET /api/v1/ventas/resumen</code>.</td>
-</tr>
-</tbody>
-</table>
-<h3 id="22-reglas-de-negocio-y-transaccionales-ejemplo-bomerp">2.2 Reglas de negocio y transaccionales (ejemplo BomERP)<a class="headerlink" href="#22-reglas-de-negocio-y-transaccionales-ejemplo-bomerp" title="Permanent link">&para;</a></h3>
-<p><strong>Tabla 3. Reglas de negocio y transaccionales (ejemplo BomERP)</strong></p>
-<table>
-<thead>
-<tr>
-<th>Regla</th>
-<th>Implementación Oracle</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Un producto se registra con una categoría que debe existir.</td>
-<td><code>SP_REGISTRAR_PRODUCTO</code>, captura <code>ORA-02291</code> y la registra en <code>LOG_ERRORES</code>.</td>
-</tr>
-<tr>
-<td>Un descuento no puede dejar el precio fuera de rango razonable.</td>
-<td><code>TRG_PRODUCTO_PRECIO_BU</code> (<code>BEFORE UPDATE</code>), rechaza con <code>RAISE_APPLICATION_ERROR</code> antes de escribir.</td>
-</tr>
-<tr>
-<td>Todo cambio de precio o stock queda auditado, sin que el backend lo sepa.</td>
-<td><code>TRG_PRODUCTO_AUDITORIA</code> (<code>AFTER INSERT</code>/<code>UPDATE</code>/<code>DELETE</code>), disparado por Oracle mismo.</td>
-</tr>
-<tr>
-<td>Una venta no puede registrarse con stock insuficiente.</td>
-<td>Validado desde el servicio de <code>ventas</code> en LP2 (S4), consultando <code>catalogo</code> vía su servicio público.</td>
-</tr>
-<tr>
-<td>Un producto inexistente al consultar su precio responde con causa clara.</td>
-<td><code>FN_OBTENER_PRECIO_PRODUCTO</code>, captura <code>NO_DATA_FOUND</code> y la registra en <code>LOG_ERRORES</code>.</td>
-</tr>
-</tbody>
-</table>
-<h3 id="23-manejo-de-excepciones-ejemplo-bomerp">2.3 Manejo de excepciones (ejemplo BomERP)<a class="headerlink" href="#23-manejo-de-excepciones-ejemplo-bomerp" title="Permanent link">&para;</a></h3>
-<p><strong>Tabla 4. Manejo de excepciones (ejemplo BomERP)</strong></p>
-<table>
-<thead>
-<tr>
-<th>Situación</th>
-<th>Excepción esperada</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Categoría inexistente al registrar un producto.</td>
-<td><code>ORA-02291</code> capturado, <code>RAISE_APPLICATION_ERROR(-20010, ...)</code>.</td>
-</tr>
-<tr>
-<td>Porcentaje de descuento fuera de rango (0-100).</td>
-<td><code>RAISE_APPLICATION_ERROR(-20011, ...)</code>, sin código Oracle previo — la regla la crea el propio procedimiento.</td>
-</tr>
-<tr>
-<td>Producto inexistente al consultar su precio.</td>
-<td><code>NO_DATA_FOUND</code> (código <code>100</code>), <code>RAISE_APPLICATION_ERROR(-20012, ...)</code>.</td>
-</tr>
-</tbody>
-</table>
-<h3 id="24-selectividad-e-indices-ejemplo-bomerp">2.4 Selectividad e índices (ejemplo BomERP)<a class="headerlink" href="#24-selectividad-e-indices-ejemplo-bomerp" title="Permanent link">&para;</a></h3>
-<p>Ningún índice se crea sin medir selectividad primero (<code>COUNT(DISTINCT columna) / COUNT(*)</code>):</p>
-<p><strong>Tabla 5. Selectividad e índices (ejemplo BomERP)</strong></p>
-<table>
-<thead>
-<tr>
-<th>Columna candidata</th>
-<th>Selectividad</th>
-<th>Índice creado</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>VENTAS.FECHA</code></td>
-<td>Alta (cercana a 1)</td>
-<td>B-Tree (<code>IX_VENTAS_FECHA</code>)</td>
-</tr>
-<tr>
-<td><code>LOG_ERRORES.OBJETO</code></td>
-<td>Baja (pocos valores distintos)</td>
-<td>Bitmap (<code>IX_LOG_ERRORES_OBJETO</code>)</td>
-</tr>
-<tr>
-<td><code>TRUNC(VENTAS.FECHA)</code></td>
-<td>La de la expresión, no la de la columna</td>
-<td>Function-Based (<code>IX_VENTAS_FECHA_DIA</code>)</td>
-</tr>
-<tr>
-<td><code>VENTAS.ESTADO</code></td>
-<td>Muy baja (un único valor)</td>
-<td><strong>Ninguno</strong> — se creó, se confirmó que el optimizador no lo usaba, y se eliminó.</td>
-</tr>
-</tbody>
-</table>
+<p>Lo que sustentas en S06 es <strong>tu motor transaccional</strong>: los objetos que tú construiste, con las reglas y los datos de tu propio dominio — no el de BomERP. <code>bd2-producto.md</code> muestra cómo se ve ese motor terminado usando el ejemplo del docente; tu entregable real tiene la misma estructura, con el contenido que tú construiste en S1-S5.</p>
 <h2 id="3-evaluacion-teorico-practica-s1-s5">3. Evaluación teórico-práctica (S1-S5)<a class="headerlink" href="#3-evaluacion-teorico-practica-s1-s5" title="Permanent link">&para;</a></h2>
 <p>Cubre los cinco temas dictados antes de esta sesión. El docente puede tomarla escrita, oral o mixta.</p>
-<p><strong>Tabla 6. Temario de la evaluación teórico-práctica</strong></p>
+<p><strong>Tabla 2. Temario de la evaluación teórico-práctica</strong></p>
 <table>
 <thead>
 <tr>
@@ -3051,7 +2823,7 @@
 <li>En tu propio proyecto, ¿qué columna tiene la selectividad más baja, y por qué decidiste (o no) crearle un índice?</li>
 </ol>
 <h2 id="4-sustentacion-del-motor-transaccional">4. Sustentación del motor transaccional<a class="headerlink" href="#4-sustentacion-del-motor-transaccional" title="Permanent link">&para;</a></h2>
-<p><strong>Tabla 7. Distribución de tiempo por integrante</strong></p>
+<p><strong>Tabla 3. Distribución de tiempo por integrante</strong></p>
 <table>
 <thead>
 <tr>
@@ -3074,11 +2846,11 @@
 <tr>
 <td>Preguntas individuales</td>
 <td style="text-align: right;">5 min</td>
-<td>Verificar dominio y aporte propio, con base en la Tabla 6.</td>
+<td>Verificar dominio y aporte propio, con base en la Tabla 2.</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Tabla 8. Entregables obligatorios</strong></p>
+<p><strong>Tabla 4. Entregables obligatorios</strong></p>
 <table>
 <thead>
 <tr>
@@ -3090,7 +2862,7 @@
 <tbody>
 <tr>
 <td>Producto de unidad</td>
-<td><code>bd2-producto.md</code> (sección 2 de esta guía) completo</td>
+<td><a href="../../../proyecto-integrador/u1/bd2-producto/"><code>bd2-producto.md</code></a> completo</td>
 <td>Coherente con el sílabo y con los objetos Oracle reales</td>
 </tr>
 <tr>
@@ -3105,46 +2877,14 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Tabla 9. Evidencia de integración con ADS y LP2</strong></p>
-<table>
-<thead>
-<tr>
-<th>BD2</th>
-<th>ADS</th>
-<th>LP2</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>TRG_PRODUCTO_AUDITORIA</code></td>
-<td>Atributo de auditabilidad</td>
-<td><code>POST</code>/<code>PUT</code> sobre <code>/api/v1/productos</code>.</td>
-</tr>
-<tr>
-<td><code>IX_VENTAS_FECHA</code></td>
-<td>Atributo de rendimiento</td>
-<td><code>GET /api/v1/ventas?desde=&amp;hasta=</code>.</td>
-</tr>
-<tr>
-<td><code>LOG_ERRORES</code> + excepciones personalizadas</td>
-<td>Robustez del motor</td>
-<td><code>GlobalExceptionHandler</code> (manejo global de errores).</td>
-</tr>
-<tr>
-<td><code>EXPLAIN PLAN</code>/<code>DBMS_STATS</code> sobre la consulta representativa (S4)</td>
-<td>—</td>
-<td>Consulta de reporte agregado (<code>GET /api/v1/ventas/resumen</code>, LP2 S5).</td>
-</tr>
-</tbody>
-</table>
-<p>Secuencia sugerida de presentación:</p>
+<p>Secuencia sugerida de presentación (referencias a secciones de <code>bd2-producto.md</code>):</p>
 <ol>
-<li>Presentar los objetos Oracle (2.1) y las reglas de negocio implementadas (2.2).</li>
+<li>Presentar los objetos Oracle y las reglas de negocio implementadas.</li>
 <li>Disparar en vivo un trigger de regla de negocio y uno de auditoría, mostrando el registro generado.</li>
 <li>Provocar una excepción personalizada y mostrar su registro en la tabla de errores.</li>
 <li>Comparar un <code>EXPLAIN PLAN</code> antes y después de un índice, explicando la selectividad medida que justificó la decisión.</li>
-<li>Mostrar el caso de un índice descartado (Tabla 5, fila <code>ESTADO</code>) y explicar por qué no se creó.</li>
-<li>Cerrar con la Tabla 9, explicando al menos una fila con evidencia en vivo desde el backend de LP2.</li>
+<li>Mostrar el caso de un índice descartado (tabla de selectividad e índices, fila <code>ESTADO</code>) y explicar por qué no se creó.</li>
+<li>Cerrar con la tabla de evidencia de integración con ADS y LP2 de <code>bd2-producto.md</code>, explicando al menos una fila con evidencia en vivo desde el backend de LP2.</li>
 </ol>
 <p>Criterios mínimos de aceptación:</p>
 <ul>
@@ -3152,79 +2892,10 @@
 <li>Al menos un trigger de regla de negocio y uno de auditoría se disparan y se explican correctamente.</li>
 <li>Al menos una excepción personalizada se prueba con un caso real.</li>
 <li>La comparación de <code>EXPLAIN PLAN</code> incluye la selectividad medida que justificó el índice creado (o descartado).</li>
-<li>Cada integrante responde individualmente al menos una pregunta de la Tabla 6.</li>
+<li>Cada integrante responde individualmente al menos una pregunta de la Tabla 2.</li>
 </ul>
 <h2 id="5-rubrica-de-evaluacion">5. Rúbrica de evaluación<a class="headerlink" href="#5-rubrica-de-evaluacion" title="Permanent link">&para;</a></h2>
-<p>Los cinco criterios son cita literal del resultado de aprendizaje de la Unidad I en el sílabo de BD2.</p>
-<p><strong>Tabla 10. Rúbrica de evaluación</strong></p>
-<table>
-<thead>
-<tr>
-<th>Criterio</th>
-<th style="text-align: right;">Peso</th>
-<th>A (20 pts)</th>
-<th>B (15 pts)</th>
-<th>C (10 pts)</th>
-<th>D (5 pts)</th>
-<th style="text-align: right;">Nivel obtenido</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1. Implementa procedimientos y funciones PL/SQL alineados al negocio</td>
-<td style="text-align: right;">20%</td>
-<td>Procedimientos y funciones correctos, probados con casos válidos e inválidos, alineados a una regla real del proyecto.</td>
-<td>Procedimientos y funciones correctos, con pruebas parciales.</td>
-<td>Procedimientos incompletos o sin alineación clara al negocio.</td>
-<td>No presenta procedimientos ni funciones PL/SQL.</td>
-<td style="text-align: right;"></td>
-</tr>
-<tr>
-<td>2. Automatiza reglas mediante triggers DML</td>
-<td style="text-align: right;">20%</td>
-<td>Al menos un trigger de regla de negocio y uno de auditoría, disparados y verificados en vivo.</td>
-<td>Triggers presentes, con verificación parcial.</td>
-<td>Un solo trigger funcional, o sin verificación clara.</td>
-<td>No presenta triggers.</td>
-<td style="text-align: right;"></td>
-</tr>
-<tr>
-<td>3. Controla errores mediante manejo de excepciones</td>
-<td style="text-align: right;">20%</td>
-<td>Excepciones predefinidas y personalizadas, con registro de errores probado con casos reales.</td>
-<td>Manejo de excepciones presente, con registro parcial.</td>
-<td>Manejo de excepciones incompleto o sin registro.</td>
-<td>No maneja excepciones.</td>
-<td style="text-align: right;"></td>
-</tr>
-<tr>
-<td>4. Analiza y mejora consultas mediante Explain Plan, CBO y DBMS_STATS</td>
-<td style="text-align: right;">20%</td>
-<td>Comparación completa (antes/después de estadísticas y de una reescritura), con <code>COST</code>/<code>ROWS</code> interpretados correctamente.</td>
-<td>Comparación presente, con interpretación parcial.</td>
-<td>Un solo <code>EXPLAIN PLAN</code> capturado, sin comparación real.</td>
-<td>No presenta <code>EXPLAIN PLAN</code>.</td>
-<td style="text-align: right;"></td>
-</tr>
-<tr>
-<td>5. Aplica estrategias de indexación según selectividad y necesidades de consulta</td>
-<td style="text-align: right;">20%</td>
-<td>Selectividad medida antes de crear cada índice, con al menos un caso de índice correctamente descartado.</td>
-<td>Índices creados con selectividad medida, sin caso de descarte.</td>
-<td>Índices creados sin medir selectividad.</td>
-<td>No presenta índices ni selectividad medida.</td>
-<td style="text-align: right;"></td>
-</tr>
-</tbody>
-</table>
-<p>Nota final = suma de (<code>Peso</code> × <code>Puntos del nivel obtenido</code>) / 100 × 20 = ____.</p>
-<p>Para usar la rúbrica con IA, solicita:</p>
-<div class="highlight"><pre><span></span><code>Evalúa la sustentación y el producto (bd2-producto.md o la sección 2 de esta guía) usando la rúbrica de esta sesión.
-Para cada criterio selecciona el nivel obtenido: A=20, B=15, C=10, D=5.
-Justifica brevemente cada nivel con evidencia concreta (objetos Oracle, planes de ejecución, selectividad).
-Calcula la nota final con la fórmula: suma de (Peso × Puntos del nivel obtenido) / 100 × 20.
-Indica 2 fortalezas y 2 recomendaciones para lo que sigue en Unidad II.
-</code></pre></div>
+<p>La rúbrica (5 criterios, cita literal del resultado de aprendizaje de la Unidad I en el sílabo de BD2) vive en <a href="../../../proyecto-integrador/u1/bd2-producto/#7-rubrica-de-evaluacion"><code>bd2-producto.md</code></a>, junto con la plantilla del producto y su trazabilidad con la malla curricular (CE023 Nivel 1). Úsala directamente desde ahí para calificar la sustentación de esta sesión — no se duplica aquí.</p>
 
 
 

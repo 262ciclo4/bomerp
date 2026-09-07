@@ -2534,50 +2534,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#21-alcance-arquitectonico-ejemplo-bomerp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2.1 Alcance arquitectónico (ejemplo BomERP)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#22-contrato-rest-ejemplo-bomerp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2.2 Contrato REST (ejemplo BomERP)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#23-dto-principales-ejemplo-bomerp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2.3 DTO principales (ejemplo BomERP)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#24-arquitectura-backend-ejemplo-bomerp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2.4 Arquitectura backend (ejemplo BomERP)
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -2700,50 +2656,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#21-alcance-arquitectonico-ejemplo-bomerp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2.1 Alcance arquitectónico (ejemplo BomERP)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#22-contrato-rest-ejemplo-bomerp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2.2 Contrato REST (ejemplo BomERP)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#23-dto-principales-ejemplo-bomerp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2.3 DTO principales (ejemplo BomERP)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#24-arquitectura-backend-ejemplo-bomerp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2.4 Arquitectura backend (ejemplo BomERP)
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -2815,8 +2727,7 @@
 <blockquote>
 <p>Backend REST empresarial con ORM, CRUD, objetos relacionados, operación cabecera–detalle, consultas, reportes, CORS, logs y pruebas.</p>
 </blockquote>
-<p>Ese producto ya existe como <a href="../../../proyecto-integrador/u1/lp2-demo/"><code>docs/proyecto-integrador/u1/lp2-demo.md</code></a>. Esta sección lo reproduce completo para que la sesión sea autocontenida; <code>lp2-demo.md</code> sigue siendo la fuente única — si hay una edición futura, se hace ahí y se refleja aquí.</p>
-<p><strong>Lo que sigue (2.1-2.4) es el ejemplo BomERP del docente, no una plantilla obligatoria.</strong> Cada sede (Lima, Juliaca, Tarapoto) y cada grupo dentro de una misma sede tiene su propio dominio, definido en su propio <code>brief.md</code> de S2 — no todos siguen CoMarket/BomERP. Lo que sí es exigible a todos es la estructura: monolito modular verificado con Spring Modulith, un módulo transaccional con cabecera-detalle real, persistencia, consultas, CORS, logs y pruebas.</p>
+<p>El producto completo — plantilla-ejemplo con el contenido de BomERP — vive en <a href="../../../proyecto-integrador/u1/lp2-demo/"><code>lp2-demo.md</code></a>: alcance arquitectónico, contrato REST, DTO principales, arquitectura backend, casos de prueba y trazabilidad con ADS y BD2. La estructura es exigible a todos (monolito modular verificado, un módulo transaccional con cabecera-detalle real, persistencia, consultas, CORS, logs y pruebas); el contenido de BomERP se reemplaza por el del propio proyecto de cada equipo.</p>
 <h3 id="lo-que-acumulaste-sesion-por-sesion">Lo que acumulaste sesión por sesión<a class="headerlink" href="#lo-que-acumulaste-sesion-por-sesion" title="Permanent link">&para;</a></h3>
 <p>Este producto no se construye en S06: se ensambla con lo que cada sesión anterior ya te pidió sobre tu propio proyecto.</p>
 <p><strong>Tabla 1. De la sesión al backend evaluado</strong></p>
@@ -2825,34 +2736,34 @@
 <tr>
 <th>Sesión</th>
 <th>Qué produjiste (tu propio proyecto)</th>
-<th>Dónde queda en tu backend evaluado</th>
+<th>Dónde queda en <code>lp2-demo.md</code></th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>S1</td>
 <td>Proyecto backend ejecutable, conectado a Oracle, con endpoint de verificación y un primer recurso REST.</td>
-<td>2.1 Alcance arquitectónico y 2.2 Contrato REST</td>
+<td>1. Alcance arquitectónico y 3. Contrato REST</td>
 </tr>
 <tr>
 <td>S2</td>
 <td>CRUD REST completo de tu recurso principal, con DTO validado, mapeo explícito y manejo global de errores.</td>
-<td>2.2 Contrato REST</td>
+<td>3. Contrato REST</td>
 </tr>
 <tr>
 <td>S3</td>
 <td>Objetos relacionados entre dos entidades, con DTO relacionado y navegación controlada.</td>
-<td>2.2 Contrato REST</td>
+<td>3. Contrato REST</td>
 </tr>
 <tr>
 <td>S4</td>
 <td>Tu propia operación cabecera-detalle, con cálculos, una regla de negocio real y transacción atómica probada.</td>
-<td>2.2 Contrato REST y 2.3 DTO principales</td>
+<td>3. Contrato REST y 4. DTO principales</td>
 </tr>
 <tr>
 <td>S5</td>
 <td>Filtros combinados, ordenamiento, proyecciones, agregaciones y CORS configurado.</td>
-<td>2.2 Contrato REST</td>
+<td>3. Contrato REST</td>
 </tr>
 <tr>
 <td>S6 (esta sesión)</td>
@@ -2861,107 +2772,10 @@
 </tr>
 </tbody>
 </table>
-<p>Lo que sustentas en S06 es <strong>tu backend</strong>: los recursos que tú construiste, con los datos y reglas de tu propio dominio — no el de BomERP. Las secciones 2.1-2.4 muestran cómo se ve ese backend terminado usando el ejemplo del docente; tu entregable real es un backend con la misma estructura, pero con el contenido que tú construiste en S1-S5.</p>
-<h3 id="21-alcance-arquitectonico-ejemplo-bomerp">2.1 Alcance arquitectónico (ejemplo BomERP)<a class="headerlink" href="#21-alcance-arquitectonico-ejemplo-bomerp" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>backend/                     # un solo proyecto Maven, sin reactor multi-módulo
-└── src/main/java/pe/edu/upeu/bomerp/
-    ├── BomErpApplication.java   # único Spring Boot ejecutable
-    ├── catalogo/                # funcional en U1
-    ├── ventas/                  # funcional en U1
-    ├── inventario/              # aún no existe, se agrega cuando su sesión le dé contenido
-    ├── compras/                 # aún no existe, se agrega cuando su sesión le dé contenido
-    └── seguridad/               # se implementa en U2
-</code></pre></div>
-<p>Cada paquete directo bajo el paquete raíz es un módulo de aplicación verificado por Spring Modulith (<code>ModularityTests</code>), no un artefacto Maven separado. La autenticación JWT no forma parte de U1 y se incorpora en S10.</p>
-<h3 id="22-contrato-rest-ejemplo-bomerp">2.2 Contrato REST (ejemplo BomERP)<a class="headerlink" href="#22-contrato-rest-ejemplo-bomerp" title="Permanent link">&para;</a></h3>
-<p><strong>Tabla 2. Contrato REST de referencia (ejemplo BomERP)</strong></p>
-<table>
-<thead>
-<tr>
-<th>Método</th>
-<th>Endpoint</th>
-<th>Propósito</th>
-<th>Sesión relacionada</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>GET</code></td>
-<td><code>/api/v1/categorias</code></td>
-<td>Listar categorías.</td>
-<td>S1-S3</td>
-</tr>
-<tr>
-<td><code>GET</code></td>
-<td><code>/api/v1/productos</code></td>
-<td>Listar productos con categoría.</td>
-<td>S1-S3</td>
-</tr>
-<tr>
-<td><code>POST</code></td>
-<td><code>/api/v1/productos</code></td>
-<td>Registrar un producto.</td>
-<td>S2</td>
-</tr>
-<tr>
-<td><code>POST</code></td>
-<td><code>/api/v1/ventas</code></td>
-<td>Registrar cabecera y colección de detalles.</td>
-<td>S4</td>
-</tr>
-<tr>
-<td><code>GET</code></td>
-<td><code>/api/v1/ventas</code></td>
-<td>Consultar ventas mediante filtros y ordenamiento.</td>
-<td>S5</td>
-</tr>
-<tr>
-<td><code>GET</code></td>
-<td><code>/api/v1/ventas/resumen</code></td>
-<td>Devolver agregaciones y respuestas resumidas.</td>
-<td>S5</td>
-</tr>
-</tbody>
-</table>
-<h3 id="23-dto-principales-ejemplo-bomerp">2.3 DTO principales (ejemplo BomERP)<a class="headerlink" href="#23-dto-principales-ejemplo-bomerp" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"detalles"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"productoId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">"cantidad"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"productoId"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nt">"cantidad"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="p">}</span>
-<span class="w">  </span><span class="p">]</span>
-<span class="p">}</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1001</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"fecha"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-09-01T10:15:00"</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"estado"</span><span class="p">:</span><span class="w"> </span><span class="s2">"REGISTRADA"</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"total"</span><span class="p">:</span><span class="w"> </span><span class="mf">145.50</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"detalles"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"productoId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">"nombreProducto"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Producto de prueba"</span><span class="p">,</span><span class="w"> </span><span class="nt">"precioUnitario"</span><span class="p">:</span><span class="w"> </span><span class="mf">50.00</span><span class="p">,</span><span class="w"> </span><span class="nt">"cantidad"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nt">"subtotal"</span><span class="p">:</span><span class="w"> </span><span class="mf">100.00</span><span class="w"> </span><span class="p">}</span>
-<span class="w">  </span><span class="p">]</span>
-<span class="p">}</span>
-</code></pre></div>
-<h3 id="24-arquitectura-backend-ejemplo-bomerp">2.4 Arquitectura backend (ejemplo BomERP)<a class="headerlink" href="#24-arquitectura-backend-ejemplo-bomerp" title="Permanent link">&para;</a></h3>
-<p><strong>Figura 1. Arquitectura backend U1 (ejemplo BomERP)</strong></p>
-<pre class="mermaid"><code>flowchart LR
-    APP[BomErpApplication&lt;br/&gt;único ejecutable]
-    CAT[catalogo&lt;br/&gt;Categoria–Producto]
-    VEN[ventas&lt;br/&gt;Venta–DetalleVenta]
-    FUT["inventario, compras, seguridad&lt;br/&gt;(aún no creados como paquetes)"]
-
-    SCAT[(BOM_CATALOGO)]
-    SVEN[(BOM_VENTAS)]
-
-    APP --&gt; CAT
-    APP --&gt; VEN
-    APP -. se agregan cuando su sesión les da contenido .-&gt; FUT
-    VEN --&gt;|servicio público| CAT
-    CAT --&gt; SCAT
-    VEN --&gt; SVEN</code></pre>
-<p>Todos los módulos se ejecutan en la misma JVM y utilizan un datasource. No existe Feign ni comunicación HTTP interna. Cada módulo conserva sus controllers, casos de uso, entidades y repositorios; los repositorios no se comparten.</p>
+<p>Lo que sustentas en S06 es <strong>tu backend</strong>: los recursos que tú construiste, con los datos y reglas de tu propio dominio — no el de BomERP. <code>lp2-demo.md</code> muestra cómo se ve ese backend terminado usando el ejemplo del docente; tu entregable real tiene la misma estructura, con el contenido que tú construiste en S1-S5.</p>
 <h2 id="3-evaluacion-teorico-practica-s1-s5">3. Evaluación teórico-práctica (S1-S5)<a class="headerlink" href="#3-evaluacion-teorico-practica-s1-s5" title="Permanent link">&para;</a></h2>
 <p>Cubre los cinco temas dictados antes de esta sesión. El docente puede tomarla escrita, oral o mixta.</p>
-<p><strong>Tabla 3. Temario de la evaluación teórico-práctica</strong></p>
+<p><strong>Tabla 2. Temario de la evaluación teórico-práctica</strong></p>
 <table>
 <thead>
 <tr>
@@ -3007,7 +2821,7 @@
 <li>¿Qué evidencia concreta demuestra que CORS está configurado por propiedad y no fijo en el código?</li>
 </ol>
 <h2 id="4-sustentacion-del-backend">4. Sustentación del backend<a class="headerlink" href="#4-sustentacion-del-backend" title="Permanent link">&para;</a></h2>
-<p><strong>Tabla 4. Distribución de tiempo por integrante</strong></p>
+<p><strong>Tabla 3. Distribución de tiempo por integrante</strong></p>
 <table>
 <thead>
 <tr>
@@ -3030,11 +2844,11 @@
 <tr>
 <td>Preguntas individuales</td>
 <td style="text-align: right;">5 min</td>
-<td>Verificar dominio y aporte propio, con base en la Tabla 3.</td>
+<td>Verificar dominio y aporte propio, con base en la Tabla 2.</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Tabla 5. Entregables obligatorios</strong></p>
+<p><strong>Tabla 4. Entregables obligatorios</strong></p>
 <table>
 <thead>
 <tr>
@@ -3046,12 +2860,12 @@
 <tbody>
 <tr>
 <td>Producto de unidad</td>
-<td><code>lp2-demo.md</code> (sección 2 de esta guía) completo</td>
+<td><a href="../../../proyecto-integrador/u1/lp2-demo/"><code>lp2-demo.md</code></a> completo</td>
 <td>Coherente con el sílabo y con el código real ejecutable</td>
 </tr>
 <tr>
 <td>Evidencia de integración</td>
-<td>Backend conectado a los esquemas Oracle de BD2, endpoints vivos, <code>ModularityTests</code> en verde</td>
+<td>Backend conectado a los esquemas Oracle de BD2, endpoints vivos, verificación automática de módulos en verde</td>
 <td>Trazabilidad verificable con ADS y BD2, no solo documentada</td>
 </tr>
 <tr>
@@ -3061,126 +2875,25 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Tabla 6. Evidencia de integración con ADS y BD2</strong></p>
-<table>
-<thead>
-<tr>
-<th>Elemento LP2</th>
-<th>ADS</th>
-<th>BD2</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Configuración por ambientes</td>
-<td>Un ejecutable desplegable y configuración externa</td>
-<td>Conexión Oracle sin credenciales versionadas.</td>
-</tr>
-<tr>
-<td>Monolito modular con capas internas</td>
-<td>Vista C3, límites y dependencias</td>
-<td>Esquemas y tablas con propiedad funcional definida.</td>
-</tr>
-<tr>
-<td>Validación de total y stock</td>
-<td>Regla de integridad</td>
-<td>Restricciones y excepciones PL/SQL.</td>
-</tr>
-<tr>
-<td>Filtros por fecha</td>
-<td>Atributo de rendimiento</td>
-<td>Índice <code>IX_VENTAS_FECHA</code>.</td>
-</tr>
-</tbody>
-</table>
-<p>Secuencia sugerida de presentación:</p>
+<p>Secuencia sugerida de presentación (referencias a secciones de <code>lp2-demo.md</code>):</p>
 <ol>
-<li>Presentar el alcance arquitectónico (2.1) y el contrato REST (2.2).</li>
+<li>Presentar el alcance arquitectónico y el contrato REST.</li>
 <li>Ejecutar el CRUD completo en vivo: un caso de éxito y un caso inválido (<code>400</code>).</li>
 <li>Ejecutar la operación cabecera-detalle: un caso de éxito y un caso de rollback provocado a propósito.</li>
 <li>Ejecutar una consulta con filtros combinados y el reporte agregado (<code>/resumen</code>).</li>
-<li>Mostrar <code>ModularityTests</code> en verde y los esquemas Oracle reales de BD2 conectados.</li>
-<li>Cerrar con la Tabla 6, explicando al menos una fila con evidencia en vivo.</li>
+<li>Mostrar la verificación automática de módulos en verde y los esquemas Oracle reales de BD2 conectados.</li>
+<li>Cerrar con la tabla de trazabilidad con ADS y BD2 de <code>lp2-demo.md</code>, explicando al menos una fila con evidencia en vivo.</li>
 </ol>
 <p>Criterios mínimos de aceptación:</p>
 <ul>
 <li>El backend arranca y conecta con Oracle sin errores, contra el esquema real que BD2 construyó.</li>
 <li>El CRUD y la operación cabecera-detalle funcionan con al menos un caso de éxito y uno de error cada uno.</li>
 <li>Al menos un filtro combinado y el reporte agregado responden con datos reales.</li>
-<li><code>ModularityTests</code> está en verde y se muestra en vivo, no solo se menciona.</li>
-<li>Cada integrante responde individualmente al menos una pregunta de la Tabla 3.</li>
+<li>La verificación automática de módulos está en verde y se muestra en vivo, no solo se menciona.</li>
+<li>Cada integrante responde individualmente al menos una pregunta de la Tabla 2.</li>
 </ul>
 <h2 id="5-rubrica-de-evaluacion">5. Rúbrica de evaluación<a class="headerlink" href="#5-rubrica-de-evaluacion" title="Permanent link">&para;</a></h2>
-<p>Los cinco criterios son cita literal del resultado de aprendizaje de la Unidad I en el sílabo de LP2.</p>
-<p><strong>Tabla 7. Rúbrica de evaluación</strong></p>
-<table>
-<thead>
-<tr>
-<th>Criterio</th>
-<th style="text-align: right;">Peso</th>
-<th>A (20 pts)</th>
-<th>B (15 pts)</th>
-<th>C (10 pts)</th>
-<th>D (5 pts)</th>
-<th style="text-align: right;">Nivel obtenido</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1. Crea y configura el proyecto backend con ORM, conexión a la base de datos, recurso REST inicial, DTO y documentación de API</td>
-<td style="text-align: right;">20%</td>
-<td>Proyecto ejecutable, conectado a Oracle, con contrato y versionado de API documentados y verificables en vivo.</td>
-<td>Proyecto ejecutable y conectado, con documentación parcial.</td>
-<td>Proyecto ejecutable con conexión o documentación incompleta.</td>
-<td>No presenta un proyecto backend ejecutable.</td>
-<td style="text-align: right;"></td>
-</tr>
-<tr>
-<td>2. Implementa un CRUD REST completo, con validaciones, excepciones, logs y pruebas transversales</td>
-<td style="text-align: right;">20%</td>
-<td>CRUD completo con validación, manejo de errores y trazabilidad probados con casos reales.</td>
-<td>CRUD completo con validación parcial o trazabilidad incompleta.</td>
-<td>CRUD incompleto o sin manejo de errores.</td>
-<td>No presenta CRUD funcional.</td>
-<td style="text-align: right;"></td>
-</tr>
-<tr>
-<td>3. Gestiona objetos relacionados mediante ORM, DTO y reglas de asociación</td>
-<td style="text-align: right;">20%</td>
-<td>Asociación entre entidades con DTO relacionado y navegación controlada, verificada en vivo.</td>
-<td>Asociación funcional, con detalles menores en la navegación o el DTO.</td>
-<td>Asociación incompleta o sin control de referencias.</td>
-<td>No implementa objetos relacionados.</td>
-<td style="text-align: right;"></td>
-</tr>
-<tr>
-<td>4. Implementa una operación cabecera-detalle con registro atómico, cálculos, estados, consistencia, commit y rollback</td>
-<td style="text-align: right;">20%</td>
-<td>Operación completa, con caso de éxito y caso de rollback probados y explicados.</td>
-<td>Operación completa, con un caso probado.</td>
-<td>Operación presente, sin evidencia clara de atomicidad.</td>
-<td>No implementa la operación cabecera-detalle.</td>
-<td style="text-align: right;"></td>
-</tr>
-<tr>
-<td>5. Implementa consultas, filtros, ordenamiento, agregaciones, reportes y configuración CORS</td>
-<td style="text-align: right;">20%</td>
-<td>Filtros combinados, reporte agregado y CORS configurado por propiedad, probados en vivo.</td>
-<td>La mayoría de estos elementos funciona, con detalles menores.</td>
-<td>Consultas o CORS incompletos.</td>
-<td>No implementa consultas ni CORS.</td>
-<td style="text-align: right;"></td>
-</tr>
-</tbody>
-</table>
-<p>Nota final = suma de (<code>Peso</code> × <code>Puntos del nivel obtenido</code>) / 100 × 20 = ____.</p>
-<p>Para usar la rúbrica con IA, solicita:</p>
-<div class="highlight"><pre><span></span><code>Evalúa la sustentación y el producto (lp2-demo.md o la sección 2 de esta guía) usando la rúbrica de esta sesión.
-Para cada criterio selecciona el nivel obtenido: A=20, B=15, C=10, D=5.
-Justifica brevemente cada nivel con evidencia concreta (endpoints, código, pruebas en vivo).
-Calcula la nota final con la fórmula: suma de (Peso × Puntos del nivel obtenido) / 100 × 20.
-Indica 2 fortalezas y 2 recomendaciones para lo que sigue en Unidad II.
-</code></pre></div>
+<p>La rúbrica (5 criterios, cita literal del resultado de aprendizaje de la Unidad I en el sílabo de LP2) vive en <a href="../../../proyecto-integrador/u1/lp2-demo/#8-rubrica-de-evaluacion"><code>lp2-demo.md</code></a>, junto con la plantilla del producto y su trazabilidad con la malla curricular (CE023 Nivel 2). Úsala directamente desde ahí para calificar la sustentación de esta sesión — no se duplica aquí.</p>
 
 
 

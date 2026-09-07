@@ -738,6 +738,28 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#7-rubrica-de-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Rúbrica de Evaluación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-trazabilidad-y-procedencia-de-la-rubrica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Trazabilidad y procedencia de la rúbrica
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2706,6 +2728,28 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#7-rubrica-de-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Rúbrica de Evaluación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-trazabilidad-y-procedencia-de-la-rubrica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Trazabilidad y procedencia de la rúbrica
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2727,12 +2771,13 @@
 
 
 <h1 id="bd2-producto-de-unidad-1">BD2 - Producto de Unidad 1<a class="headerlink" href="#bd2-producto-de-unidad-1" title="Permanent link">&para;</a></h1>
-<p><strong>Este documento es el ejemplo BomERP del docente, no una plantilla obligatoria.</strong> Cada sede (Lima, Juliaca, Tarapoto) y cada grupo dentro de una misma sede tiene su propio dominio, definido en su propio <a href="../../brief/">brief.md</a> de S2 — los esquemas, tablas, paquetes PL/SQL y triggers concretos de este documento son los del ejemplo BomERP; cada equipo los reemplaza por los de su propio proyecto. Lo exigible a todos es la estructura: motor transaccional con reglas de negocio en PL/SQL, manejo de excepciones, auditoría y optimización con índices y <code>EXPLAIN PLAN</code>.</p>
+<p><strong>Esta es la plantilla-ejemplo del producto de Unidad 1 de BD2.</strong> La estructura (objetos Oracle, reglas de negocio y transaccionales, manejo de excepciones, selectividad e índices, evidencia de integración) es exigible a todos: motor transaccional con reglas de negocio en PL/SQL, manejo de excepciones, auditoría y optimización con índices según selectividad medida. El contenido de BomERP (esquemas, tablas, paquetes PL/SQL y triggers concretos) es el ejemplo real que muestra cómo se ve terminada — cada sede (Lima, Juliaca, Tarapoto) y cada grupo reemplaza ese contenido por el de su propio proyecto, definido en su propio <a href="../../brief/">brief.md</a> de S2, sin cambiar la estructura.</p>
 <h2 id="producto">Producto<a class="headerlink" href="#producto" title="Permanent link">&para;</a></h2>
 <p><strong>Motor transaccional Oracle optimizado.</strong></p>
 <p>Este producto implementa lógica de negocio en Oracle mediante PL/SQL, triggers, excepciones, auditoría básica, consultas optimizadas e índices. La base no se trabaja como ejercicio aislado: soporta los endpoints y reglas del backend LP2.</p>
 <h2 id="1-scripts-del-producto">1. Scripts del producto<a class="headerlink" href="#1-scripts-del-producto" title="Permanent link">&para;</a></h2>
 <p>Los scripts se agregan <strong>por sesión de BD2</strong>, a medida que cada una les da contenido real — no se pre-crean tablas/objetos de sesiones que todavía no se dictaron (mismo criterio que la arquitectura de módulos de LP2, ver <a href="../../../lp2/adr/ADR-002-spring-modulith/">ADR-002</a>).</p>
+<p><strong>Tabla 1. Scripts del producto</strong></p>
 <table>
 <thead>
 <tr>
@@ -2792,6 +2837,7 @@
 <p>Pendiente (se agrega cuando esa sesión de BD2 se documente): esquema <code>BOM_SEGURIDAD</code> (S10 de LP2).</p>
 <h2 id="2-objetos-oracle-u1">2. Objetos Oracle U1<a class="headerlink" href="#2-objetos-oracle-u1" title="Permanent link">&para;</a></h2>
 <p><strong>Estado al cierre de la Unidad 1 (S6):</strong></p>
+<p><strong>Tabla 2. Objetos Oracle U1</strong></p>
 <table>
 <thead>
 <tr>
@@ -2839,6 +2885,7 @@
 </tbody>
 </table>
 <h2 id="3-reglas-de-negocio-y-transaccionales">3. Reglas de negocio y transaccionales<a class="headerlink" href="#3-reglas-de-negocio-y-transaccionales" title="Permanent link">&para;</a></h2>
+<p><strong>Tabla 3. Reglas de negocio y transaccionales</strong></p>
 <table>
 <thead>
 <tr>
@@ -2870,6 +2917,7 @@
 </tbody>
 </table>
 <h2 id="4-manejo-de-excepciones">4. Manejo de excepciones<a class="headerlink" href="#4-manejo-de-excepciones" title="Permanent link">&para;</a></h2>
+<p><strong>Tabla 4. Manejo de excepciones</strong></p>
 <table>
 <thead>
 <tr>
@@ -2894,6 +2942,7 @@
 </table>
 <h2 id="5-selectividad-e-indices-s5">5. Selectividad e índices (S5)<a class="headerlink" href="#5-selectividad-e-indices-s5" title="Permanent link">&para;</a></h2>
 <p>Ningún índice se crea sin medir selectividad primero (<code>COUNT(DISTINCT columna) / COUNT(*)</code>):</p>
+<p><strong>Tabla 5. Selectividad e índices</strong></p>
 <table>
 <thead>
 <tr>
@@ -2926,6 +2975,7 @@
 </tbody>
 </table>
 <h2 id="6-evidencia-de-integracion">6. Evidencia de integración<a class="headerlink" href="#6-evidencia-de-integracion" title="Permanent link">&para;</a></h2>
+<p><strong>Tabla 6. Evidencia de integración con ADS y LP2</strong></p>
 <table>
 <thead>
 <tr>
@@ -2958,6 +3008,79 @@
 </tbody>
 </table>
 <p>Las FK entre esquemas conservan la integridad porque todos los objetos pertenecen a una sola base Oracle. <code>BOMERP_APP</code> ejecuta la aplicación, pero no es propietario de tablas ni paquetes.</p>
+<h2 id="7-rubrica-de-evaluacion">7. Rúbrica de Evaluación<a class="headerlink" href="#7-rubrica-de-evaluacion" title="Permanent link">&para;</a></h2>
+<p><strong>Tabla 7. Rúbrica de evaluación de la Unidad 1</strong></p>
+<table>
+<thead>
+<tr>
+<th>Criterio</th>
+<th style="text-align: right;">Peso</th>
+<th>A (20 pts)</th>
+<th>B (15 pts)</th>
+<th>C (10 pts)</th>
+<th>D (5 pts)</th>
+<th style="text-align: right;">Nivel obtenido</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Implementa procedimientos y funciones PL/SQL alineados al negocio</td>
+<td style="text-align: right;">20%</td>
+<td>Procedimientos y funciones correctos, probados con casos válidos e inválidos, alineados a una regla real del proyecto.</td>
+<td>Procedimientos y funciones correctos, con pruebas parciales.</td>
+<td>Procedimientos incompletos o sin alineación clara al negocio.</td>
+<td>No presenta procedimientos ni funciones PL/SQL.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>2. Automatiza reglas mediante triggers DML</td>
+<td style="text-align: right;">20%</td>
+<td>Al menos un trigger de regla de negocio y uno de auditoría, disparados y verificados en vivo.</td>
+<td>Triggers presentes, con verificación parcial.</td>
+<td>Un solo trigger funcional, o sin verificación clara.</td>
+<td>No presenta triggers.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>3. Controla errores mediante manejo de excepciones</td>
+<td style="text-align: right;">20%</td>
+<td>Excepciones predefinidas y personalizadas, con registro de errores probado con casos reales.</td>
+<td>Manejo de excepciones presente, con registro parcial.</td>
+<td>Manejo de excepciones incompleto o sin registro.</td>
+<td>No maneja excepciones.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>4. Analiza y mejora consultas mediante Explain Plan, CBO y DBMS_STATS</td>
+<td style="text-align: right;">20%</td>
+<td>Comparación completa (antes/después de estadísticas y de una reescritura), con <code>COST</code>/<code>ROWS</code> interpretados correctamente.</td>
+<td>Comparación presente, con interpretación parcial.</td>
+<td>Un solo <code>EXPLAIN PLAN</code> capturado, sin comparación real.</td>
+<td>No presenta <code>EXPLAIN PLAN</code>.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>5. Aplica estrategias de indexación según selectividad y necesidades de consulta</td>
+<td style="text-align: right;">20%</td>
+<td>Selectividad medida antes de crear cada índice, con al menos un caso de índice correctamente descartado.</td>
+<td>Índices creados con selectividad medida, sin caso de descarte.</td>
+<td>Índices creados sin medir selectividad.</td>
+<td>No presenta índices ni selectividad medida.</td>
+<td style="text-align: right;"></td>
+</tr>
+</tbody>
+</table>
+<p>Nota final = suma de (<code>Peso</code> × <code>Puntos del nivel obtenido</code>) / 100 × 20.</p>
+<p>Para usar la rúbrica con IA, solicita:</p>
+<div class="highlight"><pre><span></span><code>Evalúa la sustentación y el producto (bd2-producto.md o la sección 2 de la guía S06) usando la rúbrica de esta sección.
+Para cada criterio selecciona el nivel obtenido: A=20, B=15, C=10, D=5.
+Justifica brevemente cada nivel con evidencia concreta (objetos Oracle, planes de ejecución, selectividad).
+Calcula la nota final con la fórmula: suma de (Peso × Puntos del nivel obtenido) / 100 × 20.
+Indica 2 fortalezas y 2 recomendaciones para lo que sigue en Unidad II.
+</code></pre></div>
+<h2 id="8-trazabilidad-y-procedencia-de-la-rubrica">8. Trazabilidad y procedencia de la rúbrica<a class="headerlink" href="#8-trazabilidad-y-procedencia-de-la-rubrica" title="Permanent link">&para;</a></h2>
+<p>Los cinco criterios son cita literal del resultado de aprendizaje de la Unidad I en el sílabo de BD2.</p>
+<p><strong>Con la malla curricular:</strong> los cinco criterios corresponden al <strong>Nivel 1 de CE023</strong> (Programación) — la rama de esa competencia que se satisface programando el motor transaccional del lado del servidor (Unidad 1 de BD2), distinta de la rama que otros cursos (<code>FP</code>, <code>POO</code>, <code>LP1</code>) satisfacen construyendo una plataforma completa de otro tipo. La administración de la instancia Oracle a escala empresarial (<strong>Nivel 2 de CE022</strong>, Ingeniería de la Información) no se evalúa aquí: se completa en las Unidades 2 y 3 de BD2.</p>
 
 
 
