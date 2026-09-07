@@ -345,9 +345,40 @@ public interface VentaService {
 }
 ```
 
-**`ventas/venta/service/VentaServiceImpl.java`** (agrega estos dos métodos y quita `listar()`; `obtener()` y `crear()` no cambian)
+**`ventas/venta/service/VentaServiceImpl.java`**
 
 ```java
+package pe.edu.upeu.bomerp.ventas.venta.service;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoResponse;
+import pe.edu.upeu.bomerp.catalogo.producto.service.ProductoService;
+import pe.edu.upeu.bomerp.exception.ResourceNotFoundException;
+import pe.edu.upeu.bomerp.ventas.venta.dto.DetalleVentaRequest;
+import pe.edu.upeu.bomerp.ventas.venta.dto.VentaAgregado;
+import pe.edu.upeu.bomerp.ventas.venta.dto.VentaReporte;
+import pe.edu.upeu.bomerp.ventas.venta.dto.VentaRequest;
+import pe.edu.upeu.bomerp.ventas.venta.dto.VentaResponse;
+import pe.edu.upeu.bomerp.ventas.venta.dto.VentaResumen;
+import pe.edu.upeu.bomerp.ventas.venta.entity.DetalleVenta;
+import pe.edu.upeu.bomerp.ventas.venta.entity.EstadoVenta;
+import pe.edu.upeu.bomerp.ventas.venta.entity.Venta;
+import pe.edu.upeu.bomerp.ventas.venta.mapper.VentaMapper;
+import pe.edu.upeu.bomerp.ventas.venta.repository.VentaRepository;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class VentaServiceImpl implements VentaService {
+    private final VentaRepository ventaRepository;
+    private final ProductoService productoService;
+    private final VentaMapper ventaMapper;
+
     @Override
     @Transactional(readOnly = true)
     public List<VentaResponse> buscar(EstadoVenta estado, LocalDateTime desde, LocalDateTime hasta,
@@ -359,15 +390,46 @@ public interface VentaService {
 
     @Override
     @Transactional(readOnly = true)
+    public VentaResponse obtener(Long id) {
+        Venta venta = ventaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Venta no encontrada: " + id));
+        return ventaMapper.toResponse(venta);
+    }
+
+    @Override
+    @Transactional
+    public VentaResponse crear(VentaRequest request) {
+        Venta venta = new Venta();
+        venta.setFecha(LocalDateTime.now());
+        venta.setEstado(EstadoVenta.REGISTRADA);
+
+        BigDecimal total = BigDecimal.ZERO;
+        for (DetalleVentaRequest detalleRequest : request.getDetalles()) {
+            ProductoResponse producto = productoService.obtener(detalleRequest.getProductoId());
+            productoService.descontarStock(detalleRequest.getProductoId(), detalleRequest.getCantidad());
+
+            DetalleVenta detalle = ventaMapper.toDetalle(detalleRequest, producto);
+            detalle.setVenta(venta);
+            venta.getDetalles().add(detalle);
+            total = total.add(detalle.getSubtotal());
+        }
+        venta.setTotal(total);
+
+        return ventaMapper.toResponse(ventaRepository.save(venta));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public VentaReporte reporte(EstadoVenta estado, LocalDateTime desde, LocalDateTime hasta) {
         VentaAgregado agregado = ventaRepository.agregados(estado, desde, hasta);
         Sort sort = Sort.by(Sort.Direction.DESC, "fecha");
         List<VentaResumen> ventas = ventaRepository.buscarResumen(estado, desde, hasta, sort);
         return new VentaReporte(agregado, ventas);
     }
+}
 ```
 
-Agrega los imports que falten: `org.springframework.data.domain.Sort`, `pe.edu.upeu.bomerp.ventas.venta.dto.VentaAgregado`, `pe.edu.upeu.bomerp.ventas.venta.dto.VentaReporte` y `pe.edu.upeu.bomerp.ventas.venta.dto.VentaResumen`.
+Frente a la versión de S4, lo único que cambia es: `listar()` desaparece (`buscar()` la reemplaza), se agrega `reporte()` al final, y suben dos imports nuevos (`org.springframework.data.domain.Sort` y `pe.edu.upeu.bomerp.ventas.venta.dto.VentaAgregado`/`VentaReporte`/`VentaResumen`) — `obtener()` y `crear()` quedan idénticos a S4, cópialos tal cual si ya los tenías.
 
 `reporte()` hace dos consultas, no una: `agregados()` (una fila con `COUNT`/`SUM`/`AVG`) y `buscarResumen()` (una fila por venta) no se pueden combinar en una sola consulta JPQL sin `GROUP BY` — mezclar una columna agregada con columnas sueltas de la misma fila no es válido en SQL/JPQL.
 

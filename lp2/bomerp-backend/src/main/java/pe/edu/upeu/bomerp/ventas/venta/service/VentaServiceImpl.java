@@ -27,8 +27,20 @@ public class VentaServiceImpl implements VentaService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<VentaResponse> listar() {
-        return ventaRepository.findAll().stream().map(ventaMapper::toResponse).toList();
+    public List<VentaResponse> buscar(EstadoVenta estado, LocalDateTime desde, LocalDateTime hasta,
+                                       String ordenarPor, String direccion) {
+        Sort.Direction dir = "ASC".equalsIgnoreCase(direccion) ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(dir, ordenarPor);
+        return ventaRepository.buscar(estado, desde, hasta, sort).stream().map(ventaMapper::toResponse).toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public VentaReporte reporte(EstadoVenta estado, LocalDateTime desde, LocalDateTime hasta) {
+        VentaAgregado agregado = ventaRepository.agregados(estado, desde, hasta);
+        Sort sort = Sort.by(Sort.Direction.DESC, "fecha");
+        List<VentaResumen> ventas = ventaRepository.buscarResumen(estado, desde, hasta, sort);
+        return new VentaReporte(agregado, ventas);
     }
 
     @Override
