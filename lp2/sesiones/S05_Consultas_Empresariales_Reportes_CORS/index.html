@@ -4020,7 +4020,22 @@ FROM Venta v
 </code></pre></div>
 <p>El origen permitido queda en <code>application-dev.yml</code>, no fijo en el código: en producción va a ser otro dominio, y esta clase no debería cambiar entre ambientes — solo la propiedad. <code>allowedOrigins</code> exige un valor explícito y nunca <code>"*"</code> en este proyecto: S10 incorpora JWT, y un origen comodín es incompatible con credenciales (cookies o cabeceras de autenticación) en la especificación CORS.</p>
 <h3 id="37-probar-filtros-ordenamiento-y-el-reporte">3.7 Probar filtros, ordenamiento y el reporte<a class="headerlink" href="#37-probar-filtros-ordenamiento-y-el-reporte" title="Permanent link">&para;</a></h3>
-<p>Con el backend corriendo y al menos cuatro ventas registradas (3.1):</p>
+<p><strong>Formato de fecha para <code>desde</code>/<code>hasta</code>:</strong> en Swagger UI y en PowerShell es el mismo, ISO 8601 completo con hora — <code>yyyy-MM-ddTHH:mm:ss</code>, por ejemplo <code>2026-09-01T00:00:00</code>. No es <code>dd/mm/yyyy</code> ni <code>dd-mm-yyyy</code>: la <code>T</code> en medio separa fecha de hora y es obligatoria (<code>@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)</code>, 3.5) — sin ella, o sin la hora, Spring responde <code>400 Bad Request</code> antes de llegar al controlador (ver "Error frecuente" más abajo).</p>
+<p><strong>Probar desde Swagger UI:</strong></p>
+<ol>
+<li>Abre <code>http://localhost:8080/swagger-ui/index.html</code> (o <code>/swagger-ui.html</code>, ambos apuntan a lo mismo, S1).</li>
+<li>Despliega <code>GET /api/v1/ventas</code> y haz clic en <strong>Try it out</strong>.</li>
+<li>Completa los parámetros:<ul>
+<li><code>estado</code>: elige <code>REGISTRADA</code> en el desplegable, o déjalo en <code>--</code> para no filtrar por estado.</li>
+<li><code>desde</code> / <code>hasta</code>: pega el formato completo, por ejemplo <code>2026-09-01T00:00:00</code> y <code>2026-09-30T23:59:59</code> — Swagger no valida el formato mientras escribes, un valor incompleto solo falla al ejecutar.</li>
+<li><code>ordenarPor</code>: <code>fecha</code>, <code>estado</code>, <code>total</code> o <code>id</code> (campos de <code>Venta</code>, no de <code>VentaResumen</code> — ver "Error frecuente" más abajo).</li>
+<li><code>direccion</code>: <code>ASC</code> o <code>DESC</code>.</li>
+</ul>
+</li>
+<li>Clic en <strong>Execute</strong>. En <code>Server response</code> (código <code>200</code>) aparece el arreglo de ventas ya filtrado y ordenado; el bloque <code>Curl</code> de arriba muestra el equivalente en línea de comandos si prefieres copiarlo directo.</li>
+<li>Repite para <code>GET /api/v1/ventas/resumen</code> con los mismos <code>estado</code>/<code>desde</code>/<code>hasta</code> (ese endpoint no recibe <code>ordenarPor</code> ni <code>direccion</code>: ordena internamente por fecha, 3.3).</li>
+</ol>
+<p><strong>Probar desde PowerShell</strong>, con el backend corriendo y al menos cuatro ventas registradas (3.1):</p>
 <div class="highlight"><pre><span></span><code><span class="c"># Sin filtros: todas las ventas, ordenadas por fecha descendente (valor por defecto)</span>
 <span class="nb">Invoke-RestMethod</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:8080/api/v1/ventas"</span>
 
