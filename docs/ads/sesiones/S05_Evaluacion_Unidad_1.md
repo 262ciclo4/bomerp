@@ -52,7 +52,7 @@ Preguntas de referencia (el docente puede formular equivalentes):
 2. Un módulo pone `@Entity` en su clase de dominio y la llama "hexagonal". ¿Por qué eso no es hexagonal?
 3. Un método solo hace `repository.save(entidad)` sin ninguna regla de negocio. ¿Por qué llamarlo "caso de uso" es incorrecto?
 4. Aplica la prueba del papel y lápiz a una regla de negocio de tu propio módulo transaccional: ¿es una entidad o un caso de uso?
-5. ¿Qué verifica `ModularityTests` que una simple convención documentada no puede garantizar?
+5. ¿Qué gana un proyecto al verificar automáticamente los límites entre módulos, en vez de solo documentarlos como convención?
 6. ¿Qué cambiaría en tu vista C3 si tu módulo transaccional migrara a hexagonal? ¿Ese cambio afectaría tu vista C2?
 7. ¿Por qué un ADR debe registrar también las alternativas descartadas y no solo la decisión final?
 
@@ -77,14 +77,14 @@ Secuencia sugerida de presentación (referencias a secciones de `ads-producto.md
 1. Presentar el dominio y el problema técnico (sección 1, Contexto técnico).
 2. Recorrer las vistas C1, C2 y C3 (secciones 3-5) explicando qué decisión arquitectónica sostiene cada una.
 3. Justificar el estilo elegido (monolito modular con capas internas) frente a las alternativas de S4, citando al menos un error común que se evitó.
-4. Mostrar los principios SOLID aplicados (sección 6, Principios de diseño) sobre código real de `catalogo` o `ventas`, con `ModularityTests` en verde.
+4. Mostrar los principios SOLID aplicados (sección 6, Principios de diseño) sobre código real de `catalogo` o `ventas`, con verificación automática de límites en verde.
 5. Cerrar con la trazabilidad técnica (sección 8) y los ADR previstos aún no formalizados (sección 7).
 
 Criterios mínimos de aceptación:
 
 - Las tres vistas (C1, C2, C3) son coherentes entre sí y con el código real del proyecto.
 - El estilo arquitectónico elegido está justificado frente a al menos una alternativa de S4.
-- Cada principio SOLID (sección 6 de `ads-producto.md`) se sustenta con un ejemplo real, no solo con la definición, con `ModularityTests` en verde.
+- Cada principio SOLID (sección 6 de `ads-producto.md`) se sustenta con un ejemplo real, no solo con la definición, con verificación automática de límites en verde.
 - Cada integrante responde individualmente al menos una pregunta de la Tabla 2 o de `ads-producto.md`.
 
 ## 5. Rúbrica de evaluación
