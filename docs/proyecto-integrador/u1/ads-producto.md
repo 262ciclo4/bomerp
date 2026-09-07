@@ -82,8 +82,11 @@ flowchart TB
         VEN[ventas<br/>Venta–DetalleVenta]
     end
 
-    SCAT[(BOM_CATALOGO)]
-    SVEN[(BOM_VENTAS)]
+    subgraph ORACLE[Una base Oracle - esquemas funcionales]
+        direction LR
+        SCAT[(BOM_CATALOGO)]
+        SVEN[(BOM_VENTAS)]
+    end
 
     subgraph FUT[Módulos futuros, aún sin crear en U1]
         direction LR
