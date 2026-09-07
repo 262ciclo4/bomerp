@@ -561,7 +561,21 @@ El origen permitido queda en `application-dev.yml`, no fijo en el código: en pr
 
 ### 3.7 Probar filtros, ordenamiento y el reporte
 
-Con el backend corriendo y al menos cuatro ventas registradas (3.1):
+**Formato de fecha para `desde`/`hasta`:** en Swagger UI y en PowerShell es el mismo, ISO 8601 completo con hora — `yyyy-MM-ddTHH:mm:ss`, por ejemplo `2026-09-01T00:00:00`. No es `dd/mm/yyyy` ni `dd-mm-yyyy`: la `T` en medio separa fecha de hora y es obligatoria (`@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)`, 3.5) — sin ella, o sin la hora, Spring responde `400 Bad Request` antes de llegar al controlador (ver "Error frecuente" más abajo).
+
+**Probar desde Swagger UI:**
+
+1. Abre `http://localhost:8080/swagger-ui/index.html` (o `/swagger-ui.html`, ambos apuntan a lo mismo, S1).
+2. Despliega `GET /api/v1/ventas` y haz clic en **Try it out**.
+3. Completa los parámetros:
+    - `estado`: elige `REGISTRADA` en el desplegable, o déjalo en `--` para no filtrar por estado.
+    - `desde` / `hasta`: pega el formato completo, por ejemplo `2026-09-01T00:00:00` y `2026-09-30T23:59:59` — Swagger no valida el formato mientras escribes, un valor incompleto solo falla al ejecutar.
+    - `ordenarPor`: `fecha`, `estado`, `total` o `id` (campos de `Venta`, no de `VentaResumen` — ver "Error frecuente" más abajo).
+    - `direccion`: `ASC` o `DESC`.
+4. Clic en **Execute**. En `Server response` (código `200`) aparece el arreglo de ventas ya filtrado y ordenado; el bloque `Curl` de arriba muestra el equivalente en línea de comandos si prefieres copiarlo directo.
+5. Repite para `GET /api/v1/ventas/resumen` con los mismos `estado`/`desde`/`hasta` (ese endpoint no recibe `ordenarPor` ni `direccion`: ordena internamente por fecha, 3.3).
+
+**Probar desde PowerShell**, con el backend corriendo y al menos cuatro ventas registradas (3.1):
 
 ```powershell
 # Sin filtros: todas las ventas, ordenadas por fecha descendente (valor por defecto)
