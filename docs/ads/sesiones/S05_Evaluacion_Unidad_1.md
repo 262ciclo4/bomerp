@@ -48,7 +48,7 @@ Cubre los cuatro temas dictados antes de esta sesión. El docente puede tomarla 
 
 Preguntas de referencia (el docente puede formular equivalentes):
 
-1. ¿Por qué tu producto U1 usa monolito modular con capas internas y no microservicios ni hexagonal desde el inicio?
+1. ¿Por qué tu proyecto eligió su estilo arquitectónico (monolito modular, hexagonal u otro) y no alguna de las demás alternativas comparadas en S4?
 2. Un módulo pone `@Entity` en su clase de dominio y la llama "hexagonal". ¿Por qué eso no es hexagonal?
 3. Un método solo hace `repository.save(entidad)` sin ninguna regla de negocio. ¿Por qué llamarlo "caso de uso" es incorrecto?
 4. Aplica la prueba del papel y lápiz a una regla de negocio de tu propio módulo transaccional: ¿es una entidad o un caso de uso?
