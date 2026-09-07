@@ -164,10 +164,6 @@ Decisiones adicionales, previstas pero **aún no formalizadas** como ADR de cód
 
 ## 9. Rúbrica de Evaluación
 
-Los primeros cinco criterios son cita literal del resultado de aprendizaje de la Unidad I en el sílabo de ADS; el sexto corresponde a la sustentación exigida por el mismo sílabo (sesión 5, actividad 2).
-
-**Trazabilidad con la malla curricular:** los criterios 1-5 corresponden a la porción de arquitectura del **Nivel 2 de CE021** (Ingeniería de Requerimientos) — la otra porción de ese nivel, diseño detallado (modelo de dominio, UML, patrones), se completa en la Unidad 2 de ADS, no aquí. El criterio 6 (Sustentación y defensa técnica) es transversal y no forma parte de la definición de la competencia.
-
 **Tabla 7. Rúbrica de evaluación de la Unidad 1**
 
 | Criterio | Peso | A (20 pts) | B (15 pts) | C (10 pts) | D (5 pts) |
@@ -180,3 +176,11 @@ Los primeros cinco criterios son cita literal del resultado de aprendizaje de la
 | 6. Sustentación y defensa técnica | 20% | Explica y defiende con dominio las decisiones tomadas, respondiendo con precisión las preguntas individuales. | Explica con solvencia. | Explica con dificultad. | No sustenta. |
 
 Nota final = suma de (`Peso` × `Puntos del nivel obtenido`) / 100 × 20.
+
+## 10. Trazabilidad y procedencia de la rúbrica
+
+Los primeros cinco criterios son cita literal del resultado de aprendizaje de la Unidad I en el sílabo de ADS; el sexto corresponde a la sustentación exigida por el mismo sílabo (sesión 5, actividad 2).
+
+**Con la malla curricular:** los criterios 1-5 corresponden a la porción de arquitectura del **Nivel 2 de CE021** (Ingeniería de Requerimientos) — la otra porción de ese nivel, diseño detallado (modelo de dominio, UML, patrones), se completa en la Unidad 2 de ADS, no aquí. El criterio 6 (Sustentación y defensa técnica) es transversal y no forma parte de la definición de la competencia.
+
+Además, la Sección 2 (Atributos de calidad) de este producto es insumo para el **Nivel 1 de CE024** (Calidad de Software) — se usa aquí para decisiones arquitectónicas, pero no se califica en esta rúbrica; se califica formalmente recién en la Unidad 3 de ADS (criterio 3: "Justifica atributos de calidad y decisiones técnicas").
