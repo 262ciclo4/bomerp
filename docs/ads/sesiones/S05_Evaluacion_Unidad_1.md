@@ -37,7 +37,7 @@ Lo que sustentas en S05 es **tu arquitectura**: el estilo que tú elegiste en S4
 
 Cubre los cuatro temas dictados antes de esta sesión. El docente puede tomarla escrita, oral o mixta.
 
-**Tabla 8. Temario de la evaluación teórico-práctica**
+**Tabla 2. Temario de la evaluación teórico-práctica**
 
 | Sesión | Tema | Qué puede evaluar el docente |
 |---|---|---|
@@ -58,19 +58,19 @@ Preguntas de referencia (el docente puede formular equivalentes):
 
 ## 4. Sustentación de la arquitectura
 
-**Tabla 9. Distribución de tiempo por integrante**
+**Tabla 3. Distribución de tiempo por integrante**
 
 | Momento | Tiempo | Propósito |
 |---|---:|---|
 | Presentación técnica | 10 min | Explicar el producto (`ads-producto.md`), las decisiones tomadas y su justificación. |
-| Preguntas individuales | 8 min | Verificar dominio y aporte propio, con base en la Tabla 8 y las decisiones de `ads-producto.md`. |
+| Preguntas individuales | 8 min | Verificar dominio y aporte propio, con base en la Tabla 2 y las decisiones de `ads-producto.md`. |
 
-**Tabla 10. Entregables obligatorios**
+**Tabla 4. Entregables obligatorios**
 
 | Entregable | Evidencia mínima | Criterio de aceptación |
 |---|---|---|
 | Producto de unidad | [`ads-producto.md`](../../proyecto-integrador/u1/ads-producto.md) completo | Coherente con el sílabo y con el código real del proyecto |
-| Sustentación individual | Preguntas y defensa por integrante (sección 3 y Tabla 8) | Autoría demostrada |
+| Sustentación individual | Preguntas y defensa por integrante (sección 3 y Tabla 2) | Autoría demostrada |
 
 Secuencia sugerida de presentación (referencias a secciones de `ads-producto.md`):
 
@@ -85,8 +85,8 @@ Criterios mínimos de aceptación:
 - Las tres vistas (C1, C2, C3) son coherentes entre sí y con el código real del proyecto.
 - El estilo arquitectónico elegido está justificado frente a al menos una alternativa de S4.
 - Cada principio SOLID (sección 6 de `ads-producto.md`) se sustenta con un ejemplo real, no solo con la definición, con `ModularityTests` en verde.
-- Cada integrante responde individualmente al menos una pregunta de la Tabla 8 o de `ads-producto.md`.
+- Cada integrante responde individualmente al menos una pregunta de la Tabla 2 o de `ads-producto.md`.
 
 ## 5. Rúbrica de evaluación
 
-La rúbrica (5 criterios, cita literal del resultado de aprendizaje de la Unidad I) vive en [`ads-producto.md`](../../proyecto-integrador/u1/ads-producto.md#9-rubrica-de-evaluacion), junto con la plantilla del producto. Úsala directamente desde ahí para calificar la sustentación de esta sesión — no se duplica aquí.
+La rúbrica (6 criterios: 5 cita literal del resultado de aprendizaje de la Unidad I + sustentación) vive en [`ads-producto.md`](../../proyecto-integrador/u1/ads-producto.md#9-rubrica-de-evaluacion), junto con la plantilla del producto. Úsala directamente desde ahí para calificar la sustentación de esta sesión — no se duplica aquí.

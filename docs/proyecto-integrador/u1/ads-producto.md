@@ -10,6 +10,8 @@ Este producto define la base tecnica que BD2 y LP2 deben respetar. ADS no entreg
 
 ## 1. Contexto tecnico
 
+**Tabla 1. Contexto técnico del producto U1**
+
 | Elemento | Definicion |
 |---|---|
 | Dominio | Continuidad de CoMarket: catálogo, inventario, ventas, compras y seguridad. El flujo funcional obligatorio parte de `Categoria–Producto–Venta–DetalleVenta`. |
@@ -21,6 +23,8 @@ Este producto define la base tecnica que BD2 y LP2 deben respetar. ADS no entreg
 
 ## 2. Atributos de calidad
 
+**Tabla 2. Atributos de calidad del producto U1**
+
 | Atributo | Decision inicial | Evidencia |
 |---|---|---|
 | Seguridad futura | Decisión de autenticación y autorización para U2. | ADR previsto; JWT no se implementa en el corte U1. |
@@ -31,6 +35,8 @@ Este producto define la base tecnica que BD2 y LP2 deben respetar. ADS no entreg
 | Escalabilidad inicial | API stateless preparada para SPA. | Decision arquitectonica ADR-001. |
 
 ## 3. Vista C1 - Contexto
+
+**Figura 1. Vista C1 - Contexto**
 
 ```mermaid
 flowchart TB
@@ -45,6 +51,8 @@ flowchart TB
 ```
 
 ## 4. Vista C2 - Contenedores
+
+**Figura 2. Vista C2 - Contenedores**
 
 ```mermaid
 flowchart TB
@@ -61,6 +69,8 @@ flowchart TB
 ```
 
 ## 5. Vista C3 - Componentes backend
+
+**Figura 3. Vista C3 - Componentes backend**
 
 ```mermaid
 flowchart LR
@@ -103,6 +113,8 @@ Reglas de la vista:
 
 ## 6. Principios de diseno aplicados
 
+**Tabla 3. Principios de diseño aplicados**
+
 | Principio | Aplicacion |
 |---|---|
 | Responsabilidad unica | Cada módulo concentra una capacidad del negocio; sus controladores reciben peticiones, los servicios coordinan casos de uso y los repositorios administran persistencia propia. |
@@ -115,6 +127,8 @@ Reglas de la vista:
 
 Las decisiones de arquitectura del backend ya están formalizadas como ADR reales en `docs/lp2/adr/` — verificadas contra el código (`mvnw test`), no solo documentadas aquí. Esta página no repite esos códigos con otro significado, para no colisionar con ellos:
 
+**Tabla 4. ADR reales, verificados contra el código**
+
 | ADR real | Decisión | Justificación |
 |---|---|---|
 | [ADR-001](../../lp2/adr/ADR-001-arquitectura-backend.md) | Un único proyecto Spring Boot, sin reactor Maven multi-módulo. | Reduce fricción de build sin introducir distribución que el sílabo no evalúa. |
@@ -123,12 +137,16 @@ Las decisiones de arquitectura del backend ya están formalizadas como ADR reale
 
 Decisiones adicionales, previstas pero **aún no formalizadas** como ADR de código (se registran como ADR real recién cuando su sesión les dé contenido, no antes):
 
+**Tabla 5. Decisiones previstas, aún no formalizadas como ADR de código**
+
 | Código previsto | Decisión | Se formaliza en |
 |---|---|---|
 | ADR-004 | API REST protegida con JWT. | S10 (Seguridad backend) |
 | ADR-005 | Una sola SPA organizada por funcionalidades (`core`/`shared`/módulos). | S7 (Creación de la SPA) |
 
 ## 8. Trazabilidad tecnica U1
+
+**Tabla 6. Trazabilidad técnica U1**
 
 | Decision ADS | Evidencia BD2 | Evidencia LP2 |
 |---|---|---|
@@ -141,7 +159,7 @@ Decisiones adicionales, previstas pero **aún no formalizadas** como ADR de cód
 
 Los primeros cinco criterios son cita literal del resultado de aprendizaje de la Unidad I en el sílabo de ADS; el sexto corresponde a la sustentación exigida por el mismo sílabo (sesión 5, actividad 2).
 
-**Tabla 1. Rúbrica de evaluación de la Unidad 1**
+**Tabla 7. Rúbrica de evaluación de la Unidad 1**
 
 | Criterio | Peso | A (20 pts) | B (15 pts) | C (10 pts) | D (5 pts) |
 |---|---:|---|---|---|---|
