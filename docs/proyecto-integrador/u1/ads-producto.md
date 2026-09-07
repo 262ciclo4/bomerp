@@ -166,6 +166,8 @@ Decisiones adicionales, previstas pero **aún no formalizadas** como ADR de cód
 
 Los primeros cinco criterios son cita literal del resultado de aprendizaje de la Unidad I en el sílabo de ADS; el sexto corresponde a la sustentación exigida por el mismo sílabo (sesión 5, actividad 2).
 
+**Trazabilidad con la malla curricular:** los criterios 1-5 corresponden a la porción de arquitectura del **Nivel 2 de CE021** (Ingeniería de Requerimientos) — la otra porción de ese nivel, diseño detallado (modelo de dominio, UML, patrones), se completa en la Unidad 2 de ADS, no aquí. El criterio 6 (Sustentación y defensa técnica) es transversal y no forma parte de la definición de la competencia.
+
 **Tabla 7. Rúbrica de evaluación de la Unidad 1**
 
 | Criterio | Peso | A (20 pts) | B (15 pts) | C (10 pts) | D (5 pts) |
