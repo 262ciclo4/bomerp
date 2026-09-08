@@ -121,7 +121,7 @@ El criterio 6 se evalúa con los mismos 7 subaspectos de la sustentación integr
 | 4. Aporte individual | Cada integrante demuestra lo que construyó de su propio motor transaccional. |
 | 5. Repositorio y estándares | Topics académicos configurados desde S2, organización, commits y reproducibilidad de los scripts Oracle. |
 | 6. MkDocs o equivalente | Documentación de Unidad 1 publicada, navegable y alineada con `bd2-producto.md`. |
-| 7. Pitch/demo ejecutiva | Introducción breve del motor transaccional y su avance (no reemplaza la demo técnica de S06, la precede). |
+| 7. Pitch/demo ejecutiva | Introducción breve del motor transaccional y su avance, con apoyo visual (.pptx, Canva o equivalente) — no reemplaza la demo técnica de S06, la precede. |
 
 Para usar la rúbrica con IA, solicita:
 

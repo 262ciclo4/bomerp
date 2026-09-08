@@ -142,7 +142,7 @@ El criterio 6 se evalúa con los mismos 7 subaspectos de la sustentación integr
 | 4. Aporte individual | Cada integrante demuestra lo que construyó de su propio backend. |
 | 5. Repositorio y estándares | Topics académicos configurados desde S2, organización, commits y reproducibilidad del backend. |
 | 6. MkDocs o equivalente | Documentación de Unidad 1 publicada, navegable y alineada con `lp2-demo.md`. |
-| 7. Pitch/demo ejecutiva | Introducción breve del backend y su avance (no reemplaza la demo técnica de S06, la precede). |
+| 7. Pitch/demo ejecutiva | Introducción breve del backend y su avance, con apoyo visual (.pptx, Canva o equivalente) — no reemplaza la demo técnica de S06, la precede. |
 
 Para usar la rúbrica con IA, solicita:
 

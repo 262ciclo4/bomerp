@@ -191,7 +191,7 @@ El criterio 6 se evalúa con los mismos 7 subaspectos de la sustentación integr
 | 4. Aporte individual | Cada integrante demuestra su propio aporte al diseño técnico. |
 | 5. Repositorio y estándares | Topics académicos configurados desde S2, organización, commits y reproducibilidad de la documentación arquitectónica. |
 | 6. MkDocs o equivalente | Documentación de Unidad 1 publicada, navegable y alineada con `ads-producto.md`. |
-| 7. Pitch/demo ejecutiva | Introducción breve del sistema y su arquitectura (no reemplaza la presentación técnica de S05, la precede). |
+| 7. Pitch/demo ejecutiva | Introducción breve del sistema y su arquitectura, con apoyo visual (.pptx, Canva o equivalente) — no reemplaza la presentación técnica de S05, la precede. |
 
 ## 10. Trazabilidad y procedencia de la rúbrica
 
