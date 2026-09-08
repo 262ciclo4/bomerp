@@ -166,16 +166,32 @@ Decisiones adicionales, previstas pero **aún no formalizadas** como ADR de cód
 
 **Tabla 7. Rúbrica de evaluación de la Unidad 1**
 
-| Criterio | Peso | A (20 pts) | B (15 pts) | C (10 pts) | D (5 pts) |
-|---|---:|---|---|---|---|
-| 1. Representa vistas arquitectónicas mediante C4 o equivalente | 16% | C1, C2 y C3 completas, coherentes entre sí y con el código real. | Las tres vistas están presentes, con alguna inconsistencia menor frente al código. | Falta una vista o hay inconsistencias relevantes. | No presenta vistas arquitectónicas verificables. |
-| 2. Define límites, responsabilidades y componentes del sistema | 16% | Límites de módulo claros y verificados automáticamente (no solo por convención documentada); responsabilidades sin solapamiento. | Límites claros, verificación parcial. | Límites confusos o con solapamiento de responsabilidades. | No define límites ni responsabilidades. |
-| 3. Aplica principios SOLID, cohesión, acoplamiento, modularidad y abstracción | 16% | Cada principio de la sección 6 se sustenta con un ejemplo real del código. | La mayoría de principios se sustenta con ejemplos reales. | Aplicación superficial o solo teórica. | No aplica los principios. |
-| 4. Justifica estilos arquitectónicos y trade-offs | 16% | Justifica el estilo elegido frente a al menos una alternativa, citando trade-offs reales. | Justifica el estilo elegido con trade-offs generales. | Menciona el estilo sin justificar trade-offs. | No justifica el estilo elegido. |
-| 5. Mantiene coherencia con los requerimientos del negocio | 16% | La arquitectura resuelve el dominio (sección 1) y la trazabilidad (sección 8) es verificable en vivo. | La arquitectura resuelve el dominio; la trazabilidad es mayormente verificable. | Coherencia parcial con el dominio o trazabilidad débil. | No hay coherencia demostrable con el dominio. |
-| 6. Sustentación y defensa técnica | 20% | Explica y defiende con dominio las decisiones tomadas, respondiendo con precisión las preguntas individuales. | Explica con solvencia. | Explica con dificultad. | No sustenta. |
+| Criterio | Peso | CE / Nivel | A (20 pts) | B (15 pts) | C (10 pts) | D (5 pts) | Calificación obtenida |
+|---|---:|---|---|---|---|---|---:|
+| 1. Representa vistas arquitectónicas mediante C4 o equivalente | 16% | CE021-N2 (parcial) | C1, C2 y C3 completas, coherentes entre sí y con el código real. | Las tres vistas están presentes, con alguna inconsistencia menor frente al código. | Falta una vista o hay inconsistencias relevantes. | No presenta vistas arquitectónicas verificables. | |
+| 2. Define límites, responsabilidades y componentes del sistema | 16% | CE021-N2 (parcial) | Límites de módulo claros y verificados automáticamente (no solo por convención documentada); responsabilidades sin solapamiento. | Límites claros, verificación parcial. | Límites confusos o con solapamiento de responsabilidades. | No define límites ni responsabilidades. | |
+| 3. Aplica principios SOLID, cohesión, acoplamiento, modularidad y abstracción | 16% | CE021-N2 (parcial) | Cada principio de la sección 6 se sustenta con un ejemplo real del código. | La mayoría de principios se sustenta con ejemplos reales. | Aplicación superficial o solo teórica. | No aplica los principios. | |
+| 4. Justifica estilos arquitectónicos y trade-offs | 16% | CE021-N2 (parcial) | Justifica el estilo elegido frente a al menos una alternativa, citando trade-offs reales. | Justifica el estilo elegido con trade-offs generales. | Menciona el estilo sin justificar trade-offs. | No justifica el estilo elegido. | |
+| 5. Mantiene coherencia con los requerimientos del negocio | 16% | CE021-N2 (parcial) | La arquitectura resuelve el dominio (sección 1) y la trazabilidad (sección 8) es verificable en vivo. | La arquitectura resuelve el dominio; la trazabilidad es mayormente verificable. | Coherencia parcial con el dominio o trazabilidad débil. | No hay coherencia demostrable con el dominio. | |
+| 6. Sustentación y defensa técnica | 20% | CG | Explica y defiende con dominio las decisiones tomadas, respondiendo con precisión las preguntas individuales. | Explica con solvencia. | Explica con dificultad. | No sustenta. | |
 
-Nota final = suma de (`Peso` × `Puntos del nivel obtenido`) / 100 × 20.
+Nota final = suma de (`Peso` × `Puntos de la calificación obtenida`) / 100 × 20.
+
+`CE021-N2 (parcial)` = porción de arquitectura del Nivel 2 de CE021 (Ingeniería de Requerimientos) — la otra porción (diseño detallado) se completa en Unidad 2 de ADS. `CG` = Competencia General "Servicio y misión" del sílabo de ADS — no es CE021.
+
+**Tabla 8. Subaspectos de la sustentación (Unidad 1)**
+
+El criterio 6 se evalúa con los mismos 7 subaspectos de la sustentación integral del Proyecto Integrador ([Guía de Sustentación Final](../u3/guia-sustentacion.md#subaspectos-de-la-sustentacion-integral)) — exigibles desde esta primera sustentación de unidad, no solo en la sustentación final del ciclo (Unidad 3).
+
+| Subaspecto | Qué observa en Unidad 1 |
+|---|---|
+| 1. Defensa técnica | Explicación de las vistas C4 (contexto, contenedores, componentes), los límites de módulo verificados, los principios SOLID aplicados y el estilo arquitectónico justificado, con sus decisiones y evidencias. |
+| 2. Comunicación y orden | Claridad, estructura, tiempo y lenguaje técnico durante la presentación. |
+| 3. Presentación personal y actitud | Puntualidad, vestimenta limpia y adecuada, higiene, cabello ordenado, actitud profesional, respeto, honestidad y coherencia con los valores y principios cristianos de la institución. |
+| 4. Aporte individual | Cada integrante demuestra su propio aporte al diseño técnico. |
+| 5. Repositorio y estándares | Topics académicos configurados desde S2, organización, commits y reproducibilidad de la documentación arquitectónica. |
+| 6. MkDocs o equivalente | Documentación de Unidad 1 publicada, navegable y alineada con `ads-producto.md`. |
+| 7. Pitch/demo ejecutiva | Introducción breve del sistema y su arquitectura (no reemplaza la presentación técnica de S05, la precede). |
 
 ## 10. Trazabilidad y procedencia de la rúbrica
 

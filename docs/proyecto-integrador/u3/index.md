@@ -75,3 +75,43 @@ flowchart TB
 | Integración y estabilización | Paginación justificada, auditoría, E2E, errores corregidos y resultados documentados. |
 | Sustentación | Cada integrante defiende una parte verificable. |
 | Reproducibilidad | Repositorio y documentación permiten ejecutar o revisar el producto. |
+
+## Documentación y reporte del producto final
+
+### Plantilla mínima de documentación MkDocs o equivalente
+
+La documentación publicada no reemplaza al informe. Su función es permitir que otra persona comprenda, ejecute, revise y verifique el producto desde el repositorio.
+
+| Página o sección | Contenido mínimo | Evidencia esperada |
+|---|---|---|
+| Inicio | Nombre del proyecto, problema, solución, curso o cursos, integrantes y enlace al repositorio. | Presentación clara del producto. |
+| Instalación o ejecución | Requisitos, dependencias, configuración y comandos para ejecutar el proyecto. | Instrucciones reproducibles. |
+| Uso del sistema | Flujo principal, pantallas, comandos, endpoints, notebooks o casos de uso según corresponda. | Guía breve para probar el producto. |
+| Arquitectura o estructura | Diagrama, componentes, carpetas principales y decisiones técnicas. | Vista técnica comprensible. |
+| Módulos o funcionalidades | Descripción de las funciones principales del producto. | Relación entre funcionalidades y problema. |
+| Datos | Modelo, archivos, base de datos, datasets, fuentes o estructura de almacenamiento según el curso. | Evidencia de gestión de datos. |
+| Pruebas y evidencias | Casos de prueba, capturas, resultados, métricas, validaciones o salidas generadas. | Verificación del funcionamiento. |
+| Equipo y aporte individual | Integrantes, responsabilidades, aportes y evidencias de participación. | Autoría verificable. |
+| Repositorio y estándares | Topics académicos, estructura, commits, ramas si aplica y criterios de reproducibilidad. | Cumplimiento de estándares técnicos. |
+| Limitaciones y mejoras | Restricciones del producto y mejoras futuras priorizadas. | Cierre reflexivo y realista. |
+
+La documentación debe estar disponible desde las primeras presentaciones y crecer con el proyecto.
+
+### Plantilla sugerida de informe del proyecto
+
+El informe debe documentar el producto integrador como un solo sistema empresarial, no como tres entregables separados. Debe evidenciar la trazabilidad entre ADS, BD2 y LP2.
+
+| Sección | Contenido mínimo | Evidencia esperada |
+|---|---|---|
+| Portada | Nombre del proyecto, cursos, sección, integrantes, docentes y semestre. | Datos completos del equipo. |
+| Resumen ejecutivo | Problema, solución full-stack y valor para el negocio. | Síntesis de 10 a 15 líneas. |
+| Competencia y trazabilidad | Competencia/capacidad del PI y competencias relacionadas. | CE021, CE022, CE023 y CE024 vinculadas al producto. |
+| Alcance y diseño técnico | Contexto, restricciones, atributos de calidad y decisiones. | Documento de diseño, ADRs o diagramas. |
+| Arquitectura | C4, UML, patrones, componentes e integración. | Diagramas y explicación técnica. |
+| Base Oracle | Administración, seguridad, auditoría, rendimiento, backup y recovery. | Scripts, capturas, planes, evidencias y monitoreo. |
+| Backend REST | Conexión, APIs, DTO, CRUD, transacciones, consultas, reglas y seguridad. | Código, endpoints, pruebas y documentación. |
+| Frontend SPA | Navegación, CRUD, formularios cabecera–detalle, consultas, guards, interceptores y UX. | Capturas, componentes y demo funcional. |
+| Integración y operación | Relación diseño-BD-API-SPA, optimización, monitoreo, auditoría y validación. | Demo end-to-end, paginación, pruebas, logs, métricas y evidencias. |
+| Repositorio y documentación | Repositorio, topics, estructura, instrucciones y documentación publicada. | URL del repositorio y MkDocs o equivalente. |
+| Aporte individual | Responsabilidad de cada integrante por curso o componente. | Tabla de tareas, commits o evidencias por integrante. |
+| Limitaciones y mejoras | Límites del sistema y mejoras posibles. | Lista priorizada y realista. |

@@ -26,6 +26,24 @@ Cada integrante debe poder responder:
 5. Qué limitación reconoce.
 6. Cómo su trabajo se conecta con los otros cursos.
 
+## Subaspectos de la sustentación integral
+
+La sustentación integral debe representar como mínimo el 30% de la evaluación del proyecto. Se revisa mediante los siguientes subaspectos:
+
+| Subaspecto | Qué observa |
+|---|---|
+| 1. Defensa técnica | Explicación de arquitectura, base de datos, código, decisiones, limitaciones, evidencias y trazabilidad del sistema. |
+| 2. Comunicación y orden | Claridad, estructura, tiempo y lenguaje técnico. |
+| 3. Presentación personal y actitud | Puntualidad, vestimenta limpia y adecuada, higiene, cabello ordenado, actitud profesional, respeto, honestidad y coherencia con los valores y principios cristianos de la institución. |
+| 4. Aporte individual | Cada integrante demuestra lo que hizo. |
+| 5. Repositorio y estándares | Topics, organización, commits, documentación y reproducibilidad. |
+| 6. MkDocs o equivalente | Documentación publicada, navegable y alineada al producto. |
+| 7. Pitch/demo ejecutiva | Introducción clara del problema, solución y valor, seguida de una demo funcional. |
+
+La sustentación profesional forma parte de la evaluación porque el producto final no solo debe funcionar; también debe ser presentado, explicado y defendido con responsabilidad académica, ética, respeto, honestidad y coherencia con los valores y principios cristianos de la institución.
+
+Estos mismos 7 subaspectos son los que evalúa el criterio de "Sustentación y defensa técnica" en cada rúbrica de Unidad 1 (`ads-producto.md`, `lp2-demo.md`, `bd2-producto.md`) — no son exclusivos de la sustentación final.
+
 ## Evidencia obligatoria
 
 - Repositorio con topics académicos.

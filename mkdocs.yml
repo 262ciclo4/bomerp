@@ -40,6 +40,9 @@ nav:
           - ADS Producto U1: proyecto-integrador/u1/ads-producto.md
           - BD2 Producto U1: proyecto-integrador/u1/bd2-producto.md
           - LP2 Demo U1: proyecto-integrador/u1/lp2-demo.md
+          - ADS Matriz de competencias: proyecto-integrador/u1/ads-matriz-competencias.md
+          - LP2 Matriz de competencias: proyecto-integrador/u1/lp2-matriz-competencias.md
+          - BD2 Matriz de competencias: proyecto-integrador/u1/bd2-matriz-competencias.md
       - 2. Modelado UML, administración Oracle y SPA segura:
           - Producto integrado U2: proyecto-integrador/u2/index.md
           - ADS Producto U2: proyecto-integrador/u2/ads-producto.md

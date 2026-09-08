@@ -15,8 +15,8 @@ ADS define el diseño técnico profesional. BD2 administra y fortalece la base O
 No todos los integrantes de un equipo llevan necesariamente los 3 cursos (hay estudiantes irregulares que solo cursan ADS, solo BD2, solo LP2, o 2 de los 3). Por eso:
 
 - **Cada sesión de cada curso se evalúa de forma autónoma**, sin depender de que el estudiante lleve los otros dos cursos en paralelo — la integración entre ADS, BD2 y LP2 nunca es requisito para aprobar la rúbrica de una sesión individual.
-- **La integración se evalúa únicamente a nivel del Proyecto Integrador** (dimensión 6 de la rúbrica de la sección 6, "Integración del producto y calidad técnica"), y se aplica sobre el **equipo como conjunto**, no sobre cada estudiante individual: si el equipo tiene integrantes en los 3 cursos, esa evidencia de integración existe naturalmente porque cada uno construyó su parte; si el equipo no cubre los 3 cursos, esa dimensión se evalúa sobre lo que el equipo sí integró (por ejemplo, solo ADS+LP2, o solo BD2), sin penalizar la ausencia de un curso que ningún integrante lleva.
-- La sustentación (sección 7) se reparte igual: cada integrante defiende la parte que efectivamente construyó, según los cursos que lleva.
+- **La integración se evalúa únicamente a nivel del Proyecto Integrador, en la sustentación de Unidad 3** ([Guía de Sustentación Final](u3/guia-sustentacion.md), pregunta 6 de la defensa individual: "cómo su trabajo se conecta con los otros cursos"; ver también el [Checklist final](u3/checklist-final.md)), y se aplica sobre el **equipo como conjunto**, no sobre cada estudiante individual: si el equipo tiene integrantes en los 3 cursos, esa evidencia de integración existe naturalmente porque cada uno construyó su parte; si el equipo no cubre los 3 cursos, se evalúa sobre lo que el equipo sí integró (por ejemplo, solo ADS+LP2, o solo BD2), sin penalizar la ausencia de un curso que ningún integrante lleva.
+- La sustentación (Unidad 3, [Guía de Sustentación Final](u3/guia-sustentacion.md)) se reparte igual: cada integrante defiende la parte que efectivamente construyó, según los cursos que lleva.
 
 ### Competencia o capacidad del proyecto
 
@@ -130,9 +130,7 @@ Los artefactos desarrollados como ejemplo base se encuentran en [Unidad 3 - Prod
 | BD2 | **Base Oracle operativa, administrada, optimizada, auditada y resiliente.** | Backup, recovery, monitoreo, diagnóstico, seguridad, auditoría y rendimiento. | Oracle se muestra como soporte operable y recuperable del sistema. |
 | LP2 | **Base Full-Stack modular de BomERP integrada, optimizada, monitoreada y estabilizada.** | Una SPA, una aplicación Spring Boot única con módulos verificados por Spring Modulith, esquemas funcionales Oracle, optimización, caché, logging, monitoreo, paginación, auditoría, E2E y guía de ejecución. | La aplicación ejecuta el flujo final respetando límites modulares (verificados con `ModularityTests`) y se sustenta en S15. |
 
-## 5. Producto Final
-
-### Repositorio académico y topics
+## 5. Repositorio académico y topics
 
 Desde la primera presentación del proyecto, el repositorio debe estar creado y configurado con los topics académicos mínimos. Esta configuración es obligatoria porque permite identificar campus, semestre, línea, tipo de proyecto, cursos participantes, sección y grupo.
 
@@ -152,75 +150,21 @@ seccion-g1
 grupo-<numero>-<nombre-proyecto>
 ```
 
-Componentes mínimos:
+## 6. Producto y evaluación por unidad
 
-- Diseño técnico profesional con arquitectura, vistas, UML, patrones, APIs conceptuales y ADRs.
-- Trazabilidad entre diseño, endpoints, base de datos, vistas SPA y pruebas.
-- Base Oracle con PL/SQL, triggers, excepciones, índices y optimización.
-- Administración de usuarios, roles, privilegios, almacenamiento y auditoría.
-- Evidencias de backup, recovery, monitoreo y diagnóstico.
-- Un backend Spring Boot único que organiza módulos de negocio (verificados con Spring Modulith) con repositorios propios, DTO, CRUD maestro, transacciones cabecera–detalle, consultas, reglas y seguridad JWT.
-- Una SPA con `core`, `shared`, módulos funcionales, CRUD, formularios transaccionales, consultas, reportes, guards e interceptores.
-- Lazy Loading, Code Splitting, caché del navegador, Redis cuando corresponda, logging y monitoreo básico.
-- Paginación de alto volumen, auditoría, pruebas end-to-end, corrección de errores y estabilización.
-- Evidencias comparativas de optimización, pruebas de regresión y estabilización final.
+La evaluación por competencias de cada curso vive en la rúbrica de su propio producto de unidad (columna `CE / Nivel`, etiqueta `CG` para la Competencia General), no en una matriz genérica del PI — evaluar así entregables de proyecto en vez de las competencias reales de cada curso fue el problema del esquema anterior de esta sección. La sustentación final se conduce con la [Guía de Sustentación Final](u3/guia-sustentacion.md), que incluye los 7 subaspectos de la sustentación integral exigibles desde Unidad 1.
 
-## 6. Evaluación por competencias
+**Tabla. Producto y evaluación por curso y unidad**
 
-Los criterios se organizan según una matriz común de evaluación de proyectos académicos: problema, diseño técnico, datos, implementación, integración y calidad, operación, validación y sustentación. El PI se evalúa con una sola rúbrica integrada; cada dimensión indica el curso que aporta principalmente al criterio, sin separar el producto en entregas inconexas.
-
-| Dimensión común | Criterio del PI | Curso asociado | Capacidad evaluada | Evidencias esperadas |
+| Curso | Unidad 1 (con rúbrica) | Unidad 2 | Unidad 3 | Matriz de competencias |
 |---|---|---|---|---|
-| 1. Problema y alcance | Alcance y diseño técnico del sistema | ADS | Analiza el contexto del sistema y define alcance, restricciones y atributos de calidad. | Problema, alcance, stakeholders, atributos de calidad, restricciones y decisiones. |
-| 2. Requerimientos o funcionalidad esperada | Funcionalidad full-stack esperada | ADS + LP2 | Traduce necesidades y diseño en funcionalidades empresariales verificables. | Flujos, casos, pantallas, endpoints, criterios de aceptación y experiencia esperada. |
-| 3. Diseño, modelo o arquitectura | Arquitectura y diseño técnico | ADS | Diseña una arquitectura trazable, aplicable y justificable para el sistema. | C4, UML, patrones, ADRs, componentes, integración, decisiones técnicas y, cuando el módulo lo amerite por sus invariantes de negocio, diseño estratégico/táctico de Domain-Driven Design (agregado, lenguaje ubicuo). |
-| 4. Implementación técnica | Backend REST modular y una SPA modular | LP2 | Implementa una base Full-Stack empresarial segura, transaccional, modular y funcional. | Un ejecutable backend, módulos cohesionados, APIs, DTO, CRUD, cabecera–detalle, seguridad, navegación, formularios y reportes. |
-| 5. Datos, persistencia o procesamiento | Administración Oracle | BD2 | Administra datos empresariales con seguridad, rendimiento, auditoría y continuidad. | Usuarios, roles, privilegios, tablespaces, auditoría, optimización, backup/recovery y monitoreo. |
-| 6. Integración del producto y calidad técnica | Integración full-stack y calidad técnica | ADS + BD2 + LP2 | Integra diseño, base Oracle, backend y frontend como un sistema empresarial verificable y reproducible. | Demo end-to-end, trazabilidad diseño-BD-API-SPA, repositorio, estructura, documentación, estándares, pruebas, scripts y forma de ejecución. |
-| 7. Validación, pruebas o resultados | Operación, resiliencia y validación | BD2 + LP2 | Verifica funcionamiento, seguridad, operación, recuperación y resultados del sistema. | Pruebas end-to-end, monitoreo, auditoría, paginación, backup/recovery, fallos controlados y resultados verificables. |
-| 8. Sustentación técnica y profesional | Sustentación integral | ADS + BD2 + LP2 | Defiende técnica y profesionalmente el PI, evidenciando autoría, integración y responsabilidad académica. | Pitch, demo, defensa técnica, aporte individual, repositorio, topics y MkDocs o equivalente. |
+| ADS | [ads-producto.md](u1/ads-producto.md) | [ads-producto.md](u2/ads-producto.md) | [ads-producto.md](u3/ads-producto.md) | [ads-matriz-competencias.md](u1/ads-matriz-competencias.md) |
+| BD2 | [bd2-producto.md](u1/bd2-producto.md) | [bd2-producto.md](u2/bd2-producto.md) | [bd2-producto.md](u3/bd2-producto.md) | [bd2-matriz-competencias.md](u1/bd2-matriz-competencias.md) |
+| LP2 | [lp2-demo.md](u1/lp2-demo.md) | [lp2-demo.md](u2/lp2-demo.md) | [lp2-producto.md](u3/lp2-producto.md) | [lp2-matriz-competencias.md](u1/lp2-matriz-competencias.md) |
 
-### Rúbrica
+Nota: solo Unidad 1 de los tres cursos tiene cerrada la columna `CE/Nivel` y su matriz de competencias; las rúbricas de Unidad 2 y Unidad 3 quedan pendientes.
 
-| Criterios | % | A (20) | B (15) | C (10) | D (5) |
-|---|---:|---|---|---|---|
-| 1. Problema y alcance | 10% | Problema claro, viable y bien delimitado; el alcance responde al contexto y está justificado. | Problema y alcance comprensibles, con algunos límites o justificaciones por precisar. | Problema poco delimitado o alcance parcialmente viable. | Problema confuso, sin alcance definido o sin relación clara con el producto. |
-| 2. Requerimientos o funcionalidad esperada | 10% | Funcionalidades o requerimientos completos, coherentes y verificables según la necesidad planteada. | Funcionalidades principales cubiertas, con detalles menores pendientes o poco precisos. | Funcionalidades incompletas o parcialmente alineadas al problema. | Funcionalidades ausentes, inconexas o sin relación verificable con la necesidad. |
-| 3. Diseño, modelo o arquitectura | 10% | Diseño, modelo o arquitectura coherente, aplicado y alineado al producto; muestra estructura y decisiones claras. | Diseño funcional con limitaciones menores o decisiones parcialmente justificadas. | Diseño poco claro, incompleto o aplicado de forma parcial. | No presenta diseño, modelo o arquitectura verificable. |
-| 4. Implementación técnica | 10% | Implementación correcta, funcional y alineada a los contenidos centrales del curso. | Implementación funcional con detalles técnicos menores por corregir. | Implementación parcial, con errores o uso limitado de los contenidos del curso. | Implementación insuficiente, no funcional o no relacionada con los contenidos del curso. |
-| 5. Datos, persistencia o procesamiento | 10% | Los datos se gestionan, almacenan, consultan o procesan correctamente según el tipo de proyecto. | Gestión de datos funcional con detalles menores de consistencia, estructura o procesamiento. | Gestión de datos parcial, limitada o con errores relevantes. | No hay manejo de datos verificable o este impide el funcionamiento del producto. |
-| 6. Integración del producto y calidad técnica | 10% | El producto funciona como sistema integrado, ordenado, documentado y reproducible. | Integración funcional con detalles menores de organización, documentación o reproducibilidad. | Integración parcial; existen componentes aislados, desorden o evidencias incompletas. | Componentes desconectados, sin organización técnica ni evidencia reproducible. |
-| 7. Validación, pruebas o resultados | 10% | Presenta pruebas, evidencias o resultados claros que comprueban el funcionamiento y el valor del producto. | Presenta evidencias suficientes, con algunos casos o resultados por completar. | Evidencias limitadas, poco claras o con validación parcial. | No presenta pruebas, evidencias ni resultados verificables. |
-| 8. Sustentación técnica y profesional | 30% | Explica y defiende el producto con solvencia; demuestra aporte individual, dominio técnico, comunicación clara, repositorio, documentación y actitud profesional. | Sustentación clara y funcional, con detalles menores en defensa técnica, evidencias, comunicación o documentación. | Sustentación parcial; dominio, evidencias, comunicación o aporte individual insuficientemente demostrados. | No sustenta adecuadamente, no demuestra autoría o no presenta evidencias mínimas del producto. |
-
-### Subaspectos de la sustentación integral
-
-La sustentación integral debe representar como mínimo el 30% de la evaluación del proyecto. Se revisa mediante los siguientes subaspectos:
-
-| Subaspecto | Qué observa |
-|---|---|
-| 1. Defensa técnica | Explicación de arquitectura, base de datos, código, decisiones, limitaciones, evidencias y trazabilidad del sistema. |
-| 2. Comunicación y orden | Claridad, estructura, tiempo y lenguaje técnico. |
-| 3. Presentación personal y actitud | Puntualidad, vestimenta limpia y adecuada, higiene, cabello ordenado, actitud profesional, respeto, honestidad y coherencia con los valores y principios cristianos de la institución. |
-| 4. Aporte individual | Cada integrante demuestra lo que hizo. |
-| 5. Repositorio y estándares | Topics, organización, commits, documentación y reproducibilidad. |
-| 6. MkDocs o equivalente | Documentación publicada, navegable y alineada al producto. |
-| 7. Pitch/demo ejecutiva | Introducción clara del problema, solución y valor, seguida de una demo funcional. |
-
-La sustentación profesional forma parte de la evaluación porque el producto final no solo debe funcionar; también debe ser presentado, explicado y defendido con responsabilidad académica, ética, respeto, honestidad y coherencia con los valores y principios cristianos de la institución.
-
-## 7. Sustentación
-
-La sustentación inicia con un video pitch breve o introducción ejecutiva de 1 a 3 minutos para presentar el problema, la solución, el valor del producto y la participación del equipo o estudiante.
-
-| Momento | Tiempo sugerido | Propósito |
-|---|---:|---|
-| Exposición técnica | 10 minutos | Presentar arquitectura, diseño, Oracle, backend, frontend, trazabilidad y evidencias. |
-| Demostración en vivo | 5 minutos | Ejecutar flujo full-stack, seguridad, transacción, persistencia, monitoreo o recuperación. |
-
-Cada integrante debe defender una parte verificable: diseño ADS, administración BD2, backend LP2, frontend LP2, seguridad, pruebas, observabilidad, integración o documentación. La base Oracle debe mostrarse como soporte real del sistema, no como componente paralelo.
-
-## 8. Resultado Esperado
+## 7. Resultado Esperado
 
 Al cierre del ciclo, el estudiante debe demostrar que puede convertir un diseño técnico profesional en una solución full-stack empresarial operativa.
 
@@ -229,69 +173,6 @@ Diseño técnico -> Oracle administrado -> Backend REST -> Frontend SPA -> Siste
 ```
 
 El valor del proyecto integrador está en evidenciar que la arquitectura, la base Oracle y la aplicación full-stack pertenecen al mismo sistema y evolucionaron de manera coordinada.
-
-## Anexo. Secuencia sugerida de presentación
-
-La presentación puede organizarse con una secuencia breve de apoyo visual. El video pitch o introducción ejecutiva abre la sustentación y no reemplaza la demo ni la defensa técnica.
-
-| Orden | Slide o momento | Propósito | Competencia evidenciada |
-|---:|---|---|---|
-| 1 | Título del proyecto y equipo | Identificar el proyecto, integrantes y dominio elegido. | CE024 |
-| 2 | Video pitch o introducción ejecutiva | Presentar problema, solución, valor y participación del equipo. | CE024 |
-| 3 | Alcance y diseño técnico | Explicar necesidad, restricciones, atributos de calidad y decisiones. | CE021 |
-| 4 | Arquitectura | Mostrar C4, UML, patrones, componentes y trazabilidad. | CE021 |
-| 5 | Base Oracle | Presentar administración, seguridad, rendimiento, auditoría, respaldo y recuperación. | CE022 |
-| 6 | Backend REST | Explicar conexión, CRUD, DTO, transacciones, consultas, reglas y seguridad. | CE023 |
-| 7 | Frontend SPA | Mostrar navegación, CRUD, cabecera–detalle, consultas, guards, interceptores y control de acceso. | CE023 |
-| 8 | Integración full-stack | Evidenciar relación entre diseño, base, API, frontend y pruebas. | CE021 + CE022 + CE023 |
-| 9 | Operación y resiliencia | Mostrar monitoreo, recuperación, auditoría, fallos y resultados. | CE022 + CE024 |
-| 10 | Demo en vivo | Ejecutar un flujo empresarial completo. | CE023 + CE024 |
-| 11 | 4. Aporte individual | Indicar qué hizo cada integrante por curso o componente. | CE024 |
-| 12 | Repositorio, estándares y mejoras | Mostrar topics, documentación publicada en MkDocs o equivalente, reproducibilidad, límites y mejora. | CE024 |
-
-## Anexo. Plantilla mínima de documentación MkDocs o equivalente
-
-La documentación publicada no reemplaza al informe. Su función es permitir que otra persona comprenda, ejecute, revise y verifique el producto desde el repositorio.
-
-| Página o sección | Contenido mínimo | Evidencia esperada |
-|---|---|---|
-| Inicio | Nombre del proyecto, problema, solución, curso o cursos, integrantes y enlace al repositorio. | Presentación clara del producto. |
-| Instalación o ejecución | Requisitos, dependencias, configuración y comandos para ejecutar el proyecto. | Instrucciones reproducibles. |
-| Uso del sistema | Flujo principal, pantallas, comandos, endpoints, notebooks o casos de uso según corresponda. | Guía breve para probar el producto. |
-| Arquitectura o estructura | Diagrama, componentes, carpetas principales y decisiones técnicas. | Vista técnica comprensible. |
-| Módulos o funcionalidades | Descripción de las funciones principales del producto. | Relación entre funcionalidades y problema. |
-| Datos | Modelo, archivos, base de datos, datasets, fuentes o estructura de almacenamiento según el curso. | Evidencia de gestión de datos. |
-| Pruebas y evidencias | Casos de prueba, capturas, resultados, métricas, validaciones o salidas generadas. | Verificación del funcionamiento. |
-| Equipo y aporte individual | Integrantes, responsabilidades, aportes y evidencias de participación. | Autoría verificable. |
-| 5. Repositorio y estándares | Topics académicos, estructura, commits, ramas si aplica y criterios de reproducibilidad. | Cumplimiento de estándares técnicos. |
-| Limitaciones y mejoras | Restricciones del producto y mejoras futuras priorizadas. | Cierre reflexivo y realista. |
-
-La documentación debe estar disponible desde las primeras presentaciones y crecer con el proyecto. Para FP puede ser una documentación sencilla; para proyectos integradores y cursos avanzados debe ser más completa y técnica.
-## Anexo. Plantilla sugerida de informe del proyecto
-
-El informe debe documentar el producto integrador como un solo sistema empresarial, no como tres entregables separados. Debe evidenciar la trazabilidad entre ADS, BD2 y LP2.
-
-| Sección | Contenido mínimo | Evidencia esperada |
-|---|---|---|
-| Portada | Nombre del proyecto, cursos, sección, integrantes, docentes y semestre. | Datos completos del equipo. |
-| Resumen ejecutivo | Problema, solución full-stack y valor para el negocio. | Síntesis de 10 a 15 líneas. |
-| Competencia y trazabilidad | Competencia/capacidad del PI y competencias relacionadas. | CE021, CE022, CE023 y CE024 vinculadas al producto. |
-| Alcance y diseño técnico | Contexto, restricciones, atributos de calidad y decisiones. | Documento de diseño, ADRs o diagramas. |
-| Arquitectura | C4, UML, patrones, componentes e integración. | Diagramas y explicación técnica. |
-| Base Oracle | Administración, seguridad, auditoría, rendimiento, backup y recovery. | Scripts, capturas, planes, evidencias y monitoreo. |
-| Backend REST | Conexión, APIs, DTO, CRUD, transacciones, consultas, reglas y seguridad. | Código, endpoints, pruebas y documentación. |
-| Frontend SPA | Navegación, CRUD, formularios cabecera–detalle, consultas, guards, interceptores y UX. | Capturas, componentes y demo funcional. |
-| Integración y operación | Relación diseño-BD-API-SPA, optimización, monitoreo, auditoría y validación. | Demo end-to-end, paginación, pruebas, logs, métricas y evidencias. |
-| Repositorio y documentación | Repositorio, topics, estructura, instrucciones y documentación publicada. | URL del repositorio y MkDocs o equivalente. |
-| 4. Aporte individual | Responsabilidad de cada integrante por curso o componente. | Tabla de tareas, commits o evidencias por integrante. |
-| Limitaciones y mejoras | Límites del sistema y mejoras posibles. | Lista priorizada y realista. |
-
-
-
-
-
-
-
 
 
 

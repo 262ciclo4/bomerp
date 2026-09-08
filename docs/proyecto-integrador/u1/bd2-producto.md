@@ -96,24 +96,40 @@ Las FK entre esquemas conservan la integridad porque todos los objetos pertenece
 
 **Tabla 7. Rúbrica de evaluación de la Unidad 1**
 
-| Criterio | Peso | A (20 pts) | B (15 pts) | C (10 pts) | D (5 pts) | Nivel obtenido |
-|---|---:|---|---|---|---|---:|
-| 1. Implementa procedimientos y funciones PL/SQL alineados al negocio | 16% | Procedimientos y funciones correctos, probados con casos válidos e inválidos, alineados a una regla real del proyecto. | Procedimientos y funciones correctos, con pruebas parciales. | Procedimientos incompletos o sin alineación clara al negocio. | No presenta procedimientos ni funciones PL/SQL. | |
-| 2. Automatiza reglas mediante triggers DML | 16% | Al menos un trigger de regla de negocio y uno de auditoría, disparados y verificados en vivo. | Triggers presentes, con verificación parcial. | Un solo trigger funcional, o sin verificación clara. | No presenta triggers. | |
-| 3. Controla errores mediante manejo de excepciones | 16% | Excepciones predefinidas y personalizadas, con registro de errores probado con casos reales. | Manejo de excepciones presente, con registro parcial. | Manejo de excepciones incompleto o sin registro. | No maneja excepciones. | |
-| 4. Analiza y mejora consultas mediante Explain Plan, CBO y DBMS_STATS | 16% | Comparación completa (antes/después de estadísticas y de una reescritura), con `COST`/`ROWS` interpretados correctamente. | Comparación presente, con interpretación parcial. | Un solo `EXPLAIN PLAN` capturado, sin comparación real. | No presenta `EXPLAIN PLAN`. | |
-| 5. Aplica estrategias de indexación según selectividad y necesidades de consulta | 16% | Selectividad medida antes de crear cada índice, con al menos un caso de índice correctamente descartado. | Índices creados con selectividad medida, sin caso de descarte. | Índices creados sin medir selectividad. | No presenta índices ni selectividad medida. | |
-| 6. Sustentación y defensa técnica | 20% | Explica y defiende con dominio las decisiones tomadas, respondiendo con precisión las preguntas individuales. | Explica con solvencia. | Explica con dificultad. | No sustenta. | |
+| Criterio | Peso | CE / Nivel | A (20 pts) | B (15 pts) | C (10 pts) | D (5 pts) | Calificación obtenida |
+|---|---:|---|---|---|---|---|---:|
+| 1. Implementa procedimientos y funciones PL/SQL alineados al negocio | 16% | CE023-N1 | Procedimientos y funciones correctos, probados con casos válidos e inválidos, alineados a una regla real del proyecto. | Procedimientos y funciones correctos, con pruebas parciales. | Procedimientos incompletos o sin alineación clara al negocio. | No presenta procedimientos ni funciones PL/SQL. | |
+| 2. Automatiza reglas mediante triggers DML | 16% | CE023-N1 | Al menos un trigger de regla de negocio y uno de auditoría, disparados y verificados en vivo. | Triggers presentes, con verificación parcial. | Un solo trigger funcional, o sin verificación clara. | No presenta triggers. | |
+| 3. Controla errores mediante manejo de excepciones | 16% | CE023-N1 | Excepciones predefinidas y personalizadas, con registro de errores probado con casos reales. | Manejo de excepciones presente, con registro parcial. | Manejo de excepciones incompleto o sin registro. | No maneja excepciones. | |
+| 4. Analiza y mejora consultas mediante Explain Plan, CBO y DBMS_STATS | 16% | CE023-N1 | Comparación completa (antes/después de estadísticas y de una reescritura), con `COST`/`ROWS` interpretados correctamente. | Comparación presente, con interpretación parcial. | Un solo `EXPLAIN PLAN` capturado, sin comparación real. | No presenta `EXPLAIN PLAN`. | |
+| 5. Aplica estrategias de indexación según selectividad y necesidades de consulta | 16% | CE023-N1 | Selectividad medida antes de crear cada índice, con al menos un caso de índice correctamente descartado. | Índices creados con selectividad medida, sin caso de descarte. | Índices creados sin medir selectividad. | No presenta índices ni selectividad medida. | |
+| 6. Sustentación y defensa técnica | 20% | CG | Explica y defiende con dominio las decisiones tomadas, respondiendo con precisión las preguntas individuales. | Explica con solvencia. | Explica con dificultad. | No sustenta. | |
 
-Nota final = suma de (`Peso` × `Puntos del nivel obtenido`) / 100 × 20.
+Nota final = suma de (`Peso` × `Puntos de la calificación obtenida`) / 100 × 20.
+
+`CE023-N1` = Nivel 1 de CE023 (Programación) — la rama que se satisface programando el motor transaccional del lado del servidor. `CG` = Competencia General del sílabo de BD2 — con una inconsistencia del propio documento fuente que hay que resolver antes de usar esta etiqueta en un informe formal: la sección III del sílabo la nombra "PENSAMIENTO SUPERIOR" (Firmeza de propósito, ejecución, dominio propio, mantener esfuerzo), pero la tabla de evaluación de la sección VIII la nombra "Servicio y misión" — no son el mismo texto y no está claro cuál es la vigente.
+
+**Tabla 8. Subaspectos de la sustentación (Unidad 1)**
+
+El criterio 6 se evalúa con los mismos 7 subaspectos de la sustentación integral del Proyecto Integrador ([Guía de Sustentación Final](../u3/guia-sustentacion.md#subaspectos-de-la-sustentacion-integral)) — exigibles desde esta primera sustentación de unidad, no solo en la sustentación final del ciclo (Unidad 3).
+
+| Subaspecto | Qué observa en Unidad 1 |
+|---|---|
+| 1. Defensa técnica | Explicación de los procedimientos/funciones PL/SQL, triggers, manejo de excepciones e índices creados según selectividad, con sus decisiones y evidencias. |
+| 2. Comunicación y orden | Claridad, estructura, tiempo y lenguaje técnico durante la presentación. |
+| 3. Presentación personal y actitud | Puntualidad, vestimenta limpia y adecuada, higiene, cabello ordenado, actitud profesional, respeto, honestidad y coherencia con los valores y principios cristianos de la institución. |
+| 4. Aporte individual | Cada integrante demuestra lo que construyó de su propio motor transaccional. |
+| 5. Repositorio y estándares | Topics académicos configurados desde S2, organización, commits y reproducibilidad de los scripts Oracle. |
+| 6. MkDocs o equivalente | Documentación de Unidad 1 publicada, navegable y alineada con `bd2-producto.md`. |
+| 7. Pitch/demo ejecutiva | Introducción breve del motor transaccional y su avance (no reemplaza la demo técnica de S06, la precede). |
 
 Para usar la rúbrica con IA, solicita:
 
 ```text
 Evalúa la sustentación y el producto (bd2-producto.md o la sección 2 de la guía S06) usando la rúbrica de esta sección.
-Para cada criterio selecciona el nivel obtenido: A=20, B=15, C=10, D=5.
+Para cada criterio selecciona la calificación obtenida: A=20, B=15, C=10, D=5.
 Justifica brevemente cada nivel con evidencia concreta (objetos Oracle, planes de ejecución, selectividad).
-Calcula la nota final con la fórmula: suma de (Peso × Puntos del nivel obtenido) / 100 × 20.
+Calcula la nota final con la fórmula: suma de (Peso × Puntos de la calificación obtenida) / 100 × 20.
 Indica 2 fortalezas y 2 recomendaciones para lo que sigue en Unidad II.
 ```
 
