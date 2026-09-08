@@ -701,24 +701,28 @@ Y en el `maven-compiler-plugin`, junto al `annotationProcessorPaths` que ya tien
 </annotationProcessorPaths>
 ```
 
+**El proyecto que genera VS Code trae este mismo bloque `annotationProcessorPaths` dos veces dentro de `maven-compiler-plugin`**: una vez en la ejecución `default-compile` (compila `src/main`) y otra en `default-testCompile` (compila `src/test`), esta última con Lombok solo. Agrega el `<path>` de MapStruct en **las dos**, no solo en `default-compile`. Dejar `default-testCompile` sin MapStruct deja el proyecto en un estado inconsistente entre main y test que el compilador incremental del propio IDE no siempre resuelve solo — un síntoma real: agregar `@Mapping` correctamente a un mapper y que el aviso `Unmapped target property` siga apareciendo, sin que el código tenga ningún error.
+
 `ProductoMapper` pasa de clase a interfaz:
 
 ```java
 package pe.edu.upeu.bomerp.catalogo.producto.mapper;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoRequest;
 import pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoResponse;
 import pe.edu.upeu.bomerp.catalogo.producto.entity.Producto;
 
 @Mapper(componentModel = "spring")
 public interface ProductoMapper {
+    @Mapping(target = "id", ignore = true)
     Producto toEntity(ProductoRequest request);
     ProductoResponse toResponse(Producto producto);
 }
 ```
 
-Como los nombres de campo coinciden exactamente entre `Producto`, `ProductoRequest` y `ProductoResponse` (`nombre`, `precio`, `stock`), MapStruct los relaciona sin ninguna anotación `@Mapping` adicional — el mapeo de 3.4, que hoy tiene diez líneas de `set`/`get` repetidos, se reduce a dos firmas de método sin cuerpo.
+`nombre`, `precio` y `stock` coinciden exactamente entre `Producto`, `ProductoRequest` y `ProductoResponse`, así que MapStruct los relaciona sin anotaciones adicionales — el mapeo de 3.4, que hoy tiene diez líneas de `set`/`get` repetidos, se reduce a dos firmas de método sin cuerpo. `id` es la excepción: `ProductoRequest` no lo trae (lo genera Oracle al insertar, S1), así que `toEntity` sí necesita `@Mapping(target = "id", ignore = true)` — sin ella, MapStruct advierte `Unmapped target property: id` en cada build.
 
 **Ventajas frente al mapeo manual (3.4):**
 

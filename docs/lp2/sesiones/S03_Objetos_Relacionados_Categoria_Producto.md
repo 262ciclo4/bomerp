@@ -514,6 +514,7 @@ public record CategoriaResumen(Long id, String nombre) {
 package pe.edu.upeu.bomerp.catalogo.categoria.mapper;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import pe.edu.upeu.bomerp.catalogo.categoria.dto.CategoriaRequest;
 import pe.edu.upeu.bomerp.catalogo.categoria.dto.CategoriaResponse;
 import pe.edu.upeu.bomerp.catalogo.categoria.dto.CategoriaResumen;
@@ -521,13 +522,14 @@ import pe.edu.upeu.bomerp.catalogo.categoria.entity.Categoria;
 
 @Mapper(componentModel = "spring")
 public interface CategoriaMapper {
+    @Mapping(target = "id", ignore = true)
     Categoria toEntity(CategoriaRequest request);
     CategoriaResponse toResponse(Categoria categoria);
     CategoriaResumen toResumen(Categoria categoria);
 }
 ```
 
-Como `Categoria`, `CategoriaRequest`/`CategoriaResponse` y `CategoriaResumen` comparten los nombres `nombre`/`descripcion` (donde aplica), MapStruct genera las tres implementaciones sin ninguna anotación `@Mapping` adicional — exactamente el mismo caso que S2 (3.8) describió para `ProductoMapper`.
+Como `Categoria`, `CategoriaRequest`/`CategoriaResponse` y `CategoriaResumen` comparten los nombres `nombre`/`descripcion` (donde aplica), MapStruct genera `toResponse`/`toResumen` sin ninguna anotación `@Mapping` adicional. `toEntity` sí necesita una: `CategoriaRequest` no trae `id` (lo genera Oracle al insertar, S1), así que sin `@Mapping(target = "id", ignore = true)` MapStruct advierte `Unmapped target property: id` en cada build — el mismo caso que S2 (3.8) ya resolvió para `ProductoMapper`.
 
 ### 3.4 Habilitar la lógica de negocio de `Categoria`
 
