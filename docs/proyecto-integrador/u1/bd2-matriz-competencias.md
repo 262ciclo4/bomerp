@@ -31,7 +31,7 @@ Este documento **no reemplaza** la rúbrica de `bd2-producto.md` — la resume y
 
 | Unidad | Sesión | Criterio de rúbrica | Peso en la unidad | Umbral de logro | Última medición |
 |---|---|---|---:|---|---|
-| U1 | S06 | 6. Sustentación y defensa técnica | 20% | ≥70% en B o superior | Pendiente |
+| U1 | S06 | 6. Sustentación | 20% | ≥70% en B o superior | Pendiente |
 
 ## 3. Umbral de logro
 

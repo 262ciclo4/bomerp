@@ -103,25 +103,24 @@ Las FK entre esquemas conservan la integridad porque todos los objetos pertenece
 | 3. Controla errores mediante manejo de excepciones | 16% | CE023-N1 | Excepciones predefinidas y personalizadas, con registro de errores probado con casos reales. | Manejo de excepciones presente, con registro parcial. | Manejo de excepciones incompleto o sin registro. | No maneja excepciones. | |
 | 4. Analiza y mejora consultas mediante Explain Plan, CBO y DBMS_STATS | 16% | CE023-N1 | Comparación completa (antes/después de estadísticas y de una reescritura), con `COST`/`ROWS` interpretados correctamente. | Comparación presente, con interpretación parcial. | Un solo `EXPLAIN PLAN` capturado, sin comparación real. | No presenta `EXPLAIN PLAN`. | |
 | 5. Aplica estrategias de indexación según selectividad y necesidades de consulta | 16% | CE023-N1 | Selectividad medida antes de crear cada índice, con al menos un caso de índice correctamente descartado. | Índices creados con selectividad medida, sin caso de descarte. | Índices creados sin medir selectividad. | No presenta índices ni selectividad medida. | |
-| 6. Sustentación y defensa técnica | 20% | CG | Explica y defiende con dominio las decisiones tomadas, respondiendo con precisión las preguntas individuales. | Explica con solvencia. | Explica con dificultad. | No sustenta. | |
+| 6. Sustentación | 20% | CG | Sustenta con claridad y profesionalismo su aporte individual, respondiendo con precisión las preguntas del jurado. | Sustenta con solvencia, con detalles menores en claridad, orden o precisión. | Sustenta con dificultad; claridad, orden o precisión insuficientes. | No sustenta adecuadamente ni demuestra su aporte individual. | |
 
 Nota final = suma de (`Peso` × `Puntos de la calificación obtenida`) / 100 × 20.
 
-`CE023-N1` = Nivel 1 de CE023 (Programación) — la rama que se satisface programando el motor transaccional del lado del servidor. `CG` = Competencia General del sílabo de BD2 — con una inconsistencia del propio documento fuente que hay que resolver antes de usar esta etiqueta en un informe formal: la sección III del sílabo la nombra "PENSAMIENTO SUPERIOR" (Firmeza de propósito, ejecución, dominio propio, mantener esfuerzo), pero la tabla de evaluación de la sección VIII la nombra "Servicio y misión" — no son el mismo texto y no está claro cuál es la vigente.
+`CE023-N1` = Nivel 1 de CE023 (Programación) — la rama que se satisface programando el motor transaccional del lado del servidor. `CG` = Competencia General del sílabo de BD2 — con una inconsistencia del propio documento fuente que hay que resolver antes de usar esta etiqueta en un informe formal: la sección III del sílabo la nombra "PENSAMIENTO SUPERIOR" (Firmeza de propósito, ejecución, dominio propio, mantener esfuerzo), pero la tabla de evaluación de la sección VIII la nombra "Servicio y misión" — no son el mismo texto y no está claro cuál es la vigente. No es CE023: los criterios 1-5 ya son la evidencia técnica, incluida su verificación en vivo; el criterio 6 verifica aporte individual y comunicación.
 
 **Tabla 8. Subaspectos de la sustentación (Unidad 1)**
 
-El criterio 6 se evalúa con los mismos 7 subaspectos de la sustentación integral del Proyecto Integrador ([Guía de Sustentación Final](../u3/guia-sustentacion.md#subaspectos-de-la-sustentacion-integral)) — exigibles desde esta primera sustentación de unidad, no solo en la sustentación final del ciclo (Unidad 3).
+El criterio 6 se evalúa con los mismos 6 subaspectos de la sustentación integral del Proyecto Integrador ([Guía de Sustentación Final](../u3/guia-sustentacion.md#subaspectos-de-la-sustentacion-integral)) — exigibles desde esta primera sustentación de unidad, no solo en la sustentación final del ciclo (Unidad 3).
 
 | Subaspecto | Qué observa en Unidad 1 |
 |---|---|
-| 1. Defensa técnica | Explicación de los procedimientos/funciones PL/SQL, triggers, manejo de excepciones e índices creados según selectividad, con sus decisiones y evidencias. |
+| 1. Aporte individual | Cada integrante demuestra lo que construyó de su propio motor transaccional. |
 | 2. Comunicación y orden | Claridad, estructura, tiempo y lenguaje técnico durante la presentación. |
 | 3. Presentación personal y actitud | Puntualidad, vestimenta limpia y adecuada, higiene, cabello ordenado, actitud profesional, respeto, honestidad y coherencia con los valores y principios cristianos de la institución. |
-| 4. Aporte individual | Cada integrante demuestra lo que construyó de su propio motor transaccional. |
-| 5. Repositorio y estándares | Topics académicos configurados desde S2, organización, commits y reproducibilidad de los scripts Oracle. |
-| 6. MkDocs o equivalente | Documentación de Unidad 1 publicada, navegable y alineada con `bd2-producto.md`. |
-| 7. Pitch/demo ejecutiva | Introducción breve del motor transaccional y su avance, con apoyo visual (.pptx, Canva o equivalente) — no reemplaza la demo técnica de S06, la precede. |
+| 4. Repositorio y estándares | Topics académicos configurados desde S2, organización, commits y reproducibilidad de los scripts Oracle. |
+| 5. MkDocs o equivalente | Documentación de Unidad 1 publicada, navegable y alineada con `bd2-producto.md`. |
+| 6. Pitch/demo ejecutiva | Introducción breve del motor transaccional y su avance, con apoyo visual (.pptx, Canva o equivalente) — no reemplaza la demo técnica de S06, la precede. |
 
 Para usar la rúbrica con IA, solicita:
 
@@ -135,6 +134,6 @@ Indica 2 fortalezas y 2 recomendaciones para lo que sigue en Unidad II.
 
 ## 8. Trazabilidad y procedencia de la rúbrica
 
-Los primeros cinco criterios son cita literal del resultado de aprendizaje de la Unidad I en el sílabo de BD2; el sexto corresponde a la sustentación exigida por el mismo sílabo (sesión 6, actividad 2).
+Los primeros cinco criterios son cita literal del resultado de aprendizaje de la Unidad I en el sílabo de BD2; el sexto (Sustentación) corresponde a la sustentación exigida por el mismo sílabo (sesión 6, actividad 2).
 
-**Con la malla curricular:** los criterios 1-5 corresponden al **Nivel 1 de CE023** (Programación) — la rama de esa competencia que se satisface programando el motor transaccional del lado del servidor (Unidad 1 de BD2), distinta de la rama que otros cursos (`FP`, `POO`, `LP1`) satisfacen construyendo una plataforma completa de otro tipo. La administración de la instancia Oracle a escala empresarial (**Nivel 2 de CE022**, Ingeniería de la Información) no se evalúa aquí: se completa en las Unidades 2 y 3 de BD2. El criterio 6 (Sustentación y defensa técnica) es transversal y no forma parte de la definición de la competencia.
+**Con la malla curricular:** los criterios 1-5 corresponden al **Nivel 1 de CE023** (Programación) — la rama de esa competencia que se satisface programando el motor transaccional del lado del servidor (Unidad 1 de BD2), distinta de la rama que otros cursos (`FP`, `POO`, `LP1`) satisfacen construyendo una plataforma completa de otro tipo. La administración de la instancia Oracle a escala empresarial (**Nivel 2 de CE022**, Ingeniería de la Información) no se evalúa aquí: se completa en las Unidades 2 y 3 de BD2. El criterio 6 (Sustentación) es transversal y no forma parte de la definición de la competencia.

@@ -173,30 +173,29 @@ Decisiones adicionales, previstas pero **aún no formalizadas** como ADR de cód
 | 3. Aplica principios SOLID, cohesión, acoplamiento, modularidad y abstracción | 16% | CE021-N2 (parcial) | Cada principio de la sección 6 se sustenta con un ejemplo real del código. | La mayoría de principios se sustenta con ejemplos reales. | Aplicación superficial o solo teórica. | No aplica los principios. | |
 | 4. Justifica estilos arquitectónicos y trade-offs | 16% | CE021-N2 (parcial) | Justifica el estilo elegido frente a al menos una alternativa, citando trade-offs reales. | Justifica el estilo elegido con trade-offs generales. | Menciona el estilo sin justificar trade-offs. | No justifica el estilo elegido. | |
 | 5. Mantiene coherencia con los requerimientos del negocio | 16% | CE021-N2 (parcial) | La arquitectura resuelve el dominio (sección 1) y la trazabilidad (sección 8) es verificable en vivo. | La arquitectura resuelve el dominio; la trazabilidad es mayormente verificable. | Coherencia parcial con el dominio o trazabilidad débil. | No hay coherencia demostrable con el dominio. | |
-| 6. Sustentación y defensa técnica | 20% | CG | Explica y defiende con dominio las decisiones tomadas, respondiendo con precisión las preguntas individuales. | Explica con solvencia. | Explica con dificultad. | No sustenta. | |
+| 6. Sustentación | 20% | CG | Sustenta con claridad y profesionalismo su aporte individual, respondiendo con precisión las preguntas del jurado. | Sustenta con solvencia, con detalles menores en claridad, orden o precisión. | Sustenta con dificultad; claridad, orden o precisión insuficientes. | No sustenta adecuadamente ni demuestra su aporte individual. | |
 
 Nota final = suma de (`Peso` × `Puntos de la calificación obtenida`) / 100 × 20.
 
-`CE021-N2 (parcial)` = porción de arquitectura del Nivel 2 de CE021 (Ingeniería de Requerimientos) — la otra porción (diseño detallado) se completa en Unidad 2 de ADS. `CG` = Competencia General "Servicio y misión" del sílabo de ADS — no es CE021.
+`CE021-N2 (parcial)` = porción de arquitectura del Nivel 2 de CE021 (Ingeniería de Requerimientos) — la otra porción (diseño detallado) se completa en Unidad 2 de ADS. `CG` = Competencia General "Servicio y misión" del sílabo de ADS — no es CE021: los criterios 1-5 ya son la evidencia técnica, incluida su verificación en vivo; el criterio 6 verifica aporte individual y comunicación.
 
 **Tabla 8. Subaspectos de la sustentación (Unidad 1)**
 
-El criterio 6 se evalúa con los mismos 7 subaspectos de la sustentación integral del Proyecto Integrador ([Guía de Sustentación Final](../u3/guia-sustentacion.md#subaspectos-de-la-sustentacion-integral)) — exigibles desde esta primera sustentación de unidad, no solo en la sustentación final del ciclo (Unidad 3).
+El criterio 6 se evalúa con los mismos 6 subaspectos de la sustentación integral del Proyecto Integrador ([Guía de Sustentación Final](../u3/guia-sustentacion.md#subaspectos-de-la-sustentacion-integral)) — exigibles desde esta primera sustentación de unidad, no solo en la sustentación final del ciclo (Unidad 3).
 
 | Subaspecto | Qué observa en Unidad 1 |
 |---|---|
-| 1. Defensa técnica | Explicación de las vistas C4 (contexto, contenedores, componentes), los límites de módulo verificados, los principios SOLID aplicados y el estilo arquitectónico justificado, con sus decisiones y evidencias. |
+| 1. Aporte individual | Cada integrante demuestra su propio aporte al diseño técnico. |
 | 2. Comunicación y orden | Claridad, estructura, tiempo y lenguaje técnico durante la presentación. |
 | 3. Presentación personal y actitud | Puntualidad, vestimenta limpia y adecuada, higiene, cabello ordenado, actitud profesional, respeto, honestidad y coherencia con los valores y principios cristianos de la institución. |
-| 4. Aporte individual | Cada integrante demuestra su propio aporte al diseño técnico. |
-| 5. Repositorio y estándares | Topics académicos configurados desde S2, organización, commits y reproducibilidad de la documentación arquitectónica. |
-| 6. MkDocs o equivalente | Documentación de Unidad 1 publicada, navegable y alineada con `ads-producto.md`. |
-| 7. Pitch/demo ejecutiva | Introducción breve del sistema y su arquitectura, con apoyo visual (.pptx, Canva o equivalente) — no reemplaza la presentación técnica de S05, la precede. |
+| 4. Repositorio y estándares | Topics académicos configurados desde S2, organización, commits y reproducibilidad de la documentación arquitectónica. |
+| 5. MkDocs o equivalente | Documentación de Unidad 1 publicada, navegable y alineada con `ads-producto.md`. |
+| 6. Pitch/demo ejecutiva | Introducción breve del sistema y su arquitectura, con apoyo visual (.pptx, Canva o equivalente) — no reemplaza la presentación técnica de S05, la precede. |
 
 ## 10. Trazabilidad y procedencia de la rúbrica
 
-Los primeros cinco criterios son cita literal del resultado de aprendizaje de la Unidad I en el sílabo de ADS; el sexto corresponde a la sustentación exigida por el mismo sílabo (sesión 5, actividad 2).
+Los primeros cinco criterios son cita literal del resultado de aprendizaje de la Unidad I en el sílabo de ADS; el sexto (Sustentación) corresponde a la sustentación exigida por el mismo sílabo (sesión 5, actividad 2).
 
-**Con la malla curricular:** los criterios 1-5 corresponden a la porción de arquitectura del **Nivel 2 de CE021** (Ingeniería de Requerimientos) — la otra porción de ese nivel, diseño detallado (modelo de dominio, UML, patrones), se completa en la Unidad 2 de ADS, no aquí. El criterio 6 (Sustentación y defensa técnica) es transversal y no forma parte de la definición de la competencia.
+**Con la malla curricular:** los criterios 1-5 corresponden a la porción de arquitectura del **Nivel 2 de CE021** (Ingeniería de Requerimientos) — la otra porción de ese nivel, diseño detallado (modelo de dominio, UML, patrones), se completa en la Unidad 2 de ADS, no aquí. El criterio 6 (Sustentación) es transversal y no forma parte de la definición de la competencia.
 
 Además, la Sección 2 (Atributos de calidad) de este producto es insumo para el **Nivel 1 de CE024** (Calidad de Software) — se usa aquí para decisiones arquitectónicas, pero no se califica en esta rúbrica; se califica formalmente recién en la Unidad 3 de ADS (criterio 3: "Justifica atributos de calidad y decisiones técnicas").
