@@ -797,6 +797,90 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ads-matriz-competencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Matriz de competencias
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lp2-matriz-competencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Matriz de competencias
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bd2-matriz-competencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Matriz de competencias
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -3015,17 +3099,19 @@
 <tr>
 <th>Criterio</th>
 <th style="text-align: right;">Peso</th>
+<th>CE / Nivel</th>
 <th>A (20 pts)</th>
 <th>B (15 pts)</th>
 <th>C (10 pts)</th>
 <th>D (5 pts)</th>
-<th style="text-align: right;">Nivel obtenido</th>
+<th style="text-align: right;">Calificación obtenida</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>1. Implementa procedimientos y funciones PL/SQL alineados al negocio</td>
 <td style="text-align: right;">16%</td>
+<td>CE023-N1</td>
 <td>Procedimientos y funciones correctos, probados con casos válidos e inválidos, alineados a una regla real del proyecto.</td>
 <td>Procedimientos y funciones correctos, con pruebas parciales.</td>
 <td>Procedimientos incompletos o sin alineación clara al negocio.</td>
@@ -3035,6 +3121,7 @@
 <tr>
 <td>2. Automatiza reglas mediante triggers DML</td>
 <td style="text-align: right;">16%</td>
+<td>CE023-N1</td>
 <td>Al menos un trigger de regla de negocio y uno de auditoría, disparados y verificados en vivo.</td>
 <td>Triggers presentes, con verificación parcial.</td>
 <td>Un solo trigger funcional, o sin verificación clara.</td>
@@ -3044,6 +3131,7 @@
 <tr>
 <td>3. Controla errores mediante manejo de excepciones</td>
 <td style="text-align: right;">16%</td>
+<td>CE023-N1</td>
 <td>Excepciones predefinidas y personalizadas, con registro de errores probado con casos reales.</td>
 <td>Manejo de excepciones presente, con registro parcial.</td>
 <td>Manejo de excepciones incompleto o sin registro.</td>
@@ -3053,6 +3141,7 @@
 <tr>
 <td>4. Analiza y mejora consultas mediante Explain Plan, CBO y DBMS_STATS</td>
 <td style="text-align: right;">16%</td>
+<td>CE023-N1</td>
 <td>Comparación completa (antes/después de estadísticas y de una reescritura), con <code>COST</code>/<code>ROWS</code> interpretados correctamente.</td>
 <td>Comparación presente, con interpretación parcial.</td>
 <td>Un solo <code>EXPLAIN PLAN</code> capturado, sin comparación real.</td>
@@ -3062,6 +3151,7 @@
 <tr>
 <td>5. Aplica estrategias de indexación según selectividad y necesidades de consulta</td>
 <td style="text-align: right;">16%</td>
+<td>CE023-N1</td>
 <td>Selectividad medida antes de crear cada índice, con al menos un caso de índice correctamente descartado.</td>
 <td>Índices creados con selectividad medida, sin caso de descarte.</td>
 <td>Índices creados sin medir selectividad.</td>
@@ -3071,6 +3161,7 @@
 <tr>
 <td>6. Sustentación y defensa técnica</td>
 <td style="text-align: right;">20%</td>
+<td>CG</td>
 <td>Explica y defiende con dominio las decisiones tomadas, respondiendo con precisión las preguntas individuales.</td>
 <td>Explica con solvencia.</td>
 <td>Explica con dificultad.</td>
@@ -3079,12 +3170,53 @@
 </tr>
 </tbody>
 </table>
-<p>Nota final = suma de (<code>Peso</code> × <code>Puntos del nivel obtenido</code>) / 100 × 20.</p>
+<p>Nota final = suma de (<code>Peso</code> × <code>Puntos de la calificación obtenida</code>) / 100 × 20.</p>
+<p><code>CE023-N1</code> = Nivel 1 de CE023 (Programación) — la rama que se satisface programando el motor transaccional del lado del servidor. <code>CG</code> = Competencia General del sílabo de BD2 — con una inconsistencia del propio documento fuente que hay que resolver antes de usar esta etiqueta en un informe formal: la sección III del sílabo la nombra "PENSAMIENTO SUPERIOR" (Firmeza de propósito, ejecución, dominio propio, mantener esfuerzo), pero la tabla de evaluación de la sección VIII la nombra "Servicio y misión" — no son el mismo texto y no está claro cuál es la vigente.</p>
+<p><strong>Tabla 8. Subaspectos de la sustentación (Unidad 1)</strong></p>
+<p>El criterio 6 se evalúa con los mismos 7 subaspectos de la sustentación integral del Proyecto Integrador (<a href="../../u3/guia-sustentacion/#subaspectos-de-la-sustentacion-integral">Guía de Sustentación Final</a>) — exigibles desde esta primera sustentación de unidad, no solo en la sustentación final del ciclo (Unidad 3).</p>
+<table>
+<thead>
+<tr>
+<th>Subaspecto</th>
+<th>Qué observa en Unidad 1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Defensa técnica</td>
+<td>Explicación de los procedimientos/funciones PL/SQL, triggers, manejo de excepciones e índices creados según selectividad, con sus decisiones y evidencias.</td>
+</tr>
+<tr>
+<td>2. Comunicación y orden</td>
+<td>Claridad, estructura, tiempo y lenguaje técnico durante la presentación.</td>
+</tr>
+<tr>
+<td>3. Presentación personal y actitud</td>
+<td>Puntualidad, vestimenta limpia y adecuada, higiene, cabello ordenado, actitud profesional, respeto, honestidad y coherencia con los valores y principios cristianos de la institución.</td>
+</tr>
+<tr>
+<td>4. Aporte individual</td>
+<td>Cada integrante demuestra lo que construyó de su propio motor transaccional.</td>
+</tr>
+<tr>
+<td>5. Repositorio y estándares</td>
+<td>Topics académicos configurados desde S2, organización, commits y reproducibilidad de los scripts Oracle.</td>
+</tr>
+<tr>
+<td>6. MkDocs o equivalente</td>
+<td>Documentación de Unidad 1 publicada, navegable y alineada con <code>bd2-producto.md</code>.</td>
+</tr>
+<tr>
+<td>7. Pitch/demo ejecutiva</td>
+<td>Introducción breve del motor transaccional y su avance (no reemplaza la demo técnica de S06, la precede).</td>
+</tr>
+</tbody>
+</table>
 <p>Para usar la rúbrica con IA, solicita:</p>
 <div class="highlight"><pre><span></span><code>Evalúa la sustentación y el producto (bd2-producto.md o la sección 2 de la guía S06) usando la rúbrica de esta sección.
-Para cada criterio selecciona el nivel obtenido: A=20, B=15, C=10, D=5.
+Para cada criterio selecciona la calificación obtenida: A=20, B=15, C=10, D=5.
 Justifica brevemente cada nivel con evidencia concreta (objetos Oracle, planes de ejecución, selectividad).
-Calcula la nota final con la fórmula: suma de (Peso × Puntos del nivel obtenido) / 100 × 20.
+Calcula la nota final con la fórmula: suma de (Peso × Puntos de la calificación obtenida) / 100 × 20.
 Indica 2 fortalezas y 2 recomendaciones para lo que sigue en Unidad II.
 </code></pre></div>
 <h2 id="8-trazabilidad-y-procedencia-de-la-rubrica">8. Trazabilidad y procedencia de la rúbrica<a class="headerlink" href="#8-trazabilidad-y-procedencia-de-la-rubrica" title="Permanent link">&para;</a></h2>
