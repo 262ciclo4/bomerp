@@ -3970,6 +3970,7 @@ select c1_0.id, c1_0.descripcion, c1_0.nombre from categorias c1_0 where c1_0.id
 <div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.categoria.mapper</span><span class="p">;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">org.mapstruct.Mapper</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.mapstruct.Mapping</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.categoria.dto.CategoriaRequest</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.categoria.dto.CategoriaResponse</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.categoria.dto.CategoriaResumen</span><span class="p">;</span>
@@ -3977,12 +3978,13 @@ select c1_0.id, c1_0.descripcion, c1_0.nombre from categorias c1_0 where c1_0.id
 
 <span class="nd">@Mapper</span><span class="p">(</span><span class="n">componentModel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"spring"</span><span class="p">)</span>
 <span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">CategoriaMapper</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nd">@Mapping</span><span class="p">(</span><span class="n">target</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"id"</span><span class="p">,</span><span class="w"> </span><span class="n">ignore</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
 <span class="w">    </span><span class="n">Categoria</span><span class="w"> </span><span class="nf">toEntity</span><span class="p">(</span><span class="n">CategoriaRequest</span><span class="w"> </span><span class="n">request</span><span class="p">);</span>
 <span class="w">    </span><span class="n">CategoriaResponse</span><span class="w"> </span><span class="nf">toResponse</span><span class="p">(</span><span class="n">Categoria</span><span class="w"> </span><span class="n">categoria</span><span class="p">);</span>
 <span class="w">    </span><span class="n">CategoriaResumen</span><span class="w"> </span><span class="nf">toResumen</span><span class="p">(</span><span class="n">Categoria</span><span class="w"> </span><span class="n">categoria</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>Como <code>Categoria</code>, <code>CategoriaRequest</code>/<code>CategoriaResponse</code> y <code>CategoriaResumen</code> comparten los nombres <code>nombre</code>/<code>descripcion</code> (donde aplica), MapStruct genera las tres implementaciones sin ninguna anotación <code>@Mapping</code> adicional — exactamente el mismo caso que S2 (3.8) describió para <code>ProductoMapper</code>.</p>
+<p>Como <code>Categoria</code>, <code>CategoriaRequest</code>/<code>CategoriaResponse</code> y <code>CategoriaResumen</code> comparten los nombres <code>nombre</code>/<code>descripcion</code> (donde aplica), MapStruct genera <code>toResponse</code>/<code>toResumen</code> sin ninguna anotación <code>@Mapping</code> adicional. <code>toEntity</code> sí necesita una: <code>CategoriaRequest</code> no trae <code>id</code> (lo genera Oracle al insertar, S1), así que sin <code>@Mapping(target = "id", ignore = true)</code> MapStruct advierte <code>Unmapped target property: id</code> en cada build — el mismo caso que S2 (3.8) ya resolvió para <code>ProductoMapper</code>.</p>
 <h3 id="34-habilitar-la-logica-de-negocio-de-categoria">3.4 Habilitar la lógica de negocio de <code>Categoria</code><a class="headerlink" href="#34-habilitar-la-logica-de-negocio-de-categoria" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> las cuatro operaciones CRUD, con el mismo patrón <code>buscarOFallar</code> de S2.</p>
 <p><strong><code>catalogo/categoria/service/CategoriaService.java</code></strong></p>

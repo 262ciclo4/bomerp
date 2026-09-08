@@ -4150,21 +4150,24 @@ MapStruct es una decisión de equipo, no un requisito de S2.</p>
 <span class="w">    </span><span class="nt">&lt;/path&gt;</span>
 <span class="nt">&lt;/annotationProcessorPaths&gt;</span>
 </code></pre></div>
+<p><strong>El proyecto que genera VS Code trae este mismo bloque <code>annotationProcessorPaths</code> dos veces dentro de <code>maven-compiler-plugin</code></strong>: una vez en la ejecución <code>default-compile</code> (compila <code>src/main</code>) y otra en <code>default-testCompile</code> (compila <code>src/test</code>), esta última con Lombok solo. Agrega el <code>&lt;path&gt;</code> de MapStruct en <strong>las dos</strong>, no solo en <code>default-compile</code>. Dejar <code>default-testCompile</code> sin MapStruct deja el proyecto en un estado inconsistente entre main y test que el compilador incremental del propio IDE no siempre resuelve solo — un síntoma real: agregar <code>@Mapping</code> correctamente a un mapper y que el aviso <code>Unmapped target property</code> siga apareciendo, sin que el código tenga ningún error.</p>
 <p><code>ProductoMapper</code> pasa de clase a interfaz:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.mapper</span><span class="p">;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">org.mapstruct.Mapper</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.mapstruct.Mapping</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoRequest</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoResponse</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.catalogo.producto.entity.Producto</span><span class="p">;</span>
 
 <span class="nd">@Mapper</span><span class="p">(</span><span class="n">componentModel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"spring"</span><span class="p">)</span>
 <span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">ProductoMapper</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nd">@Mapping</span><span class="p">(</span><span class="n">target</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"id"</span><span class="p">,</span><span class="w"> </span><span class="n">ignore</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
 <span class="w">    </span><span class="n">Producto</span><span class="w"> </span><span class="nf">toEntity</span><span class="p">(</span><span class="n">ProductoRequest</span><span class="w"> </span><span class="n">request</span><span class="p">);</span>
 <span class="w">    </span><span class="n">ProductoResponse</span><span class="w"> </span><span class="nf">toResponse</span><span class="p">(</span><span class="n">Producto</span><span class="w"> </span><span class="n">producto</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>Como los nombres de campo coinciden exactamente entre <code>Producto</code>, <code>ProductoRequest</code> y <code>ProductoResponse</code> (<code>nombre</code>, <code>precio</code>, <code>stock</code>), MapStruct los relaciona sin ninguna anotación <code>@Mapping</code> adicional — el mapeo de 3.4, que hoy tiene diez líneas de <code>set</code>/<code>get</code> repetidos, se reduce a dos firmas de método sin cuerpo.</p>
+<p><code>nombre</code>, <code>precio</code> y <code>stock</code> coinciden exactamente entre <code>Producto</code>, <code>ProductoRequest</code> y <code>ProductoResponse</code>, así que MapStruct los relaciona sin anotaciones adicionales — el mapeo de 3.4, que hoy tiene diez líneas de <code>set</code>/<code>get</code> repetidos, se reduce a dos firmas de método sin cuerpo. <code>id</code> es la excepción: <code>ProductoRequest</code> no lo trae (lo genera Oracle al insertar, S1), así que <code>toEntity</code> sí necesita <code>@Mapping(target = "id", ignore = true)</code> — sin ella, MapStruct advierte <code>Unmapped target property: id</code> en cada build.</p>
 <p><strong>Ventajas frente al mapeo manual (3.4):</strong></p>
 <ul>
 <li><strong>Menos código que mantener</strong>: si mañana <code>Producto</code> agrega un campo con el mismo nombre en el DTO, MapStruct lo mapea solo — nadie edita <code>ProductoMapper</code> a mano.</li>
