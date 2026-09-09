@@ -3668,9 +3668,55 @@
 <p>En BomERP: <code>Categoria</code>, <code>Producto</code>, <code>Venta</code> y <code>DetalleVenta</code> son entidades (cada una con su propio identificador y ciclo de vida). Reglas de negocio ya conocidas del dominio: un producto se registra con una categoría existente; una venta no puede registrarse con stock insuficiente; el total de una venta debe cuadrar con la suma de sus detalles; solo una venta en estado <code>REGISTRADA</code> puede anularse.</p>
 <p><strong>Error frecuente</strong>: confundir una regla de negocio con una validación de formato (por ejemplo, "el nombre no puede estar vacío") — las reglas de negocio protegen invariantes del dominio, no solo la forma de un dato.</p>
 <h3 id="23-agrupacion-funcional-y-delimitacion-de-modulos">2.3 Agrupación funcional y delimitación de módulos<a class="headerlink" href="#23-agrupacion-funcional-y-delimitacion-de-modulos" title="Permanent link">&para;</a></h3>
-<p>Un <strong>módulo funcional</strong> agrupa entidades y reglas que cambian juntas por la misma razón de negocio — la misma cohesión que ya se verificó con Spring Modulith en Unidad I, pero decidida aquí desde el dominio, no desde el código.</p>
-<p>En BomERP: <code>catalogo</code> agrupa <code>Categoria</code> y <code>Producto</code> (cambian por decisiones de inventario/precio); <code>ventas</code> agrupa <code>Venta</code> y <code>DetalleVenta</code> (cambian juntas por el proceso de venta). <code>inventario</code>, <code>compras</code> y <code>seguridad</code> quedan delimitados como módulos futuros — se nombran para no mezclar su responsabilidad con <code>catalogo</code>/<code>ventas</code>, pero no se modelan en profundidad hasta que su propia sesión les dé contenido.</p>
-<p><strong>Error frecuente</strong>: agrupar por tipo técnico (todas las entidades juntas, todos los DTO juntos) en vez de por razón de negocio — eso es organización por capa, no por módulo funcional.</p>
+<p>Un <strong>módulo funcional</strong> (en DDD, <strong>bounded context</strong>: un límite explícito dentro del cual un modelo y su lenguaje son consistentes) agrupa entidades y reglas que cambian juntas por la misma razón de negocio — la misma cohesión que ya se verificó con Spring Modulith en Unidad I, pero decidida aquí desde el dominio, no desde el código.</p>
+<p>Un ERP como BomERP es precisamente el tipo de dominio donde esta habilidad se pone a prueba: no hay dos módulos obvios, hay varios módulos candidatos compitiendo por las mismas entidades, y trazar mal el límite entre ellos es el error más caro de corregir después. Para trazarlo bien, DDD clasifica cada módulo candidato por el tipo de subdominio que resuelve, no solo por qué entidades contiene:</p>
+<p><strong>Tabla 2. Subdominios de BomERP</strong></p>
+<table>
+<thead>
+<tr>
+<th>Módulo candidato</th>
+<th>Tipo de subdominio</th>
+<th>Por qué</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ventas</code></td>
+<td><strong>Core</strong> (el negocio mismo)</td>
+<td>Es la razón de existir de un ERP comercial: ahí vive la lógica más valiosa y compleja (consistencia transaccional, anulación, auditoría).</td>
+</tr>
+<tr>
+<td><code>catalogo</code></td>
+<td>Supporting</td>
+<td>Necesario para que exista algo que vender, pero no es el diferenciador — cualquier ERP tiene un catálogo parecido.</td>
+</tr>
+<tr>
+<td><code>inventario</code> (candidato)</td>
+<td>Supporting</td>
+<td>Sostiene la disponibilidad para vender; acoplado a <code>catalogo</code>, pero su lógica de movimientos es genérica entre distintos ERP.</td>
+</tr>
+<tr>
+<td><code>compras</code> (candidato)</td>
+<td>Supporting</td>
+<td>Sostiene el inventario, con reglas de aprobación propias del negocio, pero es un proceso bastante estándar en cualquier ERP.</td>
+</tr>
+<tr>
+<td><code>seguridad</code> (candidato)</td>
+<td><strong>Generic</strong> (problema ya resuelto)</td>
+<td>Autenticación y autorización no son el negocio de BomERP — por eso otros proyectos de este mismo programa lo resuelven con un IAM externo (Keycloak) en vez de construirlo; aquí se construye con JWT solo porque es contenido de aprendizaje del sílabo de LP2 (S10), no porque diferencie al negocio.</td>
+</tr>
+</tbody>
+</table>
+<p>Un subdominio <strong>Core</strong> justifica invertir el mayor esfuerzo de modelado (por eso <code>ventas</code> es el único módulo, junto con <code>catalogo</code>, con sesión propia ya en esta unidad); un subdominio <strong>Generic</strong> casi nunca debería construirse desde cero en un proyecto real — se reconoce igual, aunque este curso lo construya por razones pedagógicas.</p>
+<p>Delimitar el módulo no basta: también hay que decidir cómo se relacionan entre sí, porque un bounded context nunca vive aislado.</p>
+<ul>
+<li><code>ventas</code> (Core) consume <code>catalogo</code> (Supporting) <strong>por referencia, no por composición</strong>: <code>DetalleVenta</code> no incluye el objeto <code>Producto</code> completo, solo su id y una copia congelada del precio al momento de la venta — si mañana <code>catalogo</code> cambia el precio de un producto, una venta ya registrada no debe cambiar. Esta es la razón real (no solo de estilo) por la que <code>Dinero</code> se modela como valor copiado en el detalle, no como referencia viva al catálogo (ver 2.5).</li>
+<li><code>catalogo</code> e <code>inventario</code> (candidato) comparten el concepto de "stock disponible" con responsabilidades distintas: <code>catalogo</code> puede mostrar un stock de lectura rápida en <code>Producto.stock</code>, pero la fuente de verdad de cuánto stock hay debería ser la suma de movimientos que <code>inventario</code> registre (<code>MovimientoStock</code>), no un contador editado directamente desde dos módulos a la vez.</li>
+<li><code>compras</code> (candidato) alimenta a <code>inventario</code> (candidato): una orden de compra recibida genera movimientos de entrada de stock — <code>compras</code> produce el evento, <code>inventario</code> lo consume.</li>
+<li><code>seguridad</code> (candidato) no se consume por composición desde ningún otro módulo: todos los demás solo guardan el id del usuario como referencia para auditoría (quién vendió, quién registró el movimiento) — nadie más necesita conocer las reglas internas de <code>Usuario</code>/<code>Rol</code>.</li>
+</ul>
+<p><strong>Hallazgo de aplicar DDD aquí:</strong> <code>Producto.stock</code>, tal como ya se usa en BD2/LP2 (S4-S5), es en realidad una vista denormalizada de algo que el módulo <code>inventario</code> todavía no existe para gobernar. Cuando <code>inventario</code> reciba su propia sesión, su primer trabajo de modelado será decidir si esa columna se conserva como caché de lectura o se recalcula desde el ledger de movimientos — no es un error de BD2/LP2, es una decisión de límite de contexto que esta sesión recién deja planteada.</p>
+<p><strong>Error frecuente</strong>: agrupar por tipo técnico (todas las entidades juntas, todos los DTO juntos) en vez de por razón de negocio — eso es organización por capa, no por módulo funcional. Otro error frecuente: tratar todos los módulos candidatos como si tuvieran la misma importancia — un subdominio Core exige el modelado más cuidadoso; uno Generic no debería competir por ese mismo esfuerzo.</p>
 <h3 id="24-casos-de-uso-relevantes">2.4 Casos de uso relevantes<a class="headerlink" href="#24-casos-de-uso-relevantes" title="Permanent link">&para;</a></h3>
 <p>Un <strong>caso de uso relevante</strong> describe una interacción completa entre un actor y el sistema que produce un resultado de valor para el negocio — no cada método de una clase, solo los que un stakeholder reconocería como "algo que el sistema hace por mí".</p>
 <p>En BomERP: <em>Registrar producto</em>, <em>Registrar venta</em> (cabecera y detalle en la misma operación), <em>Anular venta</em>, <em>Consultar ventas por filtro y rango de fecha</em>. No son casos de uso relevantes operaciones internas como "calcular subtotal de una línea" — esas son parte de la implementación de <em>Registrar venta</em>, no un caso de uso aparte.</p>
@@ -3702,7 +3748,7 @@
 </ul>
 <h3 id="31-identificar-entidades-y-reglas-de-negocio">3.1 Identificar entidades y reglas de negocio<a class="headerlink" href="#31-identificar-entidades-y-reglas-de-negocio" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> listado de entidades con sus reglas de negocio asociadas.</p>
-<p><strong>Tabla 2. Entidades y reglas de negocio de BomERP</strong></p>
+<p><strong>Tabla 3. Entidades y reglas de negocio de BomERP</strong></p>
 <table>
 <thead>
 <tr>
@@ -3736,7 +3782,7 @@
 </table>
 <h3 id="32-delimitar-modulos-funcionales">3.2 Delimitar módulos funcionales<a class="headerlink" href="#32-delimitar-modulos-funcionales" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> agrupación de entidades en módulos con su razón de cohesión.</p>
-<p><strong>Tabla 3. Módulos funcionales de BomERP</strong></p>
+<p><strong>Tabla 4. Módulos funcionales de BomERP</strong></p>
 <table>
 <thead>
 <tr>
@@ -3749,33 +3795,33 @@
 <tr>
 <td><code>catalogo</code></td>
 <td><code>Categoria</code>, <code>Producto</code></td>
-<td>Cambian juntas por decisiones de inventario y precio.</td>
+<td>Cambian por decisiones de qué existe y a qué precio, no por el proceso de venderlo.</td>
 </tr>
 <tr>
 <td><code>ventas</code></td>
 <td><code>Venta</code>, <code>DetalleVenta</code></td>
-<td>Cambian juntas por el proceso transaccional de venta.</td>
+<td>Cambian juntas por el proceso comercial de venta; el dinero fluye hacia adentro.</td>
 </tr>
 <tr>
-<td><code>inventario</code> (futuro)</td>
-<td>—</td>
-<td>Sin sesión asignada aún; no se modela en profundidad todavía.</td>
+<td><code>inventario</code> (candidato, futuro)</td>
+<td><code>MovimientoStock</code></td>
+<td>Cambia por recepción o consumo físico de stock — una razón distinta de "qué existe" (<code>catalogo</code>); sin sesión asignada aún, no se modela en profundidad todavía.</td>
 </tr>
 <tr>
-<td><code>compras</code> (futuro)</td>
-<td>—</td>
-<td>Delimitado, no obligatorio en esta unidad.</td>
+<td><code>compras</code> (candidato, futuro)</td>
+<td><code>OrdenCompra</code>, <code>Proveedor</code></td>
+<td>El dinero fluye hacia afuera, con reglas de aprobación propias — lo opuesto de <code>ventas</code>; delimitado, no obligatorio en esta unidad.</td>
 </tr>
 <tr>
-<td><code>seguridad</code> (futuro)</td>
-<td>—</td>
-<td>Se implementa en S10 (Patrones y arquitectura empresarial).</td>
+<td><code>seguridad</code> (candidato, futuro)</td>
+<td><code>Usuario</code>, <code>Rol</code></td>
+<td>Cambia por identidad y acceso, no por el negocio de catálogo o ventas; se implementa en S10 (Patrones y arquitectura empresarial).</td>
 </tr>
 </tbody>
 </table>
 <h3 id="33-reconocer-casos-de-uso-relevantes">3.3 Reconocer casos de uso relevantes<a class="headerlink" href="#33-reconocer-casos-de-uso-relevantes" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> lista de casos de uso relevantes por módulo.</p>
-<p><strong>Tabla 4. Casos de uso relevantes de BomERP</strong></p>
+<p><strong>Tabla 5. Casos de uso relevantes de BomERP</strong></p>
 <table>
 <thead>
 <tr>
@@ -3814,7 +3860,7 @@
 </table>
 <h3 id="34-identificar-objetos-de-valor">3.4 Identificar objetos de valor<a class="headerlink" href="#34-identificar-objetos-de-valor" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> objetos de valor candidatos y qué reemplazan.</p>
-<p><strong>Tabla 5. Objetos de valor candidatos</strong></p>
+<p><strong>Tabla 6. Objetos de valor candidatos</strong></p>
 <table>
 <thead>
 <tr>
@@ -3838,7 +3884,7 @@
 </table>
 <h3 id="35-aplicar-diseno-estrategico-de-ddd">3.5 Aplicar diseño estratégico de DDD<a class="headerlink" href="#35-aplicar-diseno-estrategico-de-ddd" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> glosario de lenguaje ubicuo y delimitación del agregado.</p>
-<p><strong>Tabla 6. Lenguaje ubicuo de BomERP</strong></p>
+<p><strong>Tabla 7. Lenguaje ubicuo de BomERP</strong></p>
 <table>
 <thead>
 <tr>
@@ -3892,7 +3938,7 @@
 <p>Este esquema es intencionalmente simple: el diagrama de clases completo, con atributos, operaciones y multiplicidades, se construye en S7. Aquí solo se fija qué entidades existen, en qué módulo viven y cuál es el agregado.</p>
 <h3 id="37-trazar-ads-con-bd2-y-lp2">3.7 Trazar ADS con BD2 y LP2<a class="headerlink" href="#37-trazar-ads-con-bd2-y-lp2" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> matriz de integración del modelo de dominio.</p>
-<p><strong>Tabla 7. Matriz de integración ADS-BD2-LP2</strong></p>
+<p><strong>Tabla 8. Matriz de integración ADS-BD2-LP2</strong></p>
 <table>
 <thead>
 <tr>
@@ -3939,7 +3985,7 @@
 <p>Completa y evidencia estas tareas:</p>
 <ol>
 <li>Identificar al menos cuatro entidades con su regla de negocio asociada.</li>
-<li>Delimitar al menos dos módulos funcionales con su razón de cohesión.</li>
+<li>Delimitar al menos cinco módulos candidatos de todo el sistema (como los cinco de BomERP), cada uno con su razón de cambio — de esos, elegir los uno o dos que sí se modelan en profundidad esta unidad (el equivalente propio de <code>catalogo</code>/<code>ventas</code>) y justificar por qué los demás quedan como candidatos futuros.</li>
 <li>Reconocer al menos tres casos de uso relevantes.</li>
 <li>Identificar al menos un objeto de valor candidato.</li>
 <li>Elaborar el glosario de lenguaje ubicuo y delimitar el agregado del proceso transaccional propio.</li>
@@ -3997,7 +4043,7 @@ y no a partir de qué tan cómodo es agrupar clases en el código?
 <ul>
 <li>El archivo respeta el nombre solicitado.</li>
 <li>Identifica entidades con su regla de negocio asociada.</li>
-<li>Delimita módulos funcionales con razón de cohesión explícita.</li>
+<li>Delimita al menos cinco módulos candidatos de todo el sistema, cada uno con su razón de cambio, distinguiendo cuáles se modelan en profundidad esta unidad y cuáles quedan como candidatos futuros.</li>
 <li>Reconoce casos de uso relevantes, no solo operaciones CRUD sueltas.</li>
 <li>Identifica al menos un objeto de valor justificado.</li>
 <li>Presenta el glosario de lenguaje ubicuo y el agregado delimitado.</li>
@@ -4014,7 +4060,7 @@ y no a partir de qué tan cómodo es agrupar clases en el código?
 <li>¿Por qué separaste tus módulos funcionales de esa forma y no de otra?</li>
 </ol>
 <h3 id="46-rubrica-de-evaluacion">4.6 Rúbrica de evaluación<a class="headerlink" href="#46-rubrica-de-evaluacion" title="Permanent link">&para;</a></h3>
-<p><strong>Tabla 8. Rúbrica de evaluación</strong></p>
+<p><strong>Tabla 9. Rúbrica de evaluación</strong></p>
 <table>
 <thead>
 <tr>
@@ -4031,9 +4077,9 @@ y no a partir de qué tan cómodo es agrupar clases en el código?
 <tr>
 <td>1. Entidades, reglas y módulos*</td>
 <td style="text-align: right;">25</td>
-<td>Identifica entidades con reglas de negocio claras y módulos delimitados con cohesión real.</td>
-<td>Identifica entidades y módulos principales, con detalles menores.</td>
-<td>Entidades o módulos incompletos o poco justificados.</td>
+<td>Identifica entidades con reglas de negocio claras y delimita al menos cinco módulos candidatos de todo el sistema, cada uno con su razón de cambio propia.</td>
+<td>Identifica entidades y la mayoría de los módulos candidatos, con alguna razón de cambio genérica.</td>
+<td>Entidades o módulos incompletos, o módulos delimitados sin razón de cambio distinta entre ellos.</td>
 <td>No identifica entidades ni módulos verificables.</td>
 <td style="text-align: right;"></td>
 </tr>
