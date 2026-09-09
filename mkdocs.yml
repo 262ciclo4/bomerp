@@ -66,6 +66,8 @@ nav:
           - S3 - Diseño estructural y principios SOLID: ads/sesiones/S03_Diseno_Estructural_Principios_SOLID.md
           - S4 - Arquitecturas modernas: ads/sesiones/S04_Arquitecturas_Modernas.md
           - S5 - Evaluación de la Unidad I: ads/sesiones/S05_Evaluacion_Unidad_1.md
+      - II. Diseño Dinámico, Modelado UML y Patrones:
+          - S6 - Descubrimiento y modelado del dominio: ads/sesiones/S06_Descubrimiento_Modelado_Dominio.md
   - BD2:
       - Inicio: bd2/index.md
       - Silabos:
