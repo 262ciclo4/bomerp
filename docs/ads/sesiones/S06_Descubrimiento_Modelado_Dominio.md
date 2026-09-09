@@ -116,11 +116,32 @@ En BomERP: `Categoria`, `Producto`, `Venta` y `DetalleVenta` son entidades (cada
 
 ### 2.3 Agrupación funcional y delimitación de módulos
 
-Un **módulo funcional** agrupa entidades y reglas que cambian juntas por la misma razón de negocio — la misma cohesión que ya se verificó con Spring Modulith en Unidad I, pero decidida aquí desde el dominio, no desde el código.
+Un **módulo funcional** (en DDD, **bounded context**: un límite explícito dentro del cual un modelo y su lenguaje son consistentes) agrupa entidades y reglas que cambian juntas por la misma razón de negocio — la misma cohesión que ya se verificó con Spring Modulith en Unidad I, pero decidida aquí desde el dominio, no desde el código.
 
-En BomERP: `catalogo` agrupa `Categoria` y `Producto` (cambian por decisiones de inventario/precio); `ventas` agrupa `Venta` y `DetalleVenta` (cambian juntas por el proceso de venta). `inventario`, `compras` y `seguridad` quedan delimitados como módulos futuros — se nombran para no mezclar su responsabilidad con `catalogo`/`ventas`, pero no se modelan en profundidad hasta que su propia sesión les dé contenido.
+Un ERP como BomERP es precisamente el tipo de dominio donde esta habilidad se pone a prueba: no hay dos módulos obvios, hay varios módulos candidatos compitiendo por las mismas entidades, y trazar mal el límite entre ellos es el error más caro de corregir después. Para trazarlo bien, DDD clasifica cada módulo candidato por el tipo de subdominio que resuelve, no solo por qué entidades contiene:
 
-**Error frecuente**: agrupar por tipo técnico (todas las entidades juntas, todos los DTO juntos) en vez de por razón de negocio — eso es organización por capa, no por módulo funcional.
+**Tabla 2. Subdominios de BomERP**
+
+| Módulo candidato | Tipo de subdominio | Por qué |
+|---|---|---|
+| `ventas` | **Core** (el negocio mismo) | Es la razón de existir de un ERP comercial: ahí vive la lógica más valiosa y compleja (consistencia transaccional, anulación, auditoría). |
+| `catalogo` | Supporting | Necesario para que exista algo que vender, pero no es el diferenciador — cualquier ERP tiene un catálogo parecido. |
+| `inventario` (candidato) | Supporting | Sostiene la disponibilidad para vender; acoplado a `catalogo`, pero su lógica de movimientos es genérica entre distintos ERP. |
+| `compras` (candidato) | Supporting | Sostiene el inventario, con reglas de aprobación propias del negocio, pero es un proceso bastante estándar en cualquier ERP. |
+| `seguridad` (candidato) | **Generic** (problema ya resuelto) | Autenticación y autorización no son el negocio de BomERP — por eso otros proyectos de este mismo programa lo resuelven con un IAM externo (Keycloak) en vez de construirlo; aquí se construye con JWT solo porque es contenido de aprendizaje del sílabo de LP2 (S10), no porque diferencie al negocio. |
+
+Un subdominio **Core** justifica invertir el mayor esfuerzo de modelado (por eso `ventas` es el único módulo, junto con `catalogo`, con sesión propia ya en esta unidad); un subdominio **Generic** casi nunca debería construirse desde cero en un proyecto real — se reconoce igual, aunque este curso lo construya por razones pedagógicas.
+
+Delimitar el módulo no basta: también hay que decidir cómo se relacionan entre sí, porque un bounded context nunca vive aislado.
+
+- `ventas` (Core) consume `catalogo` (Supporting) **por referencia, no por composición**: `DetalleVenta` no incluye el objeto `Producto` completo, solo su id y una copia congelada del precio al momento de la venta — si mañana `catalogo` cambia el precio de un producto, una venta ya registrada no debe cambiar. Esta es la razón real (no solo de estilo) por la que `Dinero` se modela como valor copiado en el detalle, no como referencia viva al catálogo (ver 2.5).
+- `catalogo` e `inventario` (candidato) comparten el concepto de "stock disponible" con responsabilidades distintas: `catalogo` puede mostrar un stock de lectura rápida en `Producto.stock`, pero la fuente de verdad de cuánto stock hay debería ser la suma de movimientos que `inventario` registre (`MovimientoStock`), no un contador editado directamente desde dos módulos a la vez.
+- `compras` (candidato) alimenta a `inventario` (candidato): una orden de compra recibida genera movimientos de entrada de stock — `compras` produce el evento, `inventario` lo consume.
+- `seguridad` (candidato) no se consume por composición desde ningún otro módulo: todos los demás solo guardan el id del usuario como referencia para auditoría (quién vendió, quién registró el movimiento) — nadie más necesita conocer las reglas internas de `Usuario`/`Rol`.
+
+**Hallazgo de aplicar DDD aquí:** `Producto.stock`, tal como ya se usa en BD2/LP2 (S4-S5), es en realidad una vista denormalizada de algo que el módulo `inventario` todavía no existe para gobernar. Cuando `inventario` reciba su propia sesión, su primer trabajo de modelado será decidir si esa columna se conserva como caché de lectura o se recalcula desde el ledger de movimientos — no es un error de BD2/LP2, es una decisión de límite de contexto que esta sesión recién deja planteada.
+
+**Error frecuente**: agrupar por tipo técnico (todas las entidades juntas, todos los DTO juntos) en vez de por razón de negocio — eso es organización por capa, no por módulo funcional. Otro error frecuente: tratar todos los módulos candidatos como si tuvieran la misma importancia — un subdominio Core exige el modelado más cuidadoso; uno Generic no debería competir por ese mismo esfuerzo.
 
 ### 2.4 Casos de uso relevantes
 
@@ -174,7 +195,7 @@ Tiempo: 2h.
 
 **Producto del paso:** listado de entidades con sus reglas de negocio asociadas.
 
-**Tabla 2. Entidades y reglas de negocio de BomERP**
+**Tabla 3. Entidades y reglas de negocio de BomERP**
 
 | Entidad | Identificador | Regla de negocio asociada |
 |---|---|---|
@@ -187,21 +208,21 @@ Tiempo: 2h.
 
 **Producto del paso:** agrupación de entidades en módulos con su razón de cohesión.
 
-**Tabla 3. Módulos funcionales de BomERP**
+**Tabla 4. Módulos funcionales de BomERP**
 
 | Módulo | Entidades | Razón de cohesión |
 |---|---|---|
-| `catalogo` | `Categoria`, `Producto` | Cambian juntas por decisiones de inventario y precio. |
-| `ventas` | `Venta`, `DetalleVenta` | Cambian juntas por el proceso transaccional de venta. |
-| `inventario` (futuro) | — | Sin sesión asignada aún; no se modela en profundidad todavía. |
-| `compras` (futuro) | — | Delimitado, no obligatorio en esta unidad. |
-| `seguridad` (futuro) | — | Se implementa en S10 (Patrones y arquitectura empresarial). |
+| `catalogo` | `Categoria`, `Producto` | Cambian por decisiones de qué existe y a qué precio, no por el proceso de venderlo. |
+| `ventas` | `Venta`, `DetalleVenta` | Cambian juntas por el proceso comercial de venta; el dinero fluye hacia adentro. |
+| `inventario` (candidato, futuro) | `MovimientoStock` | Cambia por recepción o consumo físico de stock — una razón distinta de "qué existe" (`catalogo`); sin sesión asignada aún, no se modela en profundidad todavía. |
+| `compras` (candidato, futuro) | `OrdenCompra`, `Proveedor` | El dinero fluye hacia afuera, con reglas de aprobación propias — lo opuesto de `ventas`; delimitado, no obligatorio en esta unidad. |
+| `seguridad` (candidato, futuro) | `Usuario`, `Rol` | Cambia por identidad y acceso, no por el negocio de catálogo o ventas; se implementa en S10 (Patrones y arquitectura empresarial). |
 
 ### 3.3 Reconocer casos de uso relevantes
 
 **Producto del paso:** lista de casos de uso relevantes por módulo.
 
-**Tabla 4. Casos de uso relevantes de BomERP**
+**Tabla 5. Casos de uso relevantes de BomERP**
 
 | Módulo | Caso de uso | Valor para el negocio |
 |---|---|---|
@@ -215,7 +236,7 @@ Tiempo: 2h.
 
 **Producto del paso:** objetos de valor candidatos y qué reemplazan.
 
-**Tabla 5. Objetos de valor candidatos**
+**Tabla 6. Objetos de valor candidatos**
 
 | Objeto de valor | Reemplaza a | Por qué es objeto de valor |
 |---|---|---|
@@ -226,7 +247,7 @@ Tiempo: 2h.
 
 **Producto del paso:** glosario de lenguaje ubicuo y delimitación del agregado.
 
-**Tabla 6. Lenguaje ubicuo de BomERP**
+**Tabla 7. Lenguaje ubicuo de BomERP**
 
 | Término del negocio | Significado compartido | Cómo se ve en el código |
 |---|---|---|
@@ -274,7 +295,7 @@ Este esquema es intencionalmente simple: el diagrama de clases completo, con atr
 
 **Producto del paso:** matriz de integración del modelo de dominio.
 
-**Tabla 7. Matriz de integración ADS-BD2-LP2**
+**Tabla 8. Matriz de integración ADS-BD2-LP2**
 
 | Decisión de dominio (ADS) | Evidencia esperada en BD2 | Evidencia esperada en LP2 |
 |---|---|---|
@@ -303,7 +324,7 @@ Descubrimiento y modelado autónomo del dominio del proyecto propio del equipo, 
 Completa y evidencia estas tareas:
 
 1. Identificar al menos cuatro entidades con su regla de negocio asociada.
-2. Delimitar al menos dos módulos funcionales con su razón de cohesión.
+2. Delimitar al menos cinco módulos candidatos de todo el sistema (como los cinco de BomERP), cada uno con su razón de cambio — de esos, elegir los uno o dos que sí se modelan en profundidad esta unidad (el equivalente propio de `catalogo`/`ventas`) y justificar por qué los demás quedan como candidatos futuros.
 3. Reconocer al menos tres casos de uso relevantes.
 4. Identificar al menos un objeto de valor candidato.
 5. Elaborar el glosario de lenguaje ubicuo y delimitar el agregado del proceso transaccional propio.
@@ -370,7 +391,7 @@ La evidencia individual se considera completa si:
 
 - El archivo respeta el nombre solicitado.
 - Identifica entidades con su regla de negocio asociada.
-- Delimita módulos funcionales con razón de cohesión explícita.
+- Delimita al menos cinco módulos candidatos de todo el sistema, cada uno con su razón de cambio, distinguiendo cuáles se modelan en profundidad esta unidad y cuáles quedan como candidatos futuros.
 - Reconoce casos de uso relevantes, no solo operaciones CRUD sueltas.
 - Identifica al menos un objeto de valor justificado.
 - Presenta el glosario de lenguaje ubicuo y el agregado delimitado.
@@ -388,11 +409,11 @@ La evidencia individual se considera completa si:
 
 ### 4.6 Rúbrica de evaluación
 
-**Tabla 8. Rúbrica de evaluación**
+**Tabla 9. Rúbrica de evaluación**
 
 | Criterio | Peso (%) | A (20 pts) | B (15 pts) | C (10 pts) | D (5 pts) | Nivel obtenido |
 |---|---:|---|---|---|---|---:|
-| 1. Entidades, reglas y módulos* | 25 | Identifica entidades con reglas de negocio claras y módulos delimitados con cohesión real. | Identifica entidades y módulos principales, con detalles menores. | Entidades o módulos incompletos o poco justificados. | No identifica entidades ni módulos verificables. | |
+| 1. Entidades, reglas y módulos* | 25 | Identifica entidades con reglas de negocio claras y delimita al menos cinco módulos candidatos de todo el sistema, cada uno con su razón de cambio propia. | Identifica entidades y la mayoría de los módulos candidatos, con alguna razón de cambio genérica. | Entidades o módulos incompletos, o módulos delimitados sin razón de cambio distinta entre ellos. | No identifica entidades ni módulos verificables. | |
 | 2. Casos de uso y objetos de valor* | 25 | Reconoce casos de uso relevantes y objetos de valor bien justificados. | Reconoce casos de uso y objetos de valor, con justificación parcial. | Lista casos de uso u objetos de valor sin justificación suficiente. | No reconoce casos de uso ni objetos de valor. | |
 | 3. Diseño estratégico DDD* | 25 | Glosario de lenguaje ubicuo claro y agregado delimitado sobre una regla de negocio real. | Glosario y agregado presentes, con justificación general. | Glosario o agregado débil o genérico. | No presenta glosario ni agregado. | |
 | 4. Esquema del modelo de dominio* | 25 | Esquema claro, coherente con entidades, módulos y agregado ya definidos. | Esquema comprensible, con inconsistencias menores. | Esquema incompleto o poco conectado con el resto del informe. | No presenta esquema. | |
