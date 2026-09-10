@@ -291,6 +291,8 @@ flowchart LR
 
 Este esquema es intencionalmente simple: el diagrama de clases completo, con atributos, operaciones y multiplicidades, se construye en S7. Aquí solo se fija qué entidades existen, en qué módulo viven y cuál es el agregado.
 
+**Dónde vive esto en el modelo C4 (S2):** los módulos de la Figura 4 (`catalogo`, `ventas`, y los candidatos `inventario`/`compras`/`seguridad`) son el mismo nivel que la **Vista C3 (Componentes)** de `ads-producto.md` U1 — de hecho son los mismos boxes (`CAT`, `VEN`) que ya aparecen ahí. No son C2 (Contenedores): BomERP es un monolito modular con un solo backend, así que los módulos no son contenedores separados, son componentes dentro de uno solo. La Figura 3 (el agregado `Venta`–`DetalleVenta`) va un nivel más adentro que C3, hacia el nivel de Código/clases — es zoom hacia el interior del componente `ventas`, y se formaliza completo recién en S7. En un ERP real que creciera hasta necesitar microservicios, el bounded context mejor delimitado (no un corte arbitrario de código) es la costura natural para extraerlo como su propio contenedor C2 — la industria decide así qué servicio separar primero.
+
 ### 3.7 Trazar ADS con BD2 y LP2
 
 **Producto del paso:** matriz de integración del modelo de dominio.
