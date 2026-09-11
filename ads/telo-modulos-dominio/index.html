@@ -1,0 +1,3300 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Entorno integrado de desarrollo academico para construir modulos ERP con ADS, BD2 y LP2.">
+      
+      
+        <meta name="author" content="UPeU">
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+  
+    <title>BOM ERP - Telo — Descubrimiento y modelado del dominio (aplicación de S6)</title>
+  
+
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#telo-descubrimiento-y-modelado-del-dominio-aplicacion-de-s6" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../.." title="BOM ERP" class="md-header__button md-logo" aria-label="BOM ERP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            BOM ERP
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Telo — Descubrimiento y modelado del dominio (aplicación de S6)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/262ciclo4/bomerp" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    262ciclo4/bomerp
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Pestañas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Inicio
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../proyecto-integrador/" class="md-tabs__link">
+          
+  
+  
+  Guía del Proyecto Integrador
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+  ADS
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../bd2/" class="md-tabs__link">
+          
+  
+  
+  BD2
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../lp2/" class="md-tabs__link">
+          
+  
+  
+  LP2
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="BOM ERP" class="md-nav__button md-logo" aria-label="BOM ERP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    BOM ERP
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/262ciclo4/bomerp" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    262ciclo4/bomerp
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guía del Proyecto Integrador
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guía del Proyecto Integrador
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Alineamiento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/brief/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brief técnico (plantilla)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Diseño técnico, motor transaccional y backend inicial
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    1. Diseño técnico, motor transaccional y backend inicial
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u1/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u1/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u1/lp2-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Demo U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u1/ads-matriz-competencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Matriz de competencias
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u1/lp2-matriz-competencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Matriz de competencias
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u1/bd2-matriz-competencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Matriz de competencias
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Modelado UML, administración Oracle y SPA segura
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    2. Modelado UML, administración Oracle y SPA segura
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u2/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u2/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u2/lp2-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Demo U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Diseño consolidado, operación Oracle y Full-Stack integrado
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    3. Diseño consolidado, operación Oracle y Full-Stack integrado
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u3/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u3/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u3/lp2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u3/checklist-final/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Checklist final
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u3/guia-sustentacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guía de sustentación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ADS
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../silabo_ads_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../silabo_ads_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Arquitectura y Diseño Estructural
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Arquitectura y Diseño Estructural
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sesiones/S01_Fundamentos_Arquitectura_Software/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - Fundamentos de arquitectura de software
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sesiones/S02_Modelo_C4_Vistas_Arquitectonicas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - Modelo C4 y vistas arquitectónicas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sesiones/S03_Diseno_Estructural_Principios_SOLID/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S3 - Diseño estructural y principios SOLID
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sesiones/S04_Arquitecturas_Modernas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S4 - Arquitecturas modernas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sesiones/S05_Evaluacion_Unidad_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S5 - Evaluación de la Unidad I
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    II. Diseño Dinámico, Modelado UML y Patrones
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    II. Diseño Dinámico, Modelado UML y Patrones
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sesiones/S06_Descubrimiento_Modelado_Dominio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S6 - Descubrimiento y modelado del dominio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    BD2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bd2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bd2/silabo_bd2_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bd2/silabo_bd2_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Programación y optimización (Oracle XE)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Programación y optimización (Oracle XE)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - PL/SQL aplicado al negocio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bd2/sesiones/S02_Triggers_DML_Auditoria/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - Triggers DML y auditoría
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bd2/sesiones/S03_Excepciones_Robustez/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S3 - Manejo de excepciones y robustez
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bd2/sesiones/S04_Optimizacion_Consultas_SQL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S4 - Optimización de consultas SQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bd2/sesiones/S05_Indices_Optimizacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S5 - Índices para optimización
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bd2/sesiones/S06_Evaluacion_Unidad_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S6 - Evaluación de la Unidad I
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    LP2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lp2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lp2/silabo_lp2_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lp2/silabo_lp2_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Decisiones de arquitectura
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Decisiones de arquitectura
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lp2/adr/ADR-001-arquitectura-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-001 - Arquitectura del backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lp2/adr/ADR-002-spring-modulith/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-002 - Spring Modulith
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lp2/adr/ADR-003-spring-boot-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-003 - Versión exacta de Spring Boot 4.0.7
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lp2/adr/ADR-004-jwt-diferido/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-004 - JWT diferido a S10
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Base backend REST modular de BomERP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Base backend REST modular de BomERP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lp2/sesiones/S01_Arquitectura_Backend_REST_Profesional/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - Arquitectura backend REST profesional
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lp2/sesiones/S02_CRUD_REST_Completo_Producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - CRUD REST completo de Producto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lp2/sesiones/S03_Objetos_Relacionados_Categoria_Producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S3 - Objetos relacionados Categoria-Producto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lp2/sesiones/S04_Operacion_Cabecera_Detalle_Venta_DetalleVenta/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S4 - Operación cabecera-detalle Venta-DetalleVenta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lp2/sesiones/S05_Consultas_Empresariales_Reportes_CORS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S5 - Consultas empresariales, reportes REST y CORS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lp2/sesiones/S06_Evaluacion_Unidad_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S6 - Evaluación de la Unidad I
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-panorama-holistico-del-negocio-y-modulos-candidatos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Panorama holístico del negocio y módulos candidatos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-clasificacion-de-subdominios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Clasificación de subdominios
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-entidades-y-reglas-de-negocio-dentro-de-cada-modulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Entidades y reglas de negocio, dentro de cada módulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-casos-de-uso-relevantes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Casos de uso relevantes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-objetos-de-valor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Objetos de valor
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-prueba-de-tres-partes-confirmar-o-corregir-los-limites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Prueba de tres partes: confirmar o corregir los límites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-diseno-estrategico-agregado-y-lenguaje-ubicuo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Diseño estratégico: agregado y lenguaje ubicuo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-esquema-del-modulo-en-un-solo-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Esquema del módulo, en un solo backend
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-donde-entra-la-pagina-web" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Dónde entra la página web
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-lo-que-este-ejercicio-no-resuelve" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Lo que este ejercicio no resuelve
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="telo-descubrimiento-y-modelado-del-dominio-aplicacion-de-s6">Telo — Descubrimiento y modelado del dominio (aplicación de S6)<a class="headerlink" href="#telo-descubrimiento-y-modelado-del-dominio-aplicacion-de-s6" title="Permanent link">&para;</a></h1>
+<p><strong>Este documento aplica la metodología de <a href="../sesiones/S06_Descubrimiento_Modelado_Dominio/">S6 - Descubrimiento y Modelado del Dominio</a> a un sistema real: Telo, reservas de habitaciones.</strong> Fuente: <code>alcance-v1.md</code> (Alcance V1 del proyecto). No es una plantilla del curso — es un ejercicio resuelto, útil como segundo ejemplo real además de BomERP.</p>
+<p>Telo es, a propósito, un caso <strong>mixto</strong> — el más realista de los dos: <code>alcance-v1.md</code> ya documenta con detalle las entidades de tres módulos (<code>reservas</code>, <code>catalogo</code>, <code>administracion</code>), pero el negocio completo de un hotel tiene más partes que ese alcance todavía no especifica. Por eso este ejercicio no arranca en las entidades documentadas: arranca en el panorama completo del hotel (sección 1), igual que S06, y recién en la sección 3 baja a las entidades — solo donde el alcance ya las da.</p>
+<h2 id="1-panorama-holistico-del-negocio-y-modulos-candidatos">1. Panorama holístico del negocio y módulos candidatos<a class="headerlink" href="#1-panorama-holistico-del-negocio-y-modulos-candidatos" title="Permanent link">&para;</a></h2>
+<p>El panorama no se arma copiando el flujo de BomERP y cambiándole los nombres — un hotel no compra materia prima ni produce nada que empaquetar. Un hotel vende <strong>estadías</strong>, y su ciclo real es otro: una habitación se reserva, se ocupa (check-in), se libera (check-out) y se limpia antes de volver a estar disponible para una reserva nueva. Ese ciclo, propio de la hospitalidad, es lo que da forma al panorama, no una plantilla genérica de ERP.</p>
+<p><strong>Figura 1. Panorama holístico de Telo: el ciclo de la habitación, sin entidades todavía</strong></p>
+<pre class="mermaid"><code>flowchart TB
+    PaginaWeb["PÁGINA WEB&lt;br/&gt;pública + flujo&lt;br/&gt;de reservación"]
+    Catalogo["CATALOGO&lt;br/&gt;tipos de habitación,&lt;br/&gt;habitaciones, tarifas"]
+    Reservas["RESERVAS&lt;br/&gt;el proceso&lt;br/&gt;de reserva"]
+    Pagos["PAGOS&lt;br/&gt;hoy: voucher manual,&lt;br/&gt;dentro de reservas&lt;br/&gt;(candidato futuro:&lt;br/&gt;pasarela automática)"]
+    Recepcion["RECEPCIÓN&lt;br/&gt;(candidato, futuro)&lt;br/&gt;check-in, check-out"]
+    AmaLlaves["AMA DE LLAVES&lt;br/&gt;(candidato, futuro)&lt;br/&gt;limpieza y&lt;br/&gt;disponibilidad física"]
+    Contabilidad["CONTABILIDAD&lt;br/&gt;(candidato, futuro)&lt;br/&gt;comprobantes fiscales,&lt;br/&gt;ingresos y egresos"]
+    Planilla["PLANILLA&lt;br/&gt;(candidato, futuro)&lt;br/&gt;pago de personal"]
+    Administracion["ADMINISTRACION&lt;br/&gt;usuarios de personal,&lt;br/&gt;datos del hotel"]
+
+    PaginaWeb --&gt;|"consulta&lt;br/&gt;disponibilidad"| Catalogo
+    Catalogo --&gt;|"habitación y&lt;br/&gt;tarifa disponible"| Reservas
+    PaginaWeb --&gt;|"envía solicitud"| Reservas
+    Reservas --&gt;|"sube voucher"| Pagos
+    Pagos --&gt;|"pago verificado,&lt;br/&gt;confirma"| Reservas
+    Reservas --&gt;|"huésped llega"| Recepcion
+    Recepcion --&gt;|"huésped se retira"| AmaLlaves
+    AmaLlaves --&gt;|"habitación lista&lt;br/&gt;de nuevo"| Catalogo
+    Pagos --&gt;|"ingreso registrado"| Contabilidad
+    Planilla --&gt;|"gasto de personal"| Contabilidad
+    AmaLlaves ~~~ Administracion</code></pre>
+<p><code>Administracion</code> no aparece conectada al ciclo — igual que <code>Seguridad</code> en BomERP, no participa de la operación diaria del hotel, la sostiene de forma transversal (cuentas de personal, datos propios del hotel). <code>PaginaWeb</code> tampoco es un módulo de dominio: es el canal por el que entra el visitante (la sección "Web pública" del alcance) — se detalla en la sección 9, no se clasifica como subdominio en la Tabla 1.</p>
+<p><code>Pagos</code> merece una aclaración aparte: el alcance es explícito en que la reservación <strong>sí</strong> incluye pagos desde V1 — el visitante sube un voucher (Yape o depósito) o lo envía por WhatsApp, y el personal lo verifica antes de confirmar (<code>alcance-v1.md</code>, sección "Reservaciones", pasos 6-7). Lo que queda <strong>fuera de alcance de V1</strong> es la automatización de ese cobro: una pasarela de pagos en línea que confirme el pago sin intervención manual (<code>alcance-v1.md</code>, "Fuera de alcance": <em>"...aplicación móvil, API pública y pasarela de pagos"</em>). Por eso <code>Pagos</code> aparece en el panorama con las dos caras a la vez — el paso manual que ya existe hoy (y que la sección 3 encuentra modelado en <code>ReservaComprobante</code>, dentro de <code>reservas</code>) y el candidato futuro (pasarela automática) que todavía no tiene alcance escrito, igual que <code>recepcion</code> o <code>ama_llaves</code>.</p>
+<p>De los siete módulos candidatos de dominio, <code>alcance-v1.md</code> solo detalla entidades para tres — <code>reservas</code>, <code>catalogo</code> y <code>administracion</code> — porque V1 es explícitamente un motor de reservas en línea, no un sistema de gestión hotelera completo (un PMS): no cubre todavía lo que pasa cuando el huésped llega físicamente al hotel. <code>recepcion</code> y <code>ama_llaves</code> son la continuación natural del mismo ciclo (check-in/check-out, limpieza) que un PMS real sí resuelve; <code>contabilidad</code> y <code>planilla</code> son necesidades administrativas de cualquier negocio, no solo de hotelería. Ninguno de los cuatro tiene todavía un documento de alcance propio — quedan nombrados como candidatos, el mismo tratamiento que BomERP le da a <code>inventario</code>, <code>compras</code> y <code>seguridad</code> en S6 (2.2-2.3).</p>
+<p><strong>Con qué técnica se llegó a estos cuatro candidatos, y por qué importa decirlo.</strong> S6 (2.2) nombra tres formas legítimas de construir un panorama: juicio de experto, Event Storming (taller en vivo con post-its) o benchmarking contra un sistema de referencia. Este ejercicio no tuvo ni un hotel real ni personal disponible para un taller — no hay Event Storming detrás de <code>recepcion</code>, <code>ama_llaves</code>, <code>contabilidad</code> ni <code>planilla</code>. Salieron de <strong>benchmarking</strong>: comparar lo que <code>alcance-v1.md</code> sí cubre (un motor de reservas en línea) contra lo que un sistema de gestión hotelera (PMS) resuelve típicamente en la industria — front desk, housekeeping, facturación, planillas. Es la técnica más débil de las tres, y por eso se declara así: estos cuatro son una <strong>hipótesis razonada, no un hecho confirmado por el negocio real de Telo</strong>. Un proyecto real, con el hotel operando, resolvería esta misma pregunta con juicio de experto (preguntar al personal) o, mejor, con un taller de Event Storming.</p>
+<p><strong>Error frecuente</strong>: reutilizar el panorama de otro negocio cambiando solo los nombres de los módulos — un hotel no tiene "almacén" en el sentido en que lo tiene una empresa que compra y revende productos; su ciclo operativo es la habitación, no el inventario. El panorama debe salir del negocio real que se está modelando, no de una plantilla. Otro error igual de común es el opuesto: omitir del panorama un paso que sí ocurre hoy (los pagos) solo porque su versión automatizada está fuera de alcance — que la pasarela sea futura no significa que el negocio no cobre desde ya.</p>
+<h2 id="2-clasificacion-de-subdominios">2. Clasificación de subdominios<a class="headerlink" href="#2-clasificacion-de-subdominios" title="Permanent link">&para;</a></h2>
+<p><strong>Tabla 1. Subdominios de Telo</strong></p>
+<table>
+<thead>
+<tr>
+<th>Módulo candidato</th>
+<th>Tipo de subdominio</th>
+<th>Por qué</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>reservas</code></td>
+<td><strong>Core</strong> (el negocio mismo)</td>
+<td>Ahí vive la complejidad real: disponibilidad por noche, bloqueos, idempotencia, vencimiento automático — la razón de ser del sistema hoy.</td>
+</tr>
+<tr>
+<td><code>catalogo</code></td>
+<td>Supporting</td>
+<td>Necesario para que exista algo que reservar y a qué precio, pero no es el diferenciador — cualquier sistema de reservas tiene tipos, habitaciones y tarifas.</td>
+</tr>
+<tr>
+<td><code>administracion</code></td>
+<td><strong>Generic</strong> (problema ya resuelto)</td>
+<td>Autenticación de personal y datos del hotel — no es el negocio de reservar ni hospedar, es infraestructura de soporte.</td>
+</tr>
+<tr>
+<td><code>pagos</code> (embebido en <code>reservas</code> hoy)</td>
+<td><strong>Generic</strong> (problema ya resuelto)</td>
+<td>Verificar un pago no diferencia a Telo — cualquier pasarela de terceros ya lo resuelve. Se modela hoy dentro de <code>reservas</code> (sección 3, <code>ReservaComprobante</code>) precisamente porque V1 excluye integrar una pasarela automática; no es todavía un módulo aparte.</td>
+</tr>
+<tr>
+<td><code>recepcion</code> (candidato)</td>
+<td><strong>Core</strong> (el negocio mismo)</td>
+<td>El check-in y el check-out son tan centrales a la experiencia del huésped como la reserva misma — completan el ciclo de la estadía que hoy <code>reservas</code> deja a medias.</td>
+</tr>
+<tr>
+<td><code>ama_llaves</code> (candidato)</td>
+<td>Supporting</td>
+<td>Sostiene que la habitación esté realmente disponible, pero la lógica de limpieza y turnos es parecida entre hoteles — no es lo que diferencia a Telo.</td>
+</tr>
+<tr>
+<td><code>contabilidad</code> (candidato)</td>
+<td><strong>Generic</strong> (problema ya resuelto)</td>
+<td>Registrar ingresos y egresos no diferencia a Telo de ningún otro hotel — es un problema que software contable ya resuelve.</td>
+</tr>
+<tr>
+<td><code>planilla</code> (candidato)</td>
+<td><strong>Generic</strong> (problema ya resuelto)</td>
+<td>Pagar personal es un proceso estándar de cualquier empleador, no algo propio del negocio de hospedaje.</td>
+</tr>
+</tbody>
+</table>
+<p>Un subdominio <strong>Core</strong> justifica el mayor esfuerzo de modelado — coherente con que la Sección E del alcance (concurrencia e idempotencia) dedica más reglas a <code>reservas</code> que a cualquier otro módulo junto. Que <code>contabilidad</code> y <code>planilla</code> sean Generic es, además, una señal de diseño real: en un proyecto fuera del aula, ninguno de los dos se construiría desde cero — se integraría un software contable o de planillas ya existente en el mercado, en vez de construirlo a mano.</p>
+<p><strong>Aclaración necesaria: <code>administracion</code> (módulo de dominio) no es lo mismo que "Administración" (la sección del alcance).</strong> El alcance usa "Administración" para nombrar una pantalla — el panel donde el personal "consulta reservas, confirma o cancela, y administra habitaciones, tipos de habitación y tarifas" — es decir, una vista de presentación que toca <code>reservas</code> y <code>catalogo</code> además de <code>Usuario</code>. El módulo de dominio <code>administracion</code> de esta sección es más angosto a propósito: solo <code>Usuario</code> y <code>ConfiguracionHotel</code>, las dos únicas entidades que no tienen mejor lugar en <code>reservas</code> ni en <code>catalogo</code>. Confundir el nombre de una pantalla con un límite de dominio es un error real y frecuente — aquí se evita dejándolo explícito, no cambiando el nombre.</p>
+<h2 id="3-entidades-y-reglas-de-negocio-dentro-de-cada-modulo">3. Entidades y reglas de negocio, dentro de cada módulo<a class="headerlink" href="#3-entidades-y-reglas-de-negocio-dentro-de-cada-modulo" title="Permanent link">&para;</a></h2>
+<p>Solo <code>reservas</code>, <code>catalogo</code> y <code>administracion</code> tienen hoy una especificación escrita — <code>alcance-v1.md</code> — de la que se pueden extraer entidades con precisión. Se descienden esos tres, módulo por módulo:</p>
+<p><strong>Tabla 2. Entidades de Telo, con su regla de negocio más representativa</strong></p>
+<table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Entidad</th>
+<th>Identificador</th>
+<th>Regla de negocio asociada</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>catalogo</code></td>
+<td><code>TipoHabitacion</code></td>
+<td>id</td>
+<td>Código único; capacidad máxima positiva.</td>
+</tr>
+<tr>
+<td><code>catalogo</code></td>
+<td><code>Habitacion</code></td>
+<td>id</td>
+<td>Pertenece a un tipo; <code>habilitada</code> define si es inventario vendible.</td>
+</tr>
+<tr>
+<td><code>catalogo</code></td>
+<td><code>Tarifa</code></td>
+<td>id</td>
+<td>Como máximo una tarifa activa por tipo y noche; una versión publicada no se sobrescribe, solo se retira.</td>
+</tr>
+<tr>
+<td><code>catalogo</code></td>
+<td><code>TipoHabitacionTraduccion</code></td>
+<td>(<code>tipo_habitacion_id</code>, <code>idioma</code>)</td>
+<td>Publicar un tipo exige traducción completa en español e inglés — no se publica a medias en un solo idioma.</td>
+</tr>
+<tr>
+<td><code>reservas</code></td>
+<td><code>Reserva</code></td>
+<td>id (+ <code>referencia_publica</code>)</td>
+<td>Salida posterior a llegada; huéspedes positivo; el total es la suma de sus detalles.</td>
+</tr>
+<tr>
+<td><code>reservas</code></td>
+<td><code>ReservaDetalle</code></td>
+<td>id</td>
+<td>Los huéspedes de esa unidad no exceden la capacidad del tipo solicitado.</td>
+</tr>
+<tr>
+<td><code>reservas</code></td>
+<td><code>ReservaNoche</code></td>
+<td>(<code>reserva_detalle_id</code>, fecha)</td>
+<td>Exactamente una fila por cada noche del intervalo solicitado, con tarifa vigente esa noche.</td>
+</tr>
+<tr>
+<td><code>reservas</code></td>
+<td><code>ReservaEvento</code></td>
+<td>id</td>
+<td>Se registra en la misma transacción que el cambio que describe — nunca se edita después.</td>
+</tr>
+<tr>
+<td><code>reservas</code></td>
+<td><code>ReservaComprobante</code></td>
+<td>id</td>
+<td>Solo cuenta como recibido a tiempo si <code>recibido_en</code> es anterior al plazo (<code>voucher_limite_en</code>).</td>
+</tr>
+<tr>
+<td><code>administracion</code></td>
+<td><code>Usuario</code></td>
+<td>id</td>
+<td>Login único; autoriza operaciones administrativas.</td>
+</tr>
+<tr>
+<td><code>administracion</code></td>
+<td><code>ConfiguracionHotel</code></td>
+<td>id (fija en 1)</td>
+<td>Como máximo una fila — un solo hotel en V1.</td>
+</tr>
+<tr>
+<td><code>administracion</code></td>
+<td><code>ConfiguracionHotelTraduccion</code></td>
+<td>(<code>hotel_id</code>, <code>idioma</code>)</td>
+<td>Publicar el contenido del hotel exige traducción completa en español e inglés.</td>
+</tr>
+</tbody>
+</table>
+<p>El idioma no es un módulo aparte ni una entidad propia: es un <strong>requisito transversal del negocio</strong> (<code>alcance-v1.md</code>, "Web pública": <em>"La experiencia pública y el proceso de reservación estarán disponibles en español e inglés"</em>), y se resuelve dentro de cada módulo que publica contenido — <code>catalogo</code> traduce sus tipos de habitación, <code>administracion</code> traduce los datos del hotel — mediante una tabla de traducción por clave compuesta (entidad + idioma), no mediante un catálogo de idiomas independiente. Pasa la prueba de tres partes de forma trivial: una traducción no tiene sentido sin la entidad que traduce (1), no se reutiliza entre entidades distintas (2), y no protege ningún invariante propio más allá de "completa antes de publicar" (3) — por eso compone dentro de <code>catalogo</code>/<code>administracion</code>, nunca aparte.</p>
+<p><strong><code>Huesped</code> no aparece en esta tabla a propósito: no es una entidad.</strong> El propio alcance lo dice explícito: <em>"Objeto de valor embebido en reserva — no se requiere maestro de clientes, cuentas ni deduplicación en V1."</em> Se compara por su contenido (nombre, email, teléfono), no tiene identidad propia ni ciclo de vida independiente de la reserva que lo registró — es objeto de valor (ver sección 5), el mismo concepto que <code>Dinero</code> en BomERP, resuelto aquí con datos reales de un proyecto real.</p>
+<p><code>recepcion</code>, <code>ama_llaves</code>, <code>contabilidad</code> y <code>planilla</code> <strong>todavía no tienen entidades</strong>: sus entidades tentativas (<code>Estadia</code>/<code>Checkin</code>, <code>EstadoLimpieza</code>, <code>Factura</code>/<code>AsientoContable</code>, <code>Boleta</code>/<code>Empleado</code>) esperan a que exista un alcance escrito para ese módulo — el mismo tratamiento que BomERP da hoy a <code>MovimientoStock</code> (<code>inventario</code>), <code>OrdenCompra</code>/<code>Proveedor</code> (<code>compras</code>) y <code>Usuario</code>/<code>Rol</code> (<code>seguridad</code>) en su propia S6.</p>
+<h2 id="4-casos-de-uso-relevantes">4. Casos de uso relevantes<a class="headerlink" href="#4-casos-de-uso-relevantes" title="Permanent link">&para;</a></h2>
+<p><strong>Tabla 3. Casos de uso relevantes de Telo</strong></p>
+<table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Caso de uso</th>
+<th>Valor para el negocio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>catalogo</code></td>
+<td>Consultar disponibilidad por fechas</td>
+<td>Mostrar al visitante qué se puede reservar.</td>
+</tr>
+<tr>
+<td><code>catalogo</code></td>
+<td>Bloquear tipo de habitación para editar tarifa</td>
+<td>Evitar vender a un precio que está cambiando en ese momento.</td>
+</tr>
+<tr>
+<td><code>reservas</code></td>
+<td>Registrar reserva</td>
+<td>Comprometer cupo con un huésped, sin exigir pago inmediato.</td>
+</tr>
+<tr>
+<td><code>reservas</code></td>
+<td>Subir comprobante de pago</td>
+<td>Adjuntar evidencia de pago dentro del plazo pactado.</td>
+</tr>
+<tr>
+<td><code>reservas</code></td>
+<td>Confirmar reserva</td>
+<td>Aprobar el comprobante y pasar la reserva a estado definitivo.</td>
+</tr>
+<tr>
+<td><code>reservas</code></td>
+<td>Vencer reserva automáticamente</td>
+<td>Liberar cupo de una reserva sin voucher a tiempo.</td>
+</tr>
+<tr>
+<td><code>administracion</code></td>
+<td>Registrar usuario de personal</td>
+<td>Habilitar a un miembro del personal para operar el panel.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="5-objetos-de-valor">5. Objetos de valor<a class="headerlink" href="#5-objetos-de-valor" title="Permanent link">&para;</a></h2>
+<p><strong>Tabla 4. Objetos de valor de Telo</strong></p>
+<table>
+<thead>
+<tr>
+<th>Objeto de valor</th>
+<th>Reemplaza a</th>
+<th>Por qué es objeto de valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Huesped</code></td>
+<td>Un maestro de clientes con <code>Cliente_id</code></td>
+<td>Se compara por su contenido (nombre, email, teléfono); no necesita historial propio ni deduplicación en V1 — decisión explícita del alcance, no un descuido.</td>
+</tr>
+<tr>
+<td><code>Dinero</code> (monto + moneda <code>PEN</code>)</td>
+<td><code>BigDecimal</code> suelto en <code>Tarifa</code>, <code>Reserva</code>, <code>ReservaDetalle</code>, <code>ReservaNoche</code></td>
+<td>Todo importe se maneja con la misma regla (base = total ÷ 1.18, redondeo <code>HALF_UP</code>) — encapsular esa regla en un solo lugar evita repetirla en cuatro tablas distintas.</td>
+</tr>
+<tr>
+<td><code>RangoFecha</code> (llegada, salida)</td>
+<td>Dos columnas sueltas <code>llegada</code>/<code>salida</code></td>
+<td>Se compara por contenido; agrupa su propia validación (<code>salida</code> posterior a <code>llegada</code>) en un solo lugar, igual que el <code>RangoFecha</code> de BomERP.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Contraste con BomERP, a propósito:</strong> en BomERP, <code>Cliente</code> se promovió a entidad y módulo propio. Aquí, <code>Huesped</code> se queda como objeto de valor. La prueba es la misma en ambos casos — lo que cambia es el resultado real de aplicarla: BomERP sí necesita rastrear historial y estado de un cliente (suspensión, fidelización); Telo, en su propio alcance V1, declara explícitamente que no. Misma metodología, dos respuestas distintas, porque el dominio real es distinto — no hay una respuesta "correcta" universal, hay una respuesta correcta <em>para este alcance</em>.</p>
+<h2 id="6-prueba-de-tres-partes-confirmar-o-corregir-los-limites">6. Prueba de tres partes: confirmar o corregir los límites<a class="headerlink" href="#6-prueba-de-tres-partes-confirmar-o-corregir-los-limites" title="Permanent link">&para;</a></h2>
+<p>El panorama de la sección 1 y las entidades de la sección 3 son una propuesta — se verifica si resiste la prueba de tres partes de S6 (2.7) antes de darla por buena.</p>
+<p><strong>Tabla 5. Módulos funcionales de Telo, con su razón de cohesión</strong></p>
+<table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Entidades</th>
+<th>Razón de cohesión</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>catalogo</code></td>
+<td><code>TipoHabitacion</code> (raíz), <code>TipoHabitacionTraduccion</code>, <code>Habitacion</code>, <code>Tarifa</code></td>
+<td>Cambian por decisiones de qué se puede vender y a qué precio. <code>Tarifa</code> compone aquí, no aparte: el propio alcance exige bloquear <code>TipoHabitacion</code> para cambiar sus tarifas ("Para cambiar precios, bloquear el tipo") — comparten el mismo invariante (como máximo una tarifa activa por tipo y noche), la prueba 3 dice que sí componen.</td>
+</tr>
+<tr>
+<td><code>reservas</code></td>
+<td><code>Reserva</code> (raíz), <code>ReservaDetalle</code>, <code>ReservaNoche</code>, <code>ReservaEvento</code>, <code>ReservaComprobante</code></td>
+<td>Todas nacen y mueren con su <code>Reserva</code>: ninguna tiene sentido fuera de ella (prueba 1), ninguna se reutiliza entre reservas distintas (prueba 2), y el propio alcance exige que aprobar un comprobante y confirmar la reserva se guarden "en una sola transacción" (prueba 3) — las cinco entidades comparten un solo agregado.</td>
+</tr>
+<tr>
+<td><code>administracion</code></td>
+<td><code>Usuario</code>, <code>ConfiguracionHotel</code>, <code>ConfiguracionHotelTraduccion</code></td>
+<td>Entre sí, <code>Usuario</code> y <code>ConfiguracionHotel</code> no comparten invariante ni ciclo de vida — la prueba de tres partes dice que <strong>no componen el mismo agregado</strong>, y en efecto no lo hacen: son dos aggregate roots distintos dentro del mismo módulo. Que no compartan agregado no obliga a separarlos en módulos distintos: un módulo puede alojar varios agregados que no se transaccionan juntos. Se agrupan aquí por costo/beneficio propio de Telo, no por precedente de otro documento: cambian por razones distintas (<code>Usuario</code> por rotación de personal, <code>ConfiguracionHotel</code> por decisiones comerciales del hotel), pero en un solo hotel V1 con un puñado de usuarios, ninguno de los dos justifica hoy un módulo propio — separar ahora es más ceremonia (dos módulos, dos paquetes, dos ADRs) que beneficio real. Es la aplicación directa del consejo de Vernon en S6 (2.7): empezar con menos módulos, más grandes, y separar cuando el dolor real de tenerlos juntos aparezca — no una copia de cómo lo resolvió otro proyecto.</td>
+</tr>
+</tbody>
+</table>
+<p><code>Reserva</code>, dentro de su propio agregado, referencia a <code>catalogo</code> <strong>por id, no por composición</strong> — cada <code>ReservaDetalle</code> guarda <code>tipo_habitacion_id</code> y copia (<em>snapshot</em>) el nombre, capacidad y precio vigente al momento de reservar, exactamente el mismo patrón que <code>DetalleVenta</code> con <code>Producto</code>/<code>Dinero</code> en BomERP: si mañana cambia una tarifa, una reserva ya registrada no debe cambiar. El propio alcance lo dice explícito: <em>"Las modificaciones del catálogo y las tarifas no alteran el importe ni la información histórica de reservas ya registradas."</em></p>
+<p><strong>Nota metodológica.</strong> Telo aplica los dos caminos de S6 (2.7) a la vez, y por eso es un ejemplo más honesto que uno puramente de un tipo: el panorama de la sección 1 se construyó de forma holística, a partir del ciclo real de una habitación (reservar → ocupar → limpiar → disponible de nuevo), no de las entidades — <code>recepcion</code>/<code>ama_llaves</code>/<code>contabilidad</code>/<code>planilla</code> no tienen todavía ningún documento del que partir; las entidades de la sección 3, en cambio, se extrajeron directo de <code>alcance-v1.md</code> para los tres módulos que sí lo tienen. En un proyecto real casi nunca se tiene <em>todo</em> el negocio documentado a nivel de entidad, ni se empieza <em>completamente</em> de cero — se mezcla, módulo por módulo, según qué tan madura esté esa parte del negocio.</p>
+<h2 id="7-diseno-estrategico-agregado-y-lenguaje-ubicuo">7. Diseño estratégico: agregado y lenguaje ubicuo<a class="headerlink" href="#7-diseno-estrategico-agregado-y-lenguaje-ubicuo" title="Permanent link">&para;</a></h2>
+<p><strong>Figura 2. Agregado <code>Reserva</code></strong></p>
+<pre class="mermaid"><code>flowchart TB
+    subgraph AGG["Agregado: Reserva (raíz)"]
+        R[Reserva]
+        RD[ReservaDetalle]
+        RN[ReservaNoche]
+        RE[ReservaEvento]
+        RC[ReservaComprobante]
+        R --&gt; RD
+        RD --&gt; RN
+        R --&gt; RE
+        R --&gt; RC
+    end
+    EXT[Cualquier acceso externo] --&gt;|"solo a través de la raíz"| R
+    EXT -.-&gt;|"prohibido: modificar directo"| RD
+    EXT -.-&gt;|"prohibido: modificar directo"| RC</code></pre>
+<p><strong>Tabla 6. Lenguaje ubicuo de Telo</strong></p>
+<table>
+<thead>
+<tr>
+<th>Término del negocio</th>
+<th>Significado compartido</th>
+<th>Cómo se ve en el código</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Reserva pendiente</td>
+<td>Reserva registrada que compromete cupo, en espera de voucher.</td>
+<td><code>Reserva.estado = PENDIENTE</code></td>
+</tr>
+<tr>
+<td>Confirmar</td>
+<td>Aprobar un comprobante válido y pasar la reserva a estado definitivo.</td>
+<td><code>Reserva.confirmar()</code></td>
+</tr>
+<tr>
+<td>Vencer</td>
+<td>Liberar el cupo de una reserva que no recibió voucher a tiempo.</td>
+<td><code>Reserva.vencer()</code></td>
+</tr>
+<tr>
+<td>Bloque</td>
+<td>Una reserva con varias habitaciones, confirmada o cancelada como una sola unidad.</td>
+<td><code>Reserva.detalles</code> (1..*)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="8-esquema-del-modulo-en-un-solo-backend">8. Esquema del módulo, en un solo backend<a class="headerlink" href="#8-esquema-del-modulo-en-un-solo-backend" title="Permanent link">&para;</a></h2>
+<p><strong>Figura 3. Los módulos de Telo, monolito modular</strong></p>
+<pre class="mermaid"><code>flowchart LR
+    subgraph MADM["Módulo administracion"]
+        USR[Usuario]
+        CFG[ConfiguracionHotel]
+        CFGT[ConfiguracionHotelTraduccion]
+        CFG --- CFGT
+    end
+    subgraph MCAT["Módulo catalogo"]
+        TH[TipoHabitacion]
+        THT[TipoHabitacionTraduccion]
+        HAB[Habitacion]
+        TAR[Tarifa]
+        TH --- THT
+        TH --- HAB
+        TH --- TAR
+    end
+    subgraph MRES["Módulo reservas - agregado"]
+        RES[Reserva]
+        RD[ReservaDetalle]
+        RN[ReservaNoche]
+        RE[ReservaEvento]
+        RC[ReservaComprobante]
+        RES --- RD
+        RD --- RN
+        RES --- RE
+        RES --- RC
+    end
+    TH -.-&gt;|referenciado por, snapshot| RD
+    USR -.-&gt;|referenciado por, auditoría| RES</code></pre>
+<p><strong>Bounded context, no microservicio.</strong> El propio alcance es explícito sobre esto (sección "Fuera de alcance" y "Condiciones técnicas": <em>"No agregar módulos fuera del alcance ni una arquitectura de múltiples hoteles"</em>): los tres módulos ya especificados viven en <strong>un solo backend Spring Boot</strong>, con un único esquema PostgreSQL (<code>telo</code>). No hay ningún argumento de escala, seguridad o equipo (los tres criterios de S6, sección 2.7) que justifique separar alguno como servicio aparte en V1 — ni siquiera <code>reservas</code>, a pesar de ser el módulo con más reglas de concurrencia: todo el bloqueo pesimista descrito en la Sección E del alcance depende de que las transacciones ocurran dentro del mismo proceso y la misma base de datos. Cuando <code>recepcion</code>, <code>ama_llaves</code>, <code>contabilidad</code> o <code>planilla</code> reciban su propio alcance, la pregunta de si conviene un módulo propio dentro del mismo backend o un servicio externo (más probable en <code>contabilidad</code>/<code>planilla</code>, típicamente resueltos con software ya existente) se decide con el mismo criterio, no antes.</p>
+<h2 id="9-donde-entra-la-pagina-web">9. Dónde entra la página web<a class="headerlink" href="#9-donde-entra-la-pagina-web" title="Permanent link">&para;</a></h2>
+<p>La Figura 1 ya adelantó la página web como el canal de entrada del panorama holístico; esta sección detalla cómo se implementa. Los módulos de la Figura 3 son módulos de <strong>dominio</strong> — no dicen nada todavía de cómo el visitante o el personal llegan a ellos. El propio alcance ya resuelve esa pregunta con una decisión técnica explícita: <em>"El proyecto Spring Boot funciona con... Spring MVC, Thymeleaf..."</em> — es decir, la web pública (Inicio, Habitaciones, Servicios, Galería, Ubicación, Contacto, el flujo de reservación) y el panel administrativo se renderizan <strong>en el mismo proceso</strong>, con Controllers que devuelven vistas Thymeleaf, no una SPA ni una API separada consumida por otro despliegue.</p>
+<p>Separar un portal web como su propio desplegable solo se justifica cuando hay un argumento operativo real detrás — por ejemplo, un perímetro de seguridad distinto entre lo público y lo administrativo, tráfico de campañas de marketing que exige escalar la web pública sin tocar el backend, o una v2 de ventas en línea ya anticipada que necesita evolucionar por su cuenta. Telo no tiene ninguno de esos tres argumentos hoy: el alcance excluye explícitamente API pública y aplicación móvil ("Fuera de alcance"), y no anticipa ninguna v2 de portal separado. Por eso <strong>no hay una cuarta caja de "Portal Web"</strong> en la Figura 4 — el visitante y el personal entran directo al mismo monolito, cada uno por sus propias rutas.</p>
+<p><strong>Figura 4. Los módulos de Telo, con la web como capa de presentación del mismo monolito</strong></p>
+<pre class="mermaid"><code>flowchart TB
+    Visitante(["Visitante&lt;br/&gt;(anónimo)"])
+    Personal(["Personal autorizado&lt;br/&gt;(con sesión)"])
+
+    subgraph APP["Aplicación Telo (1 despliegue, 1 proceso — Spring MVC + Thymeleaf)"]
+        direction TB
+        subgraph PRES["Presentación (Controllers + vistas Thymeleaf)"]
+            direction LR
+            Publico["Páginas públicas&lt;br/&gt;Inicio, Habitaciones, Servicios,&lt;br/&gt;Galería, Ubicación, Contacto"]
+            Flujo["Flujo de reservación&lt;br/&gt;disponibilidad → selección →&lt;br/&gt;datos → voucher"]
+            Panel["Panel administrativo&lt;br/&gt;reservas, catálogo, tarifas"]
+        end
+
+        subgraph MADM["Módulo administracion"]
+            USR[Usuario]
+            CFG[ConfiguracionHotel]
+            CFGT[ConfiguracionHotelTraduccion]
+            CFG --- CFGT
+        end
+        subgraph MCAT["Módulo catalogo"]
+            TH[TipoHabitacion]
+            THT[TipoHabitacionTraduccion]
+            HAB[Habitacion]
+            TAR[Tarifa]
+            TH --- THT
+            TH --- HAB
+            TH --- TAR
+        end
+        subgraph MRES["Módulo reservas - agregado"]
+            RES[Reserva]
+            RD[ReservaDetalle]
+            RN[ReservaNoche]
+            RE[ReservaEvento]
+            RC[ReservaComprobante]
+            RES --- RD
+            RD --- RN
+            RES --- RE
+            RES --- RC
+        end
+
+        Publico --&gt;|"llamada Java directa"| MCAT
+        Flujo --&gt;|"llamada Java directa"| MCAT
+        Flujo --&gt;|"llamada Java directa"| MRES
+        Panel --&gt;|"llamada Java directa"| MADM
+        Panel --&gt;|"llamada Java directa"| MCAT
+        Panel --&gt;|"llamada Java directa"| MRES
+        Panel -.-&gt;|"login, autorización"| MADM
+    end
+
+    DB[("Base de datos&lt;br/&gt;esquema telo")]
+
+    Visitante --&gt; Publico
+    Visitante --&gt; Flujo
+    Personal --&gt; Panel
+
+    MADM --&gt; DB
+    MCAT --&gt; DB
+    MRES --&gt; DB
+
+    TH -.-&gt;|referenciado por, snapshot| RD
+    USR -.-&gt;|referenciado por, auditoría| RES</code></pre>
+<p>Toda flecha dentro de <code>APP</code> es una llamada Java directa, no HTTP — la presentación y los tres módulos de dominio corren en el mismo proceso, verificable con la misma herramienta que BomERP usa en Unidad I (<code>ApplicationModules.verify()</code> de Spring Modulith, si el proyecto lo adopta). La única flecha que cruza a otro sistema sería una futura pasarela de pago o un WhatsApp Business API — ninguna existe hoy: el alcance es explícito en que el voucher se sube a la propia base de datos (<code>bytea</code>) o se registra manualmente desde WhatsApp, sin integración automática.</p>
+<h2 id="10-lo-que-este-ejercicio-no-resuelve">10. Lo que este ejercicio no resuelve<a class="headerlink" href="#10-lo-que-este-ejercicio-no-resuelve" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>No se modelan aquí <code>recepcion</code>, <code>ama_llaves</code>, <code>contabilidad</code> ni <code>planilla</code></strong> — existen en el panorama holístico de la sección 1 porque son necesidades reales del negocio de hospedaje, pero ninguno tiene todavía un alcance escrito del que extraer entidades. Cuando lo tengan, se les aplica la misma secuencia completa de S6 (panorama → subdominio → entidades → casos de uso → objetos de valor → prueba de tres partes → diseño estratégico), no solo la parte de entidades.</li>
+<li><strong>No se decide aquí si <code>pagos</code> necesita separarse de <code>reservas</code> como módulo propio</strong> cuando llegue la pasarela automática que hoy está explícitamente fuera de alcance (<code>alcance-v1.md</code>, "Fuera de alcance") — hoy <code>ReservaComprobante</code> comparte agregado con <code>Reserva</code> porque el alcance exige aprobar el voucher en la misma transacción que confirma la reserva; integrar un proveedor de pagos externo típicamente exige su propia capa anticorrupción, y la prueba de tres partes habría que aplicarla de nuevo en ese momento, no antes.</li>
+<li><strong>No se modela aquí el diagrama de clases completo</strong> (atributos, tipos de columna, <code>@Version</code>, snapshots) — eso ya está resuelto con detalle en el propio <code>alcance-v1.md</code>, sección "Diseño técnico del dominio"; este documento se queda en el nivel de descubrimiento de dominio (entidades, módulos, agregado), no baja al nivel de implementación.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Angel Sullon @asullom - UPeU 2026
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.top", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
