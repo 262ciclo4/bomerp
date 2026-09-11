@@ -1,0 +1,3909 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Entorno integrado de desarrollo academico para construir modulos ERP con ADS, BD2 y LP2.">
+      
+      
+        <meta name="author" content="UPeU">
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+  
+    <title>BOM ERP - Telo — Alcance V1</title>
+  
+
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#telo-alcance-v1" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../.." title="BOM ERP" class="md-header__button md-logo" aria-label="BOM ERP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            BOM ERP
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Telo — Alcance V1
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/262ciclo4/bomerp" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    262ciclo4/bomerp
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Pestañas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Inicio
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../proyecto-integrador/" class="md-tabs__link">
+          
+  
+  
+  Guía del Proyecto Integrador
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+  ADS
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../bd2/" class="md-tabs__link">
+          
+  
+  
+  BD2
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../lp2/" class="md-tabs__link">
+          
+  
+  
+  LP2
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="BOM ERP" class="md-nav__button md-logo" aria-label="BOM ERP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    BOM ERP
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/262ciclo4/bomerp" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    262ciclo4/bomerp
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guía del Proyecto Integrador
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guía del Proyecto Integrador
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Alineamiento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/brief/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brief técnico (plantilla)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Diseño técnico, motor transaccional y backend inicial
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    1. Diseño técnico, motor transaccional y backend inicial
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u1/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u1/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u1/lp2-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Demo U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u1/ads-matriz-competencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Matriz de competencias
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u1/lp2-matriz-competencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Matriz de competencias
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u1/bd2-matriz-competencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Matriz de competencias
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Modelado UML, administración Oracle y SPA segura
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    2. Modelado UML, administración Oracle y SPA segura
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u2/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u2/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u2/lp2-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Demo U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Diseño consolidado, operación Oracle y Full-Stack integrado
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    3. Diseño consolidado, operación Oracle y Full-Stack integrado
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u3/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u3/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u3/lp2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u3/checklist-final/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Checklist final
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../proyecto-integrador/u3/guia-sustentacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guía de sustentación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ADS
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../silabo_ads_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../silabo_ads_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Arquitectura y Diseño Estructural
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Arquitectura y Diseño Estructural
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sesiones/S01_Fundamentos_Arquitectura_Software/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - Fundamentos de arquitectura de software
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sesiones/S02_Modelo_C4_Vistas_Arquitectonicas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - Modelo C4 y vistas arquitectónicas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sesiones/S03_Diseno_Estructural_Principios_SOLID/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S3 - Diseño estructural y principios SOLID
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sesiones/S04_Arquitecturas_Modernas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S4 - Arquitecturas modernas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sesiones/S05_Evaluacion_Unidad_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S5 - Evaluación de la Unidad I
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    II. Diseño Dinámico, Modelado UML y Patrones
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    II. Diseño Dinámico, Modelado UML y Patrones
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sesiones/S06_Descubrimiento_Modelado_Dominio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S6 - Descubrimiento y modelado del dominio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    BD2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bd2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bd2/silabo_bd2_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bd2/silabo_bd2_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Programación y optimización (Oracle XE)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Programación y optimización (Oracle XE)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - PL/SQL aplicado al negocio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bd2/sesiones/S02_Triggers_DML_Auditoria/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - Triggers DML y auditoría
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bd2/sesiones/S03_Excepciones_Robustez/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S3 - Manejo de excepciones y robustez
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bd2/sesiones/S04_Optimizacion_Consultas_SQL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S4 - Optimización de consultas SQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bd2/sesiones/S05_Indices_Optimizacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S5 - Índices para optimización
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bd2/sesiones/S06_Evaluacion_Unidad_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S6 - Evaluación de la Unidad I
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    LP2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lp2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lp2/silabo_lp2_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lp2/silabo_lp2_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Decisiones de arquitectura
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Decisiones de arquitectura
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lp2/adr/ADR-001-arquitectura-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-001 - Arquitectura del backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lp2/adr/ADR-002-spring-modulith/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-002 - Spring Modulith
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lp2/adr/ADR-003-spring-boot-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-003 - Versión exacta de Spring Boot 4.0.7
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lp2/adr/ADR-004-jwt-diferido/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-004 - JWT diferido a S10
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Base backend REST modular de BomERP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Base backend REST modular de BomERP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lp2/sesiones/S01_Arquitectura_Backend_REST_Profesional/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - Arquitectura backend REST profesional
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lp2/sesiones/S02_CRUD_REST_Completo_Producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - CRUD REST completo de Producto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lp2/sesiones/S03_Objetos_Relacionados_Categoria_Producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S3 - Objetos relacionados Categoria-Producto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lp2/sesiones/S04_Operacion_Cabecera_Detalle_Venta_DetalleVenta/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S4 - Operación cabecera-detalle Venta-DetalleVenta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lp2/sesiones/S05_Consultas_Empresariales_Reportes_CORS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S5 - Consultas empresariales, reportes REST y CORS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lp2/sesiones/S06_Evaluacion_Unidad_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S6 - Evaluación de la Unidad I
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objetivo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objetivo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#web-publica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Web pública
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reservaciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reservaciones
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#administracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Administración
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#criterios-de-aceptacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Criterios de aceptación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#base-tecnica-existente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Base técnica existente
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fuera-de-alcance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fuera de alcance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diseno-tecnico-del-dominio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diseño técnico del dominio
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Diseño técnico del dominio">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#condiciones-tecnicas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Condiciones técnicas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a-entidades-y-relaciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A. Entidades y relaciones
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="A. Entidades y relaciones">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#diagrama-de-clases-configuracion-catalogo-y-tarifas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagrama de clases: configuración, catálogo y tarifas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#diagrama-de-clases-reservas-noches-eventos-y-usuarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagrama de clases: reservas, noches, eventos y usuarios
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-campos-y-convenciones-de-persistencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B. Campos y convenciones de persistencia
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="B. Campos y convenciones de persistencia">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#estados-y-enums" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Estados y enums
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-restricciones-indices-y-responsabilidades" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C. Restricciones, índices y responsabilidades
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="C. Restricciones, índices y responsabilidades">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#restricciones-postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restricciones PostgreSQL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#indices-iniciales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Índices iniciales
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#postgresql-frente-a-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PostgreSQL frente a Service
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d-disponibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D. Disponibilidad
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="D. Disponibilidad">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#intervalos-y-calculo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Intervalos y cálculo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tratamiento-de-estados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tratamiento de estados
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plazo-y-comprobantes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plazo y comprobantes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pago-total-adelanto-y-saldo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pago total, adelanto y saldo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inventario-y-asignacion-fisica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inventario y asignación física
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#e-concurrencia-e-idempotencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E. Concurrencia e idempotencia
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#f-tarifas-historial-auditoria-y-multidioma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        F. Tarifas, historial, auditoría y multidioma
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="F. Tarifas, historial, auditoría y multidioma">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#versiones-de-tarifa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Versiones de tarifa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#informacion-copiada-en-reserva" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Información copiada en reserva
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#impuesto-del-18-y-tarifas-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Impuesto del 18% y tarifas variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#auditoria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auditoría
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multidioma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multidioma
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#g-migraciones-flyway-propuestas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        G. Migraciones Flyway propuestas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#h-reglas-confirmadas-y-precisiones-restantes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        H. Reglas confirmadas y precisiones restantes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#referencias-tecnicas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencias técnicas
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="telo-alcance-v1">Telo — Alcance V1<a class="headerlink" href="#telo-alcance-v1" title="Permanent link">&para;</a></h1>
+<h2 id="objetivo">Objetivo<a class="headerlink" href="#objetivo" title="Permanent link">&para;</a></h2>
+<p>Permitir que un visitante conozca el hotel y solicite una reservación de habitación. El personal autorizado gestiona las solicitudes, las habitaciones, sus tipos y las tarifas.</p>
+<h2 id="web-publica">Web pública<a class="headerlink" href="#web-publica" title="Permanent link">&para;</a></h2>
+<p>Secciones: Inicio, Habitaciones, Servicios, Galería, Ubicación y Contacto. La experiencia pública y el proceso de reservación estarán disponibles en español e inglés.</p>
+<h2 id="reservaciones">Reservaciones<a class="headerlink" href="#reservaciones" title="Permanent link">&para;</a></h2>
+<ol>
+<li>El visitante ingresa llegada, salida y cantidad de huéspedes.</li>
+<li>El sistema consulta disponibilidad para el intervalo solicitado.</li>
+<li>El visitante selecciona uno o varios tipos disponibles y la cantidad de habitaciones de cada tipo, incluyendo reservas en bloque.</li>
+<li>El visitante registra sus datos y envía la solicitud.</li>
+<li>El sistema registra la reserva con estado <code>PENDIENTE</code> y muestra una referencia de la solicitud.</li>
+<li>Muestra el QR de Yape o las cuentas de depósito y el plazo para enviar el voucher.</li>
+<li>El visitante sube el voucher en la web o lo envía al WhatsApp del personal por el pago total o un adelanto; el personal registra y verifica el pago, y puede confirmar la reserva por cualquier monto que apruebe.</li>
+</ol>
+<p>Política comercial indicada por el usuario: los pagos no son reembolsables. Mostrar esta condición en español e inglés antes de solicitar el pago y registrar su aceptación. Cancelar libera habitaciones, pero no genera devolución. No existe adelanto mínimo: el personal puede aprobar cualquier monto y, al hacerlo, confirmar la reserva.</p>
+<p>Plazo confirmado para enviar el voucher: dos horas si la llegada es el mismo día de creación de la reserva, cuatro horas si la llegada es otro día. Se propone contar desde el registro de la reserva pendiente y comparar fechas en <code>America/Lima</code>.</p>
+<p>Enviar la solicitud no equivale a confirmar la reserva. La interfaz debe comunicar esta diferencia en ambos idiomas.</p>
+<h2 id="administracion">Administración<a class="headerlink" href="#administracion" title="Permanent link">&para;</a></h2>
+<p>Acceso mediante inicio de sesión para personal autorizado. Permite consultar reservas, confirmarlas o cancelarlas, y administrar habitaciones, tipos de habitación y tarifas.</p>
+<p>Estados contemplados: <code>PENDIENTE</code>, <code>CONFIRMADA</code>, <code>CANCELADA</code> y <code>VENCIDA</code>. Enviar un voucher no confirma por sí solo: el personal debe verificar el pago.</p>
+<h2 id="criterios-de-aceptacion">Criterios de aceptación<a class="headerlink" href="#criterios-de-aceptacion" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Todas las secciones públicas son accesibles en español e inglés.</li>
+<li>Llegada, salida y cantidad de huéspedes son obligatorias; salida debe ser posterior a llegada y huéspedes debe ser un entero positivo.</li>
+<li>La disponibilidad contempla las fechas, capacidad y habitaciones habilitadas.</li>
+<li>Se verifica nuevamente la disponibilidad al registrar la reserva para evitar aceptar una selección que dejó de estar disponible.</li>
+<li>Toda solicitud nueva se registra como <code>PENDIENTE</code> y conserva las fechas, huéspedes, habitaciones solicitadas por tipo y datos del visitante.</li>
+<li>La reserva puede contener varias habitaciones; al registrarse como <code>PENDIENTE</code> compromete el bloque completo de forma atómica. Confirmarla conserva ese cupo y cancelarla lo libera.</li>
+<li>Si vence el plazo sin voucher recibido, la reserva pasa a <code>VENCIDA</code> y libera todas sus habitaciones. Se propone conservar el cupo de un voucher recibido a tiempo mientras el personal lo revisa.</li>
+<li>Moneda confirmada: soles (<code>PEN</code>). Las tarifas ingresadas ya incluyen el impuesto del 18%; no se suma nuevamente.</li>
+<li>Las operaciones administrativas requieren autenticación y autorización en el servidor.</li>
+<li>La confirmación vuelve a comprobar que existe disponibilidad; solicitudes concurrentes no pueden confirmar el mismo alojamiento para fechas superpuestas.</li>
+<li>Las modificaciones del catálogo y las tarifas no alteran el importe ni la información histórica de reservas ya registradas.</li>
+</ul>
+<h2 id="base-tecnica-existente">Base técnica existente<a class="headerlink" href="#base-tecnica-existente" title="Permanent link">&para;</a></h2>
+<p>El proyecto Spring Boot funciona con Java 21, Maven, Spring MVC, Thymeleaf, Spring Security, JPA, validación y PostgreSQL alojado en Supabase. La conexión de desarrollo está verificada. Aún no contiene las funcionalidades hoteleras descritas en este documento.</p>
+<p>El arranque inicial muestra <code>Hola mundo</code>. La conexión de desarrollo se documenta dentro del repositorio privado de la aplicación y no forma parte de este sitio público.</p>
+<h2 id="fuera-de-alcance">Fuera de alcance<a class="headerlink" href="#fuera-de-alcance" title="Permanent link">&para;</a></h2>
+<p>Contabilidad, inventarios, facturación electrónica, caja, housekeeping, aplicación móvil, API pública y pasarela de pagos.</p>
+<p>Mostrar medios de pago externos, recibir vouchers y verificarlos manualmente sí forma parte de V1. Esto no implica integración automática con Yape o bancos ni un módulo contable.</p>
+<h2 id="diseno-tecnico-del-dominio">Diseño técnico del dominio<a class="headerlink" href="#diseno-tecnico-del-dominio" title="Permanent link">&para;</a></h2>
+<p>Esta sección documenta la propuesta de diseño V1. No implica implementar entidades JPA, controllers, services, repositories, vistas ni migraciones. Las decisiones indicadas como pendientes deben resolverse antes de cerrar el modelo definitivo.</p>
+<h3 id="condiciones-tecnicas">Condiciones técnicas<a class="headerlink" href="#condiciones-tecnicas" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Mantener la arquitectura existente y la conexión JDBC/JPA estándar con PostgreSQL.</li>
+<li>Esquema de aplicación: <code>telo</code>.</li>
+<li>No utilizar Supabase SDK, API REST, Auth, Storage ni Edge Functions.</li>
+<li>Ejecutar los cambios de esquema mediante Flyway y mantener Hibernate con <code>ddl-auto=validate</code>.</li>
+<li>Usar tipos y funcionalidades de PostgreSQL independientes del proveedor para permitir una migración posterior.</li>
+<li>Dinero con <code>BigDecimal</code>; llegada y salida con <code>LocalDate</code>.</li>
+<li>El visitante selecciona un tipo de habitación. La habitación física se asigna posteriormente.</li>
+<li>Una reserva admite varias habitaciones, del mismo tipo o de distintos tipos. La asignación física es independiente para cada unidad solicitada.</li>
+<li>Tarifas variables, moneda <code>PEN</code> e impuesto del 18% incluido en el precio ingresado. Se propone variación por tipo y fecha; no se asumen descuentos por bloque.</li>
+<li>Mantener la información histórica de las reservas aunque cambien el catálogo o las tarifas.</li>
+<li>Textos estáticos con Spring i18n y contenido dinámico con tablas de traducción.</li>
+<li>No agregar módulos fuera del alcance ni una arquitectura de múltiples hoteles.</li>
+</ul>
+<h3 id="a-entidades-y-relaciones">A. Entidades y relaciones<a class="headerlink" href="#a-entidades-y-relaciones" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Concepto funcional</th>
+<th>Propuesta V1</th>
+<th>Justificación</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tipo de habitación</td>
+<td>Tabla propia</td>
+<td>Oferta, capacidad y agrupación de disponibilidad.</td>
+</tr>
+<tr>
+<td>Habitación</td>
+<td>Tabla propia</td>
+<td>Inventario físico habilitado.</td>
+</tr>
+<tr>
+<td>Tarifa</td>
+<td>Tabla con versiones conservadas</td>
+<td>Precios por vigencia e historial de condiciones aplicadas.</td>
+</tr>
+<tr>
+<td>Huésped</td>
+<td>Objeto de valor embebido en reserva</td>
+<td>No se requiere maestro de clientes, cuentas ni deduplicación en V1.</td>
+</tr>
+<tr>
+<td>Reserva</td>
+<td>Cabecera y detalles por unidad solicitada</td>
+<td>Permite varias habitaciones o un bloque, con un contacto y referencia común.</td>
+</tr>
+<tr>
+<td>Usuario</td>
+<td>Tabla propia</td>
+<td>Personal autorizado mediante Spring Security.</td>
+</tr>
+<tr>
+<td>Rol</td>
+<td>Enum</td>
+<td>No se solicita administrar un catálogo de roles.</td>
+</tr>
+<tr>
+<td>Permiso</td>
+<td>Autoridades definidas en código</td>
+<td>No requiere tablas ni interfaz de permisos configurables.</td>
+</tr>
+<tr>
+<td>Configuración del hotel</td>
+<td>Tabla de una sola fila</td>
+<td>Datos comunes del único hotel.</td>
+</tr>
+</tbody>
+</table>
+<p>Se justifican las tablas adicionales <code>configuracion_hotel_traduccion</code> y <code>tipo_habitacion_traduccion</code> para multidioma; <code>reserva_detalle</code> para cada habitación solicitada del bloque; <code>reserva_noche</code> para conservar importes por unidad y noche; <code>reserva_evento</code> para trazabilidad administrativa; y <code>reserva_comprobante</code> para recepción y revisión del voucher. Son doce tablas en total. Los QR y datos de depósito se configuran como contenido del hotel, sin un catálogo financiero adicional.</p>
+<p>La interfaz permite indicar cantidades por tipo, pero se persiste una fila de detalle por habitación solicitada. Por ejemplo, dos dobles y una simple generan tres detalles bajo una sola reserva. Así cada unidad puede asignarse posteriormente sin introducir otra tabla de asignaciones. No se necesita un módulo separado de reservas en bloque.</p>
+<p>Se propone un intervalo común, un estado global y confirmación/cancelación completa del bloque para V1. Fechas diferentes y cancelaciones parciales quedan pendientes de confirmación.</p>
+<p>La galería puede utilizar recursos incluidos en el proyecto, con textos estáticos traducidos. No se propone un administrador de galería, CMS ni almacenamiento de archivos adicional.</p>
+<h4 id="diagrama-de-clases-configuracion-catalogo-y-tarifas">Diagrama de clases: configuración, catálogo y tarifas<a class="headerlink" href="#diagrama-de-clases-configuracion-catalogo-y-tarifas" title="Permanent link">&para;</a></h4>
+<p>Cada clase representa una tabla PostgreSQL, no una clase Java implementada. <code>PK</code> indica clave primaria, <code>FK</code> clave foránea, <code>UK</code> unicidad y <code>opcional</code> permite nulos. Los campos comunes de auditoría se detallan debajo de los diagramas para evitar repetirlos.</p>
+<pre class="mermaid"><code>classDiagram
+direction LR
+class ConfiguracionHotel {
+  bigint id PK
+  varchar nombre_comercial
+  varchar direccion
+  varchar telefono
+  varchar email
+  numeric latitud_opcional
+  numeric longitud_opcional
+  varchar zona_horaria
+  varchar moneda
+  varchar idioma_predeterminado
+  text instrucciones_pago
+  varchar qr_yape_recurso
+  bigint version
+}
+class ConfiguracionHotelTraduccion {
+  bigint hotel_id PK_FK
+  varchar idioma PK
+  varchar titulo_inicio
+  text descripcion_hotel
+  text descripcion_servicios
+  text indicaciones_ubicacion
+}
+class TipoHabitacion {
+  bigint id PK
+  varchar codigo UK
+  integer capacidad_maxima
+  boolean activo
+  bigint version
+}
+class TipoHabitacionTraduccion {
+  bigint tipo_habitacion_id PK_FK
+  varchar idioma PK
+  varchar nombre
+  text descripcion
+}
+class Habitacion {
+  bigint id PK
+  bigint tipo_habitacion_id FK
+  varchar codigo UK
+  boolean habilitada
+  bigint version
+}
+class Tarifa {
+  bigint id PK
+  bigint tipo_habitacion_id FK
+  date vigencia_desde
+  date vigencia_hasta
+  numeric importe_noche
+  varchar moneda
+  boolean activa_para_venta
+  timestamptz creada_en
+  bigint creada_por FK
+  timestamptz retirada_en_opcional
+  bigint retirada_por_opcional FK
+}
+ConfiguracionHotel "1" -- "0..2" ConfiguracionHotelTraduccion : traducciones
+TipoHabitacion "1" -- "0..2" TipoHabitacionTraduccion : traducciones
+TipoHabitacion "1" -- "0..*" Habitacion : agrupa
+TipoHabitacion "1" -- "0..*" Tarifa : versiones</code></pre>
+<p>Las traducciones admiten cero filas durante la preparación; publicar requiere una traducción completa en español y otra en inglés. Las clases corresponden respectivamente a <code>configuracion_hotel</code>, <code>configuracion_hotel_traduccion</code>, <code>tipo_habitacion</code>, <code>tipo_habitacion_traduccion</code>, <code>habitacion</code> y <code>tarifa</code>.</p>
+<h4 id="diagrama-de-clases-reservas-noches-eventos-y-usuarios">Diagrama de clases: reservas, noches, eventos y usuarios<a class="headerlink" href="#diagrama-de-clases-reservas-noches-eventos-y-usuarios" title="Permanent link">&para;</a></h4>
+<p>Las clases TipoHabitacion, Habitacion y Tarifa se repiten como referencias del diagrama anterior; no son tablas adicionales.</p>
+<pre class="mermaid"><code>classDiagram
+direction TB
+class Reserva {
+  bigint id PK
+  uuid referencia_publica UK
+  uuid clave_idempotencia UK
+  date llegada
+  date salida
+  integer cantidad_huespedes_total
+  varchar estado
+  timestamptz voucher_limite_en
+  timestamptz vencida_en_opcional
+  varchar idioma_reserva
+  varchar huesped_nombre
+  varchar huesped_email
+  varchar huesped_telefono
+  varchar moneda
+  numeric tasa_impuesto_snapshot
+  boolean tarifa_incluye_impuesto_snapshot
+  varchar modalidad_pago
+  numeric importe_aprobado_total
+  text politica_pago_snapshot
+  varchar politica_pago_version
+  timestamptz politica_aceptada_en
+  numeric importe_base
+  numeric importe_impuesto
+  numeric importe_total
+  timestamptz creada_en
+  timestamptz actualizada_en
+  bigint version
+}
+class ReservaDetalle {
+  bigint id PK
+  bigint reserva_id FK
+  integer numero_linea
+  bigint tipo_habitacion_id FK
+  bigint habitacion_id_opcional FK
+  integer cantidad_huespedes
+  varchar tipo_codigo_snapshot
+  varchar tipo_nombre_snapshot
+  integer capacidad_tipo_snapshot
+  numeric importe_base
+  numeric importe_impuesto
+  numeric importe_total
+}
+class ReservaNoche {
+  bigint reserva_detalle_id PK_FK
+  date fecha PK
+  bigint tarifa_id FK
+  numeric importe_tarifa_snapshot
+  numeric importe_base
+  numeric importe_impuesto
+  numeric importe_total
+}
+class ReservaEvento {
+  bigint id PK
+  bigint reserva_id FK
+  bigint reserva_detalle_id_opcional FK
+  varchar tipo_evento
+  varchar estado_anterior_opcional
+  varchar estado_nuevo_opcional
+  bigint habitacion_anterior_id_opcional FK
+  bigint habitacion_nueva_id_opcional FK
+  bigint actor_usuario_id_opcional FK
+  varchar origen
+  text motivo_opcional
+  timestamptz ocurrido_en
+}
+class ReservaComprobante {
+  bigint id PK
+  bigint reserva_id FK
+  varchar medio_pago
+  varchar canal_recepcion
+  numeric importe_declarado
+  numeric importe_verificado_opcional
+  varchar referencia_operacion_opcional
+  timestamptz recibido_en
+  varchar estado_revision
+  bytea archivo_opcional
+  varchar nombre_original_opcional
+  varchar tipo_mime_opcional
+  bigint tamano_bytes_opcional
+  varchar contacto_whatsapp_opcional
+  bigint revisado_por_opcional FK
+  timestamptz revisado_en_opcional
+  text motivo_revision_opcional
+}
+class Usuario {
+  bigint id PK
+  varchar login UK
+  varchar nombre
+  varchar password_hash
+  varchar rol
+  boolean activo
+  bigint version
+}
+class TipoHabitacion {
+  bigint id PK
+}
+class Habitacion {
+  bigint id PK
+}
+class Tarifa {
+  bigint id PK
+}
+Reserva "1" -- "1..*" ReservaDetalle : habitaciones solicitadas
+TipoHabitacion "1" -- "0..*" ReservaDetalle : tipo solicitado
+Habitacion "0..1" -- "0..*" ReservaDetalle : asignacion posterior
+ReservaDetalle "1" -- "1..*" ReservaNoche : desglose por noche
+Tarifa "1" -- "0..*" ReservaNoche : version aplicada
+Reserva "1" -- "1..*" ReservaEvento : historial
+Reserva "1" -- "0..*" ReservaComprobante : vouchers
+Usuario "0..1" -- "0..*" ReservaComprobante : revisor
+ReservaDetalle "0..1" -- "0..*" ReservaEvento : unidad afectada
+Usuario "0..1" -- "0..*" ReservaEvento : actor
+Habitacion "0..1" -- "0..*" ReservaEvento : habitacion anterior
+Habitacion "0..1" -- "0..*" ReservaEvento : habitacion nueva</code></pre>
+<p>Las seis tablas adicionales son <code>reserva</code>, <code>reserva_detalle</code>, <code>reserva_noche</code>, <code>reserva_evento</code>, <code>reserva_comprobante</code> y <code>usuario</code>. La cardinalidad mínima de detalles, noches y eventos se garantiza al crear la reserva dentro de una transacción; una FK por sí sola no exige que existan hijos. El voucher se sube en la web o se envía al WhatsApp del personal. El archivo en <code>bytea</code> es opcional y se usa solo para el canal web, evitando Supabase Storage.</p>
+<h3 id="b-campos-y-convenciones-de-persistencia">B. Campos y convenciones de persistencia<a class="headerlink" href="#b-campos-y-convenciones-de-persistencia" title="Permanent link">&para;</a></h3>
+<ul>
+<li>PK simples: <code>bigint</code> generado por identidad, representado como <code>Long</code>.</li>
+<li>Referencia pública y clave de idempotencia: UUID generado en Java, sin extensiones específicas de Supabase.</li>
+<li>Fechas de estancia y vigencia: <code>date</code> / <code>LocalDate</code>.</li>
+<li>Tiempos de auditoría: <code>timestamptz</code> / <code>Instant</code>.</li>
+<li>Dinero: <code>numeric(12,2)</code> / <code>BigDecimal</code>, en soles <code>PEN</code>. La tasa del impuesto se conserva como <code>numeric(5,4)</code> / <code>BigDecimal</code>, inicialmente <code>0.1800</code>.</li>
+<li>Enums: <code>varchar</code> con <code>CHECK</code>, mapeados por nombre, nunca por ordinal.</li>
+<li>Campos de auditoría comunes en configuración, traducciones, tipos, habitaciones y usuarios: <code>creada_en</code>, <code>actualizada_en</code>, <code>creada_por</code> y <code>actualizada_por</code>. Los actores referencian <code>usuario</code> y pueden ser nulos para una carga inicial o proceso del sistema.</li>
+<li>Entidades editables, incluidas traducciones: <code>version</code> para control optimista JPA. En los diagramas se omite en las traducciones por brevedad.</li>
+<li>Tarifas: auditoría de creación y retiro; condiciones publicadas inmutables.</li>
+<li>Reservas: tiempos, versión y eventos con actor. No necesitan duplicar el actor de cada transición en la cabecera.</li>
+<li>Eventos y noches históricas: no se editan mediante el flujo normal de V1.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Tabla</th>
+<th>Consideraciones específicas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>configuracion_hotel</code></td>
+<td>Máximo una fila, <code>id = 1</code>. Zona horaria IANA para interpretar la fecha actual del hotel.</td>
+</tr>
+<tr>
+<td><code>configuracion_hotel_traduccion</code></td>
+<td>PK <code>(hotel_id, idioma)</code>. Información pública traducible, sin CMS.</td>
+</tr>
+<tr>
+<td><code>tipo_habitacion</code></td>
+<td>Cantidad disponible derivada de habitaciones; no almacenar un contador duplicado.</td>
+</tr>
+<tr>
+<td><code>tipo_habitacion_traduccion</code></td>
+<td>PK <code>(tipo_habitacion_id, idioma)</code>. Sin columnas <code>nombre_es</code> o <code>nombre_en</code>.</td>
+</tr>
+<tr>
+<td><code>habitacion</code></td>
+<td><code>habilitada</code> expresa inventario vendible. No necesita estados libre/ocupada, que dependen del intervalo.</td>
+</tr>
+<tr>
+<td><code>tarifa</code></td>
+<td>Variable por tipo y fecha, propuesta por habitación/noche. Importe final con 18% incluido. Fin de vigencia exclusivo. Versiones anteriores permanecen.</td>
+</tr>
+<tr>
+<td><code>reserva</code></td>
+<td>Cabecera de varias habitaciones, contacto, intervalo, estado y totales globales. Conserva moneda, tasa e interpretación tributaria del precio.</td>
+</tr>
+<tr>
+<td><code>reserva_detalle</code></td>
+<td>Una fila por habitación solicitada, FK al tipo, asignación física opcional, huéspedes, snapshots y totales de esa unidad. <code>UNIQUE (reserva_id, numero_linea)</code>.</td>
+</tr>
+<tr>
+<td><code>reserva_noche</code></td>
+<td>PK <code>(reserva_detalle_id, fecha)</code>. Una fila por unidad y noche; conserva precio de origen, base, impuesto y total.</td>
+</tr>
+<tr>
+<td><code>reserva_evento</code></td>
+<td>Historial inmutable de decisiones y asignaciones. No almacenar secretos ni repetir datos personales completos.</td>
+</tr>
+<tr>
+<td><code>usuario</code></td>
+<td>Usuario administrativo propio; contraseña con hash adaptativo compatible con Spring Security.</td>
+</tr>
+<tr>
+<td><code>reserva_comprobante</code></td>
+<td>Voucher con recepción y revisión auditadas. Medio <code>YAPE</code> o <code>DEPOSITO</code>; canal <code>WEB</code> o <code>WHATSAPP</code>. Un reemplazo crea otra fila y conserva el intento anterior.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="estados-y-enums">Estados y enums<a class="headerlink" href="#estados-y-enums" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Enum</th>
+<th>Valores propuestos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Estado de reserva</td>
+<td><code>PENDIENTE</code>, <code>CONFIRMADA</code>, <code>CANCELADA</code>, <code>VENCIDA</code></td>
+</tr>
+<tr>
+<td>Idioma</td>
+<td><code>es</code>, <code>en</code></td>
+</tr>
+<tr>
+<td>Rol</td>
+<td><code>ADMINISTRADOR</code>, <code>RECEPCION</code>, por confirmar</td>
+</tr>
+<tr>
+<td>Origen de evento</td>
+<td><code>VISITANTE</code>, <code>USUARIO</code>, <code>SISTEMA</code></td>
+</tr>
+<tr>
+<td>Tipo de evento</td>
+<td><code>CREADA</code>, <code>CONFIRMADA</code>, <code>CANCELADA</code>, <code>VENCIDA</code>, <code>VOUCHER_RECIBIDO</code>, <code>VOUCHER_APROBADO</code>, <code>VOUCHER_RECHAZADO</code>, <code>ASIGNADA</code>, <code>REASIGNADA</code></td>
+</tr>
+<tr>
+<td>Revisión del comprobante</td>
+<td><code>POR_REVISAR</code>, <code>APROBADO</code>, <code>RECHAZADO</code></td>
+</tr>
+<tr>
+<td>Medio de pago</td>
+<td><code>YAPE</code>, <code>DEPOSITO</code></td>
+</tr>
+<tr>
+<td>Canal de recepción</td>
+<td><code>WEB</code>, <code>WHATSAPP</code></td>
+</tr>
+<tr>
+<td>Modalidad de pago</td>
+<td><code>TOTAL</code>, <code>ADELANTO</code></td>
+</tr>
+</tbody>
+</table>
+<p>La regla de vencimiento justifica <code>VENCIDA</code>; no agregar estados de check-in, check-out ni contabilidad. Los nombres visibles se traducen mediante Spring i18n.</p>
+<h3 id="c-restricciones-indices-y-responsabilidades">C. Restricciones, índices y responsabilidades<a class="headerlink" href="#c-restricciones-indices-y-responsabilidades" title="Permanent link">&para;</a></h3>
+<h4 id="restricciones-postgresql">Restricciones PostgreSQL<a class="headerlink" href="#restricciones-postgresql" title="Permanent link">&para;</a></h4>
+<ul>
+<li>PK, FK y <code>NOT NULL</code> para atributos obligatorios.</li>
+<li>Unicidad de código de tipo, código de habitación, login normalizado, referencia pública y clave de idempotencia.</li>
+<li><code>CHECK</code>: salida posterior a llegada; fin de vigencia posterior al inicio; capacidad y huéspedes positivos; importes no negativos; enums admitidos; moneda de tres letras.</li>
+<li>PK compuestas en traducciones y noches para evitar duplicados.</li>
+<li>FK compuesta de <code>reserva_detalle</code> <code>(habitacion_id, tipo_habitacion_id)</code> a habitación, respaldada por <code>UNIQUE (id, tipo_habitacion_id)</code>, para impedir una asignación de otro tipo. <code>habitacion_id</code> puede ser nulo.</li>
+<li>FK compuesta opcional de evento <code>(reserva_detalle_id, reserva_id)</code> a detalle, respaldada por <code>UNIQUE (id, reserva_id)</code>, para impedir eventos sobre detalles de otra reserva.</li>
+<li><code>UNIQUE (reserva_id, numero_linea)</code> y <code>UNIQUE (reserva_id, habitacion_id)</code> en detalle: no asignar dos unidades del mismo bloque a la misma habitación. PostgreSQL permite varias asignaciones nulas.</li>
+<li>Moneda <code>PEN</code>; importes base e impuesto no negativos; total igual a base más impuesto en cada fila monetaria. Tasa histórica entre cero y uno.</li>
+<li>FK individuales para habitaciones anterior/nueva y actor de los eventos.</li>
+<li>Eliminaciones de datos referenciados con <code>RESTRICT</code>: desactivar tipos, habitaciones y usuarios en lugar de borrar historia.</li>
+<li>No validar llegada contra la fecha actual mediante un <code>CHECK</code>; esa regla depende del tiempo y la zona horaria del hotel.</li>
+<li>No usar un <code>CHECK</code> para contar capacidad o reservas de otras filas.</li>
+</ul>
+<h4 id="indices-iniciales">Índices iniciales<a class="headerlink" href="#indices-iniciales" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Tabla</th>
+<th>Índice</th>
+<th>Uso</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>habitacion</code></td>
+<td><code>(tipo_habitacion_id, habilitada)</code></td>
+<td>Inventario por tipo.</td>
+</tr>
+<tr>
+<td><code>tarifa</code></td>
+<td><code>(tipo_habitacion_id, vigencia_desde, vigencia_hasta)</code>, parcial para activas</td>
+<td>Cotización por intervalo.</td>
+</tr>
+<tr>
+<td><code>reserva</code></td>
+<td><code>(estado, llegada, salida)</code></td>
+<td>Intervalos que consumen inventario.</td>
+</tr>
+<tr>
+<td><code>reserva_detalle</code></td>
+<td><code>(tipo_habitacion_id, reserva_id)</code></td>
+<td>Unidades solicitadas por tipo; unir con cabecera para fechas y estado.</td>
+</tr>
+<tr>
+<td><code>reserva_detalle</code></td>
+<td><code>(habitacion_id, reserva_id)</code>, parcial con habitación asignada</td>
+<td>Asignaciones físicas; fechas en cabecera.</td>
+</tr>
+<tr>
+<td><code>reserva</code></td>
+<td><code>(estado, creada_en)</code></td>
+<td>Consulta administrativa.</td>
+</tr>
+<tr>
+<td><code>reserva_noche</code></td>
+<td><code>(tarifa_id)</code></td>
+<td>Referencias a versiones tarifarias.</td>
+</tr>
+<tr>
+<td><code>reserva_evento</code></td>
+<td><code>(reserva_id, ocurrido_en, id)</code></td>
+<td>Historial ordenado.</td>
+</tr>
+<tr>
+<td><code>reserva</code></td>
+<td><code>(voucher_limite_en, id)</code>, parcial para pendientes</td>
+<td>Evaluación de vencimientos.</td>
+</tr>
+<tr>
+<td><code>reserva_comprobante</code></td>
+<td><code>(reserva_id, estado_revision, recibido_en)</code></td>
+<td>Revisión de vouchers y elegibilidad para vencer.</td>
+</tr>
+</tbody>
+</table>
+<p>Las PK y restricciones únicas ya generan sus índices. Las PK compuestas de traducciones y noches cubren búsquedas por su propietario. Evaluar índices adicionales de FK de auditoría según consultas, sin duplicar índices existentes.</p>
+<h4 id="postgresql-frente-a-service">PostgreSQL frente a Service<a class="headerlink" href="#postgresql-frente-a-service" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>PostgreSQL</th>
+<th>Service</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Integridad referencial, unicidad y validaciones de fila.</td>
+<td>Autorización, transiciones y datos obligatorios del flujo.</td>
+</tr>
+<tr>
+<td>Atomicidad y bloqueos de transacción.</td>
+<td>Coordinación de bloqueos, reintentos y disponibilidad por noche.</td>
+</tr>
+<tr>
+<td>Precisión decimal.</td>
+<td>Cálculos, moneda consistente, suma de noches y redondeo.</td>
+</tr>
+<tr>
+<td>Correspondencia del tipo de habitación asignado.</td>
+<td>Viabilidad de asignar estancias completas.</td>
+</tr>
+<tr>
+<td>Persistencia de versiones e historial.</td>
+<td>Creación atómica de snapshots y eventos.</td>
+</tr>
+<tr>
+<td>Valores permitidos de idioma y estado.</td>
+<td>Traducciones completas antes de publicar.</td>
+</tr>
+<tr>
+<td>Almacenamiento de vigencias.</td>
+<td>Evitar solapamientos de tarifas activas bajo bloqueo del tipo.</td>
+</tr>
+</tbody>
+</table>
+<p>El Service debe verificar que cada detalle tiene exactamente una noche por fecha del intervalo, que sus huéspedes no exceden la capacidad del tipo, que el total de huéspedes coincide con la suma de detalles y que las versiones tarifarias corresponden al tipo y moneda. Los totales de detalle son la suma de sus noches y los de cabecera la suma de detalles.</p>
+<h3 id="d-disponibilidad">D. Disponibilidad<a class="headerlink" href="#d-disponibilidad" title="Permanent link">&para;</a></h3>
+<h4 id="intervalos-y-calculo">Intervalos y cálculo<a class="headerlink" href="#intervalos-y-calculo" title="Permanent link">&para;</a></h4>
+<p>La estancia utiliza el intervalo <code>[llegada, salida)</code>: la salida no consume noche. Dos estancias se superponen si la llegada de una es anterior a la salida de la otra y su salida es posterior a la llegada de la otra. Se permite salida y nueva llegada en la misma fecha.</p>
+<p>Para cada noche solicitada:</p>
+<ol>
+<li>Obtener la cantidad de habitaciones habilitadas del tipo.</li>
+<li>Contar detalles de reservas que consumen inventario esa noche, agrupados por tipo, no cabeceras de reserva.</li>
+<li>Restar ocupación a capacidad.</li>
+</ol>
+<p>La disponibilidad de la estancia es el mínimo de los cupos nocturnos por tipo. Para aceptar un bloque, ese mínimo debe cubrir la cantidad solicitada de cada tipo. No restar simplemente todas las reservas que intersectan el intervalo: algunas pueden ocupar noches diferentes.</p>
+<p>Además, cada tipo debe estar activo, los huéspedes de cada detalle deben caber en su tipo y cada noche debe tener tarifa aplicable. Un detalle asignado consume una unidad, no dos. Una reserva de cinco habitaciones consume cinco unidades repartidas según sus tipos.</p>
+<h4 id="tratamiento-de-estados">Tratamiento de estados<a class="headerlink" href="#tratamiento-de-estados" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Estado</th>
+<th>Consumo de inventario</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CONFIRMADA</code></td>
+<td>Sí.</td>
+</tr>
+<tr>
+<td><code>CANCELADA</code></td>
+<td>No.</td>
+</tr>
+<tr>
+<td><code>PENDIENTE</code></td>
+<td>Sí, mientras no venza el plazo sin voucher o exista un voucher recibido a tiempo por revisar.</td>
+</tr>
+<tr>
+<td><code>VENCIDA</code></td>
+<td>No.</td>
+</tr>
+</tbody>
+</table>
+<p>Las reservas <code>PENDIENTES</code> bloquean cupo en todas sus noches y tipos. Confirmar un pago verificado cambia a <code>CONFIRMADA</code> sin liberar ni duplicar consumo. Cancelar o vencer libera el cupo. El plazo para recibir voucher sustituye la propuesta anterior de retención indefinida.</p>
+<h4 id="plazo-y-comprobantes">Plazo y comprobantes<a class="headerlink" href="#plazo-y-comprobantes" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Propuesta de cómputo: desde <code>creada_en</code>; llegada igual a la fecha local de creación implica dos horas, llegada posterior implica cuatro horas. Guardar el instante resultante en <code>voucher_limite_en</code>, no recalcularlo al cambiar de día.</li>
+<li>Mostrar el plazo absoluto y el tiempo restante en ES/EN. El reloj del servidor decide; el contador del navegador es informativo.</li>
+<li>Sin voucher recibido antes del límite, transición automática <code>PENDIENTE → VENCIDA</code>, con evento y liberación de todo el bloque.</li>
+<li>Recepción web válida cuando el archivo queda aceptado y persistido antes del límite (<code>recibido_en &lt; voucher_limite_en</code>), no cuando empieza a subirse. Recepción por WhatsApp válida cuando el personal la registra con la hora real de recepción, antes de ese límite.</li>
+<li>Un voucher recibido a tiempo pasa a <code>POR_REVISAR</code>; la reserva sigue pendiente y conserva cupo hasta revisión manual. La carga no acredita por sí sola el pago.</li>
+<li>El personal verifica la operación externa y puede aprobar cualquier monto, total o adelanto. La primera aprobación confirma toda la reserva y conserva el cupo. Rechazar no acredita pago; la regla de reenvío y eventual liberación requiere definición.</li>
+<li>Una reserva vencida no se confirma directamente con un pago tardío: necesita tratamiento manual y nueva validación de cupo antes de cualquier nueva reserva.</li>
+</ul>
+<p>El voucher puede recibirse por la web o por WhatsApp del personal. Para la web se propone acceso privado mediante un token aleatorio de gestión cuyo hash se guarda en reserva (distinto de la referencia pública). El archivo se conserva en PostgreSQL estándar mediante JDBC, con tamaño y tipos permitidos acotados; no se publica una URL de archivo abierta. Para WhatsApp, el personal registra el canal, el contacto/origen y la hora real de recepción; guardar una copia del archivo es opcional y no requiere una integración con la API de WhatsApp. Formato y tamaño se definirán como límites técnicos antes de implementarlo.</p>
+<h4 id="pago-total-adelanto-y-saldo">Pago total, adelanto y saldo<a class="headerlink" href="#pago-total-adelanto-y-saldo" title="Permanent link">&para;</a></h4>
+<ul>
+<li>El visitante puede elegir pago total o adelanto. Ambos pagos son no reembolsables.</li>
+<li>No existe un adelanto mínimo. El personal puede aprobar cualquier monto válido y esa aprobación confirma la reserva.</li>
+<li>Guardar en la reserva la modalidad, el texto y versión de la política mostrada, y el instante de aceptación. Guardar en cada voucher el importe declarado y el importe que el personal verificó, ambos en <code>PEN</code>.</li>
+<li>El voucher no acredita un pago hasta ser aprobado. La primera aprobación confirmará la reserva y quedará auditada; la aprobación repetida del mismo voucher será idempotente.</li>
+<li>El saldo se calcula como total de la reserva menos los importes aprobados. Queda visible para el personal como información, sin crear contabilidad, facturas, devoluciones ni un estado financiero adicional.</li>
+<li>Un voucher rechazado no se borra ni se acredita. Cancelar una reserva no borra pagos aprobados ni crea una devolución.</li>
+</ul>
+<p>Al registrar la reserva pendiente se verifica disponibilidad y se compromete el bloque completo en una transacción. Falta precisar si también se requiere retener cupo mientras el visitante arma su selección antes del envío: esa retención previa es distinta de una reserva pendiente registrada y no se considera implementada ni definida por esta regla.</p>
+<h4 id="inventario-y-asignacion-fisica">Inventario y asignación física<a class="headerlink" href="#inventario-y-asignacion-fisica" title="Permanent link">&para;</a></h4>
+<p>Deshabilitar o cambiar de tipo una habitación exige verificar que no deja compromisos vigentes sin capacidad. También debe revisarse el efecto de reducir la capacidad de un tipo sobre reservas existentes.</p>
+<p>La asignación posterior debe coincidir con el tipo, cubrir toda la estancia, evitar solapamientos físicos y conservar la viabilidad de alojar las reservas confirmadas restantes.</p>
+<p>La disponibilidad por noche no basta para garantizar una habitación continua cuando existen asignaciones inamovibles. Debe confirmarse si las asignaciones previas a la llegada pueden reorganizarse. No prometer una asignación definitiva basándose únicamente en el cupo agregado.</p>
+<h3 id="e-concurrencia-e-idempotencia">E. Concurrencia e idempotencia<a class="headerlink" href="#e-concurrencia-e-idempotencia" title="Permanent link">&para;</a></h3>
+<p>Usar transacciones <code>READ COMMITTED</code> y bloqueo JPA <code>PESSIMISTIC_WRITE</code> sobre la fila <code>tipo_habitacion</code>. PostgreSQL mantiene el bloqueo hasta finalizar la transacción, coordinando múltiples instancias de la aplicación.</p>
+<p>Confirmación:</p>
+<ol>
+<li>Identificar todos los tipos de los detalles de la reserva.</li>
+<li>Bloquear todas las filas de tipo por ID ascendente.</li>
+<li>Bloquear y releer la reserva y sus detalles.</li>
+<li>Verificar que continúa <code>PENDIENTE</code>.
+   Para confirmar, el personal debe aprobar un comprobante recibido dentro del plazo y verificar el pago externo. Puede aprobar cualquier monto.</li>
+<li>Consultar nuevamente disponibilidad de todos los tipos después de adquirir los bloqueos y validar sus cantidades por noche.</li>
+<li>Excluir todos los detalles de la propia reserva del consumo previo para no contar dos veces su cupo ya retenido.</li>
+<li>Cambiar a <code>CONFIRMADA</code> y registrar el evento en la misma transacción.</li>
+<li>Confirmar la transacción.</li>
+</ol>
+<p>Si falta cupo para cualquier tipo o noche, no se confirma ninguna parte del bloque: la reserva permanece pendiente y se informa el conflicto. No cancelarla automáticamente.</p>
+<p>Deben seguir el mismo protocolo las cancelaciones, la creación de toda reserva pendiente, las modificaciones del inventario, cambios de tipo, asignaciones y futuras modificaciones de fechas o tipo. Al registrar una pendiente se bloquean todos sus tipos, se comprueba el cupo descontando otras pendientes y confirmadas y se insertan cabecera, detalles, noches y evento atómicamente. Si falta cupo, no se registra un bloque parcial. El mismo bloqueo permite cotizar y copiar las tarifas coherentemente con sus modificaciones.</p>
+<p>En operaciones de varios tipos, bloquear por ID ascendente y luego las reservas por ID ascendente. No modificar el tipo de una reserva por fuera de ese protocolo. Los cambios tarifarios también bloquean su tipo.</p>
+<p><code>@Version</code> detecta ediciones simultáneas, pero no sustituye el bloqueo del inventario. No se necesitan Redis, bloqueos en memoria ni servicios propios de Supabase. Una exclusión de intervalos por tipo sería incorrecta porque impediría reservas simultáneas incluso con varias habitaciones disponibles.</p>
+<p>La garantía exige que todas las escrituras respeten el protocolo; cambios SQL manuales que lo omitan pueden romper la capacidad agregada. Consultar disponibilidad no crea por sí solo una reserva. El momento de una posible retención previa al envío queda señalado en H.</p>
+<p>Recepción de voucher, aprobación, cancelación y vencimiento usan el mismo orden de bloqueo: tipos por ID, reserva y comprobantes. La elegibilidad se consulta de nuevo después del bloqueo con hora actual del servidor. La aprobación y confirmación se guardan en una sola transacción.</p>
+<p>El vencimiento se procesa mediante tarea periódica y también al evaluar/comprometer disponibilidad, para que un retraso de la tarea no retenga cupos caducados. Para lectura pública se excluyen pendientes cuyo plazo ya terminó sin comprobante oportuno; antes de vender ese cupo se materializa el vencimiento bajo bloqueo. El proceso es idempotente y coordina todas las unidades del bloque: no se libera parcialmente. Se propone no admitir nuevos comprobantes tras el límite. Así una recepción y un vencimiento concurrentes no pueden liberar y confirmar el mismo cupo.</p>
+<p>Idempotencia:</p>
+<ul>
+<li>Repetir el envío con la misma clave y mismos datos devuelve la reserva existente.</li>
+<li>La misma clave con datos distintos produce un conflicto.</li>
+<li>Confirmar de nuevo una reserva ya confirmada no duplica eventos.</li>
+<li>Los reintentos por interbloqueo son acotados y repiten la transacción completa.</li>
+</ul>
+<h3 id="f-tarifas-historial-auditoria-y-multidioma">F. Tarifas, historial, auditoría y multidioma<a class="headerlink" href="#f-tarifas-historial-auditoria-y-multidioma" title="Permanent link">&para;</a></h3>
+<h4 id="versiones-de-tarifa">Versiones de tarifa<a class="headerlink" href="#versiones-de-tarifa" title="Permanent link">&para;</a></h4>
+<p>La vigencia comercial indica las noches a las que aplica el precio. La versión conserva las condiciones específicas utilizadas. Importe, moneda, tipo y vigencia de una versión publicada no se sobrescriben.</p>
+<p>Para cambiar precios, bloquear el tipo, retirar de nuevas ventas las versiones sustituidas e insertar las nuevas, dividiendo periodos cuando corresponda. Verificar dentro de la misma transacción que exista como máximo una tarifa activa por tipo y noche. Las versiones anteriores permanecen para el historial.</p>
+<p>La falta de tarifa impide vender una noche. No se incluyen promociones, prioridades ni precios por persona mientras no se confirmen esas reglas.</p>
+<h4 id="informacion-copiada-en-reserva">Información copiada en reserva<a class="headerlink" href="#informacion-copiada-en-reserva" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Nombre y contacto del huésped.</li>
+<li>Código, nombre mostrado y capacidad del tipo en cada detalle.</li>
+<li>Idioma de la solicitud.</li>
+<li>Llegada, salida y cantidad de huéspedes.</li>
+<li>Moneda <code>PEN</code>, tasa de impuesto <code>0.1800</code>, indicador de si el precio incluye impuesto y desglose base/impuesto/total por unidad y noche, por detalle y por reserva.</li>
+<li>Referencias a las versiones tarifarias aplicadas.</li>
+</ul>
+<p>La FK permite identificar el origen; el snapshot preserva las condiciones aunque cambien el catálogo o las traducciones. No copiar todas las descripciones del hotel ni todos los idiomas.</p>
+<p>Se propone conservar al confirmar el importe registrado al enviar, sin recalcular silenciosamente. Esta política queda pendiente de ratificación comercial.</p>
+<h4 id="impuesto-del-18-y-tarifas-variables">Impuesto del 18% y tarifas variables<a class="headerlink" href="#impuesto-del-18-y-tarifas-variables" title="Permanent link">&para;</a></h4>
+<p>La tasa del 18% es una regla indicada por el usuario para este producto; no introduce facturación electrónica ni contabilidad. El precio puede variar por tipo y fecha mediante las versiones de tarifa. Los descuentos por bloque o precios negociados no se incorporan automáticamente.</p>
+<p>El importe ingresado incluye el impuesto del 18%. El total de la unidad/noche es el precio de tarifa; la base se obtiene dividiendo ese total entre <code>1.18</code> y redondeando a dos decimales con <code>HALF_UP</code>. El impuesto se obtiene por diferencia entre total y base. Se suman los resultados de noches a detalle y cabecera, sin volver a calcular el impuesto global. El snapshot conserva tasa <code>0.1800</code>, <code>tarifa_incluye_impuesto_snapshot = true</code> y desglose.</p>
+<p>Ejemplo: tarifa final S/ 118.00, base S/ 100.00 e impuesto S/ 18.00. El visitante paga S/ 118.00, no S/ 139.24. Este ejemplo expresa la regla de producto indicada; no introduce un módulo fiscal.</p>
+<h4 id="auditoria">Auditoría<a class="headerlink" href="#auditoria" title="Permanent link">&para;</a></h4>
+<p>Las filas editables registran creación, última modificación, autor cuando corresponde y versión. Las tarifas conservan creación y retiro. Los cambios de reserva generan eventos inmutables en la misma transacción, con estado anterior/nuevo y actor.</p>
+<p>Una operación del visitante utiliza actor administrativo nulo y origen explícito. Los usuarios desactivados conservan sus referencias históricas. No copiar contraseñas ni datos completos de contacto en eventos.</p>
+<p>No se propone event sourcing ni historial genérico de cada campo de todas las tablas. La auditoría se limita a trazabilidad operativa de la V1.</p>
+<h4 id="multidioma">Multidioma<a class="headerlink" href="#multidioma" title="Permanent link">&para;</a></h4>
+<p>Textos estáticos mediante Spring i18n. Contenido dinámico mediante las dos tablas de traducción, con clave compuesta de entidad e idioma. Exigir español e inglés completos antes de publicar el contenido. Estados e identificadores internos permanecen estables; la reserva copia el nombre mostrado en su idioma al enviarse.</p>
+<h3 id="g-migraciones-flyway-propuestas">G. Migraciones Flyway propuestas<a class="headerlink" href="#g-migraciones-flyway-propuestas" title="Permanent link">&para;</a></h3>
+<p>No se crean ni ejecutan en esta fase.</p>
+<table>
+<thead>
+<tr>
+<th>Orden</th>
+<th>Nombre propuesto</th>
+<th>Contenido</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>V1</td>
+<td><code>crear_esquema_telo</code></td>
+<td>Crear <code>telo</code> si no existe; compatible con el esquema vacío creado manualmente.</td>
+</tr>
+<tr>
+<td>V2</td>
+<td><code>crear_usuario</code></td>
+<td>Usuarios, roles permitidos, unicidad de login y auditoría.</td>
+</tr>
+<tr>
+<td>V3</td>
+<td><code>crear_configuracion_hotel</code></td>
+<td>Configuración y traducciones.</td>
+</tr>
+<tr>
+<td>V4</td>
+<td><code>crear_catalogo_habitaciones</code></td>
+<td>Tipos, traducciones y habitaciones.</td>
+</tr>
+<tr>
+<td>V5</td>
+<td><code>crear_tarifas</code></td>
+<td>Versiones tarifarias y vigencias.</td>
+</tr>
+<tr>
+<td>V6</td>
+<td><code>crear_reservas</code></td>
+<td>Cabecera, detalles por habitación, snapshots, noches, desglose de impuesto, estados e idempotencia.</td>
+</tr>
+<tr>
+<td>V7</td>
+<td><code>crear_eventos_reserva</code></td>
+<td>Historial de estados y asignaciones.</td>
+</tr>
+<tr>
+<td>V8</td>
+<td><code>crear_comprobantes_reserva</code></td>
+<td>Vouchers, revisión manual y sus restricciones e índices; incluir plazos y estado vencida en V6 al no existir aún migraciones aplicadas.</td>
+</tr>
+</tbody>
+</table>
+<p>Cada migración incorpora sus restricciones e índices. Antes de implementarlas, resolver las decisiones que afectan estructura y configurar/habilitar Flyway en <code>telo</code> para los perfiles con base de datos. Conservar <code>ddl-auto=validate</code>, la conexión JDBC existente y el perfil <code>local</code> sin base de datos.</p>
+<p>No insertar contraseñas ni usuarios administrativos predeterminados en migraciones. No usar objetos de los esquemas internos de Supabase. Inspeccionar si existen tablas antes de considerar un baseline: el esquema vacío creado manualmente no lo requiere por sí solo. Las migraciones aplicadas son inmutables; los cambios posteriores utilizan nuevas versiones.</p>
+<h3 id="h-reglas-confirmadas-y-precisiones-restantes">H. Reglas confirmadas y precisiones restantes<a class="headerlink" href="#h-reglas-confirmadas-y-precisiones-restantes" title="Permanent link">&para;</a></h3>
+<p><strong>Confirmado por el usuario:</strong></p>
+<ul>
+<li>Varias habitaciones o reservas en bloque.</li>
+<li>Reservas <code>PENDIENTES</code> bloquean cupo mientras se espera el pago externo y su verificación manual.</li>
+<li>Mostrar QR de Yape o cuentas de depósito y solicitar voucher.</li>
+<li>Plazo para enviar voucher: dos horas para llegada el mismo día y cuatro horas para otra fecha.</li>
+<li>Confirmar conserva el cupo; cancelar o vencer sin voucher lo libera.</li>
+<li>Tarifas variables en soles (<code>PEN</code>), con impuesto del 18% ya incluido.</li>
+<li>Voucher subido en la web o enviado al WhatsApp del personal; pago total o adelanto no reembolsable. El personal puede aprobar cualquier monto y confirmar la reserva.</li>
+<li>Administración de acceso, catálogo, tarifas y reservas.</li>
+<li>Web pública y reservaciones en español e inglés.</li>
+</ul>
+<p><strong>Precisión funcional aún necesaria:</strong> determinar si el bloqueo comienza únicamente al registrar/enviar la reserva pendiente o también al agregar habitaciones mientras se arma el bloque. Si se requiere retención previa, definir su duración y cómo liberar selecciones abandonadas; no asumir que una búsqueda equivale a una reserva pendiente.</p>
+<p><strong>Precisiones del voucher:</strong> el voucher se recibe por la web o WhatsApp del personal. Se propone conservar el cupo mientras un comprobante oportuno está por revisar, sin confirmar automáticamente. Se permite pago total o adelanto sin monto mínimo; el personal puede aprobar cualquier monto. Falta definir si se permite reenvío después de un rechazo y con qué plazo. Los plazos se interpretan desde la creación de la reserva, según fecha de llegada y zona horaria del hotel.</p>
+<p><strong>Propuestas iniciales para el resto de la V1 (no confirmaciones adicionales del usuario):</strong></p>
+<ul>
+<li>Bloques de distintos tipos con fechas comunes y confirmación/cancelación completa.</li>
+<li>Asignación física en V1, reorganizable con validación de disponibilidad y viabilidad de las estancias.</li>
+<li>Conservación del precio registrado al enviar la solicitud.</li>
+<li>Nombre, email y teléfono del huésped obligatorios, sin documento de identidad.</li>
+<li>Pendiente a confirmada tras revisión, cancelada o vencida; confirmada a cancelada; sin reabrir canceladas ni vencidas directamente.</li>
+<li>Sin edición de fechas, tipos o huéspedes después del envío en el flujo inicial.</li>
+<li>Recepción gestiona reservas; administrador también gestiona catálogo, tarifas y configuración. Sin interfaz de permisos configurables.</li>
+<li>Zona horaria <code>America/Lima</code>; datos reales, textos, servicios, imágenes y contacto se completarán antes de publicar.</li>
+</ul>
+<p>El documento de referencia disponible y actualizado es <code>docs/alcance-v1.md</code>; no se crea un documento duplicado <code>docs/alcance.md</code>.</p>
+<h3 id="referencias-tecnicas">Referencias técnicas<a class="headerlink" href="#referencias-tecnicas" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://www.postgresql.org/docs/17/explicit-locking.html">Bloqueos explícitos en PostgreSQL</a>: duración de bloqueos de fila y coordinación transaccional.</li>
+<li><a href="https://www.postgresql.org/docs/17/rangetypes.html">Tipos de rango y restricciones de exclusión</a>: referencia para distinguir exclusión de intervalos de capacidad agregada por tipo.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Angel Sullon @asullom - UPeU 2026
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.top", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

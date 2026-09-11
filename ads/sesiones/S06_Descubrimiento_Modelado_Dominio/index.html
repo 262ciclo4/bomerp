@@ -3660,12 +3660,12 @@
 <ul>
 <li>El modelo de dominio no arranca dibujando clases: arranca releyendo el SRS y las reglas de negocio ya conocidas, de ahí salen entidades, luego módulos, casos de uso, objetos de valor y recién al final el agregado — en ese orden, porque el agregado se decide sobre entidades y reglas ya identificadas, no al revés.</li>
 <li>Sin este orden, el "agregado" termina siendo una decisión arbitraria sin relación con una regla de negocio real que proteger.</li>
-<li>Integración (referencia, no requisito para esta sesión): el agregado que se delimite aquí es el mismo límite que LP2 implementará como transacción (S9 de LP2) y que BD2 restringe con <code>CHECK</code>/triggers a nivel de esquema. <strong>Errores frecuentes</strong>: modelar entidades sin revisar antes las reglas de negocio (el agregado queda mal delimitado); tratar todo objeto como entidad, incluso lo que se compara solo por su valor (precio, rango de fechas); o delimitar módulos por conveniencia de archivo en vez de por cohesión de reglas.</li>
+<li>Integración (referencia, no requisito para esta sesión): el agregado que se delimite aquí es el mismo límite que LP2 ya implementó como transacción (<code>@Transactional</code> sobre <code>Venta</code>–<code>DetalleVenta</code>, su propia S4) y que BD2 restringe con <code>CHECK</code>/triggers a nivel de esquema. <strong>Errores frecuentes</strong>: modelar entidades sin revisar antes las reglas de negocio (el agregado queda mal delimitado); tratar todo objeto como entidad, incluso lo que se compara solo por su valor (precio, rango de fechas); o delimitar módulos por conveniencia de archivo en vez de por cohesión de reglas.</li>
 </ul>
 <p>Este diagrama es el mapa que guía el resto de la explicación: cada apartado siguiente desarrolla uno de sus componentes, en el mismo orden del Índice (1.2).</p>
 <h3 id="22-identificacion-de-entidades-y-reglas-de-negocio">2.2 Identificación de entidades y reglas de negocio<a class="headerlink" href="#22-identificacion-de-entidades-y-reglas-de-negocio" title="Permanent link">&para;</a></h3>
 <p>Una <strong>entidad</strong> tiene identidad propia (un identificador que la distingue) y cambia de estado en el tiempo sin dejar de ser la misma instancia. Una <strong>regla de negocio</strong> es una condición que el dominio impone sobre esos cambios de estado, independiente de cómo se implemente después en código o base de datos.</p>
-<p>En BomERP: <code>Categoria</code>, <code>Producto</code>, <code>Venta</code> y <code>DetalleVenta</code> son entidades (cada una con su propio identificador y ciclo de vida). Reglas de negocio ya conocidas del dominio: un producto se registra con una categoría existente; una venta no puede registrarse con stock insuficiente; el total de una venta debe cuadrar con la suma de sus detalles; solo una venta en estado <code>REGISTRADA</code> puede anularse.</p>
+<p>En BomERP: <code>Categoria</code>, <code>Producto</code>, <code>Venta</code>, <code>DetalleVenta</code> y <code>Cliente</code> son entidades (cada una con su propio identificador y ciclo de vida). <code>Cliente</code> ya aparece referenciado en el diagrama de clases de <code>u2/ads-producto.md</code> (<code>Venta.cliente</code>), pero hasta hoy nadie lo había descubierto como entidad propia, con su propio ciclo de vida independiente de cualquier venta puntual. Reglas de negocio ya conocidas del dominio: un producto se registra con una categoría existente; una venta no puede registrarse con stock insuficiente; el total de una venta debe cuadrar con la suma de sus detalles; solo una venta en estado <code>REGISTRADA</code> puede anularse; una venta debe estar asociada a un cliente registrado, y un cliente suspendido no puede registrar una venta nueva.</p>
 <p><strong>Error frecuente</strong>: confundir una regla de negocio con una validación de formato (por ejemplo, "el nombre no puede estar vacío") — las reglas de negocio protegen invariantes del dominio, no solo la forma de un dato.</p>
 <h3 id="23-agrupacion-funcional-y-delimitacion-de-modulos">2.3 Agrupación funcional y delimitación de módulos<a class="headerlink" href="#23-agrupacion-funcional-y-delimitacion-de-modulos" title="Permanent link">&para;</a></h3>
 <p>Un <strong>módulo funcional</strong> (en DDD, <strong>bounded context</strong>: un límite explícito dentro del cual un modelo y su lenguaje son consistentes) agrupa entidades y reglas que cambian juntas por la misma razón de negocio — la misma cohesión que ya se verificó con Spring Modulith en Unidad I, pero decidida aquí desde el dominio, no desde el código.</p>
@@ -3691,6 +3691,11 @@
 <td>Necesario para que exista algo que vender, pero no es el diferenciador — cualquier ERP tiene un catálogo parecido.</td>
 </tr>
 <tr>
+<td><code>clientes</code></td>
+<td>Supporting</td>
+<td>Necesario para saber a quién se le vende y aplicar reglas propias del cliente (suspensión, tipo), pero no es el diferenciador — un directorio de clientes es genérico entre ERP.</td>
+</tr>
+<tr>
 <td><code>inventario</code> (candidato)</td>
 <td>Supporting</td>
 <td>Sostiene la disponibilidad para vender; acoplado a <code>catalogo</code>, pero su lógica de movimientos es genérica entre distintos ERP.</td>
@@ -3707,14 +3712,94 @@
 </tr>
 </tbody>
 </table>
-<p>Un subdominio <strong>Core</strong> justifica invertir el mayor esfuerzo de modelado (por eso <code>ventas</code> es el único módulo, junto con <code>catalogo</code>, con sesión propia ya en esta unidad); un subdominio <strong>Generic</strong> casi nunca debería construirse desde cero en un proyecto real — se reconoce igual, aunque este curso lo construya por razones pedagógicas.</p>
+<p>Un subdominio <strong>Core</strong> justifica invertir el mayor esfuerzo de modelado (por eso <code>ventas</code> es el único módulo, junto con <code>catalogo</code> y <code>clientes</code>, con sesión propia ya en esta unidad); un subdominio <strong>Generic</strong> casi nunca debería construirse desde cero en un proyecto real — se reconoce igual, aunque este curso lo construya por razones pedagógicas.</p>
 <p>Delimitar el módulo no basta: también hay que decidir cómo se relacionan entre sí, porque un bounded context nunca vive aislado.</p>
 <ul>
 <li><code>ventas</code> (Core) consume <code>catalogo</code> (Supporting) <strong>por referencia, no por composición</strong>: <code>DetalleVenta</code> no incluye el objeto <code>Producto</code> completo, solo su id y una copia congelada del precio al momento de la venta — si mañana <code>catalogo</code> cambia el precio de un producto, una venta ya registrada no debe cambiar. Esta es la razón real (no solo de estilo) por la que <code>Dinero</code> se modela como valor copiado en el detalle, no como referencia viva al catálogo (ver 2.5).</li>
+<li><code>ventas</code> (Core) consume <code>clientes</code> (Supporting) con el mismo patrón: <code>Venta</code> guarda solo el id del cliente, no lo compone — un cliente existe antes, durante y después de cualquier venta puntual, con su propio ciclo de vida (puede quedar suspendido sin que eso borre su historial de ventas ya registradas). Dos módulos distintos, la misma regla de referencia, no composición.</li>
 <li><code>catalogo</code> e <code>inventario</code> (candidato) comparten el concepto de "stock disponible" con responsabilidades distintas: <code>catalogo</code> puede mostrar un stock de lectura rápida en <code>Producto.stock</code>, pero la fuente de verdad de cuánto stock hay debería ser la suma de movimientos que <code>inventario</code> registre (<code>MovimientoStock</code>), no un contador editado directamente desde dos módulos a la vez.</li>
 <li><code>compras</code> (candidato) alimenta a <code>inventario</code> (candidato): una orden de compra recibida genera movimientos de entrada de stock — <code>compras</code> produce el evento, <code>inventario</code> lo consume.</li>
 <li><code>seguridad</code> (candidato) no se consume por composición desde ningún otro módulo: todos los demás solo guardan el id del usuario como referencia para auditoría (quién vendió, quién registró el movimiento) — nadie más necesita conocer las reglas internas de <code>Usuario</code>/<code>Rol</code>.</li>
 </ul>
+<p><strong>Prueba de tres partes: ¿referencia o composición?</strong> Cuando dos entidades están relacionadas, no se componen automáticamente solo por estar cerca en el flujo de negocio. Se componen (una vive dentro del agregado de la otra) solo si las tres pruebas dan que sí:</p>
+<ol>
+<li><strong>Ciclo de vida:</strong> ¿la entidad "hija" tiene sentido sin la entidad "padre"? (<code>DetalleVenta</code> no tiene sentido sin su <code>Venta</code> → compone. <code>Cliente</code> sí tiene sentido sin ninguna <code>Venta</code> puntual → no compone, se referencia).</li>
+<li><strong>Cardinalidad:</strong> ¿la misma instancia se reutiliza en muchas instancias del padre a lo largo del tiempo? Si sí, componerla duplicaría sus datos en cada una.</li>
+<li><strong>Invariante compartido:</strong> ¿alguna regla de negocio exige que ambas cambien juntas, atómicamente, en la misma transacción? Si la relación solo exige que la referencia sea válida <em>al momento de</em> usarla (no que cambien juntas), no compone.</li>
+</ol>
+<p>Esta prueba de tres partes no es una invención de esta guía: simplifica dos de las <strong>"Rules of Aggregate Design" de Vaughn Vernon</strong> (<em>Implementing Domain-Driven Design</em>, ya citado en la Bibliografía) — la Regla 1 ("protege invariantes reales dentro del límite de consistencia") es la base de la prueba 3; la Regla 3 ("referencia otros agregados solo por identidad, nunca por objeto completo") es la base de por qué <code>Venta</code> guarda <code>clienteId</code>, no un <code>Cliente</code> completo. Las pruebas 1 y 2 son una forma más concreta y verificable de aplicar esas reglas, no una regla adicional de Vernon.</p>
+<p>Esta misma prueba separa <code>Proveedor</code> de <code>OrdenCompra</code> dentro de <code>compras</code>, aunque <code>compras</code> todavía no tenga sesión propia: un proveedor existe antes y después de cualquier orden puntual (1), participa en muchas órdenes a la vez (2), y aprobar una orden no exige modificar el proveedor en la misma transacción (3) — así que <code>Proveedor</code>, igual que <code>Cliente</code>, queda como entidad referenciada, no compuesta dentro de <code>OrdenCompra</code>.</p>
+<p><strong>Otras técnicas de DDD para delimitar módulos</strong> (fuera del alcance de esta sesión, quedan como referencia): <em>Event Storming</em> (Alberto Brandolini) — taller colaborativo donde el equipo mapea eventos de negocio en una pared y los límites emergen de cómo se agrupan naturalmente, útil para <em>descubrir</em> módulos junto al negocio, no solo para <em>verificar</em> uno ya propuesto; el <strong>cambio de significado del lenguaje ubicuo</strong> (Evans) — si la misma palabra significa algo distinto en dos partes del sistema (<code>Producto</code> para <code>ventas</code> es "algo con precio"; para un futuro <code>inventario</code> sería "algo con ubicación y cantidad física"), ahí hay una señal de límite, aunque compartan el nombre; y los <strong>patrones de Context Mapping</strong> (Shared Kernel, Customer/Supplier, Anti-Corruption Layer) — no deciden el límite en sí, describen cómo se relacionan dos bounded contexts ya delimitados, un nivel más detallado que los bullets de esta sección.</p>
+<p><strong>El tamaño del módulo no es el criterio.</strong> <code>clientes</code> tiene una sola entidad (<code>Cliente</code>) y aun así es su propio módulo, con el mismo derecho que <code>ventas</code>, que tiene dos — el número de tablas no decide el límite, la prueba de tres partes sí. Un módulo de una sola entidad es tan válido como uno de diez, si esa entidad falla las tres pruebas de composición frente a todo lo demás.</p>
+<p>¿Y cuándo sí se juntan dos entidades en el mismo módulo, entonces — como <code>Venta</code> y <code>DetalleVenta</code> en <code>ventas</code>? Solo cuando la prueba da que sí en las tres partes a la vez: <code>DetalleVenta</code> no tiene sentido sin su <code>Venta</code> (1, ciclo de vida dependiente); cada <code>DetalleVenta</code> pertenece a exactamente una <code>Venta</code>, no se reutiliza entre varias (2, cardinalidad); y el invariante de <code>Venta</code> — el total debe cuadrar con la suma de los detalles — exige que ambas cambien atómicamente en la misma transacción (3, invariante compartido). Si <code>Cliente</code> pasara esas mismas tres pruebas frente a <code>Venta</code>, también se uniría a <code>ventas</code> como un solo módulo — pero no las pasa (existe antes y después de cualquier venta puntual, se reutiliza en muchas, y no comparte ningún invariante transaccional con una venta específica), y por eso queda separado, aunque esté "cerca" del proceso de venta.</p>
+<p><strong>La prueba dice cuándo puedes separar, no que siempre debas hacerlo al máximo.</strong> Separar un módulo tiene un costo real: más referencias cruzadas, más lugares donde mantener consistencia, más piezas que coordinar — incluso dentro de un mismo monolito modular, sin costo de red pero con costo cognitivo y de mantenimiento. Si en la práctica dos entidades casi siempre cambian juntas y casi nunca por separado, unirlas puede ser la decisión más simple, aunque la prueba técnica permitiera separarlas. Regla práctica (la misma que recomienda Vernon): ante la duda, empieza con menos módulos, más grandes, y sepáralos después, cuando el dolor real de tenerlos juntos aparezca — no al revés.</p>
+<p><strong>Bounded context no es lo mismo que microservicio.</strong> Seis o siete módulos funcionales dentro de un solo backend (monolito modular, verificado con Spring Modulith) siguen siendo perfectamente manejables — es exactamente lo que esta unidad enseña a delimitar. Seis o siete <em>microservicios</em> separados, cada uno con su propio despliegue, base de datos y contrato de red que coordinar, es un problema de otra naturaleza completamente distinta. La prueba de tres partes decide límites conceptuales dentro del modelo de dominio; cuántos servicios desplegar es una decisión de arquitectura aparte (Unidad 2, S10), que no se toma solo por haber identificado varios módulos aquí.</p>
+<p><strong>Dos ejemplos reales, del curso de Desarrollo de Aplicaciones Distribuidas (DIST), para ver el mismo principio en la práctica</strong> (<a href="https://github.com/262dist/pagatu/blob/main/docs/proyecto-sello/produccion.md"><code>produccion.md</code></a> y <a href="https://github.com/262dist/pagatu/blob/main/docs/proyecto-sello/acad.md"><code>acad.md</code></a> del Proyecto Sello de DIST):</p>
+<p><strong>Figura 5. ERP de Producción y Comercialización — seis módulos, un solo backend</strong></p>
+<pre class="mermaid"><code>flowchart TB
+    Compras["1. COMPRAS&lt;br/&gt;proveedores, cotizaciones,&lt;br/&gt;órdenes de compra"]
+    Inventario["2. INVENTARIO&lt;br/&gt;recepción (pesaje, calidad, lotes),&lt;br/&gt;almacenes y existencias,&lt;br/&gt;despacho (picking, entrega)"]
+    Produccion["3. PRODUCCIÓN&lt;br/&gt;fórmulas, órdenes,&lt;br/&gt;consumo, rendimiento"]
+    Ventas["4. VENTAS&lt;br/&gt;clientes, cotizaciones,&lt;br/&gt;pedidos, precios"]
+    Cliente(["CLIENTE"])
+    Portal(["PORTAL WEB&lt;br/&gt;· anónimo: catálogo + contacto&lt;br/&gt;· con sesión: login + menú por rol"])
+
+    Compras --&gt;|"orden de compra&lt;br/&gt;(recepción)"| Inventario
+    Inventario --&gt; Produccion
+    Produccion --&gt;|"productos terminados,&lt;br/&gt;subproductos, mermas"| Inventario
+    Inventario --&gt;|"disponibilidad"| Ventas
+    Ventas --&gt;|"pedido aprobado&lt;br/&gt;(despacho)"| Inventario
+    Inventario --&gt; Cliente
+    Portal --&gt;|"solicitud de&lt;br/&gt;contacto/pedido"| Ventas
+
+    Finanzas["5. FINANZAS&lt;br/&gt;cuentas por pagar (Compras),&lt;br/&gt;cuentas por cobrar (Ventas), caja"]
+    Administracion["6. ADMINISTRACIÓN&lt;br/&gt;usuarios, roles, permisos,&lt;br/&gt;catálogos compartidos, auditoría"]
+
+    Compras --&gt;|"cuenta por pagar"| Finanzas
+    Ventas --&gt;|"cuenta por cobrar"| Finanzas</code></pre>
+<p><em>Nota.</em> Adaptado de <em>Sistema Integral de Gestión de Producción y Comercialización</em> (<code>produccion.md</code>), Proyecto Sello de DIST, UPeU.</p>
+<p>Los seis módulos corren en <strong>un solo desplegable</strong> — ningún microservicio. <code>Inventario</code> junta recepción y despacho a propósito: son dos operaciones distintas sobre el mismo invariante (la existencia nunca queda negativa) — pasan la prueba 3 como una sola unidad, el mismo criterio que usa Odoo (<code>stock</code> frente a <code>purchase</code>/<code>sale</code>). <code>clientes</code> vive dentro de <code>ventas</code> en vez de separado: en rigor no pasa las tres pruebas (tiene ciclo de vida propio, se reutiliza en muchos pedidos), pero el equipo eligió empezar así — es la "primera separación", válida hasta que el dolor de tenerlos juntos aparezca.</p>
+<p><strong>Figura 6. Sistema académico — mismos tres módulos, dos formas válidas de desplegarlos</strong></p>
+<pre class="mermaid"><code>flowchart TB
+    subgraph A["A. Monolito modular — un solo despliegue"]
+        direction TB
+        ClienteA["Cliente"]
+        subgraph APPA["Aplicación (1 proceso)"]
+            direction TB
+            CurriculoA["Módulo Currículo"]
+            PlanificacionA["Módulo Planificación"]
+            MatriculaA["Módulo Matrícula"]
+            MatriculaA --&gt;|"llamada Java directa"| PlanificacionA
+            PlanificacionA --&gt;|"llamada Java directa"| CurriculoA
+        end
+        DBA[("1 base de datos&lt;br/&gt;schemas separados")]
+        ClienteA --&gt; APPA
+        APPA --&gt; DBA
+    end
+
+    subgraph B["B. Microservicios — un despliegue por servicio"]
+        direction TB
+        ClienteB["Cliente"]
+        GatewayB["API Gateway"]
+        CurriculoB["Servicio Currículo"]
+        PlanificacionB["Servicio Planificación"]
+        MatriculaB["Servicio Matrícula"]
+        DBCurriculoB[("BD Currículo")]
+        DBPlanificacionB[("BD Planificación")]
+        DBMatriculaB[("BD Matrícula")]
+        ClienteB --&gt; GatewayB
+        GatewayB --&gt; CurriculoB
+        GatewayB --&gt; PlanificacionB
+        GatewayB --&gt; MatriculaB
+        MatriculaB -.-&gt;|"HTTP"| PlanificacionB
+        PlanificacionB -.-&gt;|"HTTP"| CurriculoB
+        CurriculoB --&gt; DBCurriculoB
+        PlanificacionB --&gt; DBPlanificacionB
+        MatriculaB --&gt; DBMatriculaB
+    end</code></pre>
+<p><em>Nota.</em> Adaptado de <em>Sistema Universitario Integrado</em> (<code>acad.md</code>), Proyecto Sello de DIST, UPeU.</p>
+<p>Los <strong>mismos tres módulos conceptuales</strong> (<code>Currículo</code>, <code>Planificación</code>, <code>Matrícula</code>) se implementan de dos formas — en A, un solo proceso con llamadas Java directas entre módulos; en B, tres procesos independientes que se llaman por red — sin que el modelo de dominio cambie en absoluto. El sistema académico real de DIST hace algo más específico todavía: junta <code>Currículo</code> y <code>Planificación</code> con otros dos dominios más (datos maestros de <code>Personas</code>/<code>Institucional</code>) en <strong>un solo monolito modular</strong>, y separa <code>Matrícula</code> como microservicio propio — no porque la prueba de tres partes lo distinga más que a los demás (lo distingue igual), sino porque tiene picos de carga reales que el resto del sistema no tiene (miles de estudiantes matriculándose al mismo tiempo). <code>Finanzas del Estudiante</code> y <code>Pagos en línea</code> también se separan, por manejar dinero con requisitos de seguridad y cumplimiento distintos. Ningún módulo se separó "porque sí" — cada separación tiene una razón operacional concreta, además de ser un bounded context distinto.</p>
+<p>La lección de los dos ejemplos juntos: la prueba de tres partes encuentra las costuras <em>posibles</em>; decidir cuáles de esas costuras se convierten en un servicio desplegado aparte depende de razones operacionales (escala, seguridad, equipo, ciclo de release) que esta sesión no evalúa — eso se decide más adelante, con información que esta sesión todavía no tiene.</p>
 <p><strong>Hallazgo de aplicar DDD aquí:</strong> <code>Producto.stock</code>, tal como ya se usa en BD2/LP2 (S4-S5), es en realidad una vista denormalizada de algo que el módulo <code>inventario</code> todavía no existe para gobernar. Cuando <code>inventario</code> reciba su propia sesión, su primer trabajo de modelado será decidir si esa columna se conserva como caché de lectura o se recalcula desde el ledger de movimientos — no es un error de BD2/LP2, es una decisión de límite de contexto que esta sesión recién deja planteada.</p>
 <p><strong>Error frecuente</strong>: agrupar por tipo técnico (todas las entidades juntas, todos los DTO juntos) en vez de por razón de negocio — eso es organización por capa, no por módulo funcional. Otro error frecuente: tratar todos los módulos candidatos como si tuvieran la misma importancia — un subdominio Core exige el modelado más cuidadoso; uno Generic no debería competir por ese mismo esfuerzo.</p>
 <h3 id="24-casos-de-uso-relevantes">2.4 Casos de uso relevantes<a class="headerlink" href="#24-casos-de-uso-relevantes" title="Permanent link">&para;</a></h3>
@@ -3734,7 +3819,7 @@
 <h2 id="3-aplica-actividad-practica-guiada">3. Aplica: actividad práctica guiada<a class="headerlink" href="#3-aplica-actividad-practica-guiada" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 2h.</p>
 <p><strong>Actividad:</strong> descubrimiento guiado del modelo de dominio de BomERP: entidades, reglas de negocio, módulos, casos de uso relevantes, objetos de valor y diseño estratégico de DDD (Producto de la sesión en 1.4).</p>
-<p><strong>Propósito de la actividad:</strong> construir el primer modelo de dominio de BomERP — entidades con sus reglas, módulos delimitados, casos de uso relevantes, objetos de valor y el agregado que protege la consistencia transaccional — que LP2 implementará como transacción (S9) y BD2 restringirá a nivel de esquema.</p>
+<p><strong>Propósito de la actividad:</strong> construir el primer modelo de dominio de BomERP — entidades con sus reglas, módulos delimitados, casos de uso relevantes, objetos de valor y el agregado que protege la consistencia transaccional — nombrando en términos de dominio el mismo límite que LP2 ya implementó como transacción (S4) y que BD2 ya restringe a nivel de esquema (S1-S5).</p>
 <p><strong>Orientaciones metodológicas:</strong> en el laboratorio, el docente guía el descubrimiento de entidades, reglas, módulos, casos de uso, objetos de valor y agregado para BomERP paso a paso frente a la clase; los estudiantes completan las mismas tablas para el dominio de su propio proyecto de equipo (ver sección 4).</p>
 <p><strong>Actividades para realizar:</strong></p>
 <ul>
@@ -3771,12 +3856,17 @@
 <tr>
 <td><code>Venta</code></td>
 <td>id</td>
-<td>El total debe cuadrar con la suma de los detalles; solo una venta <code>REGISTRADA</code> puede anularse.</td>
+<td>El total debe cuadrar con la suma de los detalles; solo una venta <code>REGISTRADA</code> puede anularse; debe estar asociada a un cliente registrado.</td>
 </tr>
 <tr>
 <td><code>DetalleVenta</code></td>
 <td>id</td>
 <td>No puede registrarse con stock insuficiente del producto asociado.</td>
+</tr>
+<tr>
+<td><code>Cliente</code></td>
+<td>id</td>
+<td>Un cliente suspendido no puede registrar una venta nueva.</td>
 </tr>
 </tbody>
 </table>
@@ -3803,13 +3893,18 @@
 <td>Cambian juntas por el proceso comercial de venta; el dinero fluye hacia adentro.</td>
 </tr>
 <tr>
+<td><code>clientes</code></td>
+<td><code>Cliente</code></td>
+<td>Cambia por identidad y estado del comprador (alta, suspensión), independiente de si compró o no en este momento.</td>
+</tr>
+<tr>
 <td><code>inventario</code> (candidato, futuro)</td>
 <td><code>MovimientoStock</code></td>
 <td>Cambia por recepción o consumo físico de stock — una razón distinta de "qué existe" (<code>catalogo</code>); sin sesión asignada aún, no se modela en profundidad todavía.</td>
 </tr>
 <tr>
 <td><code>compras</code> (candidato, futuro)</td>
-<td><code>OrdenCompra</code>, <code>Proveedor</code></td>
+<td><code>OrdenCompra</code> (<code>Proveedor</code> referenciado, no compuesto — misma prueba que <code>Cliente</code>)</td>
 <td>El dinero fluye hacia afuera, con reglas de aprobación propias — lo opuesto de <code>ventas</code>; delimitado, no obligatorio en esta unidad.</td>
 </tr>
 <tr>
@@ -3855,6 +3950,16 @@
 <td><code>ventas</code></td>
 <td>Consultar ventas por filtro y fecha</td>
 <td>Dar soporte a reportes y auditoría.</td>
+</tr>
+<tr>
+<td><code>clientes</code></td>
+<td>Registrar cliente</td>
+<td>Habilitar a un comprador para registrar ventas.</td>
+</tr>
+<tr>
+<td><code>clientes</code></td>
+<td>Suspender cliente</td>
+<td>Impedir nuevas ventas a un cliente sin borrar su historial.</td>
 </tr>
 </tbody>
 </table>
@@ -3909,6 +4014,11 @@
 <td>Cantidad disponible de un producto para la venta.</td>
 <td><code>Producto.stock</code></td>
 </tr>
+<tr>
+<td>Suspender</td>
+<td>Impedir que un cliente registre ventas nuevas, sin borrar su historial.</td>
+<td><code>Cliente.suspender()</code></td>
+</tr>
 </tbody>
 </table>
 <p><strong>Figura 3. Agregado <code>Venta</code>–<code>DetalleVenta</code></strong></p>
@@ -3934,7 +4044,11 @@
         DET[DetalleVenta]
         VEN --- DET
     end
-    PROD -.-&gt;|referenciado por| DET</code></pre>
+    subgraph MCLI["Módulo clientes"]
+        CLI[Cliente]
+    end
+    PROD -.-&gt;|referenciado por| DET
+    CLI -.-&gt;|referenciado por| VEN</code></pre>
 <p>Este esquema es intencionalmente simple: el diagrama de clases completo, con atributos, operaciones y multiplicidades, se construye en S7. Aquí solo se fija qué entidades existen, en qué módulo viven y cuál es el agregado.</p>
 <p><strong>Dónde vive esto en el modelo C4 (S2):</strong> los módulos de la Figura 4 (<code>catalogo</code>, <code>ventas</code>, y los candidatos <code>inventario</code>/<code>compras</code>/<code>seguridad</code>) son el mismo nivel que la <strong>Vista C3 (Componentes)</strong> de <code>ads-producto.md</code> U1 — de hecho son los mismos boxes (<code>CAT</code>, <code>VEN</code>) que ya aparecen ahí. No son C2 (Contenedores): BomERP es un monolito modular con un solo backend, así que los módulos no son contenedores separados, son componentes dentro de uno solo. La Figura 3 (el agregado <code>Venta</code>–<code>DetalleVenta</code>) va un nivel más adentro que C3, hacia el nivel de Código/clases — es zoom hacia el interior del componente <code>ventas</code>, y se formaliza completo recién en S7. En un ERP real que creciera hasta necesitar microservicios, el bounded context mejor delimitado (no un corte arbitrario de código) es la costura natural para extraerlo como su propio contenedor C2 — la industria decide así qué servicio separar primero.</p>
 <h3 id="37-trazar-ads-con-bd2-y-lp2">3.7 Trazar ADS con BD2 y LP2<a class="headerlink" href="#37-trazar-ads-con-bd2-y-lp2" title="Permanent link">&para;</a></h3>
@@ -3952,7 +4066,7 @@
 <tr>
 <td>Agregado <code>Venta</code>–<code>DetalleVenta</code></td>
 <td>Transacción PL/SQL o restricción que impide guardar detalle sin cabecera</td>
-<td><code>@Transactional</code> en el servicio de registro de venta (S9 de LP2)</td>
+<td><code>@Transactional</code> en el servicio de registro de venta — ya construido en la S4 de LP2</td>
 </tr>
 <tr>
 <td>Regla: stock nunca negativo</td>
@@ -3971,7 +4085,7 @@
 </tr>
 </tbody>
 </table>
-<p>Sesión equivalente en los otros dos cursos, misma semana: <a href="../../../bd2/sesiones/S02_Triggers_DML_Auditoria/">BD2 - S2 Triggers DML y Auditoría</a> y <a href="../../../lp2/sesiones/S03_Objetos_Relacionados_Categoria_Producto/">LP2 - S3 Objetos Relacionados Categoria-Producto</a>.</p>
+<p>Misma semana, ritmo distinto: ADS cierra Unidad I una sesión antes que BD2 y LP2 (S5 frente a S6), así que mientras tú arrancas Unidad II descubriendo el dominio, tus compañeros de equipo están cerrando y sustentando el producto de Unidad I de esos dos cursos: <a href="../../../bd2/sesiones/S06_Evaluacion_Unidad_1/">BD2 - S6 Evaluación de la Unidad I</a> y <a href="../../../lp2/sesiones/S06_Evaluacion_Unidad_1/">LP2 - S6 Evaluación de la Unidad I</a>. Esta matriz no describe trabajo futuro: por la continuidad de Ciclo 3, BD2 y LP2 ya construyeron buena parte de <code>Venta</code>–<code>DetalleVenta</code> en su propia Unidad I (esquemas y operación cabecera-detalle) — esta sesión formaliza en términos de dominio (agregado, objeto de valor) el límite que esos dos cursos ya empezaron a construir de forma pragmática, sin nombrarlo así todavía.</p>
 <p><strong>Evidencia de aprendizaje:</strong></p>
 <ul>
 <li>Entidades y reglas de negocio, módulos delimitados y casos de uso relevantes de BomERP.</li>
@@ -3986,7 +4100,7 @@
 <p>Completa y evidencia estas tareas:</p>
 <ol>
 <li>Identificar al menos cuatro entidades con su regla de negocio asociada.</li>
-<li>Delimitar al menos cinco módulos candidatos de todo el sistema (como los cinco de BomERP), cada uno con su razón de cambio — de esos, elegir los uno o dos que sí se modelan en profundidad esta unidad (el equivalente propio de <code>catalogo</code>/<code>ventas</code>) y justificar por qué los demás quedan como candidatos futuros.</li>
+<li>Delimitar al menos seis módulos candidatos de todo el sistema (como los seis de BomERP), cada uno con su razón de cambio — de esos, elegir los dos o tres que sí se modelan en profundidad esta unidad (el equivalente propio de <code>catalogo</code>/<code>ventas</code>/<code>clientes</code>) y justificar por qué los demás quedan como candidatos futuros.</li>
 <li>Reconocer al menos tres casos de uso relevantes.</li>
 <li>Identificar al menos un objeto de valor candidato.</li>
 <li>Elaborar el glosario de lenguaje ubicuo y delimitar el agregado del proceso transaccional propio.</li>
@@ -4044,7 +4158,7 @@ y no a partir de qué tan cómodo es agrupar clases en el código?
 <ul>
 <li>El archivo respeta el nombre solicitado.</li>
 <li>Identifica entidades con su regla de negocio asociada.</li>
-<li>Delimita al menos cinco módulos candidatos de todo el sistema, cada uno con su razón de cambio, distinguiendo cuáles se modelan en profundidad esta unidad y cuáles quedan como candidatos futuros.</li>
+<li>Delimita al menos seis módulos candidatos de todo el sistema, cada uno con su razón de cambio, distinguiendo cuáles se modelan en profundidad esta unidad y cuáles quedan como candidatos futuros.</li>
 <li>Reconoce casos de uso relevantes, no solo operaciones CRUD sueltas.</li>
 <li>Identifica al menos un objeto de valor justificado.</li>
 <li>Presenta el glosario de lenguaje ubicuo y el agregado delimitado.</li>
@@ -4078,7 +4192,7 @@ y no a partir de qué tan cómodo es agrupar clases en el código?
 <tr>
 <td>1. Entidades, reglas y módulos*</td>
 <td style="text-align: right;">25</td>
-<td>Identifica entidades con reglas de negocio claras y delimita al menos cinco módulos candidatos de todo el sistema, cada uno con su razón de cambio propia.</td>
+<td>Identifica entidades con reglas de negocio claras y delimita al menos seis módulos candidatos de todo el sistema, cada uno con su razón de cambio propia.</td>
 <td>Identifica entidades y la mayoría de los módulos candidatos, con alguna razón de cambio genérica.</td>
 <td>Entidades o módulos incompletos, o módulos delimitados sin razón de cambio distinta entre ellos.</td>
 <td>No identifica entidades ni módulos verificables.</td>
@@ -4128,7 +4242,7 @@ Indica 2 fortalezas y 2 recomendaciones.
 <p><strong>Resumen breve:</strong> hoy BomERP pasó de tener arquitectura declarada a tener un dominio descubierto — entidades con sus reglas, módulos delimitados, casos de uso relevantes, objetos de valor y un agregado que protege la consistencia transaccional, con su propio lenguaje ubicuo.</p>
 <p><strong>Dinámica participativa:</strong> en una ronda rápida (o con una herramienta digital tipo formulario o encuesta en vivo), cada estudiante comparte en una frase qué regla de negocio protege el agregado que delimitó.</p>
 <p><strong>Metacognición:</strong> cada estudiante responde en voz alta o por escrito: ¿qué te costó más distinguir hoy, una entidad de un objeto de valor o el límite del agregado, y cómo lo resolviste?</p>
-<p><strong>Proyección:</strong> el modelo de dominio de hoy se refina en S7 con el diagrama de clases completo (atributos, operaciones, relaciones y multiplicidades), y el agregado delimitado hoy es el mismo límite que LP2 implementará como transacción en su propia Unidad 2.</p>
+<p><strong>Proyección:</strong> el modelo de dominio de hoy se refina en S7 con el diagrama de clases completo (atributos, operaciones, relaciones y multiplicidades). El agregado delimitado hoy no es una construcción futura: es el mismo límite que LP2 ya protegió con <code>@Transactional</code> desde su propia Unidad I — esta sesión lo nombra en términos de dominio, no lo estrena.</p>
 <h2 id="bibliografia">Bibliografía<a class="headerlink" href="#bibliografia" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Evans, E. (2003). <em>Domain-Driven Design: Tackling Complexity in the Heart of Software</em>. Addison-Wesley.</li>
