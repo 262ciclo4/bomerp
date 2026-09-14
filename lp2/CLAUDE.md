@@ -25,12 +25,14 @@ quedar fuera del repositorio — no se crean antes.
 
 ## Dónde está cada cosa
 
-- **Código**: `lp2/bomerp-backend` (Spring Boot), `lp2/frontend` (SPA, arranca en
-  S7). No hay carpeta `lp2/docker`: `lp2/bomerp-backend/compose-dev.yml` levanta
+- **Código**: `lp2/bomerp-backend` (Spring Boot), `lp2/bomerp-frontend` (SPA,
+  arranca en S7 — mismo criterio de nombre que `bomerp-backend`, un proyecto
+  por tecnología directo bajo `lp2/`). No hay carpeta `lp2/docker`:
+  `lp2/bomerp-backend/compose-dev.yml` levanta
   únicamente el contenedor Oracle para desarrollo en laptop (de ahí el
   sufijo `-dev`, mismo criterio que `application-dev.yml`), con las
   mismas credenciales en texto plano que usa el backend. Java 21, Node.js
-  y Angular 21 corren directamente en la máquina de desarrollo, sin
+  y Angular 22 corren directamente en la máquina de desarrollo, sin
   contenedores.
 - **Requisito del backend en DEV: solo Java 21.** No instalar Maven aparte
   — `lp2/bomerp-backend` trae Maven Wrapper (`mvnw`/`mvnw.cmd`), que descarga y

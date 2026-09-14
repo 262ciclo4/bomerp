@@ -12,7 +12,7 @@ alcance de sesiones futuras.
 ## Antes de escribir código
 
 1. Identifica el número de sesión (S2, S3, ... S16). Si no se especifica,
-   revisa `lp2/bomerp-backend` (y `lp2/frontend` desde S7) para detectar la última
+   revisa `lp2/bomerp-backend` (y `lp2/bomerp-frontend` desde S7) para detectar la última
    sesión completada y continúa con la siguiente.
 2. Lee el alcance concreto de esa sesión en la fila correspondiente de
    `docs/lp2/index.md` (raíz del repo) — ahí está el detalle específico de
@@ -23,8 +23,8 @@ alcance de sesiones futuras.
 4. Lee las ADR en `docs/lp2/adr/` (raíz del repo; arquitectura vigente: un
    solo proyecto Maven, módulos Spring Modulith, sin Feign, un solo
    datasource, regla de dependencia servicio-a-servicio entre módulos).
-5. Inspecciona el código actual en `lp2/bomerp-backend/src` (y `lp2/frontend` desde
-   S7) para saber exactamente qué ya existe antes de agregar nada.
+5. Inspecciona el código actual en `lp2/bomerp-backend/src` (y `lp2/bomerp-frontend`
+   desde S7) para saber exactamente qué ya existe antes de agregar nada.
 
 ## Reglas al implementar
 

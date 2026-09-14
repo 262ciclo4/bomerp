@@ -179,7 +179,7 @@ La **vista de contenedores** abre la caja negra de C1 y muestra las piezas despl
 flowchart LR
     Admin(["Usuario administrativo"])
     Cliente(["Cliente"])
-    SPA["SPA BomERP - Angular 21 - desde S7"]
+    SPA["SPA BomERP - Angular 22 - desde S7"]
     App["App móvil BomERP"]
     API["bomerp-backend - Spring Boot único + Spring Modulith (se abre en C3, Figura 5)"]
     DB[("Oracle - esquemas BOM_CATALOGO / BOM_VENTAS / ...")]
@@ -458,7 +458,7 @@ Sin tecnología, sin contenedores internos: BomERP es una sola caja. El detalle 
 
 | Contenedor | Tecnología | Responsabilidad |
 |---|---|---|
-| SPA BomERP | Angular 21 (desde S7) | Interfaz de usuario del catálogo y ventas |
+| SPA BomERP | Angular 22 (desde S7) | Interfaz de usuario del catálogo y ventas |
 | `bomerp-backend` | Spring Boot único, Spring Modulith | API REST modular (LP2) |
 | Oracle | Oracle Database Free 23ai | Persistencia por esquemas funcionales (BD2) |
 
@@ -472,7 +472,7 @@ Sin tecnología, sin contenedores internos: BomERP es una sola caja. El detalle 
 flowchart LR
     Usuario(["Usuario administrativo"])
     Cliente(["Cliente"])
-    SPA["SPA BomERP - Angular 21 - desde S7"]
+    SPA["SPA BomERP - Angular 22 - desde S7"]
     API["bomerp-backend - Spring Boot unico + Spring Modulith"]
     DB[("Oracle - esquemas BOM_CATALOGO / BOM_VENTAS / ...")]
     Pagos["Pasarela de pagos externo"]

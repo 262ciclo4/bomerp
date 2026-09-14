@@ -41,7 +41,7 @@ Artefacto de referencia para el Proyecto Integrador: [LP2 - Producto de Unidad 1
 
 ### U2: SPA modular segura para BomERP
 
-Producto U2: una SPA empresarial modular y segura construida con **Angular 21**, conectada al único backend de BomERP, con shell de navegación, funcionalidades organizadas por módulos de negocio, CRUD, formularios transaccionales, consultas, reportes y control de acceso mediante JWT.
+Producto U2: una SPA empresarial modular y segura construida con **Angular 22**, conectada al único backend de BomERP, con shell de navegación, funcionalidades organizadas por módulos de negocio, CRUD, formularios transaccionales, consultas, reportes y control de acceso mediante JWT.
 
 Resultado esperado U2: el estudiante construye una SPA empresarial segura, conectada al backend REST y orientada al flujo comercial implementado como base de BomERP. No se crean frontends independientes para Ventas y Compras — la SPA mantiene `core`, `shared` y módulos funcionales cargables por rutas.
 
@@ -49,7 +49,7 @@ Artefacto de referencia para el Proyecto Integrador: [LP2 - Producto de Unidad 2
 
 | Sesión | Tema (sílabo) | Módulo que se toca | Trabajo principal |
 |---|---|---|---|
-| S7 | Creación y arquitectura de la SPA: proyecto frontend, layout, menú bar, sidebar, encabezado, módulos, componentes, rutas, navegación, servicios HTTP y CRUD de una tabla independiente. | SPA (`catalogo`) | Proyecto Angular 21 creado, SPA navegable conectada al backend, con un CRUD independiente. |
+| S7 | Creación y arquitectura de la SPA: proyecto frontend, layout, menú bar, sidebar, encabezado, módulos, componentes, rutas, navegación, servicios HTTP y CRUD de una tabla independiente. | SPA (`catalogo`) | Proyecto Angular 22 creado, SPA navegable conectada al backend, con un CRUD independiente. |
 | S8 | CRUD de tablas dependientes: selección de datos relacionados, listas desplegables, validación de dependencias y presentación de información relacionada. | SPA (`catalogo`) | CRUD dependiente integrado al backend. |
 | S9 | Formularios transaccionales con cabecera–detalle: detalle dinámico, cálculos, validaciones, confirmación de la operación, consultas y reportes. | SPA (`ventas`) | Flujo transaccional y consultas/reportes operativos desde la SPA. |
 | S10 | Seguridad backend: usuarios, hash de contraseñas, autenticación JWT, roles, permisos y protección de endpoints. | `seguridad` (nuevo) | Backend autenticado y autorizado por roles o permisos. |
@@ -75,7 +75,7 @@ Artefacto de referencia para el Proyecto Integrador: [LP2 - Producto de Unidad 3
 
 ```mermaid
 flowchart TB
-    SPA[Una SPA Angular 21 modular - catalogo · inventario · ventas · compras · seguridad]
+    SPA[Una SPA Angular 22 modular - catalogo · inventario · ventas · compras · seguridad]
     APP[Un Spring Boot ejecutable único - bomerp-backend]
 
     subgraph MOD[Paquetes de módulo, verificados con Spring Modulith]
@@ -103,7 +103,7 @@ flowchart TB
     SEG --> SSEG
 ```
 
-- `bomerp-backend` es un único proyecto Maven y el único artefacto Spring Boot ejecutable. La SPA (desde S7) se crea como un único proyecto **Angular 21**, organizado por módulos funcionales cargables por rutas, no una SPA por módulo de negocio.
+- `bomerp-backend` es un único proyecto Maven y el único artefacto Spring Boot ejecutable. La SPA (desde S7) se crea como un único proyecto **Angular 22**, organizado por módulos funcionales cargables por rutas, no una SPA por módulo de negocio.
 - Los módulos de negocio son paquetes directos bajo el paquete raíz, no artefactos Maven ni microservicios; Spring Modulith los detecta y verifica automáticamente (`ModularityTests`).
 - Existe un solo datasource y las transacciones pueden abarcar varios esquemas Oracle.
 - Los módulos se comunican mediante servicios Java públicos, sin Feign ni llamadas HTTP internas.
