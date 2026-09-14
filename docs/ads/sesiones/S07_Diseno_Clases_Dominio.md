@@ -38,7 +38,7 @@ Diagrama de clases UML del dominio de tu propio proyecto: entidades persistentes
 | Evaluación formativa | Revisión en clase del diagrama de clases completo. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4. | Indicaciones de entrega (4.3), rúbrica de evaluación (4.6). |
 
 ### 1.6 Motivación de la sesión
-
+ 
 #### 1.6.1 Caso: el rectángulo que cada quien completaba distinto
 
 El esquema de S6 (Figura 9) dibuja `Venta` y `DetalleVenta` como dos cajas conectadas por una línea — pero no dice cuántos detalles admite una venta, qué pasa si `cantidad` llega en cero, ni si `Cliente` puede existir sin ninguna venta todavía. Dos integrantes del mismo equipo, mirando exactamente la misma caja, completaron su prototipo de base de datos con reglas distintas: uno permitió guardar una venta sin ningún detalle, el otro no. Ninguno de los dos estaba equivocado con la información que tenía — el esquema de S6 nunca lo dijo, porque todavía no era su trabajo decirlo.
