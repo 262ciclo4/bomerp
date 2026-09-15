@@ -4043,7 +4043,12 @@ npm<span class="w"> </span>--version
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>lp2
 ng<span class="w"> </span>new<span class="w"> </span>bomerp-frontend<span class="w"> </span>--routing<span class="w"> </span>--style<span class="o">=</span>css<span class="w"> </span>--ssr<span class="o">=</span><span class="nb">false</span>
 </code></pre></div>
-<p>Cuando la CLI pregunte por el motor de pruebas end-to-end, elige "No" (no es tema de esta sesión). El proyecto queda en <code>lp2/bomerp-frontend/</code> — mismo criterio de ubicación y de nombre que ya usa <code>lp2/bomerp-backend</code> (S1): un proyecto por tecnología, directo bajo <code>lp2/</code>, sin carpeta intermedia.</p>
+<p>La CLI hace un par de preguntas interactivas antes de generar el proyecto:</p>
+<ul>
+<li><strong>"Which AI tools should Angular integrate with?"</strong> — elige <strong>None</strong>. Cada opción (Claude Code, Cursor, Gemini CLI, etc.) agrega archivos de configuración (<code>CLAUDE.md</code>/<code>AGENTS.md</code> + config del servidor MCP de Angular) que no son parte de lo que esta sesión enseña — ningún curso del proyecto agrega infraestructura que la sesión concreta no necesita (mismo criterio que ya evitó módulos o paquetes "por si acaso" desde LP2 S1).</li>
+<li><strong>Motor de pruebas end-to-end</strong>, elige "No" (no es tema de esta sesión).</li>
+</ul>
+<p>El proyecto queda en <code>lp2/bomerp-frontend/</code> — mismo criterio de ubicación y de nombre que ya usa <code>lp2/bomerp-backend</code> (S1): un proyecto por tecnología, directo bajo <code>lp2/</code>, sin carpeta intermedia.</p>
 <p>Levanta el servidor de desarrollo:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>bomerp-frontend
 ng<span class="w"> </span>serve
