@@ -4025,6 +4025,7 @@
 <p><strong>Requisito antes de continuar:</strong> con <code>lp2/bomerp-backend</code> corriendo (<code>.\mvnw.cmd spring-boot:run</code>), confirma que <code>http://localhost:8080/api/v1/categorias</code> responde antes de tocar código nuevo. Si falla, el problema es de una sesión anterior, no de esta.</p>
 <h3 id="32-instalar-nodejs-y-la-cli-de-angular">3.2 Instalar Node.js y la CLI de Angular<a class="headerlink" href="#32-instalar-nodejs-y-la-cli-de-angular" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> entorno listo para crear y correr un proyecto Angular.</p>
+<p>Párate de preferencia en <code>lp2/</code> (la misma terminal que usarás en 3.3 para crear el proyecto) — aunque, al ser una instalación global (<code>-g</code>), el resultado de esta sección es el mismo sin importar desde qué carpeta la ejecutes.</p>
 <p>Instala <a href="https://nodejs.org/">Node.js LTS</a> (incluye <code>npm</code>). Verifica la instalación:</p>
 <div class="highlight"><pre><span></span><code>node<span class="w"> </span>--version
 npm<span class="w"> </span>--version
@@ -4035,7 +4036,7 @@ npm<span class="w"> </span>--version
 <p>Verifica:</p>
 <div class="highlight"><pre><span></span><code>ng<span class="w"> </span>version
 </code></pre></div>
-<p>Debe mostrar <code>Angular CLI: 22.x.x</code>. Si aparece una versión distinta (por ejemplo, una instalación previa de otro curso), reinstala con <code>npm install -g @angular/cli@22</code> para forzar esa versión exacta — dos versiones mayores distintas de la CLI pueden generar proyectos con estructuras distintas.</p>
+<p>Debe mostrar <code>Angular CLI: 22.x.x</code>. Si aparece una versión distinta (por ejemplo, una instalación previa de otro curso), <strong>no hace falta desinstalarla primero</strong>: vuelve a correr <code>npm install -g @angular/cli@22</code> — <code>npm</code> sobrescribe en el mismo lugar la versión global que ya tengas, sin un <code>npm uninstall -g @angular/cli</code> aparte. Forzar la versión exacta importa porque dos versiones mayores distintas de la CLI pueden generar proyectos con estructuras distintas.</p>
 <h3 id="33-crear-el-proyecto-angular">3.3 Crear el proyecto Angular<a class="headerlink" href="#33-crear-el-proyecto-angular" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> <code>lp2/bomerp-frontend</code> creado y ejecutándose por primera vez.</p>
 <p>Desde la raíz del repositorio, dentro de <code>lp2/</code>:</p>
