@@ -203,7 +203,12 @@ cd lp2
 ng new bomerp-frontend --routing --style=css --ssr=false
 ```
 
-Cuando la CLI pregunte por el motor de pruebas end-to-end, elige "No" (no es tema de esta sesión). El proyecto queda en `lp2/bomerp-frontend/` — mismo criterio de ubicación y de nombre que ya usa `lp2/bomerp-backend` (S1): un proyecto por tecnología, directo bajo `lp2/`, sin carpeta intermedia.
+La CLI hace un par de preguntas interactivas antes de generar el proyecto:
+
+- **"Which AI tools should Angular integrate with?"** — elige **None**. Cada opción (Claude Code, Cursor, Gemini CLI, etc.) agrega archivos de configuración (`CLAUDE.md`/`AGENTS.md` + config del servidor MCP de Angular) que no son parte de lo que esta sesión enseña — ningún curso del proyecto agrega infraestructura que la sesión concreta no necesita (mismo criterio que ya evitó módulos o paquetes "por si acaso" desde LP2 S1).
+- **Motor de pruebas end-to-end**, elige "No" (no es tema de esta sesión).
+
+El proyecto queda en `lp2/bomerp-frontend/` — mismo criterio de ubicación y de nombre que ya usa `lp2/bomerp-backend` (S1): un proyecto por tecnología, directo bajo `lp2/`, sin carpeta intermedia.
 
 Levanta el servidor de desarrollo:
 
