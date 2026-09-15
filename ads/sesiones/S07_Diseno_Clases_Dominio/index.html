@@ -4494,7 +4494,7 @@
 </tr>
 <tr>
 <td><code>Cliente</code> con herencia (<code>ClientePersonaNatural</code>/<code>ClienteEmpresa</code>)</td>
-<td>Estrategia de mapeo objeto-relacional para herencia (tabla única, por subclase o por clase concreta) — contenido de S8</td>
+<td>Sin sesión asignada en BD2 (S7-S12 de esta unidad son todas de administración, 1.7 de BD2 S7); se completaría recién si <code>clientes</code> recibe sesión propia</td>
 <td>Aún no implementado en LP2; candidato cuando el módulo <code>clientes</code> reciba su propia sesión</td>
 </tr>
 <tr>
@@ -4504,7 +4504,7 @@
 </tr>
 </tbody>
 </table>
-<p>La fila de <code>Cliente</code> queda deliberadamente incompleta: la estrategia de mapear una jerarquía de herencia a tablas relacionales es, precisamente, el contenido de S8 ("Diseño avanzado y transformación OR") — esta sesión modela la herencia en UML; la siguiente decide cómo esa herencia baja a tablas.</p>
+<p>La fila de <code>Cliente</code> queda deliberadamente incompleta en las dos columnas de evidencia, no solo en LP2: la estrategia de mapear la jerarquía a tablas (tabla única, por subclase o por clase concreta) la decide <strong>ADS S8</strong> ("Diseño de Clases Avanzado y Transformación Objeto-Relacional", propio de este curso, no de BD2) — esta sesión modela la herencia en UML, ADS S8 decide cómo baja a tablas. BD2 no tiene ninguna sesión de U2 dedicada a construir el esquema de <code>clientes</code> (su roadmap de esta unidad es enteramente de administración: instancia, usuarios y privilegios, almacenamiento, optimización, particionamiento), así que su columna queda pendiente por la misma razón que la de LP2: nadie ha construido <code>clientes</code> todavía en ningún curso.</p>
 <h2 id="4-crea-actividad-autonoma">4. Crea: actividad autónoma<a class="headerlink" href="#4-crea-actividad-autonoma" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 2h fuera del aula.</p>
 <h3 id="41-actividad">4.1 Actividad<a class="headerlink" href="#41-actividad" title="Permanent link">&para;</a></h3>
