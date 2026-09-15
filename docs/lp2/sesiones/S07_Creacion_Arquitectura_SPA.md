@@ -169,6 +169,8 @@ git clone --branch s05-consultas-reportes-cors https://github.com/262ciclo4/bome
 
 **Producto del paso:** entorno listo para crear y correr un proyecto Angular.
 
+Párate de preferencia en `lp2/` (la misma terminal que usarás en 3.3 para crear el proyecto) — aunque, al ser una instalación global (`-g`), el resultado de esta sección es el mismo sin importar desde qué carpeta la ejecutes.
+
 Instala [Node.js LTS](https://nodejs.org/) (incluye `npm`). Verifica la instalación:
 
 ```bash
@@ -188,7 +190,7 @@ Verifica:
 ng version
 ```
 
-Debe mostrar `Angular CLI: 22.x.x`. Si aparece una versión distinta (por ejemplo, una instalación previa de otro curso), reinstala con `npm install -g @angular/cli@22` para forzar esa versión exacta — dos versiones mayores distintas de la CLI pueden generar proyectos con estructuras distintas.
+Debe mostrar `Angular CLI: 22.x.x`. Si aparece una versión distinta (por ejemplo, una instalación previa de otro curso), **no hace falta desinstalarla primero**: vuelve a correr `npm install -g @angular/cli@22` — `npm` sobrescribe en el mismo lugar la versión global que ya tengas, sin un `npm uninstall -g @angular/cli` aparte. Forzar la versión exacta importa porque dos versiones mayores distintas de la CLI pueden generar proyectos con estructuras distintas.
 
 ### 3.3 Crear el proyecto Angular
 
