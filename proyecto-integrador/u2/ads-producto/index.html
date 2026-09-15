@@ -3070,40 +3070,62 @@
 </tbody>
 </table>
 <h2 id="diagrama-de-clases-de-referencia">Diagrama de clases de referencia<a class="headerlink" href="#diagrama-de-clases-de-referencia" title="Permanent link">&para;</a></h2>
+<p><strong>Este es el diagrama de dominio (UML/DDD, S6-S7), no una vista de Código C4</strong> — no mezcla entidades con clases de implementación (<code>Service</code>/<code>Repository</code>/<code>Controller</code>, esas sí viven en la Vista de código de C4, ADS S2 2.6). Cruza los módulos <code>catalogo</code>, <code>ventas</code> y <code>clientes</code> a propósito: ese es precisamente el trabajo del modelo de dominio, mostrar el negocio completo, no cómo se organiza el código en componentes desplegables (S7, 3.6).</p>
 <pre class="mermaid"><code>classDiagram
+    class Categoria {
+        +Long id
+        +String nombre
+        +String descripcion
+    }
+    class Producto {
+        +Long id
+        +String nombre
+        +Dinero precio
+        +Integer stock
+        +descontarStock(cantidad)
+    }
+    class Dinero {
+        &lt;&lt;value object&gt;&gt;
+        +BigDecimal monto
+        +String moneda
+    }
+    class Cliente {
+        &lt;&lt;abstract&gt;&gt;
+        +Long id
+        +String nombreORazonSocial
+        +EstadoCliente estado
+        +suspender()
+    }
+    class ClientePersonaNatural {
+        +String dni
+    }
+    class ClienteEmpresa {
+        +String ruc
+    }
     class Venta {
-      +id
-      +cliente
-      +detalles
-      +total
-      +estado
-      +anular()
+        +Long id
+        +LocalDateTime fecha
+        +EstadoVenta estado
+        +Dinero total
+        +calcularTotal()
+        +anular()
     }
     class DetalleVenta {
-      +producto
-      +cantidad
-      +precioUnitario
-      +subtotal
+        +Long id
+        +Integer cantidad
+        +Dinero precioUnitario
+        +subtotal() Dinero
     }
-    class VentaService {
-      +registrar(dto)
-      +anular(id)
-      +listar(filtro)
-    }
-    class VentaRepository {
-      +save(venta)
-      +findByEstado(estado)
-    }
-    class VentaController {
-      +postVenta(dto)
-      +patchAnular(id)
-      +getVentas()
-    }
-    Venta "1" *-- "*" DetalleVenta
-    VentaController --&gt; VentaService
-    VentaService --&gt; VentaRepository
-    VentaRepository --&gt; Venta</code></pre>
-<p>Este diagrama usa Service Layer clásico (la lógica de registrar/anular vive en <code>VentaService</code>, no en <code>Venta</code>). <code>Venta</code> es justamente el candidato natural para diseño táctico de Domain-Driven Design (S10): tiene invariantes reales que proteger siempre — el total debe cuadrar con los detalles, el stock nunca queda negativo, solo una venta <code>ACTIVA</code> puede anularse. Si el equipo aplica DDD aquí, esas reglas se mueven de <code>VentaService</code> hacia dentro de <code>Venta</code> como <em>aggregate root</em> (<code>Venta.registrarDetalle()</code>, <code>Venta.anular()</code> validando su propio estado), y <code>VentaRepository</code> se declara como interfaz del propio módulo de dominio, no como repositorio JPA directo. <code>catalogo</code> (CRUD simple de <code>Producto</code>/<code>Categoria</code>) no necesita este tratamiento — la decisión de aplicar DDD táctico es por módulo, no para todo el sistema (ver ADS S4).</p>
+
+    Categoria "1" o-- "0..*" Producto : clasifica
+    Cliente &lt;|-- ClientePersonaNatural
+    Cliente &lt;|-- ClienteEmpresa
+    Cliente "1" -- "0..*" Venta : registra
+    Venta "1" *-- "1..*" DetalleVenta : compone
+    DetalleVenta "0..*" -- "1" Producto : referencia
+    Producto ..&gt; Dinero : usa
+    DetalleVenta ..&gt; Dinero : usa</code></pre>
+<p><code>Venta.anular()</code> y <code>Venta.calcularTotal()</code> ya viven en la entidad, no en un <code>VentaService</code> externo (Information Expert, ADS S7 2.3) — evitar el Anemic Domain Model no es un paso opcional que "el equipo puede aplicar si quiere": ya está hecho desde S7. Lo que sí queda como trabajo específico de <strong>S10</strong> ("Patrones y arquitectura empresarial") es el diseño táctico <em>completo</em> de DDD sobre el agregado <code>Venta</code>-<code>DetalleVenta</code> — declarar <code>VentaRepository</code> como interfaz propia del módulo de dominio (no un <code>JpaRepository</code> expuesto directo), y formalizar <code>Venta</code> como <em>aggregate root</em> con acceso controlado a <code>DetalleVenta</code>. <code>catalogo</code> (CRUD simple de <code>Categoria</code>/<code>Producto</code>) no necesita ese tratamiento completo — la decisión de aplicar DDD táctico a fondo es por módulo, no para todo el sistema (S7, 2.8 vía S6).</p>
 <h2 id="trazabilidad-u2">Trazabilidad U2<a class="headerlink" href="#trazabilidad-u2" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -3115,22 +3137,27 @@
 </thead>
 <tbody>
 <tr>
-<td>Clases Venta y DetalleVenta</td>
-<td>Tablas <code>venta</code> y <code>detalle_venta</code></td>
-<td>Modelos y DTO de venta</td>
+<td><code>Categoria</code> agregación <code>Producto</code></td>
+<td>Tablas <code>categorias</code>/<code>productos</code>, FK sin <code>ON DELETE CASCADE</code></td>
+<td><code>@ManyToOne</code> de <code>Producto</code> hacia <code>Categoria</code></td>
 </tr>
 <tr>
-<td>Service Layer</td>
-<td>Paquete PL/SQL y reglas</td>
-<td>Servicio frontend/backend</td>
+<td><code>Venta</code> composición <code>DetalleVenta</code></td>
+<td>FK <code>NOT NULL</code> de <code>detalle_venta</code> hacia <code>venta</code></td>
+<td><code>@OneToMany(cascade = ALL)</code> en <code>Venta</code></td>
 </tr>
 <tr>
-<td>Repository Pattern</td>
-<td>Usuario y privilegios Oracle</td>
-<td>Repositorio/API service</td>
+<td><code>Cliente</code> con herencia (persona natural/empresa)</td>
+<td>Estrategia de mapeo objeto-relacional (S8)</td>
+<td>Aún no implementado en LP2 (módulo <code>clientes</code> sin sesión propia)</td>
 </tr>
 <tr>
-<td>Diagrama de secuencia anular</td>
+<td><code>Venta.anular()</code>/<code>calcularTotal()</code> como operaciones de entidad</td>
+<td>Trigger/<code>CHECK</code> de auditoría e integridad</td>
+<td>Lógica movida de <code>VentaService</code> a <code>Venta</code></td>
+</tr>
+<tr>
+<td>Diagrama de secuencia anular (S9)</td>
 <td>Trigger de auditoría</td>
 <td>Acción anular desde SPA</td>
 </tr>
