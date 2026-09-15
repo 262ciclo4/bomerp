@@ -19,50 +19,74 @@
 
 ## Diagrama de clases de referencia
 
+**Este es el diagrama de dominio (UML/DDD, S6-S7), no una vista de Código C4** — no mezcla entidades con clases de implementación (`Service`/`Repository`/`Controller`, esas sí viven en la Vista de código de C4, ADS S2 2.6). Cruza los módulos `catalogo`, `ventas` y `clientes` a propósito: ese es precisamente el trabajo del modelo de dominio, mostrar el negocio completo, no cómo se organiza el código en componentes desplegables (S7, 3.6).
+
 ```mermaid
 classDiagram
+    class Categoria {
+        +Long id
+        +String nombre
+        +String descripcion
+    }
+    class Producto {
+        +Long id
+        +String nombre
+        +Dinero precio
+        +Integer stock
+        +descontarStock(cantidad)
+    }
+    class Dinero {
+        <<value object>>
+        +BigDecimal monto
+        +String moneda
+    }
+    class Cliente {
+        <<abstract>>
+        +Long id
+        +String nombreORazonSocial
+        +EstadoCliente estado
+        +suspender()
+    }
+    class ClientePersonaNatural {
+        +String dni
+    }
+    class ClienteEmpresa {
+        +String ruc
+    }
     class Venta {
-      +id
-      +cliente
-      +detalles
-      +total
-      +estado
-      +anular()
+        +Long id
+        +LocalDateTime fecha
+        +EstadoVenta estado
+        +Dinero total
+        +calcularTotal()
+        +anular()
     }
     class DetalleVenta {
-      +producto
-      +cantidad
-      +precioUnitario
-      +subtotal
+        +Long id
+        +Integer cantidad
+        +Dinero precioUnitario
+        +subtotal() Dinero
     }
-    class VentaService {
-      +registrar(dto)
-      +anular(id)
-      +listar(filtro)
-    }
-    class VentaRepository {
-      +save(venta)
-      +findByEstado(estado)
-    }
-    class VentaController {
-      +postVenta(dto)
-      +patchAnular(id)
-      +getVentas()
-    }
-    Venta "1" *-- "*" DetalleVenta
-    VentaController --> VentaService
-    VentaService --> VentaRepository
-    VentaRepository --> Venta
+
+    Categoria "1" o-- "0..*" Producto : clasifica
+    Cliente <|-- ClientePersonaNatural
+    Cliente <|-- ClienteEmpresa
+    Cliente "1" -- "0..*" Venta : registra
+    Venta "1" *-- "1..*" DetalleVenta : compone
+    DetalleVenta "0..*" -- "1" Producto : referencia
+    Producto ..> Dinero : usa
+    DetalleVenta ..> Dinero : usa
 ```
 
-Este diagrama usa Service Layer clásico (la lógica de registrar/anular vive en `VentaService`, no en `Venta`). `Venta` es justamente el candidato natural para diseño táctico de Domain-Driven Design (S10): tiene invariantes reales que proteger siempre — el total debe cuadrar con los detalles, el stock nunca queda negativo, solo una venta `ACTIVA` puede anularse. Si el equipo aplica DDD aquí, esas reglas se mueven de `VentaService` hacia dentro de `Venta` como *aggregate root* (`Venta.registrarDetalle()`, `Venta.anular()` validando su propio estado), y `VentaRepository` se declara como interfaz del propio módulo de dominio, no como repositorio JPA directo. `catalogo` (CRUD simple de `Producto`/`Categoria`) no necesita este tratamiento — la decisión de aplicar DDD táctico es por módulo, no para todo el sistema (ver ADS S4).
+`Venta.anular()` y `Venta.calcularTotal()` ya viven en la entidad, no en un `VentaService` externo (Information Expert, ADS S7 2.3) — evitar el Anemic Domain Model no es un paso opcional que "el equipo puede aplicar si quiere": ya está hecho desde S7. Lo que sí queda como trabajo específico de **S10** ("Patrones y arquitectura empresarial") es el diseño táctico *completo* de DDD sobre el agregado `Venta`-`DetalleVenta` — declarar `VentaRepository` como interfaz propia del módulo de dominio (no un `JpaRepository` expuesto directo), y formalizar `Venta` como *aggregate root* con acceso controlado a `DetalleVenta`. `catalogo` (CRUD simple de `Categoria`/`Producto`) no necesita ese tratamiento completo — la decisión de aplicar DDD táctico a fondo es por módulo, no para todo el sistema (S7, 2.8 vía S6).
 
 ## Trazabilidad U2
 
 | Diseño ADS | Evidencia BD2 | Evidencia LP2 |
 |---|---|---|
-| Clases Venta y DetalleVenta | Tablas `venta` y `detalle_venta` | Modelos y DTO de venta |
-| Service Layer | Paquete PL/SQL y reglas | Servicio frontend/backend |
-| Repository Pattern | Usuario y privilegios Oracle | Repositorio/API service |
-| Diagrama de secuencia anular | Trigger de auditoría | Acción anular desde SPA |
+| `Categoria` agregación `Producto` | Tablas `categorias`/`productos`, FK sin `ON DELETE CASCADE` | `@ManyToOne` de `Producto` hacia `Categoria` |
+| `Venta` composición `DetalleVenta` | FK `NOT NULL` de `detalle_venta` hacia `venta` | `@OneToMany(cascade = ALL)` en `Venta` |
+| `Cliente` con herencia (persona natural/empresa) | Estrategia de mapeo objeto-relacional (S8) | Aún no implementado en LP2 (módulo `clientes` sin sesión propia) |
+| `Venta.anular()`/`calcularTotal()` como operaciones de entidad | Trigger/`CHECK` de auditoría e integridad | Lógica movida de `VentaService` a `Venta` |
+| Diagrama de secuencia anular (S9) | Trigger de auditoría | Acción anular desde SPA |
 | Integración full-stack | Persistencia y auditoría Oracle | Flujo SPA -> API -> Oracle |

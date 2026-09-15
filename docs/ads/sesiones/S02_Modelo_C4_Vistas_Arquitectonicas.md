@@ -295,7 +295,18 @@ classDiagram
 
 `ProductoService` (la interfaz) es el componente que ya apareció como una sola caja en C3 (Figura 5, dentro de `catalogo`); `ProductoServiceImpl` es su implementación concreta — clases reales del backend de LP2 (S2). Este nivel de detalle rara vez aporta valor dibujado a mano: la mayoría de equipos profesionales lo genera automáticamente y solo lo revisa cuando algo específico lo amerita.
 
-No es un diagrama por capas (presentación/negocio/datos) ni un diagrama de entidades de todo el dominio: C4-código hace zoom a **un solo componente elegido** (el que ya se abrió en C3) y muestra sus clases e interfaces internas. Un diagrama de entidades de todo el esquema (`Producto`, `Categoria`, `Venta`, ...) es otro artefacto — un diagrama de clases/dominio UML — fuera del alcance de C4; los ejemplos oficiales de [c4model.com/diagrams/code](https://c4model.com/diagrams/code) también acotan a un solo componente.
+El criterio que delimita esta vista **no es el tipo de clase que contiene** (una entidad JPA como `Producto` es código real, tan válida aquí como `ProductoServiceImpl`) — es el **alcance**: la propia especificación lo fija en un solo campo, "Scope: a single component" (Brown, 2024) — C4-código siempre hace zoom a **un solo componente ya elegido en C3** (aquí, `catalogo`) y muestra sus clases e interfaces internas, nunca varios componentes a la vez. Un diagrama que cruce todo el dominio (`Producto`, `Categoria` de `catalogo`, junto con `Venta` de `ventas`, por ejemplo) deja de ser Código C4 no por incluir entidades, sino por cruzar más de un componente. Eso no lo deja sin marco propio: ese diagrama es un **diagrama de clases UML** — específicamente, el modelo de dominio de Domain-Driven Design, que a propósito sí cruza los módulos de negocio que haga falta (se retoma en ADS S6-S7). C4 y UML/DDD son marcos complementarios, no uno dentro del otro: C4 documenta cómo el sistema está construido y desplegado; UML/DDD documenta qué conceptos de negocio existen y cómo se relacionan, sin importar en qué componente termine viviendo cada uno.
+
+**Dónde vive `entity` frente a las demás capas, en la estructura real de LP2:**
+
+```text
+lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/
+└── catalogo/                    # un componente de C3 = un módulo Modulith
+    ├── categoria/{controller,dto,entity,repository,service}
+    └── producto/{controller,dto,entity,repository,service}
+```
+
+`entity` es una carpeta más, al mismo nivel que `controller`, `dto`, `repository` y `service` — las cinco son capas **dentro del mismo componente** (`catalogo`, S1 3.9). Un Código C4 de `catalogo` puede zoomear a cualquiera de esas capas, o a varias a la vez (como ya hizo la Figura 6, con `service` y `repository` juntas) — sigue siendo un solo componente. Lo que ya no sería Código C4 es cruzar la carpeta `catalogo/` hacia `ventas/`: ahí es donde el alcance de "un solo componente" (Brown, 2024) queda atrás, sin importar qué capa se esté mirando.
 
 **Error frecuente**: dibujarlo a mano para "completar" el modelo — si nadie lo va a mantener sincronizado con el código real, un diagrama C4 desactualizado es peor que no tenerlo (documentación que miente).
 
