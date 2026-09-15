@@ -121,37 +121,9 @@ classDiagram
     }
 ```
 
-`Proveedor` (módulo candidato `compras`, S6 2.2-2.3) es el ejemplo de anatomía: `+`/`-` son visibilidad (público/privado), igual que en Java — `id` y `razonSocial` son públicos, `ruc` es privado, los tres son **atributos** (nombre y tipo, `+razonSocial: String`), no cómo se guardan en una base de datos real; esa traducción (columna, tipo SQL, longitud) es trabajo de BD2, no del modelo de dominio. `Producto` ya aplica esa misma anatomía a una entidad real que sí se modela en profundidad esta unidad, con un subconjunto de sus atributos — el resto (`precio`, y las demás entidades: `Categoria`, `Cliente`, `Venta`, `DetalleVenta`) se completa recién en 3.2, no antes, para no repetir el mismo trabajo dos veces.
+`Proveedor` (módulo candidato `compras`, S6 2.2-2.3) es el ejemplo de anatomía: `+`/`-` son visibilidad (público/privado), igual que en Java — `id` y `razonSocial` son públicos, `ruc` es privado, los tres son **atributos** (nombre y tipo, `+razonSocial: String`), no cómo se guardan en una base de datos real; esa traducción (columna, tipo SQL, longitud) es trabajo de BD2, no del modelo de dominio. `Producto` ya aplica esa misma anatomía a una entidad real que sí se modela en profundidad esta unidad, con un subconjunto de sus atributos — a propósito, sin `precio` todavía: su tipo es `Dinero`, y ese objeto de valor recién se explica en 2.3, no antes. Mostrar `precio: Dinero` aquí obligaría a explicar `Dinero` antes de tiempo, o a dejarlo sin explicar — ninguna de las dos sirve. El resto de atributos, y las demás entidades (`Categoria`, `Cliente`, `Venta`, `DetalleVenta`), se completan recién en 3.2, no antes, para no repetir el mismo trabajo dos veces.
 
 **Error frecuente**: agregar un atributo que en realidad es una relación con otra clase (por ejemplo, `Venta.idCliente: Long`) en vez de modelarlo como una relación real (`Venta` -- `Cliente`, con su multiplicidad). Un identificador foráneo es una decisión de persistencia (BD2/LP2); el dominio modela la relación entre objetos, no la llave que la implementa.
-
-**Un tipo de atributo especial: `Dinero`, el objeto de valor que S6 (2.6) ya había identificado.** No aparece como una entidad más en Tabla 2 (3.2) — aparece como el *tipo* de `precio`, `total` y `precioUnitario`.
-
-**¿Entidad, `double`, `BigDecimal` o `Dinero`? No son lo mismo, ni intercambiables por gusto.** `Dinero` no es una entidad: no tiene `id`, no vive en su propia tabla — sus columnas terminan dentro de la tabla de quien lo usa (`@Embeddable`/`@Embedded` en JPA). Tampoco es "lo mismo" que un número suelto, aunque por dentro use uno: `double` no sirve para dinero (es punto flotante binario — `0.1 + 0.2` no da exactamente `0.3`, un error de redondeo inaceptable en un monto); `BigDecimal` sí es el tipo correcto para decimales exactos (el que `Dinero` envuelve por dentro, y el que LP2 usa hoy sin envoltorio), pero un `BigDecimal` suelto no sabe que representa dinero — nada le impide quedar negativo, ni sumarse sin querer con un monto de otra moneda. `Dinero` no reinventa la aritmética: agrega la moneda como parte inseparable del valor, y operaciones que rechazan lo que no debería pasar.
-
-**No es un tipo exclusivo de `Producto`, `Venta` o `DetalleVenta` — es reusable en todo el dominio.** Cualquier campo que represente dinero, en cualquier entidad de cualquier módulo, se tipa `Dinero`, nunca un `BigDecimal` suelto — por eso vive en el paquete raíz compartido (`pe.edu.upeu.bomerp`), no dentro de `catalogo` ni de `ventas`. `OrdenCompra.total`/`DetalleOrdenCompra.precioUnitario` (2.3, Figura 4) ya reusan el mismo tipo; un campo nuevo que representara dinero (un límite de crédito, un descuento, un impuesto) seguiría la misma regla, no inventaría su propio `BigDecimal`.
-
-**(Opcional, referencia) Cómo se vería `Dinero` en código, para cuando el equipo decida implementarlo:**
-
-```java
-public record Dinero(BigDecimal monto, String moneda) {
-
-    public Dinero multiplicar(int cantidad) {
-        return new Dinero(monto.multiply(BigDecimal.valueOf(cantidad)), moneda);
-    }
-
-    public Dinero sumar(Dinero otro) {
-        if (!moneda.equals(otro.moneda)) {
-            throw new IllegalArgumentException("No se pueden sumar montos en monedas distintas");
-        }
-        return new Dinero(monto.add(otro.monto), moneda);
-    }
-}
-```
-
-Un `record` de Java: inmutable, con igualdad por valor (2.6) — `multiplicar()` devuelve un `Dinero` nuevo en vez de modificar el existente, y es lo que permitiría escribir `DetalleVenta.subtotal()` como `precioUnitario.multiplicar(cantidad)`. Esta sesión no exige implementarlo, solo modelarlo: LP2 (S1-S5) sigue representando `precio`/`total`/`precioUnitario` con `BigDecimal` suelto — introducir `Dinero` es un refactor pendiente, no un requisito de esta sesión de diseño (ver Tabla 6, 3.7). Queda aquí como referencia para el día en que sí se aplique, no como parte de lo evaluado hoy.
-
-**El patrón detrás de `Dinero`, si alguna vez se implementa completo:** un objeto de valor que representa dinero no es una idea suelta — tiene nombre propio, el patrón **Money**, publicado originalmente en 2002 (Fowler, 2024). Además de restringir la suma solo entre la misma moneda (ya presente arriba), el patrón agrega una operación adicional que un `BigDecimal` suelto nunca resuelve por sí solo: `allocate()`, repartir un monto entre varias partes sin perder ni inventar céntimos por redondeo (por ejemplo, dividir S/ 0.05 al 50%/50% entre dos cuentas no da exactamente la mitad a cada una — el patrón decide a cuál de las dos le toca el céntimo sobrante). No es contenido de esta sesión; se nombra para que quien implemente `Dinero` en LP2 sepa que no está resolviendo el problema desde cero.
 
 ### 2.3 Operaciones de clase
 
@@ -159,7 +131,9 @@ Una **operación** es un comportamiento que la propia clase ejecuta para protege
 
 Esta decisión ya se anticipó en S6 (2.8, diseño táctico): un modelo donde las entidades solo tienen atributos y toda la lógica vive afuera, en una capa de "servicio", es un **Anemic Domain Model** — funciona, pero deja a la entidad sin poder proteger sus propias reglas. `Venta.anular()`, `Venta.calcularTotal()` y `Producto.descontarStock(cantidad)` son operaciones reales de esta sesión, no solo getters/setters.
 
-**Figura 4. Operaciones de clase, con un ejemplo de otro módulo de BomERP (`compras`)**
+#### 2.3.1 Operaciones de entidad
+
+**Figura 4. Operaciones de entidad, con un ejemplo de otro módulo de BomERP (`compras`)**
 
 ```mermaid
 classDiagram
@@ -188,28 +162,65 @@ classDiagram
 
 `calcularTotal()` (abajo) necesita recorrer `detalles` — y eso solo es válido porque el diagrama ya lo declara explícitamente, con una composición real (`*--`, `1` a `1..*`) hacia `DetalleOrdenCompra`. Ninguna entidad accede "porque sí" a los datos de otra: si `OrdenCompra` no tuviera esa relación dibujada, `calcularTotal()` no tendría ningún `detalles` que recorrer — el código nunca inventa una relación que el modelo no declaró. Por qué esta relación en concreto es composición y no agregación (la prueba de tres partes aplicada) se explica recién en 2.5; aquí se muestra ya resuelta, porque esta sección la necesita para que `calcularTotal()` tenga sentido.
 
-`Dinero` también aparece en este diagrama, con dependencia (`..>`), no asociación — es el mismo objeto de valor ya explicado arriba (2.2): `total` y `precioUnitario` lo usan como tipo, sin que eso sea una relación estructural con multiplicidad propia.
-
 "Registrar orden de compra" no aparece como operación de `OrdenCompra`: crear la instancia es responsabilidad de un servicio de aplicación externo, no de la entidad todavía inexistente. `aprobar()` y `calcularTotal()`, en cambio, sí son operaciones reales — no solo firmas vacías, cada una protege una regla concreta:
 
 ```java
-public void aprobar() {
-    if (estado != EstadoOrdenCompra.PENDIENTE) {
-        throw new IllegalStateException("Solo una orden PENDIENTE puede aprobarse");
-    }
-    this.estado = EstadoOrdenCompra.APROBADA;
-}
+public class OrdenCompra {
 
-public void calcularTotal() {
-    Dinero acumulado = null;
-    for (DetalleOrdenCompra detalle : detalles) {
-        acumulado = (acumulado == null) ? detalle.subtotal() : acumulado.sumar(detalle.subtotal());
+    private EstadoOrdenCompra estado;
+    private Dinero total;
+    private final List<DetalleOrdenCompra> detalles = new ArrayList<>();
+
+    public void aprobar() {
+        if (estado != EstadoOrdenCompra.PENDIENTE) {
+            throw new IllegalStateException("Solo una orden PENDIENTE puede aprobarse");
+        }
+        this.estado = EstadoOrdenCompra.APROBADA;
     }
-    this.total = acumulado;
+
+    public void calcularTotal() {
+        Dinero acumulado = null;
+        for (DetalleOrdenCompra detalle : detalles) {
+            acumulado = (acumulado == null) ? detalle.subtotal() : acumulado.sumar(detalle.subtotal());
+        }
+        this.total = acumulado;
+    }
 }
 ```
 
-Java real, no pseudocódigo — ambos métodos compilarían dentro de la clase `OrdenCompra` una vez que exista `EstadoOrdenCompra` (enum, declarado igual que `EstadoVenta`) y `DetalleOrdenCompra` (arriba). `aprobar()` protege su propia transición de estado (mismo criterio que `Venta.anular()`, S7 2.3); `calcularTotal()` recorre sus propios `detalles` y delega la suma en `Dinero.sumar()` (3.2) — ninguna de las dos necesita que un servicio externo le lea los atributos uno por uno.
+Java real, no pseudocódigo — la clase compilaría una vez que exista `EstadoOrdenCompra` (enum, declarado igual que `EstadoVenta`) y `DetalleOrdenCompra` (arriba). El campo `detalles` es la traducción directa a código de la composición `OrdenCompra "1" *-- "1..*" DetalleOrdenCompra` de la Figura 4 — no aparece dibujado como atributo dentro de la caja (la caja solo dibuja `id`/`estado`/`total`), porque en UML una asociación con multiplicidad *es* el atributo; dibujarlo otra vez dentro de la clase sería redundante. `aprobar()` protege su propia transición de estado (mismo criterio que `Venta.anular()`, arriba); `calcularTotal()` recorre sus propios `detalles` y delega la suma en `Dinero.sumar()` (2.3.2, abajo) — ninguna de las dos necesita que un servicio externo le lea los atributos uno por uno. Los métodos que agregan y quitan elementos de `detalles` (`agregarDetalle()`/`quitarDetalle()`) se muestran en 2.5, junto con la razón de ciclo de vida que los justifica.
+
+#### 2.3.2 Operaciones de objeto de valor
+
+`Dinero` también aparece en la Figura 4, con dependencia (`..>`), no asociación: `total` y `precioUnitario` lo usan como tipo, sin que eso sea una relación estructural con multiplicidad propia. Es el objeto de valor que S6 (2.6) ya había identificado — no aparece como una entidad más en Tabla 2 (3.2), aparece como el *tipo* de `precio`, `total` y `precioUnitario`.
+
+**¿Entidad, `double`, `BigDecimal` o `Dinero`? No son lo mismo, ni intercambiables por gusto.** `Dinero` no es una entidad: no tiene `id`, no vive en su propia tabla — sus columnas terminan dentro de la tabla de quien lo usa (`@Embeddable`/`@Embedded` en JPA). Tampoco es "lo mismo" que un número suelto, aunque por dentro use uno: `double` no sirve para dinero (es punto flotante binario — `0.1 + 0.2` no da exactamente `0.3`, un error de redondeo inaceptable en un monto); `BigDecimal` sí es el tipo correcto para decimales exactos (el que `Dinero` envuelve por dentro, y el que LP2 usa hoy sin envoltorio), pero un `BigDecimal` suelto no sabe que representa dinero — nada le impide quedar negativo, ni sumarse sin querer con un monto de otra moneda. `Dinero` no reinventa la aritmética: agrega la moneda como parte inseparable del valor, y operaciones que rechazan lo que no debería pasar — la misma idea de *Information Expert* de 2.3.1, aplicada a un objeto de valor en vez de a una entidad: aquí no hay ningún servicio candidato a hacerle el trabajo, `Dinero` no tiene repositorio ni identidad que alguien externo pudiera consultar.
+
+**No es un tipo exclusivo de `Producto`, `Venta` o `DetalleVenta` — es reusable en todo el dominio.** Cualquier campo que represente dinero, en cualquier entidad de cualquier módulo, se tipa `Dinero`, nunca un `BigDecimal` suelto — por eso vive en el paquete raíz compartido (`pe.edu.upeu.bomerp`), no dentro de `catalogo` ni de `ventas`. `OrdenCompra.total`/`DetalleOrdenCompra.precioUnitario` (2.3.1, arriba) ya reusan el mismo tipo; un campo nuevo que representara dinero (un límite de crédito, un descuento, un impuesto) seguiría la misma regla, no inventaría su propio `BigDecimal`.
+
+**(Opcional, referencia) Cómo se vería `Dinero` en código, para cuando el equipo decida implementarlo:**
+
+```java
+public record Dinero(BigDecimal monto, String moneda) {
+
+    public Dinero multiplicar(int cantidad) {
+        return new Dinero(monto.multiply(BigDecimal.valueOf(cantidad)), moneda);
+    }
+
+    public Dinero sumar(Dinero otro) {
+        if (!moneda.equals(otro.moneda)) {
+            throw new IllegalArgumentException("No se pueden sumar montos en monedas distintas");
+        }
+        return new Dinero(monto.add(otro.monto), moneda);
+    }
+}
+```
+
+Un `record` de Java: inmutable, con igualdad por valor (2.6) — `multiplicar()` devuelve un `Dinero` nuevo en vez de modificar el existente, y es lo que permite escribir `DetalleOrdenCompra.subtotal()`/`DetalleVenta.subtotal()` como `precioUnitario.multiplicar(cantidad)`. Esta sesión no exige implementarlo, solo modelarlo: LP2 (S1-S5) sigue representando `precio`/`total`/`precioUnitario` con `BigDecimal` suelto — introducir `Dinero` es un refactor pendiente, no un requisito de esta sesión de diseño (ver Tabla 6, 3.7). Queda aquí como referencia para el día en que sí se aplique, no como parte de lo evaluado hoy.
+
+**El patrón detrás de `Dinero`, si alguna vez se implementa completo:** un objeto de valor que representa dinero no es una idea suelta — tiene nombre propio, el patrón **Money**, publicado originalmente en 2002 (Fowler, 2024). Además de restringir la suma solo entre la misma moneda (ya presente arriba), el patrón agrega una operación adicional que un `BigDecimal` suelto nunca resuelve por sí solo: `allocate()`, repartir un monto entre varias partes sin perder ni inventar céntimos por redondeo (por ejemplo, dividir S/ 0.05 al 50%/50% entre dos cuentas no da exactamente la mitad a cada una — el patrón decide a cuál de las dos le toca el céntimo sobrante). No es contenido de esta sesión; se nombra para que quien implemente `Dinero` en LP2 sepa que no está resolviendo el problema desde cero.
+
+#### 2.3.3 Operaciones de servicio: delegar, no duplicar
 
 **¿`OrdenCompraService` no necesitaría entonces un método `aprobar()` también? Sí — pero no es el mismo trabajo duplicado.** Que `aprobar()` sea una operación de la entidad no elimina el servicio de aplicación: el servicio sigue existiendo para todo lo que la entidad no debe saber hacer (buscar la orden por id en el repositorio, abrir la transacción, guardar el cambio, devolver un DTO al controlador). La diferencia está en qué hace cada método por dentro:
 
@@ -232,6 +243,8 @@ public void calcularTotal(Long id) {
 ```
 
 El servicio **delega** en `OrdenCompra.aprobar()`/`calcularTotal()` la única parte que de verdad es una regla de negocio (¿puede aprobarse desde este estado?, ¿cuánto suma cada `detalle`?); él mismo nunca reimplementa esas validaciones ni esa suma. Los dos métodos del servicio son idénticos en estructura a propósito — buscar, delegar, guardar —, porque esa es exactamente la responsabilidad fija del servicio, sin importar qué regla concreta le toque a la entidad. El error que sí sería un problema — y que recaería otra vez en Anemic Domain Model — es que `OrdenCompraService` cambiara `orden.estado` o `orden.total` directamente (`orden.setEstado(APROBADA)`, `orden.setTotal(suma)`) sin pasar por `orden.aprobar()`/`orden.calcularTotal()`: ahí la regla quedaría solo en el servicio, y cualquier otro punto del código que también cambie esos campos podría saltársela.
+
+#### 2.3.4 Qué casos de uso no se vuelven una operación
 
 **No todo caso de uso frecuente se vuelve una operación de entidad — hay que revisarlos uno por uno.** S6 (2.5) ya había identificado los casos de uso relevantes de `catalogo` y `ventas`; *Information Expert* decide, caso por caso, si la responsabilidad cae en una entidad o en otra capa (un servicio de aplicación, o una consulta de repositorio, S05 de LP2):
 
@@ -261,7 +274,7 @@ classDiagram
 
 **¿Y la flecha de dependencia (`..>`)? No es lo que hace falta aquí.** La dependencia en UML es una relación débil y temporal — una clase que usa a otra de paso (por ejemplo, como tipo de un parámetro), sin guardar ninguna referencia ni tener multiplicidad propia (OMG, 2017). `OrdenCompra` y `Proveedor` no es ese caso: es una relación estructural, permanente, con multiplicidad real — una asociación, no una dependencia. Lo que responde "quién depende de quién para existir" no es el tipo de flecha, es el **mínimo** de la multiplicidad: `Proveedor` tiene mínimo `0` del lado de `OrdenCompra` (puede existir sin ninguna orden), mientras que `OrdenCompra` tiene mínimo `1` del lado de `Proveedor` (no puede existir sin exactamente un proveedor) — por eso `Proveedor` existe primero.
 
-Aplicado al dominio que sí se modela en profundidad esta unidad (Figura 8, 3.6): `Categoria "1" -- "0..*" Producto` dice algo que el esquema de S6 nunca dijo — una categoría puede tener cero productos, y un producto pertenece a exactamente una categoría, nunca a varias. `Venta -- Cliente` y `DetalleVenta -- Producto` siguen el mismo criterio que `OrdenCompra -- Proveedor`: la flecha va del lado que guarda la llave foránea (`Venta`, `DetalleVenta`) hacia el lado referenciado (`Cliente`, `Producto`) — aplicado a una regla real, la de S6 (2.4), "una venta debe estar asociada a un cliente registrado".
+Aplicado al dominio que sí se modela en profundidad esta unidad (Figura 9, 3.6): `Categoria "1" -- "0..*" Producto` dice algo que el esquema de S6 nunca dijo — una categoría puede tener cero productos, y un producto pertenece a exactamente una categoría, nunca a varias. `Venta -- Cliente` y `DetalleVenta -- Producto` siguen el mismo criterio que `OrdenCompra -- Proveedor`: la flecha va del lado que guarda la llave foránea (`Venta`, `DetalleVenta`) hacia el lado referenciado (`Cliente`, `Producto`) — aplicado a una regla real, la de S6 (2.4), "una venta debe estar asociada a un cliente registrado".
 
 **Error frecuente**: dejar una relación sin multiplicidad, "porque ya se entiende". Sin ese dato explícito, el equipo de LP2 no sabe si debe validar que una venta tenga al menos un detalle (`1..*`) o si acepta ventas vacías (`0..*`) — exactamente el problema del caso de 1.6.1.
 
@@ -279,7 +292,70 @@ classDiagram
 
 **Composición** (`OrdenCompra *-- DetalleOrdenCompra`, módulo `compras`): un detalle de orden de compra no tiene sentido fuera de su orden — nadie lo traslada a otra orden; si la orden se elimina, el detalle deja de existir con ella. Es exactamente el mismo patrón que `Venta`-`DetalleVenta` (ver abajo), aplicado a un módulo distinto. **Agregación** (`Almacen o-- Producto`, módulo `inventario`): un producto puede moverse de un almacén a otro sin perder su identidad, y si un almacén cierra, el negocio real espera que sus productos se trasladen a otro, no que desaparezcan con él.
 
-El mismo criterio, aplicado al dominio que sí se modela en profundidad esta unidad (Figura 8, 3.6): `Venta "1" *-- "1..*" DetalleVenta` es composición, mismo caso que `OrdenCompra`-`DetalleOrdenCompra` — la prueba de tres partes de S6 ya concluyó que un `DetalleVenta` no tiene sentido sin su `Venta`. `Categoria "1" o-- "0..*" Producto` es agregación, mismo caso que `Almacen`-`Producto` — un `Producto` puede recategorizarse sin perder su identidad, y si una `Categoria` se elimina, el negocio real espera que sus productos se reasignen, no que desaparezcan con ella.
+El mismo criterio, aplicado al dominio que sí se modela en profundidad esta unidad (Figura 9, 3.6): `Venta "1" *-- "1..*" DetalleVenta` es composición, mismo caso que `OrdenCompra`-`DetalleOrdenCompra` — la prueba de tres partes de S6 ya concluyó que un `DetalleVenta` no tiene sentido sin su `Venta`. `Categoria "1" o-- "0..*" Producto` es agregación, mismo caso que `Almacen`-`Producto` — un `Producto` puede recategorizarse sin perder su identidad, y si una `Categoria` se elimina, el negocio real espera que sus productos se reasignen, no que desaparezcan con ella.
+
+**La diferencia no es solo del diagrama — el código también la hace cumplir.** En una composición real, nadie fuera del todo debería poder crear la parte por su cuenta. Los dos métodos siguientes se agregan a la misma clase `OrdenCompra` ya declarada en 2.3.1 (arriba), que ya expone el campo `detalles` que aquí se llena y se vacía:
+
+```java
+public void agregarDetalle(Integer cantidad, Dinero precioUnitario) {
+    detalles.add(new DetalleOrdenCompra(this, cantidad, precioUnitario));
+}
+
+public void quitarDetalle(DetalleOrdenCompra detalle) {
+    detalles.remove(detalle);   // el detalle deja de existir aquí, no se reasigna a otra orden
+}
+```
+
+```java
+public class DetalleOrdenCompra {
+
+    private final OrdenCompra orden;
+    private Integer cantidad;
+    private Dinero precioUnitario;
+
+    DetalleOrdenCompra(OrdenCompra orden, Integer cantidad, Dinero precioUnitario) {
+        this.orden = orden;
+        this.cantidad = cantidad;
+        this.precioUnitario = precioUnitario;
+    }
+}
+```
+
+`cantidad` y `precioUnitario` son los mismos atributos que ya dibuja la Figura 4 para `DetalleOrdenCompra`; `orden` es la traducción a código de esa misma composición, ahora leída desde el lado de la parte — el mismo criterio de 2.4: quien guarda la referencia hacia el otro extremo de la relación. El constructor de `DetalleOrdenCompra` no es `public`: solo `OrdenCompra.agregarDetalle()` (mismo paquete) puede crear uno, y solo `quitarDetalle()` puede hacerlo desaparecer — nadie más lo instancia ni lo mueve a otra orden.
+
+**¿Y `OrdenCompraService`, no debería tener también un `agregarDetalle()`? Sí — el mismo criterio de 2.3.3, no uno nuevo.** Buscar la orden por id, abrir la transacción y guardar el cambio sigue siendo trabajo del servicio, no de la entidad; lo único que no se mueve al servicio es la protección de la composición en sí (el constructor no público), porque si el servicio construyera el `DetalleOrdenCompra` directamente ya no habría ninguna garantía de que siempre pase por `OrdenCompra`:
+
+```java
+@Transactional
+public void agregarDetalle(Long ordenId, Integer cantidad, Dinero precioUnitario) {
+    OrdenCompra orden = ordenCompraRepository.findById(ordenId)
+            .orElseThrow(() -> new ResourceNotFoundException("Orden no encontrada: " + ordenId));
+    orden.agregarDetalle(cantidad, precioUnitario);   // delega la composición a quien la protege
+    ordenCompraRepository.save(orden);
+}
+```
+
+Misma estructura que `aprobar(Long id)`/`calcularTotal(Long id)` en 2.3.3: buscar, delegar, guardar — el servicio nunca reimplementa la regla de composición, solo la invoca.
+
+La agregación, en cambio, nunca restringe así el constructor de la parte, porque la parte tiene vida propia:
+
+```java
+public class Almacen {
+
+    private final List<Producto> productos = new ArrayList<>();
+
+    public void recibir(Producto producto) {
+        productos.add(producto);
+    }
+
+    public void trasladar(Producto producto, Almacen destino) {
+        productos.remove(producto);
+        destino.recibir(producto);   // el producto sigue existiendo, solo cambia de almacén
+    }
+}
+```
+
+`Almacen` nunca construye un `Producto` — solo referencia instancias que ya existen (creadas por `catalogo`, S1), y `trasladar()` las mueve sin destruirlas. Esa es la prueba de tres partes de S6 (2.7) escrita en código, no solo en el diagrama.
 
 **Error frecuente**: usar composición por defecto para cualquier relación "contenedor-contenido" sin aplicar la prueba de tres partes. No toda caja dibujada cerca de otra en S6 compone — hay que verificarlo, no asumirlo por cercanía visual.
 
@@ -315,13 +391,78 @@ Es una relación completamente distinta a la asociación de 2.4, aunque ambas se
 
 `inventario` (módulo candidato de S6, 2.2-2.3, todavía sin sesión propia esta unidad) tiene su propio caso de herencia, distinto de `catalogo`/`ventas`: una `Entrada` de mercadería y una `Salida` comparten la misma operación (`aplicar(stockActual)`), pero cada una la resuelve al revés — `Entrada` suma la cantidad al stock actual, `Salida` la resta. Es comportamiento real, no un atributo distinto — exactamente el criterio que justifica modelar herencia en primer lugar (arriba).
 
-Aplicado de nuevo al caso que sí se modela en profundidad esta unidad (Figura 8, 3.6): `Cliente` sigue el mismo criterio — una persona natural se identifica con DNI, una empresa con RUC, documentos distintos que validan contra un sistema externo distinto (RENIEC o SUNAT, ver el modelo C4 de S2). Igual que `aplicar()` cambia de operación aritmética según la subclase, la validación de identidad cambiaría de sistema externo según el tipo de cliente — comportamiento real, no un dato suelto.
+```java
+public abstract class MovimientoStock {
+
+    protected LocalDateTime fecha;
+    protected Integer cantidad;
+
+    public abstract Integer aplicar(Integer stockActual);
+}
+
+public class Entrada extends MovimientoStock {
+
+    private String proveedor;
+
+    @Override
+    public Integer aplicar(Integer stockActual) {
+        return stockActual + cantidad;
+    }
+}
+
+public class Salida extends MovimientoStock {
+
+    private String motivo;
+
+    @Override
+    public Integer aplicar(Integer stockActual) {
+        return stockActual - cantidad;
+    }
+}
+```
+
+`MovimientoStock` es `abstract` en Java igual que en el diagrama: nadie puede escribir `new MovimientoStock(...)`, porque no decide todavía si suma o resta — solo `Entrada` y `Salida` (`extends MovimientoStock`) son instanciables, y cada una está obligada a implementar `aplicar()` (`@Override`) con su propia regla. Es el mismo mecanismo que ya usa `Cliente` en la Figura 9 (abajo): una superclase que no se instancia directamente, dos subclases que sí.
+
+Aplicado de nuevo al caso que sí se modela en profundidad esta unidad (Figura 9, 3.6): `Cliente` sigue el mismo criterio — una persona natural se identifica con DNI, una empresa con RUC, documentos distintos que validan contra un sistema externo distinto (RENIEC o SUNAT, ver el modelo C4 de S2). Igual que `aplicar()` cambia de operación aritmética según la subclase, la validación de identidad cambiaría de sistema externo según el tipo de cliente — comportamiento real, no un dato suelto.
 
 **Error frecuente**: modelar herencia para cada variante posible de un dato (por ejemplo, una subclase por cada método de pago) cuando la única diferencia real es el valor de un atributo, no el comportamiento — eso infla el diagrama sin agregar ninguna regla de negocio nueva.
 
 ### 2.7 Restricciones del modelo de clases
 
 Una **restricción** es una regla que el diagrama no puede expresar solo con multiplicidades — se escribe como texto, entre llaves, junto a la clase o relación que limita (notación OCL simplificada, OMG, 2017). `Producto.stock >= 0` no es una multiplicidad: ninguna relación entre `Producto` y otra clase puede impedir por sí sola que el stock baje de cero.
+
+**Figura 8. Restricciones, con ejemplos de otros módulos de BomERP (`compras`, `inventario`)**
+
+```mermaid
+classDiagram
+    class OrdenCompra {
+        +EstadoOrdenCompra estado
+        +Dinero total
+        +aprobar()
+        +calcularTotal()
+        restricción: estado == PENDIENTE antes de aprobar()
+    }
+    class MovimientoStock {
+        <<abstract>>
+        +Integer cantidad
+        +aplicar(stockActual) Integer
+        restricción: cantidad > 0
+    }
+```
+
+La restricción se escribe como una línea más dentro de la propia caja de la clase, sin el prefijo `+`/`-` de atributo ni `()` de operación — así el lector la distingue de inmediato de lo que la clase *tiene* o *hace*, sin depender de una nota aparte (`note for`) cuyo cuadro de ancho fijo trunca texto largo en el sitio publicado (mismo problema ya evitado en la Figura 9, 3.6). `OrdenCompra.estado == PENDIENTE antes de aprobar()` es la misma regla que ya protege el código de 2.3.1 (`aprobar()` lanza `IllegalStateException` si el estado no es `PENDIENTE`); `MovimientoStock.cantidad > 0` es una restricción nueva, que ninguna multiplicidad de la Figura 7 podía expresar — nada en `MovimientoStock <|-- Entrada` dice que `cantidad` no puede ser cero o negativa:
+
+```java
+public MovimientoStock(LocalDateTime fecha, Integer cantidad) {
+    if (cantidad == null || cantidad <= 0) {
+        throw new IllegalArgumentException("La cantidad de un movimiento debe ser mayor a cero");
+    }
+    this.fecha = fecha;
+    this.cantidad = cantidad;
+}
+```
+
+El constructor de `MovimientoStock` (heredado por `Entrada` y `Salida`, 2.6) es el lugar correcto para esta restricción: se cumple sin excepción para cualquier subclase futura, porque ninguna puede saltarse el constructor de su propia superclase.
 
 Las reglas de negocio que S6 (2.4) ya redactó en prosa ("el total de una venta debe cuadrar con la suma de sus detalles", "solo una venta en estado `REGISTRADA` puede anularse") son exactamente las restricciones que esta sesión formaliza junto al diagrama — no se inventan reglas nuevas, se les da la forma que un diagrama de clases puede documentar.
 
@@ -349,7 +490,7 @@ Retoma el esquema inicial: `Categoria`, `Producto` (módulo `catalogo`); `Venta`
 | `Venta` | `id: Long`, `fecha: LocalDateTime`, `estado: EstadoVenta`, `total: Dinero` | `calcularTotal()`, `anular()` |
 | `DetalleVenta` | `id: Long`, `cantidad: Integer`, `precioUnitario: Dinero` | `subtotal(): Dinero` |
 
-`precio`, `total` y `precioUnitario` usan `Dinero` (monto + moneda) como tipo, no `BigDecimal` suelto — el objeto de valor ya explicado en 2.2 (entidad vs. `double`/`BigDecimal`/`Dinero`, el `record` completo y el patrón Money), sin repetirlo aquí dos veces.
+`precio`, `total` y `precioUnitario` usan `Dinero` (monto + moneda) como tipo, no `BigDecimal` suelto — el objeto de valor ya explicado en 2.3 (entidad vs. `double`/`BigDecimal`/`Dinero`, el `record` completo y el patrón Money), sin repetirlo aquí dos veces.
 
 ### 3.3 Definir relaciones, multiplicidades, agregación y composición
 
@@ -397,7 +538,7 @@ La validación contra RENIEC/SUNAT no se implementa en esta sesión — es conte
 
 **Producto del paso:** el diagrama de clases del dominio de BomERP, con todo lo construido en 3.2-3.5 en un solo lugar.
 
-**Figura 8. Diagrama de clases del dominio de BomERP**
+**Figura 9. Diagrama de clases del dominio de BomERP**
 
 ```mermaid
 classDiagram
@@ -460,7 +601,7 @@ Las restricciones del modelo (`Venta.total`, `Producto.stock`, las precondicione
 
 Este diagrama es el que se ajusta y sustenta en 4.1 (trabajo autónomo) sobre el dominio propio de cada equipo — no una plantilla a copiar, sino el resultado esperado de aplicar 3.2-3.5 sobre entidades distintas.
 
-**Relación con el modelo C4 (S2): por qué este diagrama no vive dentro de C4, sino junto a él.** S2 (2.6, Figura 6) ya construyó la Vista de código de C4, con clases reales de LP2 (`ProductoService`/`ProductoServiceImpl`/`ProductoRepository`, dentro de `catalogo`). El criterio que separa esa vista de la de hoy **no es que unas sean entidades y otras clases de servicio** — una entidad JPA (`Categoria`, `Producto`) es código real tanto como un `ServiceImpl`, y un Código C4 de `catalogo` bien podría incluir sus entidades igual que sus servicios. El criterio real es el **alcance**: C4-código siempre hace zoom a **un solo componente ya elegido en C3** — así lo fija la propia especificación, "Scope: a single component" (Brown, 2024) —, nunca a varios a la vez. La Figura 8 de hoy hace justo lo que un Código C4 no puede hacer: cruza `catalogo`, `ventas` y `clientes` en un mismo diagrama, porque el dominio de negocio no respeta las fronteras de componente que C4 sí exige respetar nivel por nivel. Por eso S2 (2.6) ya llamaba a esto "otro artefacto" — no por el tipo de clase que contiene, sino porque ningún diagrama de C4 se dibuja a propósito cruzando varios componentes de C3 al mismo tiempo.
+**Relación con el modelo C4 (S2): por qué este diagrama no vive dentro de C4, sino junto a él.** S2 (2.6, Figura 6) ya construyó la Vista de código de C4, con clases reales de LP2 (`ProductoService`/`ProductoServiceImpl`/`ProductoRepository`, dentro de `catalogo`). El criterio que separa esa vista de la de hoy **no es que unas sean entidades y otras clases de servicio** — una entidad JPA (`Categoria`, `Producto`) es código real tanto como un `ServiceImpl`, y un Código C4 de `catalogo` bien podría incluir sus entidades igual que sus servicios. El criterio real es el **alcance**: C4-código siempre hace zoom a **un solo componente ya elegido en C3** — así lo fija la propia especificación, "Scope: a single component" (Brown, 2024) —, nunca a varios a la vez. La Figura 9 de hoy hace justo lo que un Código C4 no puede hacer: cruza `catalogo`, `ventas` y `clientes` en un mismo diagrama, porque el dominio de negocio no respeta las fronteras de componente que C4 sí exige respetar nivel por nivel. Por eso S2 (2.6) ya llamaba a esto "otro artefacto" — no por el tipo de clase que contiene, sino porque ningún diagrama de C4 se dibuja a propósito cruzando varios componentes de C3 al mismo tiempo.
 
 **Entonces, ¿dónde vive? En UML y en Domain-Driven Design — no es un artefacto huérfano.** Que no sea Código C4 no lo deja sin marco: es un **diagrama de clases UML**, uno de los tipos de diagrama estándar de la especificación (OMG, 2017), y es, específicamente, el **modelo de dominio** de Domain-Driven Design (Evans, 2003; Vernon, 2013 — ya citados en S6) — el artefacto que DDD, a propósito, sí dibuja cruzando los módulos de negocio que hagan falta, porque su trabajo es mostrar cómo se relaciona el dominio completo, no cómo se despliega o se organiza en componentes de software. C4 y UML/DDD son marcos **complementarios, no uno dentro del otro**: C4 documenta cómo el sistema está construido y desplegado (contenedores, componentes, código); UML/DDD documenta qué conceptos de negocio existen y cómo se relacionan, sin importar en qué componente termine viviendo cada uno. Un mismo proyecto usa ambos a la vez, cada uno para la pregunta que sí responde.
 
@@ -477,9 +618,9 @@ lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/
     └── entity/Cliente.java       # candidato, sin sesión propia asignada
 ```
 
-Ninguna carpeta del código junta estas cinco clases en un solo lugar — `Categoria`/`Producto` viven en `catalogo`, `Venta`/`DetalleVenta` en `ventas`, y `Cliente` ni siquiera tiene carpeta todavía. La Figura 8 no es una carpeta ni una clase Java: es una **vista** que junta clases de varios módulos a la vez, precisamente porque su trabajo (mostrar el dominio completo) no es el mismo trabajo que organizar el código en componentes desplegables — por eso puede cruzar módulos sin que eso rompa ninguna regla de Spring Modulith ni de C4; simplemente no es un artefacto del mismo tipo que esas reglas gobiernan.
+Ninguna carpeta del código junta estas cinco clases en un solo lugar — `Categoria`/`Producto` viven en `catalogo`, `Venta`/`DetalleVenta` en `ventas`, y `Cliente` ni siquiera tiene carpeta todavía. La Figura 9 no es una carpeta ni una clase Java: es una **vista** que junta clases de varios módulos a la vez, precisamente porque su trabajo (mostrar el dominio completo) no es el mismo trabajo que organizar el código en componentes desplegables — por eso puede cruzar módulos sin que eso rompa ninguna regla de Spring Modulith ni de C4; simplemente no es un artefacto del mismo tipo que esas reglas gobiernan.
 
-**El árbol de arriba, leído con los mismos lentes de C4 (S2): mezcla dos niveles de zoom a la vez, sin decirlo.** `catalogo/`, `ventas/` y `clientes/` (las carpetas de primer nivel) **son C3**: las mismas cajas que ya dibujó la Figura 5 de S2 — cada módulo Modulith es, físicamente, uno de esos componentes. Desde `entity/` hacia adentro (las clases `.java`) **es C4-código**, el nivel que hace zoom a un solo componente ya elegido — el mismo nivel que S2 (2.6, Figura 6) ya mostró para `catalogo`, solo que ahí con la capa `service`, y aquí con la capa `entity`. No es una carpeta "fuera" de C1-C4: es C3 y C4 vistos juntos, porque un sistema de archivos real no separa esos niveles como sí lo hace un diagrama. Lo que sigue quedando fuera de ambos es la Figura 8 completa: ni C3 (que no abre las cajas) ni C4 (que abre una sola) dibujan tres componentes a la vez en el mismo diagrama.
+**El árbol de arriba, leído con los mismos lentes de C4 (S2): mezcla dos niveles de zoom a la vez, sin decirlo.** `catalogo/`, `ventas/` y `clientes/` (las carpetas de primer nivel) **son C3**: las mismas cajas que ya dibujó la Figura 5 de S2 — cada módulo Modulith es, físicamente, uno de esos componentes. Desde `entity/` hacia adentro (las clases `.java`) **es C4-código**, el nivel que hace zoom a un solo componente ya elegido — el mismo nivel que S2 (2.6, Figura 6) ya mostró para `catalogo`, solo que ahí con la capa `service`, y aquí con la capa `entity`. No es una carpeta "fuera" de C1-C4: es C3 y C4 vistos juntos, porque un sistema de archivos real no separa esos niveles como sí lo hace un diagrama. Lo que sigue quedando fuera de ambos es la Figura 9 completa: ni C3 (que no abre las cajas) ni C4 (que abre una sola) dibujan tres componentes a la vez en el mismo diagrama.
 
 ### 3.7 Trazar con BD2 y LP2
 
