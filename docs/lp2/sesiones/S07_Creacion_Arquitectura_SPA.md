@@ -400,9 +400,12 @@ export interface Categoria {
 
 **Producto del paso:** la URL del backend declarada en un solo lugar, no repetida dentro de cada servicio HTTP.
 
-**Sin archivo de ambientes**, cada servicio HTTP escribiría la URL completa del backend a mano, repetida en cada método:
+Antes de crear ningún archivo, una aclaración: el bloque de código siguiente **no se crea, es solo para entender el problema que este paso evita** — nada de esta guía pide construir un `CategoriaService` así. Es la forma en que se vería *si* no existiera un archivo de ambientes, cada servicio HTTP escribiendo la URL completa del backend a mano, repetida en cada método:
+
+<div style="background-color:#ffffff; border:1px solid #d0d0d0; border-radius:4px; padding:0.75rem 1rem;" markdown="1">
 
 ```ts
+// Ejemplo del problema — no crear este archivo.
 @Injectable({ providedIn: 'root' })
 export class CategoriaService {
   private readonly http = inject(HttpClient);
@@ -417,7 +420,11 @@ export class CategoriaService {
 }
 ```
 
-El problema no es solo la repetición dentro de `CategoriaService`: `http://localhost:8080` volvería a escribirse, idéntico, en `ProductoService`, `VentaService` y cualquier otro servicio de funcionalidad futuro. El día que el backend cambie de host o puerto (por ejemplo, al desplegar en producción, S13), habría que buscar y corregir esa cadena en cada archivo, uno por uno — un error de tipeo en cualquiera de ellos apunta silenciosamente al backend equivocado, sin que TypeScript pueda avisar nada (es un `string`, no una referencia).
+</div>
+
+El problema no es solo la repetición dentro de un mismo servicio: `http://localhost:8080` volvería a escribirse, idéntico, en `ProductoService`, `VentaService` y cualquier otro servicio de funcionalidad futuro. El día que el backend cambie de host o puerto (por ejemplo, al desplegar en producción, S13), habría que buscar y corregir esa cadena en cada archivo, uno por uno — un error de tipeo en cualquiera de ellos apunta silenciosamente al backend equivocado, sin que TypeScript pueda avisar nada (es un `string`, no una referencia).
+
+Los archivos que sí vas a crear en este paso son los tres que siguen.
 
 **Con archivo de ambientes** (lo que esta guía construye), la URL vive en un solo lugar, y cada servicio la consume sin conocerla directamente. Agrega `provideHttpClient()` a `app.config.ts` (junto a lo que `ng new` ya generó):
 
