@@ -249,7 +249,21 @@ Desde `bomerp-frontend/`, genera el componente con la CLI en vez de crear los ar
 ng generate component core/layout
 ```
 
-Esto crea `core/layout/layout.ts`, `layout.html`, `layout.css` y `layout.spec.ts`, ya registrados como standalone — sin `NgModule` que editar y sin el sufijo `Component` en el nombre de archivo ni en la clase (`Layout`, no `LayoutComponent`): desde Angular 20, la CLI ya no agrega ese sufijo por defecto (se retoma en 3.9, con `CategoriaService`). Reemplaza el contenido de los tres archivos generados:
+Esto crea `core/layout/layout.ts`, `layout.html`, `layout.css` y `layout.spec.ts`, ya registrados como standalone — sin `NgModule` que editar y sin el sufijo `Component` en el nombre de archivo ni en la clase (`Layout`, no `LayoutComponent`): desde Angular 20, la CLI ya no agrega ese sufijo por defecto (se retoma en 3.9, con `CategoriaService`). El `core/layout/layout.ts` que acaba de generar la CLI trae el `@Component` vacío de imports:
+
+```ts
+import { Component } from '@angular/core';
+
+@Component({
+  imports: [],
+  selector: 'app-layout',
+  styleUrl: './layout.css',
+  templateUrl: './layout.html',
+})
+export class Layout {}
+```
+
+Reemplaza el contenido de los tres archivos generados:
 
 **`core/layout/layout.ts`**
 
@@ -265,6 +279,13 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 })
 export class Layout {}
 ```
+
+Dos cambios reales frente a lo que generó la CLI (arriba), ambos por la misma razón — el `layout.html` de abajo usa `routerLink`, `routerLinkActive` y `<router-outlet>`, y al ser un componente standalone nadie los importa por él:
+
+- **Se agrega la línea** `import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';` — sin ella, TypeScript no reconoce esos tres nombres.
+- **`imports: []` pasa a `imports: [RouterOutlet, RouterLink, RouterLinkActive]`** — un standalone component debe declarar en su propio `imports` cada directiva o componente que usa en su plantilla; a diferencia de un `NgModule` (2.2), aquí no hay un lugar central que los registre por todos.
+
+El orden de las propiedades dentro de `@Component({...})` (`selector`, `imports`, `templateUrl`, `styleUrl`) no importa — es un objeto de JavaScript, no una lista con secuencia obligatoria; que la CLI las genere en un orden y este documento las muestre en otro no es un error de ninguno de los dos lados.
 
 **`core/layout/layout.html`**
 
