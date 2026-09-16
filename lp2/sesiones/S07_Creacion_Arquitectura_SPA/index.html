@@ -4081,7 +4081,7 @@
 <p><strong>Nota sobre <code>httpResource()</code>, para no confundirte si lo ves en otro lado.</strong> Angular 22 también estabiliza <code>httpResource()</code> (<code>@angular/common/http</code>, Angular 2026f), una forma más nueva de leer datos que integra la petición directamente con signals — sin <code>subscribe()</code> manual:</p>
 <div class="highlight"><pre><span></span><code><span class="k">protected</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="nx">categorias</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">httpResource</span><span class="o">&lt;</span><span class="nx">Categoria</span><span class="p">[]</span><span class="o">&gt;</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">api</span><span class="p">.</span><span class="nx">buildUrl</span><span class="p">(</span><span class="s1">'/api/v1/categorias'</span><span class="p">));</span>
 </code></pre></div>
-<p>En la plantilla, <code>categorias.value()</code>, <code>categorias.isLoading()</code> y <code>categorias.error()</code> reemplazarían al <code>signal()</code> y al <code>error</code> que <code>CategoriaList</code> construye a mano (3.10). <code>httpResource()</code> existe desde antes (Angular 19.2), pero marcado como experimental; recién en Angular 22 —la versión de esta guía— pasó a ser una API estable, lista para código nuevo. Por eso, si le pides ayuda a una IA para un CRUD en Angular 22, es probable que te proponga esto para el caso de solo lectura (<code>listar()</code>): ya no es una apuesta arriesgada, es una recomendación válida del propio equipo de Angular. Esta guía sigue enseñando <code>HttpClient</code> + <code>subscribe()</code> (3.9-3.10) a propósito, no por desactualizada: es la forma con más años de documentación y respuestas de la comunidad para cuando algo falla, y esta es tu primera sesión de Angular — además, <code>httpResource()</code> es solo para lectura: la propia documentación de Angular advierte explícitamente "avoid using httpResource for mutations like POST or PUT — instead, prefer directly using the underlying HttpClient APIs" (Angular, 2026f) — <code>crear()</code>, <code>actualizar()</code> y <code>eliminar()</code> siguen siendo <code>HttpClient</code> normal pase lo que pase, así que <code>httpResource()</code> tampoco resuelve todo el CRUD por sí solo.</p>
+<p>En la plantilla, <code>categorias.value()</code>, <code>categorias.isLoading()</code> y <code>categorias.error()</code> reemplazarían al <code>signal()</code> y al <code>error</code> que <code>CategoriaList</code> construye a mano (3.10). <code>httpResource()</code> existe desde antes (Angular 19.2), pero marcado como experimental; recién en Angular 22 —la versión de esta guía— pasó a ser una API estable, lista para código nuevo. Por eso, si le pides ayuda a una IA para un CRUD en Angular 22, es probable que te proponga esto para el caso de solo lectura (<code>listar()</code>): ya no es una apuesta arriesgada, es una recomendación válida del propio equipo de Angular. Esta guía sigue enseñando <code>HttpClient</code> + <code>subscribe()</code> (3.9-3.10) a propósito, no por desactualizada: es la forma con más años de documentación y respuestas de la comunidad para cuando algo falla, y esta es tu primera sesión de Angular — además, <code>httpResource()</code> es solo para lectura: la propia documentación de Angular advierte explícitamente "avoid using httpResource for mutations like POST or PUT — instead, prefer directly using the underlying HttpClient APIs" (Angular, 2026e) — <code>crear()</code>, <code>actualizar()</code> y <code>eliminar()</code> siguen siendo <code>HttpClient</code> normal pase lo que pase, así que <code>httpResource()</code> tampoco resuelve todo el CRUD por sí solo.</p>
 <h3 id="27-crud-de-una-tabla-independiente">2.7 CRUD de una tabla independiente<a class="headerlink" href="#27-crud-de-una-tabla-independiente" title="Permanent link">&para;</a></h3>
 <p>Una <strong>tabla independiente</strong> no necesita ningún otro dato para poder crearse o mostrarse — no depende de seleccionar antes un registro de otra entidad. <code>Categoria</code> (S1-S3) es exactamente ese caso: no lleva ninguna llave foránea hacia otra tabla. Una <strong>tabla dependiente</strong>, en cambio, sí necesita eso — <code>Producto</code> depende de <code>Categoria</code> (llave foránea <code>ID_CATEGORIA</code>, S1/S3), así que su formulario necesita, además, una lista desplegable con las categorías existentes para poder elegir una.</p>
 <p>Esta sesión construye el caso independiente (<code>Categoria</code>); el caso dependiente (<code>Producto</code>, con su selector de categoría) es exactamente el contenido de S8 — no una repetición de esta sesión, sino el mismo patrón con un problema nuevo: qué hacer cuando el formulario necesita datos de otra entidad antes de poder guardar.</p>
@@ -4176,7 +4176,12 @@ ng<span class="w"> </span>serve
 <p>El orden de las propiedades dentro de <code>@Component({...})</code> (<code>selector</code>, <code>imports</code>, <code>templateUrl</code>, <code>styleUrl</code>) no importa — es un objeto de JavaScript, no una lista con secuencia obligatoria; que la CLI las genere en un orden y este documento las muestre en otro no es un error de ninguno de los dos lados.</p>
 <p><strong><code>core/layout/layout.html</code></strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">header</span> <span class="na">class</span><span class="o">=</span><span class="s">"header"</span><span class="p">&gt;</span>
-  <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>BomERP<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">a</span> <span class="na">routerLink</span><span class="o">=</span><span class="s">"/"</span> <span class="na">class</span><span class="o">=</span><span class="s">"home-link"</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">img</span> <span class="na">src</span><span class="o">=</span><span class="s">"favicon.ico"</span> <span class="na">alt</span><span class="o">=</span><span class="s">""</span> <span class="na">height</span><span class="o">=</span><span class="s">"30"</span> <span class="p">/&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
+    BomERP
+  <span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
 <span class="p">&lt;/</span><span class="nt">header</span><span class="p">&gt;</span>
 
 <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"body"</span><span class="p">&gt;</span>
@@ -4208,15 +4213,30 @@ ng<span class="w"> </span>serve
 <span class="w">  </span><span class="k">flex</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
 <span class="w">  </span><span class="k">padding</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="kt">rem</span><span class="p">;</span>
 <span class="p">}</span>
+
+<span class="p">.</span><span class="nc">home-link</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">display</span><span class="p">:</span><span class="w"> </span><span class="kc">inline-flex</span><span class="p">;</span>
+<span class="w">  </span><span class="k">align-items</span><span class="p">:</span><span class="w"> </span><span class="kc">center</span><span class="p">;</span>
+<span class="w">  </span><span class="k">vertical-align</span><span class="p">:</span><span class="w"> </span><span class="kc">middle</span><span class="p">;</span>
+<span class="p">}</span>
 </code></pre></div>
-<p><code>routerLinkActive="active"</code> resalta el enlace de la pantalla que está activa en ese momento — un detalle pequeño, pero es lo que le permite a quien usa la aplicación saber en qué sección está sin leer la URL.</p>
+<p><code>routerLinkActive="active"</code> resalta el enlace de la pantalla que está activa en ese momento — un detalle pequeño, pero es lo que le permite a quien usa la aplicación saber en qué sección está sin leer la URL. El ícono junto a "BomERP" ahora es un enlace a <code>/</code> — la convención habitual de cualquier aplicación web para volver al inicio desde cualquier pantalla, sin depender de un botón "Atrás" del navegador. Ese enlace no funciona todavía: <code>/</code> recién tiene una pantalla real (<code>Inicio</code>) en 3.6.</p>
+<p><strong>Por qué <code>favicon.ico</code> y no un ícono nuevo.</strong> <code>ng new</code> (3.3) ya genera <code>public/favicon.ico</code> — la CLI copia todo lo que hay en <code>public/</code> a la raíz del sitio compilado, por eso <code>favicon.ico</code> (sin ninguna ruta delante) alcanza para encontrarlo. Reusar un archivo que el proyecto ya tiene evita agregar una dependencia nueva (Font Awesome, Material Icons) o escribir un ícono a mano — infraestructura de más para un solo ícono (mismo criterio de 2.4, sin paquetes "por si acaso").</p>
 <p>Reemplaza <code>app.html</code> (el componente raíz) para que quede vacío de layout propio:</p>
 <p><strong><code>app.html</code></strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">router-outlet</span> <span class="p">/&gt;</span>
 </code></pre></div>
 <p><code>App</code> (el componente raíz) deja de tener menú, encabezado o sidebar — esos ahora viven exclusivamente en <code>Layout</code> (2.3), como ruta padre (3.6).</p>
 <h3 id="36-configurar-rutas-y-navegacion-principal">3.6 Configurar rutas y navegación principal<a class="headerlink" href="#36-configurar-rutas-y-navegacion-principal" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> <code>Layout</code> como ruta padre, con <code>children</code> todavía vacío — el proyecto debe compilar y mostrarse en el navegador ya en este paso, no recién al final de 3.13.</p>
+<p><strong>Producto del paso:</strong> <code>Layout</code> como ruta padre, con una página de inicio real en <code>''</code> — el proyecto debe compilar y mostrarse en el navegador ya en este paso, no recién al final de 3.13.</p>
+<p><code>''</code> necesita cargar algo desde ya: dejarlo vacío (<code>children: []</code>) mostraría el layout con el área de contenido en blanco, y un redirect hacia <code>catalogo/categorias</code> sería forzar al usuario a la única pantalla que existe hoy, en vez de dejarlo elegir desde el menú — el sidebar (3.5) ya tiene el enlace <strong>Categorías</strong> para eso. Genera una página de inicio mínima, sin lógica:</p>
+<div class="highlight"><pre><span></span><code>ng<span class="w"> </span>generate<span class="w"> </span>component<span class="w"> </span>core/inicio
+</code></pre></div>
+<p>Reemplaza el contenido de <code>core/inicio/inicio.html</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">h2</span><span class="p">&gt;</span>Bienvenido a BomERP<span class="p">&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Usa el menú de la izquierda para navegar entre los módulos disponibles.<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</code></pre></div>
+<p><code>core/inicio/inicio.ts</code> no necesita ningún cambio: la CLI ya genera una clase vacía (<code>export class Inicio {}</code>), y esta pantalla no tiene ningún estado ni lógica propia — solo texto.</p>
 <p><strong><code>app.routes.ts</code></strong></p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Routes</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/router'</span><span class="p">;</span>
 
@@ -4224,16 +4244,21 @@ ng<span class="w"> </span>serve
 <span class="w">  </span><span class="p">{</span>
 <span class="w">    </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">''</span><span class="p">,</span>
 <span class="w">    </span><span class="nx">loadComponent</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">import</span><span class="p">(</span><span class="s1">'./core/layout/layout'</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">m</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">m</span><span class="p">.</span><span class="nx">Layout</span><span class="p">),</span>
-<span class="w">    </span><span class="nx">children</span><span class="o">:</span><span class="w"> </span><span class="p">[],</span>
+<span class="w">    </span><span class="nx">children</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">''</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">loadComponent</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">import</span><span class="p">(</span><span class="s1">'./core/inicio/inicio'</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">m</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">m</span><span class="p">.</span><span class="nx">Inicio</span><span class="p">),</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">    </span><span class="p">],</span>
 <span class="w">  </span><span class="p">},</span>
 <span class="p">];</span>
 </code></pre></div>
-<p><code>loadComponent</code> recibe una función que hace el <code>import()</code> recién cuando el navegador entra a esa ruta (2.4) — por ahora eso solo aplica a <code>Layout</code>, el único componente que ya existe (3.5). <code>children</code> queda vacío a propósito: <code>CategoriaList</code>/<code>CategoriaForm</code> todavía no existen (se crean recién en 3.10 y 3.13) — agregar ya sus rutas haría que el proyecto no compilara desde este paso, sin ninguna forma de comprobar el avance hasta el final. Cada ruta se agrega en el mismo paso en que su componente queda listo, nunca antes: 3.10 agrega la ruta de <code>CategoriaList</code>, 3.13 agrega las de <code>CategoriaForm</code>.</p>
-<p><strong>Error frecuente</strong>: escribir las rutas de <code>Categoria</code> como hermanas de <code>Layout</code> en el mismo arreglo, en vez de como <code>children</code>. El resultado visual es que la pantalla de categorías reemplaza <em>todo</em> el documento (sin encabezado ni sidebar), en vez de aparecer dentro de <code>router-outlet</code> de <code>Layout</code> — la estructura del arreglo de rutas es la que decide si una pantalla hereda el layout o no, no una decisión del componente de la pantalla. Este error recién se puede ver a partir de 3.10, cuando exista la primera ruta hija.</p>
+<p><code>loadComponent</code> recibe una función que hace el <code>import()</code> recién cuando el navegador entra a esa ruta (2.4) — por ahora eso aplica a <code>Layout</code> e <code>Inicio</code>, los dos únicos componentes que ya existen (3.5, arriba). Las rutas de <code>Categoria</code> todavía no aparecen: <code>CategoriaList</code>/<code>CategoriaForm</code> todavía no existen (se crean recién en 3.10 y 3.13) — agregar ya sus rutas haría que el proyecto no compilara desde este paso, sin ninguna forma de comprobar el avance hasta el final. Cada ruta se agrega en el mismo paso en que su componente queda listo, nunca antes: 3.10 agrega la ruta de <code>CategoriaList</code>, 3.13 agrega las de <code>CategoriaForm</code>.</p>
+<p><strong>Error frecuente</strong>: escribir las rutas de <code>Categoria</code> como hermanas de <code>Layout</code> en el mismo arreglo, en vez de como <code>children</code>. El resultado visual es que la pantalla de categorías reemplaza <em>todo</em> el documento (sin encabezado ni sidebar), en vez de aparecer dentro de <code>router-outlet</code> de <code>Layout</code> — la estructura del arreglo de rutas es la que decide si una pantalla hereda el layout o no, no una decisión del componente de la pantalla. Este error recién se puede ver a partir de 3.10, cuando exista la primera ruta hija además de <code>Inicio</code>.</p>
 <p>Verifica antes de seguir:</p>
 <div class="highlight"><pre><span></span><code>ng<span class="w"> </span>serve
 </code></pre></div>
-<p>Abre <code>http://localhost:4200</code>. Debe mostrarse el encabezado ("BomERP") y el sidebar con el enlace <strong>Categorías</strong>, con el área de contenido vacía — es lo esperado: <code>children</code> todavía no tiene ninguna ruta que <code>router-outlet</code> pueda cargar. Ningún error en la consola del navegador ni en la terminal de <code>ng serve</code> significa que el proyecto compiló correctamente hasta este punto.</p>
+<p>Abre <code>http://localhost:4200</code>. Debe mostrarse el encabezado ("BomERP"), el sidebar con el enlace <strong>Categorías</strong>, y el mensaje de bienvenida de <code>Inicio</code> dentro del área de contenido — ya no queda en blanco. Ningún error en la consola del navegador ni en la terminal de <code>ng serve</code> significa que el proyecto compiló correctamente hasta este punto.</p>
 <h3 id="37-crear-el-modelo-categoria">3.7 Crear el modelo <code>Categoria</code><a class="headerlink" href="#37-crear-el-modelo-categoria" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> el contrato de datos que el frontend comparte con <code>CategoriaResponse</code>/<code>CategoriaRequest</code> del backend (S3).</p>
 <p><code>Categoria</code> se modela como <code>interface</code>, no como <code>class</code> (2.5): es un dato que solo cruza la red, sin comportamiento propio.</p>
@@ -4307,7 +4332,7 @@ ng<span class="w"> </span>serve
 <span class="p">}</span>
 </code></pre></div>
 <p><code>ApiService</code> no sabe nada de <code>Categoria</code> ni de ningún otro recurso — solo arma una URL completa a partir de una ruta relativa (<code>/api/v1/categorias</code>) y la URL base del backend, leída de <code>environment.ts</code>. Cuando el backend cambie de host o puerto (por ejemplo, al desplegar en producción, S13), se corrige en ese único archivo — ningún servicio de funcionalidad (<code>CategoriaService</code>, 3.9) necesita tocarse.</p>
-<p><strong>Sobre el nombre de archivo y de clase.</strong> Desde Angular 20, la CLI ya no agrega el sufijo <code>Service</code>/<code>Component</code> por defecto (Angular, 2026e): <code>ng generate service api</code> generaría un archivo <code>api.ts</code> con una clase <code>Api</code>. Esta guía nombra explícitamente sus servicios inyectables con el sufijo <code>Service</code> (<code>ApiService</code>, <code>CategoriaService</code>, 3.9), a mano — no solo por estilo: en el caso de <code>CategoriaService</code>, evita además un choque de nombres real con la interfaz <code>Categoria</code> del modelo (3.7), que sí usa el nombre corto.</p>
+<p><strong>Sobre el nombre de archivo y de clase.</strong> Desde Angular 20, la CLI ya no agrega el sufijo <code>Service</code>/<code>Component</code> por defecto (Angular, 2026f): <code>ng generate service api</code> generaría un archivo <code>api.ts</code> con una clase <code>Api</code>. Esta guía nombra explícitamente sus servicios inyectables con el sufijo <code>Service</code> (<code>ApiService</code>, <code>CategoriaService</code>, 3.9), a mano — no solo por estilo: en el caso de <code>CategoriaService</code>, evita además un choque de nombres real con la interfaz <code>Categoria</code> del modelo (3.7), que sí usa el nombre corto.</p>
 <p><strong>Segunda forma, con la CLI (opcional).</strong> No todo tiene que generarse con <code>ng generate</code> — un servicio con pocas líneas es igual de rápido a mano. Si prefieres la CLI de todas formas, nombra el propio comando con el sufijo incluido, para que la clase salga con el nombre correcto:</p>
 <div class="highlight"><pre><span></span><code>ng<span class="w"> </span>generate<span class="w"> </span>service<span class="w"> </span>core/services/api-service
 </code></pre></div>
@@ -4355,45 +4380,59 @@ ng<span class="w"> </span>serve
 
 <span class="w">  </span><span class="k">protected</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="nx">categorias</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">signal</span><span class="o">&lt;</span><span class="nx">Categoria</span><span class="p">[]</span><span class="o">&gt;</span><span class="p">([]);</span>
 <span class="w">  </span><span class="k">protected</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="nx">error</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">signal</span><span class="o">&lt;</span><span class="kt">string</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kc">null</span><span class="o">&gt;</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+<span class="w">  </span><span class="k">protected</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="nx">loading</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">signal</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
 
 <span class="w">  </span><span class="nx">ngOnInit</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">loading</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
 <span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">categoriaService</span><span class="p">.</span><span class="nx">listar</span><span class="p">().</span><span class="nx">subscribe</span><span class="p">({</span>
 <span class="w">      </span><span class="nx">next</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">categorias</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">data</span><span class="p">),</span>
-<span class="w">      </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'No se pudo cargar la lista de categorías.'</span><span class="p">),</span>
+<span class="w">      </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'No se pudo cargar la lista de categorías.'</span><span class="p">);</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">loading</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nx">complete</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">loading</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="kc">false</span><span class="p">),</span>
 <span class="w">    </span><span class="p">});</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
+<p><code>loading</code> necesita apagarse en <code>error</code> explícitamente, no solo en <code>complete</code>: en RxJS, <code>error</code> y <code>complete</code> son notificaciones terminales que se excluyen entre sí — si la petición falla, <code>complete</code> nunca se dispara, y sin esa línea el mensaje "Cargando..." se quedaría fijo en pantalla para siempre.</p>
 <p>Reemplaza el contenido de <code>features/catalogo/categoria/categoria-list.html</code>:</p>
-<div class="highlight"><pre><span></span><code>@if (error()) {
+<div class="highlight"><pre><span></span><code>@if (loading()) {
+  <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Cargando categorías...<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+}
+
+@if (error()) {
   <span class="p">&lt;</span><span class="nt">p</span> <span class="na">class</span><span class="o">=</span><span class="s">"error"</span><span class="p">&gt;</span>{{ error() }}<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
 }
 
 <span class="p">&lt;</span><span class="nt">a</span> <span class="na">routerLink</span><span class="o">=</span><span class="s">"/catalogo/categorias/nueva"</span><span class="p">&gt;</span>Nueva categoría<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
 
-<span class="p">&lt;</span><span class="nt">table</span><span class="p">&gt;</span>
-  <span class="p">&lt;</span><span class="nt">thead</span><span class="p">&gt;</span>
-    <span class="p">&lt;</span><span class="nt">tr</span><span class="p">&gt;</span>
-      <span class="p">&lt;</span><span class="nt">th</span><span class="p">&gt;</span>Nombre<span class="p">&lt;/</span><span class="nt">th</span><span class="p">&gt;</span>
-      <span class="p">&lt;</span><span class="nt">th</span><span class="p">&gt;</span>Descripción<span class="p">&lt;/</span><span class="nt">th</span><span class="p">&gt;</span>
-    <span class="p">&lt;/</span><span class="nt">tr</span><span class="p">&gt;</span>
-  <span class="p">&lt;/</span><span class="nt">thead</span><span class="p">&gt;</span>
-  <span class="p">&lt;</span><span class="nt">tbody</span><span class="p">&gt;</span>
-    @for (categoria of categorias(); track categoria.id) {
+@if (!error()) {
+  <span class="p">&lt;</span><span class="nt">table</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">thead</span><span class="p">&gt;</span>
       <span class="p">&lt;</span><span class="nt">tr</span><span class="p">&gt;</span>
-        <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>{{ categoria.nombre }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
-        <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>{{ categoria.descripcion }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">th</span><span class="p">&gt;</span>Nombre<span class="p">&lt;/</span><span class="nt">th</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">th</span><span class="p">&gt;</span>Descripción<span class="p">&lt;/</span><span class="nt">th</span><span class="p">&gt;</span>
       <span class="p">&lt;/</span><span class="nt">tr</span><span class="p">&gt;</span>
-    } @empty {
-      <span class="p">&lt;</span><span class="nt">tr</span><span class="p">&gt;</span>
-        <span class="p">&lt;</span><span class="nt">td</span> <span class="na">colspan</span><span class="o">=</span><span class="s">"2"</span><span class="p">&gt;</span>No hay categorías registradas.<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
-      <span class="p">&lt;/</span><span class="nt">tr</span><span class="p">&gt;</span>
-    }
-  <span class="p">&lt;/</span><span class="nt">tbody</span><span class="p">&gt;</span>
-<span class="p">&lt;/</span><span class="nt">table</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">thead</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">tbody</span><span class="p">&gt;</span>
+      @for (categoria of categorias(); track categoria.id) {
+        <span class="p">&lt;</span><span class="nt">tr</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>{{ categoria.nombre }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>{{ categoria.descripcion }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="nt">tr</span><span class="p">&gt;</span>
+      } @empty {
+        <span class="p">&lt;</span><span class="nt">tr</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">td</span> <span class="na">colspan</span><span class="o">=</span><span class="s">"2"</span><span class="p">&gt;</span>No hay categorías registradas.<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="nt">tr</span><span class="p">&gt;</span>
+      }
+    <span class="p">&lt;/</span><span class="nt">tbody</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">table</span><span class="p">&gt;</span>
+}
 </code></pre></div>
+<p>La tabla queda detrás de <code>@if (!error())</code>: sin esa condición, "No hay categorías registradas" (el <code>@empty</code> de arriba) seguiría apareciendo también cuando la petición falla — <code>categorias()</code> está vacío en los dos casos (una lista real sin datos, o una petición que nunca llegó a responder), y sin distinguirlos el mensaje de error y el de "vacío" aparecerían juntos, dando a entender que el catálogo realmente no tiene categorías cuando en realidad es un problema de conexión.</p>
 <p><code>categorias</code> y <code>error</code> son <code>signal()</code>, no propiedades sueltas (2.2): la plantilla se vuelve a renderizar cuando cualquiera de los dos cambia de valor, sin depender de Zone.js. <code>@for</code>/<code>@if</code>/<code>@empty</code> es el control de flujo nativo de plantillas de Angular — reemplaza a <code>*ngFor</code>/<code>*ngIf</code> sin necesitar importar <code>CommonModule</code>. Todavía no hay columna de acciones ni botón <strong>Eliminar</strong>: <code>CategoriaService</code> (3.9) solo sabe <code>listar()</code> por ahora — agregarlos ya generaría un error de compilación, llamando a un método que la clase no tiene.</p>
-<p>Ahora que <code>CategoriaList</code> ya existe, agrega su ruta a <code>children</code> (3.6) — la primera ruta hija real del proyecto:</p>
+<p>Ahora que <code>CategoriaList</code> ya existe, agrega su ruta a <code>children</code> (3.6) — como hermana de <code>''</code>/<code>Inicio</code>, no en su lugar:</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Routes</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/router'</span><span class="p">;</span>
 
 <span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">routes</span><span class="o">:</span><span class="w"> </span><span class="kt">Routes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
@@ -4402,16 +4441,19 @@ ng<span class="w"> </span>serve
 <span class="w">    </span><span class="nx">loadComponent</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">import</span><span class="p">(</span><span class="s1">'./core/layout/layout'</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">m</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">m</span><span class="p">.</span><span class="nx">Layout</span><span class="p">),</span>
 <span class="w">    </span><span class="nx">children</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">''</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">loadComponent</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">import</span><span class="p">(</span><span class="s1">'./core/inicio/inicio'</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">m</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">m</span><span class="p">.</span><span class="nx">Inicio</span><span class="p">),</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
 <span class="w">        </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'catalogo/categorias'</span><span class="p">,</span>
 <span class="w">        </span><span class="nx">loadComponent</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span>
 <span class="w">          </span><span class="k">import</span><span class="p">(</span><span class="s1">'./features/catalogo/categoria/categoria-list'</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">m</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">m</span><span class="p">.</span><span class="nx">CategoriaList</span><span class="p">),</span>
 <span class="w">      </span><span class="p">},</span>
-<span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">''</span><span class="p">,</span><span class="w"> </span><span class="nx">redirectTo</span><span class="o">:</span><span class="w"> </span><span class="s1">'catalogo/categorias'</span><span class="p">,</span><span class="w"> </span><span class="nx">pathMatch</span><span class="o">:</span><span class="w"> </span><span class="s1">'full'</span><span class="w"> </span><span class="p">},</span>
 <span class="w">    </span><span class="p">],</span>
 <span class="w">  </span><span class="p">},</span>
 <span class="p">];</span>
 </code></pre></div>
-<p>El redirect (<code>path: ''</code>) recién tiene sentido agregarlo ahora: antes de este paso no existía ninguna ruta a la cual redirigir. Corre <code>ng serve</code> y entra a <code>http://localhost:4200</code> — debe redirigir automáticamente a <code>/catalogo/categorias</code> y mostrar la lista (vacía o con datos, según lo que ya tenga tu base). El enlace <strong>Nueva categoría</strong> todavía no funciona (<code>CategoriaForm</code> se crea recién en 3.13) — es el único comportamiento pendiente en este paso exacto. Con esto ya tienes el primer resultado real de la sesión antes de seguir agregando código.</p>
+<p><code>Inicio</code> sigue siendo la página de <code>''</code> — nadie la reemplaza por un redirect hacia <code>catalogo/categorias</code>, porque el sidebar ya le da al usuario esa opción por su cuenta (3.6). Corre <code>ng serve</code> y entra a <code>http://localhost:4200</code> — debe seguir mostrando <code>Inicio</code>; clic en <strong>Categorías</strong> (sidebar) para ver la lista (vacía o con datos, según lo que ya tenga tu base). El enlace <strong>Nueva categoría</strong> todavía no funciona (<code>CategoriaForm</code> se crea recién en 3.13) — es el único comportamiento pendiente en este paso exacto. Con esto ya tienes el primer resultado real de la sesión antes de seguir agregando código.</p>
 <h3 id="311-completar-categoriaservice-crear-actualizar-eliminar">3.11 Completar <code>CategoriaService</code>: crear, actualizar, eliminar<a class="headerlink" href="#311-completar-categoriaservice-crear-actualizar-eliminar" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> los cuatro métodos que le faltaban a <code>CategoriaService</code> (3.9), ahora que ya viste funcionar el quinto (<code>listar</code>).</p>
 <p>Agrega a <code>features/catalogo/categoria/categoria-service.ts</code>:</p>
@@ -4468,19 +4510,29 @@ ng<span class="w"> </span>serve
 
 <span class="w">  </span><span class="k">protected</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="nx">categorias</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">signal</span><span class="o">&lt;</span><span class="nx">Categoria</span><span class="p">[]</span><span class="o">&gt;</span><span class="p">([]);</span>
 <span class="w">  </span><span class="k">protected</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="nx">error</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">signal</span><span class="o">&lt;</span><span class="kt">string</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kc">null</span><span class="o">&gt;</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+<span class="w">  </span><span class="k">protected</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="nx">loading</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">signal</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
 
 <span class="w">  </span><span class="nx">ngOnInit</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">cargar</span><span class="p">();</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="nx">cargar</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">loading</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
 <span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">categoriaService</span><span class="p">.</span><span class="nx">listar</span><span class="p">().</span><span class="nx">subscribe</span><span class="p">({</span>
 <span class="w">      </span><span class="nx">next</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">categorias</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">data</span><span class="p">),</span>
-<span class="w">      </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'No se pudo cargar la lista de categorías.'</span><span class="p">),</span>
+<span class="w">      </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'No se pudo cargar la lista de categorías.'</span><span class="p">);</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">loading</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nx">complete</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">loading</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="kc">false</span><span class="p">),</span>
 <span class="w">    </span><span class="p">});</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="nx">eliminar</span><span class="p">(</span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">confirm</span><span class="p">(</span><span class="sb">`¿Está seguro de eliminar la categoría </span><span class="si">${</span><span class="nx">id</span><span class="si">}</span><span class="sb">?`</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">return</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
 <span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">categoriaService</span><span class="p">.</span><span class="nx">eliminar</span><span class="p">(</span><span class="nx">id</span><span class="p">).</span><span class="nx">subscribe</span><span class="p">({</span>
 <span class="w">      </span><span class="nx">next</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">cargar</span><span class="p">(),</span>
 <span class="w">      </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="o">:</span><span class="w"> </span><span class="kt">HttpErrorResponse</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
@@ -4494,39 +4546,45 @@ ng<span class="w"> </span>serve
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<p><code>ngOnInit</code> ahora delega en <code>cargar()</code> en vez de llamar a <code>listar()</code> directamente (3.10): <code>eliminar()</code> necesita volver a cargar la lista después de borrar, y <code>cargar()</code> es ese mismo código, reutilizado, no repetido dos veces.</p>
+<p><code>ngOnInit</code> ahora delega en <code>cargar()</code> en vez de llamar a <code>listar()</code> directamente (3.10): <code>eliminar()</code> necesita volver a cargar la lista después de borrar, y <code>cargar()</code> es ese mismo código, reutilizado, no repetido dos veces. <code>confirm()</code> (nativo del navegador, sin ninguna librería) corta el método antes de llamar al backend si el usuario cancela — sin esa confirmación, un clic accidental en <strong>Eliminar</strong> borraría la categoría sin ninguna forma de deshacerlo.</p>
 <p>Agrega a <code>features/catalogo/categoria/categoria-list.html</code> la columna de acciones:</p>
-<div class="highlight"><pre><span></span><code>@if (error()) {
+<div class="highlight"><pre><span></span><code>@if (loading()) {
+  <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Cargando categorías...<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+}
+
+@if (error()) {
   <span class="p">&lt;</span><span class="nt">p</span> <span class="na">class</span><span class="o">=</span><span class="s">"error"</span><span class="p">&gt;</span>{{ error() }}<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
 }
 
 <span class="p">&lt;</span><span class="nt">a</span> <span class="na">routerLink</span><span class="o">=</span><span class="s">"/catalogo/categorias/nueva"</span><span class="p">&gt;</span>Nueva categoría<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
 
-<span class="p">&lt;</span><span class="nt">table</span><span class="p">&gt;</span>
-  <span class="p">&lt;</span><span class="nt">thead</span><span class="p">&gt;</span>
-    <span class="p">&lt;</span><span class="nt">tr</span><span class="p">&gt;</span>
-      <span class="p">&lt;</span><span class="nt">th</span><span class="p">&gt;</span>Nombre<span class="p">&lt;/</span><span class="nt">th</span><span class="p">&gt;</span>
-      <span class="p">&lt;</span><span class="nt">th</span><span class="p">&gt;</span>Descripción<span class="p">&lt;/</span><span class="nt">th</span><span class="p">&gt;</span>
-      <span class="p">&lt;</span><span class="nt">th</span><span class="p">&gt;&lt;/</span><span class="nt">th</span><span class="p">&gt;</span>
-    <span class="p">&lt;/</span><span class="nt">tr</span><span class="p">&gt;</span>
-  <span class="p">&lt;/</span><span class="nt">thead</span><span class="p">&gt;</span>
-  <span class="p">&lt;</span><span class="nt">tbody</span><span class="p">&gt;</span>
-    @for (categoria of categorias(); track categoria.id) {
+@if (!error()) {
+  <span class="p">&lt;</span><span class="nt">table</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">thead</span><span class="p">&gt;</span>
       <span class="p">&lt;</span><span class="nt">tr</span><span class="p">&gt;</span>
-        <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>{{ categoria.nombre }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
-        <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>{{ categoria.descripcion }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
-        <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>
-          <span class="p">&lt;</span><span class="nt">a</span> <span class="err">[</span><span class="na">routerLink</span><span class="err">]="['/</span><span class="na">catalogo</span><span class="err">/</span><span class="na">categorias</span><span class="err">',</span> <span class="na">categoria</span><span class="err">.</span><span class="na">id</span><span class="err">,</span> <span class="err">'</span><span class="na">editar</span><span class="err">']"</span><span class="p">&gt;</span>Editar<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
-          <span class="p">&lt;</span><span class="nt">button</span> <span class="err">(</span><span class="na">click</span><span class="err">)="</span><span class="na">eliminar</span><span class="err">(</span><span class="na">categoria</span><span class="err">.</span><span class="na">id</span><span class="err">!)"</span><span class="p">&gt;</span>Eliminar<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
-        <span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">th</span><span class="p">&gt;</span>Nombre<span class="p">&lt;/</span><span class="nt">th</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">th</span><span class="p">&gt;</span>Descripción<span class="p">&lt;/</span><span class="nt">th</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">th</span><span class="p">&gt;&lt;/</span><span class="nt">th</span><span class="p">&gt;</span>
       <span class="p">&lt;/</span><span class="nt">tr</span><span class="p">&gt;</span>
-    } @empty {
-      <span class="p">&lt;</span><span class="nt">tr</span><span class="p">&gt;</span>
-        <span class="p">&lt;</span><span class="nt">td</span> <span class="na">colspan</span><span class="o">=</span><span class="s">"3"</span><span class="p">&gt;</span>No hay categorías registradas.<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
-      <span class="p">&lt;/</span><span class="nt">tr</span><span class="p">&gt;</span>
-    }
-  <span class="p">&lt;/</span><span class="nt">tbody</span><span class="p">&gt;</span>
-<span class="p">&lt;/</span><span class="nt">table</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">thead</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">tbody</span><span class="p">&gt;</span>
+      @for (categoria of categorias(); track categoria.id) {
+        <span class="p">&lt;</span><span class="nt">tr</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>{{ categoria.nombre }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>{{ categoria.descripcion }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="nt">a</span> <span class="err">[</span><span class="na">routerLink</span><span class="err">]="['/</span><span class="na">catalogo</span><span class="err">/</span><span class="na">categorias</span><span class="err">',</span> <span class="na">categoria</span><span class="err">.</span><span class="na">id</span><span class="err">,</span> <span class="err">'</span><span class="na">editar</span><span class="err">']"</span><span class="p">&gt;</span>Editar<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="nt">button</span> <span class="err">(</span><span class="na">click</span><span class="err">)="</span><span class="na">eliminar</span><span class="err">(</span><span class="na">categoria</span><span class="err">.</span><span class="na">id</span><span class="err">!)"</span><span class="p">&gt;</span>Eliminar<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+          <span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="nt">tr</span><span class="p">&gt;</span>
+      } @empty {
+        <span class="p">&lt;</span><span class="nt">tr</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">td</span> <span class="na">colspan</span><span class="o">=</span><span class="s">"3"</span><span class="p">&gt;</span>No hay categorías registradas.<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="nt">tr</span><span class="p">&gt;</span>
+      }
+    <span class="p">&lt;/</span><span class="nt">tbody</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">table</span><span class="p">&gt;</span>
+}
 </code></pre></div>
 <p>El manejo del error <code>500</code> al eliminar (<code>err.status === 500</code>) no es un caso inventado para esta guía: es exactamente el hallazgo conocido de S3 (<code>FK_PRODUCTO_CATEGORIA</code>) — intentar eliminar una categoría con productos asociados. El frontend no puede evitar esa restricción (vive en la base de datos, BD2), pero sí puede mostrar un mensaje entendible en vez de dejar que la aplicación falle en silencio. <code>err</code> se tipa explícitamente como <code>HttpErrorResponse</code> (de <code>@angular/common/http</code>) en vez de dejarlo implícito: es el tipo real que <code>HttpClient</code> entrega en el callback de error, con <code>status</code> como propiedad tipada — sin esa anotación, TypeScript no puede advertir si el código intenta leer una propiedad que no existe.</p>
 <p>El enlace <strong>Editar</strong> sigue sin funcionar (<code>CategoriaForm</code> se crea en 3.13) — es el único comportamiento pendiente después de este paso.</p>
@@ -4584,6 +4642,10 @@ ng<span class="w"> </span>serve
 <span class="w">      </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'No se pudo guardar la categoría.'</span><span class="p">),</span>
 <span class="w">    </span><span class="p">});</span>
 <span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nx">cancelar</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">router</span><span class="p">.</span><span class="nx">navigate</span><span class="p">([</span><span class="s1">'/catalogo/categorias'</span><span class="p">]);</span>
+<span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 <p>Reemplaza el contenido de <code>features/catalogo/categoria/categoria-form.html</code>:</p>
@@ -4606,10 +4668,13 @@ ng<span class="w"> </span>serve
   }
 
   <span class="p">&lt;</span><span class="nt">button</span> <span class="na">type</span><span class="o">=</span><span class="s">"submit"</span><span class="p">&gt;</span>Guardar<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">button</span> <span class="na">type</span><span class="o">=</span><span class="s">"button"</span> <span class="err">(</span><span class="na">click</span><span class="err">)="</span><span class="na">cancelar</span><span class="err">()"</span><span class="p">&gt;</span>Cancelar<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
 <span class="p">&lt;/</span><span class="nt">form</span><span class="p">&gt;</span>
 </code></pre></div>
 <p>Las validaciones (<code>Validators.required</code>, <code>Validators.maxLength(80)</code>) calzan exactamente con <code>@NotBlank</code>/<code>@Size(max = 80)</code> de <code>CategoriaRequest</code> (S3, backend) — no son coincidencia: el formulario evita mandar una petición que el backend va a rechazar de todas formas, pero la validación real y definitiva sigue siendo la del backend, no la del formulario (el frontend nunca reemplaza esa responsabilidad).</p>
-<p><strong>Sobre Reactive Forms.</strong> Angular 22 estabiliza una alternativa más nueva basada en <code>signal()</code> para formularios (Signal Forms). Esta guía enseña Reactive Forms (<code>FormBuilder</code>, <code>FormGroup</code>) a propósito: sigue siendo la forma estable y ampliamente documentada de construir formularios en Angular, y es la base que Signal Forms todavía está migrando a reemplazar — no una técnica obsoleta.</p>
+<p><code>type="button"</code> en <strong>Cancelar</strong> no es opcional: sin él, el botón heredaría el tipo por defecto de cualquier <code>&lt;button&gt;</code> dentro de un <code>&lt;form&gt;</code> (<code>submit</code>), y haría clic en "Cancelar" dispararía igual el <code>(ngSubmit)="guardar()"</code> del formulario — justo lo que se quiere evitar. <code>cancelar()</code> no necesita descartar nada del <code>form</code> explícitamente: como nunca llama a <code>guardar()</code>, ningún dato llega al backend, y al salir de la ruta Angular destruye el componente completo, incluido el <code>FormGroup</code>.</p>
+<p><strong>Sobre Reactive Forms.</strong> Angular 22 estabiliza una alternativa más nueva basada en <code>signal()</code> para formularios (Signal Forms, Angular 2026g). Esta guía enseña Reactive Forms (<code>FormBuilder</code>, <code>FormGroup</code>) a propósito: sigue siendo la forma estable y ampliamente documentada de construir formularios en Angular, y es la base que Signal Forms todavía está migrando a reemplazar — no una técnica obsoleta.</p>
+<p><strong>"Reactive" aquí no tiene nada que ver con el backend.</strong> Angular ofrece dos formas de manejar el estado de un formulario: <code>FormsModule</code> (dirigido por plantilla, con <code>ngModel</code>) y <code>ReactiveFormsModule</code> (<code>FormBuilder</code>/<code>FormGroup</code>, el modelo del formulario declarado en TypeScript). El nombre viene de que por dentro usa <code>Observable</code>s para reaccionar a los cambios de valor — no de que el backend sea reactivo (Spring WebFlux) en vez de bloqueante (Spring MVC, lo que este proyecto usa desde S1). Son dos capas que no se comunican en ese sentido: <code>ReactiveFormsModule</code> funciona igual contra cualquier backend, sea cual sea su arquitectura. Se elige aquí porque las validaciones (<code>Validators.required</code>, <code>Validators.maxLength(80)</code>) quedan declaradas en TypeScript, calzando 1 a 1 con <code>@NotBlank</code>/<code>@Size(max = 80)</code> del backend (S3) — no por ninguna relación con cómo Spring maneja las peticiones.</p>
 <p>Con <code>CategoriaForm</code> ya creado, completa <code>children</code> (3.6, 3.10) con las dos rutas que faltaban:</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Routes</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/router'</span><span class="p">;</span>
 
@@ -4618,6 +4683,10 @@ ng<span class="w"> </span>serve
 <span class="w">    </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">''</span><span class="p">,</span>
 <span class="w">    </span><span class="nx">loadComponent</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">import</span><span class="p">(</span><span class="s1">'./core/layout/layout'</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">m</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">m</span><span class="p">.</span><span class="nx">Layout</span><span class="p">),</span>
 <span class="w">    </span><span class="nx">children</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">''</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">loadComponent</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">import</span><span class="p">(</span><span class="s1">'./core/inicio/inicio'</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">m</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">m</span><span class="p">.</span><span class="nx">Inicio</span><span class="p">),</span>
+<span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="p">{</span>
 <span class="w">        </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'catalogo/categorias'</span><span class="p">,</span>
 <span class="w">        </span><span class="nx">loadComponent</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span>
@@ -4633,16 +4702,15 @@ ng<span class="w"> </span>serve
 <span class="w">        </span><span class="nx">loadComponent</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span>
 <span class="w">          </span><span class="k">import</span><span class="p">(</span><span class="s1">'./features/catalogo/categoria/categoria-form'</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">m</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">m</span><span class="p">.</span><span class="nx">CategoriaForm</span><span class="p">),</span>
 <span class="w">      </span><span class="p">},</span>
-<span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">''</span><span class="p">,</span><span class="w"> </span><span class="nx">redirectTo</span><span class="o">:</span><span class="w"> </span><span class="s1">'catalogo/categorias'</span><span class="p">,</span><span class="w"> </span><span class="nx">pathMatch</span><span class="o">:</span><span class="w"> </span><span class="s1">'full'</span><span class="w"> </span><span class="p">},</span>
 <span class="w">    </span><span class="p">],</span>
 <span class="w">  </span><span class="p">},</span>
 <span class="p">];</span>
 </code></pre></div>
-<p>Recién ahora el CRUD queda completo: los enlaces <strong>Nueva categoría</strong> (3.10) y <strong>Editar</strong> (3.12) de <code>categoria-list.html</code>, que ya apuntaban a estas rutas desde antes, por fin encuentran un componente real que cargar.</p>
+<p>Recién ahora el CRUD queda completo: los enlaces <strong>Nueva categoría</strong> (3.10) y <strong>Editar</strong> (3.12) de <code>categoria-list.html</code>, que ya apuntaban a estas rutas desde antes, por fin encuentran un componente real que cargar. <code>''</code> sigue siendo <code>Inicio</code> (3.6) — nunca hizo falta ningún redirect.</p>
 <h3 id="314-probar-el-crud-completo">3.14 Probar el CRUD completo<a class="headerlink" href="#314-probar-el-crud-completo" title="Permanent link">&para;</a></h3>
 <p>Con <code>lp2/bomerp-backend</code> corriendo y <code>ng serve</code> activo:</p>
 <ol>
-<li>Abre <code>http://localhost:4200</code>. Debe redirigir automáticamente a <code>/catalogo/categorias</code> (3.10).</li>
+<li>Abre <code>http://localhost:4200</code>. Debe mostrarse <code>Inicio</code> (3.6). Clic en <strong>Categorías</strong> (sidebar) para ir a <code>/catalogo/categorias</code>.</li>
 <li>Clic en <strong>Nueva categoría</strong>, completa el formulario y guarda. Debe volver a la lista, con la categoría nueva visible.</li>
 <li>Clic en <strong>Editar</strong> sobre una categoría existente. El formulario debe cargar sus datos actuales (no en blanco).</li>
 <li>Cambia el nombre y guarda. El cambio debe reflejarse en la lista.</li>
@@ -4825,10 +4893,11 @@ Indica 2 fortalezas y 2 recomendaciones.
 <ol>
 <li>Angular. (2026a). <em>Zoneless</em>. Google. https://angular.dev/guide/zoneless</li>
 <li>Angular. (2026b). <em>Routing</em>. Google. https://angular.dev/guide/routing</li>
-<li>Angular. (2026c). <em>Anatomy of components</em>. Google. https://angular.dev/guide/components</li>
+<li>Angular. (2026c). <em>Angular coding style guide</em>. Google. https://angular.dev/style-guide</li>
 <li>Angular. (2026d). <em>HTTP Client</em>. Google. https://angular.dev/guide/http</li>
-<li>Angular. (2026e). <em>Reactive forms</em>. Google. https://angular.dev/guide/forms/reactive-forms</li>
-<li>Angular. (2026f). <em>Reactive data fetching with httpResource</em>. Google. https://angular.dev/guide/http/http-resource</li>
+<li>Angular. (2026e). <em>Reactive data fetching with httpResource</em>. Google. https://angular.dev/guide/http/http-resource</li>
+<li>Angular. (2026f). <em>ng generate component</em>. Google. https://angular.dev/cli/generate/component</li>
+<li>Angular. (2026g). <em>Reactive forms</em>. Google. https://angular.dev/guide/forms/reactive-forms</li>
 </ol>
 
 
