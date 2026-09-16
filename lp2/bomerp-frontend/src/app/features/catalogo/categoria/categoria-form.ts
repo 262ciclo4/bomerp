@@ -46,4 +46,8 @@ export class CategoriaForm {
       error: () => this.error.set('No se pudo guardar la categoría.'),
     });
   }
+
+  cancelar(): void {
+    this.router.navigate(['/catalogo/categorias']);
+  }
 }

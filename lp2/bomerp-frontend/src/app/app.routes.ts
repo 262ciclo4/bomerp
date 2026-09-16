@@ -6,6 +6,10 @@ export const routes: Routes = [
     loadComponent: () => import('./core/layout/layout').then((m) => m.Layout),
     children: [
       {
+        path: '',
+        loadComponent: () => import('./core/inicio/inicio').then((m) => m.Inicio),
+      },
+      {
         path: 'catalogo/categorias',
         loadComponent: () =>
           import('./features/catalogo/categoria/categoria-list').then((m) => m.CategoriaList),
@@ -20,7 +24,6 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/catalogo/categoria/categoria-form').then((m) => m.CategoriaForm),
       },
-      { path: '', redirectTo: 'catalogo/categorias', pathMatch: 'full' },
     ],
   },
 ];

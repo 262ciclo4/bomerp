@@ -14,19 +14,29 @@ export class CategoriaList implements OnInit {
 
   protected readonly categorias = signal<Categoria[]>([]);
   protected readonly error = signal<string | null>(null);
+  protected readonly loading = signal(false);
 
   ngOnInit(): void {
     this.cargar();
   }
 
   cargar(): void {
+    this.loading.set(true);
     this.categoriaService.listar().subscribe({
       next: (data) => this.categorias.set(data),
-      error: () => this.error.set('No se pudo cargar la lista de categorías.'),
+      error: () => {
+        this.error.set('No se pudo cargar la lista de categorías.');
+        this.loading.set(false);
+      },
+      complete: () => this.loading.set(false),
     });
   }
 
   eliminar(id: number): void {
+    if (!confirm(`¿Está seguro de eliminar la categoría ${id}?`)) {
+      return;
+    }
+
     this.categoriaService.eliminar(id).subscribe({
       next: () => this.cargar(),
       error: (err: HttpErrorResponse) => {
