@@ -396,6 +396,8 @@ export interface Categoria {
 
 `id` es opcional porque una categoría nueva, antes de guardarse, todavía no tiene uno — el backend lo asigna recién al crearla (S1). Los campos y sus nombres calzan exactamente con `CategoriaResponse`/`CategoriaRequest` (S3): el frontend no inventa un contrato propio, consume el que el backend ya expone.
 
+**¿Por qué a mano y no con `ng generate interface`?** La CLI sí tiene ese generador (`ng generate interface categoria model` crearía `categoria.model.ts`), pero a diferencia de un componente o un servicio (3.5, 3.8-3.9), no genera ningún `.spec.ts` — una interfaz no tiene comportamiento propio que probar (2.5), así que la CLI no tendría nada que escribir ahí. El único ahorro real sería no teclear `export interface Categoria {}` a mano, sin ninguna ventaja adicional — por eso esta guía sí lo escribe directo.
+
 ### 3.8 Crear el archivo de ambientes y el servicio base de API
 
 **Producto del paso:** la URL del backend declarada en un solo lugar, no repetida dentro de cada servicio HTTP.
@@ -458,7 +460,13 @@ export const environment = {
 };
 ```
 
-Crea `core/services/api-service.ts`:
+Genera el servicio con la CLI, igual que `Layout` (3.5) — así queda registrado con `@Injectable({ providedIn: 'root' })` y con su propio `api-service.spec.ts`, sin escribir ese archivo a mano:
+
+```bash
+ng generate service core/services/api-service
+```
+
+Reemplaza el contenido de `core/services/api-service.ts`:
 
 ```ts
 import { Injectable } from '@angular/core';
@@ -477,13 +485,19 @@ export class ApiService {
 
 `ApiService` no sabe nada de `Categoria` ni de ningún otro recurso — solo arma una URL completa a partir de una ruta relativa (`/api/v1/categorias`) y la URL base del backend, leída de `environment.ts`. Cuando el backend cambie de host o puerto (por ejemplo, al desplegar en producción, S13), se corrige en ese único archivo — ningún servicio de funcionalidad (`CategoriaService`, 3.9) necesita tocarse.
 
-**Sobre el nombre de archivo y de clase.** Desde Angular 20, la CLI ya no agrega el sufijo `Service`/`Component` por defecto (Angular, 2026e): `ng generate service api` generaría un archivo `api.ts` con una clase `Api`. Esta guía nombra explícitamente sus servicios inyectables con el sufijo `Service` (`ApiService`, `CategoriaService`, 3.9), a mano — no solo por estilo: en el caso de `CategoriaService`, evita además un choque de nombres real con la interfaz `Categoria` del modelo (3.7), que sí usa el nombre corto.
+**Sobre el nombre de archivo y de clase.** Desde Angular 20, la CLI ya no agrega el sufijo `Service`/`Component` por defecto (Angular, 2026e): `ng generate service api` generaría un archivo `api.ts` con una clase `Api`. La forma de obtener `ApiService` con la CLI no es crear el archivo a mano — es nombrar el propio comando con el sufijo incluido, `ng generate service core/services/api-service`, exactamente igual que `ng generate component .../categoria-list` (3.10) genera la clase `CategoriaList`: la CLI convierte a PascalCase el último segmento de la ruta que le des, sea cual sea. Esta guía nombra sus servicios inyectables con el sufijo `Service` (`ApiService`, `CategoriaService`, 3.9) por la misma razón de siempre — evitar, en el caso de `CategoriaService`, un choque de nombres real con la interfaz `Categoria` del modelo (3.7), que sí usa el nombre corto —, y se lo indica a la CLI en el propio comando, en vez de crear el archivo a mano.
 
 ### 3.9 Crear `CategoriaService` (solo `listar`)
 
 **Producto del paso:** el único punto del frontend que sabe cómo se llega a `/api/v1/categorias` — por ahora, solo para leer.
 
-Crea `features/catalogo/categoria/categoria-service.ts`, con un único método:
+Genera el servicio con la CLI, igual que `ApiService` (3.8) — obtienes de una vez la clase `CategoriaService` y su `categoria-service.spec.ts`:
+
+```bash
+ng generate service features/catalogo/categoria/categoria-service
+```
+
+Reemplaza el contenido de `categoria-service.ts` con un único método por ahora:
 
 ```ts
 import { Injectable, inject } from '@angular/core';
