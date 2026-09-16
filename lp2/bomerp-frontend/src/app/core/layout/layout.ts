@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
+import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
-  imports: [],
   selector: 'app-layout',
-  styleUrl: './layout.css',
+  imports: [RouterOutlet, RouterLink, RouterLinkActive],
   templateUrl: './layout.html',
+  styleUrl: './layout.css',
 })
 export class Layout {}

@@ -342,7 +342,7 @@ Reemplaza `app.html` (el componente raíz) para que quede vacío de layout propi
 
 ### 3.6 Configurar rutas y navegación principal
 
-**Producto del paso:** `Layout` como ruta padre, con las pantallas de `Categoria` como rutas hijas cargadas de forma perezosa.
+**Producto del paso:** `Layout` como ruta padre, con `children` todavía vacío — el proyecto debe compilar y mostrarse en el navegador ya en este paso, no recién al final de 3.11.
 
 **`app.routes.ts`**
 
@@ -353,31 +353,22 @@ export const routes: Routes = [
   {
     path: '',
     loadComponent: () => import('./core/layout/layout').then((m) => m.Layout),
-    children: [
-      {
-        path: 'catalogo/categorias',
-        loadComponent: () =>
-          import('./features/catalogo/categoria/categoria-list').then((m) => m.CategoriaList),
-      },
-      {
-        path: 'catalogo/categorias/nueva',
-        loadComponent: () =>
-          import('./features/catalogo/categoria/categoria-form').then((m) => m.CategoriaForm),
-      },
-      {
-        path: 'catalogo/categorias/:id/editar',
-        loadComponent: () =>
-          import('./features/catalogo/categoria/categoria-form').then((m) => m.CategoriaForm),
-      },
-      { path: '', redirectTo: 'catalogo/categorias', pathMatch: 'full' },
-    ],
+    children: [],
   },
 ];
 ```
 
-`loadComponent` recibe una función que hace el `import()` recién cuando el navegador entra a esa ruta (2.4) — los archivos de `categoria-list`/`categoria-form` todavía no existen (se crean en 3.10-3.11); el proyecto no compila hasta ese punto, es un error esperado en este paso exacto.
+`loadComponent` recibe una función que hace el `import()` recién cuando el navegador entra a esa ruta (2.4) — por ahora eso solo aplica a `Layout`, el único componente que ya existe (3.5). `children` queda vacío a propósito: `CategoriaList`/`CategoriaForm` todavía no existen (se crean recién en 3.10 y 3.11) — agregar ya sus rutas haría que el proyecto no compilara desde este paso, sin ninguna forma de comprobar el avance hasta el final. Cada ruta se agrega en el mismo paso en que su componente queda listo, nunca antes: 3.10 agrega la ruta de `CategoriaList`, 3.11 agrega las de `CategoriaForm`.
 
-**Error frecuente**: escribir las rutas de `Categoria` como hermanas de `Layout` en el mismo arreglo, en vez de como `children`. El resultado visual es que la pantalla de categorías reemplaza *todo* el documento (sin encabezado ni sidebar), en vez de aparecer dentro de `router-outlet` de `Layout` — la estructura del arreglo de rutas es la que decide si una pantalla hereda el layout o no, no una decisión del componente de la pantalla.
+**Error frecuente**: escribir las rutas de `Categoria` como hermanas de `Layout` en el mismo arreglo, en vez de como `children`. El resultado visual es que la pantalla de categorías reemplaza *todo* el documento (sin encabezado ni sidebar), en vez de aparecer dentro de `router-outlet` de `Layout` — la estructura del arreglo de rutas es la que decide si una pantalla hereda el layout o no, no una decisión del componente de la pantalla. Este error recién se puede ver a partir de 3.10, cuando exista la primera ruta hija.
+
+Verifica antes de seguir:
+
+```bash
+ng serve
+```
+
+Abre `http://localhost:4200`. Debe mostrarse el encabezado ("BomERP") y el sidebar con el enlace **Categorías**, con el área de contenido vacía — es lo esperado: `children` todavía no tiene ninguna ruta que `router-outlet` pueda cargar. Ningún error en la consola del navegador ni en la terminal de `ng serve` significa que el proyecto compiló correctamente hasta este punto.
 
 ### 3.7 Crear el modelo `Categoria`
 
@@ -399,7 +390,26 @@ export interface Categoria {
 
 **Producto del paso:** la URL del backend declarada en un solo lugar, no repetida dentro de cada servicio HTTP.
 
-Agrega `provideHttpClient()` a `app.config.ts` (junto a lo que `ng new` ya generó):
+**Sin archivo de ambientes**, cada servicio HTTP escribiría la URL completa del backend a mano, repetida en cada método:
+
+```ts
+@Injectable({ providedIn: 'root' })
+export class CategoriaService {
+  private readonly http = inject(HttpClient);
+
+  listar(): Observable<Categoria[]> {
+    return this.http.get<Categoria[]>('http://localhost:8080/api/v1/categorias');
+  }
+
+  obtener(id: number): Observable<Categoria> {
+    return this.http.get<Categoria>(`http://localhost:8080/api/v1/categorias/${id}`);
+  }
+}
+```
+
+El problema no es solo la repetición dentro de `CategoriaService`: `http://localhost:8080` volvería a escribirse, idéntico, en `ProductoService`, `VentaService` y cualquier otro servicio de funcionalidad futuro. El día que el backend cambie de host o puerto (por ejemplo, al desplegar en producción, S13), habría que buscar y corregir esa cadena en cada archivo, uno por uno — un error de tipeo en cualquiera de ellos apunta silenciosamente al backend equivocado, sin que TypeScript pueda avisar nada (es un `string`, no una referencia).
+
+**Con archivo de ambientes** (lo que esta guía construye), la URL vive en un solo lugar, y cada servicio la consume sin conocerla directamente. Agrega `provideHttpClient()` a `app.config.ts` (junto a lo que `ng new` ya generó):
 
 ```ts
 import { ApplicationConfig, provideZonelessChangeDetection } from '@angular/core';
@@ -578,6 +588,29 @@ Reemplaza el contenido de `features/catalogo/categoria/categoria-list.html`:
 
 El manejo del error `500` al eliminar (`err.status === 500`) no es un caso inventado para esta guía: es exactamente el hallazgo conocido de S3 (`FK_PRODUCTO_CATEGORIA`) — intentar eliminar una categoría con productos asociados. El frontend no puede evitar esa restricción (vive en la base de datos, BD2), pero sí puede mostrar un mensaje entendible en vez de dejar que la aplicación falle en silencio. `err` se tipa explícitamente como `HttpErrorResponse` (de `@angular/common/http`) en vez de dejarlo implícito: es el tipo real que `HttpClient` entrega en el callback de error, con `status` como propiedad tipada — sin esa anotación, TypeScript no puede advertir si el código intenta leer una propiedad que no existe.
 
+Ahora que `CategoriaList` ya existe, agrega su ruta a `children` (3.6) — la primera ruta hija real del proyecto:
+
+```ts
+import { Routes } from '@angular/router';
+
+export const routes: Routes = [
+  {
+    path: '',
+    loadComponent: () => import('./core/layout/layout').then((m) => m.Layout),
+    children: [
+      {
+        path: 'catalogo/categorias',
+        loadComponent: () =>
+          import('./features/catalogo/categoria/categoria-list').then((m) => m.CategoriaList),
+      },
+      { path: '', redirectTo: 'catalogo/categorias', pathMatch: 'full' },
+    ],
+  },
+];
+```
+
+El redirect (`path: ''`) recién tiene sentido agregarlo ahora: antes de este paso no existía ninguna ruta a la cual redirigir. Corre `ng serve` y entra a `http://localhost:4200` — debe redirigir automáticamente a `/catalogo/categorias` y mostrar la lista (vacía o con datos, según lo que ya tenga tu base). El enlace **Nueva categoría** y **Editar** todavía no funcionan (`CategoriaForm` se crea recién en 3.11) — es el único comportamiento pendiente en este paso exacto.
+
 ### 3.11 Crear `CategoriaForm`
 
 **Producto del paso:** una sola pantalla que sirve tanto para crear como para editar, según si la ruta trae un `id`.
@@ -669,11 +702,44 @@ Las validaciones (`Validators.required`, `Validators.maxLength(80)`) calzan exac
 
 **Sobre Reactive Forms.** Angular 22 estabiliza una alternativa más nueva basada en `signal()` para formularios (Signal Forms). Esta guía enseña Reactive Forms (`FormBuilder`, `FormGroup`) a propósito: sigue siendo la forma estable y ampliamente documentada de construir formularios en Angular, y es la base que Signal Forms todavía está migrando a reemplazar — no una técnica obsoleta.
 
+Con `CategoriaForm` ya creado, completa `children` (3.6, 3.10) con las dos rutas que faltaban:
+
+```ts
+import { Routes } from '@angular/router';
+
+export const routes: Routes = [
+  {
+    path: '',
+    loadComponent: () => import('./core/layout/layout').then((m) => m.Layout),
+    children: [
+      {
+        path: 'catalogo/categorias',
+        loadComponent: () =>
+          import('./features/catalogo/categoria/categoria-list').then((m) => m.CategoriaList),
+      },
+      {
+        path: 'catalogo/categorias/nueva',
+        loadComponent: () =>
+          import('./features/catalogo/categoria/categoria-form').then((m) => m.CategoriaForm),
+      },
+      {
+        path: 'catalogo/categorias/:id/editar',
+        loadComponent: () =>
+          import('./features/catalogo/categoria/categoria-form').then((m) => m.CategoriaForm),
+      },
+      { path: '', redirectTo: 'catalogo/categorias', pathMatch: 'full' },
+    ],
+  },
+];
+```
+
+Recién ahora el CRUD queda completo: los enlaces **Nueva categoría** y **Editar** de `categoria-list.html` (3.10), que ya apuntaban a estas rutas desde antes, por fin encuentran un componente real que cargar.
+
 ### 3.12 Probar el CRUD completo
 
 Con `lp2/bomerp-backend` corriendo y `ng serve` activo:
 
-1. Abre `http://localhost:4200`. Debe redirigir automáticamente a `/catalogo/categorias` (3.6).
+1. Abre `http://localhost:4200`. Debe redirigir automáticamente a `/catalogo/categorias` (3.10).
 2. Clic en **Nueva categoría**, completa el formulario y guarda. Debe volver a la lista, con la categoría nueva visible.
 3. Clic en **Editar** sobre una categoría existente. El formulario debe cargar sus datos actuales (no en blanco).
 4. Cambia el nombre y guarda. El cambio debe reflejarse en la lista.
