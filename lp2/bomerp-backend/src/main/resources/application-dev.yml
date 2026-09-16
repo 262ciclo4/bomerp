@@ -37,3 +37,7 @@ management:
   endpoint:
     health:
       show-details: always
+
+bomerp:
+  cors:
+    allowed-origins: http://localhost:4200

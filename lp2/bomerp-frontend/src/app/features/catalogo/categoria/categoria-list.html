@@ -9,6 +9,7 @@
     <tr>
       <th>Nombre</th>
       <th>Descripción</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -16,10 +17,14 @@
       <tr>
         <td>{{ categoria.nombre }}</td>
         <td>{{ categoria.descripcion }}</td>
+        <td>
+          <a [routerLink]="['/catalogo/categorias', categoria.id, 'editar']">Editar</a>
+          <button (click)="eliminar(categoria.id!)">Eliminar</button>
+        </td>
       </tr>
     } @empty {
       <tr>
-        <td colspan="2">No hay categorías registradas.</td>
+        <td colspan="3">No hay categorías registradas.</td>
       </tr>
     }
   </tbody>

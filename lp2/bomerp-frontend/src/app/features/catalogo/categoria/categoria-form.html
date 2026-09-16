@@ -1,0 +1,20 @@
+<form [formGroup]="form" (ngSubmit)="guardar()">
+  <label>
+    Nombre
+    <input type="text" formControlName="nombre" />
+  </label>
+  @if (form.controls.nombre.invalid && form.controls.nombre.touched) {
+    <p class="error">El nombre es obligatorio (máximo 80 caracteres).</p>
+  }
+
+  <label>
+    Descripción
+    <textarea formControlName="descripcion"></textarea>
+  </label>
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  <button type="submit">Guardar</button>
+</form>

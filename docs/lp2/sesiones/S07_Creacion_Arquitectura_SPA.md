@@ -460,13 +460,7 @@ export const environment = {
 };
 ```
 
-Genera el servicio con la CLI, igual que `Layout` (3.5) — así queda registrado con `@Injectable({ providedIn: 'root' })` y con su propio `api-service.spec.ts`, sin escribir ese archivo a mano:
-
-```bash
-ng generate service core/services/api-service
-```
-
-Reemplaza el contenido de `core/services/api-service.ts`:
+Crea `core/services/api-service.ts`:
 
 ```ts
 import { Injectable } from '@angular/core';
@@ -485,19 +479,21 @@ export class ApiService {
 
 `ApiService` no sabe nada de `Categoria` ni de ningún otro recurso — solo arma una URL completa a partir de una ruta relativa (`/api/v1/categorias`) y la URL base del backend, leída de `environment.ts`. Cuando el backend cambie de host o puerto (por ejemplo, al desplegar en producción, S13), se corrige en ese único archivo — ningún servicio de funcionalidad (`CategoriaService`, 3.9) necesita tocarse.
 
-**Sobre el nombre de archivo y de clase.** Desde Angular 20, la CLI ya no agrega el sufijo `Service`/`Component` por defecto (Angular, 2026e): `ng generate service api` generaría un archivo `api.ts` con una clase `Api`. La forma de obtener `ApiService` con la CLI no es crear el archivo a mano — es nombrar el propio comando con el sufijo incluido, `ng generate service core/services/api-service`, exactamente igual que `ng generate component .../categoria-list` (3.10) genera la clase `CategoriaList`: la CLI convierte a PascalCase el último segmento de la ruta que le des, sea cual sea. Esta guía nombra sus servicios inyectables con el sufijo `Service` (`ApiService`, `CategoriaService`, 3.9) por la misma razón de siempre — evitar, en el caso de `CategoriaService`, un choque de nombres real con la interfaz `Categoria` del modelo (3.7), que sí usa el nombre corto —, y se lo indica a la CLI en el propio comando, en vez de crear el archivo a mano.
+**Sobre el nombre de archivo y de clase.** Desde Angular 20, la CLI ya no agrega el sufijo `Service`/`Component` por defecto (Angular, 2026e): `ng generate service api` generaría un archivo `api.ts` con una clase `Api`. Esta guía nombra explícitamente sus servicios inyectables con el sufijo `Service` (`ApiService`, `CategoriaService`, 3.9), a mano — no solo por estilo: en el caso de `CategoriaService`, evita además un choque de nombres real con la interfaz `Categoria` del modelo (3.7), que sí usa el nombre corto.
+
+**Segunda forma, con la CLI (opcional).** No todo tiene que generarse con `ng generate` — un servicio con pocas líneas es igual de rápido a mano. Si prefieres la CLI de todas formas, nombra el propio comando con el sufijo incluido, para que la clase salga con el nombre correcto:
+
+```bash
+ng generate service core/services/api-service
+```
+
+Esto crea `api-service.ts` (con `ApiService` ya registrado como `@Injectable({ providedIn: 'root' })`) y `api-service.spec.ts` — igual que `ng generate component .../categoria-list` (3.10) genera la clase `CategoriaList`, porque la CLI convierte a PascalCase el último segmento de la ruta que le des. Cualquiera de las dos formas termina en el mismo archivo; solo falta reemplazar el contenido generado por el de arriba.
 
 ### 3.9 Crear `CategoriaService` (solo `listar`)
 
 **Producto del paso:** el único punto del frontend que sabe cómo se llega a `/api/v1/categorias` — por ahora, solo para leer.
 
-Genera el servicio con la CLI, igual que `ApiService` (3.8) — obtienes de una vez la clase `CategoriaService` y su `categoria-service.spec.ts`:
-
-```bash
-ng generate service features/catalogo/categoria/categoria-service
-```
-
-Reemplaza el contenido de `categoria-service.ts` con un único método por ahora:
+Crea `features/catalogo/categoria/categoria-service.ts`, con un único método por ahora:
 
 ```ts
 import { Injectable, inject } from '@angular/core';
@@ -520,13 +516,17 @@ export class CategoriaService {
 
 `CategoriaService` ya no arma ninguna URL completa por su cuenta: le pide a `ApiService` (3.8) que la construya a partir de `resource`, la ruta relativa propia de esta funcionalidad. `obtener()`, `crear()`, `actualizar()` y `eliminar()` se agregan recién en 3.11, cuando exista una pantalla que los necesite — construir los cinco métodos ahora, sin nada todavía que los llame, alargaría este paso sin ningún resultado visible en el camino.
 
+**Segunda forma, con la CLI (opcional, 3.8):** `ng generate service features/catalogo/categoria/categoria-service` genera `categoria-service.ts` (con la clase `CategoriaService` ya registrada) y `categoria-service.spec.ts` — luego reemplazas el contenido igual que arriba.
+
 ### 3.10 Crear `CategoriaList` y ver el primer resultado
 
 **Producto del paso:** la lista de categorías, visible en el navegador con datos reales del backend — el primer resultado end-to-end de la sesión.
 
 ```bash
-ng generate component features/catalogo/categoria/categoria-list
+ng generate component features/catalogo/categoria/categoria-list --flat
 ```
+
+`--flat` es necesario aquí: por defecto, `ng generate component` crea una subcarpeta con el nombre del componente (`categoria/categoria-list/categoria-list.ts`) — el comportamiento correcto cuando un componente vive solo. Pero `categoria/` ya es la carpeta por *recurso* (2.4): `categoria-list.ts` debe quedar directo dentro de ella, al mismo nivel que `categoria-service.ts` y `categoria.model.ts` (3.7, 3.9), no en una subcarpeta propia — `--flat` es lo que evita esa carpeta extra.
 
 Reemplaza el contenido de `features/catalogo/categoria/categoria-list.ts`:
 
@@ -752,8 +752,10 @@ El enlace **Editar** sigue sin funcionar (`CategoriaForm` se crea en 3.13) — e
 **Producto del paso:** una sola pantalla que sirve tanto para crear como para editar, según si la ruta trae un `id`.
 
 ```bash
-ng generate component features/catalogo/categoria/categoria-form
+ng generate component features/catalogo/categoria/categoria-form --flat
 ```
+
+`--flat` de nuevo (3.10): sin él, la CLI crearía `categoria/categoria-form/categoria-form.ts` en vez de dejarlo directo dentro de `categoria/`.
 
 Reemplaza el contenido de `features/catalogo/categoria/categoria-form.ts`:
 
