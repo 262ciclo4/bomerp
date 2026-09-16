@@ -107,7 +107,7 @@ flowchart TB
     API --> DB
 ```
 
-Lectura del diagrama: el usuario nunca navega recargando la página — el Layout (2.3) se mantiene fijo, y solo el contenido dentro de `router-outlet` cambia según la ruta activa. Ningún componente llama a `HttpClient` directamente: siempre pasa por `CategoriaService` (2.5), que es el único que conoce la URL real del backend.
+Lectura del diagrama: el usuario nunca navega recargando la página — el Layout (2.3) se mantiene fijo, y solo el contenido dentro de `router-outlet` cambia según la ruta activa. Ningún componente llama a `HttpClient` directamente: siempre pasa por `CategoriaService` (2.6), que es el único que conoce la URL real del backend.
 
 ### 2.2 Creación del proyecto frontend
 
@@ -125,9 +125,17 @@ En Angular, esa separación se resuelve con una ruta padre: un componente de lay
 
 El *routing* conecta una URL con el componente que debe mostrarse — sin él, la única forma de cambiar de pantalla sería recargar todo el documento. Organizar los componentes **por funcionalidad de negocio** (todo lo de `catalogo` junto, todo lo de `ventas` junto) en vez de **por tipo** (todos los componentes en una carpeta, todos los servicios en otra) es la recomendación oficial del propio equipo de Angular para cualquier aplicación que crezca más allá de un ejemplo pequeño (Angular, 2026c).
 
-Esta sesión adopta la convención ya definida para el producto de la unidad ([`docs/lp2/index.md`](../index.md)): `core/` (el layout de hoy, el servicio base de conexión al backend de 2.5, y más adelante sesión de seguridad, guards e interceptores), `shared/` (piezas reutilizables entre funcionalidades) y `features/` (una carpeta por módulo de negocio — `catalogo` hoy, `ventas`/`seguridad` en sesiones posteriores). Cada ruta se carga de forma perezosa (`loadComponent`): el navegador descarga el código de una pantalla recién cuando el usuario navega a ella, no todo de una vez al abrir la aplicación (3.6).
+Esta sesión adopta la convención ya definida para el producto de la unidad ([`docs/lp2/index.md`](../index.md)): `core/` (el layout de hoy, el servicio base de conexión al backend de 2.6, y más adelante sesión de seguridad, guards e interceptores), `shared/` (piezas reutilizables entre funcionalidades) y `features/` (una carpeta por módulo de negocio — `catalogo` hoy, `ventas`/`seguridad` en sesiones posteriores). Cada ruta se carga de forma perezosa (`loadComponent`): el navegador descarga el código de una pantalla recién cuando el usuario navega a ella, no todo de una vez al abrir la aplicación (3.6).
 
-### 2.5 Servicios HTTP hacia el backend
+### 2.5 Modelos de datos: `interface`, no `class`
+
+Un **modelo de datos** en el frontend describe la forma de lo que viaja por HTTP — sus campos y sus tipos —, no el comportamiento de una entidad de dominio: esa lógica vive en el backend (ADS/BD2), el frontend solo necesita saber qué campos esperar. TypeScript ofrece dos formas de describir esa forma: `interface`/`type` (contratos que el compilador verifica y luego desaparecen, sin generar ningún código JavaScript) y `class` (que sí genera un constructor real en tiempo de ejecución, con o sin métodos).
+
+Esa diferencia no es cosmética para un modelo de datos: `HttpClient` arma la respuesta de un endpoint con `JSON.parse()`, que siempre produce un objeto plano — nunca una instancia real de ninguna clase, sin importar con qué tipo se anote la respuesta. Tipar un modelo como `class` sugeriría, falsamente, que el objeto recibido tiene los métodos de esa clase disponibles; en la práctica, `instanceof` sobre ese objeto daría `false`, y cualquier método que la clase declarara simplemente no existiría en tiempo de ejecución. `interface` no tiene ese riesgo, porque nunca promete comportamiento: solo describe forma, que es exactamente lo único que un dato que cruza la red puede garantizar.
+
+La regla general: `interface` (o `type`) para cualquier dato que cruce una frontera de red (un DTO); `class` solo para objetos que sí necesitan comportamiento real construido en el navegador (por ejemplo, un `FormGroup` o un servicio inyectable, 2.6). El modelo `Categoria` de esta sesión (3.7) aplica el primer caso.
+
+### 2.6 Servicios HTTP hacia el backend
 
 Un servicio HTTP es una clase inyectable dedicada exclusivamente a hablar con el backend — arma la URL, hace la petición y devuelve el resultado — para que ningún componente necesite saber cómo se llama un endpoint ni qué verbo HTTP usa (Angular, 2026d). Separar esa responsabilidad del componente tiene una razón concreta: si la URL del backend cambia, o si el endpoint se reorganiza, se corrige en un solo archivo, no en cada componente que lo consume.
 
@@ -143,7 +151,7 @@ protected readonly categorias = httpResource<Categoria[]>(() => this.api.buildUr
 
 En la plantilla, `categorias.value()`, `categorias.isLoading()` y `categorias.error()` reemplazarían al `signal()` y al `error` que `CategoriaList` construye a mano (3.10). `httpResource()` existe desde antes (Angular 19.2), pero marcado como experimental; recién en Angular 22 —la versión de esta guía— pasó a ser una API estable, lista para código nuevo. Por eso, si le pides ayuda a una IA para un CRUD en Angular 22, es probable que te proponga esto para el caso de solo lectura (`listar()`): ya no es una apuesta arriesgada, es una recomendación válida del propio equipo de Angular. Esta guía sigue enseñando `HttpClient` + `subscribe()` (3.9-3.10) a propósito, no por desactualizada: es la forma con más años de documentación y respuestas de la comunidad para cuando algo falla, y esta es tu primera sesión de Angular — además, `httpResource()` es solo para lectura: la propia documentación de Angular advierte explícitamente "avoid using httpResource for mutations like POST or PUT — instead, prefer directly using the underlying HttpClient APIs" (Angular, 2026f) — `crear()`, `actualizar()` y `eliminar()` siguen siendo `HttpClient` normal pase lo que pase, así que `httpResource()` tampoco resuelve todo el CRUD por sí solo.
 
-### 2.6 CRUD de una tabla independiente
+### 2.7 CRUD de una tabla independiente
 
 Una **tabla independiente** no necesita ningún otro dato para poder crearse o mostrarse — no depende de seleccionar antes un registro de otra entidad. `Categoria` (S1-S3) es exactamente ese caso: no lleva ninguna llave foránea hacia otra tabla. Una **tabla dependiente**, en cambio, sí necesita eso — `Producto` depende de `Categoria` (llave foránea `ID_CATEGORIA`, S1/S3), así que su formulario necesita, además, una lista desplegable con las categorías existentes para poder elegir una.
 
@@ -373,6 +381,8 @@ Abre `http://localhost:4200`. Debe mostrarse el encabezado ("BomERP") y el sideb
 ### 3.7 Crear el modelo `Categoria`
 
 **Producto del paso:** el contrato de datos que el frontend comparte con `CategoriaResponse`/`CategoriaRequest` del backend (S3).
+
+`Categoria` se modela como `interface`, no como `class` (2.5): es un dato que solo cruza la red, sin comportamiento propio.
 
 Crea `features/catalogo/categoria/categoria.model.ts`:
 
@@ -764,7 +774,7 @@ Completa y evidencia estas tareas:
 
 1. Si tu equipo aún no comparte un proyecto Angular común, créalo con la misma estructura `core`/`shared`/`features` de esta sesión.
 2. Construye el layout (encabezado, sidebar, menú) con al menos dos rutas de navegación.
-3. Crea (o reutiliza, si ya existe) un `ApiService` en `core/` con la URL base de tu propio backend, y un servicio HTTP de funcionalidad que lo use para un CRUD completo (listar, crear, editar, eliminar) de una tabla independiente de tu propio dominio — una entidad que no dependa de seleccionar antes un dato de otra tabla (2.6).
+3. Crea (o reutiliza, si ya existe) un `ApiService` en `core/` con la URL base de tu propio backend, y un servicio HTTP de funcionalidad que lo use para un CRUD completo (listar, crear, editar, eliminar) de una tabla independiente de tu propio dominio — una entidad que no dependa de seleccionar antes un dato de otra tabla (2.7).
 4. Prueba el CRUD completo contra tu propio backend real, no con datos simulados.
 5. Documenta un error real encontrado.
 
