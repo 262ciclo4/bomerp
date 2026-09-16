@@ -4074,7 +4074,18 @@ ng<span class="w"> </span>serve
 <p>Desde <code>bomerp-frontend/</code>, genera el componente con la CLI en vez de crear los archivos a mano:</p>
 <div class="highlight"><pre><span></span><code>ng<span class="w"> </span>generate<span class="w"> </span>component<span class="w"> </span>core/layout
 </code></pre></div>
-<p>Esto crea <code>core/layout/layout.ts</code>, <code>layout.html</code>, <code>layout.css</code> y <code>layout.spec.ts</code>, ya registrados como standalone — sin <code>NgModule</code> que editar y sin el sufijo <code>Component</code> en el nombre de archivo ni en la clase (<code>Layout</code>, no <code>LayoutComponent</code>): desde Angular 20, la CLI ya no agrega ese sufijo por defecto (se retoma en 3.9, con <code>CategoriaService</code>). Reemplaza el contenido de los tres archivos generados:</p>
+<p>Esto crea <code>core/layout/layout.ts</code>, <code>layout.html</code>, <code>layout.css</code> y <code>layout.spec.ts</code>, ya registrados como standalone — sin <code>NgModule</code> que editar y sin el sufijo <code>Component</code> en el nombre de archivo ni en la clase (<code>Layout</code>, no <code>LayoutComponent</code>): desde Angular 20, la CLI ya no agrega ese sufijo por defecto (se retoma en 3.9, con <code>CategoriaService</code>). El <code>core/layout/layout.ts</code> que acaba de generar la CLI trae el <code>@Component</code> vacío de imports:</p>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Component</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/core'</span><span class="p">;</span>
+
+<span class="kd">@Component</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">imports</span><span class="o">:</span><span class="w"> </span><span class="p">[],</span>
+<span class="w">  </span><span class="nx">selector</span><span class="o">:</span><span class="w"> </span><span class="s1">'app-layout'</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">styleUrl</span><span class="o">:</span><span class="w"> </span><span class="s1">'./layout.css'</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">templateUrl</span><span class="o">:</span><span class="w"> </span><span class="s1">'./layout.html'</span><span class="p">,</span>
+<span class="p">})</span>
+<span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">Layout</span><span class="w"> </span><span class="p">{}</span>
+</code></pre></div>
+<p>Reemplaza el contenido de los tres archivos generados:</p>
 <p><strong><code>core/layout/layout.ts</code></strong></p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Component</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/core'</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">RouterOutlet</span><span class="p">,</span><span class="w"> </span><span class="nx">RouterLink</span><span class="p">,</span><span class="w"> </span><span class="nx">RouterLinkActive</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/router'</span><span class="p">;</span>
@@ -4087,6 +4098,12 @@ ng<span class="w"> </span>serve
 <span class="p">})</span>
 <span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">Layout</span><span class="w"> </span><span class="p">{}</span>
 </code></pre></div>
+<p>Dos cambios reales frente a lo que generó la CLI (arriba), ambos por la misma razón — el <code>layout.html</code> de abajo usa <code>routerLink</code>, <code>routerLinkActive</code> y <code>&lt;router-outlet&gt;</code>, y al ser un componente standalone nadie los importa por él:</p>
+<ul>
+<li><strong>Se agrega la línea</strong> <code>import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';</code> — sin ella, TypeScript no reconoce esos tres nombres.</li>
+<li><strong><code>imports: []</code> pasa a <code>imports: [RouterOutlet, RouterLink, RouterLinkActive]</code></strong> — un standalone component debe declarar en su propio <code>imports</code> cada directiva o componente que usa en su plantilla; a diferencia de un <code>NgModule</code> (2.2), aquí no hay un lugar central que los registre por todos.</li>
+</ul>
+<p>El orden de las propiedades dentro de <code>@Component({...})</code> (<code>selector</code>, <code>imports</code>, <code>templateUrl</code>, <code>styleUrl</code>) no importa — es un objeto de JavaScript, no una lista con secuencia obligatoria; que la CLI las genere en un orden y este documento las muestre en otro no es un error de ninguno de los dos lados.</p>
 <p><strong><code>core/layout/layout.html</code></strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">header</span> <span class="na">class</span><span class="o">=</span><span class="s">"header"</span><span class="p">&gt;</span>
   <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>BomERP<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
