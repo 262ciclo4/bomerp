@@ -113,7 +113,7 @@ Lectura del diagrama: el usuario nunca navega recargando la página — el Layou
 
 Un proyecto frontend de tipo SPA (*Single Page Application*) es una aplicación que corre completa en el navegador: una sola carga inicial de HTML/JS/CSS, y toda navegación posterior ocurre sin recargar la página — el propio JavaScript decide qué mostrar según la ruta, no el servidor pidiendo una página nueva cada vez. Un generador de proyecto (CLI) arma la estructura base — compilación, enrutamiento, inyección de dependencias — para no construir eso a mano en cada proyecto nuevo.
 
-El generador de Angular crea, por defecto, componentes **standalone** (sin `NgModule`) y una aplicación **zoneless**: la detección de cambios ya no depende de parchear las APIs asíncronas del navegador (temporizadores, promesas, eventos) como hacía Zone.js — reacciona a los `signal()` que un componente declara explícitamente (Angular, 2026a). Esto no cambia cómo se estructura un CRUD (3.7-3.11), pero sí explica por qué esta guía nunca importa `NgModule` en ningún archivo.
+El generador de Angular crea, por defecto, componentes **standalone** (sin `NgModule`) y una aplicación **zoneless**, sin que haga falta declarar ningún provider para eso — desde Angular 21, zoneless es el comportamiento por defecto del framework (Angular, 2026a): la detección de cambios ya no depende de parchear las APIs asíncronas del navegador (temporizadores, promesas, eventos) como hacía Zone.js — reacciona a los `signal()` que un componente declara explícitamente. Esto no cambia cómo se estructura un CRUD (3.7-3.11), pero sí explica por qué esta guía nunca importa `NgModule` en ningún archivo.
 
 ### 2.3 Layout y navegación: menú, sidebar y encabezado
 
@@ -245,7 +245,7 @@ bomerp-frontend/
 └── package.json
 ```
 
-No hay ningún `NgModule` en todo el proyecto (2.2): `app.ts` es un componente standalone, y `app.config.ts` declara los `providers` que antes vivían en un `AppModule`. `app.config.ts` ya incluye `provideZonelessChangeDetection()` — la aplicación nace zoneless, no es algo que esta sesión configure a mano.
+No hay ningún `NgModule` en todo el proyecto (2.2): `app.ts` es un componente standalone, y `app.config.ts` declara los `providers` que antes vivían en un `AppModule`. Lo que trae `app.config.ts` recién generado es `provideBrowserGlobalErrorListeners()` (reenvía errores no capturados del navegador al `ErrorHandler` de Angular) y `provideRouter(routes)` — **no** `provideZonelessChangeDetection()`: desde Angular 21, zoneless es el comportamiento por defecto del framework, sin necesidad de declararlo con ningún provider (Angular, 2026a). Esta guía sí lo agrega explícitamente en 3.8, no porque haga falta, sino para que quede visible en el código qué modo de detección de cambios está usando el proyecto.
 
 ### 3.5 Crear el layout: encabezado, sidebar y menú
 
@@ -426,18 +426,29 @@ El problema no es solo la repetición dentro de un mismo servicio: `http://local
 
 Los archivos que sí vas a crear en este paso son los tres que siguen.
 
-**Con archivo de ambientes** (lo que esta guía construye), la URL vive en un solo lugar, y cada servicio la consume sin conocerla directamente. Agrega `provideHttpClient()` a `app.config.ts` (junto a lo que `ng new` ya generó):
+**Con archivo de ambientes** (lo que esta guía construye), la URL vive en un solo lugar, y cada servicio la consume sin conocerla directamente. Agrega `provideZonelessChangeDetection()` y `provideHttpClient()` a `app.config.ts`, **sin quitar** lo que `ng new` ya generó (`provideBrowserGlobalErrorListeners()`, `provideRouter(routes)`):
 
 ```ts
-import { ApplicationConfig, provideZonelessChangeDetection } from '@angular/core';
+import {
+  ApplicationConfig,
+  provideBrowserGlobalErrorListeners,
+  provideZonelessChangeDetection,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideZonelessChangeDetection(), provideRouter(routes), provideHttpClient()],
+  providers: [
+    provideBrowserGlobalErrorListeners(),
+    provideZonelessChangeDetection(),
+    provideRouter(routes),
+    provideHttpClient(),
+  ],
 };
 ```
+
+`provideBrowserGlobalErrorListeners()` no se toca: es lo que la CLI ya trae para reenviar al `ErrorHandler` cualquier error no capturado del navegador (una promesa rechazada sin `.catch()`, un error fuera de cualquier `try/catch`) — quitarlo no rompe nada visible hoy, pero apaga sin darse cuenta un mecanismo de manejo de errores que Angular ya trae activado por defecto.
 
 Crea `src/environments/environment.ts`:
 
