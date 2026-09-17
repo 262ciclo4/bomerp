@@ -666,7 +666,7 @@ Reemplaza el contenido de `features/catalogo/categoria/categoria-list.html`:
         <td>{{ categoria.descripcion }}</td>
       </tr>
     } @empty {
-      @if (!error()) {
+      @if (!loading() && !error()) {
         <tr>
           <td colspan="2">No hay categorías registradas.</td>
         </tr>
@@ -676,9 +676,19 @@ Reemplaza el contenido de `features/catalogo/categoria/categoria-list.html`:
 </table>
 ```
 
-La tabla ya no se oculta entera — solo el texto "No hay categorías registradas" queda detrás de `@if (!error())`. La diferencia importa: `categorias()` está vacío tanto si la lista realmente no tiene datos como si la petición nunca llegó a responder, y sin distinguir esos dos casos el mensaje diría "no hay categorías" cuando en realidad es un problema de conexión. La tabla en sí (`<table>`, `<thead>`) no tiene ninguna razón para desaparecer: sigue siendo la estructura correcta incluso vacía.
+La tabla ya no se oculta entera — solo el texto "No hay categorías registradas" queda detrás de `@if (!loading() && !error())`. Las dos condiciones importan, no solo una: `categorias()` está vacío en tres casos distintos — mientras la petición todavía está en curso, si la petición falló, o si la lista de verdad no tiene datos — y el mensaje "no hay categorías" solo es cierto en el tercero. Sin `!loading()`, el mensaje aparecería un instante antes de que llegue la respuesta real, dando a entender que el catálogo está vacío cuando en realidad la carga ni siquiera terminó. La tabla en sí (`<table>`, `<thead>`) no tiene ninguna razón para desaparecer en ningún caso: sigue siendo la estructura correcta incluso vacía.
 
 `categorias` y `error` son `signal()`, no propiedades sueltas (2.2): la plantilla se vuelve a renderizar cuando cualquiera de los dos cambia de valor, sin depender de Zone.js. `@for`/`@if`/`@empty` es el control de flujo nativo de plantillas de Angular — reemplaza a `*ngFor`/`*ngIf` sin necesitar importar `CommonModule`. Todavía no hay columna de acciones ni botón **Eliminar**: `CategoriaService` (3.9) solo sabe `listar()` por ahora — agregarlos ya generaría un error de compilación, llamando a un método que la clase no tiene.
+
+Agrega a `src/styles.css` (el estilo global, generado por `ng new`, 3.3) la clase que usa `<p class="error">` (arriba):
+
+```css
+.error {
+  color: #b42318;
+}
+```
+
+`.error` va en el CSS global, no en un `styleUrl` propio de `CategoriaList`: es una convención visual de toda la aplicación (cualquier mensaje de error, en cualquier componente futuro, la va a reutilizar tal cual), no un estilo exclusivo de esta pantalla — declararla una sola vez en `styles.css` evita repetir la misma regla en cada componente que necesite mostrar un error (mismo criterio que `ApiService`, 3.8, aplicado a CSS en vez de a una URL). Sin esto, `<p class="error">` es solo un párrafo con una clase que ningún estilo todavía reconoce — el texto sale del mismo color que el resto de la página.
 
 Ahora que `CategoriaList` ya existe, agrega su ruta a `children` (3.6) — como hermana de `''`/`Inicio`, no en su lugar:
 
@@ -844,7 +854,7 @@ Agrega a `features/catalogo/categoria/categoria-list.html` la columna de accione
         </td>
       </tr>
     } @empty {
-      @if (!error()) {
+      @if (!loading() && !error()) {
         <tr>
           <td colspan="3">No hay categorías registradas.</td>
         </tr>
@@ -890,6 +900,7 @@ export class CategoriaForm {
   protected readonly id = signal<number | null>(null);
   protected readonly error = signal<string | null>(null);
   protected readonly loading = signal(false);
+  protected readonly errorCarga = signal(false);
 
   protected readonly form = this.fb.nonNullable.group({
     nombre: ['', [Validators.required, Validators.maxLength(80)]],
@@ -908,6 +919,7 @@ export class CategoriaForm {
           this.loading.set(false);
         },
         error: () => {
+          this.errorCarga.set(true);
           this.error.set('No se pudo cargar la categoría.');
           this.loading.set(false);
         },
@@ -916,6 +928,13 @@ export class CategoriaForm {
   }
 
   guardar(): void {
+    if (this.loading() || this.errorCarga()) return;
+
+    this.error.set(null);
+
+    const nombre = this.form.controls.nombre;
+    nombre.setValue(nombre.value.trim());
+
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -937,6 +956,22 @@ export class CategoriaForm {
   cancelar(): void {
     this.router.navigate(['/catalogo/categorias']);
   }
+
+  protected mensajeValidacion(campo: 'nombre' | 'descripcion'): string {
+    const control = this.form.controls[campo];
+
+    if (!control.touched) return '';
+
+    if (control.hasError('required')) {
+      return 'Este campo es obligatorio.';
+    }
+
+    if (control.hasError('maxlength')) {
+      return `Máximo ${control.getError('maxlength').requiredLength} caracteres.`;
+    }
+
+    return '';
+  }
 }
 ```
 
@@ -952,31 +987,44 @@ Reemplaza el contenido de `features/catalogo/categoria/categoria-form.html`:
     Nombre
     <input type="text" formControlName="nombre" />
   </label>
-  @if (form.controls.nombre.invalid && form.controls.nombre.touched) {
-    <p class="error">El nombre es obligatorio (máximo 80 caracteres).</p>
+  @if (mensajeValidacion('nombre'); as mensaje) {
+    <p class="error">{{ mensaje }}</p>
   }
 
   <label>
     Descripción
     <textarea formControlName="descripcion"></textarea>
   </label>
+  @if (mensajeValidacion('descripcion'); as mensaje) {
+    <p class="error">{{ mensaje }}</p>
+  }
 
   @if (error()) {
     <p class="error">{{ error() }}</p>
   }
 
-  <button type="submit" [disabled]="loading()">Guardar</button>
+  <button type="submit" [disabled]="loading() || errorCarga()">Guardar</button>
   <button type="button" (click)="cancelar()">Cancelar</button>
 </form>
 ```
+
+`class="error"` (arriba, en los dos mensajes de validación) ya se ve en rojo sin ningún paso adicional: es la misma clase `.error` que se declaró una sola vez en `src/styles.css` (3.10) — ningún componente necesita su propio archivo de estilos para reutilizarla.
 
 Las validaciones (`Validators.required`, `Validators.maxLength(80)`) calzan exactamente con `@NotBlank`/`@Size(max = 80)` de `CategoriaRequest` (S3, backend) — no son coincidencia: el formulario evita mandar una petición que el backend va a rechazar de todas formas, pero la validación real y definitiva sigue siendo la del backend, no la del formulario (el frontend nunca reemplaza esa responsabilidad).
 
 `type="button"` en **Cancelar** no es opcional: sin él, el botón heredaría el tipo por defecto de cualquier `<button>` dentro de un `<form>` (`submit`), y haría clic en "Cancelar" dispararía igual el `(ngSubmit)="guardar()"` del formulario — justo lo que se quiere evitar. `cancelar()` no necesita descartar nada del `form` explícitamente: como nunca llama a `guardar()`, ningún dato llega al backend, y al salir de la ruta Angular destruye el componente completo, incluido el `FormGroup`.
 
-`this.form.markAllAsTouched()` antes del `return` completa el `@if` que ya muestra el mensaje de `Nombre` (arriba): ese `@if` depende de `form.controls.nombre.touched`, y un campo queda `touched` recién cuando el usuario hace clic dentro y sale de él — no al hacer clic en **Guardar** directamente. Sin `markAllAsTouched()`, alguien que nunca tocó el campo `Nombre` y hace clic en **Guardar** ve que "no pasa nada", sin ningún mensaje que le explique por qué: el formulario es inválido, pero `touched` sigue en `false`. `markAllAsTouched()` marca todos los controles como tocados de una sola vez, así el mismo `@if` de siempre se activa también en el intento de envío.
+`this.form.markAllAsTouched()` antes del `return` sigue haciendo falta: `mensajeValidacion()` devuelve `''` mientras el campo no esté `touched`, y un campo queda `touched` recién cuando el usuario hace clic dentro y sale de él — no al hacer clic en **Guardar** directamente. Sin `markAllAsTouched()`, alguien que nunca tocó ningún campo y hace clic en **Guardar** ve que "no pasa nada", sin ningún mensaje que le explique por qué.
+
+Dos líneas nuevas al principio de `guardar()`, antes de tocar el formulario. `if (this.loading()) return;` refuerza, dentro del propio método, lo que `[disabled]="loading()"` ya hace en la plantilla — una segunda barrera contra un doble envío, no una redundante: el `disabled` del botón depende de que Angular vuelva a renderizar a tiempo, mientras que este `return` corta la ejecución sin depender de ningún repintado. `this.error.set(null)` limpia el mensaje de un intento anterior fallido contra el backend — sin esa línea, si guardar falla una vez, se corrige algo y el segundo intento resulta con el formulario inválido, quedarían visibles a la vez el mensaje viejo del backend (ya no tiene nada que ver con este intento) y el mensaje de validación nuevo.
+
+`nombre.setValue(nombre.value.trim())`, justo antes de revisar `this.form.invalid`, corrige un hueco real de `Validators.required`: ese validador solo rechaza una cadena vacía (`''`), no una cadena que solo tiene espacios (`'   '`) — un usuario que escribe únicamente espacios y sale del campo pasa la validación tal cual, y `crear()`/`actualizar()` mandarían ese valor al backend. `trim()` antes de validar convierte `'   '` en `''`, y ahí sí `Validators.required` lo rechaza como corresponde; de paso, un nombre como `' Bebidas '` llega al backend ya como `'Bebidas'`, sin espacios sueltos al principio o al final que nadie escribió a propósito.
+
+**Un mensaje por campo, no uno genérico** — la versión final. `mensajeValidacion()` recibe el nombre del campo (`'nombre'` o `'descripcion'`) y devuelve el mensaje correcto leyendo los errores reales de ese control (`control.hasError('required')`, `control.hasError('maxlength')`) — sin repetir la misma función para cada campo, y sin escribir el `80` de `Validators.maxLength(80)` a mano en el mensaje: `control.getError('maxlength').requiredLength` lo lee directo del propio error, así que si el validador cambia, el mensaje se actualiza solo. Es la misma idea que evitar 30 funciones casi idénticas si el formulario tuviera 30 campos (2.7) — pero sin perder el detalle de qué error específico falló, que un mensaje único para todo el formulario sí perdía. `@if (mensajeValidacion('nombre'); as mensaje)` aprovecha que Angular permite capturar en `mensaje` el valor devuelto por la expresión del `@if` — si `mensajeValidacion()` devuelve `''` (cadena vacía, un valor falsy), el bloque no se muestra, sin necesitar una condición aparte para "está vacío o no".
 
 `loading` cumple dos funciones, no una: mientras `obtener(id)` trae los datos para editar, evita que alguien alcance a hacer clic en **Guardar** antes de que el formulario tenga algo real que enviar — el propio caso que generó el bug de Angular de 3.14 era justo esa ventana. Mientras `guardar()` espera la respuesta del backend, `[disabled]="loading()"` evita un doble clic en **Guardar** que mandaría dos peticiones (dos `crear()`, o dos `actualizar()` compitiendo). `obtener(id)` ahora también tiene su propio `error`: antes, si el `id` de la URL no existía (categoría borrada por otra persona, URL editada a mano), el formulario quedaba en blanco sin ningún aviso — parecía un "crear" nuevo, no un error real.
+
+`errorCarga` resuelve un caso que `loading` por sí solo no cubre: una vez que `obtener(id)` termina (falló), `loading` vuelve a `false` — el botón **Guardar** quedaría habilitado de nuevo, sobre un formulario vacío que nunca llegó a cargar los datos reales. Sin `errorCarga`, hacer clic ahí no rompería nada por casualidad — `nombre` sigue vacío, así que `Validators.required` igual bloquearía el envío —, pero el mensaje que vería la persona sería "Este campo es obligatorio", que no es la causa real del problema (la carga falló, no que alguien haya olvidado escribir el nombre). `errorCarga` corta antes de eso y deja visible el único mensaje que sí explica lo que pasó: "No se pudo cargar la categoría."
 
 **Sobre Reactive Forms.** Angular 22 estabiliza una alternativa más nueva basada en `signal()` para formularios (Signal Forms, Angular 2026g). Esta guía enseña Reactive Forms (`FormBuilder`, `FormGroup`) a propósito: sigue siendo la forma estable y ampliamente documentada de construir formularios en Angular, y es la base que Signal Forms todavía está migrando a reemplazar — no una técnica obsoleta.
 
@@ -1180,7 +1228,7 @@ Indica 2 fortalezas y 2 recomendaciones.
 
 Tiempo: 5 min.
 
-**Resumen breve:** hoy nació el proyecto frontend de BomERP: navegación principal con layout propio (encabezado, sidebar, menú), estructura de carpetas por funcionalidad (`core`/`shared`/`features`), un servicio HTTP dedicado y el primer CRUD completo — de `Categoria` — conectado al backend real, sin recargar la página en ninguna operación.
+**Resumen breve:** hoy nació el proyecto frontend de BomERP: navegación principal con layout propio (encabezado, sidebar, menú), una página de inicio real, estructura de carpetas por funcionalidad (`core`/`shared`/`features`), un servicio HTTP dedicado con un interceptor de trazabilidad, y el primer CRUD completo — de `Categoria` — conectado al backend real, sin recargar la página en ninguna operación.
 
 **Dinámica participativa:** en una ronda rápida, cada estudiante comparte en qué carpeta (`core`, `shared` o `features`) le costó más decidir dónde poner algo, y por qué.
 

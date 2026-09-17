@@ -7,19 +7,24 @@
     Nombre
     <input type="text" formControlName="nombre" />
   </label>
-  @if (form.controls.nombre.invalid && form.controls.nombre.touched) {
-    <p class="error">El nombre es obligatorio (máximo 80 caracteres).</p>
+  @if (mensajeValidacion('nombre'); as mensaje) {
+    <p class="error">{{ mensaje }}</p>
   }
 
   <label>
     Descripción
     <textarea formControlName="descripcion"></textarea>
   </label>
+  @if (mensajeValidacion('descripcion'); as mensaje) {
+    <p class="error">{{ mensaje }}</p>
+  }
 
   @if (error()) {
     <p class="error">{{ error() }}</p>
   }
 
-  <button type="submit" [disabled]="loading()">Guardar</button>
-  <button type="button" (click)="cancelar()">Cancelar</button>
+<button type="submit" [disabled]="loading() || errorCarga()">
+  Guardar
+</button>
+<button type="button" (click)="cancelar()">Cancelar</button>
 </form>

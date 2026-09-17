@@ -17,6 +17,7 @@ export class CategoriaForm {
   protected readonly id = signal<number | null>(null);
   protected readonly error = signal<string | null>(null);
   protected readonly loading = signal(false);
+  protected readonly errorCarga = signal(false);
 
   protected readonly form = this.fb.nonNullable.group({
     nombre: ['', [Validators.required, Validators.maxLength(80)]],
@@ -35,14 +36,20 @@ export class CategoriaForm {
           this.loading.set(false);
         },
         error: () => {
-          this.error.set('No se pudo cargar la categoría.');
-          this.loading.set(false);
+            this.errorCarga.set(true);
+            this.error.set('No se pudo cargar la categoría.');
+            this.loading.set(false);
         },
       });
     }
   }
 
   guardar(): void {
+    if (this.loading() || this.errorCarga()) return;
+    this.error.set(null);
+    const nombre = this.form.controls.nombre;
+    nombre.setValue(nombre.value.trim());
+
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -63,5 +70,21 @@ export class CategoriaForm {
 
   cancelar(): void {
     this.router.navigate(['/catalogo/categorias']);
+  }
+
+  protected mensajeValidacion(campo: 'nombre' | 'descripcion'): string {
+    const control = this.form.controls[campo];
+
+    if (!control.touched) return '';
+
+    if (control.hasError('required')) {
+      return 'Este campo es obligatorio.';
+    }
+
+    if (control.hasError('maxlength')) {
+      return `Máximo ${control.getError('maxlength').requiredLength} caracteres.`;
+    }
+
+    return '';
   }
 }

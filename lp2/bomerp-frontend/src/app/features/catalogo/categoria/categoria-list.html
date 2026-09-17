@@ -27,7 +27,7 @@
         </td>
       </tr>
     } @empty {
-      @if (!error()) {
+      @if (!loading() && !error()) {
         <tr>
           <td colspan="3">No hay categorías registradas.</td>
         </tr>
