@@ -80,7 +80,7 @@ flowchart TB
     class S7 today;
 ```
 
-**Sobre el ambiente de esta sesión.** El sílabo declara Oracle Database 19c EE sobre Oracle Linux como ambiente de esta unidad — ese ambiente todavía no está aprovisionado en este repositorio. Esta guía explora la arquitectura de instancia sobre `bomerp-oracle` (Oracle XE, el mismo contenedor usado desde S1): los conceptos (SGA, PGA, procesos background, `ORACLE_HOME`/`ORACLE_SID`, SYSDBA) y las consultas de esta sesión son los mismos en cualquier instancia Oracle — lo único que cambiaría al migrar al ambiente oficial de la unidad son los comandos de conexión al sistema operativo, no las vistas ni los conceptos.
+**Sobre el ambiente de esta sesión.** El sílabo declara Oracle Database 19c EE sobre Oracle Linux como ambiente de esta unidad — ese ambiente todavía no está aprovisionado en este repositorio. Esta guía explora la arquitectura de instancia sobre `bomerp-oracle` (Oracle Database Free, el mismo contenedor usado desde S1 — la edición gratuita vigente desde Oracle 23c, que reemplazó a Oracle XE): los conceptos (SGA, PGA, procesos background, `ORACLE_HOME`/`ORACLE_SID`, SYSDBA) y las consultas de esta sesión son los mismos en cualquier instancia Oracle — lo único que cambiaría al migrar al ambiente oficial de la unidad son los comandos de conexión al sistema operativo, no las vistas ni los conceptos.
 
 ## 2. Explica
 
@@ -156,6 +156,26 @@ Un mismo servidor puede tener varias instalaciones de Oracle (`ORACLE_HOME`, la 
 Esto es, a propósito, la excepción al mínimo privilegio que el proyecto sigue desde S1: `BOMERP_APP` y `BOM_CATALOGO` nunca deben tener SYSDBA — es un privilegio de administración de la instancia, no de operación de la aplicación. El caso de 1.6.1 (`ORA-00942` sobre `V$SGA`) es exactamente esta separación funcionando como debe.
 
 **Error frecuente**: conectar como SYSDBA para hacer trabajo cotidiano de aplicación (consultas de negocio, pruebas de la API) "porque es más simple y no falla por permisos". Eso invierte la razón de ser del mínimo privilegio: la conexión SYSDBA queda reservada para administración real de la instancia, nunca como atajo para evitar configurar el privilegio correcto.
+
+### 2.6 Cómo lo hace la industria: configuración persistida y el alert log
+
+Todo lo explorado hasta aquí (2.2-2.5) alcanza para entender la arquitectura de una instancia — pero un DBA real, en producción, todavía depende de dos piezas que esta sesión no ha tocado.
+
+**La configuración de una instancia real no vive solo en memoria.** Un `ALTER SYSTEM SET` cambia un parámetro de la instancia en caliente, pero por defecto ese cambio se pierde en el próximo reinicio — para que sobreviva, tiene que persistirse en el **SPFILE** (*server parameter file*, un archivo binario que Oracle lee al arrancar), no en el PFILE de texto plano que usaban las versiones antiguas (Oracle Corporation, 2024g). Por eso `ALTER SYSTEM SET` acepta `SCOPE=MEMORY` (solo en caliente, se pierde al reiniciar), `SCOPE=SPFILE` (se persiste, pero no aplica hasta el próximo arranque) o `SCOPE=BOTH` (las dos cosas a la vez) — un cambio hecho solo con `SCOPE=MEMORY` es exactamente el error que deja a alguien preguntándose, semanas después, por qué "el ajuste que hice ya no está" tras un reinicio de mantenimiento.
+
+Esa misma configuración persistida decide, además, **cómo se reparte la memoria entre los componentes de la SGA** (2.2): de forma manual (cada componente con su propio tamaño fijo, `shared_pool_size`, `db_cache_size`, etc.), con **Automatic Shared Memory Management** (ASMM, un solo `sga_target` que Oracle redistribuye solo entre los componentes) o con **Automatic Memory Management** (AMM, un `memory_target` único que ya reparte automáticamente entre SGA y PGA juntas) (Oracle Corporation, 2024g). Una instancia real casi nunca fija cada componente a mano — depende de cuál de las tres estrategias tenga activa, verificable con la misma vista que ya usaste en 3.2:
+
+```sql
+SELECT name, value FROM V$PARAMETER WHERE name IN ('spfile', 'sga_target', 'memory_target', 'pga_aggregate_target');
+```
+
+**El alert log es lo primero que revisa un DBA real, antes que cualquier vista `V$`.** Es un archivo de texto (`alert_<SID>.log`) que registra, en orden cronológico, cada evento relevante de la instancia: arranques, apagados, cambios de parámetros persistidos, errores `ORA-` graves, y los propios cambios de redo log que ya hace `LGWR` (2.3, Tabla 2) — el mismo proceso que ya conoces, ahora visible como texto real, no solo como fila de una tabla. Vive dentro del **ADR** (*Automatic Diagnostic Repository*), la carpeta donde Oracle organiza todos sus diagnósticos, cuya raíz es el parámetro `diagnostic_dest` (Oracle Corporation, 2024h):
+
+```sql
+SELECT value FROM V$DIAG_INFO WHERE name = 'Diag Trace';
+```
+
+**Más allá de esta sesión.** Una sola instancia (lo que existe hoy en `bomerp-oracle`) es el caso más simple de Oracle en producción — a mayor escala, la industria usa **RAC** (*Real Application Clusters*, varias instancias compartiendo una misma base de datos, para alta disponibilidad y escalabilidad horizontal, Oracle Corporation, 2024h) y **Data Guard** (una base de datos réplica en espera, lista para tomar el lugar de la principal ante una caída). Ninguna de las dos es parte de esta unidad ni de este curso — se nombran para que quede claro que "una instancia" es el bloque fundamental sobre el que se construyen arquitecturas más grandes, no el límite superior de lo que Oracle puede hacer.
 
 ## 3. Aplica: actividad práctica guiada
 
@@ -265,9 +285,37 @@ SELECT * FROM V$SGA;
 
 El resultado esperado es `ORA-00942`, no una lista de valores — la misma consulta de 3.2, con un usuario sin el privilegio administrativo, falla por diseño.
 
-### 3.6 Documentar la arquitectura de la instancia
+### 3.6 Verificar la configuración persistida y el alert log
 
-**Producto del paso:** el informe de arquitectura, consolidando 3.2-3.5 en un solo documento.
+**Producto del paso:** confirmación de qué estrategia de memoria usa la instancia real, y evidencia real del alert log.
+
+Con la sesión SYSDBA todavía abierta (3.2), confirma qué estrategia de memoria (2.6) tiene activa la instancia:
+
+```sql
+SELECT name, value FROM V$PARAMETER WHERE name IN ('spfile', 'sga_target', 'memory_target', 'pga_aggregate_target');
+```
+
+`spfile` con una ruta real confirma que la instancia arrancó con un server parameter file, no con un PFILE de texto. `sga_target`/`memory_target` en `0` significa que ninguna de las dos automatizaciones (ASMM, AMM) está activa — la instancia reparte la SGA de forma manual, componente por componente; si tu instancia muestra un valor distinto de `0` en cualquiera de los dos, esa es la estrategia que sí tiene activa (2.6).
+
+Ubica el alert log a través del ADR:
+
+```sql
+SELECT value FROM V$DIAG_INFO WHERE name = 'Diag Trace';
+```
+
+Y revísalo directamente desde el sistema operativo del contenedor (no es una vista `V$`, es un archivo de texto real):
+
+```bash
+docker exec bomerp-oracle bash -c "tail -20 /opt/oracle/diag/rdbms/free/FREE/trace/alert_FREE.log"
+```
+
+Busca en el resultado una línea con `Thread 1 advanced to log sequence` — es `LGWR` (2.3, Tabla 2) cambiando de redo log, exactamente el mismo proceso ya conocido, ahora visible como texto real en vez de una fila de `V$LOG`.
+
+**Error frecuente**: buscar el alert log con una consulta SQL (`SELECT ... FROM alert_log` o similar). No existe como tabla ni como vista — es un archivo del sistema operativo dentro del ADR; se lee con herramientas de archivo (`tail`, `grep`, `cat`), nunca con `sqlplus`.
+
+### 3.7 Documentar la arquitectura de la instancia
+
+**Producto del paso:** el informe de arquitectura, consolidando 3.2-3.6 en un solo documento.
 
 **Tabla 3. Informe de arquitectura de la instancia `bomerp-oracle`**
 
@@ -279,8 +327,10 @@ El resultado esperado es `ORA-00942`, no una lista de valores — la misma consu
 | `ORACLE_HOME` / `ORACLE_SID` | 3.4 | (completar con los valores reales del contenedor) |
 | Usuarios con SYSDBA otorgado | 3.5 | (completar con la salida real de `V$PWFILE_USERS`) |
 | Acceso a `V$SGA` como `BOM_CATALOGO` | 3.5 | `ORA-00942` (esperado, confirma mínimo privilegio) |
+| Estrategia de memoria (`spfile`/`sga_target`/`memory_target`) | 3.6 | (completar con los valores reales de tu instancia) |
+| Hallazgo real en el alert log | 3.6 | (completar con una línea real encontrada, por ejemplo un cambio de redo log) |
 
-### 3.7 Relacionar con ADS y LP2
+### 3.8 Relacionar con ADS y LP2
 
 Sesión equivalente en los otros dos cursos, misma semana: ADS S7 construye el diagrama de clases completo del dominio (atributos, operaciones, relaciones, multiplicidades, agregación, composición, herencia y restricciones) — sin relación directa con la arquitectura de instancia de hoy, ambos cursos avanzan temas independientes de su propia Unidad II. LP2 S7 construye el proyecto frontend (Angular) y sigue conectándose a Oracle exactamente igual que desde S1 (`jdbc:oracle:thin:@localhost:1521/FREEPDB1`, usuario `BOMERP_APP`) — nada de lo explorado hoy cambia esa conexión: `BOMERP_APP` sigue sin SYSDBA, y así debe quedarse.
 
@@ -298,7 +348,8 @@ Completa y evidencia estas tareas:
 2. Identificar los procesos background activos, contrastados contra sus responsabilidades.
 3. Documentar `ORACLE_HOME` y `ORACLE_SID` (o su equivalente en tu ambiente), verificados contra `V$INSTANCE`.
 4. Conectar como SYSDBA y reproducir, con un usuario de aplicación propio, el caso de acceso restringido a una vista `V$` (1.6.1, 3.5).
-5. Documentar un hallazgo real.
+5. Verificar qué estrategia de memoria usa tu instancia (`spfile`/`sga_target`/`memory_target`) y ubicar tu propio alert log (2.6, 3.6).
+6. Documentar un hallazgo real — el alert log del paso anterior suele ser la fuente más rica para encontrar uno.
 
 ### 4.2 Propósito
 
@@ -331,7 +382,7 @@ Cada captura de pantalla del informe debe mostrar, sin recortar, el reloj del si
 Incluye capturas o salidas con una breve explicación debajo de cada una, organizadas en los mismos 4 bloques de la rúbrica (4.6):
 
 1. *SGA y PGA*
-    - Consulta y resultado de `V$SGA`/`V$SGAINFO` y `V$PGASTAT` sobre tu propia instancia.
+    - Consulta y resultado de `V$SGA`/`V$SGAINFO` y `V$PGASTAT` sobre tu propia instancia, y la estrategia de memoria activa (`spfile`/`sga_target`/`memory_target`).
 2. *Procesos background*
     - Lista de procesos activos (`V$BGPROCESS`), contrastada contra sus responsabilidades.
 3. *Variables de entorno*
@@ -341,7 +392,7 @@ Incluye capturas o salidas con una breve explicación debajo de cada una, organi
 
 **Error o hallazgo**
 
-Describe un hallazgo real: una variable de entorno que no coincidía con lo esperado, un proceso background que no imaginabas que existía, o un intento fallido de acceder a una vista `V$` que te ayudó a entender el privilegio SYSDBA.
+Describe un hallazgo real: una variable de entorno que no coincidía con lo esperado, un proceso background que no imaginabas que existía, un intento fallido de acceder a una vista `V$` que te ayudó a entender el privilegio SYSDBA, o una línea real de tu alert log (3.6) que no esperabas encontrar.
 
 **Reflexión técnica breve**
 
@@ -375,7 +426,7 @@ Pega esta página como la última hoja del PDF, con tus respuestas.
 La evidencia individual se considera completa si:
 
 - El archivo respeta el nombre solicitado.
-- Consulta y documenta SGA y PGA reales de su propia instancia.
+- Consulta y documenta SGA y PGA reales de su propia instancia, incluida la estrategia de memoria activa.
 - Identifica los procesos background activos, contrastados contra sus responsabilidades.
 - Documenta `ORACLE_HOME`/`ORACLE_SID` (o equivalente), verificados contra `V$INSTANCE`.
 - Evidencia una conexión SYSDBA distinta de una conexión de aplicación, con el caso de acceso restringido reproducido.
@@ -392,6 +443,7 @@ La evidencia individual se considera completa si:
 3. ¿Por qué `LGWR` no espera a `DBWn` para que un `COMMIT` se confirme?
 4. ¿Por qué `BOMERP_APP` (LP2) nunca debería tener el privilegio SYSDBA?
 5. En tu propio proyecto (4.1), ¿qué proceso background te sorprendió encontrar activo, y qué responsabilidad cumple?
+6. Un compañero cambia un parámetro con `ALTER SYSTEM SET ... SCOPE=MEMORY` y, tras reiniciar la instancia para aplicar otro cambio, el primero "desaparece". ¿Qué pasó, y qué `SCOPE` debió usar?
 
 ### 4.6 Rúbrica de evaluación
 
@@ -399,7 +451,7 @@ La evidencia individual se considera completa si:
 
 | Criterio | Peso (%) | A (20 pts) | B (15 pts) | C (10 pts) | D (5 pts) | Nivel obtenido |
 |---|---:|---|---|---|---|---:|
-| 1. SGA y PGA* | 25 | Consulta y documenta SGA/PGA reales, con los componentes principales identificados correctamente. | SGA/PGA consultadas, con algún componente sin identificar. | Consulta parcial o sin distinguir SGA de PGA. | No consulta SGA ni PGA. | |
+| 1. SGA y PGA* | 25 | Consulta y documenta SGA/PGA reales, con los componentes principales identificados correctamente y la estrategia de memoria (manual/ASMM/AMM) reconocida. | SGA/PGA consultadas, con algún componente o la estrategia de memoria sin identificar. | Consulta parcial o sin distinguir SGA de PGA. | No consulta SGA ni PGA. | |
 | 2. Procesos background* | 25 | Identifica los procesos activos y explica correctamente la responsabilidad de cada uno. | Procesos identificados, con alguna responsabilidad incompleta. | Lista de procesos sin explicación real. | No identifica procesos background. | |
 | 3. Variables de entorno* | 25 | `ORACLE_HOME`/`ORACLE_SID` documentados y verificados contra `V$INSTANCE`, con coincidencia confirmada. | Variables documentadas, sin verificación cruzada contra `V$INSTANCE`. | Variables mencionadas sin evidencia real. | No documenta variables de entorno. | |
 | 4. SYSDBA vs. aplicación* | 25 | Conexión SYSDBA evidenciada, con el caso de acceso restringido reproducido y explicado correctamente. | Conexión SYSDBA evidenciada, con el caso reproducido de forma parcial. | Menciona SYSDBA sin reproducir el caso de acceso restringido. | No evidencia ninguna conexión SYSDBA. | |
@@ -439,3 +491,5 @@ Tiempo: 5 min.
 4. Oracle Corporation. (2024d). *V$BGPROCESS*. Database Reference. https://docs.oracle.com/en/database/oracle/oracle-database/23/refrn/V-BGPROCESS.html
 5. Oracle Corporation. (2024e). *V$INSTANCE*. Database Reference. https://docs.oracle.com/en/database/oracle/oracle-database/23/refrn/V-INSTANCE.html
 6. Oracle Corporation. (2024f). *V$PWFILE_USERS*. Database Reference. https://docs.oracle.com/en/database/oracle/oracle-database/23/refrn/V-PWFILE_USERS.html
+7. Oracle Corporation. (2024g). *Managing Memory*. Database Administrator's Guide. https://docs.oracle.com/en/database/oracle/oracle-database/23/admin/managing-memory.html
+8. Oracle Corporation. (2024h). *Diagnosing and Resolving Problems*. Database Administrator's Guide. https://docs.oracle.com/en/database/oracle/oracle-database/23/admin/diagnosing-and-resolving-problems.html
