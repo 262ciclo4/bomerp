@@ -2369,6 +2369,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#26-como-lo-hace-la-industria-configuracion-persistida-y-el-alert-log" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Cómo lo hace la industria: configuración persistida y el alert log
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2442,10 +2453,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#36-documentar-la-arquitectura-de-la-instancia" class="md-nav__link">
+  <a href="#36-verificar-la-configuracion-persistida-y-el-alert-log" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.6 Documentar la arquitectura de la instancia
+        3.6 Verificar la configuración persistida y el alert log
       
     </span>
   </a>
@@ -2453,10 +2464,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#37-relacionar-con-ads-y-lp2" class="md-nav__link">
+  <a href="#37-documentar-la-arquitectura-de-la-instancia" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.7 Relacionar con ADS y LP2
+        3.7 Documentar la arquitectura de la instancia
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#38-relacionar-con-ads-y-lp2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 Relacionar con ADS y LP2
       
     </span>
   </a>
@@ -3499,6 +3521,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#26-como-lo-hace-la-industria-configuracion-persistida-y-el-alert-log" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Cómo lo hace la industria: configuración persistida y el alert log
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3572,10 +3605,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#36-documentar-la-arquitectura-de-la-instancia" class="md-nav__link">
+  <a href="#36-verificar-la-configuracion-persistida-y-el-alert-log" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.6 Documentar la arquitectura de la instancia
+        3.6 Verificar la configuración persistida y el alert log
       
     </span>
   </a>
@@ -3583,10 +3616,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#37-relacionar-con-ads-y-lp2" class="md-nav__link">
+  <a href="#37-documentar-la-arquitectura-de-la-instancia" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.7 Relacionar con ADS y LP2
+        3.7 Documentar la arquitectura de la instancia
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#38-relacionar-con-ads-y-lp2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 Relacionar con ADS y LP2
       
     </span>
   </a>
@@ -3822,7 +3866,7 @@
 
     classDef today fill:#ffe08a,stroke:#9a6b00,stroke-width:2px,color:#111;
     class S7 today;</code></pre>
-<p><strong>Sobre el ambiente de esta sesión.</strong> El sílabo declara Oracle Database 19c EE sobre Oracle Linux como ambiente de esta unidad — ese ambiente todavía no está aprovisionado en este repositorio. Esta guía explora la arquitectura de instancia sobre <code>bomerp-oracle</code> (Oracle XE, el mismo contenedor usado desde S1): los conceptos (SGA, PGA, procesos background, <code>ORACLE_HOME</code>/<code>ORACLE_SID</code>, SYSDBA) y las consultas de esta sesión son los mismos en cualquier instancia Oracle — lo único que cambiaría al migrar al ambiente oficial de la unidad son los comandos de conexión al sistema operativo, no las vistas ni los conceptos.</p>
+<p><strong>Sobre el ambiente de esta sesión.</strong> El sílabo declara Oracle Database 19c EE sobre Oracle Linux como ambiente de esta unidad — ese ambiente todavía no está aprovisionado en este repositorio. Esta guía explora la arquitectura de instancia sobre <code>bomerp-oracle</code> (Oracle Database Free, el mismo contenedor usado desde S1 — la edición gratuita vigente desde Oracle 23c, que reemplazó a Oracle XE): los conceptos (SGA, PGA, procesos background, <code>ORACLE_HOME</code>/<code>ORACLE_SID</code>, SYSDBA) y las consultas de esta sesión son los mismos en cualquier instancia Oracle — lo único que cambiaría al migrar al ambiente oficial de la unidad son los comandos de conexión al sistema operativo, no las vistas ni los conceptos.</p>
 <h2 id="2-explica">2. Explica<a class="headerlink" href="#2-explica" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 25 min.</p>
 <h3 id="21-arquitectura-de-la-sesion">2.1 Arquitectura de la sesión<a class="headerlink" href="#21-arquitectura-de-la-sesion" title="Permanent link">&para;</a></h3>
@@ -3897,6 +3941,16 @@
 <p><strong>SYSDBA</strong> no es un rol ni un privilegio de objeto — es un privilegio administrativo especial, separado por completo del sistema de privilegios normal, que habilita operaciones que ningún otro conjunto de privilegios permite: arrancar y apagar la instancia, crear la base de datos, y acceder a las vistas dinámicas de rendimiento (<code>V$...</code>) que exponen el estado interno de toda la instancia (Oracle Corporation, 2024b). Por eso puede autenticarse incluso cuando la base de datos todavía no está abierta — antes de que exista cualquier usuario "normal" para validar contra la base.</p>
 <p>Esto es, a propósito, la excepción al mínimo privilegio que el proyecto sigue desde S1: <code>BOMERP_APP</code> y <code>BOM_CATALOGO</code> nunca deben tener SYSDBA — es un privilegio de administración de la instancia, no de operación de la aplicación. El caso de 1.6.1 (<code>ORA-00942</code> sobre <code>V$SGA</code>) es exactamente esta separación funcionando como debe.</p>
 <p><strong>Error frecuente</strong>: conectar como SYSDBA para hacer trabajo cotidiano de aplicación (consultas de negocio, pruebas de la API) "porque es más simple y no falla por permisos". Eso invierte la razón de ser del mínimo privilegio: la conexión SYSDBA queda reservada para administración real de la instancia, nunca como atajo para evitar configurar el privilegio correcto.</p>
+<h3 id="26-como-lo-hace-la-industria-configuracion-persistida-y-el-alert-log">2.6 Cómo lo hace la industria: configuración persistida y el alert log<a class="headerlink" href="#26-como-lo-hace-la-industria-configuracion-persistida-y-el-alert-log" title="Permanent link">&para;</a></h3>
+<p>Todo lo explorado hasta aquí (2.2-2.5) alcanza para entender la arquitectura de una instancia — pero un DBA real, en producción, todavía depende de dos piezas que esta sesión no ha tocado.</p>
+<p><strong>La configuración de una instancia real no vive solo en memoria.</strong> Un <code>ALTER SYSTEM SET</code> cambia un parámetro de la instancia en caliente, pero por defecto ese cambio se pierde en el próximo reinicio — para que sobreviva, tiene que persistirse en el <strong>SPFILE</strong> (<em>server parameter file</em>, un archivo binario que Oracle lee al arrancar), no en el PFILE de texto plano que usaban las versiones antiguas (Oracle Corporation, 2024g). Por eso <code>ALTER SYSTEM SET</code> acepta <code>SCOPE=MEMORY</code> (solo en caliente, se pierde al reiniciar), <code>SCOPE=SPFILE</code> (se persiste, pero no aplica hasta el próximo arranque) o <code>SCOPE=BOTH</code> (las dos cosas a la vez) — un cambio hecho solo con <code>SCOPE=MEMORY</code> es exactamente el error que deja a alguien preguntándose, semanas después, por qué "el ajuste que hice ya no está" tras un reinicio de mantenimiento.</p>
+<p>Esa misma configuración persistida decide, además, <strong>cómo se reparte la memoria entre los componentes de la SGA</strong> (2.2): de forma manual (cada componente con su propio tamaño fijo, <code>shared_pool_size</code>, <code>db_cache_size</code>, etc.), con <strong>Automatic Shared Memory Management</strong> (ASMM, un solo <code>sga_target</code> que Oracle redistribuye solo entre los componentes) o con <strong>Automatic Memory Management</strong> (AMM, un <code>memory_target</code> único que ya reparte automáticamente entre SGA y PGA juntas) (Oracle Corporation, 2024g). Una instancia real casi nunca fija cada componente a mano — depende de cuál de las tres estrategias tenga activa, verificable con la misma vista que ya usaste en 3.2:</p>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">V$PARAMETER</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">'spfile'</span><span class="p">,</span><span class="w"> </span><span class="s1">'sga_target'</span><span class="p">,</span><span class="w"> </span><span class="s1">'memory_target'</span><span class="p">,</span><span class="w"> </span><span class="s1">'pga_aggregate_target'</span><span class="p">);</span>
+</code></pre></div>
+<p><strong>El alert log es lo primero que revisa un DBA real, antes que cualquier vista <code>V$</code>.</strong> Es un archivo de texto (<code>alert_&lt;SID&gt;.log</code>) que registra, en orden cronológico, cada evento relevante de la instancia: arranques, apagados, cambios de parámetros persistidos, errores <code>ORA-</code> graves, y los propios cambios de redo log que ya hace <code>LGWR</code> (2.3, Tabla 2) — el mismo proceso que ya conoces, ahora visible como texto real, no solo como fila de una tabla. Vive dentro del <strong>ADR</strong> (<em>Automatic Diagnostic Repository</em>), la carpeta donde Oracle organiza todos sus diagnósticos, cuya raíz es el parámetro <code>diagnostic_dest</code> (Oracle Corporation, 2024h):</p>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">V$DIAG_INFO</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'Diag Trace'</span><span class="p">;</span>
+</code></pre></div>
+<p><strong>Más allá de esta sesión.</strong> Una sola instancia (lo que existe hoy en <code>bomerp-oracle</code>) es el caso más simple de Oracle en producción — a mayor escala, la industria usa <strong>RAC</strong> (<em>Real Application Clusters</em>, varias instancias compartiendo una misma base de datos, para alta disponibilidad y escalabilidad horizontal, Oracle Corporation, 2024h) y <strong>Data Guard</strong> (una base de datos réplica en espera, lista para tomar el lugar de la principal ante una caída). Ninguna de las dos es parte de esta unidad ni de este curso — se nombran para que quede claro que "una instancia" es el bloque fundamental sobre el que se construyen arquitecturas más grandes, no el límite superior de lo que Oracle puede hacer.</p>
 <h2 id="3-aplica-actividad-practica-guiada">3. Aplica: actividad práctica guiada<a class="headerlink" href="#3-aplica-actividad-practica-guiada" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 90 min.</p>
 <h3 id="31-verificar-el-punto-de-partida">3.1 Verificar el punto de partida<a class="headerlink" href="#31-verificar-el-punto-de-partida" title="Permanent link">&para;</a></h3>
@@ -3951,8 +4005,22 @@
 <div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">V$SGA</span><span class="p">;</span>
 </code></pre></div>
 <p>El resultado esperado es <code>ORA-00942</code>, no una lista de valores — la misma consulta de 3.2, con un usuario sin el privilegio administrativo, falla por diseño.</p>
-<h3 id="36-documentar-la-arquitectura-de-la-instancia">3.6 Documentar la arquitectura de la instancia<a class="headerlink" href="#36-documentar-la-arquitectura-de-la-instancia" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> el informe de arquitectura, consolidando 3.2-3.5 en un solo documento.</p>
+<h3 id="36-verificar-la-configuracion-persistida-y-el-alert-log">3.6 Verificar la configuración persistida y el alert log<a class="headerlink" href="#36-verificar-la-configuracion-persistida-y-el-alert-log" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> confirmación de qué estrategia de memoria usa la instancia real, y evidencia real del alert log.</p>
+<p>Con la sesión SYSDBA todavía abierta (3.2), confirma qué estrategia de memoria (2.6) tiene activa la instancia:</p>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">V$PARAMETER</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">'spfile'</span><span class="p">,</span><span class="w"> </span><span class="s1">'sga_target'</span><span class="p">,</span><span class="w"> </span><span class="s1">'memory_target'</span><span class="p">,</span><span class="w"> </span><span class="s1">'pga_aggregate_target'</span><span class="p">);</span>
+</code></pre></div>
+<p><code>spfile</code> con una ruta real confirma que la instancia arrancó con un server parameter file, no con un PFILE de texto. <code>sga_target</code>/<code>memory_target</code> en <code>0</code> significa que ninguna de las dos automatizaciones (ASMM, AMM) está activa — la instancia reparte la SGA de forma manual, componente por componente; si tu instancia muestra un valor distinto de <code>0</code> en cualquiera de los dos, esa es la estrategia que sí tiene activa (2.6).</p>
+<p>Ubica el alert log a través del ADR:</p>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">V$DIAG_INFO</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'Diag Trace'</span><span class="p">;</span>
+</code></pre></div>
+<p>Y revísalo directamente desde el sistema operativo del contenedor (no es una vista <code>V$</code>, es un archivo de texto real):</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>bomerp-oracle<span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">"tail -20 /opt/oracle/diag/rdbms/free/FREE/trace/alert_FREE.log"</span>
+</code></pre></div>
+<p>Busca en el resultado una línea con <code>Thread 1 advanced to log sequence</code> — es <code>LGWR</code> (2.3, Tabla 2) cambiando de redo log, exactamente el mismo proceso ya conocido, ahora visible como texto real en vez de una fila de <code>V$LOG</code>.</p>
+<p><strong>Error frecuente</strong>: buscar el alert log con una consulta SQL (<code>SELECT ... FROM alert_log</code> o similar). No existe como tabla ni como vista — es un archivo del sistema operativo dentro del ADR; se lee con herramientas de archivo (<code>tail</code>, <code>grep</code>, <code>cat</code>), nunca con <code>sqlplus</code>.</p>
+<h3 id="37-documentar-la-arquitectura-de-la-instancia">3.7 Documentar la arquitectura de la instancia<a class="headerlink" href="#37-documentar-la-arquitectura-de-la-instancia" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> el informe de arquitectura, consolidando 3.2-3.6 en un solo documento.</p>
 <p><strong>Tabla 3. Informe de arquitectura de la instancia <code>bomerp-oracle</code></strong></p>
 <table>
 <thead>
@@ -3993,9 +4061,19 @@
 <td>3.5</td>
 <td><code>ORA-00942</code> (esperado, confirma mínimo privilegio)</td>
 </tr>
+<tr>
+<td>Estrategia de memoria (<code>spfile</code>/<code>sga_target</code>/<code>memory_target</code>)</td>
+<td>3.6</td>
+<td>(completar con los valores reales de tu instancia)</td>
+</tr>
+<tr>
+<td>Hallazgo real en el alert log</td>
+<td>3.6</td>
+<td>(completar con una línea real encontrada, por ejemplo un cambio de redo log)</td>
+</tr>
 </tbody>
 </table>
-<h3 id="37-relacionar-con-ads-y-lp2">3.7 Relacionar con ADS y LP2<a class="headerlink" href="#37-relacionar-con-ads-y-lp2" title="Permanent link">&para;</a></h3>
+<h3 id="38-relacionar-con-ads-y-lp2">3.8 Relacionar con ADS y LP2<a class="headerlink" href="#38-relacionar-con-ads-y-lp2" title="Permanent link">&para;</a></h3>
 <p>Sesión equivalente en los otros dos cursos, misma semana: ADS S7 construye el diagrama de clases completo del dominio (atributos, operaciones, relaciones, multiplicidades, agregación, composición, herencia y restricciones) — sin relación directa con la arquitectura de instancia de hoy, ambos cursos avanzan temas independientes de su propia Unidad II. LP2 S7 construye el proyecto frontend (Angular) y sigue conectándose a Oracle exactamente igual que desde S1 (<code>jdbc:oracle:thin:@localhost:1521/FREEPDB1</code>, usuario <code>BOMERP_APP</code>) — nada de lo explorado hoy cambia esa conexión: <code>BOMERP_APP</code> sigue sin SYSDBA, y así debe quedarse.</p>
 <h2 id="4-crea-actividad-autonoma">4. Crea: actividad autónoma<a class="headerlink" href="#4-crea-actividad-autonoma" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 2h fuera del aula.</p>
@@ -4007,7 +4085,8 @@
 <li>Identificar los procesos background activos, contrastados contra sus responsabilidades.</li>
 <li>Documentar <code>ORACLE_HOME</code> y <code>ORACLE_SID</code> (o su equivalente en tu ambiente), verificados contra <code>V$INSTANCE</code>.</li>
 <li>Conectar como SYSDBA y reproducir, con un usuario de aplicación propio, el caso de acceso restringido a una vista <code>V$</code> (1.6.1, 3.5).</li>
-<li>Documentar un hallazgo real.</li>
+<li>Verificar qué estrategia de memoria usa tu instancia (<code>spfile</code>/<code>sga_target</code>/<code>memory_target</code>) y ubicar tu propio alert log (2.6, 3.6).</li>
+<li>Documentar un hallazgo real — el alert log del paso anterior suele ser la fuente más rica para encontrar uno.</li>
 </ol>
 <h3 id="42-proposito">4.2 Propósito<a class="headerlink" href="#42-proposito" title="Permanent link">&para;</a></h3>
 <p>Que cada estudiante demuestre, de forma individual y fuera del aula, que puede explorar la arquitectura de una instancia Oracle real y distinguir una conexión administrativa de una conexión de aplicación, sin el acompañamiento del docente.</p>
@@ -4030,7 +4109,7 @@
 <p>Incluye capturas o salidas con una breve explicación debajo de cada una, organizadas en los mismos 4 bloques de la rúbrica (4.6):</p>
 <ol>
 <li><em>SGA y PGA</em><ul>
-<li>Consulta y resultado de <code>V$SGA</code>/<code>V$SGAINFO</code> y <code>V$PGASTAT</code> sobre tu propia instancia.</li>
+<li>Consulta y resultado de <code>V$SGA</code>/<code>V$SGAINFO</code> y <code>V$PGASTAT</code> sobre tu propia instancia, y la estrategia de memoria activa (<code>spfile</code>/<code>sga_target</code>/<code>memory_target</code>).</li>
 </ul>
 </li>
 <li><em>Procesos background</em><ul>
@@ -4047,7 +4126,7 @@
 </li>
 </ol>
 <p><strong>Error o hallazgo</strong></p>
-<p>Describe un hallazgo real: una variable de entorno que no coincidía con lo esperado, un proceso background que no imaginabas que existía, o un intento fallido de acceder a una vista <code>V$</code> que te ayudó a entender el privilegio SYSDBA.</p>
+<p>Describe un hallazgo real: una variable de entorno que no coincidía con lo esperado, un proceso background que no imaginabas que existía, un intento fallido de acceder a una vista <code>V$</code> que te ayudó a entender el privilegio SYSDBA, o una línea real de tu alert log (3.6) que no esperabas encontrar.</p>
 <p><strong>Reflexión técnica breve</strong></p>
 <p>Responde en 5 a 8 líneas:</p>
 <div class="highlight"><pre><span></span><code>¿Por qué SYSDBA rompe, a propósito, el principio de mínimo privilegio
@@ -4078,7 +4157,7 @@ que el proyecto sigue desde S1 — y por qué esa excepción está bien?
 <p>La evidencia individual se considera completa si:</p>
 <ul>
 <li>El archivo respeta el nombre solicitado.</li>
-<li>Consulta y documenta SGA y PGA reales de su propia instancia.</li>
+<li>Consulta y documenta SGA y PGA reales de su propia instancia, incluida la estrategia de memoria activa.</li>
 <li>Identifica los procesos background activos, contrastados contra sus responsabilidades.</li>
 <li>Documenta <code>ORACLE_HOME</code>/<code>ORACLE_SID</code> (o equivalente), verificados contra <code>V$INSTANCE</code>.</li>
 <li>Evidencia una conexión SYSDBA distinta de una conexión de aplicación, con el caso de acceso restringido reproducido.</li>
@@ -4095,6 +4174,7 @@ que el proyecto sigue desde S1 — y por qué esa excepción está bien?
 <li>¿Por qué <code>LGWR</code> no espera a <code>DBWn</code> para que un <code>COMMIT</code> se confirme?</li>
 <li>¿Por qué <code>BOMERP_APP</code> (LP2) nunca debería tener el privilegio SYSDBA?</li>
 <li>En tu propio proyecto (4.1), ¿qué proceso background te sorprendió encontrar activo, y qué responsabilidad cumple?</li>
+<li>Un compañero cambia un parámetro con <code>ALTER SYSTEM SET ... SCOPE=MEMORY</code> y, tras reiniciar la instancia para aplicar otro cambio, el primero "desaparece". ¿Qué pasó, y qué <code>SCOPE</code> debió usar?</li>
 </ol>
 <h3 id="46-rubrica-de-evaluacion">4.6 Rúbrica de evaluación<a class="headerlink" href="#46-rubrica-de-evaluacion" title="Permanent link">&para;</a></h3>
 <p><strong>Tabla 4. Rúbrica de evaluación</strong></p>
@@ -4114,8 +4194,8 @@ que el proyecto sigue desde S1 — y por qué esa excepción está bien?
 <tr>
 <td>1. SGA y PGA*</td>
 <td style="text-align: right;">25</td>
-<td>Consulta y documenta SGA/PGA reales, con los componentes principales identificados correctamente.</td>
-<td>SGA/PGA consultadas, con algún componente sin identificar.</td>
+<td>Consulta y documenta SGA/PGA reales, con los componentes principales identificados correctamente y la estrategia de memoria (manual/ASMM/AMM) reconocida.</td>
+<td>SGA/PGA consultadas, con algún componente o la estrategia de memoria sin identificar.</td>
 <td>Consulta parcial o sin distinguir SGA de PGA.</td>
 <td>No consulta SGA ni PGA.</td>
 <td style="text-align: right;"></td>
@@ -4173,6 +4253,8 @@ Indica 2 fortalezas y 2 recomendaciones.
 <li>Oracle Corporation. (2024d). <em>V$BGPROCESS</em>. Database Reference. https://docs.oracle.com/en/database/oracle/oracle-database/23/refrn/V-BGPROCESS.html</li>
 <li>Oracle Corporation. (2024e). <em>V$INSTANCE</em>. Database Reference. https://docs.oracle.com/en/database/oracle/oracle-database/23/refrn/V-INSTANCE.html</li>
 <li>Oracle Corporation. (2024f). <em>V$PWFILE_USERS</em>. Database Reference. https://docs.oracle.com/en/database/oracle/oracle-database/23/refrn/V-PWFILE_USERS.html</li>
+<li>Oracle Corporation. (2024g). <em>Managing Memory</em>. Database Administrator's Guide. https://docs.oracle.com/en/database/oracle/oracle-database/23/admin/managing-memory.html</li>
+<li>Oracle Corporation. (2024h). <em>Diagnosing and Resolving Problems</em>. Database Administrator's Guide. https://docs.oracle.com/en/database/oracle/oracle-database/23/admin/diagnosing-and-resolving-problems.html</li>
 </ol>
 
 
