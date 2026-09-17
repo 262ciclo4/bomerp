@@ -16,6 +16,7 @@ export class CategoriaForm {
 
   protected readonly id = signal<number | null>(null);
   protected readonly error = signal<string | null>(null);
+  protected readonly loading = signal(false);
 
   protected readonly form = this.fb.nonNullable.group({
     nombre: ['', [Validators.required, Validators.maxLength(80)]],
@@ -27,23 +28,36 @@ export class CategoriaForm {
     if (idParam) {
       const id = Number(idParam);
       this.id.set(id);
-      this.categoriaService.obtener(id).subscribe((categoria) => {
-        this.form.patchValue(categoria);
+      this.loading.set(true);
+      this.categoriaService.obtener(id).subscribe({
+        next: (categoria) => {
+          this.form.patchValue(categoria);
+          this.loading.set(false);
+        },
+        error: () => {
+          this.error.set('No se pudo cargar la categoría.');
+          this.loading.set(false);
+        },
       });
     }
   }
 
   guardar(): void {
     if (this.form.invalid) {
+      this.form.markAllAsTouched();
       return;
     }
     const valor = this.form.getRawValue();
     const id = this.id();
     const peticion = id ? this.categoriaService.actualizar(id, valor) : this.categoriaService.crear(valor);
 
+    this.loading.set(true);
     peticion.subscribe({
       next: () => this.router.navigate(['/catalogo/categorias']),
-      error: () => this.error.set('No se pudo guardar la categoría.'),
+      error: () => {
+        this.error.set('No se pudo guardar la categoría.');
+        this.loading.set(false);
+      },
     });
   }
 

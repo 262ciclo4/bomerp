@@ -28,7 +28,7 @@ Al concluir la clase, estarás en condiciones de:
 
 ### 1.4 Producto de sesión
 
-Proyecto Angular 22 (`lp2/bomerp-frontend`), con navegación principal (encabezado, sidebar y menú) organizada en `core`/`shared`/`features`, ruteo funcional entre pantallas, y un CRUD completo (listar, crear, editar, eliminar) de `Categoria` (`catalogo`), conectado a `http://localhost:8080/api/v1/categorias`.
+Proyecto Angular 22 (`lp2/bomerp-frontend`), con navegación principal (encabezado, sidebar y menú) organizada en `core`/`shared`/`features`, una página de inicio real en `/`, ruteo funcional entre pantallas, un interceptor HTTP que agrega `X-Trace-ID` a cada petición, y un CRUD completo (listar, crear, editar, eliminar) de `Categoria` (`catalogo`), conectado a `http://localhost:8080/api/v1/categorias`.
 
 ### 1.5 Metodología
 
@@ -64,7 +64,7 @@ Esta sesión no reemplaza el backend ni cambia ninguno de sus endpoints: constru
 - Unidad: U2 - SPA modular segura para BomERP.
 - Producto del curso: base Full-Stack modular de BomERP.
 - Producto de unidad: SPA modular y segura, conectada al backend, con navegación por funcionalidades, CRUD de tablas independientes y dependientes, formularios transaccionales, consultas, reportes y control de acceso.
-- Avance del producto en esta sesión: nace el proyecto frontend, con su navegación principal y el primer CRUD independiente (`Categoria`, módulo `catalogo`), conectado al backend real.
+- Avance del producto en esta sesión: nace el proyecto frontend, con su navegación principal, una página de inicio, un interceptor HTTP de trazabilidad y el primer CRUD independiente (`Categoria`, módulo `catalogo`), conectado al backend real.
 
 **Figura 1. Roadmap del producto de la unidad**
 
@@ -524,6 +524,46 @@ ng generate service core/services/api-service
 
 Esto crea `api-service.ts` (con `ApiService` ya registrado como `@Injectable({ providedIn: 'root' })`) y `api-service.spec.ts` — igual que `ng generate component .../categoria-list` (3.10) genera la clase `CategoriaList`, porque la CLI convierte a PascalCase el último segmento de la ruta que le des. Cualquiera de las dos formas termina en el mismo archivo; solo falta reemplazar el contenido generado por el de arriba.
 
+**El backend ya espera un `X-Trace-ID`, falta que el frontend lo mande.** El filtro `CorrelationIdFilter` (`lp2/bomerp-backend`, S5) ya lee ese header en cada petición y lo agrega a cada línea de log (`logback-spring.xml`, `%X{traceId}`) — si nadie lo manda, genera uno aleatorio por su cuenta, así que el backend nunca falla por su ausencia. El problema es otro: un UUID que el backend inventa por su cuenta no sirve para correlacionar nada desde el frontend — si una petición falla, no hay ningún valor que el navegador conozca de antemano para buscarlo en los logs. Lo acordado (S5) fue que el frontend genere su propio `X-Trace-ID` y lo mande en cada petición, para que el mismo valor visible en la consola del navegador sea el que se busca en `logs/bomerp.log`.
+
+Crea `core/interceptors/trace-id-interceptor.ts`:
+
+```ts
+import { HttpInterceptorFn } from '@angular/common/http';
+
+export const traceIdInterceptor: HttpInterceptorFn = (req, next) => {
+  const traceId = crypto.randomUUID();
+  return next(req.clone({ headers: req.headers.set('X-Trace-ID', traceId) }));
+};
+```
+
+Un interceptor HTTP es una función que Angular ejecuta para *cada* petición que salga por `HttpClient` — ningún servicio de funcionalidad (`CategoriaService`, 3.9) necesita saber que existe ni recordar agregar nada, mismo principio que `ApiService` (arriba), aplicado a un header en vez de a una URL. `crypto.randomUUID()` es una API nativa del navegador (Web Crypto): genera un identificador único sin agregar ninguna librería.
+
+Registra el interceptor en `app.config.ts`, agregando `withInterceptors([traceIdInterceptor])` a `provideHttpClient()`:
+
+```ts
+import {
+  ApplicationConfig,
+  provideBrowserGlobalErrorListeners,
+  provideZonelessChangeDetection,
+} from '@angular/core';
+import { provideRouter } from '@angular/router';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { routes } from './app.routes';
+import { traceIdInterceptor } from './core/interceptors/trace-id-interceptor';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideBrowserGlobalErrorListeners(),
+    provideZonelessChangeDetection(),
+    provideRouter(routes),
+    provideHttpClient(withInterceptors([traceIdInterceptor])),
+  ],
+};
+```
+
+`withInterceptors()` recibe un arreglo porque puede haber más de uno (autenticación en S10, logging, reintentos) — cada petición pasa por todos, en el mismo orden en que se listan. Con uno solo por ahora alcanza.
+
 ### 3.9 Crear `CategoriaService` (solo `listar`)
 
 **Producto del paso:** el único punto del frontend que sabe cómo se llega a `/api/v1/categorias` — por ahora, solo para leer.
@@ -612,31 +652,31 @@ Reemplaza el contenido de `features/catalogo/categoria/categoria-list.html`:
 
 <a routerLink="/catalogo/categorias/nueva">Nueva categoría</a>
 
-@if (!error()) {
-  <table>
-    <thead>
+<table>
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Descripción</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (categoria of categorias(); track categoria.id) {
       <tr>
-        <th>Nombre</th>
-        <th>Descripción</th>
+        <td>{{ categoria.nombre }}</td>
+        <td>{{ categoria.descripcion }}</td>
       </tr>
-    </thead>
-    <tbody>
-      @for (categoria of categorias(); track categoria.id) {
-        <tr>
-          <td>{{ categoria.nombre }}</td>
-          <td>{{ categoria.descripcion }}</td>
-        </tr>
-      } @empty {
+    } @empty {
+      @if (!error()) {
         <tr>
           <td colspan="2">No hay categorías registradas.</td>
         </tr>
       }
-    </tbody>
-  </table>
-}
+    }
+  </tbody>
+</table>
 ```
 
-La tabla queda detrás de `@if (!error())`: sin esa condición, "No hay categorías registradas" (el `@empty` de arriba) seguiría apareciendo también cuando la petición falla — `categorias()` está vacío en los dos casos (una lista real sin datos, o una petición que nunca llegó a responder), y sin distinguirlos el mensaje de error y el de "vacío" aparecerían juntos, dando a entender que el catálogo realmente no tiene categorías cuando en realidad es un problema de conexión.
+La tabla ya no se oculta entera — solo el texto "No hay categorías registradas" queda detrás de `@if (!error())`. La diferencia importa: `categorias()` está vacío tanto si la lista realmente no tiene datos como si la petición nunca llegó a responder, y sin distinguir esos dos casos el mensaje diría "no hay categorías" cuando en realidad es un problema de conexión. La tabla en sí (`<table>`, `<thead>`) no tiene ninguna razón para desaparecer: sigue siendo la estructura correcta incluso vacía.
 
 `categorias` y `error` son `signal()`, no propiedades sueltas (2.2): la plantilla se vuelve a renderizar cuando cualquiera de los dos cambia de valor, sin depender de Zone.js. `@for`/`@if`/`@empty` es el control de flujo nativo de plantillas de Angular — reemplaza a `*ngFor`/`*ngIf` sin necesitar importar `CommonModule`. Todavía no hay columna de acciones ni botón **Eliminar**: `CategoriaService` (3.9) solo sabe `listar()` por ahora — agregarlos ya generaría un error de compilación, llamando a un método que la clase no tiene.
 
@@ -740,6 +780,7 @@ export class CategoriaList implements OnInit {
 
   cargar(): void {
     this.loading.set(true);
+    this.error.set(null);
     this.categoriaService.listar().subscribe({
       next: (data) => this.categorias.set(data),
       error: () => {
@@ -769,7 +810,7 @@ export class CategoriaList implements OnInit {
 }
 ```
 
-`ngOnInit` ahora delega en `cargar()` en vez de llamar a `listar()` directamente (3.10): `eliminar()` necesita volver a cargar la lista después de borrar, y `cargar()` es ese mismo código, reutilizado, no repetido dos veces. `confirm()` (nativo del navegador, sin ninguna librería) corta el método antes de llamar al backend si el usuario cancela — sin esa confirmación, un clic accidental en **Eliminar** borraría la categoría sin ninguna forma de deshacerlo.
+`eliminar()` reutiliza el mismo `error` (sin crear un segundo signal para lo mismo): la tabla (abajo) ya no depende de `error` para decidir si se muestra, así que un fallo al eliminar no le hace nada a la tabla — solo agrega el mensaje de arriba, y `categorias()` sigue teniendo la lista que ya se había cargado, sin tocarse. `cargar()` limpia `error` al empezar (`this.error.set(null)`): sin esa línea, un error de una llamada anterior (una eliminación fallida, o una recarga que falló una vez) se quedaría pegado en pantalla para siempre, incluso después de una recarga exitosa. `ngOnInit` ahora delega en `cargar()` en vez de llamar a `listar()` directamente (3.10): `eliminar()` necesita volver a cargar la lista después de borrar, y `cargar()` es ese mismo código, reutilizado, no repetido dos veces. `confirm()` (nativo del navegador, sin ninguna librería) corta el método antes de llamar al backend si el usuario cancela — sin esa confirmación, un clic accidental en **Eliminar** borraría la categoría sin ninguna forma de deshacerlo.
 
 Agrega a `features/catalogo/categoria/categoria-list.html` la columna de acciones:
 
@@ -784,33 +825,33 @@ Agrega a `features/catalogo/categoria/categoria-list.html` la columna de accione
 
 <a routerLink="/catalogo/categorias/nueva">Nueva categoría</a>
 
-@if (!error()) {
-  <table>
-    <thead>
+<table>
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Descripción</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (categoria of categorias(); track categoria.id) {
       <tr>
-        <th>Nombre</th>
-        <th>Descripción</th>
-        <th></th>
+        <td>{{ categoria.nombre }}</td>
+        <td>{{ categoria.descripcion }}</td>
+        <td>
+          <a [routerLink]="['/catalogo/categorias', categoria.id, 'editar']">Editar</a>
+          <button (click)="eliminar(categoria.id!)">Eliminar</button>
+        </td>
       </tr>
-    </thead>
-    <tbody>
-      @for (categoria of categorias(); track categoria.id) {
-        <tr>
-          <td>{{ categoria.nombre }}</td>
-          <td>{{ categoria.descripcion }}</td>
-          <td>
-            <a [routerLink]="['/catalogo/categorias', categoria.id, 'editar']">Editar</a>
-            <button (click)="eliminar(categoria.id!)">Eliminar</button>
-          </td>
-        </tr>
-      } @empty {
+    } @empty {
+      @if (!error()) {
         <tr>
           <td colspan="3">No hay categorías registradas.</td>
         </tr>
       }
-    </tbody>
-  </table>
-}
+    }
+  </tbody>
+</table>
 ```
 
 El manejo del error `500` al eliminar (`err.status === 500`) no es un caso inventado para esta guía: es exactamente el hallazgo conocido de S3 (`FK_PRODUCTO_CATEGORIA`) — intentar eliminar una categoría con productos asociados. El frontend no puede evitar esa restricción (vive en la base de datos, BD2), pero sí puede mostrar un mensaje entendible en vez de dejar que la aplicación falle en silencio. `err` se tipa explícitamente como `HttpErrorResponse` (de `@angular/common/http`) en vez de dejarlo implícito: es el tipo real que `HttpClient` entrega en el callback de error, con `status` como propiedad tipada — sin esa anotación, TypeScript no puede advertir si el código intenta leer una propiedad que no existe.
@@ -848,6 +889,7 @@ export class CategoriaForm {
 
   protected readonly id = signal<number | null>(null);
   protected readonly error = signal<string | null>(null);
+  protected readonly loading = signal(false);
 
   protected readonly form = this.fb.nonNullable.group({
     nombre: ['', [Validators.required, Validators.maxLength(80)]],
@@ -859,23 +901,36 @@ export class CategoriaForm {
     if (idParam) {
       const id = Number(idParam);
       this.id.set(id);
-      this.categoriaService.obtener(id).subscribe((categoria) => {
-        this.form.patchValue(categoria);
+      this.loading.set(true);
+      this.categoriaService.obtener(id).subscribe({
+        next: (categoria) => {
+          this.form.patchValue(categoria);
+          this.loading.set(false);
+        },
+        error: () => {
+          this.error.set('No se pudo cargar la categoría.');
+          this.loading.set(false);
+        },
       });
     }
   }
 
   guardar(): void {
     if (this.form.invalid) {
+      this.form.markAllAsTouched();
       return;
     }
     const valor = this.form.getRawValue();
     const id = this.id();
     const peticion = id ? this.categoriaService.actualizar(id, valor) : this.categoriaService.crear(valor);
 
+    this.loading.set(true);
     peticion.subscribe({
       next: () => this.router.navigate(['/catalogo/categorias']),
-      error: () => this.error.set('No se pudo guardar la categoría.'),
+      error: () => {
+        this.error.set('No se pudo guardar la categoría.');
+        this.loading.set(false);
+      },
     });
   }
 
@@ -889,6 +944,10 @@ Reemplaza el contenido de `features/catalogo/categoria/categoria-form.html`:
 
 ```html
 <form [formGroup]="form" (ngSubmit)="guardar()">
+  @if (loading()) {
+    <p>Cargando...</p>
+  }
+
   <label>
     Nombre
     <input type="text" formControlName="nombre" />
@@ -906,7 +965,7 @@ Reemplaza el contenido de `features/catalogo/categoria/categoria-form.html`:
     <p class="error">{{ error() }}</p>
   }
 
-  <button type="submit">Guardar</button>
+  <button type="submit" [disabled]="loading()">Guardar</button>
   <button type="button" (click)="cancelar()">Cancelar</button>
 </form>
 ```
@@ -914,6 +973,10 @@ Reemplaza el contenido de `features/catalogo/categoria/categoria-form.html`:
 Las validaciones (`Validators.required`, `Validators.maxLength(80)`) calzan exactamente con `@NotBlank`/`@Size(max = 80)` de `CategoriaRequest` (S3, backend) — no son coincidencia: el formulario evita mandar una petición que el backend va a rechazar de todas formas, pero la validación real y definitiva sigue siendo la del backend, no la del formulario (el frontend nunca reemplaza esa responsabilidad).
 
 `type="button"` en **Cancelar** no es opcional: sin él, el botón heredaría el tipo por defecto de cualquier `<button>` dentro de un `<form>` (`submit`), y haría clic en "Cancelar" dispararía igual el `(ngSubmit)="guardar()"` del formulario — justo lo que se quiere evitar. `cancelar()` no necesita descartar nada del `form` explícitamente: como nunca llama a `guardar()`, ningún dato llega al backend, y al salir de la ruta Angular destruye el componente completo, incluido el `FormGroup`.
+
+`this.form.markAllAsTouched()` antes del `return` completa el `@if` que ya muestra el mensaje de `Nombre` (arriba): ese `@if` depende de `form.controls.nombre.touched`, y un campo queda `touched` recién cuando el usuario hace clic dentro y sale de él — no al hacer clic en **Guardar** directamente. Sin `markAllAsTouched()`, alguien que nunca tocó el campo `Nombre` y hace clic en **Guardar** ve que "no pasa nada", sin ningún mensaje que le explique por qué: el formulario es inválido, pero `touched` sigue en `false`. `markAllAsTouched()` marca todos los controles como tocados de una sola vez, así el mismo `@if` de siempre se activa también en el intento de envío.
+
+`loading` cumple dos funciones, no una: mientras `obtener(id)` trae los datos para editar, evita que alguien alcance a hacer clic en **Guardar** antes de que el formulario tenga algo real que enviar — el propio caso que generó el bug de Angular de 3.14 era justo esa ventana. Mientras `guardar()` espera la respuesta del backend, `[disabled]="loading()"` evita un doble clic en **Guardar** que mandaría dos peticiones (dos `crear()`, o dos `actualizar()` compitiendo). `obtener(id)` ahora también tiene su propio `error`: antes, si el `id` de la URL no existía (categoría borrada por otra persona, URL editada a mano), el formulario quedaba en blanco sin ningún aviso — parecía un "crear" nuevo, no un error real.
 
 **Sobre Reactive Forms.** Angular 22 estabiliza una alternativa más nueva basada en `signal()` para formularios (Signal Forms, Angular 2026g). Esta guía enseña Reactive Forms (`FormBuilder`, `FormGroup`) a propósito: sigue siendo la forma estable y ampliamente documentada de construir formularios en Angular, y es la base que Signal Forms todavía está migrando a reemplazar — no una técnica obsoleta.
 
@@ -963,10 +1026,12 @@ Con `lp2/bomerp-backend` corriendo y `ng serve` activo:
 2. Clic en **Nueva categoría**, completa el formulario y guarda. Debe volver a la lista, con la categoría nueva visible.
 3. Clic en **Editar** sobre una categoría existente. El formulario debe cargar sus datos actuales (no en blanco).
 4. Cambia el nombre y guarda. El cambio debe reflejarse en la lista.
-5. Intenta **Eliminar** una categoría que ya tiene productos asociados (S3, datos de prueba). Debe aparecer el mensaje de error controlado (3.12), no una pantalla rota ni un error de consola sin explicación.
+5. Intenta **Eliminar** una categoría que ya tiene productos asociados (S3, datos de prueba). Debe aparecer el mensaje de error controlado (3.12), con la tabla y el resto de categorías todavía visibles — no una pantalla rota, ni la tabla desaparecida, ni un error de consola sin explicación.
 6. Elimina una categoría sin productos asociados. Debe desaparecer de la lista.
 
 **Error frecuente**: dejar `lp2/bomerp-backend` apagado y solo revisar la consola del navegador. El error de red (`ERR_CONNECTION_REFUSED` o similar) aparece en la pestaña **Network**/**Console** de las herramientas de desarrollador — revisa ahí antes de asumir que el código de Angular está mal.
+
+**Error frecuente**: navegar a **Editar** y hacer clic en **Guardar** casi de inmediato (o cualquier navegación rápida seguida de otra acción) puede mostrar en consola `Uncaught TypeError: Cannot read properties of undefined (reading 'startTime')`, lanzado desde `reportAllChanges`. No es un bug de esta guía ni de `guardar()`: es un bug conocido de Angular 22 (`angular/angular#70464`), propio de la instrumentación interna de Chrome DevTools para apps zoneless durante una navegación — ocurre solo con la consola de Chrome abierta, nunca en Firefox/Edge, y el equipo de Angular ya lo cerró como "not planned". La operación real (guardar, navegar) ya se ejecutó antes de que la excepción se lance; no afecta los datos. Si aparece durante una sustentación o una captura de evidencia, aclara que es este bug conocido, no un error de tu código.
 
 ### 3.15 Relacionar con ADS y BD2
 
@@ -983,10 +1048,11 @@ Replicación autónoma del proyecto frontend y de un CRUD de tabla independiente
 Completa y evidencia estas tareas:
 
 1. Si tu equipo aún no comparte un proyecto Angular común, créalo con la misma estructura `core`/`shared`/`features` de esta sesión.
-2. Construye el layout (encabezado, sidebar, menú) con al menos dos rutas de navegación.
+2. Construye el layout (encabezado, sidebar, menú) con al menos dos rutas de navegación, y una página de inicio real en `/` (3.6) — sin redirect hacia ninguna otra pantalla.
 3. Crea (o reutiliza, si ya existe) un `ApiService` en `core/` con la URL base de tu propio backend, y un servicio HTTP de funcionalidad que lo use para un CRUD completo (listar, crear, editar, eliminar) de una tabla independiente de tu propio dominio — una entidad que no dependa de seleccionar antes un dato de otra tabla (2.7).
-4. Prueba el CRUD completo contra tu propio backend real, no con datos simulados.
-5. Documenta un error real encontrado.
+4. Agrega un interceptor HTTP (3.8) que adjunte un identificador único (`crypto.randomUUID()`) a cada petición saliente, en un header propio de tu proyecto.
+5. Prueba el CRUD completo contra tu propio backend real, no con datos simulados.
+6. Documenta un error real encontrado.
 
 ### 4.2 Propósito
 
@@ -1021,9 +1087,9 @@ Incluye capturas con una breve explicación debajo de cada una, organizadas en l
 1. *Proyecto y arquitectura*
     - Estructura de carpetas `core`/`shared`/`features` del proyecto.
 2. *Layout y navegación*
-    - La aplicación corriendo, con el menú, sidebar y encabezado visibles, navegando entre al menos dos rutas.
+    - La aplicación corriendo, con el menú, sidebar y encabezado visibles, navegando entre al menos dos rutas, incluida la página de inicio en `/`.
 3. *Servicio HTTP*
-    - El servicio HTTP de tu tabla independiente, y una petición exitosa contra tu backend real (pestaña Network).
+    - El servicio HTTP de tu tabla independiente, tu interceptor agregando el header a la petición (pestaña Network, Request Headers) y una petición exitosa contra tu backend real.
 4. *CRUD independiente*
     - Los cuatro casos (crear, listar, editar, eliminar) funcionando contra el backend real.
 
@@ -1064,8 +1130,9 @@ La evidencia individual se considera completa si:
 
 - El archivo respeta el nombre solicitado.
 - El proyecto sigue la estructura `core`/`shared`/`features`.
-- El layout (encabezado, sidebar, menú) funciona con al menos dos rutas navegables.
+- El layout (encabezado, sidebar, menú) funciona con al menos dos rutas navegables, con una página de inicio real en `/` (sin redirect).
 - Implementa un servicio HTTP dedicado, sin llamadas a `HttpClient` directamente desde un componente.
+- Implementa un interceptor HTTP que agrega un identificador único a cada petición saliente.
 - Implementa un CRUD independiente completo (crear, listar, editar, eliminar), probado contra un backend real.
 - Cada captura de la evidencia técnica muestra el reloj del sistema y el usuario/perfil visible, sin recortar.
 - Las fechas y horas de las capturas son coherentes con el historial de commits de su repositorio en GitHub.
@@ -1080,7 +1147,8 @@ La evidencia individual se considera completa si:
 3. ¿Por qué `CategoriaService` no expone directamente el `HttpClient` a los componentes que lo usan?
 4. ¿Por qué `Categoria` es una tabla independiente, y qué cambiaría si tuviera una relación con otra entidad?
 5. ¿Por qué `ApiService` no sabe nada sobre `Categoria`, y qué otro servicio de funcionalidad futuro reutilizaría exactamente el mismo `ApiService`?
-6. Si tu CRUD autónomo (4.1) usa una tabla distinta a `Categoria`, ¿qué validaciones del backend tuviste que respetar en el formulario del frontend?
+6. ¿Por qué el interceptor HTTP agrega su header en un solo lugar, en vez de que cada servicio de funcionalidad lo agregue por su cuenta? ¿Qué otro problema, además de este, se resolvería con el mismo mecanismo?
+7. Si tu CRUD autónomo (4.1) usa una tabla distinta a `Categoria`, ¿qué validaciones del backend tuviste que respetar en el formulario del frontend?
 
 ### 4.6 Rúbrica de evaluación
 
@@ -1089,8 +1157,8 @@ La evidencia individual se considera completa si:
 | Criterio | Peso (%) | A (20 pts) | B (15 pts) | C (10 pts) | D (5 pts) | Nivel obtenido |
 |---|---:|---|---|---|---|---:|
 | 1. Proyecto y arquitectura* | 25 | Estructura `core`/`shared`/`features` correcta y coherente con el dominio propio. | Estructura presente, con alguna carpeta mal ubicada. | Estructura parcial o poco organizada. | No sigue la estructura solicitada. | |
-| 2. Layout y navegación* | 25 | Layout con encabezado, sidebar y menú, navegando correctamente entre rutas hijas. | Layout funcional, con algún detalle visual o de ruta incompleto. | Layout presente pero con navegación incompleta o rota. | No implementa layout ni navegación. | |
-| 3. Servicio HTTP* | 25 | Servicio HTTP dedicado, sin llamadas a `HttpClient` desde componentes, probado contra un backend real. | Servicio HTTP funcional, con alguna llamada directa desde un componente. | Servicio HTTP incompleto o parcialmente probado. | No implementa servicio HTTP. | |
+| 2. Layout y navegación* | 25 | Layout con encabezado, sidebar y menú, con página de inicio real en `/` (sin redirect), navegando correctamente entre rutas hijas. | Layout funcional, con algún detalle visual, de ruta o de la página de inicio incompleto. | Layout presente pero con navegación incompleta o rota. | No implementa layout ni navegación. | |
+| 3. Servicio HTTP* | 25 | Servicio HTTP dedicado, sin llamadas a `HttpClient` desde componentes, con interceptor de trazabilidad funcionando, probado contra un backend real. | Servicio HTTP funcional, con el interceptor o alguna llamada directa desde un componente incompleta. | Servicio HTTP incompleto o parcialmente probado, sin interceptor. | No implementa servicio HTTP. | |
 | 4. CRUD independiente* | 25 | Los cuatro casos (crear, listar, editar, eliminar) funcionando contra el backend real, con manejo de errores. | CRUD funcional, con algún caso sin evidenciar. | CRUD parcial (algunos casos faltan o fallan). | No implementa CRUD funcional. | |
 
 \* Agregado manual.

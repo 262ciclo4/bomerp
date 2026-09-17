@@ -8,30 +8,30 @@
 
 <a routerLink="/catalogo/categorias/nueva">Nueva categoría</a>
 
-@if (!error()) {
-  <table>
-    <thead>
+<table>
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Descripción</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (categoria of categorias(); track categoria.id) {
       <tr>
-        <th>Nombre</th>
-        <th>Descripción</th>
-        <th></th>
+        <td>{{ categoria.nombre }}</td>
+        <td>{{ categoria.descripcion }}</td>
+        <td>
+          <a [routerLink]="['/catalogo/categorias', categoria.id, 'editar']">Editar</a>
+          <button (click)="eliminar(categoria.id!)">Eliminar</button>
+        </td>
       </tr>
-    </thead>
-    <tbody>
-      @for (categoria of categorias(); track categoria.id) {
-        <tr>
-          <td>{{ categoria.nombre }}</td>
-          <td>{{ categoria.descripcion }}</td>
-          <td>
-            <a [routerLink]="['/catalogo/categorias', categoria.id, 'editar']">Editar</a>
-            <button (click)="eliminar(categoria.id!)">Eliminar</button>
-          </td>
-        </tr>
-      } @empty {
+    } @empty {
+      @if (!error()) {
         <tr>
           <td colspan="3">No hay categorías registradas.</td>
         </tr>
       }
-    </tbody>
-  </table>
-}
+    }
+  </tbody>
+</table>

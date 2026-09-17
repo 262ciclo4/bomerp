@@ -1,4 +1,8 @@
 <form [formGroup]="form" (ngSubmit)="guardar()">
+  @if (loading()) {
+    <p>Cargando...</p>
+  }
+
   <label>
     Nombre
     <input type="text" formControlName="nombre" />
@@ -16,6 +20,6 @@
     <p class="error">{{ error() }}</p>
   }
 
-  <button type="submit">Guardar</button>
+  <button type="submit" [disabled]="loading()">Guardar</button>
   <button type="button" (click)="cancelar()">Cancelar</button>
 </form>
