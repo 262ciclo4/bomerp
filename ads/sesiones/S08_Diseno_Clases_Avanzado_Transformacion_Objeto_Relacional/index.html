@@ -1,0 +1,5135 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Entorno integrado de desarrollo academico para construir modulos ERP con ADS, BD2 y LP2.">
+      
+      
+        <meta name="author" content="UPeU">
+      
+      
+      
+        <link rel="prev" href="../S07_Diseno_Clases_Dominio/">
+      
+      
+        <link rel="next" href="../../../bd2/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+  
+    <title>BOM ERP - S8 - Diseño de clases avanzado y transformación objeto-relacional</title>
+  
+
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#s8-diseno-de-clases-avanzado-y-transformacion-objeto-relacional" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../../.." title="BOM ERP" class="md-header__button md-logo" aria-label="BOM ERP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            BOM ERP
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              S8 - Diseño de clases avanzado y transformación objeto-relacional
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/262ciclo4/bomerp" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    262ciclo4/bomerp
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Pestañas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Inicio
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../proyecto-integrador/" class="md-tabs__link">
+          
+  
+  
+  Guía del Proyecto Integrador
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../" class="md-tabs__link">
+          
+  
+  
+  ADS
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../bd2/" class="md-tabs__link">
+          
+  
+  
+  BD2
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../lp2/" class="md-tabs__link">
+          
+  
+  
+  LP2
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="BOM ERP" class="md-nav__button md-logo" aria-label="BOM ERP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    BOM ERP
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/262ciclo4/bomerp" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    262ciclo4/bomerp
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guía del Proyecto Integrador
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guía del Proyecto Integrador
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Alineamiento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/brief/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brief técnico (plantilla)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Diseño técnico, motor transaccional y backend inicial
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    1. Diseño técnico, motor transaccional y backend inicial
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/lp2-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Demo U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/ads-matriz-competencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Matriz de competencias
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/lp2-matriz-competencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Matriz de competencias
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/bd2-matriz-competencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Matriz de competencias
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Modelado UML, administración Oracle y SPA segura
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    2. Modelado UML, administración Oracle y SPA segura
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/lp2-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Demo U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Diseño consolidado, operación Oracle y Full-Stack integrado
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    3. Diseño consolidado, operación Oracle y Full-Stack integrado
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/lp2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/checklist-final/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Checklist final
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/guia-sustentacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guía de sustentación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ADS
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../silabo_ads_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../silabo_ads_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Arquitectura y Diseño Estructural
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Arquitectura y Diseño Estructural
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S01_Fundamentos_Arquitectura_Software/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - Fundamentos de arquitectura de software
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S02_Modelo_C4_Vistas_Arquitectonicas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - Modelo C4 y vistas arquitectónicas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S03_Diseno_Estructural_Principios_SOLID/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S3 - Diseño estructural y principios SOLID
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S04_Arquitecturas_Modernas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S4 - Arquitecturas modernas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S05_Evaluacion_Unidad_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S5 - Evaluación de la Unidad I
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    II. Diseño Dinámico, Modelado UML y Patrones
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    II. Diseño Dinámico, Modelado UML y Patrones
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S06_Descubrimiento_Modelado_Dominio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S6 - Descubrimiento y modelado del dominio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S07_Diseno_Clases_Dominio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S7 - Diseño de clases del dominio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S8 - Diseño de clases avanzado y transformación objeto-relacional
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S8 - Diseño de clases avanzado y transformación objeto-relacional
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-introduccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Introducción
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Introducción">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-presentacion-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Presentación de la sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-indice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Índice
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-proposito-de-aprendizaje" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Propósito de aprendizaje
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-producto-de-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Producto de sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-metodologia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Metodología
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16-motivacion-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6 Motivación de la sesión
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.6 Motivación de la sesión">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#161-caso-el-precio-que-cambio-despues-de-la-venta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6.1 Caso: el precio que cambió después de la venta
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#17-ubicacion-en-el-curso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.7 Ubicación en el curso
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-explica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Explica
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Explica">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-arquitectura-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Arquitectura de la sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-de-clase-de-dominio-a-clase-de-diseno" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 De clase de dominio a clase de diseño
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-clases-de-diseno-por-capas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Clases de diseño por capas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-dto-mapper-y-contrato-rest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 DTO, mapper y contrato REST
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-transformacion-objeto-relacional-clases-tablas-y-claves" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Transformación objeto-relacional: clases, tablas y claves
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-asociaciones-herencia-y-objetos-de-valor-en-tablas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Asociaciones, herencia y objetos de valor en tablas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#27-trazabilidad-dominio-clases-base-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7 Trazabilidad dominio-clases-base de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-aplica-actividad-practica-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Aplica: actividad práctica guiada
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Aplica: actividad práctica guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-verificar-el-punto-de-partida" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Verificar el punto de partida
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-refinar-las-clases-de-dominio-en-clases-de-diseno" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Refinar las clases de dominio en clases de diseño
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-definir-la-estructura-de-carpetas-y-disenar-las-capas-del-modulo-ventas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Definir la estructura de carpetas y diseñar las capas del módulo ventas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-definir-los-dto-y-el-contrato-rest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Definir los DTO y el contrato REST
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-transformar-las-clases-en-tablas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Transformar las clases en tablas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-decidir-la-herencia-de-cliente-y-el-objeto-de-valor-dinero" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Decidir la herencia de Cliente y el objeto de valor Dinero
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37-dibujar-el-modelo-relacional-completo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 Dibujar el modelo relacional completo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#38-armar-la-matriz-de-trazabilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 Armar la matriz de trazabilidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-crea-actividad-autonoma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Crea: actividad autónoma
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Crea: actividad autónoma">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-actividad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Actividad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-proposito" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Propósito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-indicaciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Indicaciones
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.3 Indicaciones">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#431-estructura-del-informe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3.1 Estructura del informe
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-criterios-minimos-de-aceptacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Criterios mínimos de aceptación
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-preguntas-de-defensa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Preguntas de defensa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-rubrica-de-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 Rúbrica de evaluación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-cierre" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Cierre
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bibliografia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bibliografía
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    BD2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/silabo_bd2_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/silabo_bd2_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Programación y optimización (Oracle XE)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Programación y optimización (Oracle XE)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - PL/SQL aplicado al negocio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S02_Triggers_DML_Auditoria/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - Triggers DML y auditoría
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S03_Excepciones_Robustez/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S3 - Manejo de excepciones y robustez
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S04_Optimizacion_Consultas_SQL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S4 - Optimización de consultas SQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S05_Indices_Optimizacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S5 - Índices para optimización
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S06_Evaluacion_Unidad_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S6 - Evaluación de la Unidad I
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    II. Administración, almacenamiento, seguridad y optimización
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    II. Administración, almacenamiento, seguridad y optimización
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S07_Arquitectura_Oracle_Instancia/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S7 - Arquitectura Oracle e instancia
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S08_Usuarios_Roles_Privilegios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S8 - Gestión de usuarios, roles y privilegios
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    LP2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/silabo_lp2_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/silabo_lp2_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Decisiones de arquitectura
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Decisiones de arquitectura
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/adr/ADR-001-arquitectura-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-001 - Arquitectura del backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/adr/ADR-002-spring-modulith/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-002 - Spring Modulith
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/adr/ADR-003-spring-boot-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-003 - Versión exacta de Spring Boot 4.0.7
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/adr/ADR-004-jwt-diferido/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-004 - JWT diferido a S10
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Base backend REST modular de BomERP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Base backend REST modular de BomERP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S01_Arquitectura_Backend_REST_Profesional/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - Arquitectura backend REST profesional
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S02_CRUD_REST_Completo_Producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - CRUD REST completo de Producto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S03_Objetos_Relacionados_Categoria_Producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S3 - Objetos relacionados Categoria-Producto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S04_Operacion_Cabecera_Detalle_Venta_DetalleVenta/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S4 - Operación cabecera-detalle Venta-DetalleVenta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S05_Consultas_Empresariales_Reportes_CORS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S5 - Consultas empresariales, reportes REST y CORS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S06_Evaluacion_Unidad_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S6 - Evaluación de la Unidad I
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    II. SPA modular segura para BomERP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    II. SPA modular segura para BomERP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S07_Creacion_Arquitectura_SPA/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S7 - Creación y arquitectura de la SPA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S08_CRUD_Tablas_Dependientes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S8 - CRUD de tablas dependientes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-introduccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Introducción
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Introducción">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-presentacion-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Presentación de la sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-indice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Índice
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-proposito-de-aprendizaje" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Propósito de aprendizaje
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-producto-de-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Producto de sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-metodologia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Metodología
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16-motivacion-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6 Motivación de la sesión
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.6 Motivación de la sesión">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#161-caso-el-precio-que-cambio-despues-de-la-venta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6.1 Caso: el precio que cambió después de la venta
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#17-ubicacion-en-el-curso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.7 Ubicación en el curso
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-explica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Explica
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Explica">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-arquitectura-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Arquitectura de la sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-de-clase-de-dominio-a-clase-de-diseno" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 De clase de dominio a clase de diseño
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-clases-de-diseno-por-capas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Clases de diseño por capas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-dto-mapper-y-contrato-rest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 DTO, mapper y contrato REST
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-transformacion-objeto-relacional-clases-tablas-y-claves" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Transformación objeto-relacional: clases, tablas y claves
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-asociaciones-herencia-y-objetos-de-valor-en-tablas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Asociaciones, herencia y objetos de valor en tablas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#27-trazabilidad-dominio-clases-base-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7 Trazabilidad dominio-clases-base de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-aplica-actividad-practica-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Aplica: actividad práctica guiada
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Aplica: actividad práctica guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-verificar-el-punto-de-partida" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Verificar el punto de partida
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-refinar-las-clases-de-dominio-en-clases-de-diseno" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Refinar las clases de dominio en clases de diseño
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-definir-la-estructura-de-carpetas-y-disenar-las-capas-del-modulo-ventas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Definir la estructura de carpetas y diseñar las capas del módulo ventas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-definir-los-dto-y-el-contrato-rest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Definir los DTO y el contrato REST
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-transformar-las-clases-en-tablas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Transformar las clases en tablas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-decidir-la-herencia-de-cliente-y-el-objeto-de-valor-dinero" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Decidir la herencia de Cliente y el objeto de valor Dinero
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37-dibujar-el-modelo-relacional-completo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 Dibujar el modelo relacional completo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#38-armar-la-matriz-de-trazabilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 Armar la matriz de trazabilidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-crea-actividad-autonoma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Crea: actividad autónoma
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Crea: actividad autónoma">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-actividad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Actividad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-proposito" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Propósito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-indicaciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Indicaciones
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.3 Indicaciones">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#431-estructura-del-informe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3.1 Estructura del informe
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-criterios-minimos-de-aceptacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Criterios mínimos de aceptación
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-preguntas-de-defensa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Preguntas de defensa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-rubrica-de-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 Rúbrica de evaluación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-cierre" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Cierre
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bibliografia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bibliografía
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="s8-diseno-de-clases-avanzado-y-transformacion-objeto-relacional">S8 - Diseño de Clases Avanzado y Transformación Objeto-Relacional<a class="headerlink" href="#s8-diseno-de-clases-avanzado-y-transformacion-objeto-relacional" title="Permanent link">&para;</a></h1>
+<h2 id="1-introduccion">1. Introducción<a class="headerlink" href="#1-introduccion" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 20 min.</p>
+<h3 id="11-presentacion-de-la-sesion">1.1 Presentación de la sesión<a class="headerlink" href="#11-presentacion-de-la-sesion" title="Permanent link">&para;</a></h3>
+<p>S7 dejó un diagrama de clases del dominio completo: atributos, operaciones, relaciones con multiplicidad, agregación, composición, herencia y restricciones. Ese diagrama responde qué conceptos tiene el negocio y cómo se relacionan, y se detiene a propósito antes de una pregunta que el software sí necesita responder: qué clases concretas van a existir, cómo se reparten las responsabilidades entre ellas y cómo se guardan los datos en tablas. Esta sesión baja ese nivel: refina las clases del dominio en clases de diseño, las organiza en capas, define lo que entra y sale de cada operación, y transforma el resultado en un modelo relacional con la trazabilidad completa entre dominio, clases y base de datos. El porqué de hacerlo ahora, y no directamente en código, se desarrolla en 1.6, a partir del caso.</p>
+<h3 id="12-indice">1.2 Índice<a class="headerlink" href="#12-indice" title="Permanent link">&para;</a></h3>
+<ol>
+<li>De clase de dominio a clase de diseño.</li>
+<li>Clases de diseño por capas.</li>
+<li>DTO, mapper y contrato REST.</li>
+<li>Transformación objeto-relacional: clases, tablas y claves.</li>
+<li>Asociaciones, herencia y objetos de valor en tablas.</li>
+<li>Trazabilidad dominio-clases-base de datos.</li>
+</ol>
+<h3 id="13-proposito-de-aprendizaje">1.3 Propósito de aprendizaje<a class="headerlink" href="#13-proposito-de-aprendizaje" title="Permanent link">&para;</a></h3>
+<p>Al concluir la clase, estarás en condiciones de:</p>
+<ul>
+<li><strong>Diseñar</strong> las clases de un módulo de tu propio proyecto en capas, definir sus DTO y su contrato de servicio, y <strong>transformar</strong> ese diseño en un modelo relacional, dejando la trazabilidad entre el dominio, las clases y las tablas documentada.</li>
+</ul>
+<h3 id="14-producto-de-sesion">1.4 Producto de sesión<a class="headerlink" href="#14-producto-de-sesion" title="Permanent link">&para;</a></h3>
+<p>Diseño de clases de un módulo de tu propio proyecto, con su transformación objeto-relacional: diagrama de clases de diseño por capas (Controller, Service, Repository, Mapper, entidades y DTO), contrato REST conceptual del módulo, tabla de correspondencia clase-tabla con tipos, claves y restricciones, decisión justificada para la herencia y para el objeto de valor, modelo relacional dibujado, y matriz de trazabilidad dominio-clase-tabla-DTO.</p>
+<h3 id="15-metodologia">1.5 Metodología<a class="headerlink" href="#15-metodologia" title="Permanent link">&para;</a></h3>
+<p><strong>Tabla 1. Metodología de la sesión</strong></p>
+<table>
+<thead>
+<tr>
+<th>Actividades a Realizar en el Periodo</th>
+<th>Orientaciones generales (Orientaciones Metodológicas)</th>
+<th>Material de estudio recomendado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Revisión previa individual</td>
+<td>Releer el diagrama de clases del dominio propio (S7): atributos, operaciones, relaciones, herencia y restricciones, junto con la matriz de integración de S7 (3.7). Trabajo individual, antes de clase.</td>
+<td>S7 (3.2-3.7), diagrama de clases del dominio propio.</td>
+</tr>
+<tr>
+<td>Clase presencial</td>
+<td>Construcción guiada del diseño de clases del módulo <code>ventas</code> de BomERP: refinamiento, capas, DTO, contrato REST, transformación a tablas y matriz de trazabilidad. Trabajo individual, siguiendo al docente paso a paso; consulta inmediata ante dudas sobre asociaciones entre módulos o estrategia de herencia.</td>
+<td>Figura 9 de S7, plantillas de las tablas de 3.2-3.8.</td>
+</tr>
+<tr>
+<td>Evaluación formativa</td>
+<td>Revisión en clase del diseño de capas y de la tabla de correspondencia clase-tabla. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4.</td>
+<td>Indicaciones de entrega (4.3), rúbrica de evaluación (4.6).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="16-motivacion-de-la-sesion">1.6 Motivación de la sesión<a class="headerlink" href="#16-motivacion-de-la-sesion" title="Permanent link">&para;</a></h3>
+<h4 id="161-caso-el-precio-que-cambio-despues-de-la-venta">1.6.1 Caso: el precio que cambió después de la venta<a class="headerlink" href="#161-caso-el-precio-que-cambio-despues-de-la-venta" title="Permanent link">&para;</a></h4>
+<p>Un equipo traduce su diagrama de clases del dominio a tablas de forma literal. En el diagrama, <code>DetalleVenta</code> se relaciona con <code>Producto</code>, así que en la base de datos <code>DETALLE_VENTAS</code> guarda solo una llave foránea hacia <code>PRODUCTOS</code> y lee el precio con un <code>JOIN</code>. Funciona en las pruebas. Una semana después, el precio de un producto cambia en el catálogo y el total de todas las ventas antiguas de ese producto cambia con él: los reportes de ayer ya no coinciden con los de hoy. Además, esa llave foránea obliga al módulo <code>ventas</code> a depender del esquema de <code>catalogo</code>, justo lo que la arquitectura del proyecto quería evitar.</p>
+<p>Ninguna de las dos decisiones del equipo era descuidada: el diagrama de S7 dice que <code>DetalleVenta</code> "referencia" a <code>Producto</code>, y una asociación se implementa, por defecto, con una llave foránea. El problema es que nadie hizo el paso intermedio: preguntar qué significa esa asociación <strong>al persistirse</strong>. La respuesta correcta para <code>DetalleVenta</code> no es una llave foránea con <code>JOIN</code>, sino una <strong>referencia por identificador</strong> más una <strong>copia del nombre y del precio</strong> de ese momento — y esa decisión solo aparece cuando el diagrama de dominio se refina como clase de diseño y se transforma a tablas con criterio, no con una regla mecánica.</p>
+<p><strong>Preguntas de análisis</strong></p>
+<p><strong>Activación de conocimientos previos</strong></p>
+<ol>
+<li>En el diagrama de clases del dominio de tu proyecto (S7), ¿qué relación conecta clases que pertenecen a módulos distintos?</li>
+</ol>
+<p><strong>Comprensión del diseño de clases y su transformación</strong></p>
+<ol>
+<li>¿Qué diferencia hay entre decir "<code>DetalleVenta</code> referencia a <code>Producto</code>" (dominio) y decir "<code>DetalleVenta</code> guarda el identificador, el nombre y el precio del producto en ese momento" (persistencia)? ¿Qué pregunta responde cada frase?</li>
+<li>Si <code>Venta</code> recibe del cliente el <code>total</code> y el <code>precioUnitario</code> de cada línea, ¿qué podría salir mal? ¿Qué campos debería decidir el servidor, y no el cliente?</li>
+</ol>
+<h3 id="17-ubicacion-en-el-curso">1.7 Ubicación en el curso<a class="headerlink" href="#17-ubicacion-en-el-curso" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Producto del curso: Diseño Técnico Profesional Documentado.</li>
+<li>Producto de unidad: Catálogo UML con patrones de diseño e integración aplicados.</li>
+<li>Avance del producto en esta sesión: diseño de clases por capas de un módulo, contrato REST conceptual, modelo relacional y matriz de trazabilidad dominio-clase-tabla-DTO.</li>
+</ul>
+<p>Roadmap del producto de la unidad:</p>
+<p><strong>Figura 1. Roadmap del producto de la unidad</strong></p>
+<pre class="mermaid"><code>flowchart TB
+    S6["`**S6:** Descubrimiento y modelado del dominio`"]
+    S7["`**S7:** Diseño de clases del dominio`"]
+    S8["`**S8:** Diseño de clases avanzado y transformación OR`"]
+    S9["`**S9:** Diagramas dinámicos UML`"]
+    S10["`**S10:** Patrones de diseño (GoF y GRASP)`"]
+    S11["`**S11:** Integración y sistemas empresariales`"]
+    S12["`**S12:** Producto U2`"]
+
+    S6 --&gt; S7 --&gt; S8 --&gt; S9 --&gt; S10 --&gt; S11 --&gt; S12
+
+    classDef today fill:#ffe08a,stroke:#9a6b00,stroke-width:2px,color:#111;
+    class S8 today;</code></pre>
+<h2 id="2-explica">2. Explica<a class="headerlink" href="#2-explica" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 25 min.</p>
+<h3 id="21-arquitectura-de-la-sesion">2.1 Arquitectura de la sesión<a class="headerlink" href="#21-arquitectura-de-la-sesion" title="Permanent link">&para;</a></h3>
+<p><strong>Figura 2. Del diagrama de clases del dominio al modelo relacional trazado</strong></p>
+<pre class="mermaid"><code>flowchart TB
+    A[Diagrama de clases del dominio&lt;br/&gt;S7] --&gt; B[Clases de diseño:&lt;br/&gt;tipos, navegabilidad,&lt;br/&gt;referencias entre módulos]
+    B --&gt; C[Capas del módulo:&lt;br/&gt;Controller, Service,&lt;br/&gt;Repository, Mapper]
+    C --&gt; D[DTO y contrato REST]
+    B --&gt; E[Modelo relacional:&lt;br/&gt;tablas, claves,&lt;br/&gt;restricciones]
+    D --&gt; F[Matriz de trazabilidad&lt;br/&gt;dominio - clase - tabla - DTO]
+    E --&gt; F</code></pre>
+<p>Lectura del diagrama: el diseño de clases parte del dominio y se bifurca en dos caminos que se vuelven a unir. Por un lado, las clases se organizan en capas y definen lo que entra y sale de cada operación (DTO y contrato REST). Por el otro, se transforman en tablas. La matriz de trazabilidad es el punto donde ambos caminos se verifican entre sí. Cada apartado siguiente desarrolla uno de esos pasos, en el mismo orden del Índice (1.2).</p>
+<p>El estilo de organización no se decide en esta sesión: ya está fijado desde S4 y formalizado en las ADR de LP2. El backend es un <strong>monolito modular</strong>: un solo proyecto, con un paquete por módulo de negocio (<code>catalogo</code>, <code>ventas</code>, ...) y, dentro de cada módulo, organización <strong>en capas</strong> (<code>controller</code>, <code>service</code>, <code>repository</code>, <code>entity</code>, <code>dto</code>, <code>mapper</code>). Hoy se diseña dentro de ese marco. Si tu equipo eligió otro estilo en S4, aplica el mismo razonamiento con la estructura que justificaste en tu ADR.</p>
+<h3 id="22-de-clase-de-dominio-a-clase-de-diseno">2.2 De clase de dominio a clase de diseño<a class="headerlink" href="#22-de-clase-de-dominio-a-clase-de-diseno" title="Permanent link">&para;</a></h3>
+<p>Una <strong>clase de diseño</strong> —un elemento del diagrama de clases UML (OMG, 2017)— es una clase de dominio refinada con las decisiones que el software necesita y el modelo de negocio no tiene por qué contener: tipos concretos, visibilidad, identidad, navegabilidad y responsabilidades (Larman, 2004). El diagrama de S7 dice <strong>qué</strong> es el dominio; la clase de diseño dice <strong>cómo</strong> se representa en un sistema concreto, sin escribir todavía el código.</p>
+<p>Es el mismo tipo de diagrama (UML) y son las mismas clases, pero se conservan <strong>dos versiones</strong>, cada una con su propósito. La diferencia de fondo es el lenguaje: el modelo de dominio es general, independiente de cómo se programe, mientras que las clases de diseño se expresan en el lenguaje del proyecto (Java, en BomERP), con sus tipos, sus colecciones y sus construcciones (<code>enum</code>, <code>record</code>). El diagrama de dominio de S7, que no se modifica, dice qué significa el negocio (<code>Dinero</code>, la asociación entre <code>DetalleVenta</code> y <code>Producto</code>). El diagrama de diseño de hoy se <strong>deriva</strong> de él y dice cómo se representa en el software (<code>BigDecimal</code>, <code>productoId</code>). Larman (2004) distingue estas dos perspectivas: el modelo de dominio, conceptual, y el diagrama de clases de diseño, que parte de él.</p>
+<p>"Refinar" no significa corregir el diagrama de S7, que ya está completo como modelo de dominio, sino <strong>agregarle lo que S7 dejó fuera a propósito</strong>: las decisiones de implementación. Si el diagrama de S7 se sobrescribiera, se perdería el significado de negocio: la asociación real entre una venta y un producto desaparecería, reemplazada por un identificador. Por eso la matriz de trazabilidad (2.7) enlaza cada clase de dominio con su clase de diseño. Más abajo se muestran las dos versiones de tres clases, lado a lado. El diagrama por capas de 2.3 es un tercer diagrama: no deriva las entidades, agrega a su alrededor las clases que las usan.</p>
+<p><strong>Tabla 2. Decisiones que convierten una clase de dominio en clase de diseño</strong></p>
+<table>
+<thead>
+<tr>
+<th>Decisión</th>
+<th>Pregunta que resuelve</th>
+<th>Ejemplo en BomERP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tipo concreto</td>
+<td>¿Con qué tipo del lenguaje se representa cada atributo?</td>
+<td><code>fecha</code> es <code>LocalDateTime</code>; <code>estado</code>, un <code>enum</code>; el importe (<code>Dinero</code> en el dominio) se representa con <code>BigDecimal</code>, decisión explicada en la lectura de la Figura 4.</td>
+</tr>
+<tr>
+<td>Identidad</td>
+<td>¿Cómo se identifica cada objeto?</td>
+<td><code>id: Long</code>, generado por la base de datos, no por la aplicación.</td>
+</tr>
+<tr>
+<td>Navegabilidad</td>
+<td>¿Desde qué clase se puede llegar a la otra?</td>
+<td><code>Producto</code> conoce a su <code>Categoria</code>; <code>Categoria</code> no lista sus productos.</td>
+</tr>
+<tr>
+<td>Enumeraciones</td>
+<td>¿Qué valores admite un atributo de estado?</td>
+<td><code>EstadoVenta</code> como <code>enum</code>, no como texto libre.</td>
+</tr>
+<tr>
+<td>Referencia entre módulos</td>
+<td>¿Una clase de otro módulo se referencia por objeto o por identificador?</td>
+<td><code>DetalleVenta</code> guarda <code>productoId</code>, no un objeto <code>Producto</code>.</td>
+</tr>
+<tr>
+<td>Atributo derivado</td>
+<td>¿Se calcula cada vez o se guarda?</td>
+<td><code>subtotal</code> y <code>total</code> se guardan: son una foto del momento de la venta.</td>
+</tr>
+<tr>
+<td>Ubicación de la operación</td>
+<td>¿La regla vive en la entidad o en un servicio?</td>
+<td><code>descontarStock</code> valida <code>stock &gt;= 0</code> sobre <code>Producto</code>; el servicio solo orquesta.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Ejemplo: de las clases de S7 a las clases de diseño.</strong> El diagrama de dominio de S7 (Figura 9 de S7) muestra <code>Venta</code>, <code>DetalleVenta</code> y <code>Producto</code> con los tipos del negocio. Ese es el punto de partida:</p>
+<p><strong>Figura 3. <code>Venta</code>, <code>DetalleVenta</code> y <code>Producto</code> en el modelo de dominio (S7)</strong></p>
+<pre class="mermaid"><code>classDiagram
+    class Venta {
+        +Long id
+        +LocalDateTime fecha
+        +EstadoVenta estado
+        +Dinero total
+        +calcularTotal()
+    }
+    class DetalleVenta {
+        +Long id
+        +Integer cantidad
+        +Dinero precioUnitario
+        +subtotal() Dinero
+    }
+    class Producto {
+        +Long id
+        +String nombre
+        +Dinero precio
+        +Integer stock
+        +descontarStock(cantidad)
+    }
+
+    Venta "1" *-- "1..*" DetalleVenta : compone
+    DetalleVenta "0..*" --&gt; "1" Producto : referencia</code></pre>
+<p>Aplicando las decisiones de la Tabla 2 a esas tres clases, se deriva el siguiente diseño:</p>
+<p><strong>Figura 4. Las mismas clases como clases de diseño, derivadas de la Figura 3</strong></p>
+<pre class="mermaid"><code>classDiagram
+    class Venta {
+        &lt;&lt;entidad&gt;&gt;
+        -Long id
+        -LocalDateTime fecha
+        -EstadoVenta estado
+        -BigDecimal total
+        -List~DetalleVenta~ detalles
+        +calcularTotal()
+    }
+    class DetalleVenta {
+        &lt;&lt;entidad&gt;&gt;
+        -Long id
+        -Long productoId
+        -String nombreProducto
+        -BigDecimal precioUnitario
+        -Integer cantidad
+        -BigDecimal subtotal
+    }
+    class Producto {
+        &lt;&lt;entidad, módulo catalogo&gt;&gt;
+        -Long id
+        -String nombre
+        -BigDecimal precio
+        -Integer stock
+        +descontarStock(cantidad)
+    }
+
+    Venta "1" *-- "1..*" DetalleVenta : detalles
+    DetalleVenta ..&gt; Producto : solo el identificador</code></pre>
+<p>Lectura de las dos figuras, cambio por cambio:</p>
+<ul>
+<li><strong>Tipos del lenguaje.</strong> Los atributos se declaran con tipos de Java (<code>Long</code>, <code>LocalDateTime</code>, <code>Integer</code>, un <code>enum</code> para el estado). Los importes, que en el dominio son <code>Dinero</code>, se declaran <code>BigDecimal</code>. Implementar <code>Dinero</code> como una clase propia (por ejemplo, un <code>record</code> de Java) es una <strong>decisión de diseño opcional</strong>, no una obligación: sirve cuando el sistema maneja varias monedas o cuando conviene que el importe valide o formatee por sí mismo. Con una sola moneda, una clase <code>Dinero</code> no cambiaría ningún comportamiento, así que BomERP se queda con <code>BigDecimal</code>; si aparece una segunda moneda, se introduce.</li>
+<li><strong>Visibilidad.</strong> Los atributos pasan de públicos (<code>+</code>) a privados (<code>-</code>): la clase de diseño los protege y los expone por operaciones.</li>
+<li><strong>Navegabilidad.</strong> <code>Venta</code> guarda ahora la colección <code>detalles</code>, explícita, porque desde una venta hay que llegar a sus líneas.</li>
+<li><strong>Referencia entre módulos.</strong> La flecha de asociación <code>DetalleVenta</code> --&gt; <code>Producto</code> se convierte en una dependencia punteada: <code>DetalleVenta</code> ya no guarda un <code>Producto</code>, sino su <code>productoId</code>, más una copia de <code>nombreProducto</code> y de <code>precioUnitario</code> de ese momento.</li>
+<li><strong>Atributo derivado.</strong> La operación <code>subtotal()</code> de <code>DetalleVenta</code> se vuelve un atributo <code>subtotal</code>, calculado una vez al registrar la venta y guardado.</li>
+<li><strong>Lo que no cambia.</strong> La composición <code>Venta</code> *-- <code>DetalleVenta</code> con su multiplicidad <code>1..*</code>, y <code>descontarStock</code> en <code>Producto</code>: esas decisiones del dominio se conservan.</li>
+</ul>
+<p><strong>Referencia entre módulos.</strong> Cuando dos clases pertenecen a módulos distintos, la clase de diseño no las conecta con una asociación directa: guarda el <strong>identificador</strong> de la otra, y si necesita sus datos los pide por la interfaz pública del otro módulo. Así el límite del módulo, dibujado en C3 (S2), sigue siendo un límite en el código y en la base de datos.</p>
+<p><strong>Error frecuente</strong>: dibujar en el diagrama de diseño una asociación directa entre clases de módulos distintos (<code>DetalleVenta</code> --&gt; <code>Producto</code>). En LP2 el build falla en <code>ModularityTests</code> (ADR-002), porque <code>ventas</code> accede a tipos internos de <code>catalogo</code> que no fueron expuestos. La corrección no es exponer la entidad, sino guardar el identificador y pedir los datos por el servicio público del módulo.</p>
+<h3 id="23-clases-de-diseno-por-capas">2.3 Clases de diseño por capas<a class="headerlink" href="#23-clases-de-diseno-por-capas" title="Permanent link">&para;</a></h3>
+<p>Una <strong>arquitectura en capas</strong> organiza las clases de un módulo en niveles con una regla de dependencia: cada capa conoce solo a la que tiene debajo, nunca a la de arriba. En una API REST, la "vista" del esquema MVC clásico vive fuera del backend (la SPA), por eso el módulo se describe en capas y no como MVC completo. Estas capas son el interior de <strong>un</strong> componente del nivel 3 del modelo C4 (un módulo del ERP): describirlas es trabajar en el nivel 4 (código), y cada módulo del sistema repite el mismo esquema dentro de su propia carpeta (3.3).</p>
+<p><strong>Tabla 3. Capas de un módulo y sus clases</strong></p>
+<table>
+<thead>
+<tr>
+<th>Capa</th>
+<th>Clase de diseño</th>
+<th>Responsabilidad</th>
+<th>Depende de</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Presentación</td>
+<td><code>Controller</code></td>
+<td>Recibe la petición HTTP, valida la forma de los datos y devuelve la respuesta. No contiene reglas de negocio.</td>
+<td><code>Service</code> (interfaz)</td>
+</tr>
+<tr>
+<td>Lógica de aplicación</td>
+<td><code>Service</code> (interfaz) y <code>ServiceImpl</code></td>
+<td>Orquesta un caso de uso: abre la transacción, coordina repositorio, mapper y servicios de otros módulos.</td>
+<td><code>Repository</code>, <code>Mapper</code>, <code>Service</code> de otro módulo</td>
+</tr>
+<tr>
+<td>Acceso a datos</td>
+<td><code>Repository</code></td>
+<td>Guarda y consulta entidades. Uno por raíz de agregado, no por tabla.</td>
+<td><code>Entity</code></td>
+</tr>
+<tr>
+<td>Traducción</td>
+<td><code>Mapper</code></td>
+<td>Convierte entre entidades y DTO.</td>
+<td><code>Entity</code>, <code>DTO</code></td>
+</tr>
+<tr>
+<td>Dominio</td>
+<td><code>Entity</code></td>
+<td>Datos y reglas propias de cada concepto del negocio.</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Contrato</td>
+<td><code>DTO</code></td>
+<td>Forma de los datos que cruzan la frontera de la API.</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Figura 5. Regla de dependencia entre capas</strong></p>
+<pre class="mermaid"><code>flowchart TB
+    Controller --&gt; ServiceInterfaz["Service (interfaz)"]
+    ServiceImpl["ServiceImpl"] -. implementa .-&gt; ServiceInterfaz
+    ServiceImpl --&gt; Repository
+    ServiceImpl --&gt; Mapper
+    ServiceImpl --&gt; OtroModulo["Service público&lt;br/&gt;de otro módulo"]
+    Repository --&gt; Entity
+    Mapper --&gt; Entity
+    Mapper --&gt; DTO
+    Controller --&gt; DTO</code></pre>
+<p>Tres reglas hacen que el diagrama sea verificable. Primero, el <code>Controller</code> depende de la <strong>interfaz</strong> del servicio, no de su implementación. Segundo, hay un <code>Repository</code> por <strong>raíz de agregado</strong>: <code>Venta</code> tiene repositorio, <code>DetalleVenta</code> no, porque solo se accede a él a través de su <code>Venta</code> (S6, agregado como límite de consistencia). Tercero, un servicio jamás llama al repositorio de otro módulo: usa el servicio público de ese módulo (ADR-002).</p>
+<p><strong>Qué decide cada capa además de su forma.</strong> Un diagrama de clases de diseño que solo lista clases y flechas no dice si el sistema es correcto. Lo que lo hace construible es qué garantiza cada capa, y por eso se diseña junto con las clases:</p>
+<ul>
+<li><strong>Contrato (<code>Service</code> como interfaz).</strong> Cada operación declara qué recibe, qué devuelve, qué precondiciones exige y qué errores lanza. Es la única puerta del módulo: quien lo usa depende de ese contrato, no de cómo se implementa.</li>
+<li><strong>Validación de forma (<code>Controller</code> + DTO).</strong> Antes de entrar al servicio se comprueba que el dato <em>está bien formado</em>: campos obligatorios, rangos, longitudes, formatos. Se declara sobre el DTO de entrada (Bean Validation: <code>@NotEmpty</code>, <code>@Positive</code>, <code>@Size</code>) y se activa con <code>@Valid</code> en el parámetro del controlador. Una petición malformada responde <code>400</code> sin tocar el negocio.</li>
+<li><strong>Reglas de negocio (<code>ServiceImpl</code>).</strong> Lo que depende del estado del sistema —¿hay stock?, ¿el producto está activo?, ¿la venta ya fue anulada?— solo puede comprobarse con datos y no con la forma; vive en el servicio, dentro de una transacción, y sus violaciones son excepciones de negocio (<code>404</code>, <code>409</code>, <code>422</code>). Nunca en el controlador y nunca en el DTO.</li>
+<li><strong>Autorización (permisos).</strong> Qué rol puede ejecutar cada operación se declara sobre el método del servicio (o del controlador) con una anotación como <code>@PreAuthorize</code>, no dentro del cuerpo con <code>if</code>. Se decide por <strong>caso de uso</strong>, con el mínimo privilegio, y también por <strong>propiedad del dato</strong> cuando corresponde: un vendedor ve sus ventas, un supervisor ve todas.</li>
+<li><strong>Errores (<code>exception</code>, transversal).</strong> Un manejador único traduce cada excepción de negocio a su código HTTP y a un cuerpo de error uniforme, de modo que el contrato REST de todos los módulos responde igual.</li>
+</ul>
+<p>Autenticar (¿quién eres?) y autorizar (¿qué puedes hacer?) son dos cosas distintas. Esta sesión diseña la segunda: la tabla de permisos por operación. El mecanismo que entrega la identidad al backend se elige en la arquitectura de seguridad y no cambia este diseño, porque las anotaciones solo dependen de los roles que reciben.</p>
+<p>El porqué de cada rol —por ejemplo, el patrón GRASP <em>Controller</em> o el patrón GoF <em>Facade</em>— se estudia en S10 (Patrones de Diseño GoF y GRASP). Hoy solo se dibuja qué clases existen, qué responsabilidad tiene cada una y quién depende de quién.</p>
+<h3 id="24-dto-mapper-y-contrato-rest">2.4 DTO, mapper y contrato REST<a class="headerlink" href="#24-dto-mapper-y-contrato-rest" title="Permanent link">&para;</a></h3>
+<p>Un <strong>DTO</strong> (<em>Data Transfer Object</em>) es una clase que solo transporta datos a través de una frontera —aquí, la API— sin comportamiento de negocio (Fowler, 2003). Existe para que la forma de lo que se expone no dependa de la forma de las entidades: exponer una entidad directamente filtra columnas internas, arrastra relaciones perezosas y obliga a cambiar la API cada vez que cambia la tabla.</p>
+<p><strong>Tabla 4. Tipos de DTO de un módulo</strong></p>
+<table>
+<thead>
+<tr>
+<th>Tipo</th>
+<th>Para qué sirve</th>
+<th>Ejemplo en <code>ventas</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Request</td>
+<td>Datos que el cliente envía; solo lo que el cliente puede decidir.</td>
+<td><code>VentaRequest</code>, <code>DetalleVentaRequest</code></td>
+</tr>
+<tr>
+<td>Response</td>
+<td>Datos que la API devuelve de un recurso.</td>
+<td><code>VentaResponse</code>, <code>DetalleVentaResponse</code></td>
+</tr>
+<tr>
+<td>Resumen</td>
+<td>Vista reducida para listados y reportes.</td>
+<td><code>VentaResumen</code></td>
+</tr>
+<tr>
+<td>Agregado</td>
+<td>Resultado de un cálculo sobre muchos registros.</td>
+<td><code>VentaAgregado</code></td>
+</tr>
+<tr>
+<td>Reporte</td>
+<td>DTO compuesto de otros DTO.</td>
+<td><code>VentaReporte</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Qué no entra en un Request.</strong> El cliente decide qué producto compra y cuántas unidades (<code>productoId</code>, <code>cantidad</code>). No decide el <code>total</code>, el <code>precioUnitario</code>, la <code>fecha</code> ni el <code>estado</code>: esos los fija el servidor con datos del catálogo y del momento. Un Request que acepta el total confía en un dato que cualquiera puede alterar con una simple petición: una regla de negocio no puede depender de un dato que el propio cliente declara.</p>
+<p>Un <strong>mapper</strong> es la clase que traduce entre entidades y DTO en ambos sentidos, para que ni el servicio ni el controlador repitan esa conversión.</p>
+<p>El <strong>contrato REST</strong> conceptual de un módulo lista, por cada operación: método y ruta, DTO de entrada, DTO de salida y códigos de respuesta. Es el insumo directo del backend (LP2) y se diseña antes de programar.</p>
+<h3 id="25-transformacion-objeto-relacional-clases-tablas-y-claves">2.5 Transformación objeto-relacional: clases, tablas y claves<a class="headerlink" href="#25-transformacion-objeto-relacional-clases-tablas-y-claves" title="Permanent link">&para;</a></h3>
+<p>Los objetos y las tablas modelan el mundo de forma distinta: los objetos forman grafos con herencia y referencias, las tablas son filas con llaves. Esa diferencia se llama <strong>desajuste de impedancia objeto-relacional</strong> (Fowler, 2003). Transformar un diseño de clases a tablas es aplicar reglas explícitas para cerrar esa brecha, no traducir nombres uno a uno.</p>
+<p><strong>Tabla 5. Reglas base de la transformación</strong></p>
+<table>
+<thead>
+<tr>
+<th>Elemento de la clase</th>
+<th>Elemento relacional</th>
+<th>Convención de BomERP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Clase persistente</td>
+<td>Tabla</td>
+<td>Nombre en plural y mayúsculas, dentro del esquema <code>BOM_&lt;MODULO&gt;</code>.</td>
+</tr>
+<tr>
+<td>Atributo</td>
+<td>Columna con tipo de la base</td>
+<td><code>String</code> -&gt; <code>VARCHAR2(n)</code>, <code>Long</code>/<code>Integer</code> -&gt; <code>NUMBER</code>, <code>BigDecimal</code> -&gt; <code>NUMBER(p,s)</code>, <code>LocalDateTime</code> -&gt; <code>TIMESTAMP</code>.</td>
+</tr>
+<tr>
+<td>Identidad</td>
+<td>Llave primaria</td>
+<td><code>ID NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY</code>.</td>
+</tr>
+<tr>
+<td>Atributo obligatorio</td>
+<td><code>NOT NULL</code></td>
+<td>Según la multiplicidad mínima del atributo.</td>
+</tr>
+<tr>
+<td>Atributo único</td>
+<td><code>UNIQUE</code></td>
+<td><code>Categoria.nombre</code>.</td>
+</tr>
+<tr>
+<td>Enumeración</td>
+<td><code>VARCHAR2</code> con restricción <code>CHECK</code></td>
+<td><code>EstadoVenta</code> -&gt; <code>ESTADO VARCHAR2(20)</code>.</td>
+</tr>
+<tr>
+<td>Restricción de clase (<code>{stock &gt;= 0}</code>)</td>
+<td><code>CHECK</code></td>
+<td><code>CK_PRODUCTO_STOCK CHECK (STOCK &gt;= 0)</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>Ejemplo real, la clase <code>Categoria</code> y su tabla en Oracle:</p>
+<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">CATEGORIAS</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">ID</span><span class="w"> </span><span class="nb">NUMBER</span><span class="w"> </span><span class="k">GENERATED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">IDENTITY</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">    </span><span class="n">NOMBRE</span><span class="w"> </span><span class="n">VARCHAR2</span><span class="p">(</span><span class="mi">80</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">UNIQUE</span><span class="p">,</span>
+<span class="w">    </span><span class="n">DESCRIPCION</span><span class="w"> </span><span class="n">VARCHAR2</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
+<span class="p">);</span>
+</code></pre></div>
+<p><code>id</code> se vuelve la llave primaria, <code>nombre</code> (obligatorio y único) se vuelve <code>NOT NULL UNIQUE</code>, y <code>descripcion</code> (opcional) queda sin restricción. La tabla y sus columnas son trabajo de BD2; el diseño de la correspondencia es de ADS.</p>
+<h3 id="26-asociaciones-herencia-y-objetos-de-valor-en-tablas">2.6 Asociaciones, herencia y objetos de valor en tablas<a class="headerlink" href="#26-asociaciones-herencia-y-objetos-de-valor-en-tablas" title="Permanent link">&para;</a></h3>
+<p><strong>Asociaciones.</strong> La multiplicidad y el tipo de relación de S7 deciden dónde va la llave foránea y cómo se protege.</p>
+<p><strong>Tabla 6. De la relación del dominio a la estructura relacional</strong></p>
+<table>
+<thead>
+<tr>
+<th>Relación en el dominio</th>
+<th>Estructura relacional</th>
+<th>Ejemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Composición <code>1</code> - <code>1..*</code></td>
+<td>Llave foránea <code>NOT NULL</code> en la tabla de la parte. La cascada se decide en la aplicación.</td>
+<td><code>DETALLE_VENTAS.ID_VENTA NOT NULL</code></td>
+</tr>
+<tr>
+<td>Agregación o asociación <code>1</code> - <code>0..*</code></td>
+<td>Llave foránea en la tabla del lado "muchos". Sin borrado en cascada.</td>
+<td><code>PRODUCTOS.ID_CATEGORIA</code></td>
+</tr>
+<tr>
+<td>Muchos a muchos</td>
+<td>Tabla intermedia con dos llaves foráneas.</td>
+<td>(no aparece en BomERP)</td>
+</tr>
+<tr>
+<td>Entre módulos distintos</td>
+<td>Columna con el identificador, <strong>sin</strong> llave foránea.</td>
+<td><code>DETALLE_VENTAS.ID_PRODUCTO</code></td>
+</tr>
+</tbody>
+</table>
+<p>La última fila es una decisión de diseño real de BomERP: <code>ID_PRODUCTO</code> no lleva llave foránea hacia <code>BOM_CATALOGO.PRODUCTOS</code>, a propósito, con el mismo criterio de separación que LP2 aplica a nivel de módulo Java. La integridad entre módulos la garantiza el servicio del otro módulo, no una restricción entre esquemas.</p>
+<p><strong>Herencia.</strong> Una jerarquía de clases no existe en una tabla, así que hay que elegir cómo bajarla. Hay tres estrategias (Fowler, 2003), que en JPA se llaman <code>SINGLE_TABLE</code>, <code>JOINED</code> y <code>TABLE_PER_CLASS</code> (Jakarta EE, 2024).</p>
+<p><strong>Tabla 7. Estrategias para mapear una jerarquía de herencia</strong></p>
+<table>
+<thead>
+<tr>
+<th>Estrategia</th>
+<th>Estructura</th>
+<th>Ventaja</th>
+<th>Costo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tabla única (<em>Single Table</em>)</td>
+<td>Una tabla con las columnas de todas las clases.</td>
+<td>Consultas polimórficas simples, sin <code>JOIN</code>.</td>
+<td>Columnas propias de cada subclase deben ser nulables; se pierde <code>NOT NULL</code> real.</td>
+</tr>
+<tr>
+<td>Una tabla por clase (<em>Class Table</em>)</td>
+<td>Una tabla para la superclase y una por cada subclase, unidas por la llave.</td>
+<td>Cada columna conserva su <code>NOT NULL</code>; las referencias hacia la superclase apuntan a una sola tabla.</td>
+<td>Cada lectura completa exige un <code>JOIN</code>.</td>
+</tr>
+<tr>
+<td>Una tabla por clase concreta (<em>Concrete Table</em>)</td>
+<td>Una tabla por subclase, cada una con todas sus columnas.</td>
+<td>Sin <code>JOIN</code> para leer una subclase.</td>
+<td>Las consultas sobre la superclase requieren <code>UNION</code>; una llave foránea hacia "cualquier cliente" no puede apuntar a una sola tabla.</td>
+</tr>
+</tbody>
+</table>
+<p><em>Nota.</em> Adaptado de <em>Patterns of Enterprise Application Architecture</em>, por M. Fowler, 2003, Addison-Wesley.</p>
+<p>El criterio de decisión es qué se necesita proteger y qué se consulta más: si las subclases tienen columnas obligatorias propias y otras clases las referencian, conviene una tabla por clase; si son casi idénticas y se consultan siempre juntas, tabla única.</p>
+<p><strong>Objetos de valor.</strong> Un objeto de valor no tiene identidad ni tabla propia (S6, S7): sus atributos se guardan como columnas de la tabla que lo usa. <code>Dinero</code> (monto y moneda) se guarda como una columna <code>NUMBER(p,s)</code> para el monto. Si el sistema maneja una sola moneda, la moneda no se persiste y se documenta como restricción; si aparece una segunda moneda, se agrega una columna <code>MONEDA</code> en cada tabla que use <code>Dinero</code>.</p>
+<p><strong>Atributos derivados.</strong> Un atributo que se calcula de otros (<code>subtotal = precioUnitario * cantidad</code>) se persiste solo si tiene un motivo: conservar el valor de ese momento aunque cambien los datos de origen, o evitar recalcularlo en consultas pesadas. <code>DETALLE_VENTAS.SUBTOTAL</code> y <code>VENTAS.TOTAL</code> se guardan por ambos motivos: <code>SUM(TOTAL)</code> alimenta el reporte de ventas.</p>
+<h3 id="27-trazabilidad-dominio-clases-base-de-datos">2.7 Trazabilidad dominio-clases-base de datos<a class="headerlink" href="#27-trazabilidad-dominio-clases-base-de-datos" title="Permanent link">&para;</a></h3>
+<p>La <strong>trazabilidad</strong> relaciona cada elemento de un nivel con su equivalente en el siguiente: concepto del dominio, clase de diseño, tabla y columnas, DTO. Se documenta en una <strong>matriz</strong> y sirve para dos cosas: que BD2 y LP2 reciban un diseño verificable, y detectar brechas entre niveles. El Proyecto Integrador excluye explícitamente el diseño técnico que no se refleja en la aplicación.</p>
+<p>La matriz revela inconsistencias que ningún diagrama por separado muestra. Ejemplo real en BomERP: en el dominio, <code>Categoria "1" o-- "0..*" Producto</code> exige que todo producto tenga exactamente una categoría; la clase <code>Producto</code> la declara obligatoria (<code>nullable = false</code>), pero el DDL del catálogo define <code>ID_CATEGORIA NUMBER</code> sin <code>NOT NULL</code>. Solo al poner las tres columnas de la matriz lado a lado aparece la brecha: la base de datos permite un producto sin categoría, y el diseño no.</p>
+<h2 id="3-aplica-actividad-practica-guiada">3. Aplica: actividad práctica guiada<a class="headerlink" href="#3-aplica-actividad-practica-guiada" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 90 min.</p>
+<p><strong>Actividad:</strong> diseño guiado de las clases del módulo <code>ventas</code> de BomERP, de punta a punta: refinamiento, capas, DTO, contrato REST, transformación a tablas, decisiones de herencia y objeto de valor, modelo relacional y matriz de trazabilidad (Producto de la sesión en 1.4).</p>
+<p><strong>Propósito de la actividad:</strong> llevar el diagrama de clases del dominio de S7 hasta un diseño verificable contra el backend de LP2 y el esquema de BD2, con las decisiones justificadas.</p>
+<p><strong>Orientaciones metodológicas:</strong> en el laboratorio, el docente guía el diseño de <code>ventas</code> paso a paso frente a la clase; los estudiantes completan las mismas tablas para un módulo de su propio proyecto (ver sección 4).</p>
+<p><strong>Actividades para realizar:</strong></p>
+<ul>
+<li><strong>3.1</strong> Verificar el punto de partida.</li>
+<li><strong>3.2</strong> Refinar las clases de dominio en clases de diseño.</li>
+<li><strong>3.3</strong> Definir la estructura de carpetas del ERP y diseñar las capas del módulo <code>ventas</code>.</li>
+<li><strong>3.4</strong> Definir los DTO y el contrato REST.</li>
+<li><strong>3.5</strong> Transformar las clases en tablas.</li>
+<li><strong>3.6</strong> Decidir la herencia de <code>Cliente</code> y el objeto de valor <code>Dinero</code>.</li>
+<li><strong>3.7</strong> Dibujar el modelo relacional completo.</li>
+<li><strong>3.8</strong> Armar la matriz de trazabilidad.</li>
+</ul>
+<h3 id="31-verificar-el-punto-de-partida">3.1 Verificar el punto de partida<a class="headerlink" href="#31-verificar-el-punto-de-partida" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> confirmación de que el diagrama de clases de S7 (Figura 9) y su Tabla de restricciones siguen siendo el punto de partida válido.</p>
+<p>Retoma las clases de S7: <code>Categoria</code> y <code>Producto</code> (módulo <code>catalogo</code>), <code>Venta</code> y <code>DetalleVenta</code> (módulo <code>ventas</code>, agregado) y <code>Cliente</code> con sus dos subclases (módulo <code>clientes</code>). El módulo que se diseña hoy es <code>ventas</code>, porque es el que cruza a los otros dos.</p>
+<h3 id="32-refinar-las-clases-de-dominio-en-clases-de-diseno">3.2 Refinar las clases de dominio en clases de diseño<a class="headerlink" href="#32-refinar-las-clases-de-dominio-en-clases-de-diseno" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> cada clase con sus decisiones de refinamiento (Tabla 2 aplicada).</p>
+<p><strong>Tabla 8. Refinamiento de las clases del dominio de BomERP</strong></p>
+<table>
+<thead>
+<tr>
+<th>Clase de dominio (S7)</th>
+<th>Clase de diseño</th>
+<th>Decisiones</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Categoria</code></td>
+<td><code>Categoria</code> (entidad)</td>
+<td><code>id: Long</code>; <code>nombre</code> obligatorio y único, hasta 80 caracteres; <code>descripcion</code> opcional, hasta 200.</td>
+</tr>
+<tr>
+<td><code>Producto</code></td>
+<td><code>Producto</code> (entidad)</td>
+<td><code>precio: Dinero</code> -&gt; <code>BigDecimal</code> (moneda única); <code>stock &gt;= 0</code> validado en <code>descontarStock</code>; <code>Producto</code> conoce a <code>Categoria</code> (navegabilidad unidireccional).</td>
+</tr>
+<tr>
+<td><code>Venta</code></td>
+<td><code>Venta</code> (entidad, raíz del agregado)</td>
+<td><code>estado: EstadoVenta</code> (enumeración); <code>total: BigDecimal</code> persistido; lista de <code>detalles</code> con cascada y eliminación de huérfanos (composición).</td>
+</tr>
+<tr>
+<td><code>DetalleVenta</code></td>
+<td><code>DetalleVenta</code> (entidad)</td>
+<td>Guarda <code>productoId</code> (no un objeto <code>Producto</code>); copia <code>nombreProducto</code> y <code>precioUnitario</code>; <code>subtotal</code> persistido.</td>
+</tr>
+<tr>
+<td><code>Cliente</code> (abstracta) y subclases</td>
+<td><code>Cliente</code>, <code>ClientePersonaNatural</code>, <code>ClienteEmpresa</code></td>
+<td>Previsto: hoy <code>Venta</code> no referencia a <code>Cliente</code> en LP2. Cuando exista, <code>Venta</code> guardará <code>clienteId</code> (otro módulo, por identificador).</td>
+</tr>
+</tbody>
+</table>
+<p><code>Venta.calcularTotal()</code> aparece como operación en el diagrama de S7 y hoy, en LP2, el total se calcula dentro de <code>VentaServiceImpl.crear</code>: es un refactor pendiente que la matriz de 3.8 deja registrado, no un error del diseño.</p>
+<h3 id="33-definir-la-estructura-de-carpetas-y-disenar-las-capas-del-modulo-ventas">3.3 Definir la estructura de carpetas y diseñar las capas del módulo <code>ventas</code><a class="headerlink" href="#33-definir-la-estructura-de-carpetas-y-disenar-las-capas-del-modulo-ventas" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> la estructura de carpetas del backend de un ERP con varios módulos, y el diagrama de código (nivel 4 del modelo C4) del componente <code>ventas</code>.</p>
+<p><strong>Del nivel 3 al nivel 4: las carpetas.</strong> En el modelo C4 de S2, cada módulo de negocio de BomERP es un <strong>componente</strong> del nivel 3 (C3). El nivel 4 (código) hace zoom a <strong>un solo</strong> componente y muestra sus clases e interfaces (Brown, 2024). Las carpetas del proyecto son el lugar donde ambos niveles se tocan: las carpetas de primer nivel son los componentes de C3, y todo lo que hay dentro de cada una es el nivel 4 de ese componente. Esta sesión diseña ese nivel 4 antes de escribir el código; una vez que el código existe, herramientas como el <code>Documenter</code> de Spring Modulith (S2, 2.6) pueden mantener el diagrama sincronizado.</p>
+<p>Un ERP tiene muchos módulos, así que la estructura de carpetas tiene que servir igual para el primero que para el décimo. Este es el árbol de BomERP: los módulos que ya existen en LP2 y los previstos por S6.</p>
+<div class="highlight"><pre><span></span><code>lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/
+├── BomerpBackendApplication.java
+├── CorsConfig.java, OpenApiConfig.java      # transversal: configuración común
+├── exception/                               # transversal: errores comunes
+├── filter/                                  # transversal: trazabilidad de peticiones
+│
+├── catalogo/                                # C3: módulo
+│   ├── categoria/{controller,dto,entity,mapper,repository,service}
+│   └── producto/{controller,dto,entity,mapper,repository,service}
+│
+├── ventas/                                  # C3: módulo (el de hoy)
+│   └── venta/{controller,dto,entity,mapper,repository,service}
+│                                            # Venta y DetalleVenta: un solo agregado, un solo paquete
+│
+├── clientes/                                # previsto (S6)
+│   └── cliente/{controller,dto,entity,mapper,repository,service}
+├── inventario/                              # previsto (S6)
+├── compras/                                 # previsto (S6)
+└── administracion/                          # previsto (S6)
+</code></pre></div>
+<p>Siete reglas hacen que el árbol crezca sin desordenarse:</p>
+<ol>
+<li><strong>El primer nivel es el módulo, no la capa técnica.</strong> Se organiza por <code>catalogo</code>, <code>ventas</code>, <code>clientes</code>, y no por <code>controller</code>, <code>service</code>, <code>repository</code> en la raíz. Con decenas de módulos, una carpeta <code>controller/</code> con cientos de clases mezcladas esconde los límites del negocio; una carpeta por módulo los hace visibles y verificables (ADR-002).</li>
+<li><strong>El segundo nivel es la raíz de agregado, no la tabla.</strong> <code>venta/</code> es un paquete; <code>DetalleVenta</code> no tiene el suyo, vive dentro de <code>venta/entity</code> porque no se accede a él sino a través de <code>Venta</code> (S6). Un módulo con varios agregados (por ejemplo, <code>ventas</code> con <code>venta</code>, <code>cotizacion</code> y <code>devolucion</code>) agrega un paquete de segundo nivel por cada uno.</li>
+<li><strong>El tercer nivel son las capas, y son las mismas seis en todos los agregados.</strong> Quien conoce un módulo, conoce todos: <code>controller</code>, <code>service</code>, <code>repository</code>, <code>entity</code>, <code>dto</code> y <code>mapper</code>.</li>
+<li><strong>Lo compartido por todos los módulos vive fuera de ellos.</strong> Errores comunes, filtros y configuración van en el paquete raíz o en uno transversal; un módulo de negocio nunca aloja código que otro módulo necesita.</li>
+<li><strong>Un módulo solo muestra su interfaz de servicio al resto.</strong> El paquete <code>service</code> de cada módulo declara qué interfaces son públicas (<code>@NamedInterface</code>, como hace <code>catalogo</code> con <code>ProductoService</code>); todo lo demás es interno y ningún otro módulo puede tocarlo.</li>
+<li><strong>Las dependencias entre módulos van en una sola dirección.</strong> <code>ventas</code> usa a <code>catalogo</code> y a <code>clientes</code>; nunca al revés. Un ciclo entre módulos hace que ninguno pueda cambiarse sin arrastrar al otro, y <code>ModularityTests</code> lo detecta.</li>
+<li><strong>Un módulo previsto se crea cuando su sesión lo necesita, no antes.</strong> <code>clientes</code>, <code>inventario</code>, <code>compras</code> y <code>administracion</code> figuran en el árbol para que el diseño los tenga en cuenta, pero su carpeta aparece recién cuando LP2 llega a ese módulo.</li>
+</ol>
+<p>Con las carpetas resueltas, ahora sí el nivel 4 de un componente. El diagrama siguiente hace zoom a <code>ventas</code>: es el mismo tipo de diagrama de código de S2 de S2 (2.6), pero con las seis capas del módulo, y se repite tal cual —uno por módulo— para el resto del ERP. Un solo diagrama de código para todo el sistema cruzaría componentes de C3, y ya no sería de nivel 4.</p>
+<p><strong>Figura 6. Diagrama de código (C4, nivel 4) del componente <code>ventas</code>: clases de diseño por capas</strong></p>
+<pre class="mermaid"><code>classDiagram
+    class VentaController {
+        &lt;&lt;RestController&gt;&gt;
+        -VentaService ventaService
+        +buscar(estado, desde, hasta, ordenarPor, direccion) List~VentaResponse~
+        +resumen(estado, desde, hasta) VentaReporte
+        +obtener(id) VentaResponse
+        +crear(@Valid VentaRequest) VentaResponse
+    }
+    class VentaService {
+        &lt;&lt;interface&gt;&gt;
+        +buscar(...) List~VentaResponse~
+        +obtener(id) VentaResponse
+        +crear(VentaRequest) VentaResponse
+        +reporte(...) VentaReporte
+    }
+    class VentaServiceImpl {
+        &lt;&lt;Service, Transactional&gt;&gt;
+        -VentaRepository ventaRepository
+        -ProductoService productoService
+        -VentaMapper ventaMapper
+    }
+    class VentaRepository {
+        &lt;&lt;interface&gt;&gt;
+        +buscar(...) List~Venta~
+        +buscarResumen(...) List~VentaResumen~
+        +agregados(...) VentaAgregado
+    }
+    class VentaMapper {
+        &lt;&lt;interface&gt;&gt;
+        +toDetalle(request, producto) DetalleVenta
+        +toResponse(venta) VentaResponse
+    }
+    class VentaRequest {
+        &lt;&lt;DTO&gt;&gt;
+        @NotEmpty List~DetalleVentaRequest~ detalles
+    }
+    class DetalleVentaRequest {
+        &lt;&lt;DTO&gt;&gt;
+        @NotNull Long productoId
+        @NotNull @Positive Integer cantidad
+    }
+    class VentaNoEncontradaException {
+        &lt;&lt;404&gt;&gt;
+    }
+    class StockInsuficienteException {
+        &lt;&lt;409&gt;&gt;
+    }
+    class Venta {
+        +Long id
+        +LocalDateTime fecha
+        +EstadoVenta estado
+        +BigDecimal total
+    }
+    class DetalleVenta {
+        +Long id
+        +Long productoId
+        +String nombreProducto
+        +BigDecimal precioUnitario
+        +Integer cantidad
+        +BigDecimal subtotal
+    }
+    class ProductoService {
+        &lt;&lt;interface&gt;&gt;
+        +obtener(id) ProductoResponse
+        +descontarStock(id, cantidad)
+    }
+
+    VentaController --&gt; VentaService
+    VentaController ..&gt; VentaRequest : valida con @Valid
+    VentaRequest "1" *-- "1..*" DetalleVentaRequest
+    VentaServiceImpl ..|&gt; VentaService
+    VentaServiceImpl --&gt; VentaRepository
+    VentaServiceImpl --&gt; VentaMapper
+    VentaServiceImpl --&gt; ProductoService : otro módulo, solo su interfaz pública
+    VentaServiceImpl ..&gt; StockInsuficienteException : lanza
+    VentaServiceImpl ..&gt; VentaNoEncontradaException : lanza
+    VentaRepository ..&gt; Venta
+    VentaMapper ..&gt; Venta
+    Venta "1" *-- "1..*" DetalleVenta
+
+    note for VentaController "Permisos: @PreAuthorize por operación (Tabla 10)"
+    note for VentaServiceImpl "Reglas de negocio RN1 a RN6 (Tabla 9)"</code></pre>
+<p>Lectura del diagrama: <code>VentaController</code> conoce solo la interfaz <code>VentaService</code>. <code>VentaServiceImpl</code> es la única clase que reúne repositorio, mapper y el servicio de otro módulo (<code>ProductoService</code>, del módulo <code>catalogo</code>), y lo hace por su interfaz pública, nunca por <code>ProductoRepository</code> (regla 5). <code>Venta</code> tiene repositorio; <code>DetalleVenta</code> no, porque vive dentro del agregado (regla 2). Los DTO se detallan en 3.4. LP2 declara <code>total</code>, <code>precioUnitario</code> y <code>subtotal</code> como <code>BigDecimal</code>, que coincide con esta decisión.</p>
+<p>Las clases y flechas solo dicen quién conoce a quién. Lo que hace verificable al módulo es lo que cada capa <strong>garantiza</strong>, y se diseña ahora, no al programar. Para <code>ventas</code>:</p>
+<p><strong>Tabla 9. Contrato, validaciones, reglas de negocio y permisos del módulo <code>ventas</code></strong></p>
+<table>
+<thead>
+<tr>
+<th>Operación</th>
+<th>Capa</th>
+<th>Qué garantiza</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>crear(VentaRequest)</code></td>
+<td>Contrato (<code>VentaService</code>)</td>
+<td>Precondición: usuario autenticado. Postcondición: devuelve la venta con <code>total</code> calculado y el stock descontado; si falla algo, no queda nada guardado. Errores: <code>400</code>, <code>404</code>, <code>409</code>.</td>
+</tr>
+<tr>
+<td><code>crear</code></td>
+<td>Validación de forma (<code>Controller</code> + DTO)</td>
+<td><code>detalles</code> no vacío; en cada detalle, <code>productoId</code> obligatorio y <code>cantidad</code> entera positiva. Se declara en <code>VentaRequest</code> y <code>DetalleVentaRequest</code> y se activa con <code>@Valid</code>. Falla con <code>400</code>.</td>
+</tr>
+<tr>
+<td><code>crear</code></td>
+<td>RN1 (<code>ServiceImpl</code>)</td>
+<td>Cada <code>productoId</code> debe existir en <code>catalogo</code> y estar activo; si no, <code>404</code>.</td>
+</tr>
+<tr>
+<td><code>crear</code></td>
+<td>RN2</td>
+<td>Debe haber stock suficiente para cada <code>cantidad</code>; si no, <code>409</code> (<code>StockInsuficienteException</code>).</td>
+</tr>
+<tr>
+<td><code>crear</code></td>
+<td>RN3</td>
+<td><code>nombreProducto</code> y <code>precioUnitario</code> se copian del producto <strong>en ese momento</strong> (instantánea), nunca del cliente.</td>
+</tr>
+<tr>
+<td><code>crear</code></td>
+<td>RN4</td>
+<td><code>subtotal = precioUnitario × cantidad</code> y <code>total</code> es la suma de los subtotales, calculados por el servidor.</td>
+</tr>
+<tr>
+<td><code>crear</code></td>
+<td>RN5</td>
+<td>La venta nace en estado inicial <code>REGISTRADA</code>, con la <code>fecha</code> del servidor.</td>
+</tr>
+<tr>
+<td><code>crear</code></td>
+<td>RN6 (transacción)</td>
+<td>Guardar la venta y descontar el stock ocurren en <strong>una sola transacción</strong>: si el descuento falla, la venta se deshace.</td>
+</tr>
+<tr>
+<td><code>obtener(id)</code></td>
+<td>Contrato y regla</td>
+<td>Si no existe, <code>404</code> (<code>VentaNoEncontradaException</code>). Un vendedor solo obtiene una venta propia.</td>
+</tr>
+<tr>
+<td><code>buscar(...)</code>, <code>reporte(...)</code></td>
+<td>Validación y regla</td>
+<td><code>desde</code> no puede ser posterior a <code>hasta</code> (<code>400</code>); <code>ordenarPor</code> solo admite columnas de una lista cerrada, para no construir consultas con texto del cliente.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Tabla 10. Permisos por operación de <code>ventas</code> (mínimo privilegio)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Operación</th>
+<th><code>VENDEDOR</code></th>
+<th><code>SUPERVISOR</code></th>
+<th><code>ADMIN</code></th>
+<th>Mecanismo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>crear</code></td>
+<td>Sí</td>
+<td>Sí</td>
+<td>No</td>
+<td><code>@PreAuthorize("hasAnyRole('VENDEDOR','SUPERVISOR')")</code></td>
+</tr>
+<tr>
+<td><code>obtener</code></td>
+<td>Solo las propias</td>
+<td>Todas</td>
+<td>Todas</td>
+<td><code>hasAnyRole(...)</code> más comprobación de propiedad en el servicio</td>
+</tr>
+<tr>
+<td><code>buscar</code></td>
+<td>Solo las propias</td>
+<td>Todas</td>
+<td>Todas</td>
+<td>El servicio agrega el filtro por usuario según el rol</td>
+</tr>
+<tr>
+<td><code>reporte</code></td>
+<td>No</td>
+<td>Sí</td>
+<td>Sí</td>
+<td><code>@PreAuthorize("hasAnyRole('SUPERVISOR','ADMIN')")</code></td>
+</tr>
+</tbody>
+</table>
+<p>Un <code>ADMIN</code> administra el sistema pero no vende: por eso no aparece en <code>crear</code>. Si un rol sin permiso invoca la operación, la respuesta es <code>403</code>; si no hay identidad, <code>401</code>. Esos dos códigos se agregan al contrato REST de 3.4 para todas las operaciones.</p>
+<h3 id="34-definir-los-dto-y-el-contrato-rest">3.4 Definir los DTO y el contrato REST<a class="headerlink" href="#34-definir-los-dto-y-el-contrato-rest" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> DTO del módulo y contrato de sus operaciones.</p>
+<p><strong>Tabla 11. DTO del módulo <code>ventas</code></strong></p>
+<table>
+<thead>
+<tr>
+<th>DTO</th>
+<th>Campos</th>
+<th>Decide</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>VentaRequest</code></td>
+<td><code>detalles: List&lt;DetalleVentaRequest&gt;</code> (al menos uno)</td>
+<td>El cliente</td>
+</tr>
+<tr>
+<td><code>DetalleVentaRequest</code></td>
+<td><code>productoId</code>, <code>cantidad</code> (positiva)</td>
+<td>El cliente</td>
+</tr>
+<tr>
+<td><code>VentaResponse</code></td>
+<td><code>id</code>, <code>fecha</code>, <code>estado</code>, <code>total</code>, <code>detalles</code></td>
+<td>El servidor</td>
+</tr>
+<tr>
+<td><code>DetalleVentaResponse</code></td>
+<td><code>productoId</code>, <code>nombreProducto</code>, <code>precioUnitario</code>, <code>cantidad</code>, <code>subtotal</code></td>
+<td>El servidor</td>
+</tr>
+<tr>
+<td><code>VentaResumen</code></td>
+<td><code>id</code>, <code>fecha</code>, <code>estado</code>, <code>total</code>, <code>cantidadDetalles</code></td>
+<td>El servidor</td>
+</tr>
+</tbody>
+</table>
+<p><code>VentaRequest</code> no contiene <code>total</code>, <code>fecha</code>, <code>estado</code> ni <code>precioUnitario</code>: el servidor los calcula con datos del catálogo y del momento (2.4).</p>
+<p><strong>Tabla 12. Contrato REST del módulo <code>ventas</code></strong></p>
+<table>
+<thead>
+<tr>
+<th>Método y ruta</th>
+<th>Entrada</th>
+<th>Salida</th>
+<th>Códigos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET /api/v1/ventas</code></td>
+<td>Filtros opcionales: <code>estado</code>, <code>desde</code>, <code>hasta</code>, <code>ordenarPor</code>, <code>direccion</code></td>
+<td>Lista de <code>VentaResponse</code></td>
+<td><code>200</code>, <code>400</code> (rango de fechas inválido), <code>401</code>, <code>403</code></td>
+</tr>
+<tr>
+<td><code>GET /api/v1/ventas/resumen</code></td>
+<td>Filtros opcionales: <code>estado</code>, <code>desde</code>, <code>hasta</code></td>
+<td><code>VentaReporte</code></td>
+<td><code>200</code>, <code>400</code>, <code>401</code>, <code>403</code></td>
+</tr>
+<tr>
+<td><code>GET /api/v1/ventas/{id}</code></td>
+<td>Identificador en la ruta</td>
+<td><code>VentaResponse</code></td>
+<td><code>200</code>, <code>401</code>, <code>403</code>, <code>404</code></td>
+</tr>
+<tr>
+<td><code>POST /api/v1/ventas</code></td>
+<td><code>VentaRequest</code></td>
+<td><code>VentaResponse</code></td>
+<td><code>201</code>, <code>400</code> (datos inválidos), <code>401</code>, <code>403</code>, <code>404</code> (producto inexistente), <code>409</code> (stock insuficiente)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="35-transformar-las-clases-en-tablas">3.5 Transformar las clases en tablas<a class="headerlink" href="#35-transformar-las-clases-en-tablas" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> correspondencia clase-tabla con tipos, claves y restricciones, aplicando la Tabla 5.</p>
+<p><strong>Tabla 13. Correspondencia clase-tabla del dominio de BomERP</strong></p>
+<table>
+<thead>
+<tr>
+<th>Clase</th>
+<th>Tabla</th>
+<th>Columnas y restricciones</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Categoria</code></td>
+<td><code>BOM_CATALOGO.CATEGORIAS</code></td>
+<td><code>ID</code> PK; <code>NOMBRE VARCHAR2(80)</code> <code>NOT NULL</code> <code>UNIQUE</code>; <code>DESCRIPCION VARCHAR2(200)</code></td>
+</tr>
+<tr>
+<td><code>Producto</code></td>
+<td><code>BOM_CATALOGO.PRODUCTOS</code></td>
+<td><code>ID</code> PK; <code>NOMBRE VARCHAR2(120)</code> <code>NOT NULL</code>; <code>PRECIO NUMBER(10,2)</code> <code>NOT NULL</code> <code>CHECK (&gt;= 0)</code>; <code>STOCK NUMBER(10)</code> <code>NOT NULL</code> <code>CHECK (&gt;= 0)</code>; <code>ID_CATEGORIA</code> FK -&gt; <code>CATEGORIAS</code></td>
+</tr>
+<tr>
+<td><code>Venta</code></td>
+<td><code>BOM_VENTAS.VENTAS</code></td>
+<td><code>ID</code> PK; <code>FECHA TIMESTAMP</code> <code>NOT NULL</code>; <code>ESTADO VARCHAR2(20)</code> <code>NOT NULL</code>; <code>TOTAL NUMBER(12,2)</code> <code>NOT NULL</code> <code>CHECK (&gt;= 0)</code></td>
+</tr>
+<tr>
+<td><code>DetalleVenta</code></td>
+<td><code>BOM_VENTAS.DETALLE_VENTAS</code></td>
+<td><code>ID</code> PK; <code>ID_VENTA</code> FK <code>NOT NULL</code> -&gt; <code>VENTAS</code>; <code>ID_PRODUCTO NUMBER</code> <code>NOT NULL</code> (<strong>sin FK</strong>, 2.6); <code>NOMBRE_PRODUCTO VARCHAR2(120)</code>; <code>PRECIO_UNITARIO NUMBER(10,2)</code>; <code>CANTIDAD NUMBER(10)</code> <code>CHECK (&gt; 0)</code>; <code>SUBTOTAL NUMBER(12,2)</code> <code>CHECK (&gt;= 0)</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="36-decidir-la-herencia-de-cliente-y-el-objeto-de-valor-dinero">3.6 Decidir la herencia de <code>Cliente</code> y el objeto de valor <code>Dinero</code><a class="headerlink" href="#36-decidir-la-herencia-de-cliente-y-el-objeto-de-valor-dinero" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> decisiones justificadas, con la alternativa descartada.</p>
+<p><strong>Tabla 14. Decisiones de transformación de BomERP</strong></p>
+<table>
+<thead>
+<tr>
+<th>Elemento</th>
+<th>Decisión</th>
+<th>Por qué</th>
+<th>Alternativa descartada</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Jerarquía <code>Cliente</code></td>
+<td>Una tabla por clase, en el esquema <code>BOM_CLIENTES</code>: <code>CLIENTES</code> y, unidas por la llave, <code>CLIENTE_PERSONAS_NATURALES</code> (<code>DNI</code>) y <code>CLIENTE_EMPRESAS</code> (<code>RUC</code>).</td>
+<td><code>DNI</code> y <code>RUC</code> son obligatorios y únicos en su subclase; una tabla única los volvería nulables. Y <code>Venta</code> referencia a <em>cualquier</em> cliente: necesita una sola tabla destino.</td>
+<td>Tabla única (pierde <code>NOT NULL</code>); tabla por clase concreta (<code>Venta</code> no podría apuntar a una sola tabla).</td>
+</tr>
+<tr>
+<td><code>Dinero</code></td>
+<td>En las clases, <code>BigDecimal</code>; en las tablas, solo el monto: <code>NUMBER(p,s)</code> en cada tabla que lo usa. La moneda (soles) se documenta como restricción del sistema.</td>
+<td>Moneda única en BomERP; un objeto de valor no tiene tabla propia.</td>
+<td>Tabla <code>MONEDAS</code> o columna <code>MONEDA</code>, innecesarias mientras exista una sola.</td>
+</tr>
+<tr>
+<td><code>Venta</code> -&gt; <code>Cliente</code></td>
+<td><code>ID_CLIENTE</code> sin FK, como <code>ID_PRODUCTO</code>.</td>
+<td><code>clientes</code> y <code>ventas</code> son módulos distintos.</td>
+<td>FK entre esquemas, que rompe el límite del módulo.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="37-dibujar-el-modelo-relacional-completo">3.7 Dibujar el modelo relacional completo<a class="headerlink" href="#37-dibujar-el-modelo-relacional-completo" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> diagrama entidad-relación con las tablas de 3.5 y las decisiones de 3.6.</p>
+<p><strong>Figura 7. Modelo relacional de BomERP</strong></p>
+<pre class="mermaid"><code>erDiagram
+    CATEGORIAS ||--o{ PRODUCTOS : clasifica
+    VENTAS ||--|{ DETALLE_VENTAS : compone
+    CLIENTES ||--o| CLIENTE_PERSONAS_NATURALES : es
+    CLIENTES ||--o| CLIENTE_EMPRESAS : es
+    DETALLE_VENTAS }o..|| PRODUCTOS : "ID_PRODUCTO, sin FK"
+    VENTAS }o..|| CLIENTES : "ID_CLIENTE, sin FK"
+
+    CATEGORIAS {
+        NUMBER ID PK
+        VARCHAR2 NOMBRE UK
+        VARCHAR2 DESCRIPCION
+    }
+    PRODUCTOS {
+        NUMBER ID PK
+        NUMBER ID_CATEGORIA FK
+        VARCHAR2 NOMBRE
+        NUMBER PRECIO
+        NUMBER STOCK
+    }
+    VENTAS {
+        NUMBER ID PK
+        TIMESTAMP FECHA
+        VARCHAR2 ESTADO
+        NUMBER TOTAL
+        NUMBER ID_CLIENTE
+    }
+    DETALLE_VENTAS {
+        NUMBER ID PK
+        NUMBER ID_VENTA FK
+        NUMBER ID_PRODUCTO
+        VARCHAR2 NOMBRE_PRODUCTO
+        NUMBER PRECIO_UNITARIO
+        NUMBER CANTIDAD
+        NUMBER SUBTOTAL
+    }
+    CLIENTES {
+        NUMBER ID PK
+        VARCHAR2 NOMBRE_O_RAZON_SOCIAL
+        VARCHAR2 ESTADO
+    }
+    CLIENTE_PERSONAS_NATURALES {
+        NUMBER ID PK
+        VARCHAR2 DNI UK
+    }
+    CLIENTE_EMPRESAS {
+        NUMBER ID PK
+        VARCHAR2 RUC UK
+    }</code></pre>
+<p>Las líneas punteadas son referencias por identificador, sin llave foránea, entre módulos distintos (2.6). Las tablas de <code>clientes</code> son el diseño previsto: hoy no existen en BD2 ni en LP2.</p>
+<h3 id="38-armar-la-matriz-de-trazabilidad">3.8 Armar la matriz de trazabilidad<a class="headerlink" href="#38-armar-la-matriz-de-trazabilidad" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> matriz dominio-clase-tabla-DTO, con las brechas detectadas.</p>
+<p><strong>Tabla 15. Matriz de trazabilidad de BomERP</strong></p>
+<table>
+<thead>
+<tr>
+<th>Dominio (S7)</th>
+<th>Clase de diseño (LP2)</th>
+<th>Tabla y columnas (BD2)</th>
+<th>DTO</th>
+<th>Estado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Venta "1" *-- "1..*" DetalleVenta</code></td>
+<td><code>Venta.detalles</code> con cascada y huérfanos</td>
+<td><code>DETALLE_VENTAS.ID_VENTA</code> FK <code>NOT NULL</code>, sin cascada en la base</td>
+<td><code>VentaResponse.detalles</code></td>
+<td>Trazado, implementado</td>
+</tr>
+<tr>
+<td><code>Categoria "1" o-- "0..*" Producto</code></td>
+<td><code>Producto.categoria</code> (<code>nullable = false</code>)</td>
+<td><code>PRODUCTOS.ID_CATEGORIA</code> FK, <strong>nulable</strong></td>
+<td><code>ProductoResponse</code></td>
+<td><strong>Brecha</strong>: el DDL permite un producto sin categoría</td>
+</tr>
+<tr>
+<td><code>DetalleVenta</code> -&gt; <code>Producto</code></td>
+<td><code>DetalleVenta.productoId</code></td>
+<td><code>ID_PRODUCTO</code> sin FK, con nombre y precio copiados</td>
+<td><code>DetalleVentaResponse</code></td>
+<td>Trazado, decisión deliberada (2.6)</td>
+</tr>
+<tr>
+<td><code>{stock &gt;= 0}</code></td>
+<td>Validación en <code>descontarStock</code></td>
+<td><code>CK_PRODUCTO_STOCK</code></td>
+<td>—</td>
+<td>Trazado</td>
+</tr>
+<tr>
+<td><code>Venta.calcularTotal()</code></td>
+<td>Hoy en <code>VentaServiceImpl.crear</code></td>
+<td><code>TOTAL</code> persistido</td>
+<td><code>VentaResponse.total</code></td>
+<td><strong>Brecha</strong>: la operación no vive en la entidad, refactor pendiente</td>
+</tr>
+<tr>
+<td><code>Cliente</code> con herencia</td>
+<td>Aún no implementado</td>
+<td>Diseño de 3.6, sin tablas todavía</td>
+<td>—</td>
+<td>Previsto</td>
+</tr>
+</tbody>
+</table>
+<p>Las dos brechas de la matriz no son fallas de la sesión: son exactamente lo que la trazabilidad existe para mostrar. Cada una se corrige en el curso donde corresponde (BD2 el <code>NOT NULL</code>, LP2 el refactor), con el diseño de hoy como referencia.</p>
+<p><strong>Evidencia de aprendizaje:</strong></p>
+<ul>
+<li>Refinamiento de las clases de dominio de BomERP en clases de diseño.</li>
+<li>Estructura de carpetas del backend por módulos, siguiendo el modelo C4.</li>
+<li>Diagrama de clases del módulo <code>ventas</code> por capas (nivel 4 de C4), con su regla de dependencia.</li>
+<li>Contrato, validaciones, reglas de negocio y permisos por operación del módulo.</li>
+<li>DTO y contrato REST del módulo.</li>
+<li>Correspondencia clase-tabla con tipos, claves y restricciones.</li>
+<li>Decisiones de herencia y objeto de valor, con la alternativa descartada.</li>
+<li>Modelo relacional y matriz de trazabilidad con sus brechas.</li>
+</ul>
+<h2 id="4-crea-actividad-autonoma">4. Crea: actividad autónoma<a class="headerlink" href="#4-crea-actividad-autonoma" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 2h fuera del aula.</p>
+<h3 id="41-actividad">4.1 Actividad<a class="headerlink" href="#41-actividad" title="Permanent link">&para;</a></h3>
+<p>Diseño autónomo de un módulo del proyecto propio del equipo, con su transformación objeto-relacional, documentado en evidencia individual.</p>
+<p>Completa y evidencia estas tareas:</p>
+<ol>
+<li>Elegir un módulo de tu proyecto que se relacione con al menos otro módulo, y derivar de tu diagrama de clases de S7 las clases de diseño de ese módulo, con las decisiones de la Tabla 2. El diagrama de S7 se conserva sin cambios, como referencia de dominio: el de diseño es una segunda versión, con su trazabilidad.</li>
+<li>Definir el árbol de carpetas de tu sistema con todos sus módulos (los existentes y los previstos), con un paquete por módulo, uno por raíz de agregado y las capas dentro; luego dibujar el diagrama de clases de diseño por capas de ese módulo (nivel 4 de C4): <code>Controller</code>, <code>Service</code> (interfaz e implementación), <code>Repository</code>, <code>Mapper</code>, entidades y DTO, respetando la regla de dependencia y la relación con el otro módulo solo por su interfaz pública. Para las operaciones de escritura, documentar su contrato, las validaciones de forma del DTO, al menos tres reglas de negocio del servicio y la tabla de permisos por rol.</li>
+<li>Definir los DTO del módulo y su contrato REST conceptual, con al menos cuatro operaciones, indicando qué campos decide el servidor y no el cliente.</li>
+<li>Elaborar la correspondencia clase-tabla con tipos, claves y restricciones, y decidir la estrategia de mapeo de la jerarquía de herencia de tu diagrama de S7 y el tratamiento de tu objeto de valor, con la alternativa descartada en cada caso.</li>
+<li>Dibujar el modelo relacional del módulo, marcando cómo se referencian los módulos entre sí.</li>
+<li>Armar la matriz de trazabilidad dominio-clase-tabla-DTO y registrar al menos una brecha, con su corrección propuesta.</li>
+</ol>
+<h3 id="42-proposito">4.2 Propósito<a class="headerlink" href="#42-proposito" title="Permanent link">&para;</a></h3>
+<p>Que cada estudiante demuestre, de forma individual y fuera del aula, que puede llevar el diagrama de clases de su propio dominio hasta un diseño por capas y un modelo relacional trazado, sin el acompañamiento del docente.</p>
+<p>Cada estudiante consolida el diseño de clases y el modelo relacional del proyecto, insumo directo para BD2 y LP2.</p>
+<h3 id="43-indicaciones">4.3 Indicaciones<a class="headerlink" href="#43-indicaciones" title="Permanent link">&para;</a></h3>
+<p>Entrega un PDF con el siguiente nombre:</p>
+<div class="highlight"><pre><span></span><code>S08_ADS_Equipo##_ApellidoNombre.pdf
+</code></pre></div>
+<p>Cada captura de pantalla del informe debe mostrar, sin recortar, el reloj del sistema (fecha y hora) y tu usuario o foto de perfil (Windows, VS Code o navegador) visibles en pantalla — es lo que permite verificar que la evidencia es tuya y que corresponde al momento real de tu trabajo.</p>
+<h4 id="431-estructura-del-informe">4.3.1 Estructura del informe<a class="headerlink" href="#431-estructura-del-informe" title="Permanent link">&para;</a></h4>
+<p><strong>Datos del estudiante</strong></p>
+<ul>
+<li>Nombre:</li>
+<li>Equipo:</li>
+<li>Sesión: S08 - Diseño de Clases Avanzado y Transformación Objeto-Relacional</li>
+<li>Rol o aporte realizado:</li>
+<li>Link de GitHub:</li>
+</ul>
+<p><strong>Evidencia técnica</strong></p>
+<p>Incluye capturas o salidas con una breve explicación debajo de cada una, organizadas en los mismos 4 bloques de la rúbrica (4.6):</p>
+<ol>
+<li><em>Clases de diseño y capas</em><ul>
+<li>Tabla de refinamiento, árbol de carpetas del sistema por módulos y diagrama de clases del módulo por capas.</li>
+</ul>
+</li>
+<li><em>DTO y contrato REST</em><ul>
+<li>Tabla de DTO y contrato REST del módulo, con los campos que decide el servidor.</li>
+</ul>
+</li>
+<li><em>Transformación objeto-relacional</em><ul>
+<li>Correspondencia clase-tabla y decisiones de herencia y objeto de valor, con la alternativa descartada.</li>
+</ul>
+</li>
+<li><em>Modelo relacional y trazabilidad</em><ul>
+<li>Modelo relacional dibujado y matriz de trazabilidad con al menos una brecha.</li>
+</ul>
+</li>
+</ol>
+<p><strong>Error o hallazgo</strong></p>
+<p>Describe al menos un error o hallazgo: una asociación entre módulos que corregiste de llave foránea a referencia por identificador, un campo que sacaste del Request porque debía decidirlo el servidor, o una brecha entre tu diseño y una tabla real que la matriz permitió detectar.</p>
+<p><strong>Reflexión técnica breve</strong></p>
+<p>Responde en 5 a 8 líneas:</p>
+<div class="highlight"><pre><span></span><code>¿Qué relación de tu proyecto cruza dos módulos, y por qué la persististe
+como referencia por identificador (con copia de los datos que necesitas
+conservar) en vez de una llave foránea?
+</code></pre></div>
+<h3 id="44-criterios-minimos-de-aceptacion">4.4 Criterios mínimos de aceptación<a class="headerlink" href="#44-criterios-minimos-de-aceptacion" title="Permanent link">&para;</a></h3>
+<p>La evidencia individual se considera completa si:</p>
+<ul>
+<li>El archivo respeta el nombre solicitado.</li>
+<li>Las clases del módulo están refinadas con tipos, identidad y navegabilidad, y la relación con otro módulo se resuelve sin asociación directa.</li>
+<li>El árbol de carpetas tiene un paquete por módulo, un subpaquete por raíz de agregado y las mismas capas en cada uno, con lo transversal fuera de los módulos.</li>
+<li>Cada operación de escritura declara contrato, validaciones de forma (<code>@Valid</code>), reglas de negocio en el servicio con su código de error, y qué rol puede ejecutarla.</li>
+<li>El diagrama por capas muestra <code>Controller</code>, <code>Service</code> (interfaz e implementación), <code>Repository</code>, <code>Mapper</code>, entidades y DTO, con la regla de dependencia respetada.</li>
+<li>Hay un <code>Repository</code> por raíz de agregado, no por tabla.</li>
+<li>El contrato REST tiene al menos cuatro operaciones con DTO de entrada, DTO de salida y códigos de respuesta.</li>
+<li>Ningún Request contiene campos que deba decidir el servidor.</li>
+<li>La correspondencia clase-tabla incluye tipos, llaves y restricciones.</li>
+<li>La estrategia de herencia y el tratamiento del objeto de valor están justificados, con la alternativa descartada.</li>
+<li>El modelo relacional y la matriz de trazabilidad están completos, con al menos una brecha registrada.</li>
+<li>Cada captura de la evidencia técnica muestra el reloj del sistema y el usuario/perfil visible, sin recortar.</li>
+<li>Las fechas y horas de las capturas son coherentes con el historial de commits de su repositorio en GitHub.</li>
+<li>Incluye un error o hallazgo técnico diagnosticado.</li>
+<li>Incluye la reflexión técnica breve solicitada.</li>
+</ul>
+<h3 id="45-preguntas-de-defensa">4.5 Preguntas de defensa<a class="headerlink" href="#45-preguntas-de-defensa" title="Permanent link">&para;</a></h3>
+<ol>
+<li>De una relación de tu módulo con otro módulo, ¿por qué la persististe como identificador y no como asociación directa?</li>
+<li>¿Qué campos de tus Request decide el servidor, y qué podría salir mal si los decidiera el cliente?</li>
+<li>¿Por qué tu jerarquía de herencia usa la estrategia que elegiste, y qué pierdes frente a la alternativa que descartaste?</li>
+<li>¿Qué diferencia hay entre <code>Service</code> como interfaz y su implementación, y por qué el <code>Controller</code> depende solo de la primera?</li>
+<li>¿Qué brecha detectó tu matriz de trazabilidad, y en qué curso se corrige?</li>
+</ol>
+<h3 id="46-rubrica-de-evaluacion">4.6 Rúbrica de evaluación<a class="headerlink" href="#46-rubrica-de-evaluacion" title="Permanent link">&para;</a></h3>
+<p><strong>Tabla 16. Rúbrica de evaluación</strong></p>
+<table>
+<thead>
+<tr>
+<th>Criterio</th>
+<th style="text-align: right;">Peso (%)</th>
+<th>A (20 pts)</th>
+<th>B (15 pts)</th>
+<th>C (10 pts)</th>
+<th>D (5 pts)</th>
+<th style="text-align: right;">Nivel obtenido</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Clases de diseño y capas*</td>
+<td style="text-align: right;">25</td>
+<td>Clases refinadas con decisiones explícitas, estructura de carpetas por módulos coherente con C4 y diagrama por capas completo, con la regla de dependencia y la relación entre módulos bien resueltas; contrato, validaciones, reglas de negocio y permisos por rol definidos y ubicados en la capa correcta.</td>
+<td>Diagrama por capas completo, con alguna decisión de refinamiento sin justificar.</td>
+<td>Capas incompletas, carpetas organizadas por capa técnica en vez de por módulo, o relación entre módulos resuelta con asociación directa.</td>
+<td>No presenta clases de diseño ni capas verificables.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>2. DTO y contrato REST*</td>
+<td style="text-align: right;">25</td>
+<td>Contrato de al menos cuatro operaciones, DTO bien separados y campos del servidor fuera de los Request, con justificación.</td>
+<td>Contrato y DTO completos, con algún campo del servidor mal ubicado.</td>
+<td>Contrato incompleto o DTO que exponen entidades.</td>
+<td>No presenta DTO ni contrato verificables.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>3. Transformación objeto-relacional*</td>
+<td style="text-align: right;">25</td>
+<td>Correspondencia clase-tabla completa con tipos, llaves y restricciones, y decisiones de herencia y objeto de valor justificadas con la alternativa descartada.</td>
+<td>Correspondencia completa, con decisiones justificadas de forma parcial.</td>
+<td>Correspondencia incompleta o decisiones sin justificar.</td>
+<td>No presenta transformación a tablas.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>4. Modelo relacional y trazabilidad*</td>
+<td style="text-align: right;">25</td>
+<td>Modelo relacional coherente con la correspondencia, y matriz con al menos una brecha detectada y su corrección propuesta.</td>
+<td>Modelo y matriz presentes, con inconsistencias menores.</td>
+<td>Matriz incompleta o sin brechas analizadas.</td>
+<td>No presenta modelo ni matriz.</td>
+<td style="text-align: right;"></td>
+</tr>
+</tbody>
+</table>
+<p>* Agregado manual.</p>
+<p>Nota final = suma de (<code>Peso</code> / 100 × <code>Puntos del nivel obtenido</code>) = ____ / 20.</p>
+<p>Para usar la rúbrica con IA, solicita:</p>
+<div class="highlight"><pre><span></span><code>Evalúa el PDF usando la rúbrica de la sesión.
+Para cada criterio selecciona el nivel obtenido usando la escala A=20, B=15, C=10, D=5 puntos.
+Justifica brevemente cada nivel asignado.
+Verifica que cada captura muestre reloj del sistema y usuario/perfil visible, y que las fechas sean coherentes con el historial de commits de GitHub. Si falta esta evidencia o hay inconsistencias, indícalo explícitamente antes de calificar.
+Calcula la nota final con la fórmula: suma de (Peso/100 × Puntos del nivel obtenido), directamente sobre 20.
+Indica 2 fortalezas y 2 recomendaciones.
+</code></pre></div>
+<h2 id="5-cierre">5. Cierre<a class="headerlink" href="#5-cierre" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 5 min.</p>
+<p><strong>Resumen breve:</strong> hoy el diagrama de clases del dominio de S7 se convirtió en un diseño que se puede construir: clases de diseño con decisiones explícitas, un módulo organizado en capas con una regla de dependencia verificable, DTO y contrato REST que separan lo que decide el cliente de lo que decide el servidor, y una transformación a tablas cuyas decisiones —herencia, objeto de valor, referencias entre módulos— quedaron justificadas y trazadas en una matriz que también mostró sus propias brechas.</p>
+<p><strong>Dinámica participativa:</strong> en una ronda rápida, cada estudiante comparte en una frase qué relación de su propio módulo cruza a otro módulo, y cómo la resolvió en la base de datos.</p>
+<p><strong>Metacognición:</strong> cada estudiante responde en voz alta o por escrito: ¿qué decisión de tu diseño habrías tomado distinto si hubieras pensado en las tablas solo después de escribir el código?</p>
+<p><strong>Proyección:</strong> S9 usa las clases de hoy como participantes: los diagramas de secuencia y de actividades muestran cómo colaboran <code>Controller</code>, <code>Service</code>, <code>Repository</code> y el servicio de otro módulo en un escenario crítico. S10 explica por qué esas clases están organizadas así, con los patrones GoF y GRASP que las respaldan.</p>
+<h2 id="bibliografia">Bibliografía<a class="headerlink" href="#bibliografia" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Fowler, M. (2003). <em>Patterns of Enterprise Application Architecture</em>. Addison-Wesley.</li>
+<li>Larman, C. (2004). <em>Applying UML and Patterns: An Introduction to Object-Oriented Analysis and Design and Iterative Development</em> (3rd ed.). Prentice Hall.</li>
+<li>Object Management Group [OMG]. (2017). <em>OMG Unified Modeling Language (OMG UML), Version 2.5.1</em>. https://www.omg.org/spec/UML/2.5.1/</li>
+<li>Jakarta EE. (2024). <em>Jakarta Persistence</em>. Eclipse Foundation. https://jakarta.ee/specifications/persistence/</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Angel Sullon @asullom - UPeU 2026
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.top", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

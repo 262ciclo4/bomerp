@@ -16,7 +16,7 @@
         <link rel="prev" href="../S06_Descubrimiento_Modelado_Dominio/">
       
       
-        <link rel="next" href="../../../bd2/">
+        <link rel="next" href="../S08_Diseno_Clases_Avanzado_Transformacion_Objeto_Relacional/">
       
       
         
@@ -2160,6 +2160,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S08_Diseno_Clases_Avanzado_Transformacion_Objeto_Relacional/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S8 - Diseño de clases avanzado y transformación objeto-relacional
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2658,6 +2686,34 @@
     
   
     S7 - Arquitectura Oracle e instancia
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S08_Usuarios_Roles_Privilegios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S8 - Gestión de usuarios, roles y privilegios
   
 
     
@@ -3352,6 +3408,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S08_CRUD_Tablas_Dependientes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S8 - CRUD de tablas dependientes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -3958,9 +4042,9 @@
 <pre class="mermaid"><code>flowchart TB
     S6["`**S6:** Descubrimiento y modelado del dominio`"]
     S7["`**S7:** Diseño de clases del dominio`"]
-    S8["`**S8:** Diseño avanzado y transformación OR`"]
+    S8["`**S8:** Diseño de clases avanzado y transformación OR`"]
     S9["`**S9:** Diagramas dinámicos UML`"]
-    S10["`**S10:** Patrones y arquitectura empresarial`"]
+    S10["`**S10:** Patrones de diseño (GoF y GRASP)`"]
     S11["`**S11:** Integración y sistemas empresariales`"]
     S12["`**S12:** Producto U2`"]
 
@@ -4250,6 +4334,19 @@
 <p>Las reglas de negocio que S6 (2.4) ya redactó en prosa ("el total de una venta debe cuadrar con la suma de sus detalles", "solo una venta en estado <code>REGISTRADA</code> puede anularse") son exactamente las restricciones que esta sesión formaliza junto al diagrama — no se inventan reglas nuevas, se les da la forma que un diagrama de clases puede documentar.</p>
 <h2 id="3-aplica-actividad-practica-guiada">3. Aplica: actividad práctica guiada<a class="headerlink" href="#3-aplica-actividad-practica-guiada" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 90 min.</p>
+<p><strong>Actividad:</strong> construcción guiada del diagrama de clases del dominio de BomERP, de punta a punta: atributos, operaciones, relaciones, multiplicidades, agregación, composición, herencia y restricciones (Producto de la sesión en 1.4).</p>
+<p><strong>Propósito de la actividad:</strong> convertir el esquema inicial de S6, hecho de cajas y líneas, en un diagrama de clases completo y sin ambigüedades, con el mismo criterio de decisión que cada estudiante aplicará después sobre el dominio de su propio proyecto.</p>
+<p><strong>Orientaciones metodológicas:</strong> en el laboratorio, el docente construye el diagrama de BomERP paso a paso frente a la clase; los estudiantes completan las mismas tablas para el dominio de su propio proyecto de equipo (ver sección 4).</p>
+<p><strong>Actividades para realizar:</strong></p>
+<ul>
+<li><strong>3.1</strong> Verificar el punto de partida.</li>
+<li><strong>3.2</strong> Completar atributos y operaciones.</li>
+<li><strong>3.3</strong> Definir relaciones, multiplicidades, agregación y composición.</li>
+<li><strong>3.4</strong> Modelar la jerarquía de herencia de <code>Cliente</code>.</li>
+<li><strong>3.5</strong> Documentar las restricciones del modelo.</li>
+<li><strong>3.6</strong> Ensamblar el diagrama de clases completo.</li>
+<li><strong>3.7</strong> Trazar con BD2 y LP2.</li>
+</ul>
 <h3 id="31-verificar-el-punto-de-partida">3.1 Verificar el punto de partida<a class="headerlink" href="#31-verificar-el-punto-de-partida" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> confirmación de que el esquema inicial de S6 (Figura 9) sigue siendo el punto de partida válido — entidades y relaciones nombradas, sin atributos ni multiplicidades todavía.</p>
 <p>Retoma el esquema inicial: <code>Categoria</code>, <code>Producto</code> (módulo <code>catalogo</code>); <code>Venta</code>, <code>DetalleVenta</code> (módulo <code>ventas</code>, agregado); <code>Cliente</code> (módulo <code>clientes</code>), referenciado por <code>Venta</code>.</p>
@@ -4500,11 +4597,19 @@
 <tr>
 <td><code>Dinero</code> como objeto de valor (no entidad)</td>
 <td>Columna <code>NUMERIC(10,2)</code> para el monto, sin tabla propia — un objeto de valor nunca tiene su propia fila</td>
-<td>Refactor pendiente (3.2): <code>precio</code>/<code>total</code>/<code>precioUnitario</code> siguen en <code>BigDecimal</code> suelto en LP2, todavía no en <code>Dinero</code></td>
+<td><code>precio</code>/<code>total</code>/<code>precioUnitario</code> se representan con <code>BigDecimal</code> en LP2: decisión de diseño válida mientras la moneda sea única (ADS S8, 2.2); una clase <code>Dinero</code> propia queda como opción, no como requisito</td>
 </tr>
 </tbody>
 </table>
 <p>La fila de <code>Cliente</code> queda deliberadamente incompleta en las dos columnas de evidencia, no solo en LP2: la estrategia de mapear la jerarquía a tablas (tabla única, por subclase o por clase concreta) la decide <strong>ADS S8</strong> ("Diseño de Clases Avanzado y Transformación Objeto-Relacional", propio de este curso, no de BD2) — esta sesión modela la herencia en UML, ADS S8 decide cómo baja a tablas. BD2 no tiene ninguna sesión de U2 dedicada a construir el esquema de <code>clientes</code> (su roadmap de esta unidad es enteramente de administración: instancia, usuarios y privilegios, almacenamiento, optimización, particionamiento), así que su columna queda pendiente por la misma razón que la de LP2: nadie ha construido <code>clientes</code> todavía en ningún curso.</p>
+<p><strong>Evidencia de aprendizaje:</strong></p>
+<ul>
+<li>Atributos y operaciones de cada entidad de BomERP.</li>
+<li>Relaciones con multiplicidad, y agregación o composición decididas con la prueba de tres partes.</li>
+<li>Jerarquía de herencia de <code>Cliente</code>, con su diferencia de comportamiento.</li>
+<li>Restricciones del modelo documentadas.</li>
+<li>Diagrama de clases completo y matriz de integración ADS-BD2-LP2.</li>
+</ul>
 <h2 id="4-crea-actividad-autonoma">4. Crea: actividad autónoma<a class="headerlink" href="#4-crea-actividad-autonoma" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 2h fuera del aula.</p>
 <h3 id="41-actividad">4.1 Actividad<a class="headerlink" href="#41-actividad" title="Permanent link">&para;</a></h3>

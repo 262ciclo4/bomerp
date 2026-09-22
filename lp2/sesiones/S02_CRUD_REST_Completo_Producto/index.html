@@ -1635,6 +1635,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S08_Diseno_Clases_Avanzado_Transformacion_Objeto_Relacional/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S8 - Diseño de clases avanzado y transformación objeto-relacional
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2133,6 +2161,34 @@
     
   
     S7 - Arquitectura Oracle e instancia
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S08_Usuarios_Roles_Privilegios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S8 - Gestión de usuarios, roles y privilegios
   
 
     
@@ -3352,6 +3408,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S08_CRUD_Tablas_Dependientes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S8 - CRUD de tablas dependientes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -3995,7 +4079,7 @@
 <ul>
 <li>El controller nunca construye ni lee la entidad <code>Producto</code> directamente: siempre entra y sale por un DTO, y el <code>ProductoMapper</code> es el único punto que conoce ambos lados (DTO y entidad).</li>
 <li><code>@Valid</code> en el controller corta las peticiones inválidas <strong>antes</strong> de que lleguen al service — el service asume que todo lo que recibe ya pasó validación de forma.</li>
-<li>Integración (referencia, no requisito para esta sesión): ADS diseñó este mismo patrón (Controller-Service-Mapper-Repository-DTO) en su S10 como patrón táctico general; aquí se implementa contra Oracle real. <strong>Error frecuente</strong>: mezclar la validación de forma (<code>@NotBlank</code>, <code>@Size</code>) con reglas de negocio (por ejemplo, "el precio no puede bajar de la mitad") — esta sesión solo cubre la primera; reglas de negocio más complejas se tratan en sesiones posteriores.</li>
+<li>Integración (referencia, no requisito para esta sesión): ADS diseñó este mismo patrón (Controller-Service-Mapper-Repository-DTO) en su S8 como diseño de clases por capas; aquí se implementa contra Oracle real. <strong>Error frecuente</strong>: mezclar la validación de forma (<code>@NotBlank</code>, <code>@Size</code>) con reglas de negocio (por ejemplo, "el precio no puede bajar de la mitad") — esta sesión solo cubre la primera; reglas de negocio más complejas se tratan en sesiones posteriores.</li>
 </ul>
 <p>Este diagrama es el mapa que guía el resto de la explicación: cada apartado siguiente desarrolla uno de sus componentes, en el mismo orden del Índice (1.2).</p>
 <h3 id="22-entidad-repositorio-dto-y-mapeo">2.2 Entidad, repositorio, DTO y mapeo<a class="headerlink" href="#22-entidad-repositorio-dto-y-mapeo" title="Permanent link">&para;</a></h3>
@@ -4656,12 +4740,12 @@ MapStruct es una decisión de equipo, no un requisito de S2.</p>
 <tbody>
 <tr>
 <td><code>POST /api/v1/productos</code></td>
-<td>Patrón Controller-Service-Mapper-Repository (ADS S10)</td>
+<td>Patrón Controller-Service-Mapper-Repository (ADS S8)</td>
 <td><code>SP_REGISTRAR_PRODUCTO</code> (BD2 S1), regla equivalente</td>
 </tr>
 <tr>
 <td><code>PUT /api/v1/productos/{id}</code></td>
-<td>Contrato REST versionado (ADS S10)</td>
+<td>Contrato REST versionado (ADS S8)</td>
 <td><code>SP_APLICAR_DESCUENTO_PRODUCTO</code> (BD2 S1), regla equivalente</td>
 </tr>
 <tr>

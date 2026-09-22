@@ -2154,6 +2154,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S08_Diseno_Clases_Avanzado_Transformacion_Objeto_Relacional/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S8 - Diseño de clases avanzado y transformación objeto-relacional
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2652,6 +2680,34 @@
     
   
     S7 - Arquitectura Oracle e instancia
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S08_Usuarios_Roles_Privilegios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S8 - Gestión de usuarios, roles y privilegios
   
 
     
@@ -3346,6 +3402,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S08_CRUD_Tablas_Dependientes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S8 - CRUD de tablas dependientes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -3948,9 +4032,9 @@
 <pre class="mermaid"><code>flowchart TB
     S6["`**S6:** Descubrimiento y modelado del dominio`"]
     S7["`**S7:** Diseño de clases del dominio`"]
-    S8["`**S8:** Diseño avanzado y transformación OR`"]
+    S8["`**S8:** Diseño de clases avanzado y transformación OR`"]
     S9["`**S9:** Diagramas dinámicos UML`"]
-    S10["`**S10:** Patrones y arquitectura empresarial`"]
+    S10["`**S10:** Patrones de diseño (GoF y GRASP)`"]
     S11["`**S11:** Integración y sistemas empresariales`"]
     S12["`**S12:** Producto U2`"]
 
@@ -4099,7 +4183,7 @@
 <p><strong>El mismo caso, con <code>Proveedor</code>.</strong> Esta prueba separa igual <code>Proveedor</code> de <code>OrdenCompra</code> dentro de <code>compras</code>, aunque <code>compras</code> todavía no tenga sesión propia: un proveedor existe antes y después de cualquier orden puntual (1), participa en muchas órdenes a la vez (2), y aprobar una orden no exige modificar el proveedor en la misma transacción (3).</p>
 <p><strong>El tamaño del módulo no es el criterio.</strong> <code>clientes</code> tiene una sola entidad y aun así es su propio módulo, con el mismo derecho que <code>ventas</code>, que tiene dos — el número de tablas no decide el límite, la prueba sí.</p>
 <p><strong>La prueba dice cuándo puedes separar, no que siempre debas hacerlo al máximo.</strong> Separar tiene un costo real: más referencias cruzadas, más piezas que coordinar, incluso dentro de un mismo monolito modular. Regla práctica (la misma que recomienda Vernon): ante la duda, empieza con menos módulos, más grandes, y sepáralos después, cuando el dolor real de tenerlos juntos aparezca.</p>
-<p><strong>Bounded context no es lo mismo que microservicio.</strong> Seis módulos funcionales dentro de un solo backend siguen siendo manejables; seis microservicios separados es un problema de otra naturaleza. La prueba decide límites conceptuales; cuántos servicios desplegar es una decisión de arquitectura aparte (Unidad 2, S10).</p>
+<p><strong>Bounded context no es lo mismo que microservicio.</strong> Seis módulos funcionales dentro de un solo backend siguen siendo manejables; seis microservicios separados es un problema de otra naturaleza. La prueba decide límites conceptuales; cuántos servicios desplegar es una decisión de arquitectura aparte (Unidad 1, S4).</p>
 <p><strong>Otras técnicas de DDD para delimitar módulos</strong> (fuera del alcance de esta sesión): <em>Event Storming</em> (ya presentado en 2.2 como forma de construir el panorama holístico) también sirve, después del taller, para refinar límites entre módulos: cuando dos eventos que "deberían" estar juntos terminan agrupándose en columnas separadas sobre la superficie de post-its, esa separación espontánea suele anticipar la misma respuesta que daría la prueba de tres partes; el <strong>cambio de significado del lenguaje ubicuo</strong> (Evans) — si la misma palabra significa algo distinto en dos partes del sistema, ahí hay una señal de límite; los <strong>patrones de Context Mapping</strong> (Shared Kernel, Customer/Supplier, Anti-Corruption Layer) — describen cómo se relacionan dos bounded contexts ya delimitados.</p>
 <p><strong>Dos ejemplos ilustrativos, en un dominio distinto al de BomERP</strong> (para ver los mismos principios aplicados a otro negocio, no como precedente a copiar — cada límite se valida con la prueba de tres partes de tu propio proyecto):</p>
 <p><strong>Figura 5. Ejemplo ilustrativo: ERP de seis módulos, un solo backend</strong></p>
@@ -4166,7 +4250,7 @@
 <p>Los mismos tres módulos conceptuales se implementan de dos formas, sin que el modelo de dominio cambie — <code>Matrícula</code> se separaría como microservicio propio por escala (picos de matrícula en fechas puntuales), no porque la prueba de tres partes lo distinga más que a los demás: la prueba decide el límite conceptual (A o B tienen los mismos tres módulos); cuántos servicios desplegar es la decisión operativa aparte que ya señaló el párrafo anterior.</p>
 <p><strong>Hallazgo de aplicar DDD aquí:</strong> <code>Producto.stock</code>, tal como ya se usa en BD2/LP2 (S4-S5), es en realidad una vista denormalizada de algo que el módulo <code>inventario</code> todavía no existe para gobernar. Cuando <code>inventario</code> reciba su propia sesión, su primer trabajo de modelado será decidir si esa columna se conserva como caché de lectura o se recalcula desde el ledger de movimientos — no es un error de BD2/LP2, es una decisión de límite de contexto que esta sesión recién deja planteada.</p>
 <h3 id="28-diseno-estrategico-de-domain-driven-design">2.8 Diseño estratégico de Domain-Driven Design<a class="headerlink" href="#28-diseno-estrategico-de-domain-driven-design" title="Permanent link">&para;</a></h3>
-<p><strong>Domain-Driven Design (DDD)</strong> es un enfoque para diseñar software modelando el código directamente sobre el dominio del negocio, no sobre la base de datos ni sobre la conveniencia técnica — la idea central es que el modelo de software y el modelo mental del negocio deben ser el mismo modelo. DDD trabaja en dos niveles: el <strong>diseño estratégico</strong> (el de esta sesión, incluido el panorama de 2.2) delimita el vocabulario compartido y los límites de consistencia del dominio; el <strong>diseño táctico</strong> (patrones como Aggregate, Repository o Entity ya implementados en código, que esta misma asignatura contrasta con el <em>Anemic Domain Model</em> — entidades reducidas a getters/setters, con toda la regla de negocio fugada al Service Layer clásico — en <strong>S10 de ADS</strong>, "Patrones de Diseño y Arquitectura Empresarial") construye esos límites dentro del código. Sin el diseño estratégico primero, el diseño táctico no tiene sobre qué límite aplicarse — por eso esta sesión antecede a S10.</p>
+<p><strong>Domain-Driven Design (DDD)</strong> es un enfoque para diseñar software modelando el código directamente sobre el dominio del negocio, no sobre la base de datos ni sobre la conveniencia técnica — la idea central es que el modelo de software y el modelo mental del negocio deben ser el mismo modelo. DDD trabaja en dos niveles: el <strong>diseño estratégico</strong> (el de esta sesión, incluido el panorama de 2.2) delimita el vocabulario compartido y los límites de consistencia del dominio; el <strong>diseño táctico</strong> (patrones como Aggregate, Repository o Entity ya implementados en código, que esta misma asignatura contrasta con el <em>Anemic Domain Model</em> — entidades reducidas a getters/setters, con toda la regla de negocio fugada al Service Layer clásico — en <strong>S7 y S8 de ADS</strong>, "Diseño de Clases del Dominio" y "Diseño de Clases Avanzado") construye esos límites dentro del código. Sin el diseño estratégico primero, el diseño táctico no tiene sobre qué límite aplicarse — por eso esta sesión antecede a S7 y S8.</p>
 <p>El <strong>lenguaje ubicuo</strong> es el vocabulario que el equipo técnico y el negocio comparten sin traducción: si el negocio dice "anular una venta", el código dice <code>venta.anular()</code>, no <code>venta.setEstado(3)</code>. El <strong>agregado</strong> es el límite de consistencia transaccional: un conjunto de entidades que deben cambiar juntas, atómicamente, para que una regla de negocio nunca quede violada — se accede siempre a través de su raíz (<em>aggregate root</em>), nunca modificando un elemento interno por su cuenta.</p>
 <p><strong>Tabla 3. Lenguaje ubicuo de BomERP</strong></p>
 <table>
