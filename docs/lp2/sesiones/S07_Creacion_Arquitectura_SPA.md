@@ -109,7 +109,7 @@ flowchart TB
     API --> DB
 ```
 
-Lectura del diagrama: el usuario nunca navega recargando la página — el Layout (2.3) se mantiene fijo, y solo el contenido dentro de `router-outlet` cambia según la ruta activa. Ningún componente llama a `HttpClient` directamente: siempre pasa por `CategoriaService` (2.6), que es el único que conoce la URL real del backend.
+Lectura del diagrama: el usuario nunca navega recargando la página — el Layout (2.4) se mantiene fijo, y solo el contenido dentro de `router-outlet` cambia según la ruta activa. Ningún componente llama a `HttpClient` directamente: siempre pasa por `CategoriaService` (2.7), que es el único que conoce la URL real del backend.
 
 ### 2.2 Creación del proyecto frontend
 
@@ -117,27 +117,191 @@ Un proyecto frontend de tipo SPA (*Single Page Application*) es una aplicación 
 
 El generador de Angular crea, por defecto, componentes **standalone** (sin `NgModule`) y una aplicación **zoneless**, sin que haga falta declarar ningún provider para eso — desde Angular 21, zoneless es el comportamiento por defecto del framework (Angular, 2026a): la detección de cambios ya no depende de parchear las APIs asíncronas del navegador (temporizadores, promesas, eventos) como hacía Zone.js — reacciona a los `signal()` que un componente declara explícitamente. Esto no cambia cómo se estructura un CRUD (3.7-3.13), pero sí explica por qué esta guía nunca importa `NgModule` en ningún archivo.
 
-### 2.3 Layout y navegación: menú, sidebar y encabezado
+### 2.3 Ciclo de vida de un componente
+
+Desde que Angular crea un componente hasta que lo destruye, lo hace pasar por una secuencia fija de fases. Por cada fase, Angular invoca automáticamente un método con un nombre reservado — un *lifecycle hook* — si la clase del componente lo implementa; ningún hook es obligatorio, cada uno existe para un momento distinto del ciclo.
+
+**Figura 3. Secuencia del ciclo de vida de un componente Angular**
+
+```mermaid
+flowchart LR
+    Constructor["constructor"] --> OnChanges["ngOnChanges"]
+    OnChanges --> OnInit["ngOnInit"]
+    OnInit --> DoCheck["ngDoCheck"]
+    DoCheck -.repite en cada<br/>detección de cambios.-> DoCheck
+    DoCheck --> AfterContentInit["ngAfterContentInit"]
+    AfterContentInit --> AfterContentChecked["ngAfterContentChecked"]
+    AfterContentChecked -.repite.-> AfterContentChecked
+    AfterContentChecked --> AfterViewInit["ngAfterViewInit"]
+    AfterViewInit --> AfterViewChecked["ngAfterViewChecked"]
+    AfterViewChecked -.repite.-> AfterViewChecked
+    AfterViewChecked --> OnDestroy["ngOnDestroy"]
+
+    classDef once fill:#eef2ff,stroke:#4338ca,color:#111;
+    classDef repeat fill:#fff7ed,stroke:#9a6b00,color:#111;
+    class Constructor,OnChanges,OnInit,AfterContentInit,AfterViewInit,OnDestroy once;
+    class DoCheck,AfterContentChecked,AfterViewChecked repeat;
+```
+
+*Nota.* Adaptado de la secuencia de hooks del ciclo de vida de un componente (Angular, 2026h).
+
+| Momento | Hook | Cuándo se ejecuta | Para qué sirve |
+|---|---|---|---|
+| Creación | `constructor` | Antes que cualquier hook de Angular, al instanciar la clase. No es un hook de Angular: es JavaScript puro. | Solo inyección de dependencias (`inject()`, S6-S7). Ningún dato de entrada (`@Input()`) está disponible todavía. |
+| Entradas | `ngOnChanges` | Antes de `ngOnInit`, y de nuevo cada vez que cambia un `@Input()` del componente. No se ejecuta si el componente no declara ningún `@Input()`. | Reaccionar a un valor que el componente padre le pasa desde afuera. |
+| Inicialización | `ngOnInit` | Una sola vez, ya con los `@Input()` (si existen) asignados. | El lugar donde va la lógica de arranque de un componente: la primera carga de datos (`CategoriaList`, 3.10). |
+| Cada ciclo | `ngDoCheck` | En cada pasada de detección de cambios, además de `ngOnChanges`. | Comprobación manual de algo que Angular no detecta por sí solo. Poco común: se usa recién cuando `ngOnChanges` no alcanza. |
+| Contenido proyectado | `ngAfterContentInit` / `ngAfterContentChecked` | Después de inicializar (una vez) y de revisar (en cada ciclo) el contenido que otro componente proyecta dentro de este vía `<ng-content>`. | Solo aplica a un componente que recibe contenido proyectado — ninguno de esta sesión lo usa. |
+| Vista propia | `ngAfterViewInit` / `ngAfterViewChecked` | Después de inicializar (una vez) y de revisar (en cada ciclo) la propia plantilla del componente y las de sus hijos. | Leer o medir algo del DOM ya renderizado (por ejemplo, con `@ViewChild`). |
+| Destrucción | `ngOnDestroy` | Una sola vez, justo antes de que Angular elimine el componente (al navegar a otra ruta, por ejemplo). | Limpiar lo que el componente abrió y que Angular no cierra solo: una suscripción manual, un `setInterval`, un listener agregado a mano. |
+
+Los hooks marcados en azul en la Figura 3 ocurren **una vez**; los marcados en naranja se repiten **en cada pasada** de detección de cambios mientras el componente sigue vivo — que en una aplicación zoneless (2.2) ocurre cuando cambia un `signal()` que la plantilla lee, no en cualquier evento asíncrono del navegador.
+
+**Ejemplo: los nueve momentos de la Figura 3, sobre el mismo `CategoriaCard`.** Va en un componente aparte y autónomo —no forma parte de los pasos de 3.1-3.13, no tiene ruta ni se usa desde ningún otro componente— para no mezclarlo con `CategoriaForm` real (3.13). Con un HTML corto, va con `template` inline en vez de `templateUrl`. Y, a diferencia de un intento con `[value]`, `formControlName` sí funciona porque el `<input>` está dentro de un `<form [formGroup]="form">` real, con su propio `FormGroup` declarado en la clase — no un objeto suelto:
+
+```ts
+import {
+  Component, Input, OnChanges, OnInit, DoCheck, AfterContentInit, AfterContentChecked,
+  AfterViewInit, AfterViewChecked, OnDestroy, SimpleChanges, ContentChild, ViewChild,
+  ElementRef, inject,
+} from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
+
+@Component({
+  selector: 'app-categoria-card',
+  imports: [ReactiveFormsModule],
+  template: `
+    <ng-content></ng-content>
+    <form [formGroup]="form">
+      <input type="text" formControlName="nombre" #nombreInput />
+    </form>
+  `,
+})
+export class CategoriaCard
+  implements OnChanges, OnInit, DoCheck, AfterContentInit, AfterContentChecked,
+    AfterViewInit, AfterViewChecked, OnDestroy
+{
+  @Input() nombreInicial = '';
+
+  @ContentChild('etiqueta') etiqueta?: ElementRef;
+  @ViewChild('nombreInput') nombreInput?: ElementRef<HTMLInputElement>;
+
+  private readonly fb = inject(FormBuilder);
+  private cambiosSub?: Subscription;
+
+  protected readonly form = this.fb.nonNullable.group({
+    nombre: ['', [Validators.required, Validators.maxLength(80)]],
+  });
+
+  constructor() {
+    // Solo inyección de dependencias (fb ya se resolvió arriba, al declarar
+    // el campo). `nombreInicial` todavía no tiene ningún valor aquí.
+    console.log('constructor');
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    // Antes de ngOnInit, y de nuevo cada vez que el padre cambia [nombreInicial].
+    if (changes['nombreInicial']) {
+      console.log('Valor anterior:', changes['nombreInicial'].previousValue);
+      console.log('Valor cambiado:', changes['nombreInicial'].currentValue);
+    }
+  }
+
+  ngOnInit(): void {
+    // Una sola vez, ya con nombreInicial asignado: arranca el formulario con ese valor.
+    this.form.controls.nombre.setValue(this.nombreInicial);
+
+    this.cambiosSub = this.form.controls.nombre.valueChanges.subscribe((nombre) => {
+      console.log(nombre);
+    });
+  }
+
+  ngDoCheck(): void {
+    // En cada pasada, incluso si nada "cambió de verdad" según Angular.
+    // Sirve para detectar una mutación dentro del mismo objeto/valor de entrada
+    // (por ejemplo, si nombreInicial fuera un objeto y alguien lo mutara sin
+    // reasignarlo), algo que ngOnChanges no vería.
+  }
+
+  ngAfterContentInit(): void {
+    // Una sola vez, cuando el contenido proyectado por <ng-content> ya existe.
+    console.log('Etiqueta proyectada:', this.etiqueta?.nativeElement.textContent);
+  }
+
+  ngAfterContentChecked(): void {
+    // En cada pasada, después de revisar ese contenido proyectado.
+  }
+
+  ngAfterViewInit(): void {
+    // Una sola vez, cuando la propia plantilla ya está en el DOM.
+    this.nombreInput?.nativeElement.focus();
+  }
+
+  ngAfterViewChecked(): void {
+    // En cada pasada, después de revisar la propia vista.
+  }
+
+  ngOnDestroy(): void {
+    // Cierra lo que ngOnInit dejó abierto.
+    this.cambiosSub?.unsubscribe();
+  }
+}
+```
+
+Se usaría así, desde otro componente: `<app-categoria-card nombreInicial="Bebidas"><span #etiqueta>Destacada</span></app-categoria-card>`.
+
+`ngOnChanges` es el único hook de los nueve que necesitaba algo nuevo: `CategoriaCard` no tenía ningún `@Input()` antes, así que se le agregó `nombreInicial` solo para tener algo que cambie desde afuera. `changes['nombreInicial'].previousValue` y `.currentValue` son las dos propiedades que `SimpleChanges` siempre trae por cada `@Input()` que cambió — el primer valor que llega (cuando el padre recién crea el componente) también cuenta como cambio, y ahí `previousValue` es `undefined`.
+
+`ngOnInit` ahora sí hace dos cosas que antes vivían sueltas: usa `nombreInicial` (ya garantizado por `ngOnChanges`, que siempre corre antes) para poner el valor inicial del formulario, y recién ahí se suscribe a `nombre.valueChanges` — moverlo del `constructor` a `ngOnInit` es lo que la convención recomienda cuando el componente sí depende de un `@Input()` (a diferencia del ejemplo anterior de `CategoriaForm`, que no lo necesitaba).
+
+`ngAfterContentInit`/`ngAfterContentChecked` necesitan el `<ng-content>` que se agregó a la plantilla — ahora `@ContentChild('etiqueta')` sí tiene algo que buscar, a diferencia de un componente sin contenido proyectado. `ngAfterViewInit` reutiliza el mismo `<input formControlName="nombre">`, con `#nombreInput` como referencia de plantilla, para enfocarlo apenas la vista está lista — `#nombreInput` no choca con `formControlName`: una variable de plantilla sin asignarle nada siempre apunta al elemento del DOM, sin importar qué directivas tenga encima (`formControlName` ni siquiera declara un `exportAs` con el que pudiera confundirse).
+
+`ngOnDestroy` cierra la suscripción que `ngOnInit` abrió. Para este componente en concreto no era estrictamente necesario —`this.form` es propio de `CategoriaCard`, nadie más lo referencia desde afuera, así que al destruirse el componente no queda nada externo sosteniéndolo con vida—, pero es el hábito correcto: la regla general no es "¿esta suscripción en particular se filtra?", sino "toda suscripción manual se cierra en `ngOnDestroy`", para no depender de analizar caso por caso cada vez.
+
+Para probarlo, agrégalo a cualquier plantilla ya visible — por ejemplo, en `inicio.html` (3.6), con el import correspondiente en `inicio.ts`:
+
+```html
+<app-categoria-card nombreInicial="Bebidas">
+  <span #etiqueta>Destacada</span>
+</app-categoria-card>
+```
+
+Abre `http://localhost:4200/` y mira la consola del navegador: primero `constructor`, luego `ngOnChanges` (valor anterior `undefined`, valor cambiado `"Bebidas"`), luego `ngOnInit`, `ngAfterContentInit` (con "Destacada"), `ngAfterViewInit` con el campo ya enfocado, y desde ahí un `console.log` nuevo por cada letra que escribas en **Nombre**. Ese orden es la Figura 3 en vivo, línea por línea — nada que adivinar, todo lo que corre deja su propio rastro en la consola.
+
+**Opcional: probarlo con su propia URL.** En vez de pegarlo dentro de `inicio.html`, puedes darle una ruta propia — como `children` de `Layout`, mismo patrón que 3.10 — y abrir `http://localhost:4200/card` directo:
+
+```ts
+{
+  path: 'card',
+  loadComponent: () =>
+    import('./features/catalogo/categoria/categoria-card').then((m) => m.CategoriaCard),
+},
+```
+
+No forma parte de los pasos de 3.1-3.13 ni de las rutas que arma esa sección (3.6, 3.10, 3.13) — es solo para experimentar con este ejemplo aislado, sin el resto de `Inicio` alrededor. Quítala cuando termines de probar, para no dejar una ruta de prueba mezclada con las rutas reales del CRUD.
+
+### 2.4 Layout y navegación: menú, sidebar y encabezado
 
 El layout es la estructura visual que se repite en toda la aplicación sin importar qué pantalla esté activa: encabezado, menú de navegación y un área de contenido que sí cambia. Separarlo de las pantallas de cada funcionalidad evita repetir el mismo menú, el mismo encabezado y el mismo sidebar dentro de cada componente nuevo que se agregue.
 
 En Angular, esa separación se resuelve con una ruta padre: un componente de layout con su propio `router-outlet`, y las pantallas de cada funcionalidad como rutas hijas que se renderizan dentro de ese `router-outlet` (Angular, 2026b). El componente raíz de la aplicación (`App`) ya no contiene el layout — solo un `router-outlet` de nivel superior; todo el menú, sidebar y encabezado vive en un componente de layout aparte, dentro de `core/` (3.5).
 
-### 2.4 Módulos, componentes y rutas
+### 2.5 Módulos, componentes y rutas
 
 El *routing* conecta una URL con el componente que debe mostrarse — sin él, la única forma de cambiar de pantalla sería recargar todo el documento. Organizar los componentes **por funcionalidad de negocio** (todo lo de `catalogo` junto, todo lo de `ventas` junto) en vez de **por tipo** (todos los componentes en una carpeta, todos los servicios en otra) es la recomendación oficial del propio equipo de Angular para cualquier aplicación que crezca más allá de un ejemplo pequeño (Angular, 2026c).
 
 Esta sesión adopta la convención ya definida para el producto de la unidad ([`docs/lp2/index.md`](../index.md)): `core/` (el layout de hoy, el servicio base de conexión al backend de 2.6, y más adelante sesión de seguridad, guards e interceptores), `shared/` (piezas reutilizables entre funcionalidades) y `features/` (una carpeta por módulo de negocio — `catalogo` hoy, `ventas`/`seguridad` en sesiones posteriores). Cada ruta se carga de forma perezosa (`loadComponent`): el navegador descarga el código de una pantalla recién cuando el usuario navega a ella, no todo de una vez al abrir la aplicación (3.6).
 
-### 2.5 Modelos de datos: `interface`, no `class`
+### 2.6 Modelos de datos: `interface`, no `class`
 
 Un **modelo de datos** en el frontend describe la forma de lo que viaja por HTTP — sus campos y sus tipos —, no el comportamiento de una entidad de dominio: esa lógica vive en el backend (ADS/BD2), el frontend solo necesita saber qué campos esperar. TypeScript ofrece dos formas de describir esa forma: `interface`/`type` (contratos que el compilador verifica y luego desaparecen, sin generar ningún código JavaScript) y `class` (que sí genera un constructor real en tiempo de ejecución, con o sin métodos).
 
 Esa diferencia no es cosmética para un modelo de datos: `HttpClient` arma la respuesta de un endpoint con `JSON.parse()`, que siempre produce un objeto plano — nunca una instancia real de ninguna clase, sin importar con qué tipo se anote la respuesta. Tipar un modelo como `class` sugeriría, falsamente, que el objeto recibido tiene los métodos de esa clase disponibles; en la práctica, `instanceof` sobre ese objeto daría `false`, y cualquier método que la clase declarara simplemente no existiría en tiempo de ejecución. `interface` no tiene ese riesgo, porque nunca promete comportamiento: solo describe forma, que es exactamente lo único que un dato que cruza la red puede garantizar.
 
-La regla general: `interface` (o `type`) para cualquier dato que cruce una frontera de red (un DTO); `class` solo para objetos que sí necesitan comportamiento real construido en el navegador (por ejemplo, un `FormGroup` o un servicio inyectable, 2.6). El modelo `Categoria` de esta sesión (3.7) aplica el primer caso.
+La regla general: `interface` (o `type`) para cualquier dato que cruce una frontera de red (un DTO); `class` solo para objetos que sí necesitan comportamiento real construido en el navegador (por ejemplo, un `FormGroup` o un servicio inyectable, 2.7). El modelo `Categoria` de esta sesión (3.7) aplica el primer caso.
 
-### 2.6 Servicios HTTP hacia el backend
+### 2.7 Servicios HTTP hacia el backend
 
 Un servicio HTTP es una clase inyectable dedicada exclusivamente a hablar con el backend — arma la URL, hace la petición y devuelve el resultado — para que ningún componente necesite saber cómo se llama un endpoint ni qué verbo HTTP usa (Angular, 2026d). Separar esa responsabilidad del componente tiene una razón concreta: si la URL del backend cambia, o si el endpoint se reorganiza, se corrige en un solo archivo, no en cada componente que lo consume.
 
@@ -153,7 +317,7 @@ protected readonly categorias = httpResource<Categoria[]>(() => this.api.buildUr
 
 En la plantilla, `categorias.value()`, `categorias.isLoading()` y `categorias.error()` reemplazarían al `signal()` y al `error` que `CategoriaList` construye a mano (3.10). `httpResource()` existe desde antes (Angular 19.2), pero marcado como experimental; recién en Angular 22 —la versión de esta guía— pasó a ser una API estable, lista para código nuevo. Por eso, si le pides ayuda a una IA para un CRUD en Angular 22, es probable que te proponga esto para el caso de solo lectura (`listar()`): ya no es una apuesta arriesgada, es una recomendación válida del propio equipo de Angular. Esta guía sigue enseñando `HttpClient` + `subscribe()` (3.9-3.10) a propósito, no por desactualizada: es la forma con más años de documentación y respuestas de la comunidad para cuando algo falla, y esta es tu primera sesión de Angular — además, `httpResource()` es solo para lectura: la propia documentación de Angular advierte explícitamente "avoid using httpResource for mutations like POST or PUT — instead, prefer directly using the underlying HttpClient APIs" (Angular, 2026e) — `crear()`, `actualizar()` y `eliminar()` siguen siendo `HttpClient` normal pase lo que pase, así que `httpResource()` tampoco resuelve todo el CRUD por sí solo.
 
-### 2.7 CRUD de una tabla independiente
+### 2.8 CRUD de una tabla independiente
 
 Una **tabla independiente** no necesita ningún otro dato para poder crearse o mostrarse — no depende de seleccionar antes un registro de otra entidad. `Categoria` (S1-S3) es exactamente ese caso: no lleva ninguna llave foránea hacia otra tabla. Una **tabla dependiente**, en cambio, sí necesita eso — `Producto` depende de `Categoria` (llave foránea `ID_CATEGORIA`, S1/S3), así que su formulario necesita, además, una lista desplegable con las categorías existentes para poder elegir una.
 
@@ -187,6 +351,14 @@ Instala [Node.js LTS](https://nodejs.org/) (incluye `npm`). Verifica la instalac
 node --version
 npm --version
 ```
+
+**Solo en Windows.** `npm` y `ng` se instalan como scripts de PowerShell (`.ps1`), y PowerShell bloquea por defecto la ejecución de cualquier script local — sin este permiso, el siguiente comando (o cualquier `ng` que corras después) falla con `no se puede cargar el archivo ... porque la ejecución de scripts está deshabilitada en este sistema`. Habilítalo una sola vez por usuario:
+
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+`-Scope CurrentUser` limita el cambio a tu propio usuario, no a toda la máquina — no hace falta ser administrador. `RemoteSigned` es el nivel mínimo que lo resuelve: permite correr scripts locales sin firmar (los que instala `npm`), pero sigue exigiendo firma digital para cualquier script descargado de internet. En macOS/Linux este paso no aplica: la terminal no restringe ejecutar scripts por defecto.
 
 Instala la CLI de Angular de forma global, fijando la versión 22:
 
@@ -361,7 +533,7 @@ Reemplaza `app.html` (el componente raíz) para que quede vacío de layout propi
 <router-outlet />
 ```
 
-`App` (el componente raíz) deja de tener menú, encabezado o sidebar — esos ahora viven exclusivamente en `Layout` (2.3), como ruta padre (3.6).
+`App` (el componente raíz) deja de tener menú, encabezado o sidebar — esos ahora viven exclusivamente en `Layout` (2.4), como ruta padre (3.6).
 
 ### 3.6 Configurar rutas y navegación principal
 
@@ -401,7 +573,7 @@ export const routes: Routes = [
 ];
 ```
 
-`loadComponent` recibe una función que hace el `import()` recién cuando el navegador entra a esa ruta (2.4) — por ahora eso aplica a `Layout` e `Inicio`, los dos únicos componentes que ya existen (3.5, arriba). Las rutas de `Categoria` todavía no aparecen: `CategoriaList`/`CategoriaForm` todavía no existen (se crean recién en 3.10 y 3.13) — agregar ya sus rutas haría que el proyecto no compilara desde este paso, sin ninguna forma de comprobar el avance hasta el final. Cada ruta se agrega en el mismo paso en que su componente queda listo, nunca antes: 3.10 agrega la ruta de `CategoriaList`, 3.13 agrega las de `CategoriaForm`.
+`loadComponent` recibe una función que hace el `import()` recién cuando el navegador entra a esa ruta (2.5) — por ahora eso aplica a `Layout` e `Inicio`, los dos únicos componentes que ya existen (3.5, arriba). Las rutas de `Categoria` todavía no aparecen: `CategoriaList`/`CategoriaForm` todavía no existen (se crean recién en 3.10 y 3.13) — agregar ya sus rutas haría que el proyecto no compilara desde este paso, sin ninguna forma de comprobar el avance hasta el final. Cada ruta se agrega en el mismo paso en que su componente queda listo, nunca antes: 3.10 agrega la ruta de `CategoriaList`, 3.13 agrega las de `CategoriaForm`.
 
 **Error frecuente**: escribir las rutas de `Categoria` como hermanas de `Layout` en el mismo arreglo, en vez de como `children`. El resultado visual es que la pantalla de categorías reemplaza *todo* el documento (sin encabezado ni sidebar), en vez de aparecer dentro de `router-outlet` de `Layout` — la estructura del arreglo de rutas es la que decide si una pantalla hereda el layout o no, no una decisión del componente de la pantalla. Este error recién se puede ver a partir de 3.10, cuando exista la primera ruta hija además de `Inicio`.
 
@@ -417,7 +589,7 @@ Abre `http://localhost:4200`. Debe mostrarse el encabezado ("BomERP"), el sideba
 
 **Producto del paso:** el contrato de datos que el frontend comparte con `CategoriaResponse`/`CategoriaRequest` del backend (S3).
 
-`Categoria` se modela como `interface`, no como `class` (2.5): es un dato que solo cruza la red, sin comportamiento propio.
+`Categoria` se modela como `interface`, no como `class` (2.6): es un dato que solo cruza la red, sin comportamiento propio.
 
 Crea `features/catalogo/categoria/categoria.model.ts`:
 
@@ -431,7 +603,7 @@ export interface Categoria {
 
 `id` es opcional porque una categoría nueva, antes de guardarse, todavía no tiene uno — el backend lo asigna recién al crearla (S1). Los campos y sus nombres calzan exactamente con `CategoriaResponse`/`CategoriaRequest` (S3): el frontend no inventa un contrato propio, consume el que el backend ya expone.
 
-**¿Por qué a mano y no con `ng generate interface`?** La CLI sí tiene ese generador (`ng generate interface categoria model` crearía `categoria.model.ts`), pero a diferencia de un componente o un servicio (3.5, 3.8-3.9), no genera ningún `.spec.ts` — una interfaz no tiene comportamiento propio que probar (2.5), así que la CLI no tendría nada que escribir ahí. El único ahorro real sería no teclear `export interface Categoria {}` a mano, sin ninguna ventaja adicional — por eso esta guía sí lo escribe directo.
+**¿Por qué a mano y no con `ng generate interface`?** La CLI sí tiene ese generador (`ng generate interface categoria model` crearía `categoria.model.ts`), pero a diferencia de un componente o un servicio (3.5, 3.8-3.9), no genera ningún `.spec.ts` — una interfaz no tiene comportamiento propio que probar (2.6), así que la CLI no tendría nada que escribir ahí. El único ahorro real sería no teclear `export interface Categoria {}` a mano, sin ninguna ventaja adicional — por eso esta guía sí lo escribe directo.
 
 ### 3.8 Crear el archivo de ambientes y el servicio base de API
 
@@ -601,7 +773,7 @@ export class CategoriaService {
 ng generate component features/catalogo/categoria/categoria-list --flat
 ```
 
-`--flat` es necesario aquí: por defecto, `ng generate component` crea una subcarpeta con el nombre del componente (`categoria/categoria-list/categoria-list.ts`) — el comportamiento correcto cuando un componente vive solo. Pero `categoria/` ya es la carpeta por *recurso* (2.4): `categoria-list.ts` debe quedar directo dentro de ella, al mismo nivel que `categoria-service.ts` y `categoria.model.ts` (3.7, 3.9), no en una subcarpeta propia — `--flat` es lo que evita esa carpeta extra.
+`--flat` es necesario aquí: por defecto, `ng generate component` crea una subcarpeta con el nombre del componente (`categoria/categoria-list/categoria-list.ts`) — el comportamiento correcto cuando un componente vive solo. Pero `categoria/` ya es la carpeta por *recurso* (2.5): `categoria-list.ts` debe quedar directo dentro de ella, al mismo nivel que `categoria-service.ts` y `categoria.model.ts` (3.7, 3.9), no en una subcarpeta propia — `--flat` es lo que evita esa carpeta extra.
 
 Reemplaza el contenido de `features/catalogo/categoria/categoria-list.ts`:
 
@@ -1020,7 +1192,7 @@ Dos líneas nuevas al principio de `guardar()`, antes de tocar el formulario. `i
 
 `nombre.setValue(nombre.value.trim())`, justo antes de revisar `this.form.invalid`, corrige un hueco real de `Validators.required`: ese validador solo rechaza una cadena vacía (`''`), no una cadena que solo tiene espacios (`'   '`) — un usuario que escribe únicamente espacios y sale del campo pasa la validación tal cual, y `crear()`/`actualizar()` mandarían ese valor al backend. `trim()` antes de validar convierte `'   '` en `''`, y ahí sí `Validators.required` lo rechaza como corresponde; de paso, un nombre como `' Bebidas '` llega al backend ya como `'Bebidas'`, sin espacios sueltos al principio o al final que nadie escribió a propósito.
 
-**Un mensaje por campo, no uno genérico** — la versión final. `mensajeValidacion()` recibe el nombre del campo (`'nombre'` o `'descripcion'`) y devuelve el mensaje correcto leyendo los errores reales de ese control (`control.hasError('required')`, `control.hasError('maxlength')`) — sin repetir la misma función para cada campo, y sin escribir el `80` de `Validators.maxLength(80)` a mano en el mensaje: `control.getError('maxlength').requiredLength` lo lee directo del propio error, así que si el validador cambia, el mensaje se actualiza solo. Es la misma idea que evitar 30 funciones casi idénticas si el formulario tuviera 30 campos (2.7) — pero sin perder el detalle de qué error específico falló, que un mensaje único para todo el formulario sí perdía. `@if (mensajeValidacion('nombre'); as mensaje)` aprovecha que Angular permite capturar en `mensaje` el valor devuelto por la expresión del `@if` — si `mensajeValidacion()` devuelve `''` (cadena vacía, un valor falsy), el bloque no se muestra, sin necesitar una condición aparte para "está vacío o no".
+**Un mensaje por campo, no uno genérico** — la versión final. `mensajeValidacion()` recibe el nombre del campo (`'nombre'` o `'descripcion'`) y devuelve el mensaje correcto leyendo los errores reales de ese control (`control.hasError('required')`, `control.hasError('maxlength')`) — sin repetir la misma función para cada campo, y sin escribir el `80` de `Validators.maxLength(80)` a mano en el mensaje: `control.getError('maxlength').requiredLength` lo lee directo del propio error, así que si el validador cambia, el mensaje se actualiza solo. Es la misma idea que evitar 30 funciones casi idénticas si el formulario tuviera 30 campos (2.8) — pero sin perder el detalle de qué error específico falló, que un mensaje único para todo el formulario sí perdía. `@if (mensajeValidacion('nombre'); as mensaje)` aprovecha que Angular permite capturar en `mensaje` el valor devuelto por la expresión del `@if` — si `mensajeValidacion()` devuelve `''` (cadena vacía, un valor falsy), el bloque no se muestra, sin necesitar una condición aparte para "está vacío o no".
 
 `loading` cumple dos funciones, no una: mientras `obtener(id)` trae los datos para editar, evita que alguien alcance a hacer clic en **Guardar** antes de que el formulario tenga algo real que enviar — el propio caso que generó el bug de Angular de 3.14 era justo esa ventana. Mientras `guardar()` espera la respuesta del backend, `[disabled]="loading()"` evita un doble clic en **Guardar** que mandaría dos peticiones (dos `crear()`, o dos `actualizar()` compitiendo). `obtener(id)` ahora también tiene su propio `error`: antes, si el `id` de la URL no existía (categoría borrada por otra persona, URL editada a mano), el formulario quedaba en blanco sin ningún aviso — parecía un "crear" nuevo, no un error real.
 
@@ -1097,7 +1269,7 @@ Completa y evidencia estas tareas:
 
 1. Si tu equipo aún no comparte un proyecto Angular común, créalo con la misma estructura `core`/`shared`/`features` de esta sesión.
 2. Construye el layout (encabezado, sidebar, menú) con al menos dos rutas de navegación, y una página de inicio real en `/` (3.6) — sin redirect hacia ninguna otra pantalla.
-3. Crea (o reutiliza, si ya existe) un `ApiService` en `core/` con la URL base de tu propio backend, y un servicio HTTP de funcionalidad que lo use para un CRUD completo (listar, crear, editar, eliminar) de una tabla independiente de tu propio dominio — una entidad que no dependa de seleccionar antes un dato de otra tabla (2.7).
+3. Crea (o reutiliza, si ya existe) un `ApiService` en `core/` con la URL base de tu propio backend, y un servicio HTTP de funcionalidad que lo use para un CRUD completo (listar, crear, editar, eliminar) de una tabla independiente de tu propio dominio — una entidad que no dependa de seleccionar antes un dato de otra tabla (2.8).
 4. Agrega un interceptor HTTP (3.8) que adjunte un identificador único (`crypto.randomUUID()`) a cada petición saliente, en un header propio de tu proyecto.
 5. Prueba el CRUD completo contra tu propio backend real, no con datos simulados.
 6. Documenta un error real encontrado.
@@ -1245,3 +1417,4 @@ Tiempo: 5 min.
 5. Angular. (2026e). *Reactive data fetching with httpResource*. Google. https://angular.dev/guide/http/http-resource
 6. Angular. (2026f). *ng generate component*. Google. https://angular.dev/cli/generate/component
 7. Angular. (2026g). *Reactive forms*. Google. https://angular.dev/guide/forms/reactive-forms
+8. Angular. (2026h). *Lifecycle hooks*. Google. https://angular.dev/guide/components/lifecycle

@@ -71,9 +71,9 @@ Roadmap del producto de la unidad:
 flowchart TB
     S6["`**S6:** Descubrimiento y modelado del dominio`"]
     S7["`**S7:** Diseño de clases del dominio`"]
-    S8["`**S8:** Diseño avanzado y transformación OR`"]
+    S8["`**S8:** Diseño de clases avanzado y transformación OR`"]
     S9["`**S9:** Diagramas dinámicos UML`"]
-    S10["`**S10:** Patrones y arquitectura empresarial`"]
+    S10["`**S10:** Patrones de diseño (GoF y GRASP)`"]
     S11["`**S11:** Integración y sistemas empresariales`"]
     S12["`**S12:** Producto U2`"]
 
@@ -241,7 +241,7 @@ En este caso la prueba **confirma** lo que el panorama de 2.2 ya sugería (`clie
 
 **La prueba dice cuándo puedes separar, no que siempre debas hacerlo al máximo.** Separar tiene un costo real: más referencias cruzadas, más piezas que coordinar, incluso dentro de un mismo monolito modular. Regla práctica (la misma que recomienda Vernon): ante la duda, empieza con menos módulos, más grandes, y sepáralos después, cuando el dolor real de tenerlos juntos aparezca.
 
-**Bounded context no es lo mismo que microservicio.** Seis módulos funcionales dentro de un solo backend siguen siendo manejables; seis microservicios separados es un problema de otra naturaleza. La prueba decide límites conceptuales; cuántos servicios desplegar es una decisión de arquitectura aparte (Unidad 2, S10).
+**Bounded context no es lo mismo que microservicio.** Seis módulos funcionales dentro de un solo backend siguen siendo manejables; seis microservicios separados es un problema de otra naturaleza. La prueba decide límites conceptuales; cuántos servicios desplegar es una decisión de arquitectura aparte (Unidad 1, S4).
 
 **Otras técnicas de DDD para delimitar módulos** (fuera del alcance de esta sesión): *Event Storming* (ya presentado en 2.2 como forma de construir el panorama holístico) también sirve, después del taller, para refinar límites entre módulos: cuando dos eventos que "deberían" estar juntos terminan agrupándose en columnas separadas sobre la superficie de post-its, esa separación espontánea suele anticipar la misma respuesta que daría la prueba de tres partes; el **cambio de significado del lenguaje ubicuo** (Evans) — si la misma palabra significa algo distinto en dos partes del sistema, ahí hay una señal de límite; los **patrones de Context Mapping** (Shared Kernel, Customer/Supplier, Anti-Corruption Layer) — describen cómo se relacionan dos bounded contexts ya delimitados.
 
@@ -323,7 +323,7 @@ Los mismos tres módulos conceptuales se implementan de dos formas, sin que el m
 
 ### 2.8 Diseño estratégico de Domain-Driven Design
 
-**Domain-Driven Design (DDD)** es un enfoque para diseñar software modelando el código directamente sobre el dominio del negocio, no sobre la base de datos ni sobre la conveniencia técnica — la idea central es que el modelo de software y el modelo mental del negocio deben ser el mismo modelo. DDD trabaja en dos niveles: el **diseño estratégico** (el de esta sesión, incluido el panorama de 2.2) delimita el vocabulario compartido y los límites de consistencia del dominio; el **diseño táctico** (patrones como Aggregate, Repository o Entity ya implementados en código, que esta misma asignatura contrasta con el *Anemic Domain Model* — entidades reducidas a getters/setters, con toda la regla de negocio fugada al Service Layer clásico — en **S10 de ADS**, "Patrones de Diseño y Arquitectura Empresarial") construye esos límites dentro del código. Sin el diseño estratégico primero, el diseño táctico no tiene sobre qué límite aplicarse — por eso esta sesión antecede a S10.
+**Domain-Driven Design (DDD)** es un enfoque para diseñar software modelando el código directamente sobre el dominio del negocio, no sobre la base de datos ni sobre la conveniencia técnica — la idea central es que el modelo de software y el modelo mental del negocio deben ser el mismo modelo. DDD trabaja en dos niveles: el **diseño estratégico** (el de esta sesión, incluido el panorama de 2.2) delimita el vocabulario compartido y los límites de consistencia del dominio; el **diseño táctico** (patrones como Aggregate, Repository o Entity ya implementados en código, que esta misma asignatura contrasta con el *Anemic Domain Model* — entidades reducidas a getters/setters, con toda la regla de negocio fugada al Service Layer clásico — en **S7 y S8 de ADS**, "Diseño de Clases del Dominio" y "Diseño de Clases Avanzado") construye esos límites dentro del código. Sin el diseño estratégico primero, el diseño táctico no tiene sobre qué límite aplicarse — por eso esta sesión antecede a S7 y S8.
 
 El **lenguaje ubicuo** es el vocabulario que el equipo técnico y el negocio comparten sin traducción: si el negocio dice "anular una venta", el código dice `venta.anular()`, no `venta.setEstado(3)`. El **agregado** es el límite de consistencia transaccional: un conjunto de entidades que deben cambiar juntas, atómicamente, para que una regla de negocio nunca quede violada — se accede siempre a través de su raíz (*aggregate root*), nunca modificando un elemento interno por su cuenta.
 

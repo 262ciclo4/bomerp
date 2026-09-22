@@ -116,7 +116,7 @@ Lectura del diagrama:
 
 - El controller nunca construye ni lee la entidad `Producto` directamente: siempre entra y sale por un DTO, y el `ProductoMapper` es el único punto que conoce ambos lados (DTO y entidad).
 - `@Valid` en el controller corta las peticiones inválidas **antes** de que lleguen al service — el service asume que todo lo que recibe ya pasó validación de forma.
-- Integración (referencia, no requisito para esta sesión): ADS diseñó este mismo patrón (Controller-Service-Mapper-Repository-DTO) en su S10 como patrón táctico general; aquí se implementa contra Oracle real. **Error frecuente**: mezclar la validación de forma (`@NotBlank`, `@Size`) con reglas de negocio (por ejemplo, "el precio no puede bajar de la mitad") — esta sesión solo cubre la primera; reglas de negocio más complejas se tratan en sesiones posteriores.
+- Integración (referencia, no requisito para esta sesión): ADS diseñó este mismo patrón (Controller-Service-Mapper-Repository-DTO) en su S8 como diseño de clases por capas; aquí se implementa contra Oracle real. **Error frecuente**: mezclar la validación de forma (`@NotBlank`, `@Size`) con reglas de negocio (por ejemplo, "el precio no puede bajar de la mitad") — esta sesión solo cubre la primera; reglas de negocio más complejas se tratan en sesiones posteriores.
 
 Este diagrama es el mapa que guía el resto de la explicación: cada apartado siguiente desarrolla uno de sus componentes, en el mismo orden del Índice (1.2).
 
@@ -851,8 +851,8 @@ Ejecuta las pruebas:
 
 | Endpoint LP2 | Componente ADS | Objeto BD2 |
 |---|---|---|
-| `POST /api/v1/productos` | Patrón Controller-Service-Mapper-Repository (ADS S10) | `SP_REGISTRAR_PRODUCTO` (BD2 S1), regla equivalente |
-| `PUT /api/v1/productos/{id}` | Contrato REST versionado (ADS S10) | `SP_APLICAR_DESCUENTO_PRODUCTO` (BD2 S1), regla equivalente |
+| `POST /api/v1/productos` | Patrón Controller-Service-Mapper-Repository (ADS S8) | `SP_REGISTRAR_PRODUCTO` (BD2 S1), regla equivalente |
+| `PUT /api/v1/productos/{id}` | Contrato REST versionado (ADS S8) | `SP_APLICAR_DESCUENTO_PRODUCTO` (BD2 S1), regla equivalente |
 | `DELETE /api/v1/productos/{id}` | — | `TRG_PRODUCTO_AUDITORIA` sobre `PRODUCTOS` (BD2 S2) |
 
 Sesión equivalente en los otros dos cursos, misma semana: [ADS - S2 Modelo C4 y Vistas Arquitectónicas](../../ads/sesiones/S02_Modelo_C4_Vistas_Arquitectonicas.md) y [BD2 - S2 Triggers DML y Auditoría](../../bd2/sesiones/S02_Triggers_DML_Auditoria.md).

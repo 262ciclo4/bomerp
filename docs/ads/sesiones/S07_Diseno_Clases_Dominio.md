@@ -70,9 +70,9 @@ Roadmap del producto de la unidad:
 flowchart TB
     S6["`**S6:** Descubrimiento y modelado del dominio`"]
     S7["`**S7:** Diseño de clases del dominio`"]
-    S8["`**S8:** Diseño avanzado y transformación OR`"]
+    S8["`**S8:** Diseño de clases avanzado y transformación OR`"]
     S9["`**S9:** Diagramas dinámicos UML`"]
-    S10["`**S10:** Patrones y arquitectura empresarial`"]
+    S10["`**S10:** Patrones de diseño (GoF y GRASP)`"]
     S11["`**S11:** Integración y sistemas empresariales`"]
     S12["`**S12:** Producto U2`"]
 
@@ -470,6 +470,22 @@ Las reglas de negocio que S6 (2.4) ya redactó en prosa ("el total de una venta 
 
 Tiempo: 90 min.
 
+**Actividad:** construcción guiada del diagrama de clases del dominio de BomERP, de punta a punta: atributos, operaciones, relaciones, multiplicidades, agregación, composición, herencia y restricciones (Producto de la sesión en 1.4).
+
+**Propósito de la actividad:** convertir el esquema inicial de S6, hecho de cajas y líneas, en un diagrama de clases completo y sin ambigüedades, con el mismo criterio de decisión que cada estudiante aplicará después sobre el dominio de su propio proyecto.
+
+**Orientaciones metodológicas:** en el laboratorio, el docente construye el diagrama de BomERP paso a paso frente a la clase; los estudiantes completan las mismas tablas para el dominio de su propio proyecto de equipo (ver sección 4).
+
+**Actividades para realizar:**
+
+- **3.1** Verificar el punto de partida.
+- **3.2** Completar atributos y operaciones.
+- **3.3** Definir relaciones, multiplicidades, agregación y composición.
+- **3.4** Modelar la jerarquía de herencia de `Cliente`.
+- **3.5** Documentar las restricciones del modelo.
+- **3.6** Ensamblar el diagrama de clases completo.
+- **3.7** Trazar con BD2 y LP2.
+
 ### 3.1 Verificar el punto de partida
 
 **Producto del paso:** confirmación de que el esquema inicial de S6 (Figura 9) sigue siendo el punto de partida válido — entidades y relaciones nombradas, sin atributos ni multiplicidades todavía.
@@ -634,9 +650,17 @@ Ninguna carpeta del código junta estas cinco clases en un solo lugar — `Categ
 | `Categoria "1" o-- "0..*" Producto` | `FOREIGN KEY` de `PRODUCTOS` hacia `CATEGORIAS`, sin `ON DELETE CASCADE` (S3 LP2, hallazgo del `DELETE` con productos asociados) | `@ManyToOne` de `Producto` hacia `Categoria`, sin cascada de borrado |
 | `{stock >= 0}` sobre `Producto` | `CHECK (stock >= 0)` en Oracle | Validación antes de `descontarStock()` en el servicio (LP2 S4) |
 | `Cliente` con herencia (`ClientePersonaNatural`/`ClienteEmpresa`) | Sin sesión asignada en BD2 (S7-S12 de esta unidad son todas de administración, 1.7 de BD2 S7); se completaría recién si `clientes` recibe sesión propia | Aún no implementado en LP2; candidato cuando el módulo `clientes` reciba su propia sesión |
-| `Dinero` como objeto de valor (no entidad) | Columna `NUMERIC(10,2)` para el monto, sin tabla propia — un objeto de valor nunca tiene su propia fila | Refactor pendiente (3.2): `precio`/`total`/`precioUnitario` siguen en `BigDecimal` suelto en LP2, todavía no en `Dinero` |
+| `Dinero` como objeto de valor (no entidad) | Columna `NUMERIC(10,2)` para el monto, sin tabla propia — un objeto de valor nunca tiene su propia fila | `precio`/`total`/`precioUnitario` se representan con `BigDecimal` en LP2: decisión de diseño válida mientras la moneda sea única (ADS S8, 2.2); una clase `Dinero` propia queda como opción, no como requisito |
 
 La fila de `Cliente` queda deliberadamente incompleta en las dos columnas de evidencia, no solo en LP2: la estrategia de mapear la jerarquía a tablas (tabla única, por subclase o por clase concreta) la decide **ADS S8** ("Diseño de Clases Avanzado y Transformación Objeto-Relacional", propio de este curso, no de BD2) — esta sesión modela la herencia en UML, ADS S8 decide cómo baja a tablas. BD2 no tiene ninguna sesión de U2 dedicada a construir el esquema de `clientes` (su roadmap de esta unidad es enteramente de administración: instancia, usuarios y privilegios, almacenamiento, optimización, particionamiento), así que su columna queda pendiente por la misma razón que la de LP2: nadie ha construido `clientes` todavía en ningún curso.
+
+**Evidencia de aprendizaje:**
+
+- Atributos y operaciones de cada entidad de BomERP.
+- Relaciones con multiplicidad, y agregación o composición decididas con la prueba de tres partes.
+- Jerarquía de herencia de `Cliente`, con su diferencia de comportamiento.
+- Restricciones del modelo documentadas.
+- Diagrama de clases completo y matriz de integración ADS-BD2-LP2.
 
 ## 4. Crea: actividad autónoma
 

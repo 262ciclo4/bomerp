@@ -12,9 +12,10 @@
 |---|---|
 | Modelo de dominio | Entidades, objetos de valor, reglas y módulos. |
 | Diagrama de clases | Clases, atributos, operaciones, relaciones y multiplicidades. |
+| Diseño de clases por capas | Controller, Service, Repository, Mapper, entidades y DTO de un módulo, con su contrato REST (S8). |
 | Transformación objeto-relacional | Relación clase-tabla-clave-DTO. |
 | Diagramas dinámicos | Secuencia y actividad del flujo principal. |
-| Patrones aplicados | Controller, Service, Repository, DTO, Mapper. |
+| Patrones aplicados | Patrones GoF y GRASP aplicados sobre las clases de diseño (S10). |
 | Diseño de integración | Interacción entre SPA, API, módulos y base Oracle. |
 
 ## Diagrama de clases de referencia
@@ -78,7 +79,7 @@ classDiagram
     DetalleVenta ..> Dinero : usa
 ```
 
-`Venta.anular()` y `Venta.calcularTotal()` ya viven en la entidad, no en un `VentaService` externo (Information Expert, ADS S7 2.3) — evitar el Anemic Domain Model no es un paso opcional que "el equipo puede aplicar si quiere": ya está hecho desde S7. Lo que sí queda como trabajo específico de **S10** ("Patrones y arquitectura empresarial") es el diseño táctico *completo* de DDD sobre el agregado `Venta`-`DetalleVenta` — declarar `VentaRepository` como interfaz propia del módulo de dominio (no un `JpaRepository` expuesto directo), y formalizar `Venta` como *aggregate root* con acceso controlado a `DetalleVenta`. `catalogo` (CRUD simple de `Categoria`/`Producto`) no necesita ese tratamiento completo — la decisión de aplicar DDD táctico a fondo es por módulo, no para todo el sistema (S7, 2.8 vía S6).
+`Venta.anular()` y `Venta.calcularTotal()` ya viven en la entidad, no en un `VentaService` externo (Information Expert, ADS S7 2.3) — evitar el Anemic Domain Model no es un paso opcional que "el equipo puede aplicar si quiere": ya está hecho desde S7. Lo que sí queda como trabajo de **S8** es la organización por capas de cada módulo: un `VentaRepository` por raíz de agregado (`Venta`, no `DetalleVenta`), `VentaService` como interfaz con su implementación, y el DTO y el contrato REST que separan lo que decide el cliente de lo que decide el servidor. `catalogo` (CRUD simple de `Categoria`/`Producto`) sigue el mismo esquema de capas, pero no necesita un tratamiento de dominio más elaborado — esa decisión es por módulo, no para todo el sistema (S7, 2.8 vía S6). S10 no vuelve a dibujar esas clases: explica con patrones GoF y GRASP por qué están organizadas así.
 
 ## Trazabilidad U2
 

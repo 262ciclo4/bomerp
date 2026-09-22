@@ -69,6 +69,7 @@ nav:
       - II. Diseño Dinámico, Modelado UML y Patrones:
           - S6 - Descubrimiento y modelado del dominio: ads/sesiones/S06_Descubrimiento_Modelado_Dominio.md
           - S7 - Diseño de clases del dominio: ads/sesiones/S07_Diseno_Clases_Dominio.md
+          - S8 - Diseño de clases avanzado y transformación objeto-relacional: ads/sesiones/S08_Diseno_Clases_Avanzado_Transformacion_Objeto_Relacional.md
   - BD2:
       - Inicio: bd2/index.md
       - Silabos:
@@ -83,6 +84,7 @@ nav:
           - S6 - Evaluación de la Unidad I: bd2/sesiones/S06_Evaluacion_Unidad_1.md
       - II. Administración, almacenamiento, seguridad y optimización:
           - S7 - Arquitectura Oracle e instancia: bd2/sesiones/S07_Arquitectura_Oracle_Instancia.md
+          - S8 - Gestión de usuarios, roles y privilegios: bd2/sesiones/S08_Usuarios_Roles_Privilegios.md
   - LP2:
       - Inicio: lp2/index.md
       - Silabos:
@@ -102,3 +104,4 @@ nav:
           - S6 - Evaluación de la Unidad I: lp2/sesiones/S06_Evaluacion_Unidad_1.md
       - II. SPA modular segura para BomERP:
           - S7 - Creación y arquitectura de la SPA: lp2/sesiones/S07_Creacion_Arquitectura_SPA.md
+          - S8 - CRUD de tablas dependientes: lp2/sesiones/S08_CRUD_Tablas_Dependientes.md
