@@ -184,11 +184,11 @@ node --version
 npm --version
 ```
 
-Igual que Vue, React no exige una CLI global — el proyecto se crea con `npm create vite@latest`, eligiendo la plantilla de React, sin dejar nada instalado de forma global.
+Igual que Vue, React no exige instalar una CLI global antes de crear el proyecto — a diferencia de Angular (`npm install -g @angular/cli@22`), no hay ningún paquete que instalar por adelantado ni ninguna versión que fijar todavía. `npm create vite@latest` descarga el generador (`create-vite`) una sola vez, lo ejecuta, y no deja nada instalado de forma global: la verificación con `ng version` de Angular no tiene un equivalente *antes* de crear el proyecto — recién lo tiene después (3.3), porque recién después existe algo instalado que verificar.
 
 ### 3.3 Crear el proyecto React
 
-**Producto del paso:** `lp2/bomerp-frontend-react` creado y ejecutándose por primera vez.
+**Producto del paso:** `lp2/bomerp-frontend-react` creado y ejecutándose por primera vez, con su versión de Vite confirmada.
 
 Desde la raíz del repositorio, dentro de `lp2/`:
 
@@ -197,7 +197,7 @@ cd lp2
 npm create vite@latest bomerp-frontend-react -- --template react-ts
 ```
 
-`--template react-ts` fija de una vez React con TypeScript — el mismo criterio de Angular y Vue (2.6): los modelos de datos necesitan tipos reales, no hace falta agregarlo después.
+`--template react-ts` fija de una vez React con TypeScript — el mismo criterio de Angular y Vue (2.6): los modelos de datos necesitan tipos reales, no hace falta agregarlo después. `@latest` (en vez de una versión fija) es la diferencia real frente a `@angular/cli@22`: Angular fija la versión mayor de la CLI a propósito (S07, 3.2), porque dos versiones mayores distintas pueden generar proyectos con estructuras distintas. Vite no tiene ese mismo riesgo entre proyectos —la plantilla `react-ts` cambia poco entre versiones—, pero si tu equipo necesita reproducir exactamente la misma versión en todas las máquinas, reemplaza `@latest` por una versión fija (por ejemplo, `npm create vite@6`).
 
 Instala dependencias, agrega React Router (no viene incluido, 2.2), y levanta el servidor:
 
@@ -207,6 +207,14 @@ npm install
 npm install react-router-dom
 npm run dev
 ```
+
+Verifica qué versión de Vite quedó instalada — recién ahora existe una, como dependencia local del proyecto, no global:
+
+```bash
+npx vite --version
+```
+
+Esto cumple el mismo rol que `ng version` en Angular (3.2): confirmar la herramienta real que vas a usar antes de seguir. La diferencia es el momento — en Angular se verifica *antes* de crear el proyecto (la CLI es global, existe independiente de cualquier proyecto); en React/Vite se verifica *después* (Vite queda registrado en `package.json`, dentro de `devDependencies`, propio de este proyecto y de ningún otro).
 
 Abre la URL que muestra la terminal (por defecto `http://localhost:5173`). Debe mostrarse la página de bienvenida por defecto de Vite + React.
 

@@ -201,11 +201,11 @@ node --version
 npm --version
 ```
 
-A diferencia de Angular, Vue no exige instalar una CLI global aparte (`@angular/cli`) — el proyecto se crea con `npm create vue@latest`, que descarga el generador una sola vez, lo ejecuta, y no deja nada instalado globalmente. Un detalle menos que administrar frente a la versión de Angular.
+A diferencia de Angular, Vue no exige instalar una CLI global aparte (`@angular/cli`) antes de crear el proyecto — no hay ningún paquete que instalar por adelantado ni ninguna versión que fijar todavía. `npm create vue@latest` descarga el generador una sola vez, lo ejecuta, y no deja nada instalado globalmente: la verificación con `ng version` de Angular (S07, 3.2) no tiene un equivalente *antes* de crear el proyecto — recién lo tiene después (3.3), porque recién después existe algo instalado que verificar.
 
 ### 3.3 Crear el proyecto Vue
 
-**Producto del paso:** `lp2/bomerp-frontend-vue` creado y ejecutándose por primera vez.
+**Producto del paso:** `lp2/bomerp-frontend-vue` creado y ejecutándose por primera vez, con su versión de Vite confirmada.
 
 Desde la raíz del repositorio, dentro de `lp2/`:
 
@@ -213,6 +213,8 @@ Desde la raíz del repositorio, dentro de `lp2/`:
 cd lp2
 npm create vue@latest
 ```
+
+`@latest` (en vez de una versión fija) es la diferencia real frente a `@angular/cli@22`: Angular fija la versión mayor de la CLI a propósito (S07, 3.2), porque dos versiones mayores distintas pueden generar proyectos con estructuras distintas. El generador de Vue no tiene ese mismo riesgo —la plantilla cambia poco entre versiones—, pero si tu equipo necesita reproducir exactamente la misma versión en todas las máquinas, reemplaza `@latest` por una versión fija (por ejemplo, `npm create vue@5`).
 
 El generador hace preguntas interactivas:
 
@@ -229,6 +231,14 @@ cd bomerp-frontend-vue
 npm install
 npm run dev
 ```
+
+Verifica qué versión de Vite quedó instalada — recién ahora existe una, como dependencia local del proyecto, no global:
+
+```bash
+npx vite --version
+```
+
+Esto cumple el mismo rol que `ng version` en Angular (3.2): confirmar la herramienta real que vas a usar antes de seguir. La diferencia es el momento — en Angular se verifica *antes* de crear el proyecto (la CLI es global, existe independiente de cualquier proyecto); en Vue/Vite se verifica *después* (Vite queda registrado en `package.json`, dentro de `devDependencies`, propio de este proyecto y de ningún otro).
 
 Abre la URL que muestra la terminal (por defecto `http://localhost:5173`). Debe mostrarse la página de bienvenida por defecto de Vue.
 
