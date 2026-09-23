@@ -194,10 +194,39 @@ Desde la raíz del repositorio, dentro de `lp2/`:
 
 ```bash
 cd lp2
-npm create vite@latest bomerp-frontend-react -- --template react-ts
+npm create vite@9.2.1 bomerp-frontend-react -- --template react-ts
 ```
 
-`--template react-ts` fija de una vez React con TypeScript — el mismo criterio de Angular y Vue (2.6): los modelos de datos necesitan tipos reales, no hace falta agregarlo después. `@latest` (en vez de una versión fija) es la diferencia real frente a `@angular/cli@22`: Angular fija la versión mayor de la CLI a propósito (S07, 3.2), porque dos versiones mayores distintas pueden generar proyectos con estructuras distintas. Vite no tiene ese mismo riesgo entre proyectos —la plantilla `react-ts` cambia poco entre versiones—, pero si tu equipo necesita reproducir exactamente la misma versión en todas las máquinas, reemplaza `@latest` por una versión fija (por ejemplo, `npm create vite@6`).
+La primera vez que corres este comando en tu máquina, npm todavía no tiene descargado el paquete real detrás de `npm create vite` (`create-vite`) — te va a pedir confirmación antes de bajarlo:
+
+```text
+Need to install the following packages:
+create-vite@9.2.1
+Ok to proceed? (y)
+```
+
+Escribe `y` (o solo Enter, `(y)` ya es la opción por defecto). Es la prueba en vivo de lo que dice el párrafo siguiente: nada de esto queda instalado de forma global (3.2) — cada vez que lo corras en una máquina nueva, vas a ver este mismo prompt una sola vez.
+
+Según la versión de `create-vite` que se descargue, puede seguir una pregunta más, aunque `--template react-ts` ya fijó la plantilla:
+
+```text
+◆  Which linter to use?
+│  ● Oxlint
+│  ○ ESLint
+```
+
+Deja la opción marcada por defecto (`Oxlint`) y presiona Enter. Es un chequeo de estilo de código, no una decisión de arquitectura — no afecta ningún paso de esta guía, ni el CRUD ni las rutas.
+
+Puede seguir todavía una pregunta más:
+
+```text
+◇  Install with npm and start now?
+│  Yes
+```
+
+Responde **No**. Si respondes que sí, `create-vite` instala las dependencias y levanta el servidor por su cuenta, en el mismo paso — pero React Router (2.2) todavía no está instalado en ese punto, así que igual vas a necesitar parar el servidor o abrir otra terminal para agregarlo. Responder "No" aquí deja los tres comandos siguientes explícitos, en el orden que necesitas, sin nada corriendo de fondo todavía.
+
+`--template react-ts` fija de una vez React con TypeScript — el mismo criterio de Angular y Vue (2.6): los modelos de datos necesitan tipos reales, no hace falta agregarlo después. `@9.2.1` fija la versión de `create-vite`, con el mismo criterio que Angular fija `@angular/cli@22` (S07, 3.2): dos versiones mayores distintas de un generador pueden producir proyectos con estructuras distintas (otro linter por defecto, otras preguntas interactivas, como ya viste) — fijar la versión evita que cada estudiante del curso termine con un punto de partida distinto según cuándo corrió el comando. Como alternativa, si prefieres siempre la versión más nueva (y estás dispuesto a que la guía se desactualice con el tiempo, S07 3.2), reemplaza `@9.2.1` por `@latest`.
 
 Instala dependencias, agrega React Router (no viene incluido, 2.2), y levanta el servidor:
 
@@ -207,6 +236,8 @@ npm install
 npm install react-router-dom
 npm run dev
 ```
+
+**Si ya respondiste "Yes"** a la pregunta de arriba (o si tu terminal ya quedó con el servidor corriendo): no hace falta deshacer nada. Abre otra terminal, entra a `bomerp-frontend-react/` y corre `npm install react-router-dom` — Vite detecta la dependencia nueva y se reoptimiza solo la próxima vez que el código la importe (3.5 en adelante). Si más tarde ves un error raro relacionado con `react-router-dom` en el navegador, para el servidor (`Ctrl+C`) y córrelo de nuevo con `npm run dev`.
 
 Verifica qué versión de Vite quedó instalada — recién ahora existe una, como dependencia local del proyecto, no global:
 
@@ -220,7 +251,7 @@ Abre la URL que muestra la terminal (por defecto `http://localhost:5173`). Debe 
 
 ### 3.4 Recorrer la estructura generada
 
-**Producto del paso:** entender qué generó `npm create vite@latest`, en el mismo orden de prioridad que las guías de Angular (S07, 3.4) y Vue (anexo, 3.4).
+**Producto del paso:** entender qué generó `npm create vite@9.2.1`, en el mismo orden de prioridad que las guías de Angular (S07, 3.4) y Vue (anexo, 3.4).
 
 ```text
 bomerp-frontend-react/
