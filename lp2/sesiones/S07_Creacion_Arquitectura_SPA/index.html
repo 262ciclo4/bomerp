@@ -1132,6 +1132,120 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anexos - SPA en otros frameworks
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Anexos - SPA en otros frameworks
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/anexos/S07_Creacion_Arquitectura_SPA_Vue/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S07 con Vue
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/anexos/S07_Creacion_Arquitectura_SPA_React/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S07 con React
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -4273,7 +4387,7 @@
 <p><strong>Ejemplo: los nueve momentos de la Figura 3, sobre el mismo <code>CategoriaCard</code>.</strong> Va en un componente aparte y autónomo —no forma parte de los pasos de 3.1-3.14, no tiene ruta ni se usa desde ningún otro componente— para no mezclarlo con <code>CategoriaForm</code> real (3.14). Con un HTML corto, va con <code>template</code> inline en vez de <code>templateUrl</code>. Y, a diferencia de un intento con <code>[value]</code>, <code>formControlName</code> sí funciona porque el <code>&lt;input&gt;</code> está dentro de un <code>&lt;form [formGroup]="form"&gt;</code> real, con su propio <code>FormGroup</code> declarado en la clase — no un objeto suelto:</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">Component</span><span class="p">,</span><span class="w"> </span><span class="nx">Input</span><span class="p">,</span><span class="w"> </span><span class="nx">OnChanges</span><span class="p">,</span><span class="w"> </span><span class="nx">OnInit</span><span class="p">,</span><span class="w"> </span><span class="nx">DoCheck</span><span class="p">,</span><span class="w"> </span><span class="nx">AfterContentInit</span><span class="p">,</span><span class="w"> </span><span class="nx">AfterContentChecked</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">AfterViewInit</span><span class="p">,</span><span class="w"> </span><span class="nx">AfterViewChecked</span><span class="p">,</span><span class="w"> </span><span class="nx">OnDestroy</span><span class="p">,</span><span class="w"> </span><span class="nx">SimpleChanges</span><span class="p">,</span><span class="w"> </span><span class="nx">ContentChild</span><span class="p">,</span><span class="w"> </span><span class="nx">ViewChild</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">AfterViewInit</span><span class="p">,</span><span class="w"> </span><span class="nx">AfterViewChecked</span><span class="p">,</span><span class="w"> </span><span class="nx">OnDestroy</span><span class="p">,</span><span class="w"> </span><span class="nx">SimpleChanges</span><span class="p">,</span><span class="w"> </span><span class="nx">ViewChild</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">ElementRef</span><span class="p">,</span><span class="w"> </span><span class="nx">inject</span><span class="p">,</span>
 <span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/core'</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">FormBuilder</span><span class="p">,</span><span class="w"> </span><span class="nx">ReactiveFormsModule</span><span class="p">,</span><span class="w"> </span><span class="nx">Validators</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/forms'</span><span class="p">;</span>
@@ -4283,7 +4397,6 @@
 <span class="w">  </span><span class="nx">selector</span><span class="o">:</span><span class="w"> </span><span class="s1">'app-categoria-card'</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">imports</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">ReactiveFormsModule</span><span class="p">],</span>
 <span class="w">  </span><span class="nx">template</span><span class="o">:</span><span class="w"> </span><span class="sb">`</span>
-<span class="sb">    &lt;ng-content&gt;&lt;/ng-content&gt;</span>
 <span class="sb">    &lt;form [formGroup]="form"&gt;</span>
 <span class="sb">      &lt;input type="text" formControlName="nombre" #nombreInput /&gt;</span>
 <span class="sb">    &lt;/form&gt;</span>
@@ -4295,7 +4408,6 @@
 <span class="p">{</span>
 <span class="w">  </span><span class="kd">@Input</span><span class="p">()</span><span class="w"> </span><span class="nx">nombreInicial</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">''</span><span class="p">;</span>
 
-<span class="w">  </span><span class="kd">@ContentChild</span><span class="p">(</span><span class="s1">'etiqueta'</span><span class="p">)</span><span class="w"> </span><span class="nx">etiqueta?</span><span class="o">:</span><span class="w"> </span><span class="kt">ElementRef</span><span class="p">;</span>
 <span class="w">  </span><span class="kd">@ViewChild</span><span class="p">(</span><span class="s1">'nombreInput'</span><span class="p">)</span><span class="w"> </span><span class="nx">nombreInput?</span><span class="o">:</span><span class="w"> </span><span class="kt">ElementRef</span><span class="o">&lt;</span><span class="nx">HTMLInputElement</span><span class="o">&gt;</span><span class="p">;</span>
 
 <span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="nx">fb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">inject</span><span class="p">(</span><span class="nx">FormBuilder</span><span class="p">);</span>
@@ -4337,7 +4449,8 @@
 
 <span class="w">  </span><span class="nx">ngAfterContentInit</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="c1">// Una sola vez, cuando el contenido proyectado por &lt;ng-content&gt; ya existe.</span>
-<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Etiqueta proyectada:'</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">etiqueta</span><span class="o">?</span><span class="p">.</span><span class="nx">nativeElement</span><span class="p">.</span><span class="nx">textContent</span><span class="p">);</span>
+<span class="w">    </span><span class="c1">// CategoriaCard no proyecta nada (no tiene &lt;ng-content&gt;), así que este</span>
+<span class="w">    </span><span class="c1">// hook nunca tendría nada real que hacer aquí.</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="nx">ngAfterContentChecked</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
@@ -4359,22 +4472,36 @@
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>Se usaría así, desde otro componente: <code>&lt;app-categoria-card nombreInicial="Bebidas"&gt;&lt;span #etiqueta&gt;Destacada&lt;/span&gt;&lt;/app-categoria-card&gt;</code>.</p>
+<p>Se usaría así, desde otro componente: <code>&lt;app-categoria-card nombreInicial="Bebidas" /&gt;</code>.</p>
 <p><code>ngOnChanges</code> es el único hook de los nueve que necesitaba algo nuevo: <code>CategoriaCard</code> no tenía ningún <code>@Input()</code> antes, así que se le agregó <code>nombreInicial</code> solo para tener algo que cambie desde afuera. <code>changes['nombreInicial'].previousValue</code> y <code>.currentValue</code> son las dos propiedades que <code>SimpleChanges</code> siempre trae por cada <code>@Input()</code> que cambió — el primer valor que llega (cuando el padre recién crea el componente) también cuenta como cambio, y ahí <code>previousValue</code> es <code>undefined</code>.</p>
 <p><code>ngOnInit</code> ahora sí hace dos cosas que antes vivían sueltas: usa <code>nombreInicial</code> (ya garantizado por <code>ngOnChanges</code>, que siempre corre antes) para poner el valor inicial del formulario, y recién ahí se suscribe a <code>nombre.valueChanges</code> — moverlo del <code>constructor</code> a <code>ngOnInit</code> es lo que la convención recomienda cuando el componente sí depende de un <code>@Input()</code> (a diferencia del ejemplo anterior de <code>CategoriaForm</code>, que no lo necesitaba).</p>
-<p><code>ngAfterContentInit</code>/<code>ngAfterContentChecked</code> necesitan el <code>&lt;ng-content&gt;</code> que se agregó a la plantilla — ahora <code>@ContentChild('etiqueta')</code> sí tiene algo que buscar, a diferencia de un componente sin contenido proyectado. <code>ngAfterViewInit</code> reutiliza el mismo <code>&lt;input formControlName="nombre"&gt;</code>, con <code>#nombreInput</code> como referencia de plantilla, para enfocarlo apenas la vista está lista — <code>#nombreInput</code> no choca con <code>formControlName</code>: una variable de plantilla sin asignarle nada siempre apunta al elemento del DOM, sin importar qué directivas tenga encima (<code>formControlName</code> ni siquiera declara un <code>exportAs</code> con el que pudiera confundirse).</p>
+<p><code>ngAfterContentInit</code>/<code>ngAfterContentChecked</code> son, junto con <code>ngDoCheck</code>/<code>ngAfterViewChecked</code>, los cuatro hooks que se quedan solo con el comentario: <code>CategoriaCard</code> no tiene <code>&lt;ng-content&gt;</code> en su plantilla, así que no proyecta nada de contenido —ese es exactamente el caso descrito en la Tabla 3: "solo aplica a un componente que recibe contenido proyectado"—, y por eso <code>ngAfterContentInit</code>/<code>ngAfterContentChecked</code> nunca tendrían aquí nada real que hacer. <code>ngAfterViewInit</code> sí hace algo concreto: reutiliza el mismo <code>&lt;input formControlName="nombre"&gt;</code>, con <code>#nombreInput</code> como referencia de plantilla, para enfocarlo apenas la vista está lista — <code>#nombreInput</code> no choca con <code>formControlName</code>: una variable de plantilla sin asignarle nada siempre apunta al elemento del DOM, sin importar qué directivas tenga encima (<code>formControlName</code> ni siquiera declara un <code>exportAs</code> con el que pudiera confundirse).</p>
 <p><code>ngOnDestroy</code> cierra la suscripción que <code>ngOnInit</code> abrió. Para este componente en concreto no era estrictamente necesario —<code>this.form</code> es propio de <code>CategoriaCard</code>, nadie más lo referencia desde afuera, así que al destruirse el componente no queda nada externo sosteniéndolo con vida—, pero es el hábito correcto: la regla general no es "¿esta suscripción en particular se filtra?", sino "toda suscripción manual se cierra en <code>ngOnDestroy</code>", para no depender de analizar caso por caso cada vez.</p>
-<p>Para probarlo, agrégalo a cualquier plantilla ya visible — por ejemplo, en <code>inicio.html</code> (3.6), con el import correspondiente en <code>inicio.ts</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">app-categoria-card</span> <span class="na">nombreInicial</span><span class="o">=</span><span class="s">"Bebidas"</span><span class="p">&gt;</span>
-  <span class="p">&lt;</span><span class="nt">span</span> <span class="err">#</span><span class="na">etiqueta</span><span class="p">&gt;</span>Destacada<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>
-<span class="p">&lt;/</span><span class="nt">app-categoria-card</span><span class="p">&gt;</span>
+<p><strong>Para probarlo, <code>CategoriaCard</code> tiene que aparecer en la plantilla de <em>otro</em> componente</strong> — nunca dentro de su propia plantilla (<code>categoria-card.ts</code>): un componente no se usa a sí mismo. Por ejemplo, en <code>Inicio</code> (3.6). Dos archivos, dos cambios:</p>
+<p><strong><code>inicio.ts</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Component</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/core'</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">CategoriaCard</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'../../temp/categoria-card'</span><span class="p">;</span>
+
+<span class="kd">@Component</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">selector</span><span class="o">:</span><span class="w"> </span><span class="s1">'app-inicio'</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">imports</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">CategoriaCard</span><span class="p">],</span>
+<span class="w">  </span><span class="nx">templateUrl</span><span class="o">:</span><span class="w"> </span><span class="s1">'./inicio.html'</span><span class="p">,</span>
+<span class="p">})</span>
+<span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">Inicio</span><span class="w"> </span><span class="p">{}</span>
 </code></pre></div>
-<p>Abre <code>http://localhost:4200/</code> y mira la consola del navegador: primero <code>constructor</code>, luego <code>ngOnChanges</code> (valor anterior <code>undefined</code>, valor cambiado <code>"Bebidas"</code>), luego <code>ngOnInit</code>, <code>ngAfterContentInit</code> (con "Destacada"), <code>ngAfterViewInit</code> con el campo ya enfocado, y desde ahí un <code>console.log</code> nuevo por cada letra que escribas en <strong>Nombre</strong>. Ese orden es la Figura 3 en vivo, línea por línea — nada que adivinar, todo lo que corre deja su propio rastro en la consola.</p>
+<p><strong><code>inicio.html</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">h2</span><span class="p">&gt;</span>Bienvenido a BomERP<span class="p">&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Usa el menú de la izquierda para navegar entre los módulos disponibles.<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">app-categoria-card</span> <span class="na">nombreInicial</span><span class="o">=</span><span class="s">"Bebidas"</span> <span class="p">/&gt;</span>
+</code></pre></div>
+<p>El <code>import { CategoriaCard } from '...'</code> (en <code>inicio.ts</code>) y la línea <code>imports: [CategoriaCard]</code> no son opcionales: <code>&lt;app-categoria-card&gt;</code> es exactamente igual de standalone que <code>Layout</code> o <code>CategoriaList</code> (2.2) — si <code>Inicio</code> no lo declara en su propio <code>imports</code>, Angular no lo reconoce y falla con el mismo error que ya viste con <code>router-outlet</code>/<code>routerLink</code> sin importar (3.5). Este ejemplo vive en <code>src/app/temp/categoria-card.ts</code> — cualquier carpeta suelta le sirve, precisamente porque no forma parte de la estructura real del proyecto (<code>core</code>/<code>shared</code>/<code>features</code>, 2.5): es desechable, se borra cuando termines de probarlo. Si lo guardaste en otro lugar, ajusta la ruta del <code>import</code> en consecuencia.</p>
+<p>Abre <code>http://localhost:4200/</code> y mira la consola del navegador: primero <code>constructor</code>, luego <code>ngOnChanges</code> (valor anterior <code>undefined</code>, valor cambiado <code>"Bebidas"</code>), luego <code>ngOnInit</code>, <code>ngAfterViewInit</code> con el campo ya enfocado, y desde ahí un <code>console.log</code> nuevo por cada letra que escribas en <strong>Nombre</strong>. Ese orden es la Figura 3 en vivo, línea por línea — nada que adivinar, todo lo que corre deja su propio rastro en la consola.</p>
 <p><strong>Opcional: probarlo con su propia URL.</strong> En vez de pegarlo dentro de <code>inicio.html</code>, puedes darle una ruta propia — como <code>children</code> de <code>Layout</code>, mismo patrón que 3.7 — y abrir <code>http://localhost:4200/card</code> directo:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'card'</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">loadComponent</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span>
-<span class="w">    </span><span class="k">import</span><span class="p">(</span><span class="s1">'./features/catalogo/categoria/categoria-card'</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">m</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">m</span><span class="p">.</span><span class="nx">CategoriaCard</span><span class="p">),</span>
+<span class="w">    </span><span class="k">import</span><span class="p">(</span><span class="s1">'./temp/categoria-card'</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">m</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">m</span><span class="p">.</span><span class="nx">CategoriaCard</span><span class="p">),</span>
 <span class="p">},</span>
 </code></pre></div>
 <p>No forma parte de los pasos de 3.1-3.14 ni de las rutas que arma esa sección (3.6, 3.7, 3.14) — es solo para experimentar con este ejemplo aislado, sin el resto de <code>Inicio</code> alrededor. Quítala cuando termines de probar, para no dejar una ruta de prueba mezclada con las rutas reales del CRUD.</p>
