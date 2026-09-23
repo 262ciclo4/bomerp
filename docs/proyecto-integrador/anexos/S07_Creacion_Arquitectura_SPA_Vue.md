@@ -211,28 +211,67 @@ Desde la raíz del repositorio, dentro de `lp2/`:
 
 ```bash
 cd lp2
-npm create vue@latest
+npm create vue@3.24.0
 ```
 
-La primera vez que corres este comando en tu máquina, npm todavía no tiene descargado el paquete real detrás de `npm create vue` (`create-vue`) — te va a pedir confirmación antes de bajarlo, algo como:
+`@3.24.0` fija la versión de `create-vue`, con el mismo criterio que Angular fija `@angular/cli@22` (S07, 3.2): dos versiones mayores distintas de un generador pueden producir proyectos con preguntas y opciones distintas — fijar la versión evita que cada estudiante del curso termine con un punto de partida distinto según cuándo corrió el comando. Como alternativa, si prefieres siempre la versión más nueva (y estás dispuesto a que la guía se desactualice con el tiempo, S07 3.2), reemplaza `@3.24.0` por `@latest`.
+
+La primera vez que corres este comando en tu máquina, npm todavía no tiene descargado el paquete real detrás de `npm create vue` (`create-vue`) — te va a pedir confirmación antes de bajarlo:
 
 ```text
 Need to install the following packages:
-create-vue@X.Y.Z
+create-vue@3.24.0
 Ok to proceed? (y)
 ```
 
 Escribe `y` (o solo Enter, `(y)` ya es la opción por defecto). Es la prueba en vivo de que nada de esto queda instalado de forma global (3.2) — cada vez que lo corras en una máquina nueva, vas a ver este mismo prompt una sola vez.
 
-`@latest` (en vez de una versión fija) es la diferencia real frente a `@angular/cli@22`: Angular fija la versión mayor de la CLI a propósito (S07, 3.2), porque dos versiones mayores distintas pueden generar proyectos con estructuras distintas. El generador de Vue no tiene ese mismo riesgo —la plantilla cambia poco entre versiones—, pero si tu equipo necesita reproducir exactamente la misma versión en todas las máquinas, reemplaza `@latest` por una versión fija (por ejemplo, `npm create vue@5`).
+El generador hace preguntas interactivas — primero dos preguntas de sí/no, y después una sola pantalla con casillas (a diferencia de Angular, que las pregunta una por una):
 
-El generador hace preguntas interactivas:
+```text
+◇  Project name (target directory):
+│  bomerp-frontend-vue
+│
+◇  Use TypeScript?
+│  Yes
+│
+◆  Select features to include in your project:
+│  ◻ JSX Support
+│  ◻ Router (SPA development)
+│  ◻ Pinia (state management)
+│  ◻ Vitest (unit testing)
+│  ◻ End-to-End Testing
+│  ◻ Linter (error prevention)
+│  ◻ Prettier (code formatting)
+```
 
 - **Project name:** `bomerp-frontend-vue`.
-- **TypeScript:** Sí — mismo criterio que Angular (2.6): los modelos de datos necesitan tipos reales.
-- **Vue Router:** Sí — sin esto no hay navegación por rutas (2.5).
-- **Pinia** (manejo de estado global): No — el CRUD de esta guía no necesita estado compartido entre componentes que no tengan relación padre-hijo; agregar Pinia ahora sería infraestructura que la sesión no necesita (mismo criterio que evitó paquetes "por si acaso" en Angular, S07 2.2).
-- **Vitest / ESLint / Playwright:** No — no son tema de esta guía.
+- **Use TypeScript?** Sí — mismo criterio que Angular (2.6): los modelos de datos necesitan tipos reales.
+- **Select features:** en esta pantalla, marca **solo** `Router (SPA development)` con la barra espaciadora, deja el resto sin marcar, y presiona Enter para confirmar:
+    - **Router**, marcado — sin esto no hay navegación por rutas (2.5).
+    - **JSX Support**, sin marcar — esta guía usa `<template>`, el marcado propio de Vue (2.2), no JSX.
+    - **Pinia** (manejo de estado global), sin marcar — el CRUD de esta guía no necesita estado compartido entre componentes que no tengan relación padre-hijo; agregarlo ahora sería infraestructura que la sesión no necesita (mismo criterio que evitó paquetes "por si acaso" en Angular, S07 2.2).
+    - **Vitest / End-to-End Testing / Linter / Prettier**, sin marcar — no son tema de esta guía.
+
+Puede seguir todavía una pantalla más, de características experimentales:
+
+```text
+◆  Select experimental features to include in your project:
+│  ◻ Replace Prettier with Oxfmt
+│  ◻ Vue 3.6 (Release Candidate)
+│  ◻ Replace TypeScript with typescript-native-bridge (tsgo)
+```
+
+Deja las tres **sin marcar** y presiona Enter. Ninguna aplica: no elegiste Prettier arriba, esta guía se queda con la versión estable de Vue (no una *release candidate*) por el mismo motivo que fijaste `create-vue@3.24.0` en vez de `@latest`, y usa el compilador estándar de TypeScript, no una alternativa experimental.
+
+Una última pregunta:
+
+```text
+◆  Skip all example code and start with a blank Vue project?
+│  ○ Yes / ● No
+```
+
+Deja **No** (ya viene marcada por defecto) y presiona Enter. "No" es la opción que sí conserva el código de ejemplo que trae el generador (la página de bienvenida con el logo de Vue y el componente `HelloWorld`) — exactamente lo que 3.4 recorre y 3.5 reemplaza, el mismo patrón que la página de bienvenida por defecto de Angular (S07, 3.3-3.4).
 
 Instala dependencias y levanta el servidor de desarrollo:
 
@@ -254,7 +293,7 @@ Abre la URL que muestra la terminal (por defecto `http://localhost:5173`). Debe 
 
 ### 3.4 Recorrer la estructura generada
 
-**Producto del paso:** entender qué generó `npm create vue@latest`, en el mismo orden de prioridad que la sesión de Angular (S07, 3.4).
+**Producto del paso:** entender qué generó `npm create vue@3.24.0`, en el mismo orden de prioridad que la sesión de Angular (S07, 3.4).
 
 ```text
 bomerp-frontend-vue/
@@ -271,8 +310,25 @@ bomerp-frontend-vue/
 
 1. **`package.json`.** El manifiesto del proyecto: dependencias (`vue`, `vue-router`), versión, y los *scripts* que `npm run` termina ejecutando (`dev`, `build`). No lo tocas hoy.
 2. **`vite.config.ts`.** La configuración de build de Vite: plugins (`@vitejs/plugin-vue`), alias de rutas (`@` apunta a `src/`). El generador ya lo dejó listo — tampoco lo tocas hoy.
-3. **`index.html` y `main.ts`.** El arranque real. `index.html` es el único HTML que el navegador carga de verdad: trae un `<div id="app"></div>` vacío. `main.ts` es el primer código que corre: `createApp(App).use(router).mount('#app')` monta el componente raíz `App` dentro de ese `div`, con el router ya registrado.
-4. **`App.vue` y `router/index.ts`.** La raíz de la aplicación. `App.vue` recién generado trae contenido de bienvenida propio — igual que Angular, esa página nunca es parte de BomERP. `router/index.ts` empieza con una ruta de ejemplo (`HomeView`) — se reemplaza en 3.6.
+3. **`index.html` y `main.ts`.** El arranque real. `index.html` es el único HTML que el navegador carga de verdad: trae un `<div id="app"></div>` vacío. `main.ts` es el primer código que corre — exactamente esto, sin tocar nada todavía:
+
+```ts
+import './assets/main.css'
+
+import { createApp } from 'vue'
+import App from './App.vue'
+import router from './router'
+
+const app = createApp(App)
+
+app.use(router)
+
+app.mount('#app')
+```
+
+`createApp(App)` monta el componente raíz `App` dentro de ese `div`; `app.use(router)` **ya registra el router**, sin que tengas que tocar este archivo — a diferencia de React (2.2 del anexo de React), donde había que agregar `<BrowserRouter>` a mano. Es la ventaja directa de haber marcado la casilla **Router** al crear el proyecto (3.3): el generador de Vue no solo instala `vue-router`, también deja el cableado hecho. `import router from './router'` es una importación **por defecto** — de ahí que `router/index.ts` (abajo) tenga que exportar `export default router`, no `export const router`.
+
+4. **`App.vue` y `router/index.ts`.** La raíz de la aplicación. `App.vue` recién generado trae contenido de bienvenida propio — igual que Angular, esa página nunca es parte de BomERP. `router/index.ts` ya existe también, con rutas de ejemplo (porque marcaste **Router** en 3.3) — las vas a reemplazar en 3.5, con `export default router` de todos modos (es lo que hace que `import router from './router'`, en `main.ts`, funcione).
 
 Reemplaza `App.vue` para que quede vacío de layout propio:
 
@@ -287,8 +343,6 @@ import { RouterView } from 'vue-router'
   <RouterView />
 </template>
 ```
-
-Guarda y mira la página: queda en blanco, porque `router/index.ts` todavía no tiene ninguna ruta real que resolver a `''`. Es lo esperado — se completa en 3.5.
 
 ### 3.5 Crear el layout: encabezado, sidebar y menú
 
@@ -354,24 +408,24 @@ import { RouterLink, RouterView } from 'vue-router'
 
 `active-class="active"` es el equivalente de `routerLinkActive="active"` en Angular: resalta el enlace de la pantalla activa. `<style scoped>` es propio de Vue — el atributo `scoped` hace que esas reglas de CSS solo apliquen dentro de este componente, sin que se filtren a otros (Vue, 2026d) — el mismo problema que Angular resuelve con `styleUrl` por componente, pero declarado directamente en el mismo archivo `.vue`.
 
-Conecta `AppLayout` al router:
+Reemplaza `router/index.ts` para conectar `AppLayout`:
 
 **`src/router/index.ts`**
 
 ```ts
 import { createRouter, createWebHistory } from 'vue-router'
 
-const routes = [
-  {
-    path: '/',
-    component: () => import('../core/AppLayout.vue'),
-  },
-]
-
-export const router = createRouter({
+const router = createRouter({
   history: createWebHistory(),
-  routes,
+  routes: [
+    {
+      path: '/',
+      component: () => import('../core/AppLayout.vue'),
+    },
+  ],
 })
+
+export default router
 ```
 
 Guarda y mira la página: ahora se ve el encabezado ("BomERP") y el sidebar con el enlace **Categorías**, aunque el área de contenido quede vacía — `/` todavía no tiene ninguna ruta hija que cargar ahí (recién en 3.6).
@@ -398,23 +452,23 @@ Agrega `children` a la ruta de `AppLayout`:
 ```ts
 import { createRouter, createWebHistory } from 'vue-router'
 
-const routes = [
-  {
-    path: '/',
-    component: () => import('../core/AppLayout.vue'),
-    children: [
-      {
-        path: '',
-        component: () => import('../core/InicioView.vue'),
-      },
-    ],
-  },
-]
-
-export const router = createRouter({
+const router = createRouter({
   history: createWebHistory(),
-  routes,
+  routes: [
+    {
+      path: '/',
+      component: () => import('../core/AppLayout.vue'),
+      children: [
+        {
+          path: '',
+          component: () => import('../core/InicioView.vue'),
+        },
+      ],
+    },
+  ],
 })
+
+export default router
 ```
 
 La ruta de `Categoria` todavía no aparece aquí: se agrega recién en el siguiente paso (3.7), primero vacía — cada ruta se agrega en el mismo paso en que su componente empieza a existir, nunca antes.

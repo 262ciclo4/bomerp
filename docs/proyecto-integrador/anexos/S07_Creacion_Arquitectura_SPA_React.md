@@ -224,9 +224,9 @@ Puede seguir todavía una pregunta más:
 │  Yes
 ```
 
-Responde **No**. Si respondes que sí, `create-vite` instala las dependencias y levanta el servidor por su cuenta, en el mismo paso — pero React Router (2.2) todavía no está instalado en ese punto, así que igual vas a necesitar parar el servidor o abrir otra terminal para agregarlo. Responder "No" aquí deja los tres comandos siguientes explícitos, en el orden que necesitas, sin nada corriendo de fondo todavía.
+Responde **No** — instala y levanta el servidor a mano, en los pasos siguientes, para dejar cada comando explícito.
 
-`--template react-ts` fija de una vez React con TypeScript — el mismo criterio de Angular y Vue (2.6): los modelos de datos necesitan tipos reales, no hace falta agregarlo después. `@9.2.1` fija la versión de `create-vite`, con el mismo criterio que Angular fija `@angular/cli@22` (S07, 3.2): dos versiones mayores distintas de un generador pueden producir proyectos con estructuras distintas (otro linter por defecto, otras preguntas interactivas, como ya viste) — fijar la versión evita que cada estudiante del curso termine con un punto de partida distinto según cuándo corrió el comando. Como alternativa, si prefieres siempre la versión más nueva (y estás dispuesto a que la guía se desactualice con el tiempo, S07 3.2), reemplaza `@9.2.1` por `@latest`.
+`--template react-ts` fija de una vez React con TypeScript — el mismo criterio de Angular y Vue (2.6): los modelos de datos necesitan tipos reales, no hace falta agregarlo después. `@9.2.1` fija la versión de `create-vite`, con el mismo criterio que Angular fija `@angular/cli@22` (S07, 3.2): dos versiones mayores distintas de un generador pueden producir proyectos con estructuras distintas — fijar la versión evita que cada estudiante del curso termine con un punto de partida distinto según cuándo corrió el comando. Como alternativa, si prefieres siempre la versión más nueva (y estás dispuesto a que la guía se desactualice con el tiempo, S07 3.2), reemplaza `@9.2.1` por `@latest`.
 
 Instala dependencias, agrega React Router (no viene incluido, 2.2), y levanta el servidor:
 
@@ -236,8 +236,6 @@ npm install
 npm install react-router-dom
 npm run dev
 ```
-
-**Si ya respondiste "Yes"** a la pregunta de arriba (o si tu terminal ya quedó con el servidor corriendo): no hace falta deshacer nada. Abre otra terminal, entra a `bomerp-frontend-react/` y corre `npm install react-router-dom` — Vite detecta la dependencia nueva y se reoptimiza solo la próxima vez que el código la importe (3.5 en adelante). Si más tarde ves un error raro relacionado con `react-router-dom` en el navegador, para el servidor (`Ctrl+C`) y córrelo de nuevo con `npm run dev`.
 
 Verifica qué versión de Vite quedó instalada — recién ahora existe una, como dependencia local del proyecto, no global:
 
@@ -266,26 +264,29 @@ bomerp-frontend-react/
 
 1. **`package.json`.** Dependencias (`react`, `react-dom`, `react-router-dom`), versión, *scripts* (`dev`, `build`). No lo tocas hoy.
 2. **`vite.config.ts`.** Configuración de build, con el plugin `@vitejs/plugin-react`. Ya lo dejó listo el generador.
-3. **`index.html` y `main.tsx`.** `index.html` trae un `<div id="root"></div>` vacío. `main.tsx` es el primer código que corre: `createRoot(document.getElementById('root')!).render(<App />)` monta el componente raíz dentro de ese `div`.
-4. **`App.tsx`.** El componente raíz, con contenido de bienvenida generado — igual que en Angular y Vue, esa página nunca es parte de BomERP.
-
-React Router necesita registrarse en `main.tsx`, envolviendo `<App />`:
+3. **`index.html` y `main.tsx`.** `index.html` trae un `<div id="root"></div>` vacío. `main.tsx` es el primer código que corre, y es donde registras React Router — envuélvelo dentro de `<StrictMode>`:
 
 **`src/main.tsx`**
 
 ```tsx
+import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
-import App from './App'
+import './index.css'
+import App from './App.tsx'
 
 createRoot(document.getElementById('root')!).render(
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>,
+  <StrictMode>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </StrictMode>,
 )
 ```
 
-Reemplaza `App.tsx` para que quede vacío de layout propio:
+`createRoot(...).render(...)` monta el componente raíz dentro de ese `div`. `<StrictMode>` es una ayuda de React que solo existe en modo desarrollo (React, 2026e): duplica a propósito ciertas llamadas (por ejemplo, el cuerpo de un componente) para exponer efectos secundarios mal escritos que de otro modo pasarían inadvertidos — no genera nada en producción, y esta guía no la toca; se queda como la etiqueta más externa, sin relación con el router. `<BrowserRouter>` es lo único que agrega esta guía. `import App from './App.tsx'`, con la extensión `.tsx` incluida, es el estilo que trae esta plantilla del generador (`react-ts`) por defecto — Vite resuelve el import igual con o sin extensión; el resto de esta guía la omite (como en el resto del ecosistema), y ambas formas son válidas en este mismo proyecto.
+
+4. **`App.tsx`.** El componente raíz. Reemplázalo para que quede vacío de layout propio:
 
 **`src/App.tsx`**
 
@@ -318,7 +319,7 @@ export default function AppLayout() {
       <header className="header">
         <h1>
           <Link to="/" className="home-link">
-            <img src="/favicon.ico" alt="" height={30} />
+            <img src="/favicon.svg" alt="" height={30} />
           </Link>
           BomERP
         </h1>
@@ -948,3 +949,4 @@ Este anexo no reemplaza la entrega oficial de LP2 (Angular): documenta esta acti
 2. React. (2026b). *Synchronizing with Effects*. https://react.dev/learn/synchronizing-with-effects
 3. React Router. (2026c). *Nested Routes*. https://reactrouter.com/start/framework/routing#nested-routes
 4. React. (2026d). *Thinking in React*. https://react.dev/learn/thinking-in-react
+5. React. (2026e). *`<StrictMode>`*. https://react.dev/reference/react/StrictMode
