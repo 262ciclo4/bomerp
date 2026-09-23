@@ -33,6 +33,15 @@ site/
 Thumbs.db
 desktop.ini
 
+### Node.js / npm (cualquier proyecto frontend, en cualquier carpeta) ###
+node_modules/
+dist/
+dist-ssr/
+*.local
+npm-debug.log*
+.env
+!.env.example
+
 ### Java / JVM build outputs ###
 *.class
 *.jar
