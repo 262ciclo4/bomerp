@@ -4377,6 +4377,12 @@ npm<span class="w"> </span>--version
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>lp2
 npm<span class="w"> </span>create<span class="w"> </span>vue@latest
 </code></pre></div>
+<p>La primera vez que corres este comando en tu máquina, npm todavía no tiene descargado el paquete real detrás de <code>npm create vue</code> (<code>create-vue</code>) — te va a pedir confirmación antes de bajarlo, algo como:</p>
+<div class="highlight"><pre><span></span><code>Need to install the following packages:
+create-vue@X.Y.Z
+Ok to proceed? (y)
+</code></pre></div>
+<p>Escribe <code>y</code> (o solo Enter, <code>(y)</code> ya es la opción por defecto). Es la prueba en vivo de que nada de esto queda instalado de forma global (3.2) — cada vez que lo corras en una máquina nueva, vas a ver este mismo prompt una sola vez.</p>
 <p><code>@latest</code> (en vez de una versión fija) es la diferencia real frente a <code>@angular/cli@22</code>: Angular fija la versión mayor de la CLI a propósito (S07, 3.2), porque dos versiones mayores distintas pueden generar proyectos con estructuras distintas. El generador de Vue no tiene ese mismo riesgo —la plantilla cambia poco entre versiones—, pero si tu equipo necesita reproducir exactamente la misma versión en todas las máquinas, reemplaza <code>@latest</code> por una versión fija (por ejemplo, <code>npm create vue@5</code>).</p>
 <p>El generador hace preguntas interactivas:</p>
 <ul>
