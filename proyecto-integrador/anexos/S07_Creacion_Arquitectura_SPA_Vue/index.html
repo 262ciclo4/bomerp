@@ -4370,13 +4370,14 @@
 <div class="highlight"><pre><span></span><code>node<span class="w"> </span>--version
 npm<span class="w"> </span>--version
 </code></pre></div>
-<p>A diferencia de Angular, Vue no exige instalar una CLI global aparte (<code>@angular/cli</code>) — el proyecto se crea con <code>npm create vue@latest</code>, que descarga el generador una sola vez, lo ejecuta, y no deja nada instalado globalmente. Un detalle menos que administrar frente a la versión de Angular.</p>
+<p>A diferencia de Angular, Vue no exige instalar una CLI global aparte (<code>@angular/cli</code>) antes de crear el proyecto — no hay ningún paquete que instalar por adelantado ni ninguna versión que fijar todavía. <code>npm create vue@latest</code> descarga el generador una sola vez, lo ejecuta, y no deja nada instalado globalmente: la verificación con <code>ng version</code> de Angular (S07, 3.2) no tiene un equivalente <em>antes</em> de crear el proyecto — recién lo tiene después (3.3), porque recién después existe algo instalado que verificar.</p>
 <h3 id="33-crear-el-proyecto-vue">3.3 Crear el proyecto Vue<a class="headerlink" href="#33-crear-el-proyecto-vue" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> <code>lp2/bomerp-frontend-vue</code> creado y ejecutándose por primera vez.</p>
+<p><strong>Producto del paso:</strong> <code>lp2/bomerp-frontend-vue</code> creado y ejecutándose por primera vez, con su versión de Vite confirmada.</p>
 <p>Desde la raíz del repositorio, dentro de <code>lp2/</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>lp2
 npm<span class="w"> </span>create<span class="w"> </span>vue@latest
 </code></pre></div>
+<p><code>@latest</code> (en vez de una versión fija) es la diferencia real frente a <code>@angular/cli@22</code>: Angular fija la versión mayor de la CLI a propósito (S07, 3.2), porque dos versiones mayores distintas pueden generar proyectos con estructuras distintas. El generador de Vue no tiene ese mismo riesgo —la plantilla cambia poco entre versiones—, pero si tu equipo necesita reproducir exactamente la misma versión en todas las máquinas, reemplaza <code>@latest</code> por una versión fija (por ejemplo, <code>npm create vue@5</code>).</p>
 <p>El generador hace preguntas interactivas:</p>
 <ul>
 <li><strong>Project name:</strong> <code>bomerp-frontend-vue</code>.</li>
@@ -4390,6 +4391,10 @@ npm<span class="w"> </span>create<span class="w"> </span>vue@latest
 npm<span class="w"> </span>install
 npm<span class="w"> </span>run<span class="w"> </span>dev
 </code></pre></div>
+<p>Verifica qué versión de Vite quedó instalada — recién ahora existe una, como dependencia local del proyecto, no global:</p>
+<div class="highlight"><pre><span></span><code>npx<span class="w"> </span>vite<span class="w"> </span>--version
+</code></pre></div>
+<p>Esto cumple el mismo rol que <code>ng version</code> en Angular (3.2): confirmar la herramienta real que vas a usar antes de seguir. La diferencia es el momento — en Angular se verifica <em>antes</em> de crear el proyecto (la CLI es global, existe independiente de cualquier proyecto); en Vue/Vite se verifica <em>después</em> (Vite queda registrado en <code>package.json</code>, dentro de <code>devDependencies</code>, propio de este proyecto y de ningún otro).</p>
 <p>Abre la URL que muestra la terminal (por defecto <code>http://localhost:5173</code>). Debe mostrarse la página de bienvenida por defecto de Vue.</p>
 <h3 id="34-recorrer-la-estructura-generada">3.4 Recorrer la estructura generada<a class="headerlink" href="#34-recorrer-la-estructura-generada" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> entender qué generó <code>npm create vue@latest</code>, en el mismo orden de prioridad que la sesión de Angular (S07, 3.4).</p>
