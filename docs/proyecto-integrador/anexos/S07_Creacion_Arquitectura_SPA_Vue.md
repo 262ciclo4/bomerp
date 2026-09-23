@@ -708,7 +708,7 @@ Crea `src/features/catalogo/categoria/CategoriaFormView.vue`:
 
 ```vue
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { crear, actualizar, obtener } from './categoria-service'
 
@@ -717,20 +717,26 @@ const router = useRouter()
 
 const id = computed(() => route.params.id ? Number(route.params.id) : null)
 
+const LIMITES = { nombre: 80, descripcion: 200 } as const
+const REQUERIDO = { nombre: true, descripcion: false } as const
+
 const nombre = ref('')
 const descripcion = ref('')
-const tocado = ref(false)
+const tocado = reactive({ nombre: false, descripcion: false })
 const error = ref<string | null>(null)
 const loading = ref(false)
 const errorCarga = ref(false)
 
-const mensajeNombre = computed(() => {
-  if (!tocado.value) return ''
-  const valor = nombre.value.trim()
-  if (!valor) return 'Este campo es obligatorio.'
-  if (valor.length > 80) return 'Máximo 80 caracteres.'
+function mensajeValidacion(campo: 'nombre' | 'descripcion', valor: string): string {
+  if (!tocado[campo]) return ''
+  const limpio = valor.trim()
+  if (REQUERIDO[campo] && !limpio) return 'Este campo es obligatorio.'
+  if (limpio.length > LIMITES[campo]) return `Máximo ${LIMITES[campo]} caracteres.`
   return ''
-})
+}
+
+const mensajeNombre = computed(() => mensajeValidacion('nombre', nombre.value))
+const mensajeDescripcion = computed(() => mensajeValidacion('descripcion', descripcion.value))
 
 onMounted(async () => {
   if (!id.value) return
@@ -752,10 +758,11 @@ async function guardar() {
   if (loading.value || errorCarga.value) return
 
   error.value = null
-  tocado.value = true
+  tocado.nombre = true
+  tocado.descripcion = true
   nombre.value = nombre.value.trim()
 
-  if (mensajeNombre.value) return
+  if (mensajeNombre.value || mensajeDescripcion.value) return
 
   const valor = { nombre: nombre.value, descripcion: descripcion.value }
 
@@ -785,14 +792,15 @@ function cancelar() {
 
     <label>
       Nombre
-      <input type="text" v-model="nombre" @blur="tocado = true" />
+      <input type="text" v-model="nombre" @blur="tocado.nombre = true" />
     </label>
     <p v-if="mensajeNombre" class="error">{{ mensajeNombre }}</p>
 
     <label>
       Descripción
-      <textarea v-model="descripcion"></textarea>
+      <textarea v-model="descripcion" @blur="tocado.descripcion = true"></textarea>
     </label>
+    <p v-if="mensajeDescripcion" class="error">{{ mensajeDescripcion }}</p>
 
     <p v-if="error" class="error">{{ error }}</p>
 
@@ -802,9 +810,11 @@ function cancelar() {
 </template>
 ```
 
-Vue no tiene un equivalente directo a Reactive Forms de Angular (`FormBuilder`/`FormGroup`, S07 2.4-2.6): la forma idiomática de un formulario en Vue es `v-model` sobre `ref`s sueltos, con la validación armada a mano en `computed()` — no hace falta ninguna librería aparte para un formulario de dos campos (mismo criterio que evitó Pinia en 3.3). `v-model="nombre"` es de dos vías, igual que `formControlName` en Angular: escribir en el input actualiza `nombre.value`, y asignar `nombre.value = ...` (como hace `onMounted` al cargar la categoría) actualiza el input.
+Vue no tiene un equivalente directo a Reactive Forms de Angular (`FormBuilder`/`FormGroup`, S07 2.4-2.6): la forma idiomática de un formulario en Vue es `v-model` sobre `ref`s sueltos, con la validación armada a mano — no hace falta ninguna librería aparte para un formulario de dos campos (mismo criterio que evitó Pinia en 3.3). `v-model="nombre"` es de dos vías, igual que `formControlName` en Angular: escribir en el input actualiza `nombre.value`, y asignar `nombre.value = ...` (como hace `onMounted` al cargar la categoría) actualiza el input.
 
-`tocado` cumple el rol de `touched` en Angular: el mensaje de validación no aparece hasta que el usuario sale del campo (`@blur`) o intenta guardar. `useRoute()`/`useRouter()` son *composables* — funciones que empiezan con `use` y devuelven estado reactivo o utilidades, el patrón central de la Composition API de Vue (Vue, 2026f); son el equivalente de `inject(ActivatedRoute)`/`inject(Router)` en Angular. `@submit.prevent` evita que el formulario recargue la página al enviarse — el equivalente de que Angular no necesite nada especial porque `(ngSubmit)` ya se comporta así por defecto.
+`mensajeValidacion(campo, valor)` es una sola función genérica para los dos campos — el mismo rol que `mensajeValidacion(campo: 'nombre' | 'descripcion')` en `CategoriaForm` de Angular (S07, 3.13): `LIMITES`/`REQUERIDO` centralizan las reglas de cada campo en un solo lugar, y `mensajeNombre`/`mensajeDescripcion` son dos `computed()` que solo llaman a esa función con su propio campo — sin repetir la lógica de validar dos veces. `tocado` pasa de un solo `ref(false)` a un `reactive({ nombre: false, descripcion: false })`: cada campo lleva su propio estado de "tocado", igual que en Angular cada `FormControl` trae el suyo (`control.touched`) — con un solo booleano para todo el formulario, tocar **nombre** habría mostrado también el mensaje de **descripción** antes de que el usuario llegara a ese campo.
+
+`useRoute()`/`useRouter()` son *composables* — funciones que empiezan con `use` y devuelven estado reactivo o utilidades, el patrón central de la Composition API de Vue (Vue, 2026f); son el equivalente de `inject(ActivatedRoute)`/`inject(Router)` en Angular. `@submit.prevent` evita que el formulario recargue la página al enviarse — el equivalente de que Angular no necesite nada especial porque `(ngSubmit)` ya se comporta así por defecto.
 
 Completa las rutas que faltaban:
 

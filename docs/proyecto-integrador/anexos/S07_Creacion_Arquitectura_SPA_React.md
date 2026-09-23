@@ -696,9 +696,20 @@ export default function CategoriaListView() {
 Crea `src/features/catalogo/categoria/CategoriaFormView.tsx`:
 
 ```tsx
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { crear, actualizar, obtener } from './categoria-service'
+
+const LIMITES = { nombre: 80, descripcion: 200 } as const
+const REQUERIDO = { nombre: true, descripcion: false } as const
+
+function mensajeValidacion(campo: 'nombre' | 'descripcion', valor: string, tocado: boolean): string {
+  if (!tocado) return ''
+  const limpio = valor.trim()
+  if (REQUERIDO[campo] && !limpio) return 'Este campo es obligatorio.'
+  if (limpio.length > LIMITES[campo]) return `Máximo ${LIMITES[campo]} caracteres.`
+  return ''
+}
 
 export default function CategoriaFormView() {
   const { id: idParam } = useParams()
@@ -707,7 +718,7 @@ export default function CategoriaFormView() {
 
   const [nombre, setNombre] = useState('')
   const [descripcion, setDescripcion] = useState('')
-  const [tocado, setTocado] = useState(false)
+  const [tocado, setTocado] = useState({ nombre: false, descripcion: false })
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [errorCarga, setErrorCarga] = useState(false)
@@ -728,24 +739,27 @@ export default function CategoriaFormView() {
       .finally(() => setLoading(false))
   }, [id])
 
-  const mensajeNombre = (() => {
-    if (!tocado) return ''
-    const valor = nombre.trim()
-    if (!valor) return 'Este campo es obligatorio.'
-    if (valor.length > 80) return 'Máximo 80 caracteres.'
-    return ''
-  })()
+  const mensajeNombre = useMemo(
+    () => mensajeValidacion('nombre', nombre, tocado.nombre),
+    [nombre, tocado.nombre],
+  )
+  const mensajeDescripcion = useMemo(
+    () => mensajeValidacion('descripcion', descripcion, tocado.descripcion),
+    [descripcion, tocado.descripcion],
+  )
 
   function guardar(evento: React.FormEvent) {
     evento.preventDefault()
     if (loading || errorCarga) return
 
     setError(null)
-    setTocado(true)
+    setTocado({ nombre: true, descripcion: true })
     const nombreLimpio = nombre.trim()
     setNombre(nombreLimpio)
 
-    if (!nombreLimpio || nombreLimpio.length > 80) return
+    const nombreInvalido = mensajeValidacion('nombre', nombreLimpio, true)
+    const descripcionInvalida = mensajeValidacion('descripcion', descripcion, true)
+    if (nombreInvalido || descripcionInvalida) return
 
     const valor = { nombre: nombreLimpio, descripcion }
     const peticion = id ? actualizar(id, valor) : crear(valor)
@@ -767,15 +781,20 @@ export default function CategoriaFormView() {
           type="text"
           value={nombre}
           onChange={(e) => setNombre(e.target.value)}
-          onBlur={() => setTocado(true)}
+          onBlur={() => setTocado((t) => ({ ...t, nombre: true }))}
         />
       </label>
       {mensajeNombre && <p className="error">{mensajeNombre}</p>}
 
       <label>
         Descripción
-        <textarea value={descripcion} onChange={(e) => setDescripcion(e.target.value)} />
+        <textarea
+          value={descripcion}
+          onChange={(e) => setDescripcion(e.target.value)}
+          onBlur={() => setTocado((t) => ({ ...t, descripcion: true }))}
+        />
       </label>
+      {mensajeDescripcion && <p className="error">{mensajeDescripcion}</p>}
 
       {error && <p className="error">{error}</p>}
 
@@ -787,6 +806,10 @@ export default function CategoriaFormView() {
 ```
 
 React no tiene un equivalente a Reactive Forms de Angular ni a los `ref`/`v-model` de Vue: un formulario **controlado** en React declara cada campo como un par `useState` + `onChange` — el valor del input siempre viene de `nombre` (el estado), y cada tecla dispara `setNombre(e.target.value)`, que actualiza el estado y vuelve a renderizar el input con ese nuevo valor. Es de dos vías, como `formControlName`/`v-model`, pero explícito en cada campo: React no oculta ese mecanismo detrás de una directiva.
+
+`mensajeValidacion(campo, valor, tocado)` es la misma función genérica que ya viste en la guía de Vue (3.14) y en `CategoriaForm` de Angular (S07, 3.13) — una sola definición de las reglas por campo (`LIMITES`/`REQUERIDO`), reutilizada para `nombre` y `descripcion`. `tocado` pasa de un solo `useState(false)` a un objeto `{ nombre, descripcion }`: cada campo lleva su propio estado de "tocado", igual que cada `FormControl` de Angular trae el suyo — con un solo booleano para todo el formulario, tocar **nombre** habría mostrado también el mensaje de **descripción** antes de tiempo.
+
+`useMemo` envuelve `mensajeNombre`/`mensajeDescripcion` para no recalcular la validación en *cada* render del componente, solo cuando su propio valor o su propio `tocado` cambian — sin `useMemo`, una función común (`const mensajeNombre = mensajeValidacion(...)`, sin envoltorio) se ejecutaría de nuevo en cada render, así el render lo haya disparado otra parte del componente que no tiene nada que ver con este campo. Para una validación tan liviana como esta, la diferencia de rendimiento es insignificante, pero es el mismo mecanismo de fondo que un `computed()` de Vue trae gratis (Vue solo recalcula cuando sus dependencias reactivas cambian) y que Angular resuelve distinto: `mensajeValidacion(campo)` en Angular no está memoizado, pero se ejecuta desde la plantilla, no en cada render de JavaScript.
 
 `useParams()` es el equivalente de `inject(ActivatedRoute)` en Angular y `useRoute()` en Vue; `useNavigate()` el de `inject(Router)`/`useRouter()`. `evento.preventDefault()` dentro de `guardar` cumple el rol de `@submit.prevent` en Vue (Angular no lo necesita: `(ngSubmit)` ya evita el comportamiento por defecto del navegador).
 
