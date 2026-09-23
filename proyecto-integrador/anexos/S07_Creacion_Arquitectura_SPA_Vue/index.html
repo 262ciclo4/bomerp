@@ -4375,23 +4375,54 @@ npm<span class="w"> </span>--version
 <p><strong>Producto del paso:</strong> <code>lp2/bomerp-frontend-vue</code> creado y ejecutándose por primera vez, con su versión de Vite confirmada.</p>
 <p>Desde la raíz del repositorio, dentro de <code>lp2/</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>lp2
-npm<span class="w"> </span>create<span class="w"> </span>vue@latest
+npm<span class="w"> </span>create<span class="w"> </span>vue@3.24.0
 </code></pre></div>
-<p>La primera vez que corres este comando en tu máquina, npm todavía no tiene descargado el paquete real detrás de <code>npm create vue</code> (<code>create-vue</code>) — te va a pedir confirmación antes de bajarlo, algo como:</p>
+<p><code>@3.24.0</code> fija la versión de <code>create-vue</code>, con el mismo criterio que Angular fija <code>@angular/cli@22</code> (S07, 3.2): dos versiones mayores distintas de un generador pueden producir proyectos con preguntas y opciones distintas — fijar la versión evita que cada estudiante del curso termine con un punto de partida distinto según cuándo corrió el comando. Como alternativa, si prefieres siempre la versión más nueva (y estás dispuesto a que la guía se desactualice con el tiempo, S07 3.2), reemplaza <code>@3.24.0</code> por <code>@latest</code>.</p>
+<p>La primera vez que corres este comando en tu máquina, npm todavía no tiene descargado el paquete real detrás de <code>npm create vue</code> (<code>create-vue</code>) — te va a pedir confirmación antes de bajarlo:</p>
 <div class="highlight"><pre><span></span><code>Need to install the following packages:
-create-vue@X.Y.Z
+create-vue@3.24.0
 Ok to proceed? (y)
 </code></pre></div>
 <p>Escribe <code>y</code> (o solo Enter, <code>(y)</code> ya es la opción por defecto). Es la prueba en vivo de que nada de esto queda instalado de forma global (3.2) — cada vez que lo corras en una máquina nueva, vas a ver este mismo prompt una sola vez.</p>
-<p><code>@latest</code> (en vez de una versión fija) es la diferencia real frente a <code>@angular/cli@22</code>: Angular fija la versión mayor de la CLI a propósito (S07, 3.2), porque dos versiones mayores distintas pueden generar proyectos con estructuras distintas. El generador de Vue no tiene ese mismo riesgo —la plantilla cambia poco entre versiones—, pero si tu equipo necesita reproducir exactamente la misma versión en todas las máquinas, reemplaza <code>@latest</code> por una versión fija (por ejemplo, <code>npm create vue@5</code>).</p>
-<p>El generador hace preguntas interactivas:</p>
+<p>El generador hace preguntas interactivas — primero dos preguntas de sí/no, y después una sola pantalla con casillas (a diferencia de Angular, que las pregunta una por una):</p>
+<div class="highlight"><pre><span></span><code>◇  Project name (target directory):
+│  bomerp-frontend-vue
+│
+◇  Use TypeScript?
+│  Yes
+│
+◆  Select features to include in your project:
+│  ◻ JSX Support
+│  ◻ Router (SPA development)
+│  ◻ Pinia (state management)
+│  ◻ Vitest (unit testing)
+│  ◻ End-to-End Testing
+│  ◻ Linter (error prevention)
+│  ◻ Prettier (code formatting)
+</code></pre></div>
 <ul>
 <li><strong>Project name:</strong> <code>bomerp-frontend-vue</code>.</li>
-<li><strong>TypeScript:</strong> Sí — mismo criterio que Angular (2.6): los modelos de datos necesitan tipos reales.</li>
-<li><strong>Vue Router:</strong> Sí — sin esto no hay navegación por rutas (2.5).</li>
-<li><strong>Pinia</strong> (manejo de estado global): No — el CRUD de esta guía no necesita estado compartido entre componentes que no tengan relación padre-hijo; agregar Pinia ahora sería infraestructura que la sesión no necesita (mismo criterio que evitó paquetes "por si acaso" en Angular, S07 2.2).</li>
-<li><strong>Vitest / ESLint / Playwright:</strong> No — no son tema de esta guía.</li>
+<li><strong>Use TypeScript?</strong> Sí — mismo criterio que Angular (2.6): los modelos de datos necesitan tipos reales.</li>
+<li><strong>Select features:</strong> en esta pantalla, marca <strong>solo</strong> <code>Router (SPA development)</code> con la barra espaciadora, deja el resto sin marcar, y presiona Enter para confirmar:<ul>
+<li><strong>Router</strong>, marcado — sin esto no hay navegación por rutas (2.5).</li>
+<li><strong>JSX Support</strong>, sin marcar — esta guía usa <code>&lt;template&gt;</code>, el marcado propio de Vue (2.2), no JSX.</li>
+<li><strong>Pinia</strong> (manejo de estado global), sin marcar — el CRUD de esta guía no necesita estado compartido entre componentes que no tengan relación padre-hijo; agregarlo ahora sería infraestructura que la sesión no necesita (mismo criterio que evitó paquetes "por si acaso" en Angular, S07 2.2).</li>
+<li><strong>Vitest / End-to-End Testing / Linter / Prettier</strong>, sin marcar — no son tema de esta guía.</li>
 </ul>
+</li>
+</ul>
+<p>Puede seguir todavía una pantalla más, de características experimentales:</p>
+<div class="highlight"><pre><span></span><code>◆  Select experimental features to include in your project:
+│  ◻ Replace Prettier with Oxfmt
+│  ◻ Vue 3.6 (Release Candidate)
+│  ◻ Replace TypeScript with typescript-native-bridge (tsgo)
+</code></pre></div>
+<p>Deja las tres <strong>sin marcar</strong> y presiona Enter. Ninguna aplica: no elegiste Prettier arriba, esta guía se queda con la versión estable de Vue (no una <em>release candidate</em>) por el mismo motivo que fijaste <code>create-vue@3.24.0</code> en vez de <code>@latest</code>, y usa el compilador estándar de TypeScript, no una alternativa experimental.</p>
+<p>Una última pregunta:</p>
+<div class="highlight"><pre><span></span><code>◆  Skip all example code and start with a blank Vue project?
+│  ○ Yes / ● No
+</code></pre></div>
+<p>Deja <strong>No</strong> (ya viene marcada por defecto) y presiona Enter. "No" es la opción que sí conserva el código de ejemplo que trae el generador (la página de bienvenida con el logo de Vue y el componente <code>HelloWorld</code>) — exactamente lo que 3.4 recorre y 3.5 reemplaza, el mismo patrón que la página de bienvenida por defecto de Angular (S07, 3.3-3.4).</p>
 <p>Instala dependencias y levanta el servidor de desarrollo:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>bomerp-frontend-vue
 npm<span class="w"> </span>install
@@ -4403,7 +4434,7 @@ npm<span class="w"> </span>run<span class="w"> </span>dev
 <p>Esto cumple el mismo rol que <code>ng version</code> en Angular (3.2): confirmar la herramienta real que vas a usar antes de seguir. La diferencia es el momento — en Angular se verifica <em>antes</em> de crear el proyecto (la CLI es global, existe independiente de cualquier proyecto); en Vue/Vite se verifica <em>después</em> (Vite queda registrado en <code>package.json</code>, dentro de <code>devDependencies</code>, propio de este proyecto y de ningún otro).</p>
 <p>Abre la URL que muestra la terminal (por defecto <code>http://localhost:5173</code>). Debe mostrarse la página de bienvenida por defecto de Vue.</p>
 <h3 id="34-recorrer-la-estructura-generada">3.4 Recorrer la estructura generada<a class="headerlink" href="#34-recorrer-la-estructura-generada" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> entender qué generó <code>npm create vue@latest</code>, en el mismo orden de prioridad que la sesión de Angular (S07, 3.4).</p>
+<p><strong>Producto del paso:</strong> entender qué generó <code>npm create vue@3.24.0</code>, en el mismo orden de prioridad que la sesión de Angular (S07, 3.4).</p>
 <div class="highlight"><pre><span></span><code>bomerp-frontend-vue/
 ├── src/
 │   ├── App.vue              # componente raíz
@@ -4418,8 +4449,23 @@ npm<span class="w"> </span>run<span class="w"> </span>dev
 <ol>
 <li><strong><code>package.json</code>.</strong> El manifiesto del proyecto: dependencias (<code>vue</code>, <code>vue-router</code>), versión, y los <em>scripts</em> que <code>npm run</code> termina ejecutando (<code>dev</code>, <code>build</code>). No lo tocas hoy.</li>
 <li><strong><code>vite.config.ts</code>.</strong> La configuración de build de Vite: plugins (<code>@vitejs/plugin-vue</code>), alias de rutas (<code>@</code> apunta a <code>src/</code>). El generador ya lo dejó listo — tampoco lo tocas hoy.</li>
-<li><strong><code>index.html</code> y <code>main.ts</code>.</strong> El arranque real. <code>index.html</code> es el único HTML que el navegador carga de verdad: trae un <code>&lt;div id="app"&gt;&lt;/div&gt;</code> vacío. <code>main.ts</code> es el primer código que corre: <code>createApp(App).use(router).mount('#app')</code> monta el componente raíz <code>App</code> dentro de ese <code>div</code>, con el router ya registrado.</li>
-<li><strong><code>App.vue</code> y <code>router/index.ts</code>.</strong> La raíz de la aplicación. <code>App.vue</code> recién generado trae contenido de bienvenida propio — igual que Angular, esa página nunca es parte de BomERP. <code>router/index.ts</code> empieza con una ruta de ejemplo (<code>HomeView</code>) — se reemplaza en 3.6.</li>
+<li><strong><code>index.html</code> y <code>main.ts</code>.</strong> El arranque real. <code>index.html</code> es el único HTML que el navegador carga de verdad: trae un <code>&lt;div id="app"&gt;&lt;/div&gt;</code> vacío. <code>main.ts</code> es el primer código que corre — exactamente esto, sin tocar nada todavía:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="s1">'./assets/main.css'</span>
+
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">createApp</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'vue'</span>
+<span class="k">import</span><span class="w"> </span><span class="nx">App</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'./App.vue'</span>
+<span class="k">import</span><span class="w"> </span><span class="nx">router</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'./router'</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">createApp</span><span class="p">(</span><span class="nx">App</span><span class="p">)</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">router</span><span class="p">)</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">mount</span><span class="p">(</span><span class="s1">'#app'</span><span class="p">)</span>
+</code></pre></div>
+<p><code>createApp(App)</code> monta el componente raíz <code>App</code> dentro de ese <code>div</code>; <code>app.use(router)</code> <strong>ya registra el router</strong>, sin que tengas que tocar este archivo — a diferencia de React (2.2 del anexo de React), donde había que agregar <code>&lt;BrowserRouter&gt;</code> a mano. Es la ventaja directa de haber marcado la casilla <strong>Router</strong> al crear el proyecto (3.3): el generador de Vue no solo instala <code>vue-router</code>, también deja el cableado hecho. <code>import router from './router'</code> es una importación <strong>por defecto</strong> — de ahí que <code>router/index.ts</code> (abajo) tenga que exportar <code>export default router</code>, no <code>export const router</code>.</p>
+<ol>
+<li><strong><code>App.vue</code> y <code>router/index.ts</code>.</strong> La raíz de la aplicación. <code>App.vue</code> recién generado trae contenido de bienvenida propio — igual que Angular, esa página nunca es parte de BomERP. <code>router/index.ts</code> ya existe también, con rutas de ejemplo (porque marcaste <strong>Router</strong> en 3.3) — las vas a reemplazar en 3.5, con <code>export default router</code> de todos modos (es lo que hace que <code>import router from './router'</code>, en <code>main.ts</code>, funcione).</li>
 </ol>
 <p>Reemplaza <code>App.vue</code> para que quede vacío de layout propio:</p>
 <p><strong><code>src/App.vue</code></strong></p>
@@ -4431,7 +4477,6 @@ npm<span class="w"> </span>run<span class="w"> </span>dev
   <span class="p">&lt;</span><span class="nt">RouterView</span> <span class="p">/&gt;</span>
 <span class="p">&lt;/</span><span class="nt">template</span><span class="p">&gt;</span>
 </code></pre></div>
-<p>Guarda y mira la página: queda en blanco, porque <code>router/index.ts</code> todavía no tiene ninguna ruta real que resolver a <code>''</code>. Es lo esperado — se completa en 3.5.</p>
 <h3 id="35-crear-el-layout-encabezado-sidebar-y-menu">3.5 Crear el layout: encabezado, sidebar y menú<a class="headerlink" href="#35-crear-el-layout-encabezado-sidebar-y-menu" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> <code>AppLayout</code>, el componente que va a envolver el resto de pantallas.</p>
 <p>A diferencia de Angular, Vue no trae un generador de componentes por defecto (no existe un <code>vue generate component</code> equivalente a <code>ng generate component</code>) — los archivos <code>.vue</code> se crean a mano. Crea <code>src/core/AppLayout.vue</code>:</p>
@@ -4489,21 +4534,21 @@ npm<span class="w"> </span>run<span class="w"> </span>dev
 </code></pre></div>
 <p><code>RouterLink</code> y <code>RouterView</code> se importan arriba, en <code>&lt;script setup&gt;</code> — igual que Angular necesita declarar <code>imports: [RouterLink, RouterOutlet]</code> en su <code>@Component</code> (S07, 3.5), pero sin un arreglo aparte: en Vue, lo que importas en <code>&lt;script setup&gt;</code> queda disponible en la plantilla automáticamente. No hay un <code>imports: []</code> que se te pueda olvidar completar — la única forma de que <code>&lt;RouterLink&gt;</code> no funcione es no haberlo importado del todo, y ahí el error es directo: "<code>RouterLink</code> is not defined".</p>
 <p><code>active-class="active"</code> es el equivalente de <code>routerLinkActive="active"</code> en Angular: resalta el enlace de la pantalla activa. <code>&lt;style scoped&gt;</code> es propio de Vue — el atributo <code>scoped</code> hace que esas reglas de CSS solo apliquen dentro de este componente, sin que se filtren a otros (Vue, 2026d) — el mismo problema que Angular resuelve con <code>styleUrl</code> por componente, pero declarado directamente en el mismo archivo <code>.vue</code>.</p>
-<p>Conecta <code>AppLayout</code> al router:</p>
+<p>Reemplaza <code>router/index.ts</code> para conectar <code>AppLayout</code>:</p>
 <p><strong><code>src/router/index.ts</code></strong></p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">createRouter</span><span class="p">,</span><span class="w"> </span><span class="nx">createWebHistory</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'vue-router'</span>
 
-<span class="kd">const</span><span class="w"> </span><span class="nx">routes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-<span class="w">  </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'/'</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">component</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">import</span><span class="p">(</span><span class="s1">'../core/AppLayout.vue'</span><span class="p">),</span>
-<span class="w">  </span><span class="p">},</span>
-<span class="p">]</span>
-
-<span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">router</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">createRouter</span><span class="p">({</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">router</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">createRouter</span><span class="p">({</span>
 <span class="w">  </span><span class="nx">history</span><span class="o">:</span><span class="w"> </span><span class="kt">createWebHistory</span><span class="p">(),</span>
-<span class="w">  </span><span class="nx">routes</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">routes</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'/'</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">component</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">import</span><span class="p">(</span><span class="s1">'../core/AppLayout.vue'</span><span class="p">),</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">  </span><span class="p">],</span>
 <span class="p">})</span>
+
+<span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="nx">router</span>
 </code></pre></div>
 <p>Guarda y mira la página: ahora se ve el encabezado ("BomERP") y el sidebar con el enlace <strong>Categorías</strong>, aunque el área de contenido quede vacía — <code>/</code> todavía no tiene ninguna ruta hija que cargar ahí (recién en 3.6).</p>
 <h3 id="36-crear-la-vista-de-inicio">3.6 Crear la vista de inicio<a class="headerlink" href="#36-crear-la-vista-de-inicio" title="Permanent link">&para;</a></h3>
@@ -4520,23 +4565,23 @@ npm<span class="w"> </span>run<span class="w"> </span>dev
 <p><strong><code>src/router/index.ts</code></strong></p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">createRouter</span><span class="p">,</span><span class="w"> </span><span class="nx">createWebHistory</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'vue-router'</span>
 
-<span class="kd">const</span><span class="w"> </span><span class="nx">routes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-<span class="w">  </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'/'</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">component</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">import</span><span class="p">(</span><span class="s1">'../core/AppLayout.vue'</span><span class="p">),</span>
-<span class="w">    </span><span class="nx">children</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">      </span><span class="p">{</span>
-<span class="w">        </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">''</span><span class="p">,</span>
-<span class="w">        </span><span class="nx">component</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">import</span><span class="p">(</span><span class="s1">'../core/InicioView.vue'</span><span class="p">),</span>
-<span class="w">      </span><span class="p">},</span>
-<span class="w">    </span><span class="p">],</span>
-<span class="w">  </span><span class="p">},</span>
-<span class="p">]</span>
-
-<span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">router</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">createRouter</span><span class="p">({</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">router</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">createRouter</span><span class="p">({</span>
 <span class="w">  </span><span class="nx">history</span><span class="o">:</span><span class="w"> </span><span class="kt">createWebHistory</span><span class="p">(),</span>
-<span class="w">  </span><span class="nx">routes</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">routes</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'/'</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">component</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">import</span><span class="p">(</span><span class="s1">'../core/AppLayout.vue'</span><span class="p">),</span>
+<span class="w">      </span><span class="nx">children</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">          </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">''</span><span class="p">,</span>
+<span class="w">          </span><span class="nx">component</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">import</span><span class="p">(</span><span class="s1">'../core/InicioView.vue'</span><span class="p">),</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">  </span><span class="p">],</span>
 <span class="p">})</span>
+
+<span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="nx">router</span>
 </code></pre></div>
 <p>La ruta de <code>Categoria</code> todavía no aparece aquí: se agrega recién en el siguiente paso (3.7), primero vacía — cada ruta se agrega en el mismo paso en que su componente empieza a existir, nunca antes.</p>
 <p><strong>Error frecuente</strong>: escribir la ruta de una pantalla nueva como hermana de <code>AppLayout</code> en el mismo arreglo, en vez de como <code>children</code>. El resultado visual es idéntico al de Angular (S07, 3.6): esa pantalla reemplaza <em>todo</em> el documento, sin encabezado ni sidebar, en vez de aparecer dentro del <code>&lt;RouterView&gt;</code> de <code>AppLayout</code> — la estructura del arreglo de rutas es la que decide si una pantalla hereda el layout o no.</p>
