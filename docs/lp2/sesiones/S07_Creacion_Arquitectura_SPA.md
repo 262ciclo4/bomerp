@@ -37,7 +37,7 @@ Proyecto Angular 22 (`lp2/bomerp-frontend`), con navegación principal (encabeza
 | Actividades a Realizar en el Periodo | Orientaciones generales (Orientaciones Metodológicas) | Material de estudio recomendado |
 |---|---|---|
 | Revisión previa individual | Confirmar que `lp2/bomerp-backend` sigue respondiendo en `http://localhost:8080` con CORS habilitado para `http://localhost:4200` (S5). Instalar Node.js LTS si aún no está instalado. Trabajo individual, antes de clase. | S5 (3.7-3.8), documentación de Node.js. |
-| Clase presencial | Construcción guiada del proyecto Angular, el layout con navegación, la estructura de carpetas por funcionalidad, el servicio HTTP y el CRUD completo de `Categoria`. Trabajo individual en la propia laptop, siguiendo al docente paso a paso. | Backend ejecutable (S1-S5), Pasos 3.1 a 3.15 de esta guía. |
+| Clase presencial | Construcción guiada del proyecto Angular, el layout con navegación, la estructura de carpetas por funcionalidad, el servicio HTTP y el CRUD completo de `Categoria`. Trabajo individual en la propia laptop, siguiendo al docente paso a paso. | Backend ejecutable (S1-S5), Pasos 3.1 a 3.16 de esta guía. |
 | Evaluación formativa | Verificación en clase de la navegación entre pantallas y del CRUD de `Categoria` reflejado en tiempo real contra el backend. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4. | Indicaciones de entrega (4.3), rúbrica de evaluación (4.6). |
 
 ### 1.6 Motivación de la sesión
@@ -115,7 +115,7 @@ Lectura del diagrama: el usuario nunca navega recargando la página — el Layou
 
 Un proyecto frontend de tipo SPA (*Single Page Application*) es una aplicación que corre completa en el navegador: una sola carga inicial de HTML/JS/CSS, y toda navegación posterior ocurre sin recargar la página — el propio JavaScript decide qué mostrar según la ruta, no el servidor pidiendo una página nueva cada vez. Un generador de proyecto (CLI) arma la estructura base — compilación, enrutamiento, inyección de dependencias — para no construir eso a mano en cada proyecto nuevo.
 
-El generador de Angular crea, por defecto, componentes **standalone** (sin `NgModule`) y una aplicación **zoneless**, sin que haga falta declarar ningún provider para eso — desde Angular 21, zoneless es el comportamiento por defecto del framework (Angular, 2026a): la detección de cambios ya no depende de parchear las APIs asíncronas del navegador (temporizadores, promesas, eventos) como hacía Zone.js — reacciona a los `signal()` que un componente declara explícitamente. Esto no cambia cómo se estructura un CRUD (3.7-3.13), pero sí explica por qué esta guía nunca importa `NgModule` en ningún archivo.
+El generador de Angular crea, por defecto, componentes **standalone** (sin `NgModule`) y una aplicación **zoneless**, sin que haga falta declarar ningún provider para eso — desde Angular 21, zoneless es el comportamiento por defecto del framework (Angular, 2026a): la detección de cambios ya no depende de parchear las APIs asíncronas del navegador (temporizadores, promesas, eventos) como hacía Zone.js — reacciona a los `signal()` que un componente declara explícitamente. Esto no cambia cómo se estructura un CRUD (3.8-3.14), pero sí explica por qué esta guía nunca importa `NgModule` en ningún archivo.
 
 ### 2.3 Ciclo de vida de un componente
 
@@ -149,7 +149,7 @@ flowchart LR
 |---|---|---|---|
 | Creación | `constructor` | Antes que cualquier hook de Angular, al instanciar la clase. No es un hook de Angular: es JavaScript puro. | Solo inyección de dependencias (`inject()`, S6-S7). Ningún dato de entrada (`@Input()`) está disponible todavía. |
 | Entradas | `ngOnChanges` | Antes de `ngOnInit`, y de nuevo cada vez que cambia un `@Input()` del componente. No se ejecuta si el componente no declara ningún `@Input()`. | Reaccionar a un valor que el componente padre le pasa desde afuera. |
-| Inicialización | `ngOnInit` | Una sola vez, ya con los `@Input()` (si existen) asignados. | El lugar donde va la lógica de arranque de un componente: la primera carga de datos (`CategoriaList`, 3.10). |
+| Inicialización | `ngOnInit` | Una sola vez, ya con los `@Input()` (si existen) asignados. | El lugar donde va la lógica de arranque de un componente: la primera carga de datos (`CategoriaList`, 3.11). |
 | Cada ciclo | `ngDoCheck` | En cada pasada de detección de cambios, además de `ngOnChanges`. | Comprobación manual de algo que Angular no detecta por sí solo. Poco común: se usa recién cuando `ngOnChanges` no alcanza. |
 | Contenido proyectado | `ngAfterContentInit` / `ngAfterContentChecked` | Después de inicializar (una vez) y de revisar (en cada ciclo) el contenido que otro componente proyecta dentro de este vía `<ng-content>`. | Solo aplica a un componente que recibe contenido proyectado — ninguno de esta sesión lo usa. |
 | Vista propia | `ngAfterViewInit` / `ngAfterViewChecked` | Después de inicializar (una vez) y de revisar (en cada ciclo) la propia plantilla del componente y las de sus hijos. | Leer o medir algo del DOM ya renderizado (por ejemplo, con `@ViewChild`). |
@@ -157,7 +157,7 @@ flowchart LR
 
 Los hooks marcados en azul en la Figura 3 ocurren **una vez**; los marcados en naranja se repiten **en cada pasada** de detección de cambios mientras el componente sigue vivo — que en una aplicación zoneless (2.2) ocurre cuando cambia un `signal()` que la plantilla lee, no en cualquier evento asíncrono del navegador.
 
-**Ejemplo: los nueve momentos de la Figura 3, sobre el mismo `CategoriaCard`.** Va en un componente aparte y autónomo —no forma parte de los pasos de 3.1-3.13, no tiene ruta ni se usa desde ningún otro componente— para no mezclarlo con `CategoriaForm` real (3.13). Con un HTML corto, va con `template` inline en vez de `templateUrl`. Y, a diferencia de un intento con `[value]`, `formControlName` sí funciona porque el `<input>` está dentro de un `<form [formGroup]="form">` real, con su propio `FormGroup` declarado en la clase — no un objeto suelto:
+**Ejemplo: los nueve momentos de la Figura 3, sobre el mismo `CategoriaCard`.** Va en un componente aparte y autónomo —no forma parte de los pasos de 3.1-3.14, no tiene ruta ni se usa desde ningún otro componente— para no mezclarlo con `CategoriaForm` real (3.14). Con un HTML corto, va con `template` inline en vez de `templateUrl`. Y, a diferencia de un intento con `[value]`, `formControlName` sí funciona porque el `<input>` está dentro de un `<form [formGroup]="form">` real, con su propio `FormGroup` declarado en la clase — no un objeto suelto:
 
 ```ts
 import {
@@ -269,7 +269,7 @@ Para probarlo, agrégalo a cualquier plantilla ya visible — por ejemplo, en `i
 
 Abre `http://localhost:4200/` y mira la consola del navegador: primero `constructor`, luego `ngOnChanges` (valor anterior `undefined`, valor cambiado `"Bebidas"`), luego `ngOnInit`, `ngAfterContentInit` (con "Destacada"), `ngAfterViewInit` con el campo ya enfocado, y desde ahí un `console.log` nuevo por cada letra que escribas en **Nombre**. Ese orden es la Figura 3 en vivo, línea por línea — nada que adivinar, todo lo que corre deja su propio rastro en la consola.
 
-**Opcional: probarlo con su propia URL.** En vez de pegarlo dentro de `inicio.html`, puedes darle una ruta propia — como `children` de `Layout`, mismo patrón que 3.10 — y abrir `http://localhost:4200/card` directo:
+**Opcional: probarlo con su propia URL.** En vez de pegarlo dentro de `inicio.html`, puedes darle una ruta propia — como `children` de `Layout`, mismo patrón que 3.7 — y abrir `http://localhost:4200/card` directo:
 
 ```ts
 {
@@ -279,7 +279,7 @@ Abre `http://localhost:4200/` y mira la consola del navegador: primero `construc
 },
 ```
 
-No forma parte de los pasos de 3.1-3.13 ni de las rutas que arma esa sección (3.6, 3.10, 3.13) — es solo para experimentar con este ejemplo aislado, sin el resto de `Inicio` alrededor. Quítala cuando termines de probar, para no dejar una ruta de prueba mezclada con las rutas reales del CRUD.
+No forma parte de los pasos de 3.1-3.14 ni de las rutas que arma esa sección (3.6, 3.7, 3.14) — es solo para experimentar con este ejemplo aislado, sin el resto de `Inicio` alrededor. Quítala cuando termines de probar, para no dejar una ruta de prueba mezclada con las rutas reales del CRUD.
 
 ### 2.4 Layout y navegación: menú, sidebar y encabezado
 
@@ -299,15 +299,15 @@ Un **modelo de datos** en el frontend describe la forma de lo que viaja por HTTP
 
 Esa diferencia no es cosmética para un modelo de datos: `HttpClient` arma la respuesta de un endpoint con `JSON.parse()`, que siempre produce un objeto plano — nunca una instancia real de ninguna clase, sin importar con qué tipo se anote la respuesta. Tipar un modelo como `class` sugeriría, falsamente, que el objeto recibido tiene los métodos de esa clase disponibles; en la práctica, `instanceof` sobre ese objeto daría `false`, y cualquier método que la clase declarara simplemente no existiría en tiempo de ejecución. `interface` no tiene ese riesgo, porque nunca promete comportamiento: solo describe forma, que es exactamente lo único que un dato que cruza la red puede garantizar.
 
-La regla general: `interface` (o `type`) para cualquier dato que cruce una frontera de red (un DTO); `class` solo para objetos que sí necesitan comportamiento real construido en el navegador (por ejemplo, un `FormGroup` o un servicio inyectable, 2.7). El modelo `Categoria` de esta sesión (3.7) aplica el primer caso.
+La regla general: `interface` (o `type`) para cualquier dato que cruce una frontera de red (un DTO); `class` solo para objetos que sí necesitan comportamiento real construido en el navegador (por ejemplo, un `FormGroup` o un servicio inyectable, 2.7). El modelo `Categoria` de esta sesión (3.8) aplica el primer caso.
 
 ### 2.7 Servicios HTTP hacia el backend
 
 Un servicio HTTP es una clase inyectable dedicada exclusivamente a hablar con el backend — arma la URL, hace la petición y devuelve el resultado — para que ningún componente necesite saber cómo se llama un endpoint ni qué verbo HTTP usa (Angular, 2026d). Separar esa responsabilidad del componente tiene una razón concreta: si la URL del backend cambia, o si el endpoint se reorganiza, se corrige en un solo archivo, no en cada componente que lo consume.
 
-Esa misma idea se aplica dos veces, en dos capas distintas: un servicio de infraestructura (`ApiService`, 3.8) sabe *dónde* está el backend (host, puerto, ambiente), sin saber nada de negocio; un servicio de funcionalidad (`CategoriaService`, 3.9) sabe *qué* endpoints existen para su propio recurso, sin saber dónde vive el backend. Ningún servicio de funcionalidad futuro (`ProductoService`, `VentaService`, S8-S9) repite la URL base — todos reutilizan el mismo `ApiService`.
+Esa misma idea se aplica dos veces, en dos capas distintas: un servicio de infraestructura (`ApiService`, 3.9) sabe *dónde* está el backend (host, puerto, ambiente), sin saber nada de negocio; un servicio de funcionalidad (`CategoriaService`, 3.10) sabe *qué* endpoints existen para su propio recurso, sin saber dónde vive el backend. Ningún servicio de funcionalidad futuro (`ProductoService`, `VentaService`, S8-S9) repite la URL base — todos reutilizan el mismo `ApiService`.
 
-`CategoriaService` (3.9, 3.11) es esa segunda pieza para esta sesión: los componentes `CategoriaList` y `CategoriaForm` (3.10, 3.12-3.13) nunca importan `HttpClient` — solo conocen los métodos que `CategoriaService` expone (`listar()`, `crear()`, `actualizar()`, `eliminar()`).
+`CategoriaService` (3.10, 3.12) es esa segunda pieza para esta sesión: los componentes `CategoriaList` y `CategoriaForm` (3.11, 3.13-3.14) nunca importan `HttpClient` — solo conocen los métodos que `CategoriaService` expone (`listar()`, `crear()`, `actualizar()`, `eliminar()`).
 
 **Nota sobre `httpResource()`, para no confundirte si lo ves en otro lado.** Angular 22 también estabiliza `httpResource()` (`@angular/common/http`, Angular 2026f), una forma más nueva de leer datos que integra la petición directamente con signals — sin `subscribe()` manual:
 
@@ -315,7 +315,7 @@ Esa misma idea se aplica dos veces, en dos capas distintas: un servicio de infra
 protected readonly categorias = httpResource<Categoria[]>(() => this.api.buildUrl('/api/v1/categorias'));
 ```
 
-En la plantilla, `categorias.value()`, `categorias.isLoading()` y `categorias.error()` reemplazarían al `signal()` y al `error` que `CategoriaList` construye a mano (3.10). `httpResource()` existe desde antes (Angular 19.2), pero marcado como experimental; recién en Angular 22 —la versión de esta guía— pasó a ser una API estable, lista para código nuevo. Por eso, si le pides ayuda a una IA para un CRUD en Angular 22, es probable que te proponga esto para el caso de solo lectura (`listar()`): ya no es una apuesta arriesgada, es una recomendación válida del propio equipo de Angular. Esta guía sigue enseñando `HttpClient` + `subscribe()` (3.9-3.10) a propósito, no por desactualizada: es la forma con más años de documentación y respuestas de la comunidad para cuando algo falla, y esta es tu primera sesión de Angular — además, `httpResource()` es solo para lectura: la propia documentación de Angular advierte explícitamente "avoid using httpResource for mutations like POST or PUT — instead, prefer directly using the underlying HttpClient APIs" (Angular, 2026e) — `crear()`, `actualizar()` y `eliminar()` siguen siendo `HttpClient` normal pase lo que pase, así que `httpResource()` tampoco resuelve todo el CRUD por sí solo.
+En la plantilla, `categorias.value()`, `categorias.isLoading()` y `categorias.error()` reemplazarían al `signal()` y al `error` que `CategoriaList` construye a mano (3.11). `httpResource()` existe desde antes (Angular 19.2), pero marcado como experimental; recién en Angular 22 —la versión de esta guía— pasó a ser una API estable, lista para código nuevo. Por eso, si le pides ayuda a una IA para un CRUD en Angular 22, es probable que te proponga esto para el caso de solo lectura (`listar()`): ya no es una apuesta arriesgada, es una recomendación válida del propio equipo de Angular. Esta guía sigue enseñando `HttpClient` + `subscribe()` (3.10-3.11) a propósito, no por desactualizada: es la forma con más años de documentación y respuestas de la comunidad para cuando algo falla, y esta es tu primera sesión de Angular — además, `httpResource()` es solo para lectura: la propia documentación de Angular advierte explícitamente "avoid using httpResource for mutations like POST or PUT — instead, prefer directly using the underlying HttpClient APIs" (Angular, 2026e) — `crear()`, `actualizar()` y `eliminar()` siguen siendo `HttpClient` normal pase lo que pase, así que `httpResource()` tampoco resuelve todo el CRUD por sí solo.
 
 ### 2.8 CRUD de una tabla independiente
 
@@ -403,7 +403,7 @@ Abre `http://localhost:4200`. Debe mostrarse la página de bienvenida por defect
 
 ### 3.4 Recorrer la estructura generada
 
-**Producto del paso:** entender qué generó `ng new` antes de agregar nada propio.
+**Producto del paso:** entender qué generó `ng new`, en el orden en que cada pieza importa para lo que sigue — de lo más externo a lo más cercano a lo que vas a tocar hoy.
 
 ```text
 bomerp-frontend/
@@ -419,11 +419,24 @@ bomerp-frontend/
 └── package.json
 ```
 
-No hay ningún `NgModule` en todo el proyecto (2.2): `app.ts` es un componente standalone, y `app.config.ts` declara los `providers` que antes vivían en un `AppModule`. Lo que trae `app.config.ts` recién generado es `provideBrowserGlobalErrorListeners()` (reenvía errores no capturados del navegador al `ErrorHandler` de Angular) y `provideRouter(routes)` — **no** `provideZonelessChangeDetection()`: desde Angular 21, zoneless es el comportamiento por defecto del framework, sin necesidad de declararlo con ningún provider (Angular, 2026a). Esta guía sí lo agrega explícitamente en 3.8, no porque haga falta, sino para que quede visible en el código qué modo de detección de cambios está usando el proyecto.
+1. **`package.json`.** El manifiesto del proyecto: qué dependencias usa (`@angular/core`, `@angular/router`...), en qué versión, y los *scripts* que `ng` termina ejecutando por dentro (`ng serve`, `ng build`, `ng test`). No lo tocas hoy.
+2. **`angular.json`.** La configuración de build de la CLI: qué proyecto compila, con qué opciones, dónde queda el resultado. `ng new` (3.3) ya lo dejó listo — tampoco lo tocas hoy.
+3. **`main.ts` e `index.html`.** El arranque real. `index.html` es el único HTML que el navegador carga de verdad: trae un solo `<app-root></app-root>` vacío, y ninguna pantalla que actives después te devuelve un HTML distinto — el router (2.5) solo cambia qué hay *dentro* de `<app-root>`. `main.ts` es el primer código de Angular que corre: `bootstrapApplication(App, appConfig)` monta el componente raíz `App` dentro de ese `<app-root>`, con los `providers` que declare `app.config.ts`.
+4. **`app.ts`, `app.html`, `app.config.ts` y `app.routes.ts`.** La raíz de la aplicación. No hay ningún `NgModule` en todo el proyecto (2.2): `app.ts` es un componente standalone, y `app.config.ts` declara los `providers` que antes vivían en un `AppModule`. Lo que trae `app.config.ts` recién generado es `provideBrowserGlobalErrorListeners()` (reenvía errores no capturados del navegador al `ErrorHandler` de Angular) y `provideRouter(routes)` — **no** `provideZonelessChangeDetection()`: desde Angular 21, zoneless es el comportamiento por defecto del framework, sin necesidad de declararlo con ningún provider (Angular, 2026a). Esta guía sí lo agrega explícitamente en 3.9, no porque haga falta, sino para que quede visible en el código qué modo de detección de cambios está usando el proyecto. `app.routes.ts` empieza vacío (`routes: Routes = []`) — se completa recién en 3.5.
+
+`app.html`, en cambio, sí se toca ya: `ng new` lo llena con la página de bienvenida que viste en 3.3, pero esa página nunca es parte de BomERP — todo el contenido real de la aplicación va a vivir en el layout que se construye en 3.5. Reemplázalo ahora:
+
+**`app.html`**
+
+```html
+<router-outlet />
+```
+
+Guarda y mira `http://localhost:4200`: la página queda **en blanco**. Es lo esperado, no un error — `app.routes.ts` todavía no tiene ninguna ruta (`routes: Routes = []`), así que `<router-outlet />` no tiene nada que mostrar todavía. Recién en 3.5 empieza a llenarse.
 
 ### 3.5 Crear el layout: encabezado, sidebar y menú
 
-**Producto del paso:** `Layout`, el componente que va a envolver el resto de pantallas de la aplicación.
+**Producto del paso:** `Layout`, el componente que va a envolver el resto de pantallas de la aplicación, conectado al router desde el primer momento.
 
 Desde `bomerp-frontend/`, genera el componente con la CLI en vez de crear los archivos a mano:
 
@@ -431,7 +444,7 @@ Desde `bomerp-frontend/`, genera el componente con la CLI en vez de crear los ar
 ng generate component core/layout
 ```
 
-Esto crea `core/layout/layout.ts`, `layout.html`, `layout.css` y `layout.spec.ts`, ya registrados como standalone — sin `NgModule` que editar y sin el sufijo `Component` en el nombre de archivo ni en la clase (`Layout`, no `LayoutComponent`): desde Angular 20, la CLI ya no agrega ese sufijo por defecto (se retoma en 3.9, con `CategoriaService`). El `core/layout/layout.ts` que acaba de generar la CLI trae el `@Component` vacío de imports:
+Esto crea `core/layout/layout.ts`, `layout.html`, `layout.css` y `layout.spec.ts`, ya registrados como standalone — sin `NgModule` que editar y sin el sufijo `Component` en el nombre de archivo ni en la clase (`Layout`, no `LayoutComponent`): desde Angular 20, la CLI ya no agrega ese sufijo por defecto (se retoma en 3.10, con `CategoriaService`). El `core/layout/layout.ts` que acaba de generar la CLI trae el `@Component` vacío de imports, y `layout.html` trae un simple `<p>layout works!</p>`:
 
 ```ts
 import { Component } from '@angular/core';
@@ -445,29 +458,22 @@ import { Component } from '@angular/core';
 export class Layout {}
 ```
 
-Reemplaza el contenido de los tres archivos generados:
-
-**`core/layout/layout.ts`**
+**Conéctalo al router antes de tocarle nada más.** Reemplaza `app.routes.ts` (3.4) con esta única ruta:
 
 ```ts
-import { Component } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { Routes } from '@angular/router';
 
-@Component({
-  selector: 'app-layout',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
-  templateUrl: './layout.html',
-  styleUrl: './layout.css',
-})
-export class Layout {}
+export const routes: Routes = [
+  {
+    path: '',
+    loadComponent: () => import('./core/layout/layout').then((m) => m.Layout),
+  },
+];
 ```
 
-Dos cambios reales frente a lo que generó la CLI (arriba), ambos por la misma razón — el `layout.html` de abajo usa `routerLink`, `routerLinkActive` y `<router-outlet>`, y al ser un componente standalone nadie los importa por él:
+Guarda y abre `http://localhost:4200`: ya no está en blanco (3.4) — ahora muestra **"layout works!"**, el texto que la CLI generó por defecto. Eso es la concatenación completa, de punta a punta, antes de escribir una sola línea de HTML propia: `app.html` (`<router-outlet />`, 3.4) resuelve la ruta `''`, esa ruta carga `Layout`, y lo que sea que `Layout` tenga en su plantilla aparece ahí adentro.
 
-- **Se agrega la línea** `import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';` — sin ella, TypeScript no reconoce esos tres nombres.
-- **`imports: []` pasa a `imports: [RouterOutlet, RouterLink, RouterLinkActive]`** — un standalone component debe declarar en su propio `imports` cada directiva o componente que usa en su plantilla; a diferencia de un `NgModule` (2.2), aquí no hay un lugar central que los registre por todos.
-
-El orden de las propiedades dentro de `@Component({...})` (`selector`, `imports`, `templateUrl`, `styleUrl`) no importa — es un objeto de JavaScript, no una lista con secuencia obligatoria; que la CLI las genere en un orden y este documento las muestre en otro no es un error de ninguno de los dos lados.
+Ahora sí, reemplaza el contenido de `layout.html` y `layout.css` con el diseño real:
 
 **`core/layout/layout.html`**
 
@@ -521,25 +527,43 @@ El orden de las propiedades dentro de `@Component({...})` (`selector`, `imports`
 }
 ```
 
+Si corres `ng serve` justo ahora, la terminal (o la consola del navegador) muestra un error de compilación de plantilla, algo como `'router-outlet' is not a known element` o `Can't bind to 'routerLink'`. Es esperable, no un descuido: `layout.html` ya usa `<router-outlet>`, `routerLink` y `routerLinkActive`, pero `layout.ts` (arriba) todavía declara `imports: []`. Un standalone component solo reconoce en su plantilla lo que declara en su propio `imports` (2.2) — ni siquiera el componente padre que sí los conoce se los presta automáticamente.
+
+Corrígelo reemplazando `layout.ts`:
+
+**`core/layout/layout.ts`**
+
+```ts
+import { Component } from '@angular/core';
+import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+
+@Component({
+  selector: 'app-layout',
+  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  templateUrl: './layout.html',
+  styleUrl: './layout.css',
+})
+export class Layout {}
+```
+
+Dos cambios reales frente a lo que generó la CLI (arriba):
+
+- **Se agrega la línea** `import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';` — sin ella, TypeScript no reconoce esos tres nombres.
+- **`imports: []` pasa a `imports: [RouterOutlet, RouterLink, RouterLinkActive]`** — un standalone component debe declarar en su propio `imports` cada directiva o componente que usa en su plantilla; a diferencia de un `NgModule` (2.2), aquí no hay un lugar central que los registre por todos.
+
+El orden de las propiedades dentro de `@Component({...})` (`selector`, `imports`, `templateUrl`, `styleUrl`) no importa — es un objeto de JavaScript, no una lista con secuencia obligatoria; que la CLI las genere en un orden y este documento las muestre en otro no es un error de ninguno de los dos lados.
+
+Guarda y vuelve a `http://localhost:4200`: ahora sí se ve el encabezado ("BomERP") y el sidebar con el enlace **Categorías**, aunque el área de contenido debajo quede vacía — `/` todavía no tiene ninguna ruta hija que cargar ahí (recién en 3.6).
+
 `routerLinkActive="active"` resalta el enlace de la pantalla que está activa en ese momento — un detalle pequeño, pero es lo que le permite a quien usa la aplicación saber en qué sección está sin leer la URL. El ícono junto a "BomERP" ahora es un enlace a `/` — la convención habitual de cualquier aplicación web para volver al inicio desde cualquier pantalla, sin depender de un botón "Atrás" del navegador. Ese enlace no funciona todavía: `/` recién tiene una pantalla real (`Inicio`) en 3.6.
 
 **Por qué `favicon.ico` y no un ícono nuevo.** `ng new` (3.3) ya genera `public/favicon.ico` — la CLI copia todo lo que hay en `public/` a la raíz del sitio compilado, por eso `favicon.ico` (sin ninguna ruta delante) alcanza para encontrarlo. Reusar un archivo que el proyecto ya tiene evita agregar una dependencia nueva (Font Awesome, Material Icons) o escribir un ícono a mano — infraestructura de más para un solo ícono (mismo criterio de 2.4, sin paquetes "por si acaso").
 
-Reemplaza `app.html` (el componente raíz) para que quede vacío de layout propio:
+### 3.6 Crear la página de inicio
 
-**`app.html`**
+**Producto del paso:** `Layout` (3.5) pasa de tener una sola ruta a ser **ruta padre**, con una página de inicio real en `''` como su primera hija — el proyecto debe mostrarse completo en el navegador ya en este paso, no recién al final de 3.14.
 
-```html
-<router-outlet />
-```
-
-`App` (el componente raíz) deja de tener menú, encabezado o sidebar — esos ahora viven exclusivamente en `Layout` (2.4), como ruta padre (3.6).
-
-### 3.6 Configurar rutas y navegación principal
-
-**Producto del paso:** `Layout` como ruta padre, con una página de inicio real en `''` — el proyecto debe compilar y mostrarse en el navegador ya en este paso, no recién al final de 3.13.
-
-`''` necesita cargar algo desde ya: dejarlo vacío (`children: []`) mostraría el layout con el área de contenido en blanco, y un redirect hacia `catalogo/categorias` sería forzar al usuario a la única pantalla que existe hoy, en vez de dejarlo elegir desde el menú — el sidebar (3.5) ya tiene el enlace **Categorías** para eso. Genera una página de inicio mínima, sin lógica:
+`''` necesita cargar algo desde ya: dejarlo vacío (`children: []`) mostraría el layout con el área de contenido en blanco (justo como quedó al final de 3.5), y un redirect hacia `catalogo/categorias` sería forzar al usuario a la única pantalla que existe hoy, en vez de dejarlo elegir desde el menú — el sidebar (3.5) ya tiene el enlace **Categorías** para eso. Genera una página de inicio mínima, sin lógica ni estilos propios:
 
 ```bash
 ng generate component core/inicio
@@ -553,6 +577,8 @@ Reemplaza el contenido de `core/inicio/inicio.html`:
 ```
 
 `core/inicio/inicio.ts` no necesita ningún cambio: la CLI ya genera una clase vacía (`export class Inicio {}`), y esta pantalla no tiene ningún estado ni lógica propia — solo texto.
+
+Agrega `children` a la ruta de `Layout` que ya armaste en 3.5:
 
 **`app.routes.ts`**
 
@@ -573,9 +599,9 @@ export const routes: Routes = [
 ];
 ```
 
-`loadComponent` recibe una función que hace el `import()` recién cuando el navegador entra a esa ruta (2.5) — por ahora eso aplica a `Layout` e `Inicio`, los dos únicos componentes que ya existen (3.5, arriba). Las rutas de `Categoria` todavía no aparecen: `CategoriaList`/`CategoriaForm` todavía no existen (se crean recién en 3.10 y 3.13) — agregar ya sus rutas haría que el proyecto no compilara desde este paso, sin ninguna forma de comprobar el avance hasta el final. Cada ruta se agrega en el mismo paso en que su componente queda listo, nunca antes: 3.10 agrega la ruta de `CategoriaList`, 3.13 agrega las de `CategoriaForm`.
+`loadComponent` recibe una función que hace el `import()` recién cuando el navegador entra a esa ruta (2.5) — por ahora eso aplica a `Layout` e `Inicio`, los dos únicos componentes que ya existen. La ruta de `Categoria` todavía no aparece aquí: se agrega recién en el siguiente paso (3.7), primero vacía, y solo se llena de datos reales mucho más adelante (3.11) — cada ruta se agrega en el mismo paso en que su componente empieza a existir, nunca antes.
 
-**Error frecuente**: escribir las rutas de `Categoria` como hermanas de `Layout` en el mismo arreglo, en vez de como `children`. El resultado visual es que la pantalla de categorías reemplaza *todo* el documento (sin encabezado ni sidebar), en vez de aparecer dentro de `router-outlet` de `Layout` — la estructura del arreglo de rutas es la que decide si una pantalla hereda el layout o no, no una decisión del componente de la pantalla. Este error recién se puede ver a partir de 3.10, cuando exista la primera ruta hija además de `Inicio`.
+**Error frecuente**: escribir la ruta de una pantalla nueva como hermana de `Layout` en el mismo arreglo, en vez de como `children`. El resultado visual es que esa pantalla reemplaza *todo* el documento (sin encabezado ni sidebar), en vez de aparecer dentro de `router-outlet` de `Layout` — la estructura del arreglo de rutas es la que decide si una pantalla hereda el layout o no, no una decisión del componente de la pantalla. Vas a ver este error en vivo en el siguiente paso (3.7), la primera vez que agregues una ruta hija además de `Inicio`.
 
 Verifica antes de seguir:
 
@@ -585,7 +611,49 @@ ng serve
 
 Abre `http://localhost:4200`. Debe mostrarse el encabezado ("BomERP"), el sidebar con el enlace **Categorías**, y el mensaje de bienvenida de `Inicio` dentro del área de contenido — ya no queda en blanco. Ningún error en la consola del navegador ni en la terminal de `ng serve` significa que el proyecto compiló correctamente hasta este punto.
 
-### 3.7 Crear el modelo `Categoria`
+### 3.7 Practicar la navegación con una pantalla vacía
+
+**Producto del paso:** el enlace **Categorías** del sidebar funcionando de punta a punta — sin datos, sin backend, solo para entrenar el patrón de rutas antes de sumarle lógica.
+
+Genera el componente, todavía sin ningún contenido propio:
+
+```bash
+ng generate component features/catalogo/categoria/categoria-list --flat
+```
+
+`--flat` es necesario aquí: por defecto, `ng generate component` crea una subcarpeta con el nombre del componente (`categoria/categoria-list/categoria-list.ts`) — el comportamiento correcto cuando un componente vive solo. Pero `categoria/` ya es la carpeta por *recurso* (2.5): más adelante (3.8, 3.10) `categoria-list.ts` va a convivir ahí mismo con `categoria.model.ts` y `categoria-service.ts`, todos al mismo nivel — `--flat` es lo que evita esa carpeta extra desde ya.
+
+Déjalo tal como lo generó la CLI —sin tocar `categoria-list.ts` ni `categoria-list.html` todavía— y agrega su ruta a `children` (3.6), como hermana de `''`/`Inicio`:
+
+```ts
+import { Routes } from '@angular/router';
+
+export const routes: Routes = [
+  {
+    path: '',
+    loadComponent: () => import('./core/layout/layout').then((m) => m.Layout),
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./core/inicio/inicio').then((m) => m.Inicio),
+      },
+      {
+        path: 'catalogo/categorias',
+        loadComponent: () =>
+          import('./features/catalogo/categoria/categoria-list').then((m) => m.CategoriaList),
+      },
+    ],
+  },
+];
+```
+
+Corre `ng serve` y haz clic en **Categorías**, en el sidebar. Debe mostrarse **"categoria-list works!"** (el texto que la CLI generó por defecto) dentro del área de contenido de `Layout` — con el encabezado y el sidebar todavía visibles, y el enlace **Categorías** resaltado (`routerLinkActive="active"`, 3.5). Eso es lo único que importa en este paso: la navegación completa (clic → ruta → componente → dentro del layout correcto) funciona, antes de que `CategoriaList` tenga una sola línea de lógica real.
+
+**Error frecuente**: escribir esta ruta como hermana de `Layout` en el arreglo de rutas, en vez de como `children` (el error que ya anticipó 3.6). El resultado visual es que "categoria-list works!" reemplaza *todo* el documento —sin encabezado ni sidebar— en vez de aparecer dentro de `router-outlet` de `Layout`.
+
+De aquí en adelante, el resto de la sesión reemplaza ese "categoria-list works!" por datos reales (3.11) — pero la navegación que lo trae hasta la pantalla ya no vuelve a cambiar.
+
+### 3.8 Crear el modelo `Categoria`
 
 **Producto del paso:** el contrato de datos que el frontend comparte con `CategoriaResponse`/`CategoriaRequest` del backend (S3).
 
@@ -603,9 +671,9 @@ export interface Categoria {
 
 `id` es opcional porque una categoría nueva, antes de guardarse, todavía no tiene uno — el backend lo asigna recién al crearla (S1). Los campos y sus nombres calzan exactamente con `CategoriaResponse`/`CategoriaRequest` (S3): el frontend no inventa un contrato propio, consume el que el backend ya expone.
 
-**¿Por qué a mano y no con `ng generate interface`?** La CLI sí tiene ese generador (`ng generate interface categoria model` crearía `categoria.model.ts`), pero a diferencia de un componente o un servicio (3.5, 3.8-3.9), no genera ningún `.spec.ts` — una interfaz no tiene comportamiento propio que probar (2.6), así que la CLI no tendría nada que escribir ahí. El único ahorro real sería no teclear `export interface Categoria {}` a mano, sin ninguna ventaja adicional — por eso esta guía sí lo escribe directo.
+**¿Por qué a mano y no con `ng generate interface`?** La CLI sí tiene ese generador (`ng generate interface categoria model` crearía `categoria.model.ts`), pero a diferencia de un componente o un servicio (3.5, 3.9-3.10), no genera ningún `.spec.ts` — una interfaz no tiene comportamiento propio que probar (2.6), así que la CLI no tendría nada que escribir ahí. El único ahorro real sería no teclear `export interface Categoria {}` a mano, sin ninguna ventaja adicional — por eso esta guía sí lo escribe directo.
 
-### 3.8 Crear el archivo de ambientes y el servicio base de API
+### 3.9 Crear el archivo de ambientes y el servicio base de API
 
 **Producto del paso:** la URL del backend declarada en un solo lugar, no repetida dentro de cada servicio HTTP.
 
@@ -684,9 +752,9 @@ export class ApiService {
 }
 ```
 
-`ApiService` no sabe nada de `Categoria` ni de ningún otro recurso — solo arma una URL completa a partir de una ruta relativa (`/api/v1/categorias`) y la URL base del backend, leída de `environment.ts`. Cuando el backend cambie de host o puerto (por ejemplo, al desplegar en producción, S13), se corrige en ese único archivo — ningún servicio de funcionalidad (`CategoriaService`, 3.9) necesita tocarse.
+`ApiService` no sabe nada de `Categoria` ni de ningún otro recurso — solo arma una URL completa a partir de una ruta relativa (`/api/v1/categorias`) y la URL base del backend, leída de `environment.ts`. Cuando el backend cambie de host o puerto (por ejemplo, al desplegar en producción, S13), se corrige en ese único archivo — ningún servicio de funcionalidad (`CategoriaService`, 3.10) necesita tocarse.
 
-**Sobre el nombre de archivo y de clase.** Desde Angular 20, la CLI ya no agrega el sufijo `Service`/`Component` por defecto (Angular, 2026f): `ng generate service api` generaría un archivo `api.ts` con una clase `Api`. Esta guía nombra explícitamente sus servicios inyectables con el sufijo `Service` (`ApiService`, `CategoriaService`, 3.9), a mano — no solo por estilo: en el caso de `CategoriaService`, evita además un choque de nombres real con la interfaz `Categoria` del modelo (3.7), que sí usa el nombre corto.
+**Sobre el nombre de archivo y de clase.** Desde Angular 20, la CLI ya no agrega el sufijo `Service`/`Component` por defecto (Angular, 2026f): `ng generate service api` generaría un archivo `api.ts` con una clase `Api`. Esta guía nombra explícitamente sus servicios inyectables con el sufijo `Service` (`ApiService`, `CategoriaService`, 3.10), a mano — no solo por estilo: en el caso de `CategoriaService`, evita además un choque de nombres real con la interfaz `Categoria` del modelo (3.8), que sí usa el nombre corto.
 
 **Segunda forma, con la CLI (opcional).** No todo tiene que generarse con `ng generate` — un servicio con pocas líneas es igual de rápido a mano. Si prefieres la CLI de todas formas, nombra el propio comando con el sufijo incluido, para que la clase salga con el nombre correcto:
 
@@ -694,7 +762,7 @@ export class ApiService {
 ng generate service core/services/api-service
 ```
 
-Esto crea `api-service.ts` (con `ApiService` ya registrado como `@Injectable({ providedIn: 'root' })`) y `api-service.spec.ts` — igual que `ng generate component .../categoria-list` (3.10) genera la clase `CategoriaList`, porque la CLI convierte a PascalCase el último segmento de la ruta que le des. Cualquiera de las dos formas termina en el mismo archivo; solo falta reemplazar el contenido generado por el de arriba.
+Esto crea `api-service.ts` (con `ApiService` ya registrado como `@Injectable({ providedIn: 'root' })`) y `api-service.spec.ts` — igual que `ng generate component .../categoria-list` (3.7) genera la clase `CategoriaList`, porque la CLI convierte a PascalCase el último segmento de la ruta que le des. Cualquiera de las dos formas termina en el mismo archivo; solo falta reemplazar el contenido generado por el de arriba.
 
 **El backend ya espera un `X-Trace-ID`, falta que el frontend lo mande.** El filtro `CorrelationIdFilter` (`lp2/bomerp-backend`, S5) ya lee ese header en cada petición y lo agrega a cada línea de log (`logback-spring.xml`, `%X{traceId}`) — si nadie lo manda, genera uno aleatorio por su cuenta, así que el backend nunca falla por su ausencia. El problema es otro: un UUID que el backend inventa por su cuenta no sirve para correlacionar nada desde el frontend — si una petición falla, no hay ningún valor que el navegador conozca de antemano para buscarlo en los logs. Lo acordado (S5) fue que el frontend genere su propio `X-Trace-ID` y lo mande en cada petición, para que el mismo valor visible en la consola del navegador sea el que se busca en `logs/bomerp.log`.
 
@@ -709,7 +777,7 @@ export const traceIdInterceptor: HttpInterceptorFn = (req, next) => {
 };
 ```
 
-Un interceptor HTTP es una función que Angular ejecuta para *cada* petición que salga por `HttpClient` — ningún servicio de funcionalidad (`CategoriaService`, 3.9) necesita saber que existe ni recordar agregar nada, mismo principio que `ApiService` (arriba), aplicado a un header en vez de a una URL. `crypto.randomUUID()` es una API nativa del navegador (Web Crypto): genera un identificador único sin agregar ninguna librería.
+Un interceptor HTTP es una función que Angular ejecuta para *cada* petición que salga por `HttpClient` — ningún servicio de funcionalidad (`CategoriaService`, 3.10) necesita saber que existe ni recordar agregar nada, mismo principio que `ApiService` (arriba), aplicado a un header en vez de a una URL. `crypto.randomUUID()` es una API nativa del navegador (Web Crypto): genera un identificador único sin agregar ninguna librería.
 
 Registra el interceptor en `app.config.ts`, agregando `withInterceptors([traceIdInterceptor])` a `provideHttpClient()`:
 
@@ -736,7 +804,7 @@ export const appConfig: ApplicationConfig = {
 
 `withInterceptors()` recibe un arreglo porque puede haber más de uno (autenticación en S10, logging, reintentos) — cada petición pasa por todos, en el mismo orden en que se listan. Con uno solo por ahora alcanza.
 
-### 3.9 Crear `CategoriaService` (solo `listar`)
+### 3.10 Crear `CategoriaService` (solo `listar`)
 
 **Producto del paso:** el único punto del frontend que sabe cómo se llega a `/api/v1/categorias` — por ahora, solo para leer.
 
@@ -761,21 +829,15 @@ export class CategoriaService {
 }
 ```
 
-`CategoriaService` ya no arma ninguna URL completa por su cuenta: le pide a `ApiService` (3.8) que la construya a partir de `resource`, la ruta relativa propia de esta funcionalidad. `obtener()`, `crear()`, `actualizar()` y `eliminar()` se agregan recién en 3.11, cuando exista una pantalla que los necesite — construir los cinco métodos ahora, sin nada todavía que los llame, alargaría este paso sin ningún resultado visible en el camino.
+`CategoriaService` ya no arma ninguna URL completa por su cuenta: le pide a `ApiService` (3.9) que la construya a partir de `resource`, la ruta relativa propia de esta funcionalidad. `obtener()`, `crear()`, `actualizar()` y `eliminar()` se agregan recién en 3.12, cuando exista una pantalla que los necesite — construir los cinco métodos ahora, sin nada todavía que los llame, alargaría este paso sin ningún resultado visible en el camino.
 
-**Segunda forma, con la CLI (opcional, 3.8):** `ng generate service features/catalogo/categoria/categoria-service` genera `categoria-service.ts` (con la clase `CategoriaService` ya registrada) y `categoria-service.spec.ts` — luego reemplazas el contenido igual que arriba.
+**Segunda forma, con la CLI (opcional, 3.9):** `ng generate service features/catalogo/categoria/categoria-service` genera `categoria-service.ts` (con la clase `CategoriaService` ya registrada) y `categoria-service.spec.ts` — luego reemplazas el contenido igual que arriba.
 
-### 3.10 Crear `CategoriaList` y ver el primer resultado
+### 3.11 Crear `CategoriaList` y ver el primer resultado
 
-**Producto del paso:** la lista de categorías, visible en el navegador con datos reales del backend — el primer resultado end-to-end de la sesión.
+**Producto del paso:** la lista de categorías, visible en el navegador con datos reales del backend — el primer resultado end-to-end de la sesión, sobre la navegación que ya probaste en 3.7.
 
-```bash
-ng generate component features/catalogo/categoria/categoria-list --flat
-```
-
-`--flat` es necesario aquí: por defecto, `ng generate component` crea una subcarpeta con el nombre del componente (`categoria/categoria-list/categoria-list.ts`) — el comportamiento correcto cuando un componente vive solo. Pero `categoria/` ya es la carpeta por *recurso* (2.5): `categoria-list.ts` debe quedar directo dentro de ella, al mismo nivel que `categoria-service.ts` y `categoria.model.ts` (3.7, 3.9), no en una subcarpeta propia — `--flat` es lo que evita esa carpeta extra.
-
-Reemplaza el contenido de `features/catalogo/categoria/categoria-list.ts`:
+`categoria-list.ts` y su ruta ya existen desde 3.7, todavía con el contenido vacío que generó la CLI (`--flat` incluido). Reemplaza el contenido de `features/catalogo/categoria/categoria-list.ts`:
 
 ```ts
 import { Component, OnInit, inject, signal } from '@angular/core';
@@ -850,7 +912,7 @@ Reemplaza el contenido de `features/catalogo/categoria/categoria-list.html`:
 
 La tabla ya no se oculta entera — solo el texto "No hay categorías registradas" queda detrás de `@if (!loading() && !error())`. Las dos condiciones importan, no solo una: `categorias()` está vacío en tres casos distintos — mientras la petición todavía está en curso, si la petición falló, o si la lista de verdad no tiene datos — y el mensaje "no hay categorías" solo es cierto en el tercero. Sin `!loading()`, el mensaje aparecería un instante antes de que llegue la respuesta real, dando a entender que el catálogo está vacío cuando en realidad la carga ni siquiera terminó. La tabla en sí (`<table>`, `<thead>`) no tiene ninguna razón para desaparecer en ningún caso: sigue siendo la estructura correcta incluso vacía.
 
-`categorias` y `error` son `signal()`, no propiedades sueltas (2.2): la plantilla se vuelve a renderizar cuando cualquiera de los dos cambia de valor, sin depender de Zone.js. `@for`/`@if`/`@empty` es el control de flujo nativo de plantillas de Angular — reemplaza a `*ngFor`/`*ngIf` sin necesitar importar `CommonModule`. Todavía no hay columna de acciones ni botón **Eliminar**: `CategoriaService` (3.9) solo sabe `listar()` por ahora — agregarlos ya generaría un error de compilación, llamando a un método que la clase no tiene.
+`categorias` y `error` son `signal()`, no propiedades sueltas (2.2): la plantilla se vuelve a renderizar cuando cualquiera de los dos cambia de valor, sin depender de Zone.js. `@for`/`@if`/`@empty` es el control de flujo nativo de plantillas de Angular — reemplaza a `*ngFor`/`*ngIf` sin necesitar importar `CommonModule`. Todavía no hay columna de acciones ni botón **Eliminar**: `CategoriaService` (3.10) solo sabe `listar()` por ahora — agregarlos ya generaría un error de compilación, llamando a un método que la clase no tiene.
 
 Agrega a `src/styles.css` (el estilo global, generado por `ng new`, 3.3) la clase que usa `<p class="error">` (arriba):
 
@@ -860,37 +922,13 @@ Agrega a `src/styles.css` (el estilo global, generado por `ng new`, 3.3) la clas
 }
 ```
 
-`.error` va en el CSS global, no en un `styleUrl` propio de `CategoriaList`: es una convención visual de toda la aplicación (cualquier mensaje de error, en cualquier componente futuro, la va a reutilizar tal cual), no un estilo exclusivo de esta pantalla — declararla una sola vez en `styles.css` evita repetir la misma regla en cada componente que necesite mostrar un error (mismo criterio que `ApiService`, 3.8, aplicado a CSS en vez de a una URL). Sin esto, `<p class="error">` es solo un párrafo con una clase que ningún estilo todavía reconoce — el texto sale del mismo color que el resto de la página.
+`.error` va en el CSS global, no en un `styleUrl` propio de `CategoriaList`: es una convención visual de toda la aplicación (cualquier mensaje de error, en cualquier componente futuro, la va a reutilizar tal cual), no un estilo exclusivo de esta pantalla — declararla una sola vez en `styles.css` evita repetir la misma regla en cada componente que necesite mostrar un error (mismo criterio que `ApiService`, 3.9, aplicado a CSS en vez de a una URL). Sin esto, `<p class="error">` es solo un párrafo con una clase que ningún estilo todavía reconoce — el texto sale del mismo color que el resto de la página.
 
-Ahora que `CategoriaList` ya existe, agrega su ruta a `children` (3.6) — como hermana de `''`/`Inicio`, no en su lugar:
+La ruta ya existe desde 3.7 — no hay que tocar `app.routes.ts` en este paso. Corre `ng serve` y entra a `http://localhost:4200` — clic en **Categorías** (sidebar) para ver la lista (vacía o con datos, según lo que ya tenga tu base) en el lugar donde antes decía "categoria-list works!" (3.7). El enlace **Nueva categoría** todavía no funciona (`CategoriaForm` se crea recién en 3.14) — es el único comportamiento pendiente en este paso exacto. Con esto ya tienes el primer resultado real de la sesión antes de seguir agregando código.
 
-```ts
-import { Routes } from '@angular/router';
+### 3.12 Completar `CategoriaService`: crear, actualizar, eliminar
 
-export const routes: Routes = [
-  {
-    path: '',
-    loadComponent: () => import('./core/layout/layout').then((m) => m.Layout),
-    children: [
-      {
-        path: '',
-        loadComponent: () => import('./core/inicio/inicio').then((m) => m.Inicio),
-      },
-      {
-        path: 'catalogo/categorias',
-        loadComponent: () =>
-          import('./features/catalogo/categoria/categoria-list').then((m) => m.CategoriaList),
-      },
-    ],
-  },
-];
-```
-
-`Inicio` sigue siendo la página de `''` — nadie la reemplaza por un redirect hacia `catalogo/categorias`, porque el sidebar ya le da al usuario esa opción por su cuenta (3.6). Corre `ng serve` y entra a `http://localhost:4200` — debe seguir mostrando `Inicio`; clic en **Categorías** (sidebar) para ver la lista (vacía o con datos, según lo que ya tenga tu base). El enlace **Nueva categoría** todavía no funciona (`CategoriaForm` se crea recién en 3.13) — es el único comportamiento pendiente en este paso exacto. Con esto ya tienes el primer resultado real de la sesión antes de seguir agregando código.
-
-### 3.11 Completar `CategoriaService`: crear, actualizar, eliminar
-
-**Producto del paso:** los cuatro métodos que le faltaban a `CategoriaService` (3.9), ahora que ya viste funcionar el quinto (`listar`).
+**Producto del paso:** los cuatro métodos que le faltaban a `CategoriaService` (3.10), ahora que ya viste funcionar el quinto (`listar`).
 
 Agrega a `features/catalogo/categoria/categoria-service.ts`:
 
@@ -929,11 +967,11 @@ export class CategoriaService {
 }
 ```
 
-Mismo patrón que `listar()` en los cuatro métodos nuevos: nunca arman la URL a mano, siempre vía `ApiService.buildUrl()` (3.8). Si el equipo despliega el backend en otro host, se cambia `environment.ts` una sola vez — ni `CategoriaService` ni ningún otro servicio de funcionalidad se modifican.
+Mismo patrón que `listar()` en los cuatro métodos nuevos: nunca arman la URL a mano, siempre vía `ApiService.buildUrl()` (3.9). Si el equipo despliega el backend en otro host, se cambia `environment.ts` una sola vez — ni `CategoriaService` ni ningún otro servicio de funcionalidad se modifican.
 
-### 3.12 Agregar eliminar a `CategoriaList`
+### 3.13 Agregar eliminar a `CategoriaList`
 
-**Producto del paso:** el botón **Eliminar** funcionando, ahora que `CategoriaService.eliminar()` (3.11) ya existe.
+**Producto del paso:** el botón **Eliminar** funcionando, ahora que `CategoriaService.eliminar()` (3.12) ya existe.
 
 Agrega a `features/catalogo/categoria/categoria-list.ts`:
 
@@ -992,7 +1030,7 @@ export class CategoriaList implements OnInit {
 }
 ```
 
-`eliminar()` reutiliza el mismo `error` (sin crear un segundo signal para lo mismo): la tabla (abajo) ya no depende de `error` para decidir si se muestra, así que un fallo al eliminar no le hace nada a la tabla — solo agrega el mensaje de arriba, y `categorias()` sigue teniendo la lista que ya se había cargado, sin tocarse. `cargar()` limpia `error` al empezar (`this.error.set(null)`): sin esa línea, un error de una llamada anterior (una eliminación fallida, o una recarga que falló una vez) se quedaría pegado en pantalla para siempre, incluso después de una recarga exitosa. `ngOnInit` ahora delega en `cargar()` en vez de llamar a `listar()` directamente (3.10): `eliminar()` necesita volver a cargar la lista después de borrar, y `cargar()` es ese mismo código, reutilizado, no repetido dos veces. `confirm()` (nativo del navegador, sin ninguna librería) corta el método antes de llamar al backend si el usuario cancela — sin esa confirmación, un clic accidental en **Eliminar** borraría la categoría sin ninguna forma de deshacerlo.
+`eliminar()` reutiliza el mismo `error` (sin crear un segundo signal para lo mismo): la tabla (abajo) ya no depende de `error` para decidir si se muestra, así que un fallo al eliminar no le hace nada a la tabla — solo agrega el mensaje de arriba, y `categorias()` sigue teniendo la lista que ya se había cargado, sin tocarse. `cargar()` limpia `error` al empezar (`this.error.set(null)`): sin esa línea, un error de una llamada anterior (una eliminación fallida, o una recarga que falló una vez) se quedaría pegado en pantalla para siempre, incluso después de una recarga exitosa. `ngOnInit` ahora delega en `cargar()` en vez de llamar a `listar()` directamente (3.11): `eliminar()` necesita volver a cargar la lista después de borrar, y `cargar()` es ese mismo código, reutilizado, no repetido dos veces. `confirm()` (nativo del navegador, sin ninguna librería) corta el método antes de llamar al backend si el usuario cancela — sin esa confirmación, un clic accidental en **Eliminar** borraría la categoría sin ninguna forma de deshacerlo.
 
 Agrega a `features/catalogo/categoria/categoria-list.html` la columna de acciones:
 
@@ -1038,9 +1076,9 @@ Agrega a `features/catalogo/categoria/categoria-list.html` la columna de accione
 
 El manejo del error `500` al eliminar (`err.status === 500`) no es un caso inventado para esta guía: es exactamente el hallazgo conocido de S3 (`FK_PRODUCTO_CATEGORIA`) — intentar eliminar una categoría con productos asociados. El frontend no puede evitar esa restricción (vive en la base de datos, BD2), pero sí puede mostrar un mensaje entendible en vez de dejar que la aplicación falle en silencio. `err` se tipa explícitamente como `HttpErrorResponse` (de `@angular/common/http`) en vez de dejarlo implícito: es el tipo real que `HttpClient` entrega en el callback de error, con `status` como propiedad tipada — sin esa anotación, TypeScript no puede advertir si el código intenta leer una propiedad que no existe.
 
-El enlace **Editar** sigue sin funcionar (`CategoriaForm` se crea en 3.13) — es el único comportamiento pendiente después de este paso.
+El enlace **Editar** sigue sin funcionar (`CategoriaForm` se crea en 3.14) — es el único comportamiento pendiente después de este paso.
 
-### 3.13 Crear `CategoriaForm`
+### 3.14 Crear `CategoriaForm`
 
 **Producto del paso:** una sola pantalla que sirve tanto para crear como para editar, según si la ruta trae un `id`.
 
@@ -1048,7 +1086,7 @@ El enlace **Editar** sigue sin funcionar (`CategoriaForm` se crea en 3.13) — e
 ng generate component features/catalogo/categoria/categoria-form --flat
 ```
 
-`--flat` de nuevo (3.10): sin él, la CLI crearía `categoria/categoria-form/categoria-form.ts` en vez de dejarlo directo dentro de `categoria/`.
+`--flat` de nuevo (3.7): sin él, la CLI crearía `categoria/categoria-form/categoria-form.ts` en vez de dejarlo directo dentro de `categoria/`.
 
 Reemplaza el contenido de `features/catalogo/categoria/categoria-form.ts`:
 
@@ -1180,7 +1218,7 @@ Reemplaza el contenido de `features/catalogo/categoria/categoria-form.html`:
 </form>
 ```
 
-`class="error"` (arriba, en los dos mensajes de validación) ya se ve en rojo sin ningún paso adicional: es la misma clase `.error` que se declaró una sola vez en `src/styles.css` (3.10) — ningún componente necesita su propio archivo de estilos para reutilizarla.
+`class="error"` (arriba, en los dos mensajes de validación) ya se ve en rojo sin ningún paso adicional: es la misma clase `.error` que se declaró una sola vez en `src/styles.css` (3.11) — ningún componente necesita su propio archivo de estilos para reutilizarla.
 
 Las validaciones (`Validators.required`, `Validators.maxLength(80)`) calzan exactamente con `@NotBlank`/`@Size(max = 80)` de `CategoriaRequest` (S3, backend) — no son coincidencia: el formulario evita mandar una petición que el backend va a rechazar de todas formas, pero la validación real y definitiva sigue siendo la del backend, no la del formulario (el frontend nunca reemplaza esa responsabilidad).
 
@@ -1194,7 +1232,7 @@ Dos líneas nuevas al principio de `guardar()`, antes de tocar el formulario. `i
 
 **Un mensaje por campo, no uno genérico** — la versión final. `mensajeValidacion()` recibe el nombre del campo (`'nombre'` o `'descripcion'`) y devuelve el mensaje correcto leyendo los errores reales de ese control (`control.hasError('required')`, `control.hasError('maxlength')`) — sin repetir la misma función para cada campo, y sin escribir el `80` de `Validators.maxLength(80)` a mano en el mensaje: `control.getError('maxlength').requiredLength` lo lee directo del propio error, así que si el validador cambia, el mensaje se actualiza solo. Es la misma idea que evitar 30 funciones casi idénticas si el formulario tuviera 30 campos (2.8) — pero sin perder el detalle de qué error específico falló, que un mensaje único para todo el formulario sí perdía. `@if (mensajeValidacion('nombre'); as mensaje)` aprovecha que Angular permite capturar en `mensaje` el valor devuelto por la expresión del `@if` — si `mensajeValidacion()` devuelve `''` (cadena vacía, un valor falsy), el bloque no se muestra, sin necesitar una condición aparte para "está vacío o no".
 
-`loading` cumple dos funciones, no una: mientras `obtener(id)` trae los datos para editar, evita que alguien alcance a hacer clic en **Guardar** antes de que el formulario tenga algo real que enviar — el propio caso que generó el bug de Angular de 3.14 era justo esa ventana. Mientras `guardar()` espera la respuesta del backend, `[disabled]="loading()"` evita un doble clic en **Guardar** que mandaría dos peticiones (dos `crear()`, o dos `actualizar()` compitiendo). `obtener(id)` ahora también tiene su propio `error`: antes, si el `id` de la URL no existía (categoría borrada por otra persona, URL editada a mano), el formulario quedaba en blanco sin ningún aviso — parecía un "crear" nuevo, no un error real.
+`loading` cumple dos funciones, no una: mientras `obtener(id)` trae los datos para editar, evita que alguien alcance a hacer clic en **Guardar** antes de que el formulario tenga algo real que enviar — el propio caso que generó el bug de Angular de 3.15 era justo esa ventana. Mientras `guardar()` espera la respuesta del backend, `[disabled]="loading()"` evita un doble clic en **Guardar** que mandaría dos peticiones (dos `crear()`, o dos `actualizar()` compitiendo). `obtener(id)` ahora también tiene su propio `error`: antes, si el `id` de la URL no existía (categoría borrada por otra persona, URL editada a mano), el formulario quedaba en blanco sin ningún aviso — parecía un "crear" nuevo, no un error real.
 
 `errorCarga` resuelve un caso que `loading` por sí solo no cubre: una vez que `obtener(id)` termina (falló), `loading` vuelve a `false` — el botón **Guardar** quedaría habilitado de nuevo, sobre un formulario vacío que nunca llegó a cargar los datos reales. Sin `errorCarga`, hacer clic ahí no rompería nada por casualidad — `nombre` sigue vacío, así que `Validators.required` igual bloquearía el envío —, pero el mensaje que vería la persona sería "Este campo es obligatorio", que no es la causa real del problema (la carga falló, no que alguien haya olvidado escribir el nombre). `errorCarga` corta antes de eso y deja visible el único mensaje que sí explica lo que pasó: "No se pudo cargar la categoría."
 
@@ -1202,7 +1240,7 @@ Dos líneas nuevas al principio de `guardar()`, antes de tocar el formulario. `i
 
 **"Reactive" aquí no tiene nada que ver con el backend.** Angular ofrece dos formas de manejar el estado de un formulario: `FormsModule` (dirigido por plantilla, con `ngModel`) y `ReactiveFormsModule` (`FormBuilder`/`FormGroup`, el modelo del formulario declarado en TypeScript). El nombre viene de que por dentro usa `Observable`s para reaccionar a los cambios de valor — no de que el backend sea reactivo (Spring WebFlux) en vez de bloqueante (Spring MVC, lo que este proyecto usa desde S1). Son dos capas que no se comunican en ese sentido: `ReactiveFormsModule` funciona igual contra cualquier backend, sea cual sea su arquitectura. Se elige aquí porque las validaciones (`Validators.required`, `Validators.maxLength(80)`) quedan declaradas en TypeScript, calzando 1 a 1 con `@NotBlank`/`@Size(max = 80)` del backend (S3) — no por ninguna relación con cómo Spring maneja las peticiones.
 
-Con `CategoriaForm` ya creado, completa `children` (3.6, 3.10) con las dos rutas que faltaban:
+Con `CategoriaForm` ya creado, completa `children` (3.6, 3.7) con las dos rutas que faltaban:
 
 ```ts
 import { Routes } from '@angular/router';
@@ -1236,9 +1274,9 @@ export const routes: Routes = [
 ];
 ```
 
-Recién ahora el CRUD queda completo: los enlaces **Nueva categoría** (3.10) y **Editar** (3.12) de `categoria-list.html`, que ya apuntaban a estas rutas desde antes, por fin encuentran un componente real que cargar. `''` sigue siendo `Inicio` (3.6) — nunca hizo falta ningún redirect.
+Recién ahora el CRUD queda completo: los enlaces **Nueva categoría** (3.11) y **Editar** (3.13) de `categoria-list.html`, que ya apuntaban a estas rutas desde antes, por fin encuentran un componente real que cargar. `''` sigue siendo `Inicio` (3.6) — nunca hizo falta ningún redirect.
 
-### 3.14 Probar el CRUD completo
+### 3.15 Probar el CRUD completo
 
 Con `lp2/bomerp-backend` corriendo y `ng serve` activo:
 
@@ -1246,14 +1284,14 @@ Con `lp2/bomerp-backend` corriendo y `ng serve` activo:
 2. Clic en **Nueva categoría**, completa el formulario y guarda. Debe volver a la lista, con la categoría nueva visible.
 3. Clic en **Editar** sobre una categoría existente. El formulario debe cargar sus datos actuales (no en blanco).
 4. Cambia el nombre y guarda. El cambio debe reflejarse en la lista.
-5. Intenta **Eliminar** una categoría que ya tiene productos asociados (S3, datos de prueba). Debe aparecer el mensaje de error controlado (3.12), con la tabla y el resto de categorías todavía visibles — no una pantalla rota, ni la tabla desaparecida, ni un error de consola sin explicación.
+5. Intenta **Eliminar** una categoría que ya tiene productos asociados (S3, datos de prueba). Debe aparecer el mensaje de error controlado (3.13), con la tabla y el resto de categorías todavía visibles — no una pantalla rota, ni la tabla desaparecida, ni un error de consola sin explicación.
 6. Elimina una categoría sin productos asociados. Debe desaparecer de la lista.
 
 **Error frecuente**: dejar `lp2/bomerp-backend` apagado y solo revisar la consola del navegador. El error de red (`ERR_CONNECTION_REFUSED` o similar) aparece en la pestaña **Network**/**Console** de las herramientas de desarrollador — revisa ahí antes de asumir que el código de Angular está mal.
 
 **Error frecuente**: navegar a **Editar** y hacer clic en **Guardar** casi de inmediato (o cualquier navegación rápida seguida de otra acción) puede mostrar en consola `Uncaught TypeError: Cannot read properties of undefined (reading 'startTime')`, lanzado desde `reportAllChanges`. No es un bug de esta guía ni de `guardar()`: es un bug conocido de Angular 22 (`angular/angular#70464`), propio de la instrumentación interna de Chrome DevTools para apps zoneless durante una navegación — ocurre solo con la consola de Chrome abierta, nunca en Firefox/Edge, y el equipo de Angular ya lo cerró como "not planned". La operación real (guardar, navegar) ya se ejecutó antes de que la excepción se lance; no afecta los datos. Si aparece durante una sustentación o una captura de evidencia, aclara que es este bug conocido, no un error de tu código.
 
-### 3.15 Relacionar con ADS y BD2
+### 3.16 Relacionar con ADS y BD2
 
 Sesión equivalente en los otros dos cursos, misma semana: ADS S7 construye el diagrama de clases completo del dominio (atributos, operaciones, relaciones, multiplicidades, agregación, composición, herencia y restricciones de `Categoria`, `Producto`, `Cliente`, `Venta`, `DetalleVenta`) — sin relación directa con esta sesión, que consume esas mismas entidades ya construidas en LP2 (S1-S3), no las redefine. BD2 S7 tampoco toca ningún esquema esta semana: explora la arquitectura de la instancia Oracle (memoria, procesos, conexión administrativa) — ningún cambio de este frontend requiere nada de BD2 esta unidad.
 
@@ -1270,7 +1308,7 @@ Completa y evidencia estas tareas:
 1. Si tu equipo aún no comparte un proyecto Angular común, créalo con la misma estructura `core`/`shared`/`features` de esta sesión.
 2. Construye el layout (encabezado, sidebar, menú) con al menos dos rutas de navegación, y una página de inicio real en `/` (3.6) — sin redirect hacia ninguna otra pantalla.
 3. Crea (o reutiliza, si ya existe) un `ApiService` en `core/` con la URL base de tu propio backend, y un servicio HTTP de funcionalidad que lo use para un CRUD completo (listar, crear, editar, eliminar) de una tabla independiente de tu propio dominio — una entidad que no dependa de seleccionar antes un dato de otra tabla (2.8).
-4. Agrega un interceptor HTTP (3.8) que adjunte un identificador único (`crypto.randomUUID()`) a cada petición saliente, en un header propio de tu proyecto.
+4. Agrega un interceptor HTTP (3.9) que adjunte un identificador único (`crypto.randomUUID()`) a cada petición saliente, en un header propio de tu proyecto.
 5. Prueba el CRUD completo contra tu propio backend real, no con datos simulados.
 6. Documenta un error real encontrado.
 
