@@ -162,7 +162,7 @@ Los hooks marcados en azul en la Figura 3 ocurren **una vez**; los marcados en n
 ```ts
 import {
   Component, Input, OnChanges, OnInit, DoCheck, AfterContentInit, AfterContentChecked,
-  AfterViewInit, AfterViewChecked, OnDestroy, SimpleChanges, ContentChild, ViewChild,
+  AfterViewInit, AfterViewChecked, OnDestroy, SimpleChanges, ViewChild,
   ElementRef, inject,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -172,7 +172,6 @@ import { Subscription } from 'rxjs';
   selector: 'app-categoria-card',
   imports: [ReactiveFormsModule],
   template: `
-    <ng-content></ng-content>
     <form [formGroup]="form">
       <input type="text" formControlName="nombre" #nombreInput />
     </form>
@@ -184,7 +183,6 @@ export class CategoriaCard
 {
   @Input() nombreInicial = '';
 
-  @ContentChild('etiqueta') etiqueta?: ElementRef;
   @ViewChild('nombreInput') nombreInput?: ElementRef<HTMLInputElement>;
 
   private readonly fb = inject(FormBuilder);
@@ -226,7 +224,8 @@ export class CategoriaCard
 
   ngAfterContentInit(): void {
     // Una sola vez, cuando el contenido proyectado por <ng-content> ya existe.
-    console.log('Etiqueta proyectada:', this.etiqueta?.nativeElement.textContent);
+    // CategoriaCard no proyecta nada (no tiene <ng-content>), así que este
+    // hook nunca tendría nada real que hacer aquí.
   }
 
   ngAfterContentChecked(): void {
@@ -249,25 +248,44 @@ export class CategoriaCard
 }
 ```
 
-Se usaría así, desde otro componente: `<app-categoria-card nombreInicial="Bebidas"><span #etiqueta>Destacada</span></app-categoria-card>`.
+Se usaría así, desde otro componente: `<app-categoria-card nombreInicial="Bebidas" />`.
 
 `ngOnChanges` es el único hook de los nueve que necesitaba algo nuevo: `CategoriaCard` no tenía ningún `@Input()` antes, así que se le agregó `nombreInicial` solo para tener algo que cambie desde afuera. `changes['nombreInicial'].previousValue` y `.currentValue` son las dos propiedades que `SimpleChanges` siempre trae por cada `@Input()` que cambió — el primer valor que llega (cuando el padre recién crea el componente) también cuenta como cambio, y ahí `previousValue` es `undefined`.
 
 `ngOnInit` ahora sí hace dos cosas que antes vivían sueltas: usa `nombreInicial` (ya garantizado por `ngOnChanges`, que siempre corre antes) para poner el valor inicial del formulario, y recién ahí se suscribe a `nombre.valueChanges` — moverlo del `constructor` a `ngOnInit` es lo que la convención recomienda cuando el componente sí depende de un `@Input()` (a diferencia del ejemplo anterior de `CategoriaForm`, que no lo necesitaba).
 
-`ngAfterContentInit`/`ngAfterContentChecked` necesitan el `<ng-content>` que se agregó a la plantilla — ahora `@ContentChild('etiqueta')` sí tiene algo que buscar, a diferencia de un componente sin contenido proyectado. `ngAfterViewInit` reutiliza el mismo `<input formControlName="nombre">`, con `#nombreInput` como referencia de plantilla, para enfocarlo apenas la vista está lista — `#nombreInput` no choca con `formControlName`: una variable de plantilla sin asignarle nada siempre apunta al elemento del DOM, sin importar qué directivas tenga encima (`formControlName` ni siquiera declara un `exportAs` con el que pudiera confundirse).
+`ngAfterContentInit`/`ngAfterContentChecked` son, junto con `ngDoCheck`/`ngAfterViewChecked`, los cuatro hooks que se quedan solo con el comentario: `CategoriaCard` no tiene `<ng-content>` en su plantilla, así que no proyecta nada de contenido —ese es exactamente el caso descrito en la Tabla 3: "solo aplica a un componente que recibe contenido proyectado"—, y por eso `ngAfterContentInit`/`ngAfterContentChecked` nunca tendrían aquí nada real que hacer. `ngAfterViewInit` sí hace algo concreto: reutiliza el mismo `<input formControlName="nombre">`, con `#nombreInput` como referencia de plantilla, para enfocarlo apenas la vista está lista — `#nombreInput` no choca con `formControlName`: una variable de plantilla sin asignarle nada siempre apunta al elemento del DOM, sin importar qué directivas tenga encima (`formControlName` ni siquiera declara un `exportAs` con el que pudiera confundirse).
 
 `ngOnDestroy` cierra la suscripción que `ngOnInit` abrió. Para este componente en concreto no era estrictamente necesario —`this.form` es propio de `CategoriaCard`, nadie más lo referencia desde afuera, así que al destruirse el componente no queda nada externo sosteniéndolo con vida—, pero es el hábito correcto: la regla general no es "¿esta suscripción en particular se filtra?", sino "toda suscripción manual se cierra en `ngOnDestroy`", para no depender de analizar caso por caso cada vez.
 
-Para probarlo, agrégalo a cualquier plantilla ya visible — por ejemplo, en `inicio.html` (3.6), con el import correspondiente en `inicio.ts`:
+**Para probarlo, `CategoriaCard` tiene que aparecer en la plantilla de *otro* componente** — nunca dentro de su propia plantilla (`categoria-card.ts`): un componente no se usa a sí mismo. Por ejemplo, en `Inicio` (3.6). Dos archivos, dos cambios:
 
-```html
-<app-categoria-card nombreInicial="Bebidas">
-  <span #etiqueta>Destacada</span>
-</app-categoria-card>
+**`inicio.ts`**
+
+```ts
+import { Component } from '@angular/core';
+import { CategoriaCard } from '../../temp/categoria-card';
+
+@Component({
+  selector: 'app-inicio',
+  imports: [CategoriaCard],
+  templateUrl: './inicio.html',
+})
+export class Inicio {}
 ```
 
-Abre `http://localhost:4200/` y mira la consola del navegador: primero `constructor`, luego `ngOnChanges` (valor anterior `undefined`, valor cambiado `"Bebidas"`), luego `ngOnInit`, `ngAfterContentInit` (con "Destacada"), `ngAfterViewInit` con el campo ya enfocado, y desde ahí un `console.log` nuevo por cada letra que escribas en **Nombre**. Ese orden es la Figura 3 en vivo, línea por línea — nada que adivinar, todo lo que corre deja su propio rastro en la consola.
+**`inicio.html`**
+
+```html
+<h2>Bienvenido a BomERP</h2>
+<p>Usa el menú de la izquierda para navegar entre los módulos disponibles.</p>
+
+<app-categoria-card nombreInicial="Bebidas" />
+```
+
+El `import { CategoriaCard } from '...'` (en `inicio.ts`) y la línea `imports: [CategoriaCard]` no son opcionales: `<app-categoria-card>` es exactamente igual de standalone que `Layout` o `CategoriaList` (2.2) — si `Inicio` no lo declara en su propio `imports`, Angular no lo reconoce y falla con el mismo error que ya viste con `router-outlet`/`routerLink` sin importar (3.5). Este ejemplo vive en `src/app/temp/categoria-card.ts` — cualquier carpeta suelta le sirve, precisamente porque no forma parte de la estructura real del proyecto (`core`/`shared`/`features`, 2.5): es desechable, se borra cuando termines de probarlo. Si lo guardaste en otro lugar, ajusta la ruta del `import` en consecuencia.
+
+Abre `http://localhost:4200/` y mira la consola del navegador: primero `constructor`, luego `ngOnChanges` (valor anterior `undefined`, valor cambiado `"Bebidas"`), luego `ngOnInit`, `ngAfterViewInit` con el campo ya enfocado, y desde ahí un `console.log` nuevo por cada letra que escribas en **Nombre**. Ese orden es la Figura 3 en vivo, línea por línea — nada que adivinar, todo lo que corre deja su propio rastro en la consola.
 
 **Opcional: probarlo con su propia URL.** En vez de pegarlo dentro de `inicio.html`, puedes darle una ruta propia — como `children` de `Layout`, mismo patrón que 3.7 — y abrir `http://localhost:4200/card` directo:
 
@@ -275,7 +293,7 @@ Abre `http://localhost:4200/` y mira la consola del navegador: primero `construc
 {
   path: 'card',
   loadComponent: () =>
-    import('./features/catalogo/categoria/categoria-card').then((m) => m.CategoriaCard),
+    import('./temp/categoria-card').then((m) => m.CategoriaCard),
 },
 ```
 

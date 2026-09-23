@@ -55,6 +55,9 @@ nav:
           - LP2 Producto U3: proyecto-integrador/u3/lp2-producto.md
           - Checklist final: proyecto-integrador/u3/checklist-final.md
           - Guía de sustentación: proyecto-integrador/u3/guia-sustentacion.md
+      - Anexos - SPA en otros frameworks:
+          - S07 con Vue: proyecto-integrador/anexos/S07_Creacion_Arquitectura_SPA_Vue.md
+          - S07 con React: proyecto-integrador/anexos/S07_Creacion_Arquitectura_SPA_React.md
   - ADS:
       - Inicio: ads/index.md
       - Silabos:

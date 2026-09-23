@@ -24,6 +24,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/catalogo/categoria/categoria-form').then((m) => m.CategoriaForm),
       },
+
+      {
+  path: 'card',
+  loadComponent: () =>
+    import('./temp/categoria-card').then((m) => m.CategoriaCard),
+},
+
     ],
   },
 ];
