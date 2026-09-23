@@ -1,32 +1,55 @@
-# React + TypeScript + Vite
+# bomerp-frontend-react
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Anexo del Proyecto Integrador: la misma arquitectura de LP2 S07 (Angular, sesión oficial), resuelta en **React** — para el equipo que eligió este stack para su propio proyecto. Guía completa: [`docs/proyecto-integrador/anexos/S07_Creacion_Arquitectura_SPA_React.md`](../../docs/proyecto-integrador/anexos/S07_Creacion_Arquitectura_SPA_React.md).
 
-Currently, two official plugins are available:
+**No reemplaza** [`lp2/bomerp-frontend`](../bomerp-frontend) (Angular, la sesión oficial de LP2) — es una ruta alternativa, no una entrega paralela.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Prerrequisitos
 
-## React Compiler
+- **Node.js LTS** (incluye `npm`). No hace falta instalar nada más de forma global.
+- [`lp2/bomerp-backend`](../bomerp-backend) corriendo en `http://localhost:8080`, con CORS habilitado para `http://localhost:5173` (S5).
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Levantar el ambiente DEV
 
-## Expanding the Oxlint configuration
+1. Backend, en otra terminal:
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+   ```powershell
+   cd ../bomerp-backend
+   .\mvnw.cmd spring-boot:run
+   ```
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+2. Variables de ambiente — crea `.env` en esta carpeta (no se versiona, cada quien lo crea localmente):
+
+   ```text
+   VITE_API_BASE_URL=http://localhost:8080
+   ```
+
+3. Frontend:
+
+   ```bash
+   npm install
+   npm run dev
+   ```
+
+   Abre `http://localhost:5173`.
+
+## Estructura
+
+```text
+src/
+├── core/                          # AppLayout, api.ts (fetch + trazabilidad X-Trace-ID)
+└── features/
+    └── catalogo/
+        └── categoria/              # modelo, servicio y vistas del CRUD de Categoria
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## Stack
+
+- React 19 + TypeScript, Vite
+- React Router (rutas anidadas, `<Outlet />`, carga perezosa con `React.lazy`)
+- `fetch` nativo, sin Axios — ver `src/core/api.ts`
+- Sin gestor de estado global (Redux, Zustand): no hace falta para este CRUD
+
+## Estado actual
+
+CRUD completo de `Categoria` (listar, crear, editar, eliminar), navegación por layout con sidebar, validación de formulario (`nombre` obligatorio y máximo 80 caracteres, `descripcion` máximo 200).

@@ -1,42 +1,56 @@
 # bomerp-frontend-vue
 
-This template should help get you started developing with Vue 3 in Vite.
+Anexo del Proyecto Integrador: la misma arquitectura de LP2 S07 (Angular, sesión oficial), resuelta en **Vue** — para el equipo que eligió este stack para su propio proyecto. Guía completa: [`docs/proyecto-integrador/anexos/S07_Creacion_Arquitectura_SPA_Vue.md`](../../docs/proyecto-integrador/anexos/S07_Creacion_Arquitectura_SPA_Vue.md).
 
-## Recommended IDE Setup
+**No reemplaza** [`lp2/bomerp-frontend`](../bomerp-frontend) (Angular, la sesión oficial de LP2) — es una ruta alternativa, no una entrega paralela.
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## Prerrequisitos
 
-## Recommended Browser Setup
+- **Node.js LTS** (incluye `npm`). No hace falta instalar nada más de forma global.
+- [`lp2/bomerp-backend`](../bomerp-backend) corriendo en `http://localhost:8080`, con CORS habilitado para `http://localhost:5173` (S5).
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+## Levantar el ambiente DEV
 
-## Type Support for `.vue` Imports in TS
+1. Backend, en otra terminal:
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+   ```powershell
+   cd ../bomerp-backend
+   .\mvnw.cmd spring-boot:run
+   ```
 
-## Customize configuration
+2. Variables de ambiente — crea `.env` en esta carpeta (no se versiona, cada quien lo crea localmente):
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+   ```text
+   VITE_API_BASE_URL=http://localhost:8080
+   ```
 
-## Project Setup
+3. Frontend:
 
-```sh
-npm install
+   ```bash
+   npm install
+   npm run dev
+   ```
+
+   Abre `http://localhost:5173`.
+
+## Estructura
+
+```text
+src/
+├── core/                          # AppLayout, InicioView, api.ts (fetch + trazabilidad X-Trace-ID)
+├── router/index.ts                # rutas de la aplicación
+└── features/
+    └── catalogo/
+        └── categoria/              # modelo, servicio y vistas del CRUD de Categoria
 ```
 
-### Compile and Hot-Reload for Development
+## Stack
 
-```sh
-npm run dev
-```
+- Vue 3 (Composition API, `<script setup>`) + TypeScript, Vite
+- Vue Router (rutas anidadas, `<RouterView>`, carga perezosa con `() => import(...)`)
+- `fetch` nativo, sin Axios — ver `src/core/api.ts`
+- Sin Pinia: no hace falta gestor de estado global para este CRUD
 
-### Type-Check, Compile and Minify for Production
+## Estado actual
 
-```sh
-npm run build
-```
+CRUD completo de `Categoria` (listar, crear, editar, eliminar), navegación por layout con sidebar, validación de formulario (`nombre` obligatorio y máximo 80 caracteres, `descripcion` máximo 200) con `touched` independiente por campo.
