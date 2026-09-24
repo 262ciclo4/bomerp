@@ -528,7 +528,9 @@ export async function apiFetch(path: string, init: RequestInit = {}): Promise<Re
 }
 ```
 
-Archivo idéntico al de la guía de Vue (3.9): React tampoco trae un cliente HTTP ni un mecanismo de interceptores, así que envolver `fetch` en una única función reutilizable resuelve, sin librerías externas, lo mismo que `withInterceptors` en Angular.
+Archivo idéntico al de la guía de Vue (3.9): React tampoco trae un cliente HTTP ni un mecanismo de interceptores, así que envolver `fetch` en una única función reutilizable cumple el mismo rol que `withInterceptors` en Angular, sin librerías externas.
+
+**Esto no es un interceptor, y conviene no llamarlo así.** Un interceptor de Angular se registra una vez (`withInterceptors`) y `HttpClient` lo aplica a *toda* petición, sin que ningún servicio tenga que acordarse. `apiFetch()` es solo una convención: cumple el mismo rol mientras todos los servicios pasen por él, pero cualquier `fetch(...)` directo lo esquiva sin ningún aviso, y `X-Trace-ID` no viaja. Sin una librería no hay interceptor real: `fetch` no tiene ningún punto de registro, y la única salida nativa —sobrescribir `window.fetch` globalmente— es frágil y desaconsejada. Un interceptor de verdad solo se consigue con una librería como **Axios** (`axios.interceptors.request.use(...)`), al costo de una dependencia más. Esta guía no la agrega: se queda con `fetch` nativo y la regla explícita de que ningún componente ni servicio llama a `fetch` fuera de `api.ts`.
 
 ### 3.10 Crear `categoriaService` (solo `listar`)
 

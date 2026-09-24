@@ -563,7 +563,9 @@ export async function apiFetch(path: string, init: RequestInit = {}): Promise<Re
 }
 ```
 
-`api.ts` cumple dos roles en un solo archivo, los mismos dos que en Angular se separan en `ApiService` y un interceptor HTTP (S07, 3.8-3.9): `buildUrl()` arma la URL completa a partir de una ruta relativa y `VITE_API_BASE_URL`; `apiFetch()` es el punto único por el que pasa toda petición, y ahí se agrega `X-Trace-ID` — el mismo header que ya lee `CorrelationIdFilter` en el backend (`lp2/bomerp-backend`, S5). Vue no tiene un mecanismo de interceptores incorporado como `HttpClient` de Angular (`withInterceptors`, S07 3.8); envolver `fetch` en una sola función que todos los servicios reutilizan logra lo mismo sin necesitar una librería aparte (como Axios).
+`api.ts` cumple dos roles en un solo archivo, los mismos dos que en Angular se separan en `ApiService` y un interceptor HTTP (S07, 3.8-3.9): `buildUrl()` arma la URL completa a partir de una ruta relativa y `VITE_API_BASE_URL`; `apiFetch()` es el punto único por el que pasa toda petición, y ahí se agrega `X-Trace-ID` — el mismo header que ya lee `CorrelationIdFilter` en el backend (`lp2/bomerp-backend`, S5). Vue no tiene un mecanismo de interceptores incorporado como `HttpClient` de Angular (`withInterceptors`, S07 3.8); envolver `fetch` en una sola función que todos los servicios reutilizan cumple el mismo rol sin una librería aparte.
+
+**Esto no es un interceptor, y conviene no llamarlo así.** Un interceptor de Angular se registra una vez (`withInterceptors`) y `HttpClient` lo aplica a *toda* petición, sin que ningún servicio tenga que acordarse. `apiFetch()` es solo una convención: cumple el mismo rol mientras todos los servicios pasen por él, pero cualquier `fetch(...)` directo lo esquiva sin ningún aviso, y `X-Trace-ID` no viaja. Sin una librería no hay interceptor real: `fetch` no tiene ningún punto de registro, y la única salida nativa —sobrescribir `window.fetch` globalmente— es frágil y desaconsejada. Un interceptor de verdad solo se consigue con una librería como **Axios** (`axios.interceptors.request.use(...)`), al costo de una dependencia más. Esta guía no la agrega: se queda con `fetch` nativo y la regla explícita de que ningún componente ni servicio llama a `fetch` fuera de `api.ts`.
 
 `crypto.randomUUID()` es la misma API nativa del navegador que usa la versión de Angular — no cambia entre frameworks, porque es del navegador, no del framework.
 
@@ -931,7 +933,7 @@ Con `lp2/bomerp-backend` corriendo y `npm run dev` activo:
 | Modelo de datos | `interface` | `interface` |
 | Servicio HTTP dedicado | Clase `@Injectable`, `inject()` | Módulo con funciones exportadas |
 | Cliente HTTP | `HttpClient` incorporado | `fetch` nativo, envuelto a mano |
-| Trazabilidad de peticiones | Interceptor (`withInterceptors`) | Función `apiFetch()` que envuelve `fetch` |
+| Trazabilidad de peticiones | Interceptor (`withInterceptors`), se aplica solo a toda petición | Función `apiFetch()` que envuelve `fetch`, por convención (un `fetch` directo la esquiva) |
 | Reactividad | `signal()` | `ref()`/`computed()` |
 | Formularios | Reactive Forms (`FormGroup`) | `v-model` + validación en `computed()` |
 | Generación de archivos | CLI (`ng generate component`) | A mano (Vue no trae generador) |
