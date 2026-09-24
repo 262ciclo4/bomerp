@@ -4668,7 +4668,8 @@ npm<span class="w"> </span>run<span class="w"> </span>dev
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">response</span>
 <span class="p">}</span>
 </code></pre></div>
-<p><code>api.ts</code> cumple dos roles en un solo archivo, los mismos dos que en Angular se separan en <code>ApiService</code> y un interceptor HTTP (S07, 3.8-3.9): <code>buildUrl()</code> arma la URL completa a partir de una ruta relativa y <code>VITE_API_BASE_URL</code>; <code>apiFetch()</code> es el punto único por el que pasa toda petición, y ahí se agrega <code>X-Trace-ID</code> — el mismo header que ya lee <code>CorrelationIdFilter</code> en el backend (<code>lp2/bomerp-backend</code>, S5). Vue no tiene un mecanismo de interceptores incorporado como <code>HttpClient</code> de Angular (<code>withInterceptors</code>, S07 3.8); envolver <code>fetch</code> en una sola función que todos los servicios reutilizan logra lo mismo sin necesitar una librería aparte (como Axios).</p>
+<p><code>api.ts</code> cumple dos roles en un solo archivo, los mismos dos que en Angular se separan en <code>ApiService</code> y un interceptor HTTP (S07, 3.8-3.9): <code>buildUrl()</code> arma la URL completa a partir de una ruta relativa y <code>VITE_API_BASE_URL</code>; <code>apiFetch()</code> es el punto único por el que pasa toda petición, y ahí se agrega <code>X-Trace-ID</code> — el mismo header que ya lee <code>CorrelationIdFilter</code> en el backend (<code>lp2/bomerp-backend</code>, S5). Vue no tiene un mecanismo de interceptores incorporado como <code>HttpClient</code> de Angular (<code>withInterceptors</code>, S07 3.8); envolver <code>fetch</code> en una sola función que todos los servicios reutilizan cumple el mismo rol sin una librería aparte.</p>
+<p><strong>Esto no es un interceptor, y conviene no llamarlo así.</strong> Un interceptor de Angular se registra una vez (<code>withInterceptors</code>) y <code>HttpClient</code> lo aplica a <em>toda</em> petición, sin que ningún servicio tenga que acordarse. <code>apiFetch()</code> es solo una convención: cumple el mismo rol mientras todos los servicios pasen por él, pero cualquier <code>fetch(...)</code> directo lo esquiva sin ningún aviso, y <code>X-Trace-ID</code> no viaja. Sin una librería no hay interceptor real: <code>fetch</code> no tiene ningún punto de registro, y la única salida nativa —sobrescribir <code>window.fetch</code> globalmente— es frágil y desaconsejada. Un interceptor de verdad solo se consigue con una librería como <strong>Axios</strong> (<code>axios.interceptors.request.use(...)</code>), al costo de una dependencia más. Esta guía no la agrega: se queda con <code>fetch</code> nativo y la regla explícita de que ningún componente ni servicio llama a <code>fetch</code> fuera de <code>api.ts</code>.</p>
 <p><code>crypto.randomUUID()</code> es la misma API nativa del navegador que usa la versión de Angular — no cambia entre frameworks, porque es del navegador, no del framework.</p>
 <h3 id="310-crear-categoriaservice-solo-listar">3.10 Crear <code>categoriaService</code> (solo <code>listar</code>)<a class="headerlink" href="#310-crear-categoriaservice-solo-listar" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> el único punto del frontend que sabe cómo se llega a <code>/api/v1/categorias</code> — por ahora, solo para leer.</p>
@@ -5015,8 +5016,8 @@ npm<span class="w"> </span>run<span class="w"> </span>dev
 </tr>
 <tr>
 <td>Trazabilidad de peticiones</td>
-<td>Interceptor (<code>withInterceptors</code>)</td>
-<td>Función <code>apiFetch()</code> que envuelve <code>fetch</code></td>
+<td>Interceptor (<code>withInterceptors</code>), se aplica solo a toda petición</td>
+<td>Función <code>apiFetch()</code> que envuelve <code>fetch</code>, por convención (un <code>fetch</code> directo la esquiva)</td>
 </tr>
 <tr>
 <td>Reactividad</td>
