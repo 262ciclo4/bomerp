@@ -4191,7 +4191,7 @@
 <li><strong>Crear y estructurar</strong> un proyecto React con navegación principal organizada por funcionalidades, y <strong>construir</strong> un primer flujo CRUD completo consumiendo el backend REST de BomERP, aplicando los mismos principios de arquitectura que la sesión de Angular (separación de capas, navegación por rutas, servicios dedicados), en un framework distinto.</li>
 </ul>
 <h3 id="14-producto-de-sesion">1.4 Producto de sesión<a class="headerlink" href="#14-producto-de-sesion" title="Permanent link">&para;</a></h3>
-<p>Proyecto React (<code>lp2/bomerp-frontend-react</code>), con navegación principal (encabezado, sidebar y menú) organizada en <code>core</code>/<code>features</code>, una página de inicio real en <code>/</code>, ruteo funcional entre pantallas, una función de trazabilidad que agrega <code>X-Trace-ID</code> a cada petición, y un CRUD completo (listar, crear, editar, eliminar) de <code>Categoria</code> (<code>catalogo</code>), conectado a <code>http://localhost:8080/api/v1/categorias</code>.</p>
+<p>Proyecto React (<code>lp2/otros clientes/bomerp-frontend-react</code>), con navegación principal (encabezado, sidebar y menú) organizada en <code>core</code>/<code>features</code>, una página de inicio real en <code>/</code>, ruteo funcional entre pantallas, una función de trazabilidad que agrega <code>X-Trace-ID</code> a cada petición, y un CRUD completo (listar, crear, editar, eliminar) de <code>Categoria</code> (<code>catalogo</code>), conectado a <code>http://localhost:8080/api/v1/categorias</code>.</p>
 <h3 id="15-metodologia">1.5 Metodología<a class="headerlink" href="#15-metodologia" title="Permanent link">&para;</a></h3>
 <p><strong>Tabla 1. Metodología de la guía</strong></p>
 <table>
@@ -4348,9 +4348,9 @@ npm<span class="w"> </span>--version
 </code></pre></div>
 <p>Igual que Vue, React no exige instalar una CLI global antes de crear el proyecto — a diferencia de Angular (<code>npm install -g @angular/cli@22</code>), no hay ningún paquete que instalar por adelantado ni ninguna versión que fijar todavía. <code>npm create vite@latest</code> descarga el generador (<code>create-vite</code>) una sola vez, lo ejecuta, y no deja nada instalado de forma global: la verificación con <code>ng version</code> de Angular no tiene un equivalente <em>antes</em> de crear el proyecto — recién lo tiene después (3.3), porque recién después existe algo instalado que verificar.</p>
 <h3 id="33-crear-el-proyecto-react">3.3 Crear el proyecto React<a class="headerlink" href="#33-crear-el-proyecto-react" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> <code>lp2/bomerp-frontend-react</code> creado y ejecutándose por primera vez, con su versión de Vite confirmada.</p>
-<p>Desde la raíz del repositorio, dentro de <code>lp2/</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>lp2
+<p><strong>Producto del paso:</strong> <code>lp2/otros clientes/bomerp-frontend-react</code> creado y ejecutándose por primera vez, con su versión de Vite confirmada.</p>
+<p>Desde la raíz del repositorio, dentro de <code>lp2/otros clientes/</code> — la carpeta que agrupa los clientes alternativos a Angular, para que no se confundan con <code>lp2/bomerp-frontend</code> (la sesión oficial):</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span><span class="s2">"lp2/otros clientes"</span>
 npm<span class="w"> </span>create<span class="w"> </span>vite@9.2.1<span class="w"> </span>bomerp-frontend-react<span class="w"> </span>--<span class="w"> </span>--template<span class="w"> </span>react-ts
 </code></pre></div>
 <p>La primera vez que corres este comando en tu máquina, npm todavía no tiene descargado el paquete real detrás de <code>npm create vite</code> (<code>create-vite</code>) — te va a pedir confirmación antes de bajarlo:</p>

@@ -4213,7 +4213,7 @@
 <li><strong>Crear y estructurar</strong> un proyecto Vue con navegación principal organizada por funcionalidades, y <strong>construir</strong> un primer flujo CRUD completo consumiendo el backend REST de BomERP, aplicando los mismos principios de arquitectura que la sesión de Angular (separación de capas, navegación por rutas, servicios dedicados), en un framework distinto.</li>
 </ul>
 <h3 id="14-producto-de-sesion">1.4 Producto de sesión<a class="headerlink" href="#14-producto-de-sesion" title="Permanent link">&para;</a></h3>
-<p>Proyecto Vue (<code>lp2/bomerp-frontend-vue</code>), con navegación principal (encabezado, sidebar y menú) organizada en <code>layouts</code>/<code>views</code>/<code>features</code> (la convención propia de Vue), una página de inicio real en <code>/</code>, ruteo funcional entre pantallas, una función de trazabilidad que agrega <code>X-Trace-ID</code> a cada petición, y un CRUD completo (listar, crear, editar, eliminar) de <code>Categoria</code> (<code>catalogo</code>), conectado a <code>http://localhost:8080/api/v1/categorias</code>.</p>
+<p>Proyecto Vue (<code>lp2/otros clientes/bomerp-frontend-vue</code>), con navegación principal (encabezado, sidebar y menú) organizada en <code>layouts</code>/<code>views</code>/<code>features</code> (la convención propia de Vue), una página de inicio real en <code>/</code>, ruteo funcional entre pantallas, una función de trazabilidad que agrega <code>X-Trace-ID</code> a cada petición, y un CRUD completo (listar, crear, editar, eliminar) de <code>Categoria</code> (<code>catalogo</code>), conectado a <code>http://localhost:8080/api/v1/categorias</code>.</p>
 <h3 id="15-metodologia">1.5 Metodología<a class="headerlink" href="#15-metodologia" title="Permanent link">&para;</a></h3>
 <p><strong>Tabla 1. Metodología de la guía</strong></p>
 <table>
@@ -4394,9 +4394,9 @@ npm<span class="w"> </span>--version
 </code></pre></div>
 <p>A diferencia de Angular, Vue no exige instalar una CLI global aparte (<code>@angular/cli</code>) antes de crear el proyecto — no hay ningún paquete que instalar por adelantado ni ninguna versión que fijar todavía. <code>npm create vue@latest</code> descarga el generador una sola vez, lo ejecuta, y no deja nada instalado globalmente: la verificación con <code>ng version</code> de Angular (S07, 3.2) no tiene un equivalente <em>antes</em> de crear el proyecto — recién lo tiene después (3.3), porque recién después existe algo instalado que verificar.</p>
 <h3 id="33-crear-el-proyecto-vue">3.3 Crear el proyecto Vue<a class="headerlink" href="#33-crear-el-proyecto-vue" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> <code>lp2/bomerp-frontend-vue</code> creado y ejecutándose por primera vez, con su versión de Vite confirmada.</p>
-<p>Desde la raíz del repositorio, dentro de <code>lp2/</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>lp2
+<p><strong>Producto del paso:</strong> <code>lp2/otros clientes/bomerp-frontend-vue</code> creado y ejecutándose por primera vez, con su versión de Vite confirmada.</p>
+<p>Desde la raíz del repositorio, dentro de <code>lp2/otros clientes/</code> — la carpeta que agrupa los clientes alternativos a Angular, para que no se confundan con <code>lp2/bomerp-frontend</code> (la sesión oficial):</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span><span class="s2">"lp2/otros clientes"</span>
 npm<span class="w"> </span>create<span class="w"> </span>vue@3.24.0
 </code></pre></div>
 <p><code>@3.24.0</code> fija la versión de <code>create-vue</code>, con el mismo criterio que Angular fija <code>@angular/cli@22</code> (S07, 3.2): dos versiones mayores distintas de un generador pueden producir proyectos con preguntas y opciones distintas — fijar la versión evita que cada estudiante del curso termine con un punto de partida distinto según cuándo corrió el comando. Como alternativa, si prefieres siempre la versión más nueva (y estás dispuesto a que la guía se desactualice con el tiempo, S07 3.2), reemplaza <code>@3.24.0</code> por <code>@latest</code>.</p>
