@@ -27,7 +27,7 @@ Al concluir esta guía, estarás en condiciones de:
 
 ### 1.4 Producto de sesión
 
-Proyecto React (`lp2/bomerp-frontend-react`), con navegación principal (encabezado, sidebar y menú) organizada en `core`/`features`, una página de inicio real en `/`, ruteo funcional entre pantallas, una función de trazabilidad que agrega `X-Trace-ID` a cada petición, y un CRUD completo (listar, crear, editar, eliminar) de `Categoria` (`catalogo`), conectado a `http://localhost:8080/api/v1/categorias`.
+Proyecto React (`lp2/otros clientes/bomerp-frontend-react`), con navegación principal (encabezado, sidebar y menú) organizada en `core`/`features`, una página de inicio real en `/`, ruteo funcional entre pantallas, una función de trazabilidad que agrega `X-Trace-ID` a cada petición, y un CRUD completo (listar, crear, editar, eliminar) de `Categoria` (`catalogo`), conectado a `http://localhost:8080/api/v1/categorias`.
 
 ### 1.5 Metodología
 
@@ -188,12 +188,12 @@ Igual que Vue, React no exige instalar una CLI global antes de crear el proyecto
 
 ### 3.3 Crear el proyecto React
 
-**Producto del paso:** `lp2/bomerp-frontend-react` creado y ejecutándose por primera vez, con su versión de Vite confirmada.
+**Producto del paso:** `lp2/otros clientes/bomerp-frontend-react` creado y ejecutándose por primera vez, con su versión de Vite confirmada.
 
-Desde la raíz del repositorio, dentro de `lp2/`:
+Desde la raíz del repositorio, dentro de `lp2/otros clientes/` — la carpeta que agrupa los clientes alternativos a Angular, para que no se confundan con `lp2/bomerp-frontend` (la sesión oficial):
 
 ```bash
-cd lp2
+cd "lp2/otros clientes"
 npm create vite@9.2.1 bomerp-frontend-react -- --template react-ts
 ```
 

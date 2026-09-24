@@ -1,20 +1,20 @@
 # bomerp-frontend-react
 
-Anexo del Proyecto Integrador: la misma arquitectura de LP2 S07 (Angular, sesión oficial), resuelta en **React** — para el equipo que eligió este stack para su propio proyecto. Guía completa: [`docs/proyecto-integrador/anexos/S07_Creacion_Arquitectura_SPA_React.md`](../../docs/proyecto-integrador/anexos/S07_Creacion_Arquitectura_SPA_React.md).
+Anexo del Proyecto Integrador: la misma arquitectura de LP2 S07 (Angular, sesión oficial), resuelta en **React** — para el equipo que eligió este stack para su propio proyecto. Guía completa: [`docs/proyecto-integrador/anexos/S07_Creacion_Arquitectura_SPA_React.md`](../../../docs/proyecto-integrador/anexos/S07_Creacion_Arquitectura_SPA_React.md).
 
-**No reemplaza** [`lp2/bomerp-frontend`](../bomerp-frontend) (Angular, la sesión oficial de LP2) — es una ruta alternativa, no una entrega paralela.
+**No reemplaza** [`lp2/bomerp-frontend`](../../bomerp-frontend) (Angular, la sesión oficial de LP2) — es una ruta alternativa, no una entrega paralela.
 
 ## Prerrequisitos
 
 - **Node.js LTS** (incluye `npm`). No hace falta instalar nada más de forma global.
-- [`lp2/bomerp-backend`](../bomerp-backend) corriendo en `http://localhost:8080`, con CORS habilitado para `http://localhost:5173` (S5).
+- [`lp2/bomerp-backend`](../../bomerp-backend) corriendo en `http://localhost:8080`, con CORS habilitado para `http://localhost:5173` (S5).
 
 ## Levantar el ambiente DEV
 
 1. Backend, en otra terminal:
 
    ```powershell
-   cd ../bomerp-backend
+   cd ../../bomerp-backend
    .\mvnw.cmd spring-boot:run
    ```
 
