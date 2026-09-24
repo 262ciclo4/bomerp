@@ -40,4 +40,4 @@ management:
 
 bomerp:
   cors:
-    allowed-origins: http://localhost:4200
+    allowed-origins: http://localhost:4200,http://localhost:5173,http://localhost:5174

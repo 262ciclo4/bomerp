@@ -36,6 +36,15 @@ ng build
 
 This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
 
+### Deploying to production
+
+```bash
+npm install   # creates node_modules locally — never committed, never deployed
+ng build      # generates dist/bomerp-frontend/browser/, already bundled and minified
+```
+
+Only `dist/` gets deployed — static HTML/JS/CSS, no `node_modules`. To publish on GitHub Pages, upload **only** `dist/bomerp-frontend/browser/` (a GitHub Actions workflow can run these same two commands on a temporary machine and publish the result automatically on every `push`). Before building for production, point the API URL in `environment.ts` to the real public backend — not `localhost`. If the site doesn't live at the domain root (`user.github.io/repo/`), set `--base-href` accordingly, and copy `dist/bomerp-frontend/browser/index.html` to `404.html` so Angular Router's routes don't 404 on a page reload.
+
 ## Running unit tests
 
 To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:

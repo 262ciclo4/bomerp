@@ -33,6 +33,15 @@ Anexo del Proyecto Integrador: la misma arquitectura de LP2 S07 (Angular, sesió
 
    Abre `http://localhost:5173`.
 
+## Build de producción
+
+```bash
+npm install    # crea node_modules localmente — nunca se sube a git ni a producción
+npm run build  # genera dist/, con el código ya empaquetado y minificado
+```
+
+Lo único que se despliega es `dist/` — son archivos estáticos (HTML/JS/CSS), sin `node_modules`. Para publicarlo en GitHub Pages, sube **solo** `dist/` (GitHub Actions puede correr estos mismos dos comandos en una máquina temporal y publicar el resultado automáticamente en cada `push`). Antes de buildear para producción, cambia `VITE_API_BASE_URL` en `.env` a la URL pública real del backend — no `localhost`. Si el sitio no vive en la raíz del dominio (`usuario.github.io/repo/`), fija también el `base` en `vite.config.ts`, y copia `dist/index.html` a `dist/404.html` para que las rutas de React Router (`/catalogo/categorias`) no den 404 al recargar la página.
+
 ## Estructura
 
 ```text

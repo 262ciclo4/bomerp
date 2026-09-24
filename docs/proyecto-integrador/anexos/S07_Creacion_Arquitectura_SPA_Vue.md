@@ -27,7 +27,7 @@ Al concluir esta guía, estarás en condiciones de:
 
 ### 1.4 Producto de sesión
 
-Proyecto Vue (`lp2/bomerp-frontend-vue`), con navegación principal (encabezado, sidebar y menú) organizada en `core`/`features`, una página de inicio real en `/`, ruteo funcional entre pantallas, una función de trazabilidad que agrega `X-Trace-ID` a cada petición, y un CRUD completo (listar, crear, editar, eliminar) de `Categoria` (`catalogo`), conectado a `http://localhost:8080/api/v1/categorias`.
+Proyecto Vue (`lp2/bomerp-frontend-vue`), con navegación principal (encabezado, sidebar y menú) organizada en `layouts`/`views`/`features` (la convención propia de Vue), una página de inicio real en `/`, ruteo funcional entre pantallas, una función de trazabilidad que agrega `X-Trace-ID` a cada petición, y un CRUD completo (listar, crear, editar, eliminar) de `Categoria` (`catalogo`), conectado a `http://localhost:8080/api/v1/categorias`.
 
 ### 1.5 Metodología
 
@@ -159,7 +159,7 @@ Vue Router resuelve esto igual que Angular Router: una ruta padre con un compone
 
 El *routing* conecta una URL con el componente que debe mostrarse. Organizar por **funcionalidad de negocio** (todo lo de `catalogo` junto) en vez de por **tipo** (todas las vistas en una carpeta, todos los servicios en otra) es también la recomendación del propio equipo de Vue para cualquier proyecto que crezca más allá de un ejemplo pequeño (Vue, 2026c).
 
-Esta guía adopta una convención análoga a la de Angular: `core/` (el layout, el servicio base de conexión al backend), y `features/` (una carpeta por módulo de negocio — `catalogo` hoy). Cada ruta se carga de forma perezosa con una función `() => import('...')`, el mismo mecanismo que `loadComponent` en Angular (3.6): el navegador descarga el código de una pantalla recién cuando el usuario navega a ella.
+A diferencia de Angular y de este mismo anexo en React (que adoptan `core`/`features`, calcado de la convención real de LP2), esta guía sigue la convención propia de Vue, la misma que ya trae el generador (3.3-3.4): `layouts/` (el componente de layout), `views/` (pantallas de nivel superior, sin un módulo de negocio propio — como `InicioView`), `core/` (solo infraestructura sin interfaz, como el servicio de conexión al backend) y `features/` (una carpeta por módulo de negocio — `catalogo` hoy, con sus propias vistas, modelo y servicio). Cada ruta se carga de forma perezosa con una función `() => import('...')`, el mismo mecanismo que `loadComponent` en Angular (3.6): el navegador descarga el código de una pantalla recién cuando el usuario navega a ella.
 
 ### 2.6 Modelos de datos: `interface`, no `class`
 
@@ -302,7 +302,8 @@ bomerp-frontend-vue/
 │   ├── main.ts               # arranque de la aplicación
 │   ├── router/
 │   │   └── index.ts          # rutas de la aplicación
-│   └── views/                # vistas generadas por defecto (se reemplazan)
+│   ├── views/                # pantallas de nivel superior (HomeView/AboutView de ejemplo, se reemplazan)
+│   └── components/           # componentes de ejemplo (HelloWorld, TheWelcome), no se usan
 ├── index.html
 ├── vite.config.ts
 └── package.json
@@ -348,7 +349,11 @@ import { RouterView } from 'vue-router'
 
 **Producto del paso:** `AppLayout`, el componente que va a envolver el resto de pantallas.
 
-A diferencia de Angular, Vue no trae un generador de componentes por defecto (no existe un `vue generate component` equivalente a `ng generate component`) — los archivos `.vue` se crean a mano. Crea `src/core/AppLayout.vue`:
+**Antes de construir el layout, limpia el CSS global.** El generador deja `src/assets/main.css` con su propio tema (paleta verde/índigo, y un `grid-template-columns: 1fr 1fr` que reparte en dos columnas los primeros hijos de `#app`) — nada de eso es de BomERP, y ese grid de dos columnas es justo lo que rompería tu layout: en vez de un sidebar angosto a la izquierda, `<header>` y `<div class="body">` (el layout completo) quedarían repartidos como dos columnas del mismo ancho. Vacía el archivo por completo — sin agregar ningún reset propio (`margin: 0`, tipografía): el margen por defecto del navegador se queda tal cual, igual que en el proyecto de Angular, que tampoco lo toca. `src/assets/main.css` queda sin una sola línea, hasta que agregue `.error` más adelante (3.11).
+
+Esto también deja de importar `base.css` (las variables de color del tema por defecto) — no hace falta borrarlo, solo ya no se usa. Angular hace lo mismo (S07, 3.10): su `styles.css` global también queda casi vacío hasta ese mismo punto — el diseño real de cada pantalla vive en el CSS de sus propios componentes (`AppLayout.vue`, abajo, con `<style scoped>`), no en un archivo global con opiniones propias.
+
+A diferencia de Angular, Vue no trae un generador de componentes por defecto (no existe un `vue generate component` equivalente a `ng generate component`) — los archivos `.vue` se crean a mano. Crea `src/layouts/AppLayout.vue`:
 
 ```vue
 <script setup lang="ts">
@@ -420,7 +425,7 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      component: () => import('../core/AppLayout.vue'),
+      component: () => import('../layouts/AppLayout.vue'),
     },
   ],
 })
@@ -434,7 +439,7 @@ Guarda y mira la página: ahora se ve el encabezado ("BomERP") y el sidebar con 
 
 **Producto del paso:** `AppLayout` (3.5) pasa a ser ruta padre, con una página de inicio real en `''` como su primera hija.
 
-Crea `src/core/InicioView.vue`, sin lógica ni estilos propios:
+Crea `src/views/InicioView.vue`, sin lógica ni estilos propios:
 
 ```vue
 <script setup lang="ts"></script>
@@ -457,11 +462,11 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      component: () => import('../core/AppLayout.vue'),
+      component: () => import('../layouts/AppLayout.vue'),
       children: [
         {
           path: '',
-          component: () => import('../core/InicioView.vue'),
+          component: () => import('../views/InicioView.vue'),
         },
       ],
     },
@@ -986,6 +991,43 @@ Este anexo no reemplaza la entrega oficial de LP2 (Angular): documenta esta acti
 
 **Proyección:** el mismo patrón aplicado aquí a `Categoria` se repite para cualquier otra tabla independiente del dominio propio del equipo — la arquitectura no cambia, solo el nombre de las entidades.
 
+## Anexo: peso y rendimiento reales, medidos
+
+Los números de este anexo no son de un benchmark genérico — son el `npm run build` real de los tres proyectos de esta comparación (`bomerp-frontend`, `bomerp-frontend-react`, `bomerp-frontend-vue`), auditados con **Lighthouse** (el mismo motor que usan las DevTools de Chrome, Google 2026g) contra los tres `dist/` servidos en `localhost`.
+
+**Tabla 5. Peso del build de producción**
+
+| | Total (sin comprimir) | Total (gzip aprox.) |
+|---|---:|---:|
+| Vue | 100 539 bytes (98.1 KB) | ~38.7 kB |
+| React | 280 340 bytes (273 KB) | ~85.2 kB |
+| Angular | 325 723 bytes (318 KB) | ~85.3 kB |
+
+**Tabla 6. Rendimiento real (Lighthouse, Chrome sin interfaz, `localhost`)**
+
+| Métrica | Vue | React | Angular |
+|---|---:|---:|---:|
+| Puntaje *Performance* | 100 | 99 | 99 |
+| *First Contentful Paint* | 1282 ms | 1542 ms | 1492 ms |
+| *Largest Contentful Paint* | 1635 ms | 1719 ms | 2108 ms |
+| *Time to Interactive* | 1635 ms | 1719 ms | 2112 ms |
+| *Total Blocking Time* | 21 ms | 0 ms | 33.5 ms |
+| *Bootup time* (CPU: parseo + ejecución JS) | 137 ms | 147 ms | 268 ms |
+| Trabajo del hilo principal | 379 ms | 525 ms | 586 ms |
+| Peso transferido por red | 41 KiB | 86 KiB | 101 KiB |
+
+**Lectura de la tabla:** Vue gana en casi todas las métricas, con margen más claro en *Largest Contentful Paint* y *Bootup time*. El *bootup time* de Angular casi duplica al de Vue y React (268 ms vs. ~140 ms) — es el costo real, medible, de un *runtime* más grande (inyección de dependencias, metadatos de componentes). React queda en el medio en casi todo, salvo *Total Blocking Time* (0 ms), donde le gana a los otros dos porque esta guía nunca ejecuta un cálculo largo de una sola vez en el hilo principal.
+
+**Por qué: tres formas distintas de actualizar el DOM.** Esta diferencia no es casualidad de esta app puntual — es un mecanismo de diseño real de cada framework, el mismo que ya se nombró en 2.3 (`useEffect`/`onMounted`/`ngOnInit`) pero aplicado ahora a *cómo* cada uno decide qué repintar:
+
+- **React usa *Virtual DOM*** — ante cualquier cambio de estado, arma un árbol completo en memoria (una copia liviana del DOM), lo compara contra el árbol anterior (*diffing*), y recién ahí aplica al DOM real solo las diferencias encontradas. Eso cuesta CPU en **cada** actualización, sin importar cuán chico sea el cambio real — comparar sigue siendo el primer paso, aunque el resultado sea "no cambió nada".
+- **Vue usa reactividad fina** — cada `ref()`/`computed()` sabe, desde que se declara, exactamente qué parte de la plantilla depende de él (Vue arma esa relación en tiempo de compilación). Cuando cambia, actualiza *directo* esa parte del DOM, sin comparar ningún árbol completo primero. Por diseño, hace menos trabajo por actualización — no es una optimización adicional, es la forma en que Vue funciona desde la base.
+- **Angular *zoneless* (el que usa esta guía) se acerca al modelo de Vue** — con `signal()`, un componente sabe qué señales lee su plantilla, y actualiza solo cuando esas señales cambian, sin recorrer todo el árbol de componentes. Es una mejora real frente al Angular clásico con Zone.js, que revisaba **todo** el árbol de componentes ante cualquier evento del navegador (un clic, un `setTimeout`, una respuesta de red), hubiera cambiado algo relevante o no.
+
+Ninguno de los tres es "el correcto" — son tres apuestas de diseño distintas para el mismo problema (saber qué repintar sin repintar de más), y la Tabla 6 es el resultado medible de esa diferencia en esta app concreta.
+
+**Dos límites honestos de esta medición:** (1) corrió en `localhost`, sin latencia de red real — los milisegundos absolutos de carga serían mayores en un despliegue real, pero la comparación *entre los tres* es justa porque los tres corrieron en las mismas condiciones. (2) Lighthouse, en su categoría de *Performance*, no reporta uso de memoria (heap de JavaScript) — los números de CPU de esta tabla (*bootup time*, trabajo del hilo principal) son un indicador real, pero no hay una cifra de memoria verificada en esta medición.
+
 ## Bibliografía
 
 1. Vue. (2026a). *Getting Started*. Vue.js. https://vuejs.org/guide/quick-start
@@ -994,3 +1036,4 @@ Este anexo no reemplaza la entrega oficial de LP2 (Angular): documenta esta acti
 4. Vue. (2026d). *Scoped CSS*. Vue.js. https://vuejs.org/api/sfc-css-features
 5. Vite. (2026e). *Env Variables and Modes*. https://vite.dev/guide/env-and-mode
 6. Vue. (2026f). *Composables*. Vue.js. https://vuejs.org/guide/reusability/composables
+7. Google. (2026g). *Lighthouse*. Chrome for Developers. https://developer.chrome.com/docs/lighthouse/overview

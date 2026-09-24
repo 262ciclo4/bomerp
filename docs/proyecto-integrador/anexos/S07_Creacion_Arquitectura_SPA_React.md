@@ -307,6 +307,10 @@ Guarda y mira la página: queda en blanco — `<Routes>` todavía no tiene ningu
 
 **Producto del paso:** `AppLayout`, el componente que va a envolver el resto de pantallas.
 
+**Antes de construir el layout, limpia el CSS global.** El generador deja `src/index.css` con un tema propio (modo oscuro, acentos morados, `#root` centrado con ancho fijo) pensado para su propia página de bienvenida — nada de eso es de BomERP, y su `text-align: center` choca con el header y el sidebar que vas a construir. Vacía el archivo por completo — sin agregar ningún reset propio (`margin: 0`, tipografía): el margen por defecto del navegador se queda tal cual, igual que en el proyecto de Angular, que tampoco lo toca. `src/index.css` queda sin una sola línea, hasta que agregue `.error` más adelante (3.11).
+
+Angular hace lo mismo (S07, 3.10): su `styles.css` global también queda casi vacío hasta ese mismo punto — el diseño real de cada pantalla vive en el CSS de sus propios componentes (`AppLayout.css`, abajo), no en un archivo global con opiniones propias.
+
 Como Vue, React no trae un generador de componentes — los archivos `.tsx` se crean a mano. Crea `src/core/AppLayout.tsx`:
 
 ```tsx
@@ -372,22 +376,28 @@ export default function AppLayout() {
 
 `className` reemplaza a `class` en JSX — `class` es una palabra reservada de JavaScript, por eso React necesita un nombre distinto. `<Link>` navega sin recargar la página, como `routerLink`/`RouterLink`; `<NavLink>` es la variante que además sabe si su propia ruta está activa —la función `({ isActive }) => ...` que recibe `className` es la forma de React de lograr lo mismo que `routerLinkActive="active"` en Angular o `active-class="active"` en Vue: aquí no hay un atributo dedicado, se resuelve con una función. `<Outlet />` es el `router-outlet`/`<RouterView>` de React Router.
 
-Conecta `AppLayout` a las rutas, en `App.tsx`:
+Conecta `AppLayout` a las rutas, en `App.tsx` — con carga perezosa (2.5), igual que Angular con `loadComponent` y Vue con `() => import(...)`:
 
 **`src/App.tsx`**
 
 ```tsx
+import { Suspense, lazy } from 'react'
 import { Routes, Route } from 'react-router-dom'
-import AppLayout from './core/AppLayout'
+
+const AppLayout = lazy(() => import('./core/AppLayout'))
 
 export default function App() {
   return (
-    <Routes>
-      <Route path="/" element={<AppLayout />} />
-    </Routes>
+    <Suspense fallback={null}>
+      <Routes>
+        <Route path="/" element={<AppLayout />} />
+      </Routes>
+    </Suspense>
   )
 }
 ```
+
+`lazy(() => import('./core/AppLayout'))` es el equivalente exacto de `loadComponent: () => import(...)` en Angular y `component: () => import(...)` en Vue Router (2.5): el navegador no descarga el código de `AppLayout` hasta que la ruta `/` se resuelve. La diferencia frente a los otros dos frameworks: React exige envolver todo en `<Suspense>` — sin él, React no sabe qué mostrar mientras el chunk todavía se está descargando, y lanza un error en tiempo de ejecución. `fallback={null}` significa "no muestres nada mientras carga" — para chunks tan chicos como los de esta guía, ese instante es imperceptible.
 
 Guarda y mira la página: ahora se ve el encabezado ("BomERP") y el sidebar con el enlace **Categorías**, aunque el área de contenido quede vacía — `/` todavía no tiene ninguna ruta hija (recién en 3.6).
 
@@ -413,17 +423,21 @@ Agrega la ruta hija, anidada dentro de la de `AppLayout`:
 **`src/App.tsx`**
 
 ```tsx
+import { Suspense, lazy } from 'react'
 import { Routes, Route } from 'react-router-dom'
-import AppLayout from './core/AppLayout'
-import InicioView from './core/InicioView'
+
+const AppLayout = lazy(() => import('./core/AppLayout'))
+const InicioView = lazy(() => import('./core/InicioView'))
 
 export default function App() {
   return (
-    <Routes>
-      <Route path="/" element={<AppLayout />}>
-        <Route index element={<InicioView />} />
-      </Route>
-    </Routes>
+    <Suspense fallback={null}>
+      <Routes>
+        <Route path="/" element={<AppLayout />}>
+          <Route index element={<InicioView />} />
+        </Route>
+      </Routes>
+    </Suspense>
   )
 }
 ```
@@ -448,7 +462,11 @@ export default function CategoriaListView() {
 }
 ```
 
-Agrega su ruta, anidada junto a `index`:
+Agrega el `import` perezoso y su ruta, anidada junto a `index`:
+
+```tsx
+const CategoriaListView = lazy(() => import('./features/catalogo/categoria/CategoriaListView'))
+```
 
 ```tsx
 <Route path="catalogo/categorias" element={<CategoriaListView />} />
@@ -853,11 +871,42 @@ React no tiene un equivalente a Reactive Forms de Angular ni a los `ref`/`v-mode
 
 `useParams()` es el equivalente de `inject(ActivatedRoute)` en Angular y `useRoute()` en Vue; `useNavigate()` el de `inject(Router)`/`useRouter()`. `evento.preventDefault()` dentro de `guardar` cumple el rol de `@submit.prevent` en Vue (Angular no lo necesita: `(ngSubmit)` ya evita el comportamiento por defecto del navegador).
 
-Completa las rutas que faltaban, en `App.tsx`:
+Completa el `import` perezoso y las rutas que faltaban, en `App.tsx`:
+
+```tsx
+const CategoriaFormView = lazy(() => import('./features/catalogo/categoria/CategoriaFormView'))
+```
 
 ```tsx
 <Route path="catalogo/categorias/nueva" element={<CategoriaFormView />} />
 <Route path="catalogo/categorias/:id/editar" element={<CategoriaFormView />} />
+```
+
+`App.tsx` queda así, completo:
+
+```tsx
+import { Suspense, lazy } from 'react'
+import { Routes, Route } from 'react-router-dom'
+
+const AppLayout = lazy(() => import('./core/AppLayout'))
+const InicioView = lazy(() => import('./core/InicioView'))
+const CategoriaListView = lazy(() => import('./features/catalogo/categoria/CategoriaListView'))
+const CategoriaFormView = lazy(() => import('./features/catalogo/categoria/CategoriaFormView'))
+
+export default function App() {
+  return (
+    <Suspense fallback={null}>
+      <Routes>
+        <Route path="/" element={<AppLayout />}>
+          <Route index element={<InicioView />} />
+          <Route path="catalogo/categorias" element={<CategoriaListView />} />
+          <Route path="catalogo/categorias/nueva" element={<CategoriaFormView />} />
+          <Route path="catalogo/categorias/:id/editar" element={<CategoriaFormView />} />
+        </Route>
+      </Routes>
+    </Suspense>
+  )
+}
 ```
 
 ### 3.15 Probar el CRUD completo
