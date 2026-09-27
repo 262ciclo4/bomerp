@@ -4029,7 +4029,7 @@
 <h2 id="1-introduccion">1. Introducción<a class="headerlink" href="#1-introduccion" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 20 min.</p>
 <h3 id="11-presentacion-de-la-sesion">1.1 Presentación de la sesión<a class="headerlink" href="#11-presentacion-de-la-sesion" title="Permanent link">&para;</a></h3>
-<p>El CRUD de <code>Categoria</code> (S7) es el caso más simple de una pantalla de datos: todo lo que el formulario pide pertenece a la propia entidad. Casi ninguna tabla de un sistema real es así. Un <code>Producto</code> no existe solo: siempre pertenece a una categoría, y nadie debería tener que escribir a mano el identificador de esa categoría para registrarlo. Esta sesión construye el primer CRUD <strong>dependiente</strong> de la SPA: el formulario de un producto le muestra al usuario las categorías que existen y le deja elegir una, la lista muestra a qué categoría pertenece cada producto, y las dependencias entre las dos tablas se validan antes y después de llamar al backend. El porqué de tratarlo como un problema aparte se desarrolla en 1.6, a partir del caso.</p>
+<p>El CRUD (<em>Create, Read, Update, Delete</em>: crear, leer, actualizar y eliminar) de <code>Categoria</code> (S7) es el caso más simple de una pantalla de datos: todo lo que el formulario pide pertenece a la propia entidad. Casi ninguna tabla de un sistema real es así. Un <code>Producto</code> no existe solo: siempre pertenece a una categoría, y nadie debería tener que escribir a mano el identificador de esa categoría para registrarlo. Esta sesión construye el primer CRUD <strong>dependiente</strong> de la SPA (<em>Single-Page Application</em>): el formulario de un producto le muestra al usuario las categorías que existen y le deja elegir una, la lista muestra a qué categoría pertenece cada producto, y las dependencias entre las dos tablas se validan antes y después de llamar al backend. El porqué de tratarlo como un problema aparte se desarrolla en 1.6, a partir del caso.</p>
 <h3 id="12-indice">1.2 Índice<a class="headerlink" href="#12-indice" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Selección de datos relacionados.</li>
@@ -4213,7 +4213,7 @@
 </tr>
 </tbody>
 </table>
-<p>La validación del frontend <strong>ayuda</strong> al usuario a no equivocarse; la del backend <strong>protege</strong> los datos, porque cualquiera puede llamar a la API sin pasar por la pantalla. Por eso las dos existen, y ninguna reemplaza a la otra. El mensaje de la pantalla depende de qué falló: un <code>404</code> cuyo mensaje habla de la categoría es una dependencia rota; cualquier otro error es un error genérico de guardado.</p>
+<p>La validación del frontend <strong>ayuda</strong> al usuario a no equivocarse; la del backend <strong>protege</strong> los datos, porque cualquiera puede llamar a la API (<em>Application Programming Interface</em>) sin pasar por la pantalla. Por eso las dos existen, y ninguna reemplaza a la otra. El mensaje de la pantalla depende de qué falló: un <code>404</code> cuyo mensaje habla de la categoría es una dependencia rota; cualquier otro error es un error genérico de guardado.</p>
 <h3 id="25-presentacion-de-informacion-relacionada">2.5 Presentación de información relacionada<a class="headerlink" href="#25-presentacion-de-informacion-relacionada" title="Permanent link">&para;</a></h3>
 <p>La lista de productos no debe mostrar <code>3</code> en la columna de categoría, sino su nombre. El backend ya lo entrega: <code>ProductoResponse</code> trae un objeto <code>categoria</code> con <code>id</code> y <code>nombre</code> (un resumen, no la categoría completa), así que la pantalla solo lo lee de cada fila. No hay que pedir cada categoría por separado: llamar a <code>/api/v1/categorias/{id}</code> una vez por fila multiplicaría las peticiones sin ningún beneficio.</p>
 <p>Dos formas de mostrar la información relacionada:</p>
@@ -4239,7 +4239,7 @@
 <li><strong>3.8</strong> Validar las dependencias en <code>ProductoForm</code>.</li>
 <li><strong>3.9</strong> Registrar las rutas y el enlace del sidebar.</li>
 <li><strong>3.10</strong> Probar el CRUD dependiente completo.</li>
-<li><strong>3.11</strong> Relacionar con ADS y BD2.</li>
+<li><strong>3.11</strong> Relacionar con ADS (Análisis y Diseño de Sistemas de Información) y BD2 (Base de Datos II).</li>
 </ul>
 <h3 id="31-verificar-el-punto-de-partida">3.1 Verificar el punto de partida<a class="headerlink" href="#31-verificar-el-punto-de-partida" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> confirmación de que el backend responde con la categoría anidada y de que la SPA de S7 arranca.</p>
@@ -4287,7 +4287,7 @@
 </code></pre></div>
 <p><code>Producto</code> es lo que devuelve el backend (con <code>categoria</code> anidada); <code>ProductoRequest</code> es lo que acepta (con <code>categoriaId</code>).</p>
 <h3 id="33-crear-productoservice">3.3 Crear <code>ProductoService</code><a class="headerlink" href="#33-crear-productoservice" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> el servicio HTTP de <code>Producto</code>, con el filtro por categoría.</p>
+<p><strong>Producto del paso:</strong> el servicio HTTP (<em>HyperText Transfer Protocol</em>) de <code>Producto</code>, con el filtro por categoría.</p>
 <p>Crea <strong><code>lp2/bomerp-frontend/src/app/features/catalogo/producto/producto-service.ts</code></strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Injectable</span><span class="p">,</span><span class="w"> </span><span class="nx">inject</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/core'</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">HttpClient</span><span class="p">,</span><span class="w"> </span><span class="nx">HttpParams</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/common/http'</span><span class="p">;</span>
@@ -4326,7 +4326,7 @@
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>Es el mismo patrón que <code>CategoriaService</code> (S7): el servicio no sabe nada de pantallas, y usa <code>ApiService</code> para la URL base. La única novedad es <code>listar(categoriaId?)</code>, que agrega el parámetro <code>categoriaId</code> solo cuando se le pasa uno (Angular, 2026d).</p>
+<p>Es el mismo patrón que <code>CategoriaService</code> (S7): el servicio no sabe nada de pantallas, y usa <code>ApiService</code> para la URL (<em>Uniform Resource Locator</em>) base. La única novedad es <code>listar(categoriaId?)</code>, que agrega el parámetro <code>categoriaId</code> solo cuando se le pasa uno (Angular, 2026d).</p>
 <h3 id="34-crear-productolist-con-la-categoria-de-cada-producto">3.4 Crear <code>ProductoList</code> con la categoría de cada producto<a class="headerlink" href="#34-crear-productolist-con-la-categoria-de-cada-producto" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> la lista de productos, con el nombre de la categoría y el precio formateado.</p>
 <p>Crea <strong><code>lp2/bomerp-frontend/src/app/features/catalogo/producto/producto-list.ts</code></strong>:</p>
@@ -4723,7 +4723,7 @@
 </ol>
 <p><strong>Error frecuente</strong>: la lista desplegable de <strong>Editar</strong> aparece en blanco (o en "Selecciona una categoría") aunque el producto sí tiene categoría. Revisa que <code>producto.categoria.id</code> llegue en el <code>patchValue</code> de 3.7 y que las opciones usen <code>[ngValue]</code> y no <code>[value]</code> (2.3): con <code>[value]</code> el control recibe texto y no coincide con el <code>id</code> numérico.</p>
 <h3 id="311-relacionar-con-ads-y-bd2">3.11 Relacionar con ADS y BD2<a class="headerlink" href="#311-relacionar-con-ads-y-bd2" title="Permanent link">&para;</a></h3>
-<p>Sesión equivalente en los otros dos cursos, misma semana: ADS S8 diseña las clases de un módulo por capas, con sus DTO y su contrato REST — el <code>ProductoResponse</code> con su <code>categoria</code> anidada, un resumen y no la categoría completa, es exactamente el tipo de DTO que esa sesión diseña, y la matriz de trazabilidad de ADS S8 documenta que <code>PRODUCTOS.ID_CATEGORIA</code> hoy admite valores nulos en la base de datos aunque el diseño de clases la exige. BD2 S8 rediseña los privilegios del usuario <code>BOMERP_APP</code> con roles por función: el CRUD de <code>Producto</code> de hoy consume los mismos endpoints de catálogo, así que ejerce exactamente los privilegios de <code>ROL_APP_CATALOGO</code>, sin ningún cambio en el código de esta sesión.</p>
+<p>Sesión equivalente en los otros dos cursos, misma semana: ADS S8 diseña las clases de un módulo por capas, con sus DTO y su contrato REST (<em>Representational State Transfer</em>) — el <code>ProductoResponse</code> con su <code>categoria</code> anidada, un resumen y no la categoría completa, es exactamente el tipo de DTO que esa sesión diseña, y la matriz de trazabilidad de ADS S8 documenta que <code>PRODUCTOS.ID_CATEGORIA</code> hoy admite valores nulos en la base de datos aunque el diseño de clases la exige. BD2 S8 rediseña los privilegios del usuario <code>BOMERP_APP</code> con roles por función: el CRUD de <code>Producto</code> de hoy consume los mismos endpoints de catálogo, así que ejerce exactamente los privilegios de <code>ROL_APP_CATALOGO</code>, sin ningún cambio en el código de esta sesión.</p>
 <p><strong>Evidencia de aprendizaje:</strong></p>
 <ul>
 <li>Modelos <code>Producto</code> y <code>ProductoRequest</code>, y <code>ProductoService</code> con el filtro por categoría.</li>
@@ -4892,7 +4892,7 @@ existiera una de las dos validaciones?
 </table>
 <p>* Agregado manual.</p>
 <p>Nota final = suma de (<code>Peso</code> / 100 × <code>Puntos del nivel obtenido</code>) = ____ / 20.</p>
-<p>Para usar la rúbrica con IA, solicita:</p>
+<p>Para usar la rúbrica con IA (inteligencia artificial), solicita:</p>
 <div class="highlight"><pre><span></span><code>Evalúa el PDF usando la rúbrica de la sesión.
 Para cada criterio selecciona el nivel obtenido usando la escala A=20, B=15, C=10, D=5 puntos.
 Justifica brevemente cada nivel asignado.

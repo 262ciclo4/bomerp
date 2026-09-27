@@ -4008,7 +4008,7 @@
 <h2 id="1-introduccion">1. Introducción<a class="headerlink" href="#1-introduccion" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 20 min.</p>
 <h3 id="11-presentacion-de-la-sesion">1.1 Presentación de la sesión<a class="headerlink" href="#11-presentacion-de-la-sesion" title="Permanent link">&para;</a></h3>
-<p>S7 distinguió, con evidencia, una conexión administrativa (SYSDBA) de una conexión de aplicación: el usuario de la aplicación no puede ver lo que solo un administrador debe ver. Esa distinción se observó, pero todavía no se diseñó. Los privilegios que hoy tiene <code>BOMERP_APP</code> se fueron concediendo uno a uno, tabla por tabla, a medida que cada sesión los necesitó, sin preguntarse si la aplicación usa de verdad todo lo que se le dio. Esta sesión formaliza el modelo: qué usuarios existen y para qué, qué privilegios de sistema y de objeto necesita cada uno, cómo agruparlos en roles, y cómo verificar con el diccionario de datos que nadie tiene más de lo que necesita. El porqué de hacerlo ahora se desarrolla en 1.6, a partir del caso.</p>
+<p>S7 distinguió, con evidencia, una conexión administrativa (SYSDBA, el privilegio de administrador de la base de datos en Oracle) de una conexión de aplicación: el usuario de la aplicación no puede ver lo que solo un administrador debe ver. Esa distinción se observó, pero todavía no se diseñó. Los privilegios que hoy tiene <code>BOMERP_APP</code> se fueron concediendo uno a uno, tabla por tabla, a medida que cada sesión los necesitó, sin preguntarse si la aplicación usa de verdad todo lo que se le dio. Esta sesión formaliza el modelo: qué usuarios existen y para qué, qué privilegios de sistema y de objeto necesita cada uno, cómo agruparlos en roles, y cómo verificar con el diccionario de datos que nadie tiene más de lo que necesita. El porqué de hacerlo ahora se desarrolla en 1.6, a partir del caso.</p>
 <h3 id="12-indice">1.2 Índice<a class="headerlink" href="#12-indice" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Usuarios de base de datos.</li>
@@ -4023,7 +4023,7 @@
 <li><strong>Diseñar y aplicar</strong> un modelo de usuarios, roles y privilegios bajo el principio de mínimo privilegio sobre el esquema de tu propio proyecto, y <strong>documentar</strong> una matriz de accesos verificada contra el diccionario de datos de Oracle.</li>
 </ul>
 <h3 id="14-producto-de-sesion">1.4 Producto de sesión<a class="headerlink" href="#14-producto-de-sesion" title="Permanent link">&para;</a></h3>
-<p>Modelo de seguridad de <code>bomerp-oracle</code>: roles por función (<code>ROL_APP_CATALOGO</code>, <code>ROL_APP_VENTAS</code>, <code>ROL_CONSULTA</code>), <code>BOMERP_APP</code> reasignado a roles con los privilegios recortados a lo que LP2 realmente usa, un usuario de solo lectura (<code>BOMERP_REPORTES</code>), evidencia de accesos denegados a propósito, y la matriz de accesos verificada con <code>DBA_SYS_PRIVS</code>, <code>DBA_TAB_PRIVS</code> y <code>DBA_ROLE_PRIVS</code>.</p>
+<p>Modelo de seguridad de <code>bomerp-oracle</code>: roles por función (<code>ROL_APP_CATALOGO</code>, <code>ROL_APP_VENTAS</code>, <code>ROL_CONSULTA</code>), <code>BOMERP_APP</code> reasignado a roles con los privilegios recortados a lo que LP2 (Lenguaje de Programación II) realmente usa, un usuario de solo lectura (<code>BOMERP_REPORTES</code>), evidencia de accesos denegados a propósito, y la matriz de accesos verificada con <code>DBA_SYS_PRIVS</code>, <code>DBA_TAB_PRIVS</code> y <code>DBA_ROLE_PRIVS</code>.</p>
 <h3 id="15-metodologia">1.5 Metodología<a class="headerlink" href="#15-metodologia" title="Permanent link">&para;</a></h3>
 <p><strong>Tabla 1. Metodología de la sesión</strong></p>
 <table>
@@ -4047,7 +4047,7 @@
 </tr>
 <tr>
 <td>Evaluación formativa</td>
-<td>Verificación en clase de los accesos denegados a propósito (<code>ORA-01031</code>) y de la matriz de accesos. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4.</td>
+<td>Verificación en clase de los accesos denegados a propósito (<code>ORA-01031</code>, código de error de Oracle) y de la matriz de accesos. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4.</td>
 <td>Indicaciones de entrega (4.3), rúbrica de evaluación (4.6).</td>
 </tr>
 </tbody>
@@ -4088,7 +4088,7 @@
 
     classDef today fill:#ffe08a,stroke:#9a6b00,stroke-width:2px,color:#111;
     class S8 today;</code></pre>
-<p><strong>Sobre el ambiente de esta sesión.</strong> El sílabo declara Oracle Database 19c EE sobre Oracle Linux como ambiente de esta unidad, todavía no aprovisionado en este repositorio. Esta guía trabaja sobre <code>bomerp-oracle</code> (Oracle Database Free, el mismo contenedor de S1 y S7), conectado a la base conectable <code>FREEPDB1</code> como <code>system</code>. Los conceptos y las sentencias de esta sesión (<code>CREATE USER</code>, <code>CREATE ROLE</code>, <code>GRANT</code>, <code>REVOKE</code> y las vistas <code>DBA_*</code>) son los mismos en Oracle 19c.</p>
+<p><strong>Sobre el ambiente de esta sesión.</strong> El sílabo declara Oracle Database 19c EE (<em>Enterprise Edition</em>) sobre Oracle Linux como ambiente de esta unidad, todavía no aprovisionado en este repositorio. Esta guía trabaja sobre <code>bomerp-oracle</code> (Oracle Database Free, el mismo contenedor de S1 y S7), conectado a la base conectable <code>FREEPDB1</code> como <code>system</code>. Los conceptos y las sentencias de esta sesión (<code>CREATE USER</code>, <code>CREATE ROLE</code>, <code>GRANT</code>, <code>REVOKE</code> y las vistas <code>DBA_*</code>) son los mismos en Oracle 19c.</p>
 <h2 id="2-explica">2. Explica<a class="headerlink" href="#2-explica" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 25 min.</p>
 <h3 id="21-arquitectura-de-la-sesion">2.1 Arquitectura de la sesión<a class="headerlink" href="#21-arquitectura-de-la-sesion" title="Permanent link">&para;</a></h3>
@@ -4164,7 +4164,7 @@
 </tbody>
 </table>
 <p>La regla que ordena la tabla es la separación entre quien <strong>posee</strong> los objetos y quien los <strong>usa</strong>: la aplicación nunca es dueña de las tablas que consulta, y por eso no puede alterarlas ni eliminarlas, aunque un error de código lo intentara.</p>
-<p>En Oracle Database Free, la base contiene una raíz (<code>CDB$ROOT</code>) y una base conectable (<code>FREEPDB1</code>), donde viven los usuarios del proyecto. Conéctate siempre a <code>FREEPDB1</code>: crear un usuario o un rol sin el prefijo <code>C##</code> desde la raíz falla con <code>ORA-65096</code>.</p>
+<p>En Oracle Database Free, la base contiene una raíz (<code>CDB$ROOT</code>, de <em>Container Database</em>) y una base conectable (<code>FREEPDB1</code>, de <em>Pluggable Database</em>), donde viven los usuarios del proyecto. Conéctate siempre a <code>FREEPDB1</code>: crear un usuario o un rol sin el prefijo <code>C##</code> desde la raíz falla con <code>ORA-65096</code>.</p>
 <h3 id="23-privilegios-de-sistema-y-de-objeto">2.3 Privilegios de sistema y de objeto<a class="headerlink" href="#23-privilegios-de-sistema-y-de-objeto" title="Permanent link">&para;</a></h3>
 <p>Un <strong>privilegio</strong> es el derecho a ejecutar un tipo de acción. Oracle los divide en dos clases.</p>
 <p><strong>Tabla 3. Privilegios de sistema y de objeto</strong></p>
@@ -4231,8 +4231,8 @@
 <p>Tres detalles de los roles evitan sorpresas:</p>
 <ul>
 <li><strong>Se activan al iniciar la sesión.</strong> Los roles concedidos a un usuario se habilitan como predeterminados al conectarse. Un rol concedido <em>mientras</em> la sesión ya está abierta no aparece en ella hasta que el usuario se reconecta.</li>
-<li><strong>No aplican dentro de procedimientos de derechos del definidor.</strong> Un procedimiento PL/SQL corre por defecto con los privilegios de su <strong>dueño</strong>, y esos privilegios deben estar concedidos directamente al dueño, no a través de un rol (Oracle Corporation, 2024b). Si un procedimiento de <code>BOM_VENTAS</code> necesita leer <code>BOM_CATALOGO.PRODUCTOS</code>, el <code>GRANT</code> va directo a <code>BOM_VENTAS</code>.</li>
-<li><strong>Los roles predefinidos amplios no son para aplicaciones.</strong> <code>DBA</code> y <code>RESOURCE</code>, entre otros, agrupan muchos más privilegios de los que una aplicación necesita; el proyecto crea sus propios roles, con lo justo.</li>
+<li><strong>No aplican dentro de procedimientos de derechos del definidor.</strong> Un procedimiento PL/SQL (<em>Procedural Language/Structured Query Language</em>, el lenguaje de programación de Oracle) corre por defecto con los privilegios de su <strong>dueño</strong>, y esos privilegios deben estar concedidos directamente al dueño, no a través de un rol (Oracle Corporation, 2024b). Si un procedimiento de <code>BOM_VENTAS</code> necesita leer <code>BOM_CATALOGO.PRODUCTOS</code>, el <code>GRANT</code> va directo a <code>BOM_VENTAS</code>.</li>
+<li><strong>Los roles predefinidos amplios no son para aplicaciones.</strong> <code>DBA</code> (administrador de la base de datos) y <code>RESOURCE</code>, entre otros, agrupan muchos más privilegios de los que una aplicación necesita; el proyecto crea sus propios roles, con lo justo.</li>
 </ul>
 <h3 id="25-principio-de-minimo-privilegio">2.5 Principio de mínimo privilegio<a class="headerlink" href="#25-principio-de-minimo-privilegio" title="Permanent link">&para;</a></h3>
 <p>El <strong>principio de mínimo privilegio</strong> dice que un usuario debe recibir solo los privilegios que necesita para su trabajo, y ninguno más: los privilegios innecesarios comprometen la seguridad (Oracle Corporation, 2024a). Se aplica derivando los privilegios <strong>de lo que la aplicación hace de verdad</strong>, no de lo que sería cómodo tener.</p>
@@ -4254,7 +4254,7 @@
 <tr>
 <td>2. Traducir</td>
 <td>¿Qué privilegio de objeto exige cada operación?</td>
-<td><code>GET</code> = <code>SELECT</code>, <code>POST</code> = <code>INSERT</code>, <code>PUT</code> = <code>UPDATE</code>, <code>DELETE</code> = <code>DELETE</code>.</td>
+<td>Verbos HTTP (<em>HyperText Transfer Protocol</em>): <code>GET</code> = <code>SELECT</code>, <code>POST</code> = <code>INSERT</code>, <code>PUT</code> = <code>UPDATE</code>, <code>DELETE</code> = <code>DELETE</code>.</td>
 </tr>
 <tr>
 <td>3. Otorgar</td>
@@ -4324,7 +4324,7 @@
 <li><strong>3.6</strong> Crear un usuario de solo lectura y probar los límites.</li>
 <li><strong>3.7</strong> Verificar con el diccionario de datos y confirmar que LP2 sigue funcionando.</li>
 <li><strong>3.8</strong> Documentar la matriz de accesos.</li>
-<li><strong>3.9</strong> Relacionar con ADS y LP2.</li>
+<li><strong>3.9</strong> Relacionar con ADS (Análisis y Diseño de Sistemas de Información) y LP2.</li>
 </ul>
 <h3 id="31-verificar-el-punto-de-partida-y-conectar-como-system">3.1 Verificar el punto de partida y conectar como <code>system</code><a class="headerlink" href="#31-verificar-el-punto-de-partida-y-conectar-como-system" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> confirmación de que <code>bomerp-oracle</code> sigue corriendo y de que existen los usuarios de S1 y S4.</p>
@@ -4539,7 +4539,7 @@ curl<span class="w"> </span>http://localhost:8080/api/v1/productos
 </table>
 <p><code>S</code> = <code>SELECT</code>, <code>I</code> = <code>INSERT</code>, <code>U</code> = <code>UPDATE</code>, <code>D</code> = <code>DELETE</code>.</p>
 <h3 id="39-relacionar-con-ads-y-lp2">3.9 Relacionar con ADS y LP2<a class="headerlink" href="#39-relacionar-con-ads-y-lp2" title="Permanent link">&para;</a></h3>
-<p>Sesión equivalente en los otros dos cursos, misma semana: ADS S8 diseña las clases del módulo <code>ventas</code> por capas y las transforma a tablas, con la matriz de trazabilidad dominio-clase-tabla — la separación por módulos (<code>BOM_CATALOGO</code>, <code>BOM_VENTAS</code>) que hoy se refleja en roles distintos (<code>ROL_APP_CATALOGO</code>, <code>ROL_APP_VENTAS</code>) es la misma que ADS dibuja como límite de módulo. LP2 S8 construye en la SPA el CRUD de <code>Producto</code>, dependiente de <code>Categoria</code>: consume los mismos endpoints de catálogo, así que exige exactamente los privilegios de <code>ROL_APP_CATALOGO</code>, sin cambios en el código de LP2.</p>
+<p>Sesión equivalente en los otros dos cursos, misma semana: ADS S8 diseña las clases del módulo <code>ventas</code> por capas y las transforma a tablas, con la matriz de trazabilidad dominio-clase-tabla — la separación por módulos (<code>BOM_CATALOGO</code>, <code>BOM_VENTAS</code>) que hoy se refleja en roles distintos (<code>ROL_APP_CATALOGO</code>, <code>ROL_APP_VENTAS</code>) es la misma que ADS dibuja como límite de módulo. LP2 S8 construye en la SPA (<em>Single-Page Application</em>) el CRUD (<em>Create, Read, Update, Delete</em>) de <code>Producto</code>, dependiente de <code>Categoria</code>: consume los mismos endpoints de catálogo, así que exige exactamente los privilegios de <code>ROL_APP_CATALOGO</code>, sin cambios en el código de LP2.</p>
 <p><strong>Evidencia de aprendizaje:</strong></p>
 <ul>
 <li>Privilegios actuales de <code>BOMERP_APP</code>, auditados con el diccionario de datos.</li>
@@ -4708,7 +4708,7 @@ se otorga a un rol por función en vez de a un usuario?
 </table>
 <p>* Agregado manual.</p>
 <p>Nota final = suma de (<code>Peso</code> / 100 × <code>Puntos del nivel obtenido</code>) = ____ / 20.</p>
-<p>Para usar la rúbrica con IA, solicita:</p>
+<p>Para usar la rúbrica con IA (inteligencia artificial), solicita:</p>
 <div class="highlight"><pre><span></span><code>Evalúa el PDF usando la rúbrica de la sesión.
 Para cada criterio selecciona el nivel obtenido usando la escala A=20, B=15, C=10, D=5 puntos.
 Justifica brevemente cada nivel asignado.
