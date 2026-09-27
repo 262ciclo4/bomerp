@@ -203,6 +203,12 @@ Tiempo: 120 min.
 
 ### 3.1 Verificar el punto de partida
 
+**Punto de partida común:** todo el equipo debe comenzar exactamente desde donde quedó S7, no desde su propio avance individual. Clona la rama `s07-creacion-arquitectura-spa` (el snapshot de cierre de S7):
+
+```bash
+git clone --branch s07-creacion-arquitectura-spa https://github.com/262ciclo4/bomerp.git
+```
+
 **Producto del paso:** confirmación de que el backend responde con la categoría anidada y de que la SPA de S7 arranca.
 
 Con `lp2/bomerp-backend` corriendo, consulta los productos:
