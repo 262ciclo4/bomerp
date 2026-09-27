@@ -426,6 +426,20 @@ Siete reglas hacen que el árbol crezca sin desordenarse:
 
 Con las carpetas resueltas, ahora sí el nivel 4 de un componente. El diagrama siguiente hace zoom a `ventas`: es el mismo tipo de diagrama de código de S2 (2.6), pero con las seis capas del módulo, y se repite tal cual —uno por módulo— para el resto del ERP. Un solo diagrama de código para todo el sistema cruzaría componentes de C3, y ya no sería de nivel 4. Se lee de arriba hacia abajo: primero las capas y quién conoce a quién, y al final los datos y errores que circulan.
 
+**Por módulo, no por capa.** Es tentador dibujar, en cambio, un diagrama por capa técnica: uno con **todos** los controladores del ERP, otro con todos los servicios, otro con todas las entidades — es como se documentaba un sistema en capas antes de que la arquitectura modular (S2, ADR-002) fuera el punto de partida. Con pocos módulos casi no se nota la diferencia; con un ERP de diez o más módulos, un diagrama de "todos los controladores" junta `VentaController`, `ProductoController`, `ClienteController`... sin ninguna flecha real entre ellos (un controlador casi nunca depende de otro), así que deja de ser un diagrama de dependencias y se vuelve una simple lista. Peor: esconde justo lo que este curso quiere hacer visible — el límite de cada módulo (regla 1) y qué cruza ese límite (regla 6) —, porque ese límite solo se ve **dentro** de un diagrama por módulo, nunca entre diagramas por capa.
+
+**Tabla 9. Un diagrama por módulo frente a un diagrama por capa**
+
+| | Por módulo (esta guía) | Por capa (todos los controladores juntos, ...) |
+|---|---|---|
+| Qué agrupa | Todo lo que compone **un** componente de C3. | Una capa técnica de **todos** los componentes. |
+| Las flechas dicen algo | Sí: son dependencias reales entre clases que colaboran. | Casi ninguna: clases de la misma capa rara vez se llaman entre sí. |
+| El límite de módulo (regla 1, ADR-002) | Se ve: todo lo de `ventas` vive en un solo diagrama. | Se pierde: `ventas` y `catalogo` quedan mezclados por capa. |
+| Qué hacer si un módulo tiene demasiadas clases | Partirlo en dos diagramas del **mismo** módulo, por aspecto (Figuras 6 y 7: comportamiento y datos) — es lo que se hizo aquí mismo. | Partirlo por capa "resuelve" el tamaño, pero vuelve a mezclar módulos distintos. |
+| Cuándo crece un módulo nuevo | Se agrega **un** diagrama más; los existentes no cambian. | Cada diagrama de capa crece con cada módulo nuevo, para siempre. |
+
+La recomendación de esta guía es siempre **por módulo** (y, si un módulo se vuelve grande, dividir ese mismo módulo por aspecto, no reagrupar varios módulos por capa) — es la misma decisión que ya resolvieron las Figuras 6 y 7 para `ventas`. Un diagrama "todos los controladores" puede servir como **inventario** rápido (una lista de endpoints, por ejemplo, en Swagger), pero eso ya no es un diagrama de código de nivel 4: es una vista distinta, con un propósito distinto.
+
 **Figura 6. Diagrama de código (C4, nivel 4) del componente `ventas`: clases de diseño por capas**
 
 ```mermaid
@@ -509,15 +523,15 @@ classDiagram
     VentaMapper ..> Venta
     Venta "1" *-- "1..*" DetalleVenta
 
-    note for VentaController "Permisos: @PreAuthorize por operación (Tabla 10)"
-    note for VentaServiceImpl "Reglas de negocio RN1 a RN10 (Tabla 9)"
+    note for VentaController "Permisos: @PreAuthorize por operación (Tabla 11)"
+    note for VentaServiceImpl "Reglas de negocio RN1 a RN10 (Tabla 10)"
 ```
 
 Lectura del diagrama, de arriba hacia abajo: `VentaController` conoce solo la interfaz `VentaService` y valida `VentaRequest` con `@Valid` antes de llamar al servicio. `VentaServiceImpl` implementa esa interfaz y es la única clase que reúne repositorio, mapper y el servicio de otro módulo (`ProductoService`, del módulo `catalogo`), y lo hace por su interfaz pública, nunca por `ProductoRepository` (regla 5). El servicio lanza las excepciones de negocio (`404`, `409`), que el manejador común traduce a su código HTTP. `Venta` tiene repositorio; `DetalleVenta` no, porque vive dentro del agregado (regla 2). Los DTO se detallan en 3.4. LP2 declara `total`, `precioUnitario` y `subtotal` como `BigDecimal`, que coincide con esta decisión.
 
-Las clases y flechas solo dicen quién conoce a quién. Lo que hace verificable al módulo es lo que cada clase **garantiza**, y se diseña ahora, no al programar. Para `ventas` se documenta **clase por clase**: primero las reglas de negocio que aplica el servicio (Tabla 9) y los permisos por rol (Tabla 10), y luego una ficha por cada clase de la Figura 6 (Tablas 11 a 14), donde la primera columna es la **firma** de cada operación: qué recibe y qué devuelve.
+Las clases y flechas solo dicen quién conoce a quién. Lo que hace verificable al módulo es lo que cada clase **garantiza**, y se diseña ahora, no al programar. Para `ventas` se documenta **clase por clase**: primero las reglas de negocio que aplica el servicio (Tabla 10) y los permisos por rol (Tabla 11), y luego una ficha por cada clase de la Figura 6 (Tablas 12 a 15), donde la primera columna es la **firma** de cada operación: qué recibe y qué devuelve.
 
-**Tabla 9. Reglas de negocio del módulo `ventas`**
+**Tabla 10. Reglas de negocio del módulo `ventas`**
 
 | Regla | Enunciado | Error | Criterio de aceptación (Dado / Cuando / Entonces) |
 |---|---|---|---|
@@ -534,7 +548,7 @@ Las clases y flechas solo dicen quién conoce a quién. Lo que hace verificable 
 
 Cada criterio es a la vez la especificación de la regla, el caso de prueba que la verifica y la instrucción precisa que se le puede dar a una herramienta de IA para generar o revisar el código.
 
-**Tabla 10. Permisos por operación de `ventas` (mínimo privilegio)**
+**Tabla 11. Permisos por operación de `ventas` (mínimo privilegio)**
 
 | Operación | `VENDEDOR` | `SUPERVISOR` | `ADMIN` | Mecanismo |
 |---|---|---|---|---|
@@ -545,7 +559,7 @@ Cada criterio es a la vez la especificación de la regla, el caso de prueba que 
 
 Un `ADMIN` administra el sistema pero no vende: por eso no aparece en `crear`. Si un rol sin permiso invoca la operación, la respuesta es `403`; si no hay identidad, `401`. Esos dos códigos se agregan al contrato REST de 3.4 para todas las operaciones.
 
-**Tabla 11. Especificación de `VentaController`**
+**Tabla 12. Especificación de `VentaController`**
 
 | Método y ruta | Permiso | Validación de forma |
 |---|---|---|
@@ -556,9 +570,9 @@ Un `ADMIN` administra el sistema pero no vende: por eso no aparece en `crear`. S
 
 El controlador no aplica reglas de negocio: valida la forma, delega en `VentaService` y devuelve la respuesta. Una petición malformada responde `400` sin tocar el negocio. Los códigos de respuesta completos de cada ruta están en el contrato REST de 3.4.
 
-**Tabla 12. Especificación de `VentaService`**
+**Tabla 13. Especificación de `VentaService`**
 
-Cada operación del servicio se resume en una ficha: su firma (qué recibe y qué devuelve), quién puede ejecutarla, qué reglas de la Tabla 9 aplica y qué errores lanza. La identidad del usuario no es un parámetro: el servicio la toma del contexto de seguridad. El `400` de `crear` lo produce la validación de forma del controlador (Tabla 11), antes de entrar al servicio.
+Cada operación del servicio se resume en una ficha: su firma (qué recibe y qué devuelve), quién puede ejecutarla, qué reglas de la Tabla 10 aplica y qué errores lanza. La identidad del usuario no es un parámetro: el servicio la toma del contexto de seguridad. El `400` de `crear` lo produce la validación de forma del controlador (Tabla 12), antes de entrar al servicio.
 
 | Operación | Permiso | Reglas | Errores |
 |---|---|---|---|
@@ -586,7 +600,7 @@ crear(request):                                   // dentro de una transacción 
     // si algo falla antes de guardar, la transacción deshace también el descuento de stock (RN6)
 ```
 
-**Tabla 13. Especificación de `VentaRepository`**
+**Tabla 14. Especificación de `VentaRepository`**
 
 | Consulta | Nota |
 |---|---|
@@ -596,7 +610,7 @@ crear(request):                                   // dentro de una transacción 
 
 Las operaciones de guardar y buscar por `id` (`save`, `findById`) vienen del repositorio base y no se redefinen. `DetalleVenta` no tiene repositorio: se guarda en cascada con su `Venta`.
 
-**Tabla 14. Especificación de `VentaMapper`**
+**Tabla 15. Especificación de `VentaMapper`**
 
 | Conversión | Qué copia y qué no |
 |---|---|
@@ -610,7 +624,7 @@ El mapper solo traduce (y calcula el subtotal de cada línea): no consulta la ba
 
 **Producto del paso:** DTO del módulo y contrato de sus operaciones.
 
-**Tabla 15. DTO del módulo `ventas`**
+**Tabla 16. DTO del módulo `ventas`**
 
 | DTO | Campos | Decide |
 |---|---|---|
@@ -622,7 +636,7 @@ El mapper solo traduce (y calcula el subtotal de cada línea): no consulta la ba
 
 `VentaRequest` no contiene `total`, `fecha`, `estado`, `vendedorId` ni `precioUnitario`: el servidor los calcula con datos del catálogo y del momento (2.4).
 
-**Tabla 16. Contrato REST del módulo `ventas`**
+**Tabla 17. Contrato REST del módulo `ventas`**
 
 | Método y ruta | Entrada | Salida | Códigos |
 |---|---|---|---|
@@ -635,7 +649,7 @@ El mapper solo traduce (y calcula el subtotal de cada línea): no consulta la ba
 
 **Producto del paso:** correspondencia clase-tabla con tipos, claves y restricciones, aplicando la Tabla 5.
 
-**Tabla 17. Correspondencia clase-tabla del dominio de BomERP**
+**Tabla 18. Correspondencia clase-tabla del dominio de BomERP**
 
 | Clase | Tabla | Columnas y restricciones |
 |---|---|---|
@@ -648,7 +662,7 @@ El mapper solo traduce (y calcula el subtotal de cada línea): no consulta la ba
 
 **Producto del paso:** decisiones justificadas, con la alternativa descartada.
 
-**Tabla 18. Decisiones de transformación de BomERP**
+**Tabla 19. Decisiones de transformación de BomERP**
 
 | Elemento | Decisión | Por qué | Alternativa descartada |
 |---|---|---|---|
@@ -722,7 +736,7 @@ Las líneas punteadas son referencias por identificador, sin llave foránea, ent
 
 **Producto del paso:** matriz dominio-clase-tabla-DTO, con las brechas detectadas.
 
-**Tabla 19. Matriz de trazabilidad de BomERP**
+**Tabla 20. Matriz de trazabilidad de BomERP**
 
 | Dominio (S7) | Clase de diseño (LP2) | Tabla y columnas (BD2) | DTO | Estado |
 |---|---|---|---|---|
@@ -847,7 +861,7 @@ La evidencia individual se considera completa si:
 
 ### 4.6 Rúbrica de evaluación
 
-**Tabla 20. Rúbrica de evaluación**
+**Tabla 21. Rúbrica de evaluación**
 
 | Criterio | Peso (%) | A (20 pts) | B (15 pts) | C (10 pts) | D (5 pts) | Nivel obtenido |
 |---|---:|---|---|---|---|---:|
