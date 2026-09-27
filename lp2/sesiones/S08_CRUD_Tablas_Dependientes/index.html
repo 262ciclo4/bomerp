@@ -4242,6 +4242,9 @@
 <li><strong>3.11</strong> Relacionar con ADS (Análisis y Diseño de Sistemas de Información) y BD2 (Base de Datos II).</li>
 </ul>
 <h3 id="31-verificar-el-punto-de-partida">3.1 Verificar el punto de partida<a class="headerlink" href="#31-verificar-el-punto-de-partida" title="Permanent link">&para;</a></h3>
+<p><strong>Punto de partida común:</strong> todo el equipo debe comenzar exactamente desde donde quedó S7, no desde su propio avance individual. Clona la rama <code>s07-creacion-arquitectura-spa</code> (el snapshot de cierre de S7):</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>--branch<span class="w"> </span>s07-creacion-arquitectura-spa<span class="w"> </span>https://github.com/262ciclo4/bomerp.git
+</code></pre></div>
 <p><strong>Producto del paso:</strong> confirmación de que el backend responde con la categoría anidada y de que la SPA de S7 arranca.</p>
 <p>Con <code>lp2/bomerp-backend</code> corriendo, consulta los productos:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Get</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:8080/api/v1/productos"</span>
