@@ -4565,6 +4565,45 @@
 <li><strong>Un módulo previsto se crea cuando su sesión lo necesita, no antes.</strong> <code>clientes</code>, <code>inventario</code>, <code>compras</code> y <code>administracion</code> figuran en el árbol para que el diseño los tenga en cuenta, pero su carpeta aparece recién cuando LP2 llega a ese módulo.</li>
 </ol>
 <p>Con las carpetas resueltas, ahora sí el nivel 4 de un componente. El diagrama siguiente hace zoom a <code>ventas</code>: es el mismo tipo de diagrama de código de S2 (2.6), pero con las seis capas del módulo, y se repite tal cual —uno por módulo— para el resto del ERP. Un solo diagrama de código para todo el sistema cruzaría componentes de C3, y ya no sería de nivel 4. Se lee de arriba hacia abajo: primero las capas y quién conoce a quién, y al final los datos y errores que circulan.</p>
+<p><strong>Por módulo, no por capa.</strong> Es tentador dibujar, en cambio, un diagrama por capa técnica: uno con <strong>todos</strong> los controladores del ERP, otro con todos los servicios, otro con todas las entidades — es como se documentaba un sistema en capas antes de que la arquitectura modular (S2, ADR-002) fuera el punto de partida. Con pocos módulos casi no se nota la diferencia; con un ERP de diez o más módulos, un diagrama de "todos los controladores" junta <code>VentaController</code>, <code>ProductoController</code>, <code>ClienteController</code>... sin ninguna flecha real entre ellos (un controlador casi nunca depende de otro), así que deja de ser un diagrama de dependencias y se vuelve una simple lista. Peor: esconde justo lo que este curso quiere hacer visible — el límite de cada módulo (regla 1) y qué cruza ese límite (regla 6) —, porque ese límite solo se ve <strong>dentro</strong> de un diagrama por módulo, nunca entre diagramas por capa.</p>
+<p><strong>Tabla 9. Un diagrama por módulo frente a un diagrama por capa</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Por módulo (esta guía)</th>
+<th>Por capa (todos los controladores juntos, ...)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Qué agrupa</td>
+<td>Todo lo que compone <strong>un</strong> componente de C3.</td>
+<td>Una capa técnica de <strong>todos</strong> los componentes.</td>
+</tr>
+<tr>
+<td>Las flechas dicen algo</td>
+<td>Sí: son dependencias reales entre clases que colaboran.</td>
+<td>Casi ninguna: clases de la misma capa rara vez se llaman entre sí.</td>
+</tr>
+<tr>
+<td>El límite de módulo (regla 1, ADR-002)</td>
+<td>Se ve: todo lo de <code>ventas</code> vive en un solo diagrama.</td>
+<td>Se pierde: <code>ventas</code> y <code>catalogo</code> quedan mezclados por capa.</td>
+</tr>
+<tr>
+<td>Qué hacer si un módulo tiene demasiadas clases</td>
+<td>Partirlo en dos diagramas del <strong>mismo</strong> módulo, por aspecto (Figuras 6 y 7: comportamiento y datos) — es lo que se hizo aquí mismo.</td>
+<td>Partirlo por capa "resuelve" el tamaño, pero vuelve a mezclar módulos distintos.</td>
+</tr>
+<tr>
+<td>Cuándo crece un módulo nuevo</td>
+<td>Se agrega <strong>un</strong> diagrama más; los existentes no cambian.</td>
+<td>Cada diagrama de capa crece con cada módulo nuevo, para siempre.</td>
+</tr>
+</tbody>
+</table>
+<p>La recomendación de esta guía es siempre <strong>por módulo</strong> (y, si un módulo se vuelve grande, dividir ese mismo módulo por aspecto, no reagrupar varios módulos por capa) — es la misma decisión que ya resolvieron las Figuras 6 y 7 para <code>ventas</code>. Un diagrama "todos los controladores" puede servir como <strong>inventario</strong> rápido (una lista de endpoints, por ejemplo, en Swagger), pero eso ya no es un diagrama de código de nivel 4: es una vista distinta, con un propósito distinto.</p>
 <p><strong>Figura 6. Diagrama de código (C4, nivel 4) del componente <code>ventas</code>: clases de diseño por capas</strong></p>
 <pre class="mermaid"><code>classDiagram
     direction TB
@@ -4646,11 +4685,11 @@
     VentaMapper ..&gt; Venta
     Venta "1" *-- "1..*" DetalleVenta
 
-    note for VentaController "Permisos: @PreAuthorize por operación (Tabla 10)"
-    note for VentaServiceImpl "Reglas de negocio RN1 a RN10 (Tabla 9)"</code></pre>
+    note for VentaController "Permisos: @PreAuthorize por operación (Tabla 11)"
+    note for VentaServiceImpl "Reglas de negocio RN1 a RN10 (Tabla 10)"</code></pre>
 <p>Lectura del diagrama, de arriba hacia abajo: <code>VentaController</code> conoce solo la interfaz <code>VentaService</code> y valida <code>VentaRequest</code> con <code>@Valid</code> antes de llamar al servicio. <code>VentaServiceImpl</code> implementa esa interfaz y es la única clase que reúne repositorio, mapper y el servicio de otro módulo (<code>ProductoService</code>, del módulo <code>catalogo</code>), y lo hace por su interfaz pública, nunca por <code>ProductoRepository</code> (regla 5). El servicio lanza las excepciones de negocio (<code>404</code>, <code>409</code>), que el manejador común traduce a su código HTTP. <code>Venta</code> tiene repositorio; <code>DetalleVenta</code> no, porque vive dentro del agregado (regla 2). Los DTO se detallan en 3.4. LP2 declara <code>total</code>, <code>precioUnitario</code> y <code>subtotal</code> como <code>BigDecimal</code>, que coincide con esta decisión.</p>
-<p>Las clases y flechas solo dicen quién conoce a quién. Lo que hace verificable al módulo es lo que cada clase <strong>garantiza</strong>, y se diseña ahora, no al programar. Para <code>ventas</code> se documenta <strong>clase por clase</strong>: primero las reglas de negocio que aplica el servicio (Tabla 9) y los permisos por rol (Tabla 10), y luego una ficha por cada clase de la Figura 6 (Tablas 11 a 14), donde la primera columna es la <strong>firma</strong> de cada operación: qué recibe y qué devuelve.</p>
-<p><strong>Tabla 9. Reglas de negocio del módulo <code>ventas</code></strong></p>
+<p>Las clases y flechas solo dicen quién conoce a quién. Lo que hace verificable al módulo es lo que cada clase <strong>garantiza</strong>, y se diseña ahora, no al programar. Para <code>ventas</code> se documenta <strong>clase por clase</strong>: primero las reglas de negocio que aplica el servicio (Tabla 10) y los permisos por rol (Tabla 11), y luego una ficha por cada clase de la Figura 6 (Tablas 12 a 15), donde la primera columna es la <strong>firma</strong> de cada operación: qué recibe y qué devuelve.</p>
+<p><strong>Tabla 10. Reglas de negocio del módulo <code>ventas</code></strong></p>
 <table>
 <thead>
 <tr>
@@ -4724,7 +4763,7 @@
 </tbody>
 </table>
 <p>Cada criterio es a la vez la especificación de la regla, el caso de prueba que la verifica y la instrucción precisa que se le puede dar a una herramienta de IA para generar o revisar el código.</p>
-<p><strong>Tabla 10. Permisos por operación de <code>ventas</code> (mínimo privilegio)</strong></p>
+<p><strong>Tabla 11. Permisos por operación de <code>ventas</code> (mínimo privilegio)</strong></p>
 <table>
 <thead>
 <tr>
@@ -4767,7 +4806,7 @@
 </tbody>
 </table>
 <p>Un <code>ADMIN</code> administra el sistema pero no vende: por eso no aparece en <code>crear</code>. Si un rol sin permiso invoca la operación, la respuesta es <code>403</code>; si no hay identidad, <code>401</code>. Esos dos códigos se agregan al contrato REST de 3.4 para todas las operaciones.</p>
-<p><strong>Tabla 11. Especificación de <code>VentaController</code></strong></p>
+<p><strong>Tabla 12. Especificación de <code>VentaController</code></strong></p>
 <table>
 <thead>
 <tr>
@@ -4800,8 +4839,8 @@
 </tbody>
 </table>
 <p>El controlador no aplica reglas de negocio: valida la forma, delega en <code>VentaService</code> y devuelve la respuesta. Una petición malformada responde <code>400</code> sin tocar el negocio. Los códigos de respuesta completos de cada ruta están en el contrato REST de 3.4.</p>
-<p><strong>Tabla 12. Especificación de <code>VentaService</code></strong></p>
-<p>Cada operación del servicio se resume en una ficha: su firma (qué recibe y qué devuelve), quién puede ejecutarla, qué reglas de la Tabla 9 aplica y qué errores lanza. La identidad del usuario no es un parámetro: el servicio la toma del contexto de seguridad. El <code>400</code> de <code>crear</code> lo produce la validación de forma del controlador (Tabla 11), antes de entrar al servicio.</p>
+<p><strong>Tabla 13. Especificación de <code>VentaService</code></strong></p>
+<p>Cada operación del servicio se resume en una ficha: su firma (qué recibe y qué devuelve), quién puede ejecutarla, qué reglas de la Tabla 10 aplica y qué errores lanza. La identidad del usuario no es un parámetro: el servicio la toma del contexto de seguridad. El <code>400</code> de <code>crear</code> lo produce la validación de forma del controlador (Tabla 12), antes de entrar al servicio.</p>
 <table>
 <thead>
 <tr>
@@ -4854,7 +4893,7 @@
     devolver ventaMapper.toResponse(ventaRepository.guardar(venta))
     // si algo falla antes de guardar, la transacción deshace también el descuento de stock (RN6)
 </code></pre></div>
-<p><strong>Tabla 13. Especificación de <code>VentaRepository</code></strong></p>
+<p><strong>Tabla 14. Especificación de <code>VentaRepository</code></strong></p>
 <table>
 <thead>
 <tr>
@@ -4878,7 +4917,7 @@
 </tbody>
 </table>
 <p>Las operaciones de guardar y buscar por <code>id</code> (<code>save</code>, <code>findById</code>) vienen del repositorio base y no se redefinen. <code>DetalleVenta</code> no tiene repositorio: se guarda en cascada con su <code>Venta</code>.</p>
-<p><strong>Tabla 14. Especificación de <code>VentaMapper</code></strong></p>
+<p><strong>Tabla 15. Especificación de <code>VentaMapper</code></strong></p>
 <table>
 <thead>
 <tr>
@@ -4904,7 +4943,7 @@
 <p>El mapper solo traduce (y calcula el subtotal de cada línea): no consulta la base de datos ni aplica reglas de negocio.</p>
 <h3 id="34-definir-los-dto-y-el-contrato-rest">3.4 Definir los DTO y el contrato REST<a class="headerlink" href="#34-definir-los-dto-y-el-contrato-rest" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> DTO del módulo y contrato de sus operaciones.</p>
-<p><strong>Tabla 15. DTO del módulo <code>ventas</code></strong></p>
+<p><strong>Tabla 16. DTO del módulo <code>ventas</code></strong></p>
 <table>
 <thead>
 <tr>
@@ -4942,7 +4981,7 @@
 </tbody>
 </table>
 <p><code>VentaRequest</code> no contiene <code>total</code>, <code>fecha</code>, <code>estado</code>, <code>vendedorId</code> ni <code>precioUnitario</code>: el servidor los calcula con datos del catálogo y del momento (2.4).</p>
-<p><strong>Tabla 16. Contrato REST del módulo <code>ventas</code></strong></p>
+<p><strong>Tabla 17. Contrato REST del módulo <code>ventas</code></strong></p>
 <table>
 <thead>
 <tr>
@@ -4981,7 +5020,7 @@
 </table>
 <h3 id="35-transformar-las-clases-en-tablas">3.5 Transformar las clases en tablas<a class="headerlink" href="#35-transformar-las-clases-en-tablas" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> correspondencia clase-tabla con tipos, claves y restricciones, aplicando la Tabla 5.</p>
-<p><strong>Tabla 17. Correspondencia clase-tabla del dominio de BomERP</strong></p>
+<p><strong>Tabla 18. Correspondencia clase-tabla del dominio de BomERP</strong></p>
 <table>
 <thead>
 <tr>
@@ -5015,7 +5054,7 @@
 </table>
 <h3 id="36-decidir-la-herencia-de-cliente-y-el-objeto-de-valor-dinero">3.6 Decidir la herencia de <code>Cliente</code> y el objeto de valor <code>Dinero</code><a class="headerlink" href="#36-decidir-la-herencia-de-cliente-y-el-objeto-de-valor-dinero" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> decisiones justificadas, con la alternativa descartada.</p>
-<p><strong>Tabla 18. Decisiones de transformación de BomERP</strong></p>
+<p><strong>Tabla 19. Decisiones de transformación de BomERP</strong></p>
 <table>
 <thead>
 <tr>
@@ -5108,7 +5147,7 @@
 <p>Las líneas punteadas son referencias por identificador, sin llave foránea, entre módulos distintos (2.6). Las tablas de <code>clientes</code> son el diseño previsto: hoy no existen en BD2 ni en LP2.</p>
 <h3 id="38-armar-la-matriz-de-trazabilidad">3.8 Armar la matriz de trazabilidad<a class="headerlink" href="#38-armar-la-matriz-de-trazabilidad" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> matriz dominio-clase-tabla-DTO, con las brechas detectadas.</p>
-<p><strong>Tabla 19. Matriz de trazabilidad de BomERP</strong></p>
+<p><strong>Tabla 20. Matriz de trazabilidad de BomERP</strong></p>
 <table>
 <thead>
 <tr>
@@ -5269,7 +5308,7 @@ conservar) en vez de una llave foránea?
 <li>¿Qué brecha detectó tu matriz de trazabilidad, y en qué curso se corrige?</li>
 </ol>
 <h3 id="46-rubrica-de-evaluacion">4.6 Rúbrica de evaluación<a class="headerlink" href="#46-rubrica-de-evaluacion" title="Permanent link">&para;</a></h3>
-<p><strong>Tabla 20. Rúbrica de evaluación</strong></p>
+<p><strong>Tabla 21. Rúbrica de evaluación</strong></p>
 <table>
 <thead>
 <tr>
