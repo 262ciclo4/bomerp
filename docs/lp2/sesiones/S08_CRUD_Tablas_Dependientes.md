@@ -8,7 +8,7 @@ Tiempo: 20 min.
 
 ### 1.1 Presentación de la sesión
 
-El CRUD de `Categoria` (S7) es el caso más simple de una pantalla de datos: todo lo que el formulario pide pertenece a la propia entidad. Casi ninguna tabla de un sistema real es así. Un `Producto` no existe solo: siempre pertenece a una categoría, y nadie debería tener que escribir a mano el identificador de esa categoría para registrarlo. Esta sesión construye el primer CRUD **dependiente** de la SPA: el formulario de un producto le muestra al usuario las categorías que existen y le deja elegir una, la lista muestra a qué categoría pertenece cada producto, y las dependencias entre las dos tablas se validan antes y después de llamar al backend. El porqué de tratarlo como un problema aparte se desarrolla en 1.6, a partir del caso.
+El CRUD (*Create, Read, Update, Delete*: crear, leer, actualizar y eliminar) de `Categoria` (S7) es el caso más simple de una pantalla de datos: todo lo que el formulario pide pertenece a la propia entidad. Casi ninguna tabla de un sistema real es así. Un `Producto` no existe solo: siempre pertenece a una categoría, y nadie debería tener que escribir a mano el identificador de esa categoría para registrarlo. Esta sesión construye el primer CRUD **dependiente** de la SPA (*Single-Page Application*): el formulario de un producto le muestra al usuario las categorías que existen y le deja elegir una, la lista muestra a qué categoría pertenece cada producto, y las dependencias entre las dos tablas se validan antes y después de llamar al backend. El porqué de tratarlo como un problema aparte se desarrolla en 1.6, a partir del caso.
 
 ### 1.2 Índice
 
@@ -164,7 +164,7 @@ Una dependencia se puede romper en tres momentos distintos, y cada uno se valida
 | Existencia previa (frontend) | Que exista al menos una opción para elegir. | No hay ninguna categoría registrada. | Aviso con enlace para crear una, y botón de guardar deshabilitado. |
 | Backend | Que la referencia enviada exista de verdad. | La categoría elegida se eliminó mientras el formulario estaba abierto: `404`. | Mensaje específico, y recarga de las opciones. |
 
-La validación del frontend **ayuda** al usuario a no equivocarse; la del backend **protege** los datos, porque cualquiera puede llamar a la API sin pasar por la pantalla. Por eso las dos existen, y ninguna reemplaza a la otra. El mensaje de la pantalla depende de qué falló: un `404` cuyo mensaje habla de la categoría es una dependencia rota; cualquier otro error es un error genérico de guardado.
+La validación del frontend **ayuda** al usuario a no equivocarse; la del backend **protege** los datos, porque cualquiera puede llamar a la API (*Application Programming Interface*) sin pasar por la pantalla. Por eso las dos existen, y ninguna reemplaza a la otra. El mensaje de la pantalla depende de qué falló: un `404` cuyo mensaje habla de la categoría es una dependencia rota; cualquier otro error es un error genérico de guardado.
 
 ### 2.5 Presentación de información relacionada
 
@@ -199,7 +199,7 @@ Tiempo: 120 min.
 - **3.8** Validar las dependencias en `ProductoForm`.
 - **3.9** Registrar las rutas y el enlace del sidebar.
 - **3.10** Probar el CRUD dependiente completo.
-- **3.11** Relacionar con ADS y BD2.
+- **3.11** Relacionar con ADS (Análisis y Diseño de Sistemas de Información) y BD2 (Base de Datos II).
 
 ### 3.1 Verificar el punto de partida
 
@@ -268,7 +268,7 @@ export interface ProductoRequest {
 
 ### 3.3 Crear `ProductoService`
 
-**Producto del paso:** el servicio HTTP de `Producto`, con el filtro por categoría.
+**Producto del paso:** el servicio HTTP (*HyperText Transfer Protocol*) de `Producto`, con el filtro por categoría.
 
 Crea **`lp2/bomerp-frontend/src/app/features/catalogo/producto/producto-service.ts`**:
 
@@ -311,7 +311,7 @@ export class ProductoService {
 }
 ```
 
-Es el mismo patrón que `CategoriaService` (S7): el servicio no sabe nada de pantallas, y usa `ApiService` para la URL base. La única novedad es `listar(categoriaId?)`, que agrega el parámetro `categoriaId` solo cuando se le pasa uno (Angular, 2026d).
+Es el mismo patrón que `CategoriaService` (S7): el servicio no sabe nada de pantallas, y usa `ApiService` para la URL (*Uniform Resource Locator*) base. La única novedad es `listar(categoriaId?)`, que agrega el parámetro `categoriaId` solo cuando se le pasa uno (Angular, 2026d).
 
 ### 3.4 Crear `ProductoList` con la categoría de cada producto
 
@@ -768,7 +768,7 @@ Con `lp2/bomerp-backend` corriendo y `npm start` activo:
 
 ### 3.11 Relacionar con ADS y BD2
 
-Sesión equivalente en los otros dos cursos, misma semana: ADS S8 diseña las clases de un módulo por capas, con sus DTO y su contrato REST — el `ProductoResponse` con su `categoria` anidada, un resumen y no la categoría completa, es exactamente el tipo de DTO que esa sesión diseña, y la matriz de trazabilidad de ADS S8 documenta que `PRODUCTOS.ID_CATEGORIA` hoy admite valores nulos en la base de datos aunque el diseño de clases la exige. BD2 S8 rediseña los privilegios del usuario `BOMERP_APP` con roles por función: el CRUD de `Producto` de hoy consume los mismos endpoints de catálogo, así que ejerce exactamente los privilegios de `ROL_APP_CATALOGO`, sin ningún cambio en el código de esta sesión.
+Sesión equivalente en los otros dos cursos, misma semana: ADS S8 diseña las clases de un módulo por capas, con sus DTO y su contrato REST (*Representational State Transfer*) — el `ProductoResponse` con su `categoria` anidada, un resumen y no la categoría completa, es exactamente el tipo de DTO que esa sesión diseña, y la matriz de trazabilidad de ADS S8 documenta que `PRODUCTOS.ID_CATEGORIA` hoy admite valores nulos en la base de datos aunque el diseño de clases la exige. BD2 S8 rediseña los privilegios del usuario `BOMERP_APP` con roles por función: el CRUD de `Producto` de hoy consume los mismos endpoints de catálogo, así que ejerce exactamente los privilegios de `ROL_APP_CATALOGO`, sin ningún cambio en el código de esta sesión.
 
 **Evidencia de aprendizaje:**
 
@@ -908,7 +908,7 @@ La evidencia individual se considera completa si:
 
 Nota final = suma de (`Peso` / 100 × `Puntos del nivel obtenido`) = ____ / 20.
 
-Para usar la rúbrica con IA, solicita:
+Para usar la rúbrica con IA (inteligencia artificial), solicita:
 
 ```text
 Evalúa el PDF usando la rúbrica de la sesión.

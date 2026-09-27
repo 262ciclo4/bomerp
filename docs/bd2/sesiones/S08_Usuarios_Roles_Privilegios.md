@@ -6,7 +6,7 @@ Tiempo: 20 min.
 
 ### 1.1 Presentación de la sesión
 
-S7 distinguió, con evidencia, una conexión administrativa (SYSDBA) de una conexión de aplicación: el usuario de la aplicación no puede ver lo que solo un administrador debe ver. Esa distinción se observó, pero todavía no se diseñó. Los privilegios que hoy tiene `BOMERP_APP` se fueron concediendo uno a uno, tabla por tabla, a medida que cada sesión los necesitó, sin preguntarse si la aplicación usa de verdad todo lo que se le dio. Esta sesión formaliza el modelo: qué usuarios existen y para qué, qué privilegios de sistema y de objeto necesita cada uno, cómo agruparlos en roles, y cómo verificar con el diccionario de datos que nadie tiene más de lo que necesita. El porqué de hacerlo ahora se desarrolla en 1.6, a partir del caso.
+S7 distinguió, con evidencia, una conexión administrativa (SYSDBA, el privilegio de administrador de la base de datos en Oracle) de una conexión de aplicación: el usuario de la aplicación no puede ver lo que solo un administrador debe ver. Esa distinción se observó, pero todavía no se diseñó. Los privilegios que hoy tiene `BOMERP_APP` se fueron concediendo uno a uno, tabla por tabla, a medida que cada sesión los necesitó, sin preguntarse si la aplicación usa de verdad todo lo que se le dio. Esta sesión formaliza el modelo: qué usuarios existen y para qué, qué privilegios de sistema y de objeto necesita cada uno, cómo agruparlos en roles, y cómo verificar con el diccionario de datos que nadie tiene más de lo que necesita. El porqué de hacerlo ahora se desarrolla en 1.6, a partir del caso.
 
 ### 1.2 Índice
 
@@ -24,7 +24,7 @@ Al concluir la clase, estarás en condiciones de:
 
 ### 1.4 Producto de sesión
 
-Modelo de seguridad de `bomerp-oracle`: roles por función (`ROL_APP_CATALOGO`, `ROL_APP_VENTAS`, `ROL_CONSULTA`), `BOMERP_APP` reasignado a roles con los privilegios recortados a lo que LP2 realmente usa, un usuario de solo lectura (`BOMERP_REPORTES`), evidencia de accesos denegados a propósito, y la matriz de accesos verificada con `DBA_SYS_PRIVS`, `DBA_TAB_PRIVS` y `DBA_ROLE_PRIVS`.
+Modelo de seguridad de `bomerp-oracle`: roles por función (`ROL_APP_CATALOGO`, `ROL_APP_VENTAS`, `ROL_CONSULTA`), `BOMERP_APP` reasignado a roles con los privilegios recortados a lo que LP2 (Lenguaje de Programación II) realmente usa, un usuario de solo lectura (`BOMERP_REPORTES`), evidencia de accesos denegados a propósito, y la matriz de accesos verificada con `DBA_SYS_PRIVS`, `DBA_TAB_PRIVS` y `DBA_ROLE_PRIVS`.
 
 ### 1.5 Metodología
 
@@ -34,7 +34,7 @@ Modelo de seguridad de `bomerp-oracle`: roles por función (`ROL_APP_CATALOGO`, 
 |---|---|---|
 | Revisión previa individual | Repasar qué privilegios recibió `BOMERP_APP` en S1 y S4 (`GRANT` directos sobre tablas) y qué operaciones ejecuta realmente LP2 sobre cada tabla. Trabajo individual, antes de clase. | S1 (3.2-3.3), S4, S7 (3.5), controladores de LP2. |
 | Clase presencial | Auditoría guiada de los privilegios actuales, diseño de roles por función, reasignación de `BOMERP_APP`, creación de un usuario de solo lectura y verificación con el diccionario de datos. Trabajo individual en la propia laptop, siguiendo al docente paso a paso. | Contenedor `bomerp-oracle` corriendo (S1), Pasos 3.1 a 3.9 de esta guía. |
-| Evaluación formativa | Verificación en clase de los accesos denegados a propósito (`ORA-01031`) y de la matriz de accesos. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4. | Indicaciones de entrega (4.3), rúbrica de evaluación (4.6). |
+| Evaluación formativa | Verificación en clase de los accesos denegados a propósito (`ORA-01031`, código de error de Oracle) y de la matriz de accesos. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4. | Indicaciones de entrega (4.3), rúbrica de evaluación (4.6). |
 
 El cierre real de S7, construido con las respuestas del Anexo de feedback de esa sesión, se entrega al inicio de esta clase.
 
@@ -83,7 +83,7 @@ flowchart TB
     class S8 today;
 ```
 
-**Sobre el ambiente de esta sesión.** El sílabo declara Oracle Database 19c EE sobre Oracle Linux como ambiente de esta unidad, todavía no aprovisionado en este repositorio. Esta guía trabaja sobre `bomerp-oracle` (Oracle Database Free, el mismo contenedor de S1 y S7), conectado a la base conectable `FREEPDB1` como `system`. Los conceptos y las sentencias de esta sesión (`CREATE USER`, `CREATE ROLE`, `GRANT`, `REVOKE` y las vistas `DBA_*`) son los mismos en Oracle 19c.
+**Sobre el ambiente de esta sesión.** El sílabo declara Oracle Database 19c EE (*Enterprise Edition*) sobre Oracle Linux como ambiente de esta unidad, todavía no aprovisionado en este repositorio. Esta guía trabaja sobre `bomerp-oracle` (Oracle Database Free, el mismo contenedor de S1 y S7), conectado a la base conectable `FREEPDB1` como `system`. Los conceptos y las sentencias de esta sesión (`CREATE USER`, `CREATE ROLE`, `GRANT`, `REVOKE` y las vistas `DBA_*`) son los mismos en Oracle 19c.
 
 ## 2. Explica
 
@@ -138,7 +138,7 @@ Un **usuario** de Oracle es una identidad con la que alguien se conecta, y cada 
 
 La regla que ordena la tabla es la separación entre quien **posee** los objetos y quien los **usa**: la aplicación nunca es dueña de las tablas que consulta, y por eso no puede alterarlas ni eliminarlas, aunque un error de código lo intentara.
 
-En Oracle Database Free, la base contiene una raíz (`CDB$ROOT`) y una base conectable (`FREEPDB1`), donde viven los usuarios del proyecto. Conéctate siempre a `FREEPDB1`: crear un usuario o un rol sin el prefijo `C##` desde la raíz falla con `ORA-65096`.
+En Oracle Database Free, la base contiene una raíz (`CDB$ROOT`, de *Container Database*) y una base conectable (`FREEPDB1`, de *Pluggable Database*), donde viven los usuarios del proyecto. Conéctate siempre a `FREEPDB1`: crear un usuario o un rol sin el prefijo `C##` desde la raíz falla con `ORA-65096`.
 
 ### 2.3 Privilegios de sistema y de objeto
 
@@ -175,8 +175,8 @@ Un **rol** es un conjunto de privilegios con nombre, que se otorga a usuarios (u
 Tres detalles de los roles evitan sorpresas:
 
 - **Se activan al iniciar la sesión.** Los roles concedidos a un usuario se habilitan como predeterminados al conectarse. Un rol concedido *mientras* la sesión ya está abierta no aparece en ella hasta que el usuario se reconecta.
-- **No aplican dentro de procedimientos de derechos del definidor.** Un procedimiento PL/SQL corre por defecto con los privilegios de su **dueño**, y esos privilegios deben estar concedidos directamente al dueño, no a través de un rol (Oracle Corporation, 2024b). Si un procedimiento de `BOM_VENTAS` necesita leer `BOM_CATALOGO.PRODUCTOS`, el `GRANT` va directo a `BOM_VENTAS`.
-- **Los roles predefinidos amplios no son para aplicaciones.** `DBA` y `RESOURCE`, entre otros, agrupan muchos más privilegios de los que una aplicación necesita; el proyecto crea sus propios roles, con lo justo.
+- **No aplican dentro de procedimientos de derechos del definidor.** Un procedimiento PL/SQL (*Procedural Language/Structured Query Language*, el lenguaje de programación de Oracle) corre por defecto con los privilegios de su **dueño**, y esos privilegios deben estar concedidos directamente al dueño, no a través de un rol (Oracle Corporation, 2024b). Si un procedimiento de `BOM_VENTAS` necesita leer `BOM_CATALOGO.PRODUCTOS`, el `GRANT` va directo a `BOM_VENTAS`.
+- **Los roles predefinidos amplios no son para aplicaciones.** `DBA` (administrador de la base de datos) y `RESOURCE`, entre otros, agrupan muchos más privilegios de los que una aplicación necesita; el proyecto crea sus propios roles, con lo justo.
 
 ### 2.5 Principio de mínimo privilegio
 
@@ -187,7 +187,7 @@ El **principio de mínimo privilegio** dice que un usuario debe recibir solo los
 | Paso | Pregunta | Evidencia en esta sesión |
 |---|---|---|
 | 1. Inventariar | ¿Qué operaciones ejecuta la aplicación sobre cada tabla? | Controladores de LP2 (3.3). |
-| 2. Traducir | ¿Qué privilegio de objeto exige cada operación? | `GET` = `SELECT`, `POST` = `INSERT`, `PUT` = `UPDATE`, `DELETE` = `DELETE`. |
+| 2. Traducir | ¿Qué privilegio de objeto exige cada operación? | Verbos HTTP (*HyperText Transfer Protocol*): `GET` = `SELECT`, `POST` = `INSERT`, `PUT` = `UPDATE`, `DELETE` = `DELETE`. |
 | 3. Otorgar | ¿Qué privilegios faltan, y solo esos? | Roles por función (3.4-3.5). |
 | 4. Verificar | ¿Qué debería fallar, y falla? | Accesos denegados a propósito (3.6). |
 | 5. Revisar | ¿Sigue haciendo falta cada privilegio? | Matriz de accesos (3.8), revisada al agregar funcionalidad. |
@@ -229,7 +229,7 @@ Tiempo: 90 min.
 - **3.6** Crear un usuario de solo lectura y probar los límites.
 - **3.7** Verificar con el diccionario de datos y confirmar que LP2 sigue funcionando.
 - **3.8** Documentar la matriz de accesos.
-- **3.9** Relacionar con ADS y LP2.
+- **3.9** Relacionar con ADS (Análisis y Diseño de Sistemas de Información) y LP2.
 
 ### 3.1 Verificar el punto de partida y conectar como `system`
 
@@ -436,7 +436,7 @@ Resultado esperado: `201 Created` con la venta registrada, y `200 OK` con la lis
 
 ### 3.9 Relacionar con ADS y LP2
 
-Sesión equivalente en los otros dos cursos, misma semana: ADS S8 diseña las clases del módulo `ventas` por capas y las transforma a tablas, con la matriz de trazabilidad dominio-clase-tabla — la separación por módulos (`BOM_CATALOGO`, `BOM_VENTAS`) que hoy se refleja en roles distintos (`ROL_APP_CATALOGO`, `ROL_APP_VENTAS`) es la misma que ADS dibuja como límite de módulo. LP2 S8 construye en la SPA el CRUD de `Producto`, dependiente de `Categoria`: consume los mismos endpoints de catálogo, así que exige exactamente los privilegios de `ROL_APP_CATALOGO`, sin cambios en el código de LP2.
+Sesión equivalente en los otros dos cursos, misma semana: ADS S8 diseña las clases del módulo `ventas` por capas y las transforma a tablas, con la matriz de trazabilidad dominio-clase-tabla — la separación por módulos (`BOM_CATALOGO`, `BOM_VENTAS`) que hoy se refleja en roles distintos (`ROL_APP_CATALOGO`, `ROL_APP_VENTAS`) es la misma que ADS dibuja como límite de módulo. LP2 S8 construye en la SPA (*Single-Page Application*) el CRUD (*Create, Read, Update, Delete*) de `Producto`, dependiente de `Categoria`: consume los mismos endpoints de catálogo, así que exige exactamente los privilegios de `ROL_APP_CATALOGO`, sin cambios en el código de LP2.
 
 **Evidencia de aprendizaje:**
 
@@ -576,7 +576,7 @@ La evidencia individual se considera completa si:
 
 Nota final = suma de (`Peso` / 100 × `Puntos del nivel obtenido`) = ____ / 20.
 
-Para usar la rúbrica con IA, solicita:
+Para usar la rúbrica con IA (inteligencia artificial), solicita:
 
 ```text
 Evalúa el PDF usando la rúbrica de la sesión.
