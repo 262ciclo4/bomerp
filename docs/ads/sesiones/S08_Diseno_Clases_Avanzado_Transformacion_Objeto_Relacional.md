@@ -25,7 +25,7 @@ Al concluir la clase, estarás en condiciones de:
 
 ### 1.4 Producto de sesión
 
-Diseño de clases de un módulo de tu propio proyecto, con su transformación objeto-relacional: diagrama de clases de diseño por capas (Controller, Service, Repository, Mapper, entidades y DTO), contrato REST conceptual del módulo, tabla de correspondencia clase-tabla con tipos, claves y restricciones, decisión justificada para la herencia y para el objeto de valor, modelo relacional dibujado, y matriz de trazabilidad dominio-clase-tabla-DTO.
+Diseño de clases de un módulo de tu propio proyecto, con su transformación objeto-relacional: diagrama de clases de diseño por capas (Controller, Service, Repository, Mapper, entidades y DTO, *Data Transfer Object*), contrato REST (*Representational State Transfer*) conceptual del módulo, tabla de correspondencia clase-tabla con tipos, claves y restricciones, decisión justificada para la herencia y para el objeto de valor, modelo relacional dibujado, y matriz de trazabilidad dominio-clase-tabla-DTO.
 
 ### 1.5 Metodología
 
@@ -39,22 +39,25 @@ Diseño de clases de un módulo de tu propio proyecto, con su transformación ob
 
 ### 1.6 Motivación de la sesión
 
-#### 1.6.1 Caso: el precio que cambió después de la venta
+#### 1.6.1 Caso: el restaurante donde una sola persona hacía todo
 
-Un equipo traduce su diagrama de clases del dominio a tablas de forma literal. En el diagrama, `DetalleVenta` se relaciona con `Producto`, así que en la base de datos `DETALLE_VENTAS` guarda solo una llave foránea hacia `PRODUCTOS` y lee el precio con un `JOIN`. Funciona en las pruebas. Una semana después, el precio de un producto cambia en el catálogo y el total de todas las ventas antiguas de ese producto cambia con él: los reportes de ayer ya no coinciden con los de hoy. Además, esa llave foránea obliga al módulo `ventas` a depender del esquema de `catalogo`, justo lo que la arquitectura del proyecto quería evitar.
+Un restaurante nuevo tiene un solo trabajador que toma el pedido, cocina, cobra y anota el inventario.
 
-Ninguna de las dos decisiones del equipo era descuidada: el diagrama de S7 dice que `DetalleVenta` "referencia" a `Producto`, y una asociación se implementa, por defecto, con una llave foránea. El problema es que nadie hizo el paso intermedio: preguntar qué significa esa asociación **al persistirse**. La respuesta correcta para `DetalleVenta` no es una llave foránea con `JOIN`, sino una **referencia por identificador** más una **copia del nombre y del precio** de ese momento — y esa decisión solo aparece cuando el diagrama de dominio se refina como clase de diseño y se transforma a tablas con criterio, no con una regla mecánica.
+Con pocas mesas funciona. Un sábado lleno se equivoca en la cuenta y no avisa que se acabó el pollo. Nadie sabe dónde falló, y cambiar una sola regla, como un descuento, obliga a revisar todo.
+
+Otro restaurante define roles antes de abrir: el mozo recibe el pedido, la cocina lo prepara y el almacén guarda lo que hay. Un sistema necesita lo mismo: un plano de qué clase recibe, cuál decide y cuál guarda.
 
 **Preguntas de análisis**
 
 **Activación de conocimientos previos**
 
-1. En el diagrama de clases del dominio de tu proyecto (S7), ¿qué relación conecta clases que pertenecen a módulos distintos?
+1. ¿Qué pasa en un negocio cuando una sola persona hace todo?
+2. ¿Qué clases del negocio ya tiene tu diagrama de S7?
 
 **Comprensión del diseño de clases y su transformación**
 
-1. ¿Qué diferencia hay entre decir "`DetalleVenta` referencia a `Producto`" (dominio) y decir "`DetalleVenta` guarda el identificador, el nombre y el precio del producto en ese momento" (persistencia)? ¿Qué pregunta responde cada frase?
-2. Si `Venta` recibe del cliente el `total` y el `precioUnitario` de cada línea, ¿qué podría salir mal? ¿Qué campos debería decidir el servidor, y no el cliente?
+1. En un módulo de tu proyecto, ¿qué clase debería recibir la petición, cuál aplicar las reglas del negocio y cuál guardar los datos?
+2. ¿Qué gana el equipo al dibujar esas clases antes de programar?
 
 ### 1.7 Ubicación en el curso
 
@@ -102,11 +105,11 @@ flowchart TB
 
 Lectura del diagrama: el diseño de clases parte del dominio y se bifurca en dos caminos que se vuelven a unir. Por un lado, las clases se organizan en capas y definen lo que entra y sale de cada operación (DTO y contrato REST). Por el otro, se transforman en tablas. La matriz de trazabilidad es el punto donde ambos caminos se verifican entre sí. Cada apartado siguiente desarrolla uno de esos pasos, en el mismo orden del Índice (1.2).
 
-El estilo de organización no se decide en esta sesión: ya está fijado desde S4 y formalizado en las ADR de LP2. El backend es un **monolito modular**: un solo proyecto, con un paquete por módulo de negocio (`catalogo`, `ventas`, ...) y, dentro de cada módulo, organización **en capas** (`controller`, `service`, `repository`, `entity`, `dto`, `mapper`). Hoy se diseña dentro de ese marco. Si tu equipo eligió otro estilo en S4, aplica el mismo razonamiento con la estructura que justificaste en tu ADR.
+El estilo de organización no se decide en esta sesión: ya está fijado desde S4 y formalizado en las ADR (*Architecture Decision Record*, registro de decisión de arquitectura) de LP2 (Lenguaje de Programación II). El backend es un **monolito modular**: un solo proyecto, con un paquete por módulo de negocio (`catalogo`, `ventas`, ...) y, dentro de cada módulo, organización **en capas** (`controller`, `service`, `repository`, `entity`, `dto`, `mapper`). Hoy se diseña dentro de ese marco. Si tu equipo eligió otro estilo en S4, aplica el mismo razonamiento con la estructura que justificaste en tu ADR.
 
 ### 2.2 De clase de dominio a clase de diseño
 
-Una **clase de diseño** —un elemento del diagrama de clases UML (OMG, 2017)— es una clase de dominio refinada con las decisiones que el software necesita y el modelo de negocio no tiene por qué contener: tipos concretos, visibilidad, identidad, navegabilidad y responsabilidades (Larman, 2004). El diagrama de S7 dice **qué** es el dominio; la clase de diseño dice **cómo** se representa en un sistema concreto, sin escribir todavía el código.
+Una **clase de diseño** —un elemento del diagrama de clases UML (*Unified Modeling Language*, lenguaje unificado de modelado; Object Management Group [OMG], 2017)— es una clase de dominio refinada con las decisiones que el software necesita y el modelo de negocio no tiene por qué contener: tipos concretos, visibilidad, identidad, navegabilidad y responsabilidades (Larman, 2004). El diagrama de S7 dice **qué** es el dominio; la clase de diseño dice **cómo** se representa en un sistema concreto, sin escribir todavía el código.
 
 Es el mismo tipo de diagrama (UML) y son las mismas clases, pero se conservan **dos versiones**, cada una con su propósito. La diferencia de fondo es el lenguaje: el modelo de dominio es general, independiente de cómo se programe, mientras que las clases de diseño se expresan en el lenguaje del proyecto (Java, en BomERP), con sus tipos, sus colecciones y sus construcciones (`enum`, `record`). El diagrama de dominio de S7, que no se modifica, dice qué significa el negocio (`Dinero`, la asociación entre `DetalleVenta` y `Producto`). El diagrama de diseño de hoy se **deriva** de él y dice cómo se representa en el software (`BigDecimal`, `productoId`). Larman (2004) distingue estas dos perspectivas: el modelo de dominio, conceptual, y el diagrama de clases de diseño, que parte de él.
 
@@ -207,13 +210,13 @@ Lectura de las dos figuras, cambio por cambio:
 
 ### 2.3 Clases de diseño por capas
 
-Una **arquitectura en capas** organiza las clases de un módulo en niveles con una regla de dependencia: cada capa conoce solo a la que tiene debajo, nunca a la de arriba. En una API REST, la "vista" del esquema MVC clásico vive fuera del backend (la SPA), por eso el módulo se describe en capas y no como MVC completo. Estas capas son el interior de **un** componente del nivel 3 del modelo C4 (un módulo del ERP): describirlas es trabajar en el nivel 4 (código), y cada módulo del sistema repite el mismo esquema dentro de su propia carpeta (3.3).
+Una **arquitectura en capas** organiza las clases de un módulo en niveles con una regla de dependencia: cada capa conoce solo a la que tiene debajo, nunca a la de arriba. En una API (*Application Programming Interface*) REST, la "vista" del esquema MVC (*Model-View-Controller*) clásico vive fuera del backend (la SPA, *Single-Page Application*), por eso el módulo se describe en capas y no como MVC completo. Estas capas son el interior de **un** componente del nivel 3 del modelo C4 (un módulo del ERP, *Enterprise Resource Planning*, planificación de recursos empresariales): describirlas es trabajar en el nivel 4 (código), y cada módulo del sistema repite el mismo esquema dentro de su propia carpeta (3.3).
 
 **Tabla 3. Capas de un módulo y sus clases**
 
 | Capa | Clase de diseño | Responsabilidad | Depende de |
 |---|---|---|---|
-| Presentación | `Controller` | Recibe la petición HTTP, valida la forma de los datos y devuelve la respuesta. No contiene reglas de negocio. | `Service` (interfaz) |
+| Presentación | `Controller` | Recibe la petición HTTP (*HyperText Transfer Protocol*), valida la forma de los datos y devuelve la respuesta. No contiene reglas de negocio. | `Service` (interfaz) |
 | Lógica de aplicación | `Service` (interfaz) y `ServiceImpl` | Orquesta un caso de uso: abre la transacción, coordina repositorio, mapper y servicios de otros módulos. | `Repository`, `Mapper`, `Service` de otro módulo |
 | Acceso a datos | `Repository` | Guarda y consulta entidades. Uno por raíz de agregado, no por tabla. | `Entity` |
 | Traducción | `Mapper` | Convierte entre entidades y DTO. | `Entity`, `DTO` |
@@ -247,7 +250,7 @@ Tres reglas hacen que el diagrama sea verificable. Primero, el `Controller` depe
 
 Autenticar (¿quién eres?) y autorizar (¿qué puedes hacer?) son dos cosas distintas. Esta sesión diseña la segunda: la tabla de permisos por operación. El mecanismo que entrega la identidad al backend se elige en la arquitectura de seguridad y no cambia este diseño, porque las anotaciones solo dependen de los roles que reciben.
 
-El porqué de cada rol —por ejemplo, el patrón GRASP *Controller* o el patrón GoF *Facade*— se estudia en S10 (Patrones de Diseño GoF y GRASP). Hoy solo se dibuja qué clases existen, qué responsabilidad tiene cada una y quién depende de quién.
+El porqué de cada rol —por ejemplo, el patrón GRASP (*General Responsibility Assignment Software Patterns*) *Controller* o el patrón GoF (*Gang of Four*, los cuatro autores del libro clásico de patrones) *Facade*— se estudia en S10 (Patrones de Diseño GoF y GRASP). Hoy solo se dibuja qué clases existen, qué responsabilidad tiene cada una y quién depende de quién.
 
 ### 2.4 DTO, mapper y contrato REST
 
@@ -295,7 +298,7 @@ CREATE TABLE BOM_CATALOGO.CATEGORIAS (
 );
 ```
 
-`id` se vuelve la llave primaria, `nombre` (obligatorio y único) se vuelve `NOT NULL UNIQUE`, y `descripcion` (opcional) queda sin restricción. La tabla y sus columnas son trabajo de BD2; el diseño de la correspondencia es de ADS.
+`id` se vuelve la llave primaria, `nombre` (obligatorio y único) se vuelve `NOT NULL UNIQUE`, y `descripcion` (opcional) queda sin restricción. La tabla y sus columnas son trabajo de BD2 (Base de Datos II); el diseño de la correspondencia es de ADS (Análisis y Diseño de Sistemas de Información).
 
 ### 2.6 Asociaciones, herencia y objetos de valor en tablas
 
@@ -312,7 +315,7 @@ CREATE TABLE BOM_CATALOGO.CATEGORIAS (
 
 La última fila es una decisión de diseño real de BomERP: `ID_PRODUCTO` no lleva llave foránea hacia `BOM_CATALOGO.PRODUCTOS`, a propósito, con el mismo criterio de separación que LP2 aplica a nivel de módulo Java. La integridad entre módulos la garantiza el servicio del otro módulo, no una restricción entre esquemas.
 
-**Herencia.** Una jerarquía de clases no existe en una tabla, así que hay que elegir cómo bajarla. Hay tres estrategias (Fowler, 2003), que en JPA se llaman `SINGLE_TABLE`, `JOINED` y `TABLE_PER_CLASS` (Jakarta EE, 2024).
+**Herencia.** Una jerarquía de clases no existe en una tabla, así que hay que elegir cómo bajarla. Hay tres estrategias (Fowler, 2003), que en JPA (*Jakarta Persistence API*) se llaman `SINGLE_TABLE`, `JOINED` y `TABLE_PER_CLASS` (Jakarta EE, 2024).
 
 **Tabla 7. Estrategias para mapear una jerarquía de herencia**
 
@@ -334,7 +337,7 @@ El criterio de decisión es qué se necesita proteger y qué se consulta más: s
 
 La **trazabilidad** relaciona cada elemento de un nivel con su equivalente en el siguiente: concepto del dominio, clase de diseño, tabla y columnas, DTO. Se documenta en una **matriz** y sirve para dos cosas: que BD2 y LP2 reciban un diseño verificable, y detectar brechas entre niveles. El Proyecto Integrador excluye explícitamente el diseño técnico que no se refleja en la aplicación.
 
-La matriz revela inconsistencias que ningún diagrama por separado muestra. Ejemplo real en BomERP: en el dominio, `Categoria "1" o-- "0..*" Producto` exige que todo producto tenga exactamente una categoría; la clase `Producto` la declara obligatoria (`nullable = false`), pero el DDL del catálogo define `ID_CATEGORIA NUMBER` sin `NOT NULL`. Solo al poner las tres columnas de la matriz lado a lado aparece la brecha: la base de datos permite un producto sin categoría, y el diseño no.
+La matriz revela inconsistencias que ningún diagrama por separado muestra. Ejemplo real en BomERP: en el dominio, `Categoria "1" o-- "0..*" Producto` exige que todo producto tenga exactamente una categoría; la clase `Producto` la declara obligatoria (`nullable = false`), pero el DDL (*Data Definition Language*, las sentencias que crean las tablas) del catálogo define `ID_CATEGORIA NUMBER` sin `NOT NULL`. Solo al poner las tres columnas de la matriz lado a lado aparece la brecha: la base de datos permite un producto sin categoría, y el diseño no.
 
 ## 3. Aplica: actividad práctica guiada
 
@@ -419,19 +422,19 @@ Siete reglas hacen que el árbol crezca sin desordenarse:
 6. **Las dependencias entre módulos van en una sola dirección.** `ventas` usa a `catalogo` y a `clientes`; nunca al revés. Un ciclo entre módulos hace que ninguno pueda cambiarse sin arrastrar al otro, y `ModularityTests` lo detecta.
 7. **Un módulo previsto se crea cuando su sesión lo necesita, no antes.** `clientes`, `inventario`, `compras` y `administracion` figuran en el árbol para que el diseño los tenga en cuenta, pero su carpeta aparece recién cuando LP2 llega a ese módulo.
 
-Con las carpetas resueltas, ahora sí el nivel 4 de un componente. El diagrama siguiente hace zoom a `ventas`: es el mismo tipo de diagrama de código de S2 de S2 (2.6), pero con las seis capas del módulo, y se repite tal cual —uno por módulo— para el resto del ERP. Un solo diagrama de código para todo el sistema cruzaría componentes de C3, y ya no sería de nivel 4.
+Con las carpetas resueltas, ahora sí el nivel 4 de un componente. El diagrama siguiente hace zoom a `ventas`: es el mismo tipo de diagrama de código de S2 (2.6), pero con las seis capas del módulo, y se repite tal cual —uno por módulo— para el resto del ERP. Un solo diagrama de código para todo el sistema cruzaría componentes de C3, y ya no sería de nivel 4. Se lee de arriba hacia abajo: primero las capas y quién conoce a quién, y al final los datos y errores que circulan.
 
 **Figura 6. Diagrama de código (C4, nivel 4) del componente `ventas`: clases de diseño por capas**
 
 ```mermaid
 classDiagram
+    direction TB
     class VentaController {
         <<RestController>>
-        -VentaService ventaService
         +buscar(estado, desde, hasta, ordenarPor, direccion) List~VentaResponse~
         +resumen(estado, desde, hasta) VentaReporte
         +obtener(id) VentaResponse
-        +crear(@Valid VentaRequest) VentaResponse
+        +crear(VentaRequest) VentaResponse
     }
     class VentaService {
         <<interface>>
@@ -442,9 +445,6 @@ classDiagram
     }
     class VentaServiceImpl {
         <<Service, Transactional>>
-        -VentaRepository ventaRepository
-        -ProductoService productoService
-        -VentaMapper ventaMapper
     }
     class VentaRepository {
         <<interface>>
@@ -457,6 +457,11 @@ classDiagram
         +toDetalle(request, producto) DetalleVenta
         +toResponse(venta) VentaResponse
     }
+    class ProductoService {
+        <<interface, módulo catalogo>>
+        +obtener(id) ProductoResponse
+        +descontarStock(id, cantidad)
+    }
     class VentaRequest {
         <<DTO>>
         @NotEmpty List~DetalleVentaRequest~ detalles
@@ -465,12 +470,6 @@ classDiagram
         <<DTO>>
         @NotNull Long productoId
         @NotNull @Positive Integer cantidad
-    }
-    class VentaNoEncontradaException {
-        <<404>>
-    }
-    class StockInsuficienteException {
-        <<409>>
     }
     class Venta {
         +Long id
@@ -486,16 +485,17 @@ classDiagram
         +Integer cantidad
         +BigDecimal subtotal
     }
-    class ProductoService {
-        <<interface>>
-        +obtener(id) ProductoResponse
-        +descontarStock(id, cantidad)
+    class VentaNoEncontradaException {
+        <<404>>
+    }
+    class StockInsuficienteException {
+        <<409>>
     }
 
     VentaController --> VentaService
     VentaController ..> VentaRequest : valida con @Valid
     VentaRequest "1" *-- "1..*" DetalleVentaRequest
-    VentaServiceImpl ..|> VentaService
+    VentaService <|.. VentaServiceImpl
     VentaServiceImpl --> VentaRepository
     VentaServiceImpl --> VentaMapper
     VentaServiceImpl --> ProductoService : otro módulo, solo su interfaz pública
@@ -509,7 +509,7 @@ classDiagram
     note for VentaServiceImpl "Reglas de negocio RN1 a RN6 (Tabla 9)"
 ```
 
-Lectura del diagrama: `VentaController` conoce solo la interfaz `VentaService`. `VentaServiceImpl` es la única clase que reúne repositorio, mapper y el servicio de otro módulo (`ProductoService`, del módulo `catalogo`), y lo hace por su interfaz pública, nunca por `ProductoRepository` (regla 5). `Venta` tiene repositorio; `DetalleVenta` no, porque vive dentro del agregado (regla 2). Los DTO se detallan en 3.4. LP2 declara `total`, `precioUnitario` y `subtotal` como `BigDecimal`, que coincide con esta decisión.
+Lectura del diagrama, de arriba hacia abajo: `VentaController` conoce solo la interfaz `VentaService` y valida `VentaRequest` con `@Valid` antes de llamar al servicio. `VentaServiceImpl` implementa esa interfaz y es la única clase que reúne repositorio, mapper y el servicio de otro módulo (`ProductoService`, del módulo `catalogo`), y lo hace por su interfaz pública, nunca por `ProductoRepository` (regla 5). El servicio lanza las excepciones de negocio (`404`, `409`), que el manejador común traduce a su código HTTP. `Venta` tiene repositorio; `DetalleVenta` no, porque vive dentro del agregado (regla 2). Los DTO se detallan en 3.4. LP2 declara `total`, `precioUnitario` y `subtotal` como `BigDecimal`, que coincide con esta decisión.
 
 Las clases y flechas solo dicen quién conoce a quién. Lo que hace verificable al módulo es lo que cada capa **garantiza**, y se diseña ahora, no al programar. Para `ventas`:
 
@@ -572,8 +572,8 @@ Un `ADMIN` administra el sistema pero no vende: por eso no aparece en `crear`. S
 
 | Clase | Tabla | Columnas y restricciones |
 |---|---|---|
-| `Categoria` | `BOM_CATALOGO.CATEGORIAS` | `ID` PK; `NOMBRE VARCHAR2(80)` `NOT NULL` `UNIQUE`; `DESCRIPCION VARCHAR2(200)` |
-| `Producto` | `BOM_CATALOGO.PRODUCTOS` | `ID` PK; `NOMBRE VARCHAR2(120)` `NOT NULL`; `PRECIO NUMBER(10,2)` `NOT NULL` `CHECK (>= 0)`; `STOCK NUMBER(10)` `NOT NULL` `CHECK (>= 0)`; `ID_CATEGORIA` FK -> `CATEGORIAS` |
+| `Categoria` | `BOM_CATALOGO.CATEGORIAS` | `ID` PK (llave primaria); `NOMBRE VARCHAR2(80)` `NOT NULL` `UNIQUE`; `DESCRIPCION VARCHAR2(200)` |
+| `Producto` | `BOM_CATALOGO.PRODUCTOS` | `ID` PK; `NOMBRE VARCHAR2(120)` `NOT NULL`; `PRECIO NUMBER(10,2)` `NOT NULL` `CHECK (>= 0)`; `STOCK NUMBER(10)` `NOT NULL` `CHECK (>= 0)`; `ID_CATEGORIA` FK (llave foránea) -> `CATEGORIAS` |
 | `Venta` | `BOM_VENTAS.VENTAS` | `ID` PK; `FECHA TIMESTAMP` `NOT NULL`; `ESTADO VARCHAR2(20)` `NOT NULL`; `TOTAL NUMBER(12,2)` `NOT NULL` `CHECK (>= 0)` |
 | `DetalleVenta` | `BOM_VENTAS.DETALLE_VENTAS` | `ID` PK; `ID_VENTA` FK `NOT NULL` -> `VENTAS`; `ID_PRODUCTO NUMBER` `NOT NULL` (**sin FK**, 2.6); `NOMBRE_PRODUCTO VARCHAR2(120)`; `PRECIO_UNITARIO NUMBER(10,2)`; `CANTIDAD NUMBER(10)` `CHECK (> 0)`; `SUBTOTAL NUMBER(12,2)` `CHECK (>= 0)` |
 
@@ -790,7 +790,7 @@ La evidencia individual se considera completa si:
 
 Nota final = suma de (`Peso` / 100 × `Puntos del nivel obtenido`) = ____ / 20.
 
-Para usar la rúbrica con IA, solicita:
+Para usar la rúbrica con IA (inteligencia artificial), solicita:
 
 ```text
 Evalúa el PDF usando la rúbrica de la sesión.
@@ -819,3 +819,4 @@ Tiempo: 5 min.
 2. Larman, C. (2004). *Applying UML and Patterns: An Introduction to Object-Oriented Analysis and Design and Iterative Development* (3rd ed.). Prentice Hall.
 3. Object Management Group [OMG]. (2017). *OMG Unified Modeling Language (OMG UML), Version 2.5.1*. https://www.omg.org/spec/UML/2.5.1/
 4. Jakarta EE. (2024). *Jakarta Persistence*. Eclipse Foundation. https://jakarta.ee/specifications/persistence/
+5. Brown, S. (2024). *C4 model - Code diagram*. https://c4model.com/diagrams/code
