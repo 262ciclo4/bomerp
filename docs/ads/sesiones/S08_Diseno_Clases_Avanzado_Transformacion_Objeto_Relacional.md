@@ -169,6 +169,7 @@ classDiagram
         -Long id
         -LocalDateTime fecha
         -EstadoVenta estado
+        -Long vendedorId
         -BigDecimal total
         -List~DetalleVenta~ detalles
         +calcularTotal()
@@ -202,6 +203,7 @@ Lectura de las dos figuras, cambio por cambio:
 - **Navegabilidad.** `Venta` guarda ahora la colección `detalles`, explícita, porque desde una venta hay que llegar a sus líneas.
 - **Referencia entre módulos.** La flecha de asociación `DetalleVenta` --> `Producto` se convierte en una dependencia punteada: `DetalleVenta` ya no guarda un `Producto`, sino su `productoId`, más una copia de `nombreProducto` y de `precioUnitario` de ese momento.
 - **Atributo derivado.** La operación `subtotal()` de `DetalleVenta` se vuelve un atributo `subtotal`, calculado una vez al registrar la venta y guardado.
+- **Propietario.** `Venta` agrega `vendedorId`: la regla "un vendedor ve solo sus ventas" (3.3) exige saber quién vendió. Es un identificador y no un objeto `Usuario`, por la misma razón que `productoId`. El dominio de S7 no lo dibujó: es un hallazgo del diseño que la matriz de 3.8 deja registrado.
 - **Lo que no cambia.** La composición `Venta` *-- `DetalleVenta` con su multiplicidad `1..*`, y `descontarStock` en `Producto`: esas decisiones del dominio se conservan.
 
 **Referencia entre módulos.** Cuando dos clases pertenecen a módulos distintos, la clase de diseño no las conecta con una asociación directa: guarda el **identificador** de la otra, y si necesita sus datos los pide por la interfaz pública del otro módulo. Así el límite del módulo, dibujado en C3 (S2), sigue siendo un límite en el código y en la base de datos.
@@ -266,7 +268,7 @@ Un **DTO** (*Data Transfer Object*) es una clase que solo transporta datos a tra
 | Agregado | Resultado de un cálculo sobre muchos registros. | `VentaAgregado` |
 | Reporte | DTO compuesto de otros DTO. | `VentaReporte` |
 
-**Qué no entra en un Request.** El cliente decide qué producto compra y cuántas unidades (`productoId`, `cantidad`). No decide el `total`, el `precioUnitario`, la `fecha` ni el `estado`: esos los fija el servidor con datos del catálogo y del momento. Un Request que acepta el total confía en un dato que cualquiera puede alterar con una simple petición: una regla de negocio no puede depender de un dato que el propio cliente declara.
+**Qué no entra en un Request.** El cliente decide qué producto compra y cuántas unidades (`productoId`, `cantidad`). No decide el `total`, el `precioUnitario`, la `fecha`, el `estado` ni quién vende (`vendedorId`): esos los fija el servidor con datos del catálogo, del momento y del usuario autenticado. Un Request que acepta el total confía en un dato que cualquiera puede alterar con una simple petición: una regla de negocio no puede depender de un dato que el propio cliente declara.
 
 Un **mapper** es la clase que traduce entre entidades y DTO en ambos sentidos, para que ni el servicio ni el controlador repitan esa conversión.
 
@@ -376,7 +378,7 @@ Retoma las clases de S7: `Categoria` y `Producto` (módulo `catalogo`), `Venta` 
 |---|---|---|
 | `Categoria` | `Categoria` (entidad) | `id: Long`; `nombre` obligatorio y único, hasta 80 caracteres; `descripcion` opcional, hasta 200. |
 | `Producto` | `Producto` (entidad) | `precio: Dinero` -> `BigDecimal` (moneda única); `stock >= 0` validado en `descontarStock`; `Producto` conoce a `Categoria` (navegabilidad unidireccional). |
-| `Venta` | `Venta` (entidad, raíz del agregado) | `estado: EstadoVenta` (enumeración); `total: BigDecimal` persistido; lista de `detalles` con cascada y eliminación de huérfanos (composición). |
+| `Venta` | `Venta` (entidad, raíz del agregado) | `estado: EstadoVenta` (enumeración); `vendedorId: Long`, el usuario que vende, por identificador (otro módulo); `total: BigDecimal` persistido; lista de `detalles` con cascada y eliminación de huérfanos (composición). |
 | `DetalleVenta` | `DetalleVenta` (entidad) | Guarda `productoId` (no un objeto `Producto`); copia `nombreProducto` y `precioUnitario`; `subtotal` persistido. |
 | `Cliente` (abstracta) y subclases | `Cliente`, `ClientePersonaNatural`, `ClienteEmpresa` | Previsto: hoy `Venta` no referencia a `Cliente` en LP2. Cuando exista, `Venta` guardará `clienteId` (otro módulo, por identificador). |
 
@@ -456,6 +458,7 @@ classDiagram
         <<interface>>
         +toDetalle(request, producto) DetalleVenta
         +toResponse(venta) VentaResponse
+        +toDetalleResponse(detalle) DetalleVentaResponse
     }
     class ProductoService {
         <<interface, módulo catalogo>>
@@ -475,6 +478,7 @@ classDiagram
         +Long id
         +LocalDateTime fecha
         +EstadoVenta estado
+        +Long vendedorId
         +BigDecimal total
     }
     class DetalleVenta {
@@ -506,27 +510,29 @@ classDiagram
     Venta "1" *-- "1..*" DetalleVenta
 
     note for VentaController "Permisos: @PreAuthorize por operación (Tabla 10)"
-    note for VentaServiceImpl "Reglas de negocio RN1 a RN6 (Tabla 9)"
+    note for VentaServiceImpl "Reglas de negocio RN1 a RN10 (Tabla 9)"
 ```
 
 Lectura del diagrama, de arriba hacia abajo: `VentaController` conoce solo la interfaz `VentaService` y valida `VentaRequest` con `@Valid` antes de llamar al servicio. `VentaServiceImpl` implementa esa interfaz y es la única clase que reúne repositorio, mapper y el servicio de otro módulo (`ProductoService`, del módulo `catalogo`), y lo hace por su interfaz pública, nunca por `ProductoRepository` (regla 5). El servicio lanza las excepciones de negocio (`404`, `409`), que el manejador común traduce a su código HTTP. `Venta` tiene repositorio; `DetalleVenta` no, porque vive dentro del agregado (regla 2). Los DTO se detallan en 3.4. LP2 declara `total`, `precioUnitario` y `subtotal` como `BigDecimal`, que coincide con esta decisión.
 
-Las clases y flechas solo dicen quién conoce a quién. Lo que hace verificable al módulo es lo que cada capa **garantiza**, y se diseña ahora, no al programar. Para `ventas`:
+Las clases y flechas solo dicen quién conoce a quién. Lo que hace verificable al módulo es lo que cada clase **garantiza**, y se diseña ahora, no al programar. Para `ventas` se documenta **clase por clase**: primero las reglas de negocio que aplica el servicio (Tabla 9) y los permisos por rol (Tabla 10), y luego una ficha por cada clase de la Figura 6 (Tablas 11 a 14), donde la primera columna es la **firma** de cada operación: qué recibe y qué devuelve.
 
-**Tabla 9. Contrato, validaciones, reglas de negocio y permisos del módulo `ventas`**
+**Tabla 9. Reglas de negocio del módulo `ventas`**
 
-| Operación | Capa | Qué garantiza |
-|---|---|---|
-| `crear(VentaRequest)` | Contrato (`VentaService`) | Precondición: usuario autenticado. Postcondición: devuelve la venta con `total` calculado y el stock descontado; si falla algo, no queda nada guardado. Errores: `400`, `404`, `409`. |
-| `crear` | Validación de forma (`Controller` + DTO) | `detalles` no vacío; en cada detalle, `productoId` obligatorio y `cantidad` entera positiva. Se declara en `VentaRequest` y `DetalleVentaRequest` y se activa con `@Valid`. Falla con `400`. |
-| `crear` | RN1 (`ServiceImpl`) | Cada `productoId` debe existir en `catalogo` y estar activo; si no, `404`. |
-| `crear` | RN2 | Debe haber stock suficiente para cada `cantidad`; si no, `409` (`StockInsuficienteException`). |
-| `crear` | RN3 | `nombreProducto` y `precioUnitario` se copian del producto **en ese momento** (instantánea), nunca del cliente. |
-| `crear` | RN4 | `subtotal = precioUnitario × cantidad` y `total` es la suma de los subtotales, calculados por el servidor. |
-| `crear` | RN5 | La venta nace en estado inicial `REGISTRADA`, con la `fecha` del servidor. |
-| `crear` | RN6 (transacción) | Guardar la venta y descontar el stock ocurren en **una sola transacción**: si el descuento falla, la venta se deshace. |
-| `obtener(id)` | Contrato y regla | Si no existe, `404` (`VentaNoEncontradaException`). Un vendedor solo obtiene una venta propia. |
-| `buscar(...)`, `reporte(...)` | Validación y regla | `desde` no puede ser posterior a `hasta` (`400`); `ordenarPor` solo admite columnas de una lista cerrada, para no construir consultas con texto del cliente. |
+| Regla | Enunciado | Error | Criterio de aceptación (Dado / Cuando / Entonces) |
+|---|---|---|---|
+| RN1 | Cada `productoId` debe existir en `catalogo` y estar activo. | `404` | Dado un `productoId` que no existe, cuando se registra la venta, entonces responde `404` y no se guarda nada. |
+| RN2 | Debe haber stock suficiente para cada `cantidad`. | `409` (`StockInsuficienteException`) | Dado un producto con stock 2, cuando se vende cantidad 3, entonces responde `409` y el stock sigue en 2. |
+| RN3 | `nombreProducto` y `precioUnitario` se copian del producto **en ese momento** (instantánea), nunca del cliente. | — | Dado un producto de precio 10 vendido hoy, cuando después su precio sube a 12, entonces la venta sigue mostrando `precioUnitario` 10. |
+| RN4 | `subtotal = precioUnitario × cantidad`; `total` es la suma de los subtotales, calculados por el servidor. | — | Dadas 2 unidades a 10 y 1 unidad a 5, cuando se registra la venta, entonces los subtotales son 20 y 5, y el `total` es 25. |
+| RN5 | La venta nace en estado `REGISTRADA`, con la `fecha` del servidor y el `vendedorId` del usuario autenticado. | — | Dado un vendedor autenticado, cuando registra una venta, entonces queda `REGISTRADA`, con la fecha del servidor y su propio `vendedorId`. |
+| RN6 | Guardar la venta y descontar el stock ocurren en **una sola transacción**: si el descuento falla, la venta se deshace. | Nada queda guardado | Dada una venta de dos productos donde el segundo no tiene stock, cuando se registra, entonces responde `409` y el stock del primero queda como estaba. |
+| RN7 | Al consultar una venta por `id`, debe existir. | `404` (`VentaNoEncontradaException`) | Dado un `id` que no existe, cuando se consulta la venta, entonces responde `404`. |
+| RN8 | Un `VENDEDOR` solo accede a sus propias ventas (`vendedorId` igual al del usuario). | `403` en `obtener`; en `buscar`, el servicio filtra | Dada una venta de otro vendedor, cuando un `VENDEDOR` la consulta por `id`, entonces responde `403`; y en el listado no aparece. |
+| RN9 | En `buscar` y `reporte`, `desde` no puede ser posterior a `hasta`. | `400` | Dado `desde` posterior a `hasta`, cuando se consulta el listado, entonces responde `400`. |
+| RN10 | `ordenarPor` solo admite columnas de una lista cerrada, para no construir consultas con texto del cliente. | `400` | Dado un `ordenarPor` fuera de la lista, cuando se consulta el listado, entonces responde `400`. |
+
+Cada criterio es a la vez la especificación de la regla, el caso de prueba que la verifica y la instrucción precisa que se le puede dar a una herramienta de IA para generar o revisar el código.
 
 **Tabla 10. Permisos por operación de `ventas` (mínimo privilegio)**
 
@@ -539,23 +545,84 @@ Las clases y flechas solo dicen quién conoce a quién. Lo que hace verificable 
 
 Un `ADMIN` administra el sistema pero no vende: por eso no aparece en `crear`. Si un rol sin permiso invoca la operación, la respuesta es `403`; si no hay identidad, `401`. Esos dos códigos se agregan al contrato REST de 3.4 para todas las operaciones.
 
+**Tabla 11. Especificación de `VentaController`**
+
+| Método y ruta | Permiso | Validación de forma |
+|---|---|---|
+| `ResponseEntity<List<VentaResponse>> buscar(EstadoVenta estado, LocalDateTime desde, LocalDateTime hasta, String ordenarPor, String direccion)`<br>`GET /api/v1/ventas` | `VENDEDOR`, `SUPERVISOR`, `ADMIN` | `estado`, `desde` y `hasta` son opcionales (`@RequestParam(required = false)`); `desde` y `hasta` con formato ISO de fecha y hora; `ordenarPor` vale `fecha` y `direccion` vale `DESC` por defecto |
+| `ResponseEntity<VentaReporte> resumen(EstadoVenta estado, LocalDateTime desde, LocalDateTime hasta)`<br>`GET /api/v1/ventas/resumen` | `SUPERVISOR`, `ADMIN` | Los mismos filtros opcionales del listado |
+| `ResponseEntity<VentaResponse> obtener(Long id)`<br>`GET /api/v1/ventas/{id}` | `VENDEDOR`, `SUPERVISOR`, `ADMIN` | `id` numérico, en la ruta (`@PathVariable`) |
+| `VentaResponse crear(VentaRequest request)`<br>`POST /api/v1/ventas` | `VENDEDOR`, `SUPERVISOR` | `@Valid @RequestBody`: `detalles` no vacío; en cada detalle, `productoId` obligatorio y `cantidad` entera positiva. Responde `201` |
+
+El controlador no aplica reglas de negocio: valida la forma, delega en `VentaService` y devuelve la respuesta. Una petición malformada responde `400` sin tocar el negocio. Los códigos de respuesta completos de cada ruta están en el contrato REST de 3.4.
+
+**Tabla 12. Especificación de `VentaService`**
+
+Cada operación del servicio se resume en una ficha: su firma (qué recibe y qué devuelve), quién puede ejecutarla, qué reglas de la Tabla 9 aplica y qué errores lanza. La identidad del usuario no es un parámetro: el servicio la toma del contexto de seguridad. El `400` de `crear` lo produce la validación de forma del controlador (Tabla 11), antes de entrar al servicio.
+
+| Operación | Permiso | Reglas | Errores |
+|---|---|---|---|
+| `List<VentaResponse> buscar(EstadoVenta estado, LocalDateTime desde, LocalDateTime hasta, String ordenarPor, String direccion)` | `VENDEDOR` (solo las propias), `SUPERVISOR` y `ADMIN` (todas) | Filtros opcionales; RN8 (filtra por su `vendedorId` si es `VENDEDOR`), RN9, RN10 | `400`, `401`, `403` |
+| `VentaReporte reporte(EstadoVenta estado, LocalDateTime desde, LocalDateTime hasta)` | `SUPERVISOR` y `ADMIN` | Devuelve la cantidad de ventas y la suma de totales; RN9 | `400`, `401`, `403` |
+| `VentaResponse obtener(Long id)` | `VENDEDOR` (solo las propias), `SUPERVISOR` y `ADMIN` (todas) | RN7, RN8 | `401`, `403`, `404` |
+| `VentaResponse crear(VentaRequest request)` | `VENDEDOR` y `SUPERVISOR` | RN1 a RN6. Precondición: usuario autenticado. Postcondición: la venta queda guardada con `total` calculado y el stock descontado, o no queda nada | `401`, `403`, `404`, `409` |
+
+**Pseudocódigo de `crear`**, la única operación con un flujo que conviene leer en orden: muestra dónde se aplica cada regla y dónde empieza y termina la transacción.
+
+```text
+crear(request):                                   // dentro de una transacción (RN6)
+    venta = nueva Venta(fecha = ahora,            // RN5
+                        estado = REGISTRADA,
+                        vendedorId = usuario autenticado)
+    total = 0
+    para cada línea en request.detalles:
+        producto = productoService.obtener(línea.productoId)               // RN1: 404 si no existe o no está activo
+        productoService.descontarStock(línea.productoId, línea.cantidad)   // RN2: 409 si no hay stock suficiente
+        detalle = ventaMapper.toDetalle(línea, producto)                   // RN3: copia del momento; RN4: subtotal
+        venta.detalles.agregar(detalle)
+        total = total + detalle.subtotal
+    venta.total = total                                                    // RN4
+    devolver ventaMapper.toResponse(ventaRepository.guardar(venta))
+    // si algo falla antes de guardar, la transacción deshace también el descuento de stock (RN6)
+```
+
+**Tabla 13. Especificación de `VentaRepository`**
+
+| Consulta | Nota |
+|---|---|
+| `List<Venta> buscar(EstadoVenta estado, LocalDateTime desde, LocalDateTime hasta, Long vendedorId, Sort sort)` | Filtros opcionales. El `Sort` lo arma el servicio a partir de `ordenarPor` y `direccion`, ya validados (RN10). `vendedorId` es el parámetro que agrega el diseño para RN8 (nulo si el rol ve todas las ventas); LP2 aún no lo tiene |
+| `List<VentaResumen> buscarResumen(EstadoVenta estado, LocalDateTime desde, LocalDateTime hasta, Sort sort)` | Proyección de solo `id`, `fecha`, `estado`, `total` y `cantidadDetalles` |
+| `VentaAgregado agregados(EstadoVenta estado, LocalDateTime desde, LocalDateTime hasta)` | El cálculo (cantidad y suma de `total`) ocurre en la base, no en Java |
+
+Las operaciones de guardar y buscar por `id` (`save`, `findById`) vienen del repositorio base y no se redefinen. `DetalleVenta` no tiene repositorio: se guarda en cascada con su `Venta`.
+
+**Tabla 14. Especificación de `VentaMapper`**
+
+| Conversión | Qué copia y qué no |
+|---|---|
+| `DetalleVenta toDetalle(DetalleVentaRequest request, ProductoResponse producto)` | `productoId` y `cantidad` salen del request; `nombreProducto` y `precioUnitario`, del producto (RN3). Calcula también el `subtotal` de la línea, `precio × cantidad` (RN4), con una expresión |
+| `VentaResponse toResponse(Venta venta)` | Todos los campos, incluidos `vendedorId`, `total` y los `detalles` |
+| `DetalleVentaResponse toDetalleResponse(DetalleVenta detalle)` | Los campos de la línea; lo usa `toResponse` para cada detalle |
+
+El mapper solo traduce (y calcula el subtotal de cada línea): no consulta la base de datos ni aplica reglas de negocio.
+
 ### 3.4 Definir los DTO y el contrato REST
 
 **Producto del paso:** DTO del módulo y contrato de sus operaciones.
 
-**Tabla 11. DTO del módulo `ventas`**
+**Tabla 15. DTO del módulo `ventas`**
 
 | DTO | Campos | Decide |
 |---|---|---|
 | `VentaRequest` | `detalles: List<DetalleVentaRequest>` (al menos uno) | El cliente |
 | `DetalleVentaRequest` | `productoId`, `cantidad` (positiva) | El cliente |
-| `VentaResponse` | `id`, `fecha`, `estado`, `total`, `detalles` | El servidor |
+| `VentaResponse` | `id`, `fecha`, `estado`, `vendedorId`, `total`, `detalles` | El servidor |
 | `DetalleVentaResponse` | `productoId`, `nombreProducto`, `precioUnitario`, `cantidad`, `subtotal` | El servidor |
 | `VentaResumen` | `id`, `fecha`, `estado`, `total`, `cantidadDetalles` | El servidor |
 
-`VentaRequest` no contiene `total`, `fecha`, `estado` ni `precioUnitario`: el servidor los calcula con datos del catálogo y del momento (2.4).
+`VentaRequest` no contiene `total`, `fecha`, `estado`, `vendedorId` ni `precioUnitario`: el servidor los calcula con datos del catálogo y del momento (2.4).
 
-**Tabla 12. Contrato REST del módulo `ventas`**
+**Tabla 16. Contrato REST del módulo `ventas`**
 
 | Método y ruta | Entrada | Salida | Códigos |
 |---|---|---|---|
@@ -568,26 +635,27 @@ Un `ADMIN` administra el sistema pero no vende: por eso no aparece en `crear`. S
 
 **Producto del paso:** correspondencia clase-tabla con tipos, claves y restricciones, aplicando la Tabla 5.
 
-**Tabla 13. Correspondencia clase-tabla del dominio de BomERP**
+**Tabla 17. Correspondencia clase-tabla del dominio de BomERP**
 
 | Clase | Tabla | Columnas y restricciones |
 |---|---|---|
 | `Categoria` | `BOM_CATALOGO.CATEGORIAS` | `ID` PK (llave primaria); `NOMBRE VARCHAR2(80)` `NOT NULL` `UNIQUE`; `DESCRIPCION VARCHAR2(200)` |
 | `Producto` | `BOM_CATALOGO.PRODUCTOS` | `ID` PK; `NOMBRE VARCHAR2(120)` `NOT NULL`; `PRECIO NUMBER(10,2)` `NOT NULL` `CHECK (>= 0)`; `STOCK NUMBER(10)` `NOT NULL` `CHECK (>= 0)`; `ID_CATEGORIA` FK (llave foránea) -> `CATEGORIAS` |
-| `Venta` | `BOM_VENTAS.VENTAS` | `ID` PK; `FECHA TIMESTAMP` `NOT NULL`; `ESTADO VARCHAR2(20)` `NOT NULL`; `TOTAL NUMBER(12,2)` `NOT NULL` `CHECK (>= 0)` |
+| `Venta` | `BOM_VENTAS.VENTAS` | `ID` PK; `FECHA TIMESTAMP` `NOT NULL`; `ESTADO VARCHAR2(20)` `NOT NULL`; `TOTAL NUMBER(12,2)` `NOT NULL` `CHECK (>= 0)`; `ID_VENDEDOR NUMBER` `NOT NULL` (**sin FK**, 2.6) |
 | `DetalleVenta` | `BOM_VENTAS.DETALLE_VENTAS` | `ID` PK; `ID_VENTA` FK `NOT NULL` -> `VENTAS`; `ID_PRODUCTO NUMBER` `NOT NULL` (**sin FK**, 2.6); `NOMBRE_PRODUCTO VARCHAR2(120)`; `PRECIO_UNITARIO NUMBER(10,2)`; `CANTIDAD NUMBER(10)` `CHECK (> 0)`; `SUBTOTAL NUMBER(12,2)` `CHECK (>= 0)` |
 
 ### 3.6 Decidir la herencia de `Cliente` y el objeto de valor `Dinero`
 
 **Producto del paso:** decisiones justificadas, con la alternativa descartada.
 
-**Tabla 14. Decisiones de transformación de BomERP**
+**Tabla 18. Decisiones de transformación de BomERP**
 
 | Elemento | Decisión | Por qué | Alternativa descartada |
 |---|---|---|---|
 | Jerarquía `Cliente` | Una tabla por clase, en el esquema `BOM_CLIENTES`: `CLIENTES` y, unidas por la llave, `CLIENTE_PERSONAS_NATURALES` (`DNI`) y `CLIENTE_EMPRESAS` (`RUC`). | `DNI` y `RUC` son obligatorios y únicos en su subclase; una tabla única los volvería nulables. Y `Venta` referencia a *cualquier* cliente: necesita una sola tabla destino. | Tabla única (pierde `NOT NULL`); tabla por clase concreta (`Venta` no podría apuntar a una sola tabla). |
 | `Dinero` | En las clases, `BigDecimal`; en las tablas, solo el monto: `NUMBER(p,s)` en cada tabla que lo usa. La moneda (soles) se documenta como restricción del sistema. | Moneda única en BomERP; un objeto de valor no tiene tabla propia. | Tabla `MONEDAS` o columna `MONEDA`, innecesarias mientras exista una sola. |
 | `Venta` -> `Cliente` | `ID_CLIENTE` sin FK, como `ID_PRODUCTO`. | `clientes` y `ventas` son módulos distintos. | FK entre esquemas, que rompe el límite del módulo. |
+| `Venta` -> vendedor | `ID_VENDEDOR` sin FK, como `ID_PRODUCTO`. | El usuario vive en otro módulo (`administracion`), y la regla de permisos necesita saber quién vendió. | FK hacia la tabla de usuarios, que rompe el límite del módulo. |
 
 ### 3.7 Dibujar el modelo relacional completo
 
@@ -621,6 +689,7 @@ erDiagram
         TIMESTAMP FECHA
         VARCHAR2 ESTADO
         NUMBER TOTAL
+        NUMBER ID_VENDEDOR
         NUMBER ID_CLIENTE
     }
     DETALLE_VENTAS {
@@ -653,7 +722,7 @@ Las líneas punteadas son referencias por identificador, sin llave foránea, ent
 
 **Producto del paso:** matriz dominio-clase-tabla-DTO, con las brechas detectadas.
 
-**Tabla 15. Matriz de trazabilidad de BomERP**
+**Tabla 19. Matriz de trazabilidad de BomERP**
 
 | Dominio (S7) | Clase de diseño (LP2) | Tabla y columnas (BD2) | DTO | Estado |
 |---|---|---|---|---|
@@ -662,16 +731,17 @@ Las líneas punteadas son referencias por identificador, sin llave foránea, ent
 | `DetalleVenta` -> `Producto` | `DetalleVenta.productoId` | `ID_PRODUCTO` sin FK, con nombre y precio copiados | `DetalleVentaResponse` | Trazado, decisión deliberada (2.6) |
 | `{stock >= 0}` | Validación en `descontarStock` | `CK_PRODUCTO_STOCK` | — | Trazado |
 | `Venta.calcularTotal()` | Hoy en `VentaServiceImpl.crear` | `TOTAL` persistido | `VentaResponse.total` | **Brecha**: la operación no vive en la entidad, refactor pendiente |
+| `Venta` (el dominio no dibuja al vendedor) | `Venta.vendedorId` | `ID_VENDEDOR` sin FK | `VentaResponse.vendedorId` | **Brecha**: la regla de permisos lo exige; ni el dominio de S7 ni LP2 lo tienen |
 | `Cliente` con herencia | Aún no implementado | Diseño de 3.6, sin tablas todavía | — | Previsto |
 
-Las dos brechas de la matriz no son fallas de la sesión: son exactamente lo que la trazabilidad existe para mostrar. Cada una se corrige en el curso donde corresponde (BD2 el `NOT NULL`, LP2 el refactor), con el diseño de hoy como referencia.
+Las tres brechas de la matriz no son fallas de la sesión: son exactamente lo que la trazabilidad existe para mostrar. Cada una se corrige en el curso donde corresponde (BD2 el `NOT NULL`, LP2 el refactor y el atributo `vendedorId`), con el diseño de hoy como referencia; el dominio de S7 incorpora al vendedor cuando se revise el modelo.
 
 **Evidencia de aprendizaje:**
 
 - Refinamiento de las clases de dominio de BomERP en clases de diseño.
 - Estructura de carpetas del backend por módulos, siguiendo el modelo C4.
 - Diagrama de clases del módulo `ventas` por capas (nivel 4 de C4), con su regla de dependencia.
-- Contrato, validaciones, reglas de negocio y permisos por operación del módulo.
+- Reglas de negocio y permisos por rol del módulo, y una ficha por clase (controlador, servicio, repositorio y mapper), con el pseudocódigo de `crear`.
 - DTO y contrato REST del módulo.
 - Correspondencia clase-tabla con tipos, claves y restricciones.
 - Decisiones de herencia y objeto de valor, con la alternativa descartada.
@@ -688,7 +758,7 @@ Diseño autónomo de un módulo del proyecto propio del equipo, con su transform
 Completa y evidencia estas tareas:
 
 1. Elegir un módulo de tu proyecto que se relacione con al menos otro módulo, y derivar de tu diagrama de clases de S7 las clases de diseño de ese módulo, con las decisiones de la Tabla 2. El diagrama de S7 se conserva sin cambios, como referencia de dominio: el de diseño es una segunda versión, con su trazabilidad.
-2. Definir el árbol de carpetas de tu sistema con todos sus módulos (los existentes y los previstos), con un paquete por módulo, uno por raíz de agregado y las capas dentro; luego dibujar el diagrama de clases de diseño por capas de ese módulo (nivel 4 de C4): `Controller`, `Service` (interfaz e implementación), `Repository`, `Mapper`, entidades y DTO, respetando la regla de dependencia y la relación con el otro módulo solo por su interfaz pública. Para las operaciones de escritura, documentar su contrato, las validaciones de forma del DTO, al menos tres reglas de negocio del servicio y la tabla de permisos por rol.
+2. Definir el árbol de carpetas de tu sistema con todos sus módulos (los existentes y los previstos), con un paquete por módulo, uno por raíz de agregado y las capas dentro; luego dibujar el diagrama de clases de diseño por capas de ese módulo (nivel 4 de C4): `Controller`, `Service` (interfaz e implementación), `Repository`, `Mapper`, entidades y DTO, respetando la regla de dependencia y la relación con el otro módulo solo por su interfaz pública. Documentar el catálogo de reglas de negocio del módulo (al menos tres, cada una con su criterio de aceptación), la tabla de permisos por rol y una ficha por cada clase del diagrama —controlador, servicio, repositorio y mapper— con lo que cada operación recibe, devuelve y exige, y el pseudocódigo de una operación de escritura.
 3. Definir los DTO del módulo y su contrato REST conceptual, con al menos cuatro operaciones, indicando qué campos decide el servidor y no el cliente.
 4. Elaborar la correspondencia clase-tabla con tipos, claves y restricciones, y decidir la estrategia de mapeo de la jerarquía de herencia de tu diagrama de S7 y el tratamiento de tu objeto de valor, con la alternativa descartada en cada caso.
 5. Dibujar el modelo relacional del módulo, marcando cómo se referencian los módulos entre sí.
@@ -725,7 +795,7 @@ Cada captura de pantalla del informe debe mostrar, sin recortar, el reloj del si
 Incluye capturas o salidas con una breve explicación debajo de cada una, organizadas en los mismos 4 bloques de la rúbrica (4.6):
 
 1. *Clases de diseño y capas*
-    - Tabla de refinamiento, árbol de carpetas del sistema por módulos y diagrama de clases del módulo por capas.
+    - Tabla de refinamiento, árbol de carpetas del sistema por módulos, diagrama de clases del módulo por capas y una ficha por clase, con el pseudocódigo de una operación de escritura.
 2. *DTO y contrato REST*
     - Tabla de DTO y contrato REST del módulo, con los campos que decide el servidor.
 3. *Transformación objeto-relacional*
@@ -754,7 +824,7 @@ La evidencia individual se considera completa si:
 - El archivo respeta el nombre solicitado.
 - Las clases del módulo están refinadas con tipos, identidad y navegabilidad, y la relación con otro módulo se resuelve sin asociación directa.
 - El árbol de carpetas tiene un paquete por módulo, un subpaquete por raíz de agregado y las mismas capas en cada uno, con lo transversal fuera de los módulos.
-- Cada operación de escritura declara contrato, validaciones de forma (`@Valid`), reglas de negocio en el servicio con su código de error, y qué rol puede ejecutarla.
+- Cada clase del diagrama tiene su ficha (qué recibe y devuelve cada operación); las de escritura declaran validaciones de forma (`@Valid`), reglas de negocio en el servicio con su código de error y qué rol puede ejecutarlas; una de ellas incluye su pseudocódigo.
 - El diagrama por capas muestra `Controller`, `Service` (interfaz e implementación), `Repository`, `Mapper`, entidades y DTO, con la regla de dependencia respetada.
 - Hay un `Repository` por raíz de agregado, no por tabla.
 - El contrato REST tiene al menos cuatro operaciones con DTO de entrada, DTO de salida y códigos de respuesta.
@@ -777,7 +847,7 @@ La evidencia individual se considera completa si:
 
 ### 4.6 Rúbrica de evaluación
 
-**Tabla 16. Rúbrica de evaluación**
+**Tabla 20. Rúbrica de evaluación**
 
 | Criterio | Peso (%) | A (20 pts) | B (15 pts) | C (10 pts) | D (5 pts) | Nivel obtenido |
 |---|---:|---|---|---|---|---:|
