@@ -26,10 +26,26 @@ export const routes: Routes = [
       },
 
       {
-  path: 'card',
-  loadComponent: () =>
-    import('./temp/categoria-card').then((m) => m.CategoriaCard),
-},
+        path: 'card',
+        loadComponent: () =>
+          import('./temp/categoria-card').then((m) => m.CategoriaCard),
+      },
+
+      {
+        path: 'catalogo/productos',
+        loadComponent: () =>
+          import('./features/catalogo/producto/producto-list').then((m) => m.ProductoList),
+      },
+      {
+        path: 'catalogo/productos/nuevo',
+        loadComponent: () =>
+          import('./features/catalogo/producto/producto-form').then((m) => m.ProductoForm),
+      },
+      {
+        path: 'catalogo/productos/:id/editar',
+        loadComponent: () =>
+          import('./features/catalogo/producto/producto-form').then((m) => m.ProductoForm),
+      },
 
     ],
   },

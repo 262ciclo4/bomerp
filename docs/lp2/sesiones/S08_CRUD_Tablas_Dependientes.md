@@ -16,6 +16,7 @@ El CRUD (*Create, Read, Update, Delete*: crear, leer, actualizar y eliminar) de 
 2. Listas desplegables.
 3. Validación de dependencias.
 4. Presentación de información relacionada.
+5. Autocomplete: elegir entre muchas opciones sin desplazarse por una lista.
 
 ### 1.3 Propósito de aprendizaje
 
@@ -25,7 +26,7 @@ Al concluir la clase, estarás en condiciones de:
 
 ### 1.4 Producto de sesión
 
-CRUD completo de `Producto` (`catalogo`) en la SPA (`lp2/bomerp-frontend`): modelo `Producto`, `ProductoService`, `ProductoList` (con el nombre de la categoría de cada producto y un filtro por categoría), `ProductoForm` (con una lista desplegable de categorías cargada desde `CategoriaService`, validación de los campos y de la dependencia), rutas y enlace en el sidebar, conectado a `http://localhost:8080/api/v1/productos`.
+CRUD completo de `Producto` (`catalogo`) en la SPA (`lp2/bomerp-frontend`): modelo `Producto`, `ProductoService`, `ProductoList` (con el nombre de la categoría de cada producto y un filtro por categoría), `ProductoForm` (con una lista desplegable de categorías cargada desde `CategoriaService`, validación de los campos y de la dependencia), rutas y enlace en el sidebar, conectado a `http://localhost:8080/api/v1/productos`; y, como práctica opcional aparte, la misma selección de categoría resuelta con un autocomplete de Angular Material.
 
 ### 1.5 Metodología
 
@@ -177,6 +178,23 @@ Dos formas de mostrar la información relacionada:
 
 Los montos se formatean con el `CurrencyPipe` de Angular (Angular, 2026e), para no mostrar `12.5` donde el usuario espera `S/ 12.50`.
 
+### 2.6 Autocomplete: elegir entre muchas opciones sin desplazarse por una lista
+
+Un `<select>` con `[ngValue]` (2.3) funciona bien mientras la tabla padre tiene pocos registros: el usuario ve todas las opciones de un vistazo. Cuando esa tabla crece a decenas o cientos de filas, desplazarse por la lista deja de ser cómodo, y el usuario necesita **escribir** para encontrar la opción, no solo mirar. Un **autocomplete** resuelve eso: un campo de texto que, mientras se escribe, filtra las opciones que coinciden, y solo confirma una elección cuando el usuario **selecciona** una de la lista filtrada — nunca por el simple hecho de haber escrito algo parecido.
+
+Esa última regla es la que distingue un autocomplete bien hecho de un `<input>` cualquiera: escribir texto libre **no debe bastar** para que el formulario considere elegida una opción. Si el usuario escribe "Beb" y nunca hace clic en "Bebidas", el valor real que se envía al backend (el `id` de la categoría) debe seguir vacío, no una adivinanza a partir del texto.
+
+**Tabla 4. `<select>` frente a autocomplete**
+
+| | `<select>` (S8, 3.7) | Autocomplete (3.10) |
+|---|---|---|
+| Cómo se elige | Desplazándose por todas las opciones. | Escribiendo para filtrar, y seleccionando una de las que coinciden. |
+| Escala a muchas opciones | Se vuelve incómodo (desplazamiento largo). | Se mantiene usable: el texto acota la lista. |
+| Qué guarda el formulario | El `id` de la opción, directo del control. | El `id` de la opción, fijado **solo** cuando se selecciona — el texto escrito es una vista, no el valor real. |
+| Costo | Ninguna librería adicional. | Una librería de componentes (Angular Material, 3.10) — y su tema visual, para todo el proyecto, no solo para este campo. |
+
+En este curso se usa **Angular Material** para el autocomplete, en vez de Bootstrap o Tailwind CSS: los dos últimos son bibliotecas de estilos, no de componentes con lógica de filtrado y selección incorporada — un autocomplete con ellos habría que construirlo a mano. Angular Material sí trae el componente (`mat-autocomplete`) integrado con formularios reactivos (Angular Material, 2026).
+
 ## 3. Aplica: actividad práctica guiada
 
 Tiempo: 120 min.
@@ -197,8 +215,8 @@ Tiempo: 120 min.
 - **3.6** Agregar eliminar a `ProductoList`.
 - **3.7** Crear `ProductoForm` con la lista desplegable de categorías.
 - **3.8** Validar las dependencias en `ProductoForm`.
-- **3.9** Registrar las rutas y el enlace del sidebar.
-- **3.10** Probar el CRUD dependiente completo.
+- **3.9** Probar el CRUD dependiente completo.
+- **3.10** (Opcional) Segunda opción: elegir la categoría con un autocomplete (Angular Material).
 - **3.11** Relacionar con ADS (Análisis y Diseño de Sistemas de Información) y BD2 (Base de Datos II).
 
 ### 3.1 Verificar el punto de partida
@@ -417,7 +435,25 @@ Crea **`lp2/bomerp-frontend/src/app/features/catalogo/producto/producto-list.htm
 </table>
 ```
 
-`producto.categoria.nombre` es la información relacionada de 2.5: sale de la misma respuesta, sin ninguna llamada extra. La ruta y el enlace del sidebar se registran en 3.9; hasta entonces la pantalla todavía no es alcanzable desde el menú.
+`producto.categoria.nombre` es la información relacionada de 2.5: sale de la misma respuesta, sin ninguna llamada extra.
+
+Regístrala ya, para verla en el navegador en vez de confiar en que compila. En **`lp2/bomerp-frontend/src/app/app.routes.ts`**, agrega esta ruta junto a las de `Categoria`, dentro del `children` del layout:
+
+```ts
+      {
+        path: 'catalogo/productos',
+        loadComponent: () =>
+          import('./features/catalogo/producto/producto-list').then((m) => m.ProductoList),
+      },
+```
+
+En **`lp2/bomerp-frontend/src/app/core/layout/layout.html`**, agrega el enlace dentro de `<nav>`, debajo de **Categorías**:
+
+```html
+      <a routerLink="/catalogo/productos" routerLinkActive="active">Productos</a>
+```
+
+Abre `http://localhost:4200` y haz clic en **Productos**: debes ver la lista con la categoría de cada producto (no un número) y el precio en formato `S/ 12.50`. El enlace **Nuevo producto** todavía no lleva a ningún lado — esa ruta se registra en 3.7, cuando el formulario exista.
 
 ### 3.5 Agregar el filtro por categoría a `ProductoList`
 
@@ -682,6 +718,25 @@ Crea **`lp2/bomerp-frontend/src/app/features/catalogo/producto/producto-form.htm
 </form>
 ```
 
+Regístralo ya, para poder probarlo. En **`lp2/bomerp-frontend/src/app/app.routes.ts`**, agrega estas dos rutas junto a la de la lista:
+
+```ts
+      {
+        path: 'catalogo/productos/nuevo',
+        loadComponent: () =>
+          import('./features/catalogo/producto/producto-form').then((m) => m.ProductoForm),
+      },
+      {
+        path: 'catalogo/productos/:id/editar',
+        loadComponent: () =>
+          import('./features/catalogo/producto/producto-form').then((m) => m.ProductoForm),
+      },
+```
+
+Las tres rutas se declaran con `loadComponent`, igual que las de `Categoria` (S7): cada pantalla se carga cuando el usuario la visita (Angular, 2026f).
+
+Pruébalo de una vez: clic en **Nuevo producto** desde la lista, completa el formulario con una categoría real y guarda. Debe volver a la lista con el producto nuevo visible, con su categoría por nombre. Todavía no valida nada (eso es 3.8) ni reacciona a errores del backend con un mensaje específico — solo confirma que el CRUD básico ya funciona de punta a punta, antes de agregarle las validaciones.
+
 ### 3.8 Validar las dependencias en `ProductoForm`
 
 **Producto del paso:** los dos casos de dependencia rota de 1.6.1 resueltos: sin categorías disponibles, y categoría que desaparece mientras el formulario está abierto.
@@ -726,51 +781,123 @@ Crea **`lp2/bomerp-frontend/src/app/features/catalogo/producto/producto-form.htm
 
 El backend responde un `404` con un cuerpo `{ status, error, message }`, y `message` empieza con `Categoria no encontrada` cuando la dependencia es la que falló (y con `Producto no encontrado` si es el propio producto): esa diferencia es lo que permite mostrar un mensaje específico. Además de mostrarlo, el formulario vuelve a la opción "Selecciona una categoría" y recarga la lista de opciones, para que el usuario elija de las categorías que existen ahora.
 
-### 3.9 Registrar las rutas y el enlace del sidebar
-
-**Producto del paso:** las tres pantallas de `Producto` alcanzables desde el menú.
-
-En **`lp2/bomerp-frontend/src/app/app.routes.ts`**, agrega estas tres rutas hijas junto a las de `Categoria`, dentro del `children` del layout:
-
-```ts
-      {
-        path: 'catalogo/productos',
-        loadComponent: () =>
-          import('./features/catalogo/producto/producto-list').then((m) => m.ProductoList),
-      },
-      {
-        path: 'catalogo/productos/nuevo',
-        loadComponent: () =>
-          import('./features/catalogo/producto/producto-form').then((m) => m.ProductoForm),
-      },
-      {
-        path: 'catalogo/productos/:id/editar',
-        loadComponent: () =>
-          import('./features/catalogo/producto/producto-form').then((m) => m.ProductoForm),
-      },
-```
-
-En **`lp2/bomerp-frontend/src/app/core/layout/layout.html`**, agrega el enlace dentro de `<nav>`, debajo de **Categorías**:
-
-```html
-      <a routerLink="/catalogo/productos" routerLinkActive="active">Productos</a>
-```
-
-Las rutas se declaran con `loadComponent`, igual que las de `Categoria` (S7): cada pantalla se carga cuando el usuario la visita (Angular, 2026f).
-
-### 3.10 Probar el CRUD dependiente completo
+### 3.9 Probar el CRUD dependiente completo
 
 Con `lp2/bomerp-backend` corriendo y `npm start` activo:
 
-1. Abre `http://localhost:4200` y haz clic en **Productos** (sidebar). La lista debe mostrar el **nombre** de la categoría de cada producto, no un número, y el precio con formato `S/ 12.50`.
-2. Usa el filtro **Filtrar por categoría**: la lista debe mostrar solo los productos de esa categoría. Elige **Todas** para volver a verlos todos.
-3. Clic en **Nuevo producto**. Deja la categoría sin elegir e intenta **Guardar**: debe aparecer "Selecciona una categoría." junto al campo, sin ninguna petición nueva en la pestaña **Network**.
-4. Completa el formulario con una categoría real y guarda. Debe volver a la lista con el producto nuevo visible.
-5. Clic en **Editar** sobre un producto existente. La lista desplegable debe aparecer con **su categoría ya seleccionada**, no con "Selecciona una categoría". Cambia la categoría, guarda, y confirma el cambio en la lista.
-6. Abre **Nuevo producto** y, sin cerrarlo, elimina esa categoría desde Swagger (usa una categoría sin productos, o una creada para la prueba). Elige esa misma categoría en el formulario y guarda: debe aparecer "La categoría seleccionada ya no existe. Elige otra de la lista.", la lista de opciones se recarga sin esa categoría, y la selección vuelve a "Selecciona una categoría".
-7. Elimina un producto. Debe desaparecer de la lista. Prueba también eliminar uno que ya haya aparecido en una venta (S4): funciona, porque las ventas guardan su propia copia del nombre y del precio y no dependen del producto (ADS S8, 2.6).
+Ya probaste la lista (3.4) y el alta básica (3.7) por separado; ahora se prueba el conjunto, con las validaciones de 3.8 incluidas:
+
+1. Abre `http://localhost:4200` y usa el filtro **Filtrar por categoría**: la lista debe mostrar solo los productos de esa categoría. Elige **Todas** para volver a verlos todos.
+2. Clic en **Nuevo producto**. Deja la categoría sin elegir e intenta **Guardar**: debe aparecer "Selecciona una categoría." junto al campo, sin ninguna petición nueva en la pestaña **Network**.
+3. Clic en **Editar** sobre el producto que creaste en 3.7. La lista desplegable debe aparecer con **su categoría ya seleccionada**, no con "Selecciona una categoría". Cambia la categoría, guarda, y confirma el cambio en la lista.
+4. Abre **Nuevo producto** y, sin cerrarlo, elimina esa categoría desde Swagger (usa una categoría sin productos, o una creada para la prueba). Elige esa misma categoría en el formulario y guarda: debe aparecer "La categoría seleccionada ya no existe. Elige otra de la lista.", la lista de opciones se recarga sin esa categoría, y la selección vuelve a "Selecciona una categoría".
+5. Elimina un producto. Debe desaparecer de la lista. Prueba también eliminar uno que ya haya aparecido en una venta (S4): funciona, porque las ventas guardan su propia copia del nombre y del precio y no dependen del producto (ADS S8, 2.6).
 
 **Error frecuente**: la lista desplegable de **Editar** aparece en blanco (o en "Selecciona una categoría") aunque el producto sí tiene categoría. Revisa que `producto.categoria.id` llegue en el `patchValue` de 3.7 y que las opciones usen `[ngValue]` y no `[value]` (2.3): con `[value]` el control recibe texto y no coincide con el `id` numérico.
+
+### 3.10 (Opcional) Segunda opción: elegir la categoría con un autocomplete (Angular Material)
+
+**Producto del paso:** una **segunda forma**, aparte, de resolver el mismo campo `categoriaId` — con un autocomplete (2.6) en vez del `<select>` de 3.7. Es un paso opcional, para practicar: no reemplaza ni modifica el `ProductoForm` de 3.1-3.9, que sigue siendo el CRUD dependiente completo y probado de esta sesión. Si quieres explorarlo, hazlo sobre una copia de `producto-form.ts`/`producto-form.html` (o en una rama aparte), no sobre los archivos que ya probaste en 3.9.
+
+Instala Angular Material:
+
+```powershell
+cd lp2/bomerp-frontend
+npx ng add @angular/material
+```
+
+La instalación pregunta un tema de colores; elige **Azure/Blue**. Modifica cuatro archivos:
+
+- **`package.json`**: agrega `@angular/material` y `@angular/cdk`.
+- **`src/index.html`**: agrega la tipografía Roboto y los íconos de Material, por `<link>` a Google Fonts.
+- **`angular.json`**: agrega `src/material-theme.scss` a `styles`, antes de `src/styles.css`.
+- **`src/material-theme.scss`** (nuevo): define el tema con `@include mat.theme(...)` — los colores y la tipografía de todos los componentes de Material del proyecto, en un solo lugar.
+
+No hace falta declarar ningún módulo de animaciones aparte: en esta versión de Angular Material, el tema y los componentes ya vienen listos para usarse.
+
+Ahora el componente. En **`producto-form.ts`**, agrega los tres imports de Material:
+
+```ts
+import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+```
+
+Súmalos al arreglo `imports` del `@Component`:
+
+```ts
+  imports: [ReactiveFormsModule, RouterLink, MatAutocompleteModule, MatFormFieldModule, MatInputModule],
+```
+
+Agrega la señal de búsqueda y la lista filtrada, junto a las demás señales de la clase:
+
+```ts
+  protected readonly categoriaBusqueda = signal('');
+  protected readonly categoriasFiltradas = computed(() => {
+    const texto = this.categoriaBusqueda().trim().toLowerCase();
+    if (!texto) return this.categorias();
+    return this.categorias().filter((c) => c.nombre.toLowerCase().includes(texto));
+  });
+```
+
+`computed` necesita importarse también: `import { Component, computed, inject, signal } from '@angular/core';`.
+
+En el constructor, donde ya se hace `patchValue` al editar (3.7), agrega la línea que muestra el nombre de la categoría actual en el campo de texto:
+
+```ts
+          this.categoriaBusqueda.set(producto.categoria.nombre);
+```
+
+Agrega estos dos métodos, junto a `cargarCategorias`:
+
+```ts
+  protected buscarCategoria(texto: string): void {
+    this.categoriaBusqueda.set(texto);
+    // Escribir texto libre no basta para elegir: el id solo se fija en onCategoriaSeleccionada.
+    this.form.controls.categoriaId.setValue(0);
+  }
+
+  protected onCategoriaSeleccionada(evento: MatAutocompleteSelectedEvent): void {
+    const categoria = this.categorias().find((c) => c.nombre === evento.option.value);
+    this.form.controls.categoriaId.setValue(categoria?.id ?? 0);
+    this.form.controls.categoriaId.markAsTouched();
+  }
+```
+
+Y en `manejarErrorGuardado` (3.8), donde ya se limpia `categoriaId` cuando la categoría elegida ya no existe, agrega la línea que limpia también el texto:
+
+```ts
+      this.categoriaBusqueda.set('');
+```
+
+En **`producto-form.html`**, reemplaza el `<label>` de Categoría (el `<select>` completo) por:
+
+```html
+  <mat-form-field>
+    <mat-label>Categoría</mat-label>
+    <input
+      type="text"
+      matInput
+      [matAutocomplete]="autoCategoria"
+      [value]="categoriaBusqueda()"
+      (input)="buscarCategoria($any($event.target).value)"
+      (blur)="form.controls.categoriaId.markAsTouched()"
+    />
+    <mat-autocomplete #autoCategoria="matAutocomplete" (optionSelected)="onCategoriaSeleccionada($event)">
+      @for (categoria of categoriasFiltradas(); track categoria.id) {
+        <mat-option [value]="categoria.nombre">{{ categoria.nombre }}</mat-option>
+      }
+    </mat-autocomplete>
+  </mat-form-field>
+```
+
+Lectura de las piezas: el `<input>` **no** está atado al formulario reactivo con `formControlName` — solo muestra y edita texto libre, ligado a la señal `categoriaBusqueda`. El valor que de verdad importa (`categoriaId`, con sus validadores de 3.7) sigue viviendo en el `form`, y solo cambia en un lugar: `onCategoriaSeleccionada`, que dispara el `mat-autocomplete` cuando el usuario **hace clic** en una opción (o la confirma con el teclado) — nunca al escribir. Por eso `buscarCategoria` fija `categoriaId` en `0` en cada tecla: si el texto ya no coincide con ninguna selección confirmada, el formulario vuelve a considerarla "sin elegir", y `Validators.min(1)` (3.7) lo rechaza igual que si nunca se hubiera tocado el campo.
+
+Pruébalo: abre **Nuevo producto**, escribe parte del nombre de una categoría (por ejemplo, las primeras letras) y confirma que la lista de opciones se acota mientras escribes. Haz clic en una opción y confirma que el campo muestra el nombre completo. Guarda, y confirma que el producto queda con esa categoría. Después, edita ese mismo producto y confirma que el campo aparece ya con el nombre de su categoría escrito, no vacío.
+
+**Error frecuente**: el campo de categoría se ve sin el estilo de Material (sin el recuadro ni la etiqueta flotante), como un `<input>` común. Falta agregar `src/material-theme.scss` a `styles` en `angular.json` (lo hace `ng add` automáticamente, 3.10) o reiniciar `npm start` después de instalar Angular Material — los cambios en `angular.json` no los recoge un servidor ya corriendo.
+
+**Error frecuente**: el formulario deja guardar con una categoría que el usuario nunca seleccionó de la lista, solo escribió. Revisa que `categoriaId` se ponga en `0` dentro de `buscarCategoria` (al escribir) y que **solo** `onCategoriaSeleccionada` lo cambie a un valor mayor que cero.
 
 ### 3.11 Relacionar con ADS y BD2
 
@@ -901,7 +1028,7 @@ La evidencia individual se considera completa si:
 
 ### 4.6 Rúbrica de evaluación
 
-**Tabla 4. Rúbrica de evaluación**
+**Tabla 5. Rúbrica de evaluación**
 
 | Criterio | Peso (%) | A (20 pts) | B (15 pts) | C (10 pts) | D (5 pts) | Nivel obtenido |
 |---|---:|---|---|---|---|---:|
