@@ -3246,6 +3246,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#26-autocomplete-elegir-entre-muchas-opciones-sin-desplazarse-por-una-lista" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Autocomplete: elegir entre muchas opciones sin desplazarse por una lista
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3352,10 +3363,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#39-registrar-las-rutas-y-el-enlace-del-sidebar" class="md-nav__link">
+  <a href="#39-probar-el-crud-dependiente-completo" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.9 Registrar las rutas y el enlace del sidebar
+        3.9 Probar el CRUD dependiente completo
       
     </span>
   </a>
@@ -3363,10 +3374,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#310-probar-el-crud-dependiente-completo" class="md-nav__link">
+  <a href="#310-opcional-segunda-opcion-elegir-la-categoria-con-un-autocomplete-angular-material" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.10 Probar el CRUD dependiente completo
+        3.10 (Opcional) Segunda opción: elegir la categoría con un autocomplete (Angular Material)
       
     </span>
   </a>
@@ -3739,6 +3750,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#26-autocomplete-elegir-entre-muchas-opciones-sin-desplazarse-por-una-lista" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Autocomplete: elegir entre muchas opciones sin desplazarse por una lista
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3845,10 +3867,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#39-registrar-las-rutas-y-el-enlace-del-sidebar" class="md-nav__link">
+  <a href="#39-probar-el-crud-dependiente-completo" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.9 Registrar las rutas y el enlace del sidebar
+        3.9 Probar el CRUD dependiente completo
       
     </span>
   </a>
@@ -3856,10 +3878,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#310-probar-el-crud-dependiente-completo" class="md-nav__link">
+  <a href="#310-opcional-segunda-opcion-elegir-la-categoria-con-un-autocomplete-angular-material" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.10 Probar el CRUD dependiente completo
+        3.10 (Opcional) Segunda opción: elegir la categoría con un autocomplete (Angular Material)
       
     </span>
   </a>
@@ -4036,6 +4058,7 @@
 <li>Listas desplegables.</li>
 <li>Validación de dependencias.</li>
 <li>Presentación de información relacionada.</li>
+<li>Autocomplete: elegir entre muchas opciones sin desplazarse por una lista.</li>
 </ol>
 <h3 id="13-proposito-de-aprendizaje">1.3 Propósito de aprendizaje<a class="headerlink" href="#13-proposito-de-aprendizaje" title="Permanent link">&para;</a></h3>
 <p>Al concluir la clase, estarás en condiciones de:</p>
@@ -4043,7 +4066,7 @@
 <li><strong>Construir</strong> un CRUD completo de una tabla dependiente conectado al backend real, con selección de datos relacionados mediante una lista desplegable, validación de las dependencias entre tablas y presentación de la información relacionada en la pantalla.</li>
 </ul>
 <h3 id="14-producto-de-sesion">1.4 Producto de sesión<a class="headerlink" href="#14-producto-de-sesion" title="Permanent link">&para;</a></h3>
-<p>CRUD completo de <code>Producto</code> (<code>catalogo</code>) en la SPA (<code>lp2/bomerp-frontend</code>): modelo <code>Producto</code>, <code>ProductoService</code>, <code>ProductoList</code> (con el nombre de la categoría de cada producto y un filtro por categoría), <code>ProductoForm</code> (con una lista desplegable de categorías cargada desde <code>CategoriaService</code>, validación de los campos y de la dependencia), rutas y enlace en el sidebar, conectado a <code>http://localhost:8080/api/v1/productos</code>.</p>
+<p>CRUD completo de <code>Producto</code> (<code>catalogo</code>) en la SPA (<code>lp2/bomerp-frontend</code>): modelo <code>Producto</code>, <code>ProductoService</code>, <code>ProductoList</code> (con el nombre de la categoría de cada producto y un filtro por categoría), <code>ProductoForm</code> (con una lista desplegable de categorías cargada desde <code>CategoriaService</code>, validación de los campos y de la dependencia), rutas y enlace en el sidebar, conectado a <code>http://localhost:8080/api/v1/productos</code>; y, como práctica opcional aparte, la misma selección de categoría resuelta con un autocomplete de Angular Material.</p>
 <h3 id="15-metodologia">1.5 Metodología<a class="headerlink" href="#15-metodologia" title="Permanent link">&para;</a></h3>
 <p><strong>Tabla 1. Metodología de la sesión</strong></p>
 <table>
@@ -4222,6 +4245,42 @@
 <li><strong>Como filtro</strong>: una lista desplegable con las categorías que, al cambiar, pide al backend solo los productos de esa categoría (<code>GET /api/v1/productos?categoriaId=3</code>). El filtrado ocurre en el servidor, no en el navegador, para que siga funcionando cuando haya miles de productos.</li>
 </ul>
 <p>Los montos se formatean con el <code>CurrencyPipe</code> de Angular (Angular, 2026e), para no mostrar <code>12.5</code> donde el usuario espera <code>S/ 12.50</code>.</p>
+<h3 id="26-autocomplete-elegir-entre-muchas-opciones-sin-desplazarse-por-una-lista">2.6 Autocomplete: elegir entre muchas opciones sin desplazarse por una lista<a class="headerlink" href="#26-autocomplete-elegir-entre-muchas-opciones-sin-desplazarse-por-una-lista" title="Permanent link">&para;</a></h3>
+<p>Un <code>&lt;select&gt;</code> con <code>[ngValue]</code> (2.3) funciona bien mientras la tabla padre tiene pocos registros: el usuario ve todas las opciones de un vistazo. Cuando esa tabla crece a decenas o cientos de filas, desplazarse por la lista deja de ser cómodo, y el usuario necesita <strong>escribir</strong> para encontrar la opción, no solo mirar. Un <strong>autocomplete</strong> resuelve eso: un campo de texto que, mientras se escribe, filtra las opciones que coinciden, y solo confirma una elección cuando el usuario <strong>selecciona</strong> una de la lista filtrada — nunca por el simple hecho de haber escrito algo parecido.</p>
+<p>Esa última regla es la que distingue un autocomplete bien hecho de un <code>&lt;input&gt;</code> cualquiera: escribir texto libre <strong>no debe bastar</strong> para que el formulario considere elegida una opción. Si el usuario escribe "Beb" y nunca hace clic en "Bebidas", el valor real que se envía al backend (el <code>id</code> de la categoría) debe seguir vacío, no una adivinanza a partir del texto.</p>
+<p><strong>Tabla 4. <code>&lt;select&gt;</code> frente a autocomplete</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><code>&lt;select&gt;</code> (S8, 3.7)</th>
+<th>Autocomplete (3.10)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cómo se elige</td>
+<td>Desplazándose por todas las opciones.</td>
+<td>Escribiendo para filtrar, y seleccionando una de las que coinciden.</td>
+</tr>
+<tr>
+<td>Escala a muchas opciones</td>
+<td>Se vuelve incómodo (desplazamiento largo).</td>
+<td>Se mantiene usable: el texto acota la lista.</td>
+</tr>
+<tr>
+<td>Qué guarda el formulario</td>
+<td>El <code>id</code> de la opción, directo del control.</td>
+<td>El <code>id</code> de la opción, fijado <strong>solo</strong> cuando se selecciona — el texto escrito es una vista, no el valor real.</td>
+</tr>
+<tr>
+<td>Costo</td>
+<td>Ninguna librería adicional.</td>
+<td>Una librería de componentes (Angular Material, 3.10) — y su tema visual, para todo el proyecto, no solo para este campo.</td>
+</tr>
+</tbody>
+</table>
+<p>En este curso se usa <strong>Angular Material</strong> para el autocomplete, en vez de Bootstrap o Tailwind CSS: los dos últimos son bibliotecas de estilos, no de componentes con lógica de filtrado y selección incorporada — un autocomplete con ellos habría que construirlo a mano. Angular Material sí trae el componente (<code>mat-autocomplete</code>) integrado con formularios reactivos (Angular Material, 2026).</p>
 <h2 id="3-aplica-actividad-practica-guiada">3. Aplica: actividad práctica guiada<a class="headerlink" href="#3-aplica-actividad-practica-guiada" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 120 min.</p>
 <p><strong>Actividad:</strong> construcción guiada del CRUD dependiente de <code>Producto</code> en la SPA, de punta a punta: modelo, servicio, lista con categoría y filtro, formulario con lista desplegable, validación de dependencias y prueba del flujo completo (Producto de la sesión en 1.4).</p>
@@ -4237,8 +4296,8 @@
 <li><strong>3.6</strong> Agregar eliminar a <code>ProductoList</code>.</li>
 <li><strong>3.7</strong> Crear <code>ProductoForm</code> con la lista desplegable de categorías.</li>
 <li><strong>3.8</strong> Validar las dependencias en <code>ProductoForm</code>.</li>
-<li><strong>3.9</strong> Registrar las rutas y el enlace del sidebar.</li>
-<li><strong>3.10</strong> Probar el CRUD dependiente completo.</li>
+<li><strong>3.9</strong> Probar el CRUD dependiente completo.</li>
+<li><strong>3.10</strong> (Opcional) Segunda opción: elegir la categoría con un autocomplete (Angular Material).</li>
 <li><strong>3.11</strong> Relacionar con ADS (Análisis y Diseño de Sistemas de Información) y BD2 (Base de Datos II).</li>
 </ul>
 <h3 id="31-verificar-el-punto-de-partida">3.1 Verificar el punto de partida<a class="headerlink" href="#31-verificar-el-punto-de-partida" title="Permanent link">&para;</a></h3>
@@ -4420,7 +4479,18 @@
   <span class="p">&lt;/</span><span class="nt">tbody</span><span class="p">&gt;</span>
 <span class="p">&lt;/</span><span class="nt">table</span><span class="p">&gt;</span>
 </code></pre></div>
-<p><code>producto.categoria.nombre</code> es la información relacionada de 2.5: sale de la misma respuesta, sin ninguna llamada extra. La ruta y el enlace del sidebar se registran en 3.9; hasta entonces la pantalla todavía no es alcanzable desde el menú.</p>
+<p><code>producto.categoria.nombre</code> es la información relacionada de 2.5: sale de la misma respuesta, sin ninguna llamada extra.</p>
+<p>Regístrala ya, para verla en el navegador en vez de confiar en que compila. En <strong><code>lp2/bomerp-frontend/src/app/app.routes.ts</code></strong>, agrega esta ruta junto a las de <code>Categoria</code>, dentro del <code>children</code> del layout:</p>
+<div class="highlight"><pre><span></span><code><span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'catalogo/productos'</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">loadComponent</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span>
+<span class="w">          </span><span class="k">import</span><span class="p">(</span><span class="s1">'./features/catalogo/producto/producto-list'</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">m</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">m</span><span class="p">.</span><span class="nx">ProductoList</span><span class="p">),</span>
+<span class="w">      </span><span class="p">},</span>
+</code></pre></div>
+<p>En <strong><code>lp2/bomerp-frontend/src/app/core/layout/layout.html</code></strong>, agrega el enlace dentro de <code>&lt;nav&gt;</code>, debajo de <strong>Categorías</strong>:</p>
+<div class="highlight"><pre><span></span><code>      <span class="p">&lt;</span><span class="nt">a</span> <span class="na">routerLink</span><span class="o">=</span><span class="s">"/catalogo/productos"</span> <span class="na">routerLinkActive</span><span class="o">=</span><span class="s">"active"</span><span class="p">&gt;</span>Productos<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
+</code></pre></div>
+<p>Abre <code>http://localhost:4200</code> y haz clic en <strong>Productos</strong>: debes ver la lista con la categoría de cada producto (no un número) y el precio en formato <code>S/ 12.50</code>. El enlace <strong>Nuevo producto</strong> todavía no lleva a ningún lado — esa ruta se registra en 3.7, cuando el formulario exista.</p>
 <h3 id="35-agregar-el-filtro-por-categoria-a-productolist">3.5 Agregar el filtro por categoría a <code>ProductoList</code><a class="headerlink" href="#35-agregar-el-filtro-por-categoria-a-productolist" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> una lista desplegable que pide al backend solo los productos de la categoría elegida.</p>
 <p>En <code>producto-list.ts</code>, agrega el método <code>filtrar</code> dentro de la clase, debajo de <code>cargar()</code>:</p>
@@ -4658,6 +4728,20 @@
   <span class="p">&lt;</span><span class="nt">button</span> <span class="na">type</span><span class="o">=</span><span class="s">"button"</span> <span class="err">(</span><span class="na">click</span><span class="err">)="</span><span class="na">cancelar</span><span class="err">()"</span><span class="p">&gt;</span>Cancelar<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
 <span class="p">&lt;/</span><span class="nt">form</span><span class="p">&gt;</span>
 </code></pre></div>
+<p>Regístralo ya, para poder probarlo. En <strong><code>lp2/bomerp-frontend/src/app/app.routes.ts</code></strong>, agrega estas dos rutas junto a la de la lista:</p>
+<div class="highlight"><pre><span></span><code><span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'catalogo/productos/nuevo'</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">loadComponent</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span>
+<span class="w">          </span><span class="k">import</span><span class="p">(</span><span class="s1">'./features/catalogo/producto/producto-form'</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">m</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">m</span><span class="p">.</span><span class="nx">ProductoForm</span><span class="p">),</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'catalogo/productos/:id/editar'</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">loadComponent</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span>
+<span class="w">          </span><span class="k">import</span><span class="p">(</span><span class="s1">'./features/catalogo/producto/producto-form'</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">m</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">m</span><span class="p">.</span><span class="nx">ProductoForm</span><span class="p">),</span>
+<span class="w">      </span><span class="p">},</span>
+</code></pre></div>
+<p>Las tres rutas se declaran con <code>loadComponent</code>, igual que las de <code>Categoria</code> (S7): cada pantalla se carga cuando el usuario la visita (Angular, 2026f).</p>
+<p>Pruébalo de una vez: clic en <strong>Nuevo producto</strong> desde la lista, completa el formulario con una categoría real y guarda. Debe volver a la lista con el producto nuevo visible, con su categoría por nombre. Todavía no valida nada (eso es 3.8) ni reacciona a errores del backend con un mensaje específico — solo confirma que el CRUD básico ya funciona de punta a punta, antes de agregarle las validaciones.</p>
 <h3 id="38-validar-las-dependencias-en-productoform">3.8 Validar las dependencias en <code>ProductoForm</code><a class="headerlink" href="#38-validar-las-dependencias-en-productoform" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> los dos casos de dependencia rota de 1.6.1 resueltos: sin categorías disponibles, y categoría que desaparece mientras el formulario está abierto.</p>
 <p><strong>Sin categorías disponibles.</strong> En <code>producto-form.html</code>, agrega este aviso justo debajo de <code>@if (loading())</code> y cambia la condición del botón <strong>Guardar</strong>:</p>
@@ -4690,41 +4774,89 @@
 <span class="w">  </span><span class="p">}</span>
 </code></pre></div>
 <p>El backend responde un <code>404</code> con un cuerpo <code>{ status, error, message }</code>, y <code>message</code> empieza con <code>Categoria no encontrada</code> cuando la dependencia es la que falló (y con <code>Producto no encontrado</code> si es el propio producto): esa diferencia es lo que permite mostrar un mensaje específico. Además de mostrarlo, el formulario vuelve a la opción "Selecciona una categoría" y recarga la lista de opciones, para que el usuario elija de las categorías que existen ahora.</p>
-<h3 id="39-registrar-las-rutas-y-el-enlace-del-sidebar">3.9 Registrar las rutas y el enlace del sidebar<a class="headerlink" href="#39-registrar-las-rutas-y-el-enlace-del-sidebar" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> las tres pantallas de <code>Producto</code> alcanzables desde el menú.</p>
-<p>En <strong><code>lp2/bomerp-frontend/src/app/app.routes.ts</code></strong>, agrega estas tres rutas hijas junto a las de <code>Categoria</code>, dentro del <code>children</code> del layout:</p>
-<div class="highlight"><pre><span></span><code><span class="w">      </span><span class="p">{</span>
-<span class="w">        </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'catalogo/productos'</span><span class="p">,</span>
-<span class="w">        </span><span class="nx">loadComponent</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span>
-<span class="w">          </span><span class="k">import</span><span class="p">(</span><span class="s1">'./features/catalogo/producto/producto-list'</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">m</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">m</span><span class="p">.</span><span class="nx">ProductoList</span><span class="p">),</span>
-<span class="w">      </span><span class="p">},</span>
-<span class="w">      </span><span class="p">{</span>
-<span class="w">        </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'catalogo/productos/nuevo'</span><span class="p">,</span>
-<span class="w">        </span><span class="nx">loadComponent</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span>
-<span class="w">          </span><span class="k">import</span><span class="p">(</span><span class="s1">'./features/catalogo/producto/producto-form'</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">m</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">m</span><span class="p">.</span><span class="nx">ProductoForm</span><span class="p">),</span>
-<span class="w">      </span><span class="p">},</span>
-<span class="w">      </span><span class="p">{</span>
-<span class="w">        </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'catalogo/productos/:id/editar'</span><span class="p">,</span>
-<span class="w">        </span><span class="nx">loadComponent</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span>
-<span class="w">          </span><span class="k">import</span><span class="p">(</span><span class="s1">'./features/catalogo/producto/producto-form'</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">m</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">m</span><span class="p">.</span><span class="nx">ProductoForm</span><span class="p">),</span>
-<span class="w">      </span><span class="p">},</span>
-</code></pre></div>
-<p>En <strong><code>lp2/bomerp-frontend/src/app/core/layout/layout.html</code></strong>, agrega el enlace dentro de <code>&lt;nav&gt;</code>, debajo de <strong>Categorías</strong>:</p>
-<div class="highlight"><pre><span></span><code>      <span class="p">&lt;</span><span class="nt">a</span> <span class="na">routerLink</span><span class="o">=</span><span class="s">"/catalogo/productos"</span> <span class="na">routerLinkActive</span><span class="o">=</span><span class="s">"active"</span><span class="p">&gt;</span>Productos<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
-</code></pre></div>
-<p>Las rutas se declaran con <code>loadComponent</code>, igual que las de <code>Categoria</code> (S7): cada pantalla se carga cuando el usuario la visita (Angular, 2026f).</p>
-<h3 id="310-probar-el-crud-dependiente-completo">3.10 Probar el CRUD dependiente completo<a class="headerlink" href="#310-probar-el-crud-dependiente-completo" title="Permanent link">&para;</a></h3>
+<h3 id="39-probar-el-crud-dependiente-completo">3.9 Probar el CRUD dependiente completo<a class="headerlink" href="#39-probar-el-crud-dependiente-completo" title="Permanent link">&para;</a></h3>
 <p>Con <code>lp2/bomerp-backend</code> corriendo y <code>npm start</code> activo:</p>
+<p>Ya probaste la lista (3.4) y el alta básica (3.7) por separado; ahora se prueba el conjunto, con las validaciones de 3.8 incluidas:</p>
 <ol>
-<li>Abre <code>http://localhost:4200</code> y haz clic en <strong>Productos</strong> (sidebar). La lista debe mostrar el <strong>nombre</strong> de la categoría de cada producto, no un número, y el precio con formato <code>S/ 12.50</code>.</li>
-<li>Usa el filtro <strong>Filtrar por categoría</strong>: la lista debe mostrar solo los productos de esa categoría. Elige <strong>Todas</strong> para volver a verlos todos.</li>
+<li>Abre <code>http://localhost:4200</code> y usa el filtro <strong>Filtrar por categoría</strong>: la lista debe mostrar solo los productos de esa categoría. Elige <strong>Todas</strong> para volver a verlos todos.</li>
 <li>Clic en <strong>Nuevo producto</strong>. Deja la categoría sin elegir e intenta <strong>Guardar</strong>: debe aparecer "Selecciona una categoría." junto al campo, sin ninguna petición nueva en la pestaña <strong>Network</strong>.</li>
-<li>Completa el formulario con una categoría real y guarda. Debe volver a la lista con el producto nuevo visible.</li>
-<li>Clic en <strong>Editar</strong> sobre un producto existente. La lista desplegable debe aparecer con <strong>su categoría ya seleccionada</strong>, no con "Selecciona una categoría". Cambia la categoría, guarda, y confirma el cambio en la lista.</li>
+<li>Clic en <strong>Editar</strong> sobre el producto que creaste en 3.7. La lista desplegable debe aparecer con <strong>su categoría ya seleccionada</strong>, no con "Selecciona una categoría". Cambia la categoría, guarda, y confirma el cambio en la lista.</li>
 <li>Abre <strong>Nuevo producto</strong> y, sin cerrarlo, elimina esa categoría desde Swagger (usa una categoría sin productos, o una creada para la prueba). Elige esa misma categoría en el formulario y guarda: debe aparecer "La categoría seleccionada ya no existe. Elige otra de la lista.", la lista de opciones se recarga sin esa categoría, y la selección vuelve a "Selecciona una categoría".</li>
 <li>Elimina un producto. Debe desaparecer de la lista. Prueba también eliminar uno que ya haya aparecido en una venta (S4): funciona, porque las ventas guardan su propia copia del nombre y del precio y no dependen del producto (ADS S8, 2.6).</li>
 </ol>
 <p><strong>Error frecuente</strong>: la lista desplegable de <strong>Editar</strong> aparece en blanco (o en "Selecciona una categoría") aunque el producto sí tiene categoría. Revisa que <code>producto.categoria.id</code> llegue en el <code>patchValue</code> de 3.7 y que las opciones usen <code>[ngValue]</code> y no <code>[value]</code> (2.3): con <code>[value]</code> el control recibe texto y no coincide con el <code>id</code> numérico.</p>
+<h3 id="310-opcional-segunda-opcion-elegir-la-categoria-con-un-autocomplete-angular-material">3.10 (Opcional) Segunda opción: elegir la categoría con un autocomplete (Angular Material)<a class="headerlink" href="#310-opcional-segunda-opcion-elegir-la-categoria-con-un-autocomplete-angular-material" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> una <strong>segunda forma</strong>, aparte, de resolver el mismo campo <code>categoriaId</code> — con un autocomplete (2.6) en vez del <code>&lt;select&gt;</code> de 3.7. Es un paso opcional, para practicar: no reemplaza ni modifica el <code>ProductoForm</code> de 3.1-3.9, que sigue siendo el CRUD dependiente completo y probado de esta sesión. Si quieres explorarlo, hazlo sobre una copia de <code>producto-form.ts</code>/<code>producto-form.html</code> (o en una rama aparte), no sobre los archivos que ya probaste en 3.9.</p>
+<p>Instala Angular Material:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd </span><span class="n">lp2</span><span class="p">/</span><span class="n">bomerp-frontend</span>
+<span class="n">npx</span> <span class="n">ng</span> <span class="n">add</span> <span class="nv">@angular</span><span class="p">/</span><span class="n">material</span>
+</code></pre></div>
+<p>La instalación pregunta un tema de colores; elige <strong>Azure/Blue</strong>. Modifica cuatro archivos:</p>
+<ul>
+<li><strong><code>package.json</code></strong>: agrega <code>@angular/material</code> y <code>@angular/cdk</code>.</li>
+<li><strong><code>src/index.html</code></strong>: agrega la tipografía Roboto y los íconos de Material, por <code>&lt;link&gt;</code> a Google Fonts.</li>
+<li><strong><code>angular.json</code></strong>: agrega <code>src/material-theme.scss</code> a <code>styles</code>, antes de <code>src/styles.css</code>.</li>
+<li><strong><code>src/material-theme.scss</code></strong> (nuevo): define el tema con <code>@include mat.theme(...)</code> — los colores y la tipografía de todos los componentes de Material del proyecto, en un solo lugar.</li>
+</ul>
+<p>No hace falta declarar ningún módulo de animaciones aparte: en esta versión de Angular Material, el tema y los componentes ya vienen listos para usarse.</p>
+<p>Ahora el componente. En <strong><code>producto-form.ts</code></strong>, agrega los tres imports de Material:</p>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">MatAutocompleteModule</span><span class="p">,</span><span class="w"> </span><span class="nx">MatAutocompleteSelectedEvent</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/material/autocomplete'</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">MatFormFieldModule</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/material/form-field'</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">MatInputModule</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/material/input'</span><span class="p">;</span>
+</code></pre></div>
+<p>Súmalos al arreglo <code>imports</code> del <code>@Component</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="nx">imports</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">ReactiveFormsModule</span><span class="p">,</span><span class="w"> </span><span class="nx">RouterLink</span><span class="p">,</span><span class="w"> </span><span class="nx">MatAutocompleteModule</span><span class="p">,</span><span class="w"> </span><span class="nx">MatFormFieldModule</span><span class="p">,</span><span class="w"> </span><span class="nx">MatInputModule</span><span class="p">],</span>
+</code></pre></div>
+<p>Agrega la señal de búsqueda y la lista filtrada, junto a las demás señales de la clase:</p>
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="k">protected</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="nx">categoriaBusqueda</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">signal</span><span class="p">(</span><span class="s1">''</span><span class="p">);</span>
+<span class="w">  </span><span class="k">protected</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="nx">categoriasFiltradas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">computed</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">texto</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">categoriaBusqueda</span><span class="p">().</span><span class="nx">trim</span><span class="p">().</span><span class="nx">toLowerCase</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">texto</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">categorias</span><span class="p">();</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">categorias</span><span class="p">().</span><span class="nx">filter</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">c</span><span class="p">.</span><span class="nx">nombre</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">().</span><span class="nx">includes</span><span class="p">(</span><span class="nx">texto</span><span class="p">));</span>
+<span class="w">  </span><span class="p">});</span>
+</code></pre></div>
+<p><code>computed</code> necesita importarse también: <code>import { Component, computed, inject, signal } from '@angular/core';</code>.</p>
+<p>En el constructor, donde ya se hace <code>patchValue</code> al editar (3.7), agrega la línea que muestra el nombre de la categoría actual en el campo de texto:</p>
+<div class="highlight"><pre><span></span><code><span class="w">          </span><span class="k">this</span><span class="p">.</span><span class="nx">categoriaBusqueda</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">producto</span><span class="p">.</span><span class="nx">categoria</span><span class="p">.</span><span class="nx">nombre</span><span class="p">);</span>
+</code></pre></div>
+<p>Agrega estos dos métodos, junto a <code>cargarCategorias</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="k">protected</span><span class="w"> </span><span class="nx">buscarCategoria</span><span class="p">(</span><span class="nx">texto</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">categoriaBusqueda</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">texto</span><span class="p">);</span>
+<span class="w">    </span><span class="c1">// Escribir texto libre no basta para elegir: el id solo se fija en onCategoriaSeleccionada.</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">form</span><span class="p">.</span><span class="nx">controls</span><span class="p">.</span><span class="nx">categoriaId</span><span class="p">.</span><span class="nx">setValue</span><span class="p">(</span><span class="mf">0</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">protected</span><span class="w"> </span><span class="nx">onCategoriaSeleccionada</span><span class="p">(</span><span class="nx">evento</span><span class="o">:</span><span class="w"> </span><span class="kt">MatAutocompleteSelectedEvent</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">categoria</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">categorias</span><span class="p">().</span><span class="nx">find</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">c</span><span class="p">.</span><span class="nx">nombre</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">evento</span><span class="p">.</span><span class="nx">option</span><span class="p">.</span><span class="nx">value</span><span class="p">);</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">form</span><span class="p">.</span><span class="nx">controls</span><span class="p">.</span><span class="nx">categoriaId</span><span class="p">.</span><span class="nx">setValue</span><span class="p">(</span><span class="nx">categoria</span><span class="o">?</span><span class="p">.</span><span class="nx">id</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="mf">0</span><span class="p">);</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">form</span><span class="p">.</span><span class="nx">controls</span><span class="p">.</span><span class="nx">categoriaId</span><span class="p">.</span><span class="nx">markAsTouched</span><span class="p">();</span>
+<span class="w">  </span><span class="p">}</span>
+</code></pre></div>
+<p>Y en <code>manejarErrorGuardado</code> (3.8), donde ya se limpia <code>categoriaId</code> cuando la categoría elegida ya no existe, agrega la línea que limpia también el texto:</p>
+<div class="highlight"><pre><span></span><code><span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">categoriaBusqueda</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">''</span><span class="p">);</span>
+</code></pre></div>
+<p>En <strong><code>producto-form.html</code></strong>, reemplaza el <code>&lt;label&gt;</code> de Categoría (el <code>&lt;select&gt;</code> completo) por:</p>
+<div class="highlight"><pre><span></span><code>  <span class="p">&lt;</span><span class="nt">mat-form-field</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">mat-label</span><span class="p">&gt;</span>Categoría<span class="p">&lt;/</span><span class="nt">mat-label</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">input</span>
+      <span class="na">type</span><span class="o">=</span><span class="s">"text"</span>
+      <span class="na">matInput</span>
+      <span class="err">[</span><span class="na">matAutocomplete</span><span class="err">]="</span><span class="na">autoCategoria</span><span class="err">"</span>
+      <span class="err">[</span><span class="na">value</span><span class="err">]="</span><span class="na">categoriaBusqueda</span><span class="err">()"</span>
+      <span class="err">(</span><span class="na">input</span><span class="err">)="</span><span class="na">buscarCategoria</span><span class="err">($</span><span class="na">any</span><span class="err">($</span><span class="na">event</span><span class="err">.</span><span class="na">target</span><span class="err">).</span><span class="na">value</span><span class="err">)"</span>
+      <span class="err">(</span><span class="na">blur</span><span class="err">)="</span><span class="na">form</span><span class="err">.</span><span class="na">controls</span><span class="err">.</span><span class="na">categoriaId</span><span class="err">.</span><span class="na">markAsTouched</span><span class="err">()"</span>
+    <span class="p">/&gt;</span>
+    <span class="p">&lt;</span><span class="nt">mat-autocomplete</span> <span class="err">#</span><span class="na">autoCategoria</span><span class="o">=</span><span class="s">"matAutocomplete"</span> <span class="err">(</span><span class="na">optionSelected</span><span class="err">)="</span><span class="na">onCategoriaSeleccionada</span><span class="err">($</span><span class="na">event</span><span class="err">)"</span><span class="p">&gt;</span>
+      @for (categoria of categoriasFiltradas(); track categoria.id) {
+        <span class="p">&lt;</span><span class="nt">mat-option</span> <span class="err">[</span><span class="na">value</span><span class="err">]="</span><span class="na">categoria</span><span class="err">.</span><span class="na">nombre</span><span class="err">"</span><span class="p">&gt;</span>{{ categoria.nombre }}<span class="p">&lt;/</span><span class="nt">mat-option</span><span class="p">&gt;</span>
+      }
+    <span class="p">&lt;/</span><span class="nt">mat-autocomplete</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">mat-form-field</span><span class="p">&gt;</span>
+</code></pre></div>
+<p>Lectura de las piezas: el <code>&lt;input&gt;</code> <strong>no</strong> está atado al formulario reactivo con <code>formControlName</code> — solo muestra y edita texto libre, ligado a la señal <code>categoriaBusqueda</code>. El valor que de verdad importa (<code>categoriaId</code>, con sus validadores de 3.7) sigue viviendo en el <code>form</code>, y solo cambia en un lugar: <code>onCategoriaSeleccionada</code>, que dispara el <code>mat-autocomplete</code> cuando el usuario <strong>hace clic</strong> en una opción (o la confirma con el teclado) — nunca al escribir. Por eso <code>buscarCategoria</code> fija <code>categoriaId</code> en <code>0</code> en cada tecla: si el texto ya no coincide con ninguna selección confirmada, el formulario vuelve a considerarla "sin elegir", y <code>Validators.min(1)</code> (3.7) lo rechaza igual que si nunca se hubiera tocado el campo.</p>
+<p>Pruébalo: abre <strong>Nuevo producto</strong>, escribe parte del nombre de una categoría (por ejemplo, las primeras letras) y confirma que la lista de opciones se acota mientras escribes. Haz clic en una opción y confirma que el campo muestra el nombre completo. Guarda, y confirma que el producto queda con esa categoría. Después, edita ese mismo producto y confirma que el campo aparece ya con el nombre de su categoría escrito, no vacío.</p>
+<p><strong>Error frecuente</strong>: el campo de categoría se ve sin el estilo de Material (sin el recuadro ni la etiqueta flotante), como un <code>&lt;input&gt;</code> común. Falta agregar <code>src/material-theme.scss</code> a <code>styles</code> en <code>angular.json</code> (lo hace <code>ng add</code> automáticamente, 3.10) o reiniciar <code>npm start</code> después de instalar Angular Material — los cambios en <code>angular.json</code> no los recoge un servidor ya corriendo.</p>
+<p><strong>Error frecuente</strong>: el formulario deja guardar con una categoría que el usuario nunca seleccionó de la lista, solo escribió. Revisa que <code>categoriaId</code> se ponga en <code>0</code> dentro de <code>buscarCategoria</code> (al escribir) y que <strong>solo</strong> <code>onCategoriaSeleccionada</code> lo cambie a un valor mayor que cero.</p>
 <h3 id="311-relacionar-con-ads-y-bd2">3.11 Relacionar con ADS y BD2<a class="headerlink" href="#311-relacionar-con-ads-y-bd2" title="Permanent link">&para;</a></h3>
 <p>Sesión equivalente en los otros dos cursos, misma semana: ADS S8 diseña las clases de un módulo por capas, con sus DTO y su contrato REST (<em>Representational State Transfer</em>) — el <code>ProductoResponse</code> con su <code>categoria</code> anidada, un resumen y no la categoría completa, es exactamente el tipo de DTO que esa sesión diseña, y la matriz de trazabilidad de ADS S8 documenta que <code>PRODUCTOS.ID_CATEGORIA</code> hoy admite valores nulos en la base de datos aunque el diseño de clases la exige. BD2 S8 rediseña los privilegios del usuario <code>BOMERP_APP</code> con roles por función: el CRUD de <code>Producto</code> de hoy consume los mismos endpoints de catálogo, así que ejerce exactamente los privilegios de <code>ROL_APP_CATALOGO</code>, sin ningún cambio en el código de esta sesión.</p>
 <p><strong>Evidencia de aprendizaje:</strong></p>
@@ -4841,7 +4973,7 @@ existiera una de las dos validaciones?
 <li>En tu propio dominio (4.1), ¿qué tabla es la dependiente, de cuál depende, y qué cambiaría en tu formulario si esa relación fuera opcional?</li>
 </ol>
 <h3 id="46-rubrica-de-evaluacion">4.6 Rúbrica de evaluación<a class="headerlink" href="#46-rubrica-de-evaluacion" title="Permanent link">&para;</a></h3>
-<p><strong>Tabla 4. Rúbrica de evaluación</strong></p>
+<p><strong>Tabla 5. Rúbrica de evaluación</strong></p>
 <table>
 <thead>
 <tr>
