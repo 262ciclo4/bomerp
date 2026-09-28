@@ -831,6 +831,7 @@ Ahora el componente. En **`producto-form.ts`**, agrega los tres imports de Mater
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 ```
 
 Súmalos al arreglo `imports` del `@Component`:
