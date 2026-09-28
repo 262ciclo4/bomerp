@@ -2,3 +2,23 @@
 .error {
   color: #b42318;
 }
+
+/* mat-form-field es inline-block por defecto: dentro de un <form>, se apila en
+   una sola columna en vez de fluir en línea como encabezado de tabla. */
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  max-width: 340px;
+}
+
+form mat-form-field {
+  width: 100%;
+}
+
+form .acciones {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}

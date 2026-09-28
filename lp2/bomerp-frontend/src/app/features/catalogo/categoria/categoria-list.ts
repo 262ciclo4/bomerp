@@ -1,12 +1,13 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
 import { CategoriaService } from './categoria-service';
 import { Categoria } from './categoria.model';
 
 @Component({
   selector: 'app-categoria-list',
-  imports: [RouterLink],
+  imports: [RouterLink, MatButtonModule],
   templateUrl: './categoria-list.html',
 })
 export class CategoriaList implements OnInit {

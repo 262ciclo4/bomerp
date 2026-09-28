@@ -26,7 +26,7 @@ Al concluir la clase, estarás en condiciones de:
 
 ### 1.4 Producto de sesión
 
-CRUD completo de `Producto` (`catalogo`) en la SPA (`lp2/bomerp-frontend`): modelo `Producto`, `ProductoService`, `ProductoList` (con el nombre de la categoría de cada producto y un filtro por categoría), `ProductoForm` (con una lista desplegable de categorías cargada desde `CategoriaService`, validación de los campos y de la dependencia), rutas y enlace en el sidebar, conectado a `http://localhost:8080/api/v1/productos`; y, como práctica opcional aparte, la misma selección de categoría resuelta con un autocomplete de Angular Material.
+CRUD completo de `Producto` (`catalogo`) en la SPA (`lp2/bomerp-frontend`): modelo `Producto`, `ProductoService`, `ProductoList` (con el nombre de la categoría de cada producto y un filtro por categoría), `ProductoForm` (con una lista desplegable de categorías cargada desde `CategoriaService`, validación de los campos y de la dependencia), rutas y enlace en el sidebar, conectado a `http://localhost:8080/api/v1/productos`; y, como práctica opcional aparte, la misma selección de categoría resuelta con un autocomplete de Angular Material, y sus botones y campos, junto a los de `Categoria` (S7), migrados a Angular Material para un estilo consistente en toda la SPA.
 
 ### 1.5 Metodología
 
@@ -35,7 +35,7 @@ CRUD completo de `Producto` (`catalogo`) en la SPA (`lp2/bomerp-frontend`): mode
 | Actividades a Realizar en el Periodo | Orientaciones generales (Orientaciones Metodológicas) | Material de estudio recomendado |
 |---|---|---|
 | Revisión previa individual | Confirmar que el CRUD de `Categoria` de S7 funciona, que `lp2/bomerp-backend` responde en `http://localhost:8080` con al menos dos categorías registradas, y revisar los campos de `ProductoRequest`/`ProductoResponse` en Swagger. Trabajo individual, antes de clase. | S7 (3.7-3.14), S3 (objetos relacionados), Swagger de `productos`. |
-| Clase presencial | Construcción guiada del CRUD de `Producto`: modelo, servicio, lista con categoría y filtro, formulario con lista desplegable, validación de dependencias y prueba del flujo completo. Trabajo individual en la propia laptop, siguiendo al docente paso a paso. | Backend ejecutable y SPA de S7, Pasos 3.1 a 3.11 de esta guía. |
+| Clase presencial | Construcción guiada del CRUD de `Producto`: modelo, servicio, lista con categoría y filtro, formulario con lista desplegable, validación de dependencias y prueba del flujo completo. Trabajo individual en la propia laptop, siguiendo al docente paso a paso. | Backend ejecutable y SPA de S7, Pasos 3.1 a 3.12 de esta guía. |
 | Evaluación formativa | Verificación en clase del CRUD de `Producto` reflejado en tiempo real contra el backend, con la lista desplegable preseleccionada al editar. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4. | Indicaciones de entrega (4.3), rúbrica de evaluación (4.6). |
 
 El cierre real de S7, construido con las respuestas del Anexo de feedback de esa sesión, se entrega al inicio de esta clase.
@@ -193,7 +193,7 @@ Esa última regla es la que distingue un autocomplete bien hecho de un `<input>`
 | Qué guarda el formulario | El `id` de la opción, directo del control. | El `id` de la opción, fijado **solo** cuando se selecciona — el texto escrito es una vista, no el valor real. |
 | Costo | Ninguna librería adicional. | Una librería de componentes (Angular Material, 3.10) — y su tema visual, para todo el proyecto, no solo para este campo. |
 
-En este curso se usa **Angular Material** para el autocomplete, en vez de Bootstrap o Tailwind CSS: los dos últimos son bibliotecas de estilos, no de componentes con lógica de filtrado y selección incorporada — un autocomplete con ellos habría que construirlo a mano. Angular Material sí trae el componente (`mat-autocomplete`) integrado con formularios reactivos (Angular Material, 2026).
+En este curso se usa **Angular Material** para el autocomplete, en vez de Bootstrap o Tailwind CSS: los dos últimos son bibliotecas de estilos, no de componentes con lógica de filtrado y selección incorporada — un autocomplete con ellos habría que construirlo a mano. Angular Material sí trae el componente (`mat-autocomplete`) integrado con formularios reactivos (Angular Material, 2026a).
 
 ## 3. Aplica: actividad práctica guiada
 
@@ -217,7 +217,8 @@ Tiempo: 120 min.
 - **3.8** Validar las dependencias en `ProductoForm`.
 - **3.9** Probar el CRUD dependiente completo.
 - **3.10** (Opcional) Segunda opción: elegir la categoría con un autocomplete (Angular Material).
-- **3.11** Relacionar con ADS (Análisis y Diseño de Sistemas de Información) y BD2 (Base de Datos II).
+- **3.11** (Opcional) Aplicar Material Design al resto de la SPA.
+- **3.12** Relacionar con ADS (Análisis y Diseño de Sistemas de Información) y BD2 (Base de Datos II).
 
 ### 3.1 Verificar el punto de partida
 
@@ -797,7 +798,7 @@ Ya probaste la lista (3.4) y el alta básica (3.7) por separado; ahora se prueba
 
 ### 3.10 (Opcional) Segunda opción: elegir la categoría con un autocomplete (Angular Material)
 
-**Producto del paso:** el mismo campo `categoriaId` de siempre, resuelto con un autocomplete (2.6) **en vez de** el `<select>` de 3.7 — no junto a él. Este paso es **opcional**: puedes quedarte con el `<select>` de 3.7 (ya probado en 3.9) y saltar directo a 3.11, o hacer este paso y quedarte con el autocomplete. Al final debe existir **una sola** forma de elegir la categoría en `ProductoForm`, nunca las dos a la vez.
+**Producto del paso:** el mismo campo `categoriaId` de siempre, resuelto con un autocomplete (2.6) **en vez de** el `<select>` de 3.7 — no junto a él. Este paso es **opcional**: puedes quedarte con el `<select>` de 3.7 (ya probado en 3.9) y saltar directo a 3.12, o hacer este paso y quedarte con el autocomplete. Al final debe existir **una sola** forma de elegir la categoría en `ProductoForm`, nunca las dos a la vez.
 
 Si decides hacerlo, edita los **mismos** dos archivos de 3.7 — no crees una copia ni un segundo componente —, y en cada uno **borra** el bloque del `<select>`/las señales que ya no se usan, para no dejar código muerto:
 
@@ -908,7 +909,42 @@ Pruébalo: abre **Nuevo producto**, escribe parte del nombre de una categoría (
 
 **Error frecuente**: el formulario deja guardar con una categoría que el usuario nunca seleccionó de la lista, solo escribió. Revisa que `categoriaId` se ponga en `0` dentro de `buscarCategoria` (al escribir) y que **solo** `onCategoriaSeleccionada` lo cambie a un valor mayor que cero.
 
-### 3.11 Relacionar con ADS y BD2
+### 3.11 (Opcional) Aplicar Material Design al resto de la SPA
+
+**Producto del paso:** los cuatro componentes del módulo `catalogo` (`ProductoList`, `ProductoForm`, `CategoriaList`, `CategoriaForm`), con sus botones de acción migrados a `matButton` (Angular Material, 2026b) y sus campos de texto/número migrados a `mat-form-field` + `matInput`, visualmente consistentes con el campo de categoría de 3.10. El filtro por categoría de `ProductoList` pasa de `<select>` a `mat-select` (Angular Material, 2026c). La tabla de datos (`<table>`) de `ProductoList` y `CategoriaList` **no** cambia: sigue en HTML plano — a diferencia del campo de categoría (2.6), aquí un botón o un `<input>` de Material guardan exactamente el mismo dato que su versión plana; solo cambia el aspecto, no la lógica.
+
+Este paso es **opcional**, igual que 3.10, y no depende de haberlo hecho: aplica sobre el CRUD ya probado en 3.9, uses o no el autocomplete de categoría. La rúbrica (4.6) no evalúa el estilo visual — evalúa modelos, servicios, listas, formularios y validación —, así que replicarlo en tu propio dominio (4.1) es libre, no obligatorio.
+
+Angular Material ya está instalado desde 3.10 (`ng add @angular/material`); este paso no vuelve a instalarlo, solo agrega módulos adicionales al arreglo `imports` de los componentes que aún no los usaban.
+
+| Archivo | Qué se agrega |
+|---|---|
+| `producto-list.ts` / `.html` | `MatButtonModule`, `MatFormFieldModule`, `MatSelectModule`; el enlace "Nuevo producto" y los botones "Editar"/"Eliminar" de cada fila pasan a `matButton`; el `<select>` del filtro pasa a `mat-form-field` + `mat-select`. |
+| `producto-form.ts` / `.html` | `MatButtonModule`; los campos Nombre, Precio y Stock pasan de `<label><input></label>` a `mat-form-field` + `matInput`; los botones Guardar/Cancelar pasan a `matButton`. |
+| `categoria-list.ts` / `.html` | `MatButtonModule`; mismo cambio que en `producto-list` para "Nueva categoría", "Editar" y "Eliminar". |
+| `categoria-form.ts` / `.html` | `MatButtonModule`, `MatFormFieldModule`, `MatInputModule`; Nombre y Descripción pasan a `mat-form-field` + `matInput` (el `<textarea>` también acepta `matInput`); botones Guardar/Cancelar pasan a `matButton`. |
+| `src/styles.css` | Una regla `form mat-form-field { display: block; max-width: 320px; }`. `mat-form-field` es `inline-block` por defecto: sin esta regla, los campos de un formulario se acomodan uno al lado del otro en vez de apilarse. Se aplica solo dentro de `<form>`, así que no afecta al `mat-select` del filtro de `ProductoList` (que no está dentro de un `<form>` y ya se ve bien solo). |
+
+`matButton` (Angular Material, 2026b) es un directivo, no un componente: se agrega como atributo sobre el `<button>` o `<a>` que ya existía, con dos inputs opcionales — `appearance` (`"text"` por defecto, o `"filled"`, `"outlined"`, `"elevated"`, `"tonal"`) y `color` (`"primary"`, `"accent"`, `"warn"`). En esta sesión: `appearance="filled"` para la acción principal de cada pantalla (crear, guardar), sin ese atributo para acciones secundarias (editar, cancelar), y `color="warn"` para eliminar — así el rojo de "Eliminar" sale del token semántico que ya trae el tema (`src/material-theme.scss`, 3.10), no de un color escrito a mano.
+
+El filtro de `ProductoList` cambia de `<select>` a `mat-select` (Angular Material, 2026c) solo por consistencia visual con el resto de los campos: a diferencia de la categoría de `ProductoForm` (2.6), aquí no hay un problema de "muchas opciones" que resolver escribiendo — sigue siendo una lista corta, así que no aplica un autocomplete en este campo.
+
+Pruébalo: reinicia `npm start` si ya estaba corriendo desde antes de 3.10 (Angular Material no lo recoge un servidor ya iniciado). Abre **Categorías** y **Productos**, y confirma que los botones de acción y todos los campos de texto/número se ven con el recuadro y la etiqueta flotante de Material, y que el filtro por categoría es ahora un desplegable de Material, no el `<select>` del navegador.
+
+```powershell
+cd lp2/bomerp-frontend
+npx ng build
+```
+
+Verifica que compile sin errores. El chunk `producto-form` baja de los ~178 kB de 3.10 a unos ~26 kB: gran parte del código de Material (botones, campos, `mat-select`) ahora se comparte entre los cuatro componentes en vez de cargarse solo para `ProductoForm`.
+
+**Error frecuente**: un botón o campo se ve sin ningún estilo, como HTML plano, y la consola del navegador (o el propio `ng build`) marca que `mat-form-field`, `matButton` o `mat-select` no es un elemento o atributo conocido. Falta agregar el módulo correspondiente (`MatButtonModule`, `MatFormFieldModule`, `MatSelectModule`) al arreglo `imports` del `@Component` de ese archivo — cada componente standalone importa por separado lo que usa, no hay un módulo global que los cubra a todos.
+
+**Error frecuente**: los campos de `ProductoForm` o `CategoriaForm` se ven en una sola fila, como un encabezado de tabla, en vez de uno debajo del otro. Falta la regla de `src/styles.css` de la tabla anterior — sin ella, `mat-form-field` fluye en línea con el siguiente campo.
+
+**Error frecuente**: el panel del `mat-select` (filtro de `ProductoList`) se abre transparente, montado encima de la tabla, en vez de un cuadro sólido debajo del campo. Si `npm start` ya estaba corriendo desde antes de agregar `MatSelectModule`, el servidor de Angular (Vite) sirve una versión antigua de las dependencias empaquetadas. Detén el servidor (Ctrl+C), vuelve a correr `npm start` y espera a que la terminal muestre `Re-optimizing dependencies...` — recién ahí recarga el navegador.
+
+### 3.12 Relacionar con ADS y BD2
 
 Sesión equivalente en los otros dos cursos, misma semana: ADS S8 diseña las clases de un módulo por capas, con sus DTO y su contrato REST (*Representational State Transfer*) — el `ProductoResponse` con su `categoria` anidada, un resumen y no la categoría completa, es exactamente el tipo de DTO que esa sesión diseña, y la matriz de trazabilidad de ADS S8 documenta que `PRODUCTOS.ID_CATEGORIA` hoy admite valores nulos en la base de datos aunque el diseño de clases la exige. BD2 S8 rediseña los privilegios del usuario `BOMERP_APP` con roles por función: el CRUD de `Producto` de hoy consume los mismos endpoints de catálogo, así que ejerce exactamente los privilegios de `ROL_APP_CATALOGO`, sin ningún cambio en el código de esta sesión.
 
@@ -1081,3 +1117,6 @@ Tiempo: 5 min.
 4. Angular. (2026d). *HTTP Client*. Google. https://angular.dev/guide/http
 5. Angular. (2026e). *CurrencyPipe*. Google. https://angular.dev/api/common/CurrencyPipe
 6. Angular. (2026f). *Routing*. Google. https://angular.dev/guide/routing
+7. Angular Material. (2026a). *Autocomplete*. Google. https://material.angular.dev/components/autocomplete/overview
+8. Angular Material. (2026b). *Button*. Google. https://material.angular.dev/components/button/overview
+9. Angular Material. (2026c). *Select*. Google. https://material.angular.dev/components/select/overview

@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
@@ -8,6 +8,10 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
+import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { CategoriaService } from '../categoria/categoria-service';
 import { Categoria } from '../categoria/categoria.model';
 import { ProductoService } from './producto-service';
@@ -18,7 +22,14 @@ function entero(control: AbstractControl): ValidationErrors | null {
 
 @Component({
   selector: 'app-producto-form',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [
+    ReactiveFormsModule,
+    RouterLink,
+    MatAutocompleteModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+  ],
   templateUrl: './producto-form.html',
 })
 export class ProductoForm {
@@ -34,6 +45,12 @@ export class ProductoForm {
   protected readonly error = signal<string | null>(null);
   protected readonly loading = signal(false);
   protected readonly errorCarga = signal(false);
+  protected readonly categoriaBusqueda = signal('');
+  protected readonly categoriasFiltradas = computed(() => {
+    const texto = this.categoriaBusqueda().trim().toLowerCase();
+    if (!texto) return this.categorias();
+    return this.categorias().filter((c) => c.nombre.toLowerCase().includes(texto));
+  });
 
   protected readonly form = this.fb.nonNullable.group({
     nombre: ['', [Validators.required, Validators.maxLength(120)]],
@@ -58,6 +75,7 @@ export class ProductoForm {
             stock: producto.stock,
             categoriaId: producto.categoria.id,
           });
+          this.categoriaBusqueda.set(producto.categoria.nombre);
           this.loading.set(false);
         },
         error: () => {
@@ -77,6 +95,18 @@ export class ProductoForm {
       },
       error: () => this.error.set('No se pudieron cargar las categorías.'),
     });
+  }
+
+  protected buscarCategoria(texto: string): void {
+    this.categoriaBusqueda.set(texto);
+    // Escribir texto libre no basta para elegir: el id solo se fija en onCategoriaSeleccionada.
+    this.form.controls.categoriaId.setValue(0);
+  }
+
+  protected onCategoriaSeleccionada(evento: MatAutocompleteSelectedEvent): void {
+    const categoria = this.categorias().find((c) => c.nombre === evento.option.value);
+    this.form.controls.categoriaId.setValue(categoria?.id ?? 0);
+    this.form.controls.categoriaId.markAsTouched();
   }
 
   guardar(): void {
@@ -112,6 +142,7 @@ export class ProductoForm {
     if (err.status === 404 && mensaje.startsWith('Categoria')) {
       this.error.set('La categoría seleccionada ya no existe. Elige otra de la lista.');
       this.form.controls.categoriaId.setValue(0);
+      this.categoriaBusqueda.set('');
       this.cargarCategorias();
     } else if (err.status === 400) {
       this.error.set('Los datos enviados no son válidos. Revisa los campos del formulario.');

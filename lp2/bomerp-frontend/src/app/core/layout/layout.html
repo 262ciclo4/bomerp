@@ -1,20 +1,15 @@
-<header class="header">
-  <h1>
-    <a routerLink="/" class="home-link">
-      <img src="favicon.ico" alt="" height="30" />
-    </a>
-    BomERP
-  </h1>
-</header>
+<mat-toolbar color="primary" class="header">
+  <a routerLink="/" class="home-link">
+    <img src="favicon.ico" alt="" height="30" />
+    <span>BomERP</span>
+  </a>
+</mat-toolbar>
 
 <div class="body">
-  <aside class="sidebar">
-    <nav>
-      <a routerLink="/catalogo/categorias" routerLinkActive="active">Categorías</a>
-      |
-      <a routerLink="/catalogo/productos" routerLinkActive="active">Productos</a>
-    </nav>
-  </aside>
+  <nav class="sidebar">
+    <a routerLink="/catalogo/categorias" routerLinkActive="active">Categorías</a>
+    <a routerLink="/catalogo/productos" routerLinkActive="active">Productos</a>
+  </nav>
 
   <main class="content">
     <router-outlet />
