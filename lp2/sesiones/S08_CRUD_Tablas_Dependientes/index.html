@@ -4786,7 +4786,30 @@
 </ol>
 <p><strong>Error frecuente</strong>: la lista desplegable de <strong>Editar</strong> aparece en blanco (o en "Selecciona una categoría") aunque el producto sí tiene categoría. Revisa que <code>producto.categoria.id</code> llegue en el <code>patchValue</code> de 3.7 y que las opciones usen <code>[ngValue]</code> y no <code>[value]</code> (2.3): con <code>[value]</code> el control recibe texto y no coincide con el <code>id</code> numérico.</p>
 <h3 id="310-opcional-segunda-opcion-elegir-la-categoria-con-un-autocomplete-angular-material">3.10 (Opcional) Segunda opción: elegir la categoría con un autocomplete (Angular Material)<a class="headerlink" href="#310-opcional-segunda-opcion-elegir-la-categoria-con-un-autocomplete-angular-material" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> una <strong>segunda forma</strong>, aparte, de resolver el mismo campo <code>categoriaId</code> — con un autocomplete (2.6) en vez del <code>&lt;select&gt;</code> de 3.7. Es un paso opcional, para practicar: no reemplaza ni modifica el <code>ProductoForm</code> de 3.1-3.9, que sigue siendo el CRUD dependiente completo y probado de esta sesión. Si quieres explorarlo, hazlo sobre una copia de <code>producto-form.ts</code>/<code>producto-form.html</code> (o en una rama aparte), no sobre los archivos que ya probaste en 3.9.</p>
+<p><strong>Producto del paso:</strong> el mismo campo <code>categoriaId</code> de siempre, resuelto con un autocomplete (2.6) <strong>en vez de</strong> el <code>&lt;select&gt;</code> de 3.7 — no junto a él. Este paso es <strong>opcional</strong>: puedes quedarte con el <code>&lt;select&gt;</code> de 3.7 (ya probado en 3.9) y saltar directo a 3.11, o hacer este paso y quedarte con el autocomplete. Al final debe existir <strong>una sola</strong> forma de elegir la categoría en <code>ProductoForm</code>, nunca las dos a la vez.</p>
+<p>Si decides hacerlo, edita los <strong>mismos</strong> dos archivos de 3.7 — no crees una copia ni un segundo componente —, y en cada uno <strong>borra</strong> el bloque del <code>&lt;select&gt;</code>/las señales que ya no se usan, para no dejar código muerto:</p>
+<table>
+<thead>
+<tr>
+<th>Archivo</th>
+<th>Qué se quita</th>
+<th>Qué se agrega</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>producto-form.ts</code></td>
+<td>Nada se quita; <code>categoriaId</code> y sus validadores (3.7) se conservan tal cual.</td>
+<td>Los imports de Material, <code>categoriaBusqueda</code>, <code>categoriasFiltradas</code>, y los métodos <code>buscarCategoria</code>/<code>onCategoriaSeleccionada</code>.</td>
+</tr>
+<tr>
+<td><code>producto-form.html</code></td>
+<td>El <code>&lt;label&gt;Categoría&lt;select&gt;...&lt;/select&gt;&lt;/label&gt;</code> completo de 3.7.</td>
+<td>El <code>&lt;mat-form-field&gt;</code> con el autocomplete, de abajo.</td>
+</tr>
+</tbody>
+</table>
+<p>Hazlo <strong>después</strong> de 3.9, con el CRUD ya probado de punta a punta con el <code>&lt;select&gt;</code>: así, si algo sale mal al cambiar la maquetación, sabes que el problema está en este paso y no en el CRUD base.</p>
 <p>Instala Angular Material:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd </span><span class="n">lp2</span><span class="p">/</span><span class="n">bomerp-frontend</span>
 <span class="n">npx</span> <span class="n">ng</span> <span class="n">add</span> <span class="nv">@angular</span><span class="p">/</span><span class="n">material</span>
