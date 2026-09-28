@@ -797,7 +797,16 @@ Ya probaste la lista (3.4) y el alta básica (3.7) por separado; ahora se prueba
 
 ### 3.10 (Opcional) Segunda opción: elegir la categoría con un autocomplete (Angular Material)
 
-**Producto del paso:** una **segunda forma**, aparte, de resolver el mismo campo `categoriaId` — con un autocomplete (2.6) en vez del `<select>` de 3.7. Es un paso opcional, para practicar: no reemplaza ni modifica el `ProductoForm` de 3.1-3.9, que sigue siendo el CRUD dependiente completo y probado de esta sesión. Si quieres explorarlo, hazlo sobre una copia de `producto-form.ts`/`producto-form.html` (o en una rama aparte), no sobre los archivos que ya probaste en 3.9.
+**Producto del paso:** el mismo campo `categoriaId` de siempre, resuelto con un autocomplete (2.6) **en vez de** el `<select>` de 3.7 — no junto a él. Este paso es **opcional**: puedes quedarte con el `<select>` de 3.7 (ya probado en 3.9) y saltar directo a 3.11, o hacer este paso y quedarte con el autocomplete. Al final debe existir **una sola** forma de elegir la categoría en `ProductoForm`, nunca las dos a la vez.
+
+Si decides hacerlo, edita los **mismos** dos archivos de 3.7 — no crees una copia ni un segundo componente —, y en cada uno **borra** el bloque del `<select>`/las señales que ya no se usan, para no dejar código muerto:
+
+| Archivo | Qué se quita | Qué se agrega |
+|---|---|---|
+| `producto-form.ts` | Nada se quita; `categoriaId` y sus validadores (3.7) se conservan tal cual. | Los imports de Material, `categoriaBusqueda`, `categoriasFiltradas`, y los métodos `buscarCategoria`/`onCategoriaSeleccionada`. |
+| `producto-form.html` | El `<label>Categoría<select>...</select></label>` completo de 3.7. | El `<mat-form-field>` con el autocomplete, de abajo. |
+
+Hazlo **después** de 3.9, con el CRUD ya probado de punta a punta con el `<select>`: así, si algo sale mal al cambiar la maquetación, sabes que el problema está en este paso y no en el CRUD base.
 
 Instala Angular Material:
 
