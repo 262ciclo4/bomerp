@@ -1,4 +1,4 @@
-<form [formGroup]="form" (ngSubmit)="guardar()">
+<form class="formulario-crud" [formGroup]="form" (ngSubmit)="guardar()">
   @if (loading()) {
     <p>Cargando...</p>
   }
@@ -12,53 +12,54 @@
   <mat-form-field>
     <mat-label>Nombre</mat-label>
     <input matInput type="text" formControlName="nombre" />
+    @if (mensajeValidacion('nombre'); as mensaje) {
+      <mat-error>{{ mensaje }}</mat-error>
+    }
   </mat-form-field>
-  @if (mensajeValidacion('nombre'); as mensaje) {
-    <p class="error">{{ mensaje }}</p>
-  }
 
   <mat-form-field>
     <mat-label>Precio (S/)</mat-label>
     <input matInput type="number" step="0.01" min="0" formControlName="precio" />
+    @if (mensajeValidacion('precio'); as mensaje) {
+      <mat-error>{{ mensaje }}</mat-error>
+    }
   </mat-form-field>
-  @if (mensajeValidacion('precio'); as mensaje) {
-    <p class="error">{{ mensaje }}</p>
-  }
 
   <mat-form-field>
     <mat-label>Stock</mat-label>
     <input matInput type="number" step="1" min="0" formControlName="stock" />
+    @if (mensajeValidacion('stock'); as mensaje) {
+      <mat-error>{{ mensaje }}</mat-error>
+    }
   </mat-form-field>
-  @if (mensajeValidacion('stock'); as mensaje) {
-    <p class="error">{{ mensaje }}</p>
-  }
 
   <mat-form-field>
     <mat-label>Categoría</mat-label>
-    <input
-      type="text"
-      matInput
-      [matAutocomplete]="autoCategoria"
-      [value]="categoriaBusqueda()"
-      (input)="buscarCategoria($any($event.target).value)"
-      (blur)="form.controls.categoriaId.markAsTouched()"
-    />
-    <mat-autocomplete #autoCategoria="matAutocomplete" (optionSelected)="onCategoriaSeleccionada($event)">
+    <input type="text" matInput [matAutocomplete]="autoCategoria" formControlName="categoria" />
+    <mat-autocomplete #autoCategoria="matAutocomplete" [displayWith]="mostrarCategoria">
       @for (categoria of categoriasFiltradas(); track categoria.id) {
-        <mat-option [value]="categoria.nombre">{{ categoria.nombre }}</mat-option>
+        <mat-option [value]="categoria">{{ categoria.nombre }}</mat-option>
+      } @empty {
+        <mat-option disabled>{{
+          categoriasCargadas() ? 'Sin coincidencias' : 'Categorías no disponibles'
+        }}</mat-option>
       }
     </mat-autocomplete>
+    @if (mensajeValidacion('categoria'); as mensaje) {
+      <mat-error>{{ mensaje }}</mat-error>
+    }
   </mat-form-field>
-  @if (mensajeValidacion('categoriaId'); as mensaje) {
-    <p class="error">{{ mensaje }}</p>
-  }
 
   @if (error()) {
     <p class="error">{{ error() }}</p>
   }
 
   <div class="acciones">
-    <button matButton="filled" type="submit" [disabled]="loading() || errorCarga() || categorias().length === 0">
+    <button
+      matButton="filled"
+      type="submit"
+      [disabled]="loading() || errorCarga() || categorias().length === 0"
+    >
       Guardar
     </button>
     <button matButton type="button" (click)="cancelar()">Cancelar</button>

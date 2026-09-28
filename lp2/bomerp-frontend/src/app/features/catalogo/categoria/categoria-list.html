@@ -23,7 +23,7 @@
         <td>{{ categoria.descripcion }}</td>
         <td>
           <a matButton [routerLink]="['/catalogo/categorias', categoria.id, 'editar']">Editar</a>
-          <button matButton color="warn" (click)="eliminar(categoria.id!)">Eliminar</button>
+          <button matButton class="accion-eliminar" (click)="eliminar(categoria.id!)">Eliminar</button>
         </td>
       </tr>
     } @empty {

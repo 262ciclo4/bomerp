@@ -1,14 +1,16 @@
 import { Component, computed, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
   AbstractControl,
   FormBuilder,
+  FormControl,
   ReactiveFormsModule,
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -45,19 +47,35 @@ export class ProductoForm {
   protected readonly error = signal<string | null>(null);
   protected readonly loading = signal(false);
   protected readonly errorCarga = signal(false);
-  protected readonly categoriaBusqueda = signal('');
-  protected readonly categoriasFiltradas = computed(() => {
-    const texto = this.categoriaBusqueda().trim().toLowerCase();
-    if (!texto) return this.categorias();
-    return this.categorias().filter((c) => c.nombre.toLowerCase().includes(texto));
-  });
-
   protected readonly form = this.fb.nonNullable.group({
     nombre: ['', [Validators.required, Validators.maxLength(120)]],
     precio: [0, [Validators.required, Validators.min(0)]],
     stock: [0, [Validators.required, Validators.min(0), entero]],
-    categoriaId: [0, [Validators.min(1)]],
+    categoria: new FormControl<Categoria | string | null>(null, {
+      validators: [
+        (control) => {
+          const valor = control.value;
+          return valor && typeof valor === 'object' && Number.isInteger(valor.id) && valor.id > 0
+            ? null
+            : { categoria: true };
+        },
+      ],
+    }),
   });
+
+  private readonly categoriaValor = toSignal(this.form.controls.categoria.valueChanges, {
+    initialValue: this.form.controls.categoria.value,
+  });
+  protected readonly categoriasFiltradas = computed(() => {
+    const valor = this.categoriaValor();
+    const texto = typeof valor === 'string' ? valor.trim().toLocaleLowerCase() : '';
+    return this.categorias().filter((categoria) =>
+      categoria.nombre.toLocaleLowerCase().includes(texto),
+    );
+  });
+
+  protected readonly mostrarCategoria = (categoria: Categoria | string | null): string =>
+    typeof categoria === 'string' ? categoria : (categoria?.nombre ?? '');
 
   constructor() {
     this.cargarCategorias();
@@ -73,9 +91,8 @@ export class ProductoForm {
             nombre: producto.nombre,
             precio: producto.precio,
             stock: producto.stock,
-            categoriaId: producto.categoria.id,
+            categoria: producto.categoria,
           });
-          this.categoriaBusqueda.set(producto.categoria.nombre);
           this.loading.set(false);
         },
         error: () => {
@@ -97,20 +114,14 @@ export class ProductoForm {
     });
   }
 
-  protected buscarCategoria(texto: string): void {
-    this.categoriaBusqueda.set(texto);
-    // Escribir texto libre no basta para elegir: el id solo se fija en onCategoriaSeleccionada.
-    this.form.controls.categoriaId.setValue(0);
-  }
-
-  protected onCategoriaSeleccionada(evento: MatAutocompleteSelectedEvent): void {
-    const categoria = this.categorias().find((c) => c.nombre === evento.option.value);
-    this.form.controls.categoriaId.setValue(categoria?.id ?? 0);
-    this.form.controls.categoriaId.markAsTouched();
-  }
-
   guardar(): void {
-    if (this.loading() || this.errorCarga()) return;
+    if (
+      this.loading() ||
+      this.errorCarga() ||
+      !this.categoriasCargadas() ||
+      !this.categorias().length
+    )
+      return;
     this.error.set(null);
     const nombre = this.form.controls.nombre;
     nombre.setValue(nombre.value.trim());
@@ -119,7 +130,9 @@ export class ProductoForm {
       this.form.markAllAsTouched();
       return;
     }
-    const valor = this.form.getRawValue();
+    const { categoria, ...datos } = this.form.getRawValue();
+    if (!categoria || typeof categoria === 'string' || !categoria.id) return;
+    const valor = { ...datos, categoriaId: categoria.id };
     const id = this.id();
     const peticion = id
       ? this.productoService.actualizar(id, valor)
@@ -141,8 +154,7 @@ export class ProductoForm {
 
     if (err.status === 404 && mensaje.startsWith('Categoria')) {
       this.error.set('La categoría seleccionada ya no existe. Elige otra de la lista.');
-      this.form.controls.categoriaId.setValue(0);
-      this.categoriaBusqueda.set('');
+      this.form.controls.categoria.setValue(null);
       this.cargarCategorias();
     } else if (err.status === 400) {
       this.error.set('Los datos enviados no son válidos. Revisa los campos del formulario.');
@@ -152,10 +164,12 @@ export class ProductoForm {
     this.loading.set(false);
   }
 
-  protected mensajeValidacion(campo: 'nombre' | 'precio' | 'stock' | 'categoriaId'): string {
+  protected mensajeValidacion(campo: 'nombre' | 'precio' | 'stock' | 'categoria'): string {
     const control = this.form.controls[campo];
 
     if (!control.touched) return '';
+
+    if (control.hasError('categoria')) return 'Selecciona una categoría de la lista.';
 
     if (control.hasError('required')) {
       return 'Este campo es obligatorio.';
@@ -166,7 +180,7 @@ export class ProductoForm {
     }
 
     if (control.hasError('min')) {
-      return campo === 'categoriaId' ? 'Selecciona una categoría.' : 'Debe ser mayor o igual a 0.';
+      return 'Debe ser mayor o igual a 0.';
     }
 
     if (control.hasError('entero')) {
