@@ -434,7 +434,7 @@ stateDiagram-v2
 | Transición | Disparada por | Precondición | Efecto |
 |---|---|---|---|
 | `[*] → REGISTRADA` | `crear()` (ya implementado, S8 3.3) | RN1, RN2 cumplidas para cada línea | Venta guardada, stock descontado |
-| `REGISTRADA → ANULADA` | `anular()` (diseñada en S7; brecha: sin refinar en S8, sin implementar en LP2) | La venta está en `REGISTRADA`; ningún rol distinto de `SUPERVISOR`/`ADMIN` puede anular (a definir en S10-S11, igual que RN8 de S8) | El stock de cada `DetalleVenta` se restaura; la venta no se elimina, queda marcada |
+| `REGISTRADA → ANULADA` | `anular()` (diseñada en S7; brecha: sin refinar en S8, sin implementar en LP2) | La venta está en `REGISTRADA`; ningún rol distinto de `SUPERVISOR`/`ADMIN` puede anular (permiso pendiente de definir, mismo criterio que RN8 de S8) | El stock de cada `DetalleVenta` se restaura; la venta no se elimina, queda marcada |
 | `ANULADA → *` | Ninguna | — | No existe ninguna transición válida desde `ANULADA`: es un estado final para el ciclo de negocio |
 
 **Error frecuente**: dibujar una transición `ANULADA → REGISTRADA` "por si acaso se necesita revertir". Un diagrama de estados que permite volver a un estado anterior sin una regla de negocio real que lo justifique no documenta un camino más flexible — documenta una regla que no existe y que, si se programa tal cual, dejaría reactivar una venta anulada sin ningún control. Si tu propio dominio sí necesita revertir un estado, la transición debe nombrar una operación concreta y sus condiciones, no quedar implícita.

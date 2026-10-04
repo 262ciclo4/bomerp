@@ -74,6 +74,8 @@ nav:
           - S7 - Diseño de clases del dominio: ads/sesiones/S07_Diseno_Clases_Dominio.md
           - S8 - Diseño de clases avanzado y transformación objeto-relacional: ads/sesiones/S08_Diseno_Clases_Avanzado_Transformacion_Objeto_Relacional.md
           - S9 - Diagramas dinámicos UML: ads/sesiones/S09_Diagramas_Dinamicos_UML.md
+          - S10 - Patrones de diseño GoF y GRASP: ads/sesiones/S10_Patrones_Diseno_GoF_GRASP.md
+          - S11 - Integración y sistemas empresariales: ads/sesiones/S11_Integracion_Sistemas_Empresariales.md
   - BD2:
       - Inicio: bd2/index.md
       - Silabos:
