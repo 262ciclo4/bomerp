@@ -1,0 +1,891 @@
+# S9 - Formularios Transaccionales Cabecera-Detalle
+
+*Por: Angel Sullon Macalupu @asullom - 2026*
+
+## 1. Introducción
+
+Tiempo: 20 min.
+
+### 1.1 Presentación de la sesión
+
+El CRUD de `Producto` (S8) edita **una** fila a la vez: un formulario, una entidad, un `POST` o un `PUT`. Una venta no funciona así — el backend ya lo resolvió en S4 (`VentaServiceImpl.crear`): una cabecera (`Venta`) que se guarda junto con una lista variable de líneas (`DetalleVenta`), en una sola operación, con un total que el servidor calcula y nunca el cliente. Esta sesión construye el formulario que arma esa misma estructura en el navegador: líneas que se agregan y quitan en vivo, un total que se recalcula con cada cambio, una confirmación antes de enviar la operación, y una vista de consulta que trae el reporte agregado que el backend ya expone. El porqué de exigir una confirmación explícita antes de enviar una operación irreversible se desarrolla en 1.6, a partir del caso.
+
+### 1.2 Índice
+
+1. Formularios con detalle dinámico (`FormArray`).
+2. Cálculos derivados en el formulario.
+3. Validaciones de una operación compuesta.
+4. Confirmación antes de una operación irreversible.
+5. Consultas y reportes agregados.
+
+### 1.3 Propósito de aprendizaje
+
+Al concluir la clase, estarás en condiciones de:
+
+- **Construir** un formulario transaccional con detalle dinámico que calcula sus propios totales, **validar** la operación completa antes de confirmarla, y **consumir** un endpoint de reporte agregado para presentar una vista de consulta.
+
+### 1.4 Producto de sesión
+
+`VentaForm` en la SPA (`lp2/bomerp-frontend`): formulario con `FormArray` de líneas (selección de producto, cantidad, subtotal calculado en vivo), total general recalculado con cada cambio, validación de que exista al menos una línea y de que cada una tenga producto y cantidad válidos, confirmación explícita antes de enviar, y manejo específico de los errores reales del backend (producto inexistente, stock insuficiente). Además, `VentaReporteComponent`, una vista de consulta que trae `GET /api/v1/ventas/resumen` con filtros por estado y rango de fechas, mostrando los agregados (cantidad de ventas, monto total, ticket promedio) y el detalle resumido de cada venta.
+
+### 1.5 Metodología
+
+**Tabla 1. Metodología de la sesión**
+
+| Actividades a Realizar en el Periodo | Orientaciones generales (Orientaciones Metodológicas) | Material de estudio recomendado |
+|---|---|---|
+| Revisión previa individual | Repasar el pseudocódigo de `VentaServiceImpl.crear` (S4) y el contrato REST de `ventas` (ADS S8, Tabla 17): qué campos decide el servidor y qué errores puede devolver (404, 409). Trabajo individual, antes de clase. | S4 (backend), ADS S8 (Tablas 10, 17), S8 LP2 (2.2-2.4). |
+| Clase presencial | Construcción guiada de `VentaForm` con detalle dinámico, cálculo de totales, validación, confirmación, y de `VentaReporteComponent` con sus filtros. Trabajo individual en la propia laptop, siguiendo al docente paso a paso. | Backend ejecutable y SPA de S8, Pasos 3.1 a 3.10 de esta guía. |
+| Evaluación formativa | Verificación en clase de una venta registrada de punta a punta (con sus líneas, su total y la confirmación) y del reporte reflejando esa venta. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4. | Indicaciones de entrega (4.3), rúbrica de evaluación (4.6). |
+
+### 1.6 Motivación de la sesión
+
+#### 1.6.1 Caso: los 45 minutos de Knight Capital, sin nadie que pudiera confirmar o detener nada
+
+El 1 de agosto de 2012, Knight Capital Group desplegó un nuevo módulo de *trading* en ocho servidores, pero el proceso de despliegue falló en uno de ellos: ese octavo servidor se quedó con una bandera de código antigua, reutilizada por error para activar una función obsoleta (*Power Peg*) en vez de la nueva. Durante 45 minutos, ese servidor interpretó órdenes normales del mercado como señal para disparar millones de órdenes de compra y venta reales, sin que ningún mecanismo detuviera o pidiera confirmar la operación antes de ejecutarla. El resultado: 4 millones de ejecuciones sobre 397 millones de acciones, y una pérdida de aproximadamente 440 millones de dólares en menos de una hora.
+
+Fuente: U.S. Securities and Exchange Commission. (2013). *In the Matter of Knight Capital Americas LLC* (Release No. 34-70694). https://www.sec.gov/litigation/admin/2013/34-70694.pdf
+
+Ninguna persona decidió ejecutar esas órdenes: el sistema las generó solo, sin ningún punto donde un humano pudiera revisar el total antes de comprometerlo. Para cuando alguien notó el problema, el daño ya estaba hecho. Una operación financiera automática, sin ningún resumen ni confirmación entre "calcular" y "comprometer", no deja margen para que nadie detecte un error antes de que sea irreversible — exactamente el riesgo que un paso de confirmación, con el total visible, existe para reducir.
+
+**Preguntas de análisis**
+
+**Activación de conocimientos previos**
+
+1. En el CRUD de `Producto` (S8), ¿el usuario veía algún resumen antes de confirmar "Guardar"? ¿Por qué ahí no hacía tanta falta?
+
+**Comprensión de la confirmación en operaciones compuestas**
+
+1. Según el caso, ¿qué hubiera cambiado si hubiera existido un punto de control donde alguien pudiera ver el efecto de la operación antes de que se ejecutara de verdad?
+2. En el formulario de venta de hoy, ¿qué información mínima debería mostrar la confirmación para que el usuario detecte un error antes de enviarla?
+
+### 1.7 Ubicación en el curso
+
+- Unidad: U2 - SPA modular segura para BomERP.
+- Producto del curso: base Full-Stack modular de BomERP.
+- Producto de unidad: SPA modular y segura, conectada al backend, con navegación por funcionalidades, CRUD de tablas independientes y dependientes, formularios transaccionales, consultas, reportes y control de acceso.
+- Avance del producto en esta sesión: formulario transaccional cabecera-detalle de `Venta`, con cálculo de totales, validación compuesta y confirmación, y una vista de consulta/reporte agregado.
+
+**Figura 1. Roadmap del producto de la unidad**
+
+```mermaid
+flowchart TB
+    S7["`**S7:** Creación y arquitectura de la SPA`"]
+    S8["`**S8:** CRUD de tablas dependientes`"]
+    S9["`**S9:** Formularios transaccionales cabecera-detalle`"]
+    S10["`**S10:** Seguridad backend (JWT)`"]
+    S11["`**S11:** Seguridad frontend`"]
+    S12["`**S12:** Producto U2`"]
+
+    S7 --> S8 --> S9 --> S10 --> S11 --> S12
+
+    classDef today fill:#ffe08a,stroke:#9a6b00,stroke-width:2px,color:#111;
+    class S9 today;
+```
+
+## 2. Explica
+
+Tiempo: 25 min.
+
+### 2.1 Arquitectura de la sesión
+
+**Figura 2. Cómo se conectan las piezas del formulario transaccional**
+
+```mermaid
+flowchart TB
+    subgraph SPA["SPA (features/ventas)"]
+        VF["VentaForm<br/>FormArray de lineas"]
+        VRp["VentaReporteComponent"]
+        VS["VentaService"]
+        PS["ProductoService<br/>(ya existe, S8)"]
+    end
+
+    subgraph API["Backend (localhost:8080)"]
+        EV["POST /api/v1/ventas"]
+        ER["GET /api/v1/ventas/resumen"]
+        EP["GET /api/v1/productos"]
+    end
+
+    VF -->|"puebla cada linea<br/>con el precio real"| PS
+    VF --> VS
+    VRp --> VS
+    PS --> EP
+    VS --> EV
+    VS --> ER
+```
+
+Lectura del diagrama: `VentaForm` reutiliza `ProductoService` de S8 para poblar cada línea con productos reales (y su precio, necesario para calcular el subtotal sin esperar la respuesta del backend), exactamente la misma dependencia entre funcionalidades que S8 ya estableció con `CategoriaService`. Cada apartado siguiente desarrolla una pieza de la sesión, en el mismo orden del Índice (1.2).
+
+### 2.2 Formularios con detalle dinámico (`FormArray`)
+
+Un `FormGroup` (S7-S8) tiene una cantidad fija de controles, conocida al construirlo. Una venta no: tiene una línea, o cinco, o ninguna todavía, y el usuario decide cuántas agregar mientras llena el formulario. Angular resuelve esto con `FormArray`: una colección de controles (o de `FormGroup`) del mismo tipo, a la que se le puede agregar o quitar elementos en tiempo de ejecución (Angular, 2026a).
+
+```ts
+protected readonly form = this.fb.nonNullable.group({
+  detalles: this.fb.array([this.crearLinea()]),
+});
+
+private crearLinea() {
+  return this.fb.nonNullable.group({
+    productoId: [0, [Validators.min(1)]],
+    cantidad: [1, [Validators.required, Validators.min(1)]],
+  });
+}
+```
+
+**Tabla 2. `FormGroup` frente a `FormArray`**
+
+| | `FormGroup` (S7-S8) | `FormArray` (hoy) |
+|---|---|---|
+| Cantidad de controles | Fija, declarada una vez | Variable, cambia mientras el usuario completa el formulario |
+| Acceso en la plantilla | Por nombre (`formControlName="nombre"`) | Por índice, con `@for` sobre `.controls` |
+| Agregar/quitar | No aplica | `.push(grupo)` / `.removeAt(indice)` |
+| Ejemplo en BomERP | `ProductoForm` completo (S8) | `detalles` dentro de `VentaForm` |
+
+El `FormGroup` raíz de `VentaForm` tiene un solo campo, `detalles`, que es el `FormArray`. No hay campos de cabecera editables por el usuario: `fecha`, `estado` y `total` los decide el servidor (ADS S8, 2.4) — el mismo criterio que ya rigió `VentaRequest` en el backend desde S4.
+
+### 2.3 Cálculos derivados en el formulario
+
+Cada línea tiene un subtotal (`precioUnitario × cantidad`) y el formulario completo tiene un total (la suma de los subtotales) — ninguno de los dos es un campo que el usuario escriba: son **valores derivados** de otros campos, y se recalculan solos cuando cualquiera de sus entradas cambia.
+
+En Angular, un valor derivado de señales se expresa con `computed` (Angular, 2026b), no con un método que haya que acordarse de llamar:
+
+```ts
+protected readonly subtotales = computed(() =>
+  this.lineas().map((linea) => {
+    const producto = this.productos().find((p) => p.id === linea.productoId);
+    return (producto?.precio ?? 0) * linea.cantidad;
+  }),
+);
+
+protected readonly total = computed(() =>
+  this.subtotales().reduce((suma, s) => suma + s, 0),
+);
+```
+
+El subtotal se calcula en el navegador **con el precio que el frontend ya tiene cargado** (`ProductoService.listar()`, S8) — es una vista anticipada para el usuario, no el valor que termina guardado. El subtotal real lo calcula el backend en el momento de guardar (`VentaMapper.toDetalle`, S4), con el precio vigente en ese instante exacto, que podría ser distinto si el precio del producto cambió entre que el usuario abrió el formulario y lo envió. Esa diferencia es intencional, no un error: el formulario nunca debe enviar un subtotal o un total calculados por el cliente — solo `productoId` y `cantidad` por línea (RN3, RN4 de ADS S8, Tabla 10), exactamente como ya hace `DetalleVentaRequest` en el backend.
+
+### 2.4 Validaciones de una operación compuesta
+
+Un formulario con una sola entidad (S7-S8) es válido o inválido según sus propios campos. Un formulario con detalle dinámico agrega una validación que no vive en ningún campo individual: la **colección completa** tiene que cumplir una regla propia.
+
+**Tabla 3. Niveles de validación de un formulario cabecera-detalle**
+
+| Nivel | Qué valida | Ejemplo en `VentaForm` |
+|---|---|---|
+| Campo de la línea | Que el valor de ese campo sea válido por sí solo. | `cantidad` mayor que cero; `productoId` distinto de `0` (S8, 2.3). |
+| Colección completa | Que el conjunto de líneas cumpla una regla que ningún campo aislado puede expresar. | Debe existir **al menos una** línea (`detalles` no vacío) — la misma regla que ya valida `VentaRequest.detalles` en el backend con `@NotEmpty`. |
+| Backend | Que las referencias y las reglas de negocio se cumplan con los datos reales, en el momento de guardar. | `productoId` existe (404 si no) y hay stock suficiente (409 si no) — RN1 y RN2 de ADS S8. |
+
+El validador de la colección completa se declara sobre el propio `FormArray`, no sobre ninguna línea:
+
+```ts
+detalles: this.fb.array([this.crearLinea()], [Validators.minLength(1)]),
+```
+
+### 2.5 Confirmación antes de una operación irreversible
+
+Guardar una venta no es como editar una categoría: descuenta stock real de uno o más productos y, una vez guardada, no hay una operación de "deshacer" en esta sesión (ADS S9 dejó el ciclo de vida de `Venta` con la anulación como diseño **previsto**, todavía sin implementar). Por eso, antes de enviarla, el formulario muestra un resumen — cuántas líneas, qué productos, el total calculado — y pide una confirmación explícita, igual que `eliminar()` ya pide confirmación en `ProductoList` (S8, 3.6) para una acción distinta pero igual de irreversible desde la pantalla.
+
+```ts
+confirmarYGuardar(): void {
+  if (this.form.invalid) {
+    this.form.markAllAsTouched();
+    return;
+  }
+  const resumen = `Vas a registrar una venta de ${this.lineas().length} línea(s) por un total de S/ ${this.total().toFixed(2)}. ¿Confirmar?`;
+  if (!confirm(resumen)) return;
+  this.guardar();
+}
+```
+
+El total que aparece en la confirmación es el mismo `computed` de 2.3 — no un cálculo aparte que podría desincronizarse del que ve el usuario en el formulario. Esta confirmación es el punto de control que, en el caso de 1.6, no existía en ningún punto de los 45 minutos: un resumen legible, revisado por una persona, antes de comprometer la operación de verdad.
+
+### 2.6 Consultas y reportes agregados
+
+El backend ya expone un endpoint distinto para consultar, no solo para listar: `GET /api/v1/ventas/resumen` no devuelve ventas una por una, devuelve un `VentaReporte` con dos partes — un agregado (`VentaAgregado`: cantidad de ventas, monto total, ticket promedio, ya calculado en el servidor) y una lista resumida (`VentaResumen`, sin el detalle línea por línea). La pantalla de consulta de hoy consume esa forma de datos directamente, sin recalcular en el navegador nada que el backend ya entregó calculado.
+
+**Tabla 4. Lista (S7-S8) frente a reporte (hoy)**
+
+| | Lista (`ProductoList`, S8) | Reporte (`VentaReporteComponent`, hoy) |
+|---|---|---|
+| Qué trae | Filas completas, una por registro | Agregados ya calculados, más filas resumidas |
+| Filtro | Por una referencia (categoría) | Por estado y por rango de fechas |
+| Dónde se calcula el total | No aplica | En el servidor (`VentaAgregado`), nunca en el navegador |
+
+## 3. Aplica: actividad práctica guiada
+
+Tiempo: 120 min.
+
+**Actividad:** construcción guiada de `VentaForm` (cabecera-detalle, con cálculo y confirmación) y de `VentaReporteComponent` (consulta con filtros), de punta a punta (Producto de la sesión en 1.4).
+
+**Propósito de la actividad:** extender la arquitectura de S7-S8 a una operación que involucra una colección variable de líneas y una vista de agregados, sin romper la regla de que el cliente nunca calcula lo que el servidor debe calcular.
+
+**Orientaciones metodológicas:** en el laboratorio, el docente construye `VentaForm` y `VentaReporteComponent` paso a paso frente a la clase; los estudiantes repiten cada paso en su propia laptop y aplican después el mismo patrón a una operación cabecera-detalle de su propio dominio (ver sección 4).
+
+**Actividades para realizar:**
+
+- **3.1** Verificar el punto de partida.
+- **3.2** Crear los modelos de `Venta`.
+- **3.3** Crear `VentaService`.
+- **3.4** Crear `VentaForm` con el `FormArray` de líneas.
+- **3.5** Agregar el cálculo de subtotales y total.
+- **3.6** Agregar y quitar líneas dinámicamente.
+- **3.7** Validar la operación y agregar la confirmación.
+- **3.8** Manejar los errores reales del backend (404, 409).
+- **3.9** Crear `VentaReporteComponent` con filtros.
+- **3.10** Probar el formulario transaccional completo.
+
+### 3.1 Verificar el punto de partida
+
+**Punto de partida común:** todo el equipo debe comenzar exactamente desde donde quedó S8, no desde su propio avance individual. Clona la rama `s08-crud-tablas-dependientes` (el snapshot de cierre de S8):
+
+```bash
+git clone --branch s08-crud-tablas-dependientes https://github.com/262ciclo4/bomerp.git
+```
+
+**Producto del paso:** confirmación de que el backend responde en `/api/v1/ventas` y `/api/v1/ventas/resumen`, y de que hay al menos dos productos con stock disponible.
+
+```powershell
+Invoke-RestMethod -Method Get -Uri "http://localhost:8080/api/v1/productos"
+Invoke-RestMethod -Method Get -Uri "http://localhost:8080/api/v1/ventas/resumen"
+```
+
+```bash
+curl http://localhost:8080/api/v1/productos
+curl http://localhost:8080/api/v1/ventas/resumen
+```
+
+Si no hay productos con `stock` mayor que cero, crea o actualiza uno desde Swagger antes de continuar — sin stock, cualquier venta de prueba fallará con `409` desde el primer intento. Luego levanta la SPA (`npm start` en `lp2/bomerp-frontend`) y confirma que **Productos** (S8) sigue funcionando.
+
+### 3.2 Crear los modelos de `Venta`
+
+**Producto del paso:** los modelos que reflejan exactamente los DTO reales del backend (S4) — ninguno inventa un campo que el backend no tenga.
+
+Crea **`lp2/bomerp-frontend/src/app/features/ventas/venta/venta.model.ts`**:
+
+```ts
+export interface DetalleVentaRequest {
+  productoId: number;
+  cantidad: number;
+}
+
+export interface DetalleVentaResponse {
+  productoId: number;
+  nombreProducto: string;
+  precioUnitario: number;
+  cantidad: number;
+  subtotal: number;
+}
+
+export interface VentaRequest {
+  detalles: DetalleVentaRequest[];
+}
+
+export interface VentaResponse {
+  id: number;
+  fecha: string;
+  estado: string;
+  total: number;
+  detalles: DetalleVentaResponse[];
+}
+
+export interface VentaResumen {
+  id: number;
+  fecha: string;
+  estado: string;
+  total: number;
+  cantidadDetalles: number;
+}
+
+export interface VentaAgregado {
+  totalVentas: number;
+  montoTotal: number;
+  ticketPromedio: number;
+}
+
+export interface VentaReporte {
+  agregado: VentaAgregado;
+  ventas: VentaResumen[];
+}
+```
+
+`VentaRequest` tiene exactamente un campo, `detalles` — igual que la clase real `VentaRequest.java` del backend (ADS S8, Tabla 16): ni `fecha`, ni `estado`, ni `total` se escriben desde el cliente.
+
+### 3.3 Crear `VentaService`
+
+**Producto del paso:** el servicio HTTP de `Venta`, con `crear` y `reporte`.
+
+Crea **`lp2/bomerp-frontend/src/app/features/ventas/venta/venta-service.ts`**:
+
+```ts
+import { Injectable, inject } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { ApiService } from '../../../core/services/api-service';
+import { VentaRequest, VentaResponse, VentaReporte } from './venta.model';
+
+@Injectable({ providedIn: 'root' })
+export class VentaService {
+  private readonly http = inject(HttpClient);
+  private readonly api = inject(ApiService);
+  private readonly resource = '/api/v1/ventas';
+
+  crear(venta: VentaRequest): Observable<VentaResponse> {
+    return this.http.post<VentaResponse>(this.api.buildUrl(this.resource), venta);
+  }
+
+  reporte(estado?: string, desde?: string, hasta?: string): Observable<VentaReporte> {
+    let params = new HttpParams();
+    if (estado) params = params.set('estado', estado);
+    if (desde) params = params.set('desde', desde);
+    if (hasta) params = params.set('hasta', hasta);
+    return this.http.get<VentaReporte>(this.api.buildUrl(`${this.resource}/resumen`), { params });
+  }
+}
+```
+
+Mismo patrón de `ProductoService` (S8): el servicio no sabe nada de pantallas, y los parámetros opcionales del reporte se agregan solo cuando tienen valor (S8, 3.3).
+
+### 3.4 Crear `VentaForm` con el `FormArray` de líneas
+
+**Producto del paso:** el formulario con su `FormArray`, poblado con una línea inicial, y la lista de productos cargada para las líneas.
+
+Crea **`lp2/bomerp-frontend/src/app/features/ventas/venta/venta-form.ts`**:
+
+```ts
+import { Component, computed, inject, signal } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Router, RouterLink } from '@angular/router';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ProductoService } from '../../catalogo/producto/producto-service';
+import { Producto } from '../../catalogo/producto/producto.model';
+import { VentaService } from './venta-service';
+
+@Component({
+  selector: 'app-venta-form',
+  imports: [ReactiveFormsModule, RouterLink],
+  templateUrl: './venta-form.html',
+})
+export class VentaForm {
+  private readonly fb = inject(FormBuilder);
+  private readonly productoService = inject(ProductoService);
+  private readonly ventaService = inject(VentaService);
+  private readonly router = inject(Router);
+
+  protected readonly productos = signal<Producto[]>([]);
+  protected readonly error = signal<string | null>(null);
+  protected readonly loading = signal(false);
+
+  protected readonly form = this.fb.nonNullable.group({
+    detalles: this.fb.array([this.crearLinea()], [Validators.minLength(1)]),
+  });
+
+  constructor() {
+    this.productoService.listar().subscribe({
+      next: (data) => this.productos.set(data),
+      error: () => this.error.set('No se pudieron cargar los productos.'),
+    });
+  }
+
+  protected get lineasForm() {
+    return this.form.controls.detalles;
+  }
+
+  private crearLinea() {
+    return this.fb.nonNullable.group({
+      productoId: [0, [Validators.min(1)]],
+      cantidad: [1, [Validators.required, Validators.min(1)]],
+    });
+  }
+}
+```
+
+`crearLinea()` es privado y reutilizable: lo vuelve a usar 3.6 cuando el usuario agrega una línea nueva, así la línea agregada en vivo tiene exactamente las mismas reglas que la inicial.
+
+Crea **`lp2/bomerp-frontend/src/app/features/ventas/venta/venta-form.html`** (versión inicial, sin cálculos ni botones de línea todavía — eso llega en 3.5-3.6):
+
+```html
+<form [formGroup]="form">
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  <table formArrayName="detalles">
+    <thead>
+      <tr>
+        <th>Producto</th>
+        <th>Cantidad</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (linea of lineasForm.controls; track $index) {
+        <tr [formGroupName]="$index">
+          <td>
+            <select formControlName="productoId">
+              <option [ngValue]="0" disabled>Selecciona un producto</option>
+              @for (producto of productos(); track producto.id) {
+                <option [ngValue]="producto.id">{{ producto.nombre }}</option>
+              }
+            </select>
+          </td>
+          <td>
+            <input type="number" step="1" min="1" formControlName="cantidad" />
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</form>
+```
+
+Regístralo ya en **`lp2/bomerp-frontend/src/app/app.routes.ts`**:
+
+```ts
+      {
+        path: 'ventas/nueva',
+        loadComponent: () => import('./features/ventas/venta/venta-form').then((m) => m.VentaForm),
+      },
+```
+
+Y el enlace en **`lp2/bomerp-frontend/src/app/core/layout/layout.html`**, en una nueva sección del menú:
+
+```html
+      <a routerLink="/ventas/nueva" routerLinkActive="active">Nueva venta</a>
+```
+
+Abre `http://localhost:4200/ventas/nueva`: debes ver una fila con la lista desplegable de productos y un campo de cantidad. Todavía no calcula nada ni se puede guardar — eso es 3.5 en adelante.
+
+### 3.5 Agregar el cálculo de subtotales y total
+
+**Producto del paso:** subtotal por línea y total general, recalculados en vivo (2.3).
+
+En `venta-form.ts`, el `FormArray` guarda controles, pero el cálculo necesita **valores**, no controles — y los controles de Angular no son señales por sí mismos. Se conecta `valueChanges` del formulario a una señal, con `toSignal` (Angular, 2026c):
+
+```ts
+import { toSignal } from '@angular/core/rxjs-interop';
+```
+
+```ts
+  protected readonly valoresDetalles = toSignal(
+    this.form.controls.detalles.valueChanges,
+    { initialValue: this.form.controls.detalles.getRawValue() },
+  );
+
+  protected readonly subtotales = computed(() =>
+    this.valoresDetalles().map((linea) => {
+      const producto = this.productos().find((p) => p.id === linea.productoId);
+      return (producto?.precio ?? 0) * (linea.cantidad ?? 0);
+    }),
+  );
+
+  protected readonly total = computed(() => this.subtotales().reduce((suma, s) => suma + s, 0));
+```
+
+`valueChanges` emite cada vez que el usuario cambia **cualquier** campo de **cualquier** línea — exactamente cuándo hace falta recalcular. `toSignal` lo convierte en una señal legible desde la plantilla, con un valor inicial para que `subtotales` no falle antes de la primera emisión.
+
+En `venta-form.html`, agrega la columna de subtotal y la fila de total, dentro de la tabla:
+
+```html
+          <th>Subtotal</th>
+```
+
+```html
+          <td>{{ subtotales()[$index] | currency: 'PEN' : 'S/ ' }}</td>
+```
+
+```html
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="2">Total</td>
+        <td>{{ total() | currency: 'PEN' : 'S/ ' }}</td>
+      </tr>
+    </tfoot>
+```
+
+Agrega `CurrencyPipe` a los imports del componente (`import { CurrencyPipe } from '@angular/common';` y súmalo al arreglo `imports` del `@Component`, igual que en `ProductoList`, S8). Recarga, cambia un producto o una cantidad, y confirma que el subtotal de esa fila y el total cambian solos, sin recargar la página.
+
+**Error frecuente**: `subtotales()` siempre marca `0`, aunque los productos ya cargaron. Si `this.productos` carga **después** de que `valoresDetalles` emite su primer valor, el primer cálculo no encuentra ningún producto con ese `id` todavía — pero como ambas son señales, `computed` se vuelve a ejecutar solo en cuanto `productos()` cambia. Si el total sigue en `0` después de eso, revisa que `producto.id` y `linea.productoId` sean del mismo tipo (ambos `number`, no uno `number` y otro `string`).
+
+### 3.6 Agregar y quitar líneas dinámicamente
+
+**Producto del paso:** botones para agregar una línea nueva y para quitar una existente, con al menos una línea siempre presente.
+
+En `venta-form.ts`, agrega estos dos métodos debajo del constructor:
+
+```ts
+  protected agregarLinea(): void {
+    this.lineasForm.push(this.crearLinea());
+  }
+
+  protected quitarLinea(indice: number): void {
+    if (this.lineasForm.length > 1) {
+      this.lineasForm.removeAt(indice);
+    }
+  }
+```
+
+La condición `length > 1` en `quitarLinea` no es una validación de formulario (esa es 2.4, `Validators.minLength(1)`) — es una ayuda de interfaz: evita que el usuario se quede sin ninguna fila visible en la pantalla, lo que sería confuso incluso antes de intentar enviar el formulario.
+
+En `venta-form.html`, agrega el botón de quitar en cada fila y el de agregar debajo de la tabla:
+
+```html
+          <td>
+            <button type="button" (click)="quitarLinea($index)">Quitar</button>
+          </td>
+```
+
+(agrega también `<th></th>` al `<thead>`, para la nueva columna)
+
+```html
+  <button type="button" (click)="agregarLinea()">Agregar línea</button>
+```
+
+Prueba: agrega dos líneas más, elige productos distintos en cada una, confirma que el total suma las tres, y quita una — el total debe bajar de inmediato.
+
+### 3.7 Validar la operación y agregar la confirmación
+
+**Producto del paso:** el formulario completo, que no deja enviar una operación inválida y pide confirmación antes de guardar (2.4, 2.5).
+
+En `venta-form.ts`, agrega el método de confirmación y el de guardado (todavía sin el manejo específico de errores, eso es 3.8):
+
+```ts
+  protected confirmarYGuardar(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+    const cantidadLineas = this.lineasForm.length;
+    const resumen = `Vas a registrar una venta de ${cantidadLineas} línea(s) por un total de ` +
+      `S/ ${this.total().toFixed(2)}. ¿Confirmar?`;
+    if (!confirm(resumen)) return;
+    this.guardar();
+  }
+
+  private guardar(): void {
+    this.error.set(null);
+    this.loading.set(true);
+    this.ventaService.crear(this.form.getRawValue()).subscribe({
+      next: () => this.router.navigate(['/ventas/reporte']),
+      error: (err: HttpErrorResponse) => this.manejarErrorGuardado(err),
+    });
+  }
+
+  private manejarErrorGuardado(err: HttpErrorResponse): void {
+    this.error.set('No se pudo registrar la venta.');
+    this.loading.set(false);
+  }
+```
+
+En `venta-form.html`, reemplaza el cierre del `<form>` para agregar el botón de confirmar:
+
+```html
+  <button type="button" (click)="confirmarYGuardar()" [disabled]="loading()">Registrar venta</button>
+</form>
+```
+
+Prueba: deja una línea sin elegir producto e intenta **Registrar venta** — no debe aparecer ningún `confirm()`, porque el formulario es inválido antes de llegar a esa pregunta. Completa las líneas y vuelve a intentarlo: debe aparecer el diálogo con la cantidad de líneas y el total exacto que se ve en pantalla; si cancelas, nada se envía.
+
+### 3.8 Manejar los errores reales del backend (404, 409)
+
+**Producto del paso:** los dos errores de negocio reales de `VentaServiceImpl.crear` (ADS S8, RN1 y RN2) distinguidos con un mensaje específico — mismo criterio que `ProductoForm` ya aplicó para la categoría que desaparece (S8, 3.8).
+
+Reemplaza `manejarErrorGuardado` en `venta-form.ts`:
+
+```ts
+  private manejarErrorGuardado(err: HttpErrorResponse): void {
+    const mensaje: string = err.error?.message ?? '';
+
+    if (err.status === 404 && mensaje.startsWith('Producto no encontrado')) {
+      this.error.set('Uno de los productos elegidos ya no existe. Revisa las líneas de la venta.');
+    } else if (err.status === 409) {
+      this.error.set(mensaje || 'No hay stock suficiente para completar la venta.');
+    } else if (err.status === 400) {
+      this.error.set('Los datos enviados no son válidos. Revisa las líneas de la venta.');
+    } else {
+      this.error.set('No se pudo registrar la venta.');
+    }
+    this.loading.set(false);
+  }
+```
+
+El `409` de `StockInsuficienteException` ya trae, en su propio mensaje (ADS S8, código real del backend), el nombre del producto y las cantidades disponible/solicitada — por eso este caso muestra `mensaje` directo en vez de un texto genérico: el backend ya construyó el mensaje más útil posible, repetirlo a mano sería peor que reutilizarlo.
+
+**Error frecuente**: probar el caso de stock insuficiente y no conseguir que el backend lo rechace. La transacción de `crear` (ADS S8, RN6) descuenta el stock línea por línea, en el orden en que aparecen en el formulario — si quieres forzar el `409` de la segunda línea, asegúrate de que la **primera** línea sí tenga stock suficiente; si la primera ya falla, el error que ves es el mismo `409`, pero sobre un producto distinto al que pensabas probar.
+
+### 3.9 Crear `VentaReporteComponent` con filtros
+
+**Producto del paso:** la vista de consulta, con los agregados del backend y filtros por estado y rango de fechas (2.6).
+
+Crea **`lp2/bomerp-frontend/src/app/features/ventas/venta/venta-reporte.ts`**:
+
+```ts
+import { CurrencyPipe, DatePipe } from '@angular/common';
+import { Component, OnInit, inject, signal } from '@angular/core';
+import { VentaService } from './venta-service';
+import { VentaReporte } from './venta.model';
+
+@Component({
+  selector: 'app-venta-reporte',
+  imports: [CurrencyPipe, DatePipe],
+  templateUrl: './venta-reporte.html',
+})
+export class VentaReporteComponent implements OnInit {
+  private readonly ventaService = inject(VentaService);
+
+  protected readonly reporte = signal<VentaReporte | null>(null);
+  protected readonly estadoFiltro = signal('');
+  protected readonly error = signal<string | null>(null);
+  protected readonly loading = signal(false);
+
+  ngOnInit(): void {
+    this.cargar();
+  }
+
+  cargar(): void {
+    this.loading.set(true);
+    this.error.set(null);
+    this.ventaService.reporte(this.estadoFiltro() || undefined).subscribe({
+      next: (data) => this.reporte.set(data),
+      error: () => this.error.set('No se pudo cargar el reporte de ventas.'),
+      complete: () => this.loading.set(false),
+    });
+  }
+
+  filtrarPorEstado(estado: string): void {
+    this.estadoFiltro.set(estado);
+    this.cargar();
+  }
+}
+```
+
+Crea **`lp2/bomerp-frontend/src/app/features/ventas/venta/venta-reporte.html`**:
+
+```html
+@if (loading()) {
+  <p>Cargando reporte...</p>
+}
+@if (error()) {
+  <p class="error">{{ error() }}</p>
+}
+
+<label>
+  Filtrar por estado
+  <select #filtro (change)="filtrarPorEstado(filtro.value)">
+    <option value="">Todos</option>
+    <option value="REGISTRADA">Registrada</option>
+  </select>
+</label>
+
+@if (reporte(); as r) {
+  <section>
+    <p>Total de ventas: {{ r.agregado.totalVentas }}</p>
+    <p>Monto total: {{ r.agregado.montoTotal | currency: 'PEN' : 'S/ ' }}</p>
+    <p>Ticket promedio: {{ r.agregado.ticketPromedio | currency: 'PEN' : 'S/ ' }}</p>
+  </section>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Fecha</th>
+        <th>Estado</th>
+        <th>Líneas</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (venta of r.ventas; track venta.id) {
+        <tr>
+          <td>{{ venta.fecha | date: 'short' }}</td>
+          <td>{{ venta.estado }}</td>
+          <td>{{ venta.cantidadDetalles }}</td>
+          <td>{{ venta.total | currency: 'PEN' : 'S/ ' }}</td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="4">No hay ventas registradas para este filtro.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}
+```
+
+El `<select>` de estado hoy solo ofrece `REGISTRADA`, porque es el único valor real de `EstadoVenta` (ADS S9, 3.3) — cuando LP2 implemente `ANULADA` (previsto en esa misma guía), esta lista se actualiza con la opción nueva, no antes.
+
+Registra la ruta en `app.routes.ts` y el enlace en el layout, junto al de **Nueva venta**:
+
+```ts
+      {
+        path: 'ventas/reporte',
+        loadComponent: () =>
+          import('./features/ventas/venta/venta-reporte').then((m) => m.VentaReporteComponent),
+      },
+```
+
+```html
+      <a routerLink="/ventas/reporte" routerLinkActive="active">Reporte de ventas</a>
+```
+
+### 3.10 Probar el formulario transaccional completo
+
+Con `lp2/bomerp-backend` corriendo y `npm start` activo:
+
+1. Abre **Nueva venta**, agrega dos líneas con productos distintos y cantidades válidas. Confirma que el subtotal de cada línea y el total se actualizan en vivo al cambiar cualquier cantidad.
+2. Intenta **Registrar venta** con una línea sin producto elegido: debe quedar marcada como inválida, sin que aparezca el diálogo de confirmación.
+3. Completa las líneas y haz clic en **Registrar venta**: el diálogo debe mostrar la cantidad de líneas y el total exacto. Cancela una vez (nada debe enviarse) y vuelve a intentarlo confirmando.
+4. Confirma que la SPA te lleva a **Reporte de ventas** y que la venta recién creada aparece en la tabla, con el total correcto, y que los agregados de arriba (total de ventas, monto total, ticket promedio) cambiaron respecto a antes de registrarla.
+5. Repite el registro eligiendo una cantidad mayor al stock disponible de un producto: debe aparecer el mensaje específico de stock insuficiente, con el nombre del producto, sin que la venta quede registrada ni el reporte cambie.
+
+**Error frecuente**: el reporte no refleja la venta recién creada. Confirma que `guardar()` navega a `/ventas/reporte` **después** de que el `POST` responda (dentro de `next`, no antes) — si la navegación ocurriera antes de la respuesta, `VentaReporteComponent` cargaría el reporte con los datos de antes de guardar.
+
+### 3.11 Relacionar con ADS y BD2
+
+Sesión equivalente en los otros dos cursos, misma semana: ADS S9 modela el mismo escenario de "registrar una venta" con diagramas de secuencia y de actividades — el `confirm()` de 2.5 y 3.7 es, en el frontend, la misma decisión que esa guía documenta como el punto donde el usuario autoriza la operación antes de que el backend la ejecute. BD2 S9 continúa con las vistas y procedimientos que alimentan reportes agregados como el de 3.9 — `VentaReporte` del backend ya resuelve el agregado en SQL (`VentaRepository.agregados`), exactamente el tipo de consulta que esa sesión profundiza del lado de la base de datos.
+
+**Evidencia de aprendizaje:**
+
+- Modelos de `Venta` y sus DTO, reflejando exactamente los del backend (sin campos inventados).
+- `VentaForm` con `FormArray` de líneas, subtotales y total calculados en vivo.
+- Agregar y quitar líneas dinámicamente, con al menos una línea siempre presente.
+- Validación de la operación completa y confirmación explícita antes de enviar.
+- Manejo específico de los errores 404 y 409 del backend.
+- `VentaReporteComponent` con filtro por estado y agregados reales del servidor.
+- Flujo completo probado: registrar una venta, ver el reporte actualizado, y el caso de stock insuficiente.
+
+## 4. Crea: actividad autónoma
+
+Tiempo: 2h fuera del aula.
+
+### 4.1 Actividad
+
+Replicación autónoma de un formulario transaccional cabecera-detalle sobre el dominio elegido por el equipo, documentada en evidencia individual.
+
+Completa y evidencia estas tareas:
+
+1. Elige una operación cabecera-detalle de tu propio dominio (una cabecera con una colección variable de líneas, equivalente a `Venta`/`DetalleVenta`) y define sus modelos, reflejando exactamente los DTO de tu backend.
+2. Construye el formulario con `FormArray`, con al menos una línea inicial y botones para agregar y quitar líneas, manteniendo siempre al menos una.
+3. Calcula en vivo al menos un valor derivado por línea y un total general, usando `computed` sobre los valores del formulario — ninguno enviado como campo editable al backend.
+4. Valida la colección completa (al menos una línea) además de los campos de cada línea, y agrega una confirmación explícita antes de enviar, mostrando el resumen de la operación.
+5. Maneja al menos dos errores reales distintos que tu backend pueda devolver para esta operación, con un mensaje específico para cada uno.
+6. Construye una vista de consulta o reporte que consuma un endpoint de agregados de tu backend (si no existe todavía, créalo primero, en el curso correspondiente) y pruébala con al menos un filtro.
+
+### 4.2 Propósito
+
+Que cada estudiante demuestre, de forma individual y fuera del aula, que puede construir un formulario transaccional con detalle dinámico, cálculos derivados, validación compuesta y confirmación, además de una vista de consulta con agregados reales — sin el acompañamiento del docente.
+
+Cada estudiante documenta el formulario transaccional de su propio dominio.
+
+### 4.3 Indicaciones
+
+Entrega un PDF con el siguiente nombre:
+
+```text
+S09_LP2_Equipo##_ApellidoNombre.pdf
+```
+
+Cada captura de pantalla del informe debe mostrar, sin recortar, el reloj del sistema (fecha y hora) y tu usuario o foto de perfil (Windows, VS Code o navegador) visibles en pantalla — es lo que permite verificar que la evidencia es tuya y que corresponde al momento real de tu trabajo.
+
+#### 4.3.1 Estructura del informe
+
+**Datos del estudiante**
+
+- Nombre:
+- Equipo:
+- Sesión: S09 - Formularios Transaccionales Cabecera-Detalle
+- Rol o aporte realizado:
+- Link de GitHub:
+
+**Evidencia técnica**
+
+Incluye capturas con una breve explicación debajo de cada una, organizadas en los mismos 4 bloques de la rúbrica (4.6):
+
+1. *Formulario con detalle dinámico*
+    - `FormArray` funcionando, con líneas agregadas y quitadas en vivo.
+2. *Cálculos y validación*
+    - Subtotales y total recalculados en vivo, y la validación de la colección completa en acción.
+3. *Confirmación y manejo de errores*
+    - El diálogo de confirmación con el resumen real, y al menos dos errores distintos del backend manejados con mensajes específicos.
+4. *Consulta o reporte*
+    - La vista de agregados funcionando, con al menos un filtro probado.
+
+**Error o hallazgo**
+
+Describe un error real: un cálculo que no se actualizaba porque dependía de datos que llegaban después, una validación de colección que dejaba pasar una operación sin líneas, o un mensaje de error genérico que reemplazaste por uno específico del backend.
+
+**Reflexión técnica breve**
+
+Responde en 5 a 8 líneas:
+
+```text
+¿Qué parte de tu operación cabecera-detalle sería más riesgosa si se
+enviara sin ningún paso de confirmación? Relaciona tu respuesta con el
+caso de Knight Capital (1.6).
+```
+
+### 4.4 Criterios mínimos de aceptación
+
+- El archivo respeta el nombre solicitado.
+- El formulario usa `FormArray` para la colección de líneas, con al menos una siempre presente.
+- Al menos un valor derivado por línea y el total general se calculan con `computed`, sin enviarse como campo editable.
+- Existe una validación de la colección completa (no solo de campos individuales) y una confirmación explícita con el resumen de la operación antes de enviar.
+- Al menos dos errores reales del backend se manejan con mensajes específicos y distintos entre sí.
+- La vista de consulta o reporte consume un endpoint real de agregados, probada con al menos un filtro.
+- Cada captura de la evidencia técnica muestra el reloj del sistema y el usuario/perfil visible, sin recortar.
+- Las fechas y horas de las capturas son coherentes con el historial de commits de su repositorio en GitHub.
+- Incluye un error o hallazgo técnico diagnosticado.
+- Incluye la reflexión técnica breve solicitada.
+
+### 4.5 Preguntas de defensa
+
+1. ¿Por qué el total de tu formulario se calcula con `computed` y no con un método que se llama manualmente?
+2. ¿Qué diferencia hay entre validar cada línea y validar la colección completa, y por qué hacen falta las dos?
+3. ¿Qué información mínima debería mostrar tu diálogo de confirmación para que sea útil, y no solo un trámite?
+4. De los errores que manejaste en el punto 5 de tu actividad, ¿cómo distingue tu código cuál mensaje mostrar para cada uno?
+5. Relaciona el caso de Knight Capital con un escenario concreto de tu propio formulario donde la ausencia de confirmación tendría consecuencias reales.
+
+### 4.6 Rúbrica de evaluación
+
+**Tabla 5. Rúbrica de evaluación**
+
+| Criterio | Peso (%) | A (20 pts) | B (15 pts) | C (10 pts) | D (5 pts) | Nivel obtenido |
+|---|---:|---|---|---|---|---:|
+| 1. Formulario con detalle dinámico* | 25 | `FormArray` completo, agregar/quitar líneas funcional, al menos una línea siempre presente. | Funcional, con algún caso borde (quitar la última línea) sin resolver. | `FormArray` incompleto o sin agregar/quitar en vivo. | No presenta formulario con detalle dinámico. | |
+| 2. Cálculos y validación* | 25 | Subtotales y total recalculados en vivo con `computed`, validación de colección completa correcta. | Cálculos correctos, validación de colección incompleta. | Cálculos manuales (no reactivos) o validación solo de campos individuales. | No presenta cálculos ni validación de colección. | |
+| 3. Confirmación y manejo de errores* | 25 | Confirmación con resumen real antes de enviar, al menos dos errores del backend manejados con mensajes específicos. | Confirmación presente, manejo de errores parcial o genérico. | Confirmación sin resumen útil, o un solo error manejado. | No presenta confirmación ni manejo de errores. | |
+| 4. Consulta o reporte* | 25 | Vista de agregados funcional, consumiendo datos reales del backend, con al menos un filtro probado. | Vista funcional, sin filtro o con agregados incompletos. | Vista que no usa agregados reales del backend. | No presenta vista de consulta o reporte. | |
+
+\* Agregado manual.
+
+Nota final = suma de (`Peso` / 100 × `Puntos del nivel obtenido`) = ____ / 20.
+
+Para usar la rúbrica con IA (inteligencia artificial), solicita:
+
+```text
+Evalúa el PDF usando la rúbrica de la sesión.
+Para cada criterio selecciona el nivel obtenido usando la escala A=20, B=15, C=10, D=5 puntos.
+Justifica brevemente cada nivel asignado.
+Verifica que cada captura muestre reloj del sistema y usuario/perfil visible, y que las fechas sean coherentes con el historial de commits de GitHub. Si falta esta evidencia o hay inconsistencias, indícalo explícitamente antes de calificar.
+Calcula la nota final con la fórmula: suma de (Peso/100 × Puntos del nivel obtenido), directamente sobre 20.
+Indica 2 fortalezas y 2 recomendaciones.
+```
+
+## 5. Cierre
+
+Tiempo: 5 min.
+
+**Resumen breve:** hoy el formulario de la SPA dejó de editar una sola entidad a la vez: `VentaForm` arma una cabecera con una colección variable de líneas (`FormArray`), calcula subtotales y total en vivo con `computed` sin invadir nunca lo que el servidor debe calcular, valida la operación completa (no solo cada línea), pide una confirmación explícita con el resumen real antes de enviar, y distingue los errores de negocio del backend (producto inexistente, stock insuficiente) con mensajes específicos. `VentaReporteComponent` cierra el ciclo mostrando los agregados que el propio backend ya resuelve.
+
+**Dinámica participativa:** en una ronda rápida, cada estudiante comparte qué información puso en el resumen de su diálogo de confirmación, y por qué eligió esa y no otra.
+
+**Metacognición:** ¿qué te costó más entender hoy: que un `FormArray` necesita una validación propia además de la de cada línea, o por qué el subtotal que calcula el navegador no es el mismo que termina guardado en el backend?
+
+**Proyección:** S10 protege el backend con usuarios, JWT (*JSON Web Token*) y roles — el mismo endpoint `POST /api/v1/ventas` de hoy va a exigir un usuario autenticado, y el `vendedorId` que ADS S8 marcó como brecha en la matriz de trazabilidad por fin tendrá de dónde salir.
+
+## Bibliografía
+
+1. U.S. Securities and Exchange Commission. (2013). *In the Matter of Knight Capital Americas LLC* (Release No. 34-70694). https://www.sec.gov/litigation/admin/2013/34-70694.pdf
+2. Angular. (2026a). *Reactive forms: FormArray*. https://angular.dev/guide/forms/reactive-forms
+3. Angular. (2026b). *Signals: computed*. https://angular.dev/guide/signals
+4. Angular. (2026c). *RxJS interop: toSignal*. https://angular.dev/ecosystem/rxjs-interop
