@@ -2013,10 +2013,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#22-patrones-creacionales-gof-factory-method-y-builder" class="md-nav__link">
+  <a href="#22-patrones-creacionales-gof-factory-method-builder-y-singleton" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.2 Patrones creacionales GoF: Factory Method y Builder
+        2.2 Patrones creacionales GoF: Factory Method, Builder y Singleton
       
     </span>
   </a>
@@ -2024,10 +2024,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#23-patrones-estructurales-gof-facade-y-proxy" class="md-nav__link">
+  <a href="#23-patrones-estructurales-gof-facade-proxy-adapter-y-bridge" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.3 Patrones estructurales GoF: Facade y Proxy
+        2.3 Patrones estructurales GoF: Facade, Proxy, Adapter y Bridge
       
     </span>
   </a>
@@ -2118,10 +2118,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#32-reconocer-proxy-en-el-codigo-real" class="md-nav__link">
+  <a href="#32-reconocer-proxy-singleton-abstract-factory-y-adapter-en-el-codigo-real" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.2 Reconocer Proxy en el código real
+        3.2 Reconocer Proxy, Singleton, Abstract Factory y Adapter en el código real
       
     </span>
   </a>
@@ -3827,10 +3827,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#22-patrones-creacionales-gof-factory-method-y-builder" class="md-nav__link">
+  <a href="#22-patrones-creacionales-gof-factory-method-builder-y-singleton" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.2 Patrones creacionales GoF: Factory Method y Builder
+        2.2 Patrones creacionales GoF: Factory Method, Builder y Singleton
       
     </span>
   </a>
@@ -3838,10 +3838,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#23-patrones-estructurales-gof-facade-y-proxy" class="md-nav__link">
+  <a href="#23-patrones-estructurales-gof-facade-proxy-adapter-y-bridge" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.3 Patrones estructurales GoF: Facade y Proxy
+        2.3 Patrones estructurales GoF: Facade, Proxy, Adapter y Bridge
       
     </span>
   </a>
@@ -3932,10 +3932,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#32-reconocer-proxy-en-el-codigo-real" class="md-nav__link">
+  <a href="#32-reconocer-proxy-singleton-abstract-factory-y-adapter-en-el-codigo-real" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.2 Reconocer Proxy en el código real
+        3.2 Reconocer Proxy, Singleton, Abstract Factory y Adapter en el código real
       
     </span>
   </a>
@@ -4152,8 +4152,8 @@
 <p>Esta sesión también confronta una tensión real que BomERP tiene <strong>hoy</strong>, no en una hipótesis: S7 diseñó <code>Venta.calcularTotal()</code> y <code>Producto.descontarStock(cantidad)</code> como operaciones del dominio, y el código real de LP2 (Lenguaje de Programación II) las implementó como lógica de servicio, dejando las entidades <code>Venta</code> y <code>Producto</code> sin un solo método propio. El porqué de que esto importe, con la fuente que le puso nombre al problema, se desarrolla en 1.6.</p>
 <h3 id="12-indice">1.2 Índice<a class="headerlink" href="#12-indice" title="Permanent link">&para;</a></h3>
 <ol>
-<li>Patrones creacionales GoF: Factory Method y Builder.</li>
-<li>Patrones estructurales GoF: Facade y Proxy.</li>
+<li>Patrones creacionales GoF: Factory Method, Builder, Singleton y Abstract Factory.</li>
+<li>Patrones estructurales GoF: Facade, Proxy, Adapter y Bridge.</li>
 <li>Patrones de comportamiento GoF: Strategy, State, Chain of Responsibility y Observer.</li>
 <li>GRASP — asignación de responsabilidades: Information Expert, Creator, Controller.</li>
 <li>GRASP — acoplamiento y cohesión: Low Coupling, High Cohesion, Polymorphism.</li>
@@ -4166,7 +4166,7 @@
 <li><strong>Reconocer y aplicar</strong>, en cualquier sistema —no solo BomERP—, los patrones GoF y GRASP más frecuentes en software empresarial, <strong>decidir con criterio</strong> cuándo un patrón resuelve un problema real y cuándo es sobreingeniería, y <strong>diagnosticar</strong> con Information Expert si un dominio es anémico o rico.</li>
 </ul>
 <h3 id="14-producto-de-sesion">1.4 Producto de sesión<a class="headerlink" href="#14-producto-de-sesion" title="Permanent link">&para;</a></h3>
-<p>Catálogo de patrones aplicado a <code>ventas</code>, con cada patrón explicado primero en general y después aplicado al caso: Factory Method resolviendo el hueco de Creator en <code>Venta.agregarDetalle(...)</code>, Proxy reconocido en el código real (carga perezosa de JPA, <em>Java Persistence API</em>, y el <em>proxy</em> transaccional de Spring), decisión justificada de si <code>Venta</code> necesita el patrón State completo o un <code>enum</code> simple basta, cadena de autorización de ventas por monto diseñada con Chain of Responsibility, el evento de dominio identificado como Observer (previsto, formalizado en S11), diagnóstico de Information Expert sobre el modelo anémico de <code>Venta</code>/<code>Producto</code> con su refactor, diseño del polimorfismo previsto de <code>Cliente</code>, y verificación de Dependency Injection, Indirection y Protected Variations ya aplicados en el código real.</p>
+<p>Catálogo de patrones aplicado a <code>ventas</code>, con cada patrón explicado primero en general y después aplicado al caso: Factory Method resolviendo el hueco de Creator en <code>Venta.agregarDetalle(...)</code>, Proxy, Singleton y Abstract Factory reconocidos en el código real (carga perezosa de JPA, <em>Java Persistence API</em>, el <em>proxy</em> transaccional de Spring, el <em>scope</em> por defecto de todo bean, y <code>EntityManagerFactory</code>), Adapter identificado en <code>VentaMapper</code> y Bridge diseñado como previsto para reportes multi-formato, decisión justificada de si <code>Venta</code> necesita el patrón State completo o un <code>enum</code> simple basta, cadena de autorización de ventas por monto diseñada con Chain of Responsibility, el evento de dominio identificado como Observer (previsto, formalizado en S11), diagnóstico de Information Expert sobre el modelo anémico de <code>Venta</code>/<code>Producto</code> con su refactor, diseño del polimorfismo previsto de <code>Cliente</code>, y verificación de Dependency Injection, Indirection y Protected Variations ya aplicados en el código real.</p>
 <h3 id="15-metodologia">1.5 Metodología<a class="headerlink" href="#15-metodologia" title="Permanent link">&para;</a></h3>
 <p><strong>Tabla 1. Metodología de la sesión</strong></p>
 <table>
@@ -4180,8 +4180,8 @@
 <tbody>
 <tr>
 <td>Revisión previa individual</td>
-<td>Releer la Figura 6 de S8 (diagrama de código por capas), el diagrama de clases del dominio de S7 (<code>calcularTotal()</code>, <code>descontarStock()</code>) y la jerarquía <code>Cliente</code>. Trabajo individual, antes de clase.</td>
-<td>S7 (2.2, Figura de clases del dominio), S8 (Figura 6, Tablas 12-15).</td>
+<td>Releer la Tabla 2 de S3 (los cinco principios SOLID), la Figura 6 de S8 (diagrama de código por capas), el diagrama de clases del dominio de S7 (<code>calcularTotal()</code>, <code>descontarStock()</code>) y la jerarquía <code>Cliente</code>. Trabajo individual, antes de clase.</td>
+<td>S3 (Tabla 2, Figura 3), S7 (2.2, Figura de clases del dominio), S8 (Figura 6, Tablas 12-15).</td>
 </tr>
 <tr>
 <td>Clase presencial</td>
@@ -4251,11 +4251,296 @@
     H --&gt; K
     J --&gt; K</code></pre>
 <p>Lectura del diagrama: esta sesión no dibuja clases nuevas — reconoce, en las que S8 ya construyó, los patrones que más aparecen en cualquier sistema empresarial, y decide dónde falta aplicar uno. Cada apartado siguiente desarrolla uno de los bloques del Índice (1.2), abriendo siempre con la definición general del patrón —aplicable a cualquier sistema— antes de llegar al caso concreto de <code>ventas</code>.</p>
-<h3 id="22-patrones-creacionales-gof-factory-method-y-builder">2.2 Patrones creacionales GoF: Factory Method y Builder<a class="headerlink" href="#22-patrones-creacionales-gof-factory-method-y-builder" title="Permanent link">&para;</a></h3>
-<p>Los patrones <strong>creacionales</strong> resuelven cómo se construye un objeto, sin acoplar al código cliente a una clase concreta ni a los detalles de esa construcción (Gamma et al., 1994). De los cinco patrones creacionales del catálogo original, dos aparecen constantemente en sistemas empresariales:</p>
+<p>Antes de entrar al detalle de cada uno, las Tablas 2 y 3 ubican el catálogo completo: todos los patrones de GoF (23), organizados por familia, y todos los de GRASP (9), organizados por las mismas tres categorías que usa esta guía. Solo los marcados "Sí" se desarrollan en esta sesión — el resto existe, es válido, y queda fuera de alcance por curación deliberada (1.1), no por descuido.</p>
+<p><strong>Tabla 2. Catálogo completo de patrones GoF (23), por familia (Gamma et al., 1994)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Familia</th>
+<th>Patrón</th>
+<th>¿Desarrollado en esta sesión?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Creacionales (5)</td>
+<td>Abstract Factory</td>
+<td>Sí (2.2)</td>
+</tr>
+<tr>
+<td>Creacionales (5)</td>
+<td>Builder</td>
+<td>Sí (2.2)</td>
+</tr>
+<tr>
+<td>Creacionales (5)</td>
+<td>Factory Method</td>
+<td>Sí (2.2)</td>
+</tr>
+<tr>
+<td>Creacionales (5)</td>
+<td>Prototype</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Creacionales (5)</td>
+<td>Singleton</td>
+<td>Sí (2.2)</td>
+</tr>
+<tr>
+<td>Estructurales (7)</td>
+<td>Adapter</td>
+<td>Sí (2.3)</td>
+</tr>
+<tr>
+<td>Estructurales (7)</td>
+<td>Bridge</td>
+<td>Sí (2.3, previsto)</td>
+</tr>
+<tr>
+<td>Estructurales (7)</td>
+<td>Composite</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Estructurales (7)</td>
+<td>Decorator</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Estructurales (7)</td>
+<td>Facade</td>
+<td>Sí (2.3)</td>
+</tr>
+<tr>
+<td>Estructurales (7)</td>
+<td>Flyweight</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Estructurales (7)</td>
+<td>Proxy</td>
+<td>Sí (2.3)</td>
+</tr>
+<tr>
+<td>Comportamiento (11)</td>
+<td>Chain of Responsibility</td>
+<td>Sí (2.4)</td>
+</tr>
+<tr>
+<td>Comportamiento (11)</td>
+<td>Command</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Comportamiento (11)</td>
+<td>Interpreter</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Comportamiento (11)</td>
+<td>Iterator</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Comportamiento (11)</td>
+<td>Mediator</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Comportamiento (11)</td>
+<td>Memento</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Comportamiento (11)</td>
+<td>Observer</td>
+<td>Sí (2.4)</td>
+</tr>
+<tr>
+<td>Comportamiento (11)</td>
+<td>State</td>
+<td>Sí (2.4, evaluado y descartado para <code>Venta</code>)</td>
+</tr>
+<tr>
+<td>Comportamiento (11)</td>
+<td>Strategy</td>
+<td>Sí (2.4)</td>
+</tr>
+<tr>
+<td>Comportamiento (11)</td>
+<td>Template Method</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Comportamiento (11)</td>
+<td>Visitor</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Tabla 3. Catálogo completo de patrones GRASP (9) (Larman, 2004)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Categoría</th>
+<th>Patrón</th>
+<th>¿Desarrollado en esta sesión?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Asignación de responsabilidades</td>
+<td>Information Expert</td>
+<td>Sí (2.5)</td>
+</tr>
+<tr>
+<td>Asignación de responsabilidades</td>
+<td>Creator</td>
+<td>Sí (2.5)</td>
+</tr>
+<tr>
+<td>Asignación de responsabilidades</td>
+<td>Controller</td>
+<td>Sí (2.5)</td>
+</tr>
+<tr>
+<td>Acoplamiento y cohesión</td>
+<td>Low Coupling</td>
+<td>Sí (2.6)</td>
+</tr>
+<tr>
+<td>Acoplamiento y cohesión</td>
+<td>High Cohesion</td>
+<td>Sí (2.6)</td>
+</tr>
+<tr>
+<td>Acoplamiento y cohesión</td>
+<td>Polymorphism</td>
+<td>Sí (2.6)</td>
+</tr>
+<tr>
+<td>Patrones de protección</td>
+<td>Pure Fabrication</td>
+<td>Sí (2.7)</td>
+</tr>
+<tr>
+<td>Patrones de protección</td>
+<td>Indirection</td>
+<td>Sí (2.7)</td>
+</tr>
+<tr>
+<td>Patrones de protección</td>
+<td>Protected Variations</td>
+<td>Sí (2.7)</td>
+</tr>
+</tbody>
+</table>
+<p>A diferencia de GoF, GRASP no deja ningún patrón fuera: son solo 9, y el índice del curso (<code>docs/ads/index.md</code>) los nombra todos de forma explícita.</p>
+<p><strong>¿Estos patrones están basados en SOLID (S3)?</strong> No en ese orden — la cronología va al revés de lo que parece intuitivo. Sustitución de Liskov (Liskov, 1987) y Abierto/Cerrado (Meyer, 1988) son <strong>anteriores</strong> al catálogo GoF (1994); GRASP (Larman, 1997) y el acrónimo SOLID (consolidado por Robert C. Martin y Michael Feathers a inicios de los 2000) aparecieron casi al mismo tiempo, cada uno por su lado. Ningún patrón de hoy se diseñó "a partir de" SOLID. Lo que sí es cierto, y es la razón por la que ambos catálogos se sienten tan compatibles, es que describen la <strong>misma calidad de diseño</strong> desde ángulos distintos — y en al menos un caso, Larman lo deja explícito él mismo: describe GRASP Protected Variations (2.7) como, en esencia, el mismo principio que Abierto/Cerrado (Larman, 2001).</p>
+<p><strong>Tabla 4. Principios SOLID (S3, Tabla 2) que los patrones de esta sesión evidencian</strong></p>
+<table>
+<thead>
+<tr>
+<th>Principio SOLID (S3)</th>
+<th>Patrones de esta sesión que lo evidencian</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>S</strong> — Responsabilidad única</td>
+<td>Builder (separa construir de representar, 2.2); GRASP Controller, High Cohesion, Pure Fabrication (2.5-2.7)</td>
+</tr>
+<tr>
+<td><strong>O</strong> — Abierto/cerrado</td>
+<td>Factory Method, Abstract Factory, Strategy, State, Chain of Responsibility, Observer, Adapter, Bridge (2.2-2.4); GRASP Protected Variations (2.7) — el mismo principio, según Larman (2001)</td>
+</tr>
+<tr>
+<td><strong>L</strong> — Sustitución de Liskov</td>
+<td>Proxy (sustituye al objeto real sin que el cliente note la diferencia, 2.3); GRASP Polymorphism (2.6)</td>
+</tr>
+<tr>
+<td><strong>I</strong> — Segregación de interfaces</td>
+<td>Adapter (el cliente solo ve la interfaz que espera, nunca la de <code>Venta</code>, 2.3); GRASP Low Coupling (2.6)</td>
+</tr>
+<tr>
+<td><strong>D</strong> — Inversión de dependencias</td>
+<td>Abstract Factory, Facade, Bridge, Strategy, Observer (2.2-2.4); GRASP Indirection (2.7) y Dependency Injection (2.8, el mecanismo que hace D posible en la práctica, ya citado en S3, 2.2)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Información Expert y Creator (2.5) no corresponden a una letra específica de SOLID</strong> — responden una pregunta anterior: <em>en qué clase</em> vive cada responsabilidad, antes de evaluar si esa clase cumple <strong>S</strong>.</p>
+<p><strong>Nota honesta sobre Singleton:</strong> es el único patrón de hoy con una relación <strong>tensa</strong>, no positiva, con SOLID — su punto de acceso global incentiva que el código cliente dependa de la clase concreta en vez de una abstracción, justo lo contrario de lo que <strong>D</strong> busca. Se incluye en el catálogo (2.2) porque es real y frecuente en cualquier aplicación Spring, no porque sea un ejemplo de buen cumplimiento de SOLID.</p>
+<h3 id="22-patrones-creacionales-gof-factory-method-builder-y-singleton">2.2 Patrones creacionales GoF: Factory Method, Builder y Singleton<a class="headerlink" href="#22-patrones-creacionales-gof-factory-method-builder-y-singleton" title="Permanent link">&para;</a></h3>
+<p>Los patrones <strong>creacionales</strong> resuelven cómo se construye un objeto, sin acoplar al código cliente a una clase concreta ni a los detalles de esa construcción (Gamma et al., 1994). De los cinco patrones creacionales del catálogo original, cuatro aparecen constantemente en sistemas empresariales:</p>
 <p><strong>Factory Method</strong> define un método cuya única responsabilidad es construir un objeto completo y válido, ocultando los detalles de esa construcción al código que lo llama — en cualquier sistema, úsalo cuando construir un objeto requiere combinar datos de más de una fuente, o cuando la construcción en sí misma protege un invariante (Gamma et al., 1994).</p>
+<p><strong>Figura 3. Factory Method mínimo: <code>Venta</code> como creadora de sus propios <code>DetalleVenta</code> (hueco real, resuelto en 3.1)</strong></p>
+<pre class="mermaid"><code>classDiagram
+    class Venta {
+        &lt;&lt;agregarDetalle no existe aun en el codigo real&gt;&gt;
+        -List~DetalleVenta~ detalles
+        +agregarDetalle(productoId, cantidad, nombreProducto, precioUnitario) DetalleVenta
+    }
+    class DetalleVenta {
+        -Long productoId
+        -Integer cantidad
+        -BigDecimal subtotal
+    }
+    Venta ..&gt; DetalleVenta : crea
+    Venta "1" *-- "muchos" DetalleVenta</code></pre>
+<p>El método de fábrica vive <strong>dentro</strong> de la clase que necesita el objeto construido (<code>Venta</code>), no en una clase aparte — eso es lo que distingue a Factory Method de Builder: resuelve una construcción puntual, no un proceso paso a paso. 3.1 implementa este diagrama.</p>
 <p><strong>Builder</strong> separa la construcción de un objeto complejo —con muchos campos opcionales o un orden de inicialización que importa— de su representación final, permitiendo construirlo paso a paso (Gamma et al., 1994). Úsalo cuando un constructor tendría demasiados parámetros, o cuando no todos los campos son obligatorios en todos los casos.</p>
-<p><strong>Tabla 2. Factory Method y Builder en <code>ventas</code></strong></p>
+<p><strong>Figura 4. Builder mínimo: <code>VentaResponse</code> construido paso a paso por Lombok</strong></p>
+<pre class="mermaid"><code>classDiagram
+    class VentaResponse {
+        &lt;&lt;Product&gt;&gt;
+        -Long id
+        -BigDecimal total
+        -List~DetalleVentaResponse~ detalles
+    }
+    class VentaResponseBuilder {
+        &lt;&lt;Builder, generado por @Builder&gt;&gt;
+        +id(Long) VentaResponseBuilder
+        +total(BigDecimal) VentaResponseBuilder
+        +detalles(List) VentaResponseBuilder
+        +build() VentaResponse
+    }
+    VentaResponseBuilder ..&gt; VentaResponse : build()</code></pre>
+<p>A diferencia del Builder clásico de GoF (que separa un <code>Director</code> de un <code>Builder</code> abstracto con varias implementaciones concretas), Lombok genera un único <code>Builder</code> concreto por clase — suficiente aquí porque <code>VentaResponse</code> no necesita representaciones alternativas, solo construcción paso a paso.</p>
+<p><strong>Singleton</strong> garantiza que una clase tenga una única instancia global, y da un punto de acceso centralizado a ella (Gamma et al., 1994). En cualquier sistema empresarial es, de los cinco patrones creacionales, el que más se repite — porque todo contenedor de inversión de control (Spring, en este caso) lo aplica por defecto, sin que el programador lo pida.</p>
+<p><strong>Figura 5. Singleton mínimo: una sola instancia de <code>VentaServiceImpl</code>, compartida por todo el contenedor</strong></p>
+<pre class="mermaid"><code>classDiagram
+    class VentaServiceImpl {
+        &lt;&lt;Singleton, bean de Spring&gt;&gt;
+    }
+    class VentaController {
+        -VentaServiceImpl ventaService
+    }
+    class ReporteController {
+        -VentaServiceImpl ventaService
+    }
+    VentaController --&gt; VentaServiceImpl : misma instancia
+    ReporteController --&gt; VentaServiceImpl : misma instancia</code></pre>
+<p>A diferencia del Singleton de libro —constructor privado y un método estático <code>getInstance()</code>—, Spring resuelve esto con el <em>scope</em> del bean (<code>singleton</code>, el valor por defecto de cada <code>@Service</code>/<code>@Repository</code>/<code>@Component</code>): la responsabilidad de garantizar una única instancia no vive en la clase misma, sino en el contenedor que la administra. <code>VentaController</code> y <code>ReporteController</code> reciben, por Dependency Injection (2.8), exactamente el mismo objeto <code>VentaServiceImpl</code> — nunca uno cada uno.</p>
+<p><strong>Abstract Factory</strong> provee una interfaz para crear <strong>familias</strong> de objetos relacionados, sin especificar sus clases concretas (Gamma et al., 1994) — a diferencia de Factory Method, que fabrica un solo objeto, Abstract Factory fabrica varios que deben ser consistentes entre sí. En el ecosistema JPA (<em>Java Persistence API</em>), <code>EntityManagerFactory</code> es exactamente esto: fabrica <code>EntityManager</code>, <code>Query</code> y el resto de objetos de persistencia de una <strong>misma familia</strong> (Hibernate, en este proyecto) — si BomERP cambiara de proveedor JPA, cambiaría de fábrica concreta, sin que <code>VentaRepository</code> ni <code>ProductoRepository</code> lo notaran.</p>
+<p><strong>Figura 6. Abstract Factory mínimo: <code>EntityManagerFactory</code> fabricando una familia de objetos JPA</strong></p>
+<pre class="mermaid"><code>classDiagram
+    class EntityManagerFactory {
+        &lt;&lt;Abstract Factory, interfaz JPA&gt;&gt;
+        +createEntityManager() EntityManager
+    }
+    class EntityManager {
+        &lt;&lt;Product, parte de la familia&gt;&gt;
+        +createQuery(...) Query
+        +persist(Object)
+    }
+    class HibernateEntityManagerFactory {
+        &lt;&lt;ConcreteFactory, usada hoy&gt;&gt;
+    }
+    EntityManagerFactory &lt;|.. HibernateEntityManagerFactory
+    EntityManagerFactory ..&gt; EntityManager : createEntityManager()</code></pre>
+<p>Como Proxy y Singleton, <code>EntityManagerFactory</code> es un patrón que Spring Boot configura automáticamente a partir de <code>application.yml</code> — ningún código de <code>ventas</code> o <code>catalogo</code> lo instancia a mano, ni siquiera conoce su nombre.</p>
+<p><strong>Tabla 5. Factory Method, Builder, Singleton y Abstract Factory en <code>ventas</code></strong></p>
 <table>
 <thead>
 <tr>
@@ -4275,13 +4560,113 @@
 <td><strong>Hueco real, diseñado en 3.1</strong></td>
 <td>Hoy, <code>DetalleVenta</code> lo construye <code>VentaMapper</code>, no <code>Venta</code> — 3.1 diseña un método de fábrica dentro de <code>Venta</code> que resuelve esto.</td>
 </tr>
+<tr>
+<td>Singleton</td>
+<td><code>VentaServiceImpl</code>, <code>ProductoServiceImpl</code>, <code>VentaRepository</code>, <code>VentaMapper</code> (beans de Spring)</td>
+<td>El contenedor crea una sola instancia de cada uno, la primera vez que se necesita, y la reutiliza en cada inyección — nadie escribió un constructor privado ni un <code>getInstance()</code>.</td>
+</tr>
+<tr>
+<td>Abstract Factory</td>
+<td><code>EntityManagerFactory</code> (JPA, configurado por Spring Boot)</td>
+<td>Fabrica la familia completa de objetos de persistencia de un proveedor (<code>EntityManager</code>, <code>Query</code>) de forma consistente, sin exponer la clase concreta de Hibernate.</td>
+</tr>
 </tbody>
 </table>
-<h3 id="23-patrones-estructurales-gof-facade-y-proxy">2.3 Patrones estructurales GoF: Facade y Proxy<a class="headerlink" href="#23-patrones-estructurales-gof-facade-y-proxy" title="Permanent link">&para;</a></h3>
-<p>Los patrones <strong>estructurales</strong> resuelven cómo se componen clases y objetos para formar estructuras más grandes, sin que una dependa de los detalles internos de otra (Gamma et al., 1994).</p>
-<p><strong>Facade</strong> ofrece una interfaz simplificada a un subsistema complejo, para que quien lo usa no necesite conocer sus clases internas (Gamma et al., 1994). Es, de los siete patrones estructurales, el que más aparece en cualquier backend organizado por capas: <code>ProductoService</code> es una <em>Facade</em> real — simplifica, para <code>ventas</code>, todo lo que <code>catalogo</code> hace por dentro (<code>ProductoRepository</code>, <code>CategoriaRepository</code>, validaciones).</p>
+<h3 id="23-patrones-estructurales-gof-facade-proxy-adapter-y-bridge">2.3 Patrones estructurales GoF: Facade, Proxy, Adapter y Bridge<a class="headerlink" href="#23-patrones-estructurales-gof-facade-proxy-adapter-y-bridge" title="Permanent link">&para;</a></h3>
+<p>Los patrones <strong>estructurales</strong> resuelven cómo se componen clases y objetos para formar estructuras más grandes, sin que una dependa de los detalles internos de otra (Gamma et al., 1994). De los siete patrones estructurales del catálogo original, cuatro aparecen constantemente en sistemas empresariales:</p>
+<p><strong>Facade</strong> ofrece una interfaz simplificada a un subsistema complejo, para que quien lo usa no necesite conocer sus clases internas (Gamma et al., 1994). Es el que más aparece en cualquier backend organizado por capas: <code>ProductoService</code> es una <em>Facade</em> real — simplifica, para <code>ventas</code>, todo lo que <code>catalogo</code> hace por dentro (<code>ProductoRepository</code>, <code>CategoriaRepository</code>, validaciones).</p>
+<p><strong>Figura 7. Facade mínima: <code>ProductoService</code> oculta el subsistema <code>catalogo</code></strong></p>
+<pre class="mermaid"><code>classDiagram
+    class VentaServiceImpl {
+        &lt;&lt;cliente&gt;&gt;
+    }
+    class ProductoService {
+        &lt;&lt;Facade&gt;&gt;
+        +obtener(id) ProductoResponse
+        +descontarStock(id, cantidad)
+    }
+    class ProductoRepository
+    class CategoriaRepository
+    VentaServiceImpl ..&gt; ProductoService : usa
+    ProductoService ..&gt; ProductoRepository
+    ProductoService ..&gt; CategoriaRepository</code></pre>
+<p><code>VentaServiceImpl</code> nunca importa <code>ProductoRepository</code> ni <code>CategoriaRepository</code> — ni siquiera sabe que existen. Todo lo que necesita de <code>catalogo</code> pasa por los dos métodos que <code>ProductoService</code> expone.</p>
 <p><strong>Proxy</strong> provee un sustituto o intermediario de otro objeto, para controlar el acceso a él —sin que quien lo usa note la diferencia— por razones de costo (cargarlo es caro), de seguridad (hay que verificar permisos) o de coordinación (hay que envolver la llamada con algo más) (Gamma et al., 1994). Es uno de los patrones GoF más usados <strong>sin que se note</strong>, porque casi siempre lo aplica el framework, no el programador.</p>
-<p><strong>Tabla 3. Dos <em>Proxy</em> reales en el código de LP2, sin que nadie los haya escrito a mano</strong></p>
+<p><strong>Figura 8. Proxy mínimo: estructura clásica aplicada a la carga perezosa de <code>Categoria</code></strong></p>
+<pre class="mermaid"><code>classDiagram
+    class Categoria {
+        &lt;&lt;Subject, clase concreta&gt;&gt;
+    }
+    class CategoriaProxy {
+        &lt;&lt;Proxy, subclase generada por Hibernate&gt;&gt;
+        -boolean inicializado
+    }
+    Categoria &lt;|-- CategoriaProxy</code></pre>
+<p><code>Producto.categoria</code> nunca referencia directamente a una fila cargada de la base de datos — referencia una subclase de <code>Categoria</code>, generada por Hibernate en tiempo de ejecución (no escrita por ningún programador), que decide cuándo ir realmente a la base de datos. La línea es de <strong>herencia</strong> (sólida), no de <strong>realización</strong> (punteada): a diferencia del Proxy de libro —que suele dibujarse con un <code>Subject</code> como interfaz—, Hibernate no necesita que <code>Categoria</code> sea una interfaz; le basta con generar una subclase real de la clase concreta.</p>
+<p><strong>Figura 9. Proxy en acción: el <em>proxy</em> transaccional interceptando una llamada real</strong></p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant C as VentaController
+    participant P as Proxy transaccional&lt;br/&gt;(generado por Spring)
+    participant S as VentaServiceImpl (real)
+    C-&gt;&gt;P: crear(ventaRequest)
+    P-&gt;&gt;P: abrir transaccion
+    P-&gt;&gt;S: crear(ventaRequest)
+    S--&gt;&gt;P: VentaResponse
+    P-&gt;&gt;P: confirmar transaccion (commit)
+    P--&gt;&gt;C: VentaResponse</code></pre>
+<p>Este es el caso dinámico que justifica mostrar una secuencia además de la estructura: <code>VentaController</code> llama a algo que <strong>cree</strong> que es <code>VentaServiceImpl</code>, pero en realidad es el <em>proxy</em> de Spring, que envuelve la llamada real con la apertura y el cierre de la transacción — exactamente el mismo mecanismo que la Figura 8, aplicado a un segundo caso real.</p>
+<p><strong>Adapter</strong> convierte la interfaz de una clase en otra que el código cliente espera, permitiendo que colaboren clases cuyas interfaces serían, de otro modo, incompatibles (Gamma et al., 1994). <code>VentaMapper</code> cumple exactamente este rol: <code>Venta</code> (la entidad, con su forma interna de persistencia) y <code>VentaResponse</code> (el contrato HTTP que el cliente REST espera) son dos interfaces distintas — <code>VentaMapper</code> adapta una a la otra, sin que <code>VentaController</code> ni <code>Venta</code> se enteren el uno del otro.</p>
+<p><strong>Figura 10. Adapter mínimo: <code>VentaMapper</code> adaptando <code>Venta</code> al contrato que <code>VentaController</code> espera</strong></p>
+<pre class="mermaid"><code>classDiagram
+    class VentaController {
+        &lt;&lt;cliente, espera VentaResponse&gt;&gt;
+    }
+    class Venta {
+        &lt;&lt;Adaptee, forma interna&gt;&gt;
+    }
+    class VentaResponse {
+        &lt;&lt;interfaz esperada por el cliente&gt;&gt;
+    }
+    class VentaMapper {
+        &lt;&lt;Adapter&gt;&gt;
+        +toResponse(Venta) VentaResponse
+    }
+    VentaController ..&gt; VentaResponse
+    VentaMapper ..&gt; Venta : lee
+    VentaMapper ..&gt; VentaResponse : produce</code></pre>
+<p>A diferencia de Facade (que simplifica un subsistema completo) y de Proxy (que sustituye a un objeto sin cambiar su interfaz), Adapter existe específicamente porque las dos interfaces —la de <code>Venta</code> y la que <code>VentaResponse</code> exige— <strong>no calzan entre sí</strong>, y alguien tiene que traducir.</p>
+<p><strong>Bridge</strong> separa una abstracción de su implementación, para que ambas puedan variar de forma independiente, sin que una jerarquía de clases crezca multiplicando cada combinación posible (Gamma et al., 1994). <code>ventas</code> no lo necesita hoy, pero es el diseño natural y previsto para un requisito realista: reportes de ventas e inventario exportables en más de un formato.</p>
+<p><strong>Figura 11. Bridge mínimo: tipos de reporte y formatos de salida, variando por separado (previsto)</strong></p>
+<pre class="mermaid"><code>classDiagram
+    class Reporte {
+        &lt;&lt;Abstraction, previsto&gt;&gt;
+        #FormatoSalida formato
+        +generar()
+    }
+    class ReporteVentas {
+        &lt;&lt;RefinedAbstraction, previsto&gt;&gt;
+    }
+    class ReporteInventario {
+        &lt;&lt;RefinedAbstraction, previsto&gt;&gt;
+    }
+    class FormatoSalida {
+        &lt;&lt;Implementor, previsto&gt;&gt;
+        +exportar(datos)
+    }
+    class FormatoPDF {
+        &lt;&lt;ConcreteImplementor, previsto&gt;&gt;
+    }
+    class FormatoExcel {
+        &lt;&lt;ConcreteImplementor, previsto&gt;&gt;
+    }
+    Reporte &lt;|-- ReporteVentas
+    Reporte &lt;|-- ReporteInventario
+    Reporte o-- FormatoSalida
+    FormatoSalida &lt;|.. FormatoPDF
+    FormatoSalida &lt;|.. FormatoExcel</code></pre>
+<p>Sin Bridge, agregar un tercer formato (CSV) obligaría a crear <code>ReporteVentasCSV</code> y <code>ReporteInventarioCSV</code> — una clase por cada combinación. Con Bridge, <code>Reporte</code> <strong>tiene</strong> (composición, no herencia) un <code>FormatoSalida</code>: agregar <code>FormatoCSV</code> no toca ninguna clase de <code>Reporte</code>, y agregar un tercer tipo de reporte no toca ningún <code>FormatoSalida</code>. Es la misma idea de Low Coupling (2.6) aplicada a dos jerarquías completas, no a una sola clase.</p>
+<p><strong>Error frecuente</strong>: confundir Bridge con Strategy. Strategy (2.4) intercambia un algoritmo dentro de una sola jerarquía; Bridge desacopla <strong>dos</strong> jerarquías independientes (qué se reporta, en qué formato) que varían por separado.</p>
+<p><strong>Tabla 6. Dos <em>Proxy</em> reales en el código de LP2, sin que nadie los haya escrito a mano</strong></p>
 <table>
 <thead>
 <tr>
@@ -4303,12 +4688,53 @@
 </tr>
 </tbody>
 </table>
-<p>Ninguno de los dos <em>Proxy</em> de la Tabla 3 aparece como una clase escrita a mano en el código — eso es, precisamente, lo que distingue a Proxy de los demás patrones estructurales: su punto es ser invisible para quien usa el objeto real.</p>
+<p>Ninguno de los dos <em>Proxy</em> de la Tabla 6 aparece como una clase escrita a mano en el código — eso es, precisamente, lo que distingue a Proxy de los demás patrones estructurales: su punto es ser invisible para quien usa el objeto real.</p>
 <h3 id="24-patrones-de-comportamiento-gof-strategy-state-chain-of-responsibility-y-observer">2.4 Patrones de comportamiento GoF: Strategy, State, Chain of Responsibility y Observer<a class="headerlink" href="#24-patrones-de-comportamiento-gof-strategy-state-chain-of-responsibility-y-observer" title="Permanent link">&para;</a></h3>
 <p>Los patrones <strong>de comportamiento</strong> resuelven cómo se distribuye la responsabilidad de un algoritmo o un flujo entre objetos que colaboran (Gamma et al., 1994). Es la familia GoF más grande (once patrones) y la que más se nota en sistemas con reglas de negocio reales — cuatro se repiten en casi cualquier ERP:</p>
 <p><strong>Strategy</strong> encapsula una familia de algoritmos intercambiables detrás de una misma interfaz, para que el código cliente pueda cambiar de algoritmo sin cambiar su propia estructura (Gamma et al., 1994). El parámetro <code>Sort</code> que <code>VentaServiceImpl.buscar</code> arma a partir de <code>ordenarPor</code>/<code>direccion</code> (S8) encapsula una estrategia de ordenamiento intercambiable, sin que <code>VentaRepository</code> sepa cuál.</p>
+<p><strong>Figura 12. Strategy mínimo: <code>Sort</code> como estrategia de ordenamiento intercambiable</strong></p>
+<pre class="mermaid"><code>classDiagram
+    class VentaServiceImpl {
+        &lt;&lt;Context&gt;&gt;
+        +buscar(ordenarPor, direccion) List~Venta~
+    }
+    class Sort {
+        &lt;&lt;Strategy, interfaz de Spring Data&gt;&gt;
+        +by(direction, properties) Sort
+    }
+    class VentaRepository {
+        +findAll(Sort) List~Venta~
+    }
+    VentaServiceImpl ..&gt; Sort : construye segun ordenarPor/direccion
+    VentaRepository ..&gt; Sort : recibe, nunca sabe cual es</code></pre>
+<p>Una diferencia honesta con el Strategy de libro: GoF propone una jerarquía de clases concretas (<code>OrdenPorFecha</code>, <code>OrdenPorTotal</code>...); Spring Data construye su estrategia de forma dinámica, con datos (<code>ordenarPor</code>, <code>direccion</code>), sin una subclase por cada criterio. El principio es el mismo —<code>VentaRepository</code> nunca pregunta cuál estrategia recibió—, pero no toda implementación de Strategy en un sistema real se ve como el diagrama de un libro.</p>
 <p><strong>State</strong> permite que un objeto cambie su comportamiento cuando cambia su estado interno, de forma que parezca que el objeto cambió de clase — cada estado se modela como su propia clase, con su propia implementación de las operaciones que varían (Gamma et al., 1994). No todo atributo de estado necesita este patrón: un <code>enum</code> con una validación simple (<code>if estado != REGISTRADA</code>) resuelve el mismo problema cuando hay pocos estados y poco comportamiento que varíe. El patrón completo se justifica cuando los estados son varios <strong>y</strong> el comportamiento difiere de forma sustancial entre ellos, no solo en una condición.</p>
-<p><strong>Tabla 4. Cuándo State (clases) y cuándo un <code>enum</code> con validación basta</strong></p>
+<p><strong>Figura 13. State mínimo: la estructura completa que <code>Venta</code> <em>no</em> necesita (todavía)</strong></p>
+<pre class="mermaid"><code>classDiagram
+    class Venta {
+        -EstadoVentaPattern estado
+        +anular()
+    }
+    class EstadoVentaPattern {
+        &lt;&lt;interfaz, patron State completo, no implementado&gt;&gt;
+        +anular(Venta venta)*
+    }
+    class EstadoRegistrada {
+        +anular(venta)
+    }
+    class EstadoAnulada {
+        +anular(venta)
+    }
+    Venta --&gt; EstadoVentaPattern
+    EstadoVentaPattern &lt;|.. EstadoRegistrada
+    EstadoVentaPattern &lt;|.. EstadoAnulada</code></pre>
+<p><strong>Figura 14. El ciclo de vida real de <code>Venta</code>, como <code>enum</code> con validación</strong></p>
+<pre class="mermaid"><code>stateDiagram-v2
+    [*] --&gt; REGISTRADA : crear()
+    REGISTRADA --&gt; ANULADA : anular() [previsto]
+    ANULADA --&gt; [*]</code></pre>
+<p>Las Figuras 13 y 14 son la misma realidad vista dos veces: la Figura 13 es la estructura que el patrón State <em>exigiría</em> (una clase por estado); la Figura 14 es la que <code>Venta</code> tiene de verdad hoy, un solo atributo <code>EstadoVenta</code> con dos valores y una validación. 3.3 aplica la Tabla 7 para justificar, con criterio, por qué la Figura 14 sigue siendo suficiente.</p>
+<p><strong>Tabla 7. Cuándo State (clases) y cuándo un <code>enum</code> con validación basta</strong></p>
 <table>
 <thead>
 <tr>
@@ -4333,7 +4759,7 @@
 </table>
 <p>3.3 aplica esta tabla al <code>EstadoVenta</code> real de BomERP, que hoy tiene un solo valor (<code>REGISTRADA</code>) y uno previsto (<code>ANULADA</code>, S9) — y decide, con este criterio, si ya justifica el patrón completo o si el <code>enum</code> con validación (como el que S9 ya diseñó) sigue siendo la opción correcta.</p>
 <p><strong>Chain of Responsibility</strong> evita que un objeto que envía una petición conozca de antemano cuál objeto la va a manejar: la petición pasa de un manejador a otro, en una cadena, hasta que uno la resuelve (Gamma et al., 1994). Es, de los patrones de comportamiento, el más reconocible en cualquier ERP: <strong>cualquier flujo de aprobación por niveles</strong> (una compra, un descuento, un reembolso) es, estructuralmente, este patrón. <code>ventas</code> no lo tiene implementado todavía, pero es un diseño natural y previsto para una regla de negocio real: una venta de monto alto no debería aprobarse automáticamente.</p>
-<p><strong>Figura 3. Chain of Responsibility: autorización de una venta por monto (previsto)</strong></p>
+<p><strong>Figura 15. Chain of Responsibility: autorización de una venta por monto (previsto)</strong></p>
 <pre class="mermaid"><code>flowchart LR
     V[Venta nueva] --&gt; A{"Autorizador&lt;br/&gt;Vendedor"}
     A -- "total &lt;= S/500" --&gt; OK1([Autorizada])
@@ -4357,17 +4783,136 @@ autorizar(venta):
 </code></pre></div>
 <p>Cada autorizador solo sabe dos cosas: su propia regla, y a quién pasarle la petición si no le corresponde a él. <code>AutorizadorVendedor</code> no conoce a <code>AutorizadorAdmin</code> directamente —ni cuántos eslabones hay en total—; si BomERP agrega un cuarto nivel de aprobación mañana, ningún autorizador existente cambia una sola línea.</p>
 <p><strong>Error frecuente</strong>: implementar esto como un único método con <code>if total &lt;= 500 ... else if total &lt;= 5000 ... else ...</code>. Funciona igual de bien con pocos niveles, pero cada nivel nuevo obliga a tocar el mismo método gigante — exactamente lo que Chain of Responsibility evita, separando cada regla en su propio eslabón.</p>
+<p><strong>Figura 16. Chain of Responsibility mínimo: la interfaz compartida y sus tres eslabones</strong></p>
+<pre class="mermaid"><code>classDiagram
+    class AutorizadorVenta {
+        &lt;&lt;interfaz, Handler&gt;&gt;
+        +establecerSiguiente(AutorizadorVenta)
+        +autorizar(Venta) ResultadoAutorizacion
+    }
+    class AutorizadorVendedor {
+        -AutorizadorVenta siguiente
+        +autorizar(Venta) ResultadoAutorizacion
+    }
+    class AutorizadorSupervisor {
+        -AutorizadorVenta siguiente
+        +autorizar(Venta) ResultadoAutorizacion
+    }
+    class AutorizadorAdmin {
+        +autorizar(Venta) ResultadoAutorizacion
+    }
+    AutorizadorVenta &lt;|.. AutorizadorVendedor
+    AutorizadorVenta &lt;|.. AutorizadorSupervisor
+    AutorizadorVenta &lt;|.. AutorizadorAdmin
+    AutorizadorVendedor --&gt; AutorizadorVenta : siguiente
+    AutorizadorSupervisor --&gt; AutorizadorVenta : siguiente</code></pre>
+<p><strong>Figura 17. Chain of Responsibility en el tiempo: una venta de S/2000 recorriendo la cadena</strong></p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant S as VentaServiceImpl
+    participant V as AutorizadorVendedor
+    participant Sup as AutorizadorSupervisor
+    S-&gt;&gt;V: autorizar(venta total=S/2000)
+    V-&gt;&gt;V: total &gt; 500? si
+    V-&gt;&gt;Sup: autorizar(venta)
+    Sup-&gt;&gt;Sup: total &lt;= 5000? si
+    Sup--&gt;&gt;V: AUTORIZADA
+    V--&gt;&gt;S: AUTORIZADA</code></pre>
+<p>La Figura 16 muestra la estructura (quién implementa qué); la Figura 17 muestra lo que la estructura por sí sola no deja ver: que <code>AutorizadorAdmin</code> ni siquiera participa en este caso concreto, porque <code>AutorizadorSupervisor</code> ya resolvió la petición — la cadena avanza solo hasta donde hace falta.</p>
 <p><strong>Observer</strong> define una dependencia de uno-a-muchos entre objetos, de forma que cuando uno cambia de estado, todos sus dependientes son notificados automáticamente, sin que el primero los conozca por nombre (Gamma et al., 1994). La publicación de eventos de dominio es Observer aplicado a nivel de módulos: <code>ventas</code> (el <em>sujeto</em>) no conoce a sus suscriptores (los <em>observadores</em>), y puede tener cero, uno o varios al mismo tiempo. Hoy, en esta sesión, es un concepto; S11 lo formaliza con <code>VentaRegistrada</code> y <code>@ApplicationModuleListener</code> de Spring Modulith — el mismo patrón, con nombre e implementación concretos.</p>
+<p><strong>Figura 18. Observer mínimo: <code>ventas</code> publica, sin conocer a sus observadores (previsto)</strong></p>
+<pre class="mermaid"><code>classDiagram
+    class VentaServiceImpl {
+        &lt;&lt;Subject&gt;&gt;
+    }
+    class VentaRegistrada {
+        &lt;&lt;evento de dominio, previsto&gt;&gt;
+        -Long ventaId
+        -BigDecimal total
+    }
+    class NotificacionListener {
+        &lt;&lt;Observer, previsto en S11&gt;&gt;
+        +on(VentaRegistrada)
+    }
+    class AuditoriaListener {
+        &lt;&lt;Observer, previsto en S11&gt;&gt;
+        +on(VentaRegistrada)
+    }
+    VentaServiceImpl ..&gt; VentaRegistrada : publica
+    NotificacionListener ..&gt; VentaRegistrada : escucha
+    AuditoriaListener ..&gt; VentaRegistrada : escucha</code></pre>
+<p><strong>Figura 19. Observer en el tiempo: publicar no espera a que los observadores respondan</strong></p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant S as VentaServiceImpl
+    participant E as VentaRegistrada (evento)
+    participant N as NotificacionListener
+    participant Au as AuditoriaListener
+    S-&gt;&gt;E: publicar(venta)
+    E--&gt;&gt;N: notificar
+    E--&gt;&gt;Au: notificar
+    Note over S: VentaServiceImpl no conoce&lt;br/&gt;a N ni a Au por nombre,&lt;br/&gt;ni espera su respuesta</code></pre>
+<p>Cero, uno o varios observadores pueden escuchar <code>VentaRegistrada</code> sin que <code>VentaServiceImpl</code> cambie una sola línea — la Figura 19 es la razón por la que Observer se considera bajo acoplamiento temporal, no solo estructural.</p>
 <h3 id="25-grasp-asignacion-de-responsabilidades-information-expert-creator-controller">2.5 GRASP — asignación de responsabilidades: Information Expert, Creator, Controller<a class="headerlink" href="#25-grasp-asignacion-de-responsabilidades-information-expert-creator-controller" title="Permanent link">&para;</a></h3>
 <p>Tres de los nueve patrones GRASP (Larman, 2004) responden la misma pregunta de fondo —¿a qué clase le corresponde esta responsabilidad?— desde tres ángulos distintos.</p>
 <p><strong>Information Expert</strong>: asigna una responsabilidad a la clase que tiene la información necesaria para cumplirla. Es el patrón que el caso de 1.6 dejó planteado: <code>Venta</code> tiene sus propios <code>detalles</code>, así que es la experta en calcular su propio <code>total</code> — no <code>VentaServiceImpl</code>, que solo coordina. 3.5 aplica este criterio a <code>Venta</code> y <code>Producto</code>.</p>
+<p><strong>Figura 20. Information Expert mínimo: <code>Venta</code> tiene la información para calcular su propio total (objetivo del refactor de 3.5, no en el código real hoy)</strong></p>
+<pre class="mermaid"><code>classDiagram
+    class Venta {
+        &lt;&lt;calcularTotal no existe aun en el codigo real&gt;&gt;
+        -List~DetalleVenta~ detalles
+        -BigDecimal total
+        +calcularTotal() BigDecimal
+    }
+    class DetalleVenta {
+        -BigDecimal subtotal
+    }
+    Venta "1" *-- "muchos" DetalleVenta</code></pre>
 <p><strong>Creator</strong>: asigna la responsabilidad de crear una instancia de una clase A a la clase B, si B agrega o contiene a A, registra instancias de A, las usa íntimamente, o tiene los datos de inicialización que A necesita (Larman, 2004). <code>Venta</code> <strong>contiene</strong> (compone) a <code>DetalleVenta</code> — por Creator, <code>Venta</code> debería ser quien cree sus propios objetos <code>DetalleVenta</code>. Hoy no lo es (<code>VentaMapper.toDetalle(...)</code> los crea); 3.1 resuelve este hueco con un Factory Method dentro de <code>Venta</code>, matando dos pájaros —GRASP Creator y GoF Factory Method— con el mismo refactor.</p>
+<p><strong>Figura 21. Creator mínimo: la misma composición que justifica quién crea a quién (hueco real, resuelto en 3.1)</strong></p>
+<pre class="mermaid"><code>classDiagram
+    class Venta {
+        &lt;&lt;agregarDetalle no existe aun en el codigo real&gt;&gt;
+        +agregarDetalle(...) DetalleVenta
+    }
+    class DetalleVenta
+    Venta ..&gt; DetalleVenta : crea (Creator)
+    Venta "1" *-- "muchos" DetalleVenta : contiene</code></pre>
+<p>La Figura 20 y la Figura 21 comparten la misma composición (<code>Venta</code> contiene <code>DetalleVenta</code>) porque, en este caso, son la misma clase la que tiene la información <strong>y</strong> la que debería crear — no siempre coinciden, pero cuando lo hacen, como aquí, es una señal fuerte de que el diseño está bien encaminado. Es, de hecho, el mismo diagrama que la Figura 3 (2.2, Factory Method) — GRASP Creator y GoF Factory Method resolviendo, desde dos catálogos distintos, el mismo problema.</p>
 <p><strong>Controller</strong>: ya presentado en S8 (2.3) y verificado en S9 — asigna la responsabilidad de recibir un evento del sistema a una clase que no es la interfaz de usuario ni el dominio. <code>VentaController</code> lo aplica: recibe la petición HTTP (<em>HyperText Transfer Protocol</em>), delega en <code>VentaService</code>, no decide ninguna regla de negocio.</p>
+<p><strong>Figura 22. Controller mínimo (versión completa en S8, Figura 6, y S9)</strong></p>
+<pre class="mermaid"><code>classDiagram
+    class VentaController {
+        &lt;&lt;Controller&gt;&gt;
+        +crear(VentaRequest) ResponseEntity
+    }
+    class VentaService {
+        &lt;&lt;interfaz&gt;&gt;
+    }
+    VentaController ..&gt; VentaService : delega</code></pre>
 <h3 id="26-grasp-acoplamiento-y-cohesion-low-coupling-high-cohesion-polymorphism">2.6 GRASP — acoplamiento y cohesión: Low Coupling, High Cohesion, Polymorphism<a class="headerlink" href="#26-grasp-acoplamiento-y-cohesion-low-coupling-high-cohesion-polymorphism" title="Permanent link">&para;</a></h3>
 <p><strong>Low Coupling</strong>: asigna responsabilidades de forma que la dependencia entre clases se mantenga baja, para que un cambio en una no obligue a cambiar muchas otras (Larman, 2004). El DTO (<em>Data Transfer Object</em>, S8) es la aplicación más directa en <code>ventas</code>: <code>VentaController</code> depende de <code>VentaRequest</code>/<code>VentaResponse</code>, nunca de la entidad <code>Venta</code> — si <code>Venta</code> cambia sus columnas internas, el contrato HTTP no tiene por qué cambiar.</p>
 <p><strong>High Cohesion</strong>: asigna responsabilidades de forma que las de una clase estén fuertemente relacionadas y enfocadas (Larman, 2004). <code>VentaMapper</code> solo traduce; <code>VentaRepository</code> solo persiste y consulta — ninguna de las dos mezcla responsabilidades que no le correspondan.</p>
+<p><strong>Figura 23. Low Coupling y High Cohesion mínimos, en las mismas clases de <code>ventas</code></strong></p>
+<pre class="mermaid"><code>classDiagram
+    class VentaController {
+        +crear(VentaRequest) VentaResponse
+    }
+    class VentaRequest
+    class VentaResponse
+    class Venta {
+        &lt;&lt;entidad&gt;&gt;
+    }
+    class VentaMapper {
+        +toResponse(Venta) VentaResponse
+    }
+    class VentaRepository
+    VentaController ..&gt; VentaRequest : Low Coupling
+    VentaController ..&gt; VentaResponse : Low Coupling
+    VentaMapper ..&gt; Venta : High Cohesion
+    VentaMapper ..&gt; VentaResponse : High Cohesion
+    VentaRepository ..&gt; Venta : High Cohesion</code></pre>
+<p><code>VentaController</code> no aparece conectado a <code>Venta</code> en este diagrama — y esa ausencia <strong>es</strong> Low Coupling aplicado. <code>VentaMapper</code> y <code>VentaRepository</code>, en cambio, sí dependen de <code>Venta</code>, pero cada una con un propósito único y enfocado — esa es High Cohesion.</p>
 <p><strong>Polymorphism</strong>: cuando el comportamiento varía según el tipo de un objeto, esa variación se asigna con operaciones polimórficas definidas en cada tipo, en vez de condicionales que pregunten de qué tipo es cada objeto (Larman, 2004). BomERP todavía no implementa <code>Cliente</code>, pero S7 ya diseñó la jerarquía (<code>Cliente</code> abstracta, <code>ClientePersonaNatural</code>, <code>ClienteEmpresa</code>) — el candidato natural para aplicar Polymorphism hoy, en diseño.</p>
-<p><strong>Figura 4. Polymorphism aplicado a la jerarquía prevista de <code>Cliente</code></strong></p>
+<p><strong>Figura 24. Polymorphism aplicado a la jerarquía prevista de <code>Cliente</code></strong></p>
 <pre class="mermaid"><code>classDiagram
     class Cliente {
         &lt;&lt;abstracta, prevista&gt;&gt;
@@ -4391,11 +4936,11 @@ si cliente instanceof ClientePersonaNatural:
 sino si cliente instanceof ClienteEmpresa:
     identificador = cliente.getRuc()
 
-// Con Polymorphism (lo que la Figura 4 disena)
+// Con Polymorphism (lo que la Figura 24 disena)
 identificador = cliente.obtenerIdentificadorFiscal()
 </code></pre></div>
 <p><strong>Polymorphism no es lo mismo que una interfaz con una sola implementación.</strong> En UML, la línea de <code>Cliente &lt;|-- ClientePersonaNatural</code> (generalización, <strong>línea sólida</strong>) no es la única forma de dibujar polimorfismo — una interfaz implementada por una clase (<code>VentaService &lt;|.. VentaServiceImpl</code>, realización, <strong>línea punteada</strong>) también lo es, como mecanismo de lenguaje. La diferencia que importa para GRASP no es la notación, es si <strong>hay variación real que resolver</strong>:</p>
-<p><strong>Tabla 5. Polymorphism frente a Indirection/Protected Variations: la misma notación <code>implements</code>/<code>extends</code>, dos patrones distintos</strong></p>
+<p><strong>Tabla 8. Polymorphism frente a Indirection/Protected Variations: la misma notación <code>implements</code>/<code>extends</code>, dos patrones distintos</strong></p>
 <table>
 <thead>
 <tr>
@@ -4425,9 +4970,36 @@ identificador = cliente.obtenerIdentificadorFiscal()
 <p>Una interfaz con una sola implementación no es polimorfismo aplicado — es protección contra un cambio que todavía no ocurrió.</p>
 <h3 id="27-grasp-patrones-de-proteccion-pure-fabrication-indirection-protected-variations">2.7 GRASP — patrones de protección: Pure Fabrication, Indirection, Protected Variations<a class="headerlink" href="#27-grasp-patrones-de-proteccion-pure-fabrication-indirection-protected-variations" title="Permanent link">&para;</a></h3>
 <p><strong>Pure Fabrication</strong>: una clase inventada, que no representa ningún concepto del dominio del negocio, creada exclusivamente para lograr bajo acoplamiento y alta cohesión (Larman, 2004). <code>VentaMapper</code> y <code>VentaRepository</code> son Pure Fabrication — ningún experto del negocio describe "un mapeador" o "un repositorio" como parte de cómo funciona una venta.</p>
+<p><strong>Figura 25. Pure Fabrication mínimo: clases sin concepto de negocio, inventadas por diseño</strong></p>
+<pre class="mermaid"><code>classDiagram
+    class Venta {
+        &lt;&lt;concepto del negocio&gt;&gt;
+    }
+    class VentaMapper {
+        &lt;&lt;Pure Fabrication&gt;&gt;
+        +toResponse(Venta) VentaResponse
+    }
+    class VentaRepository {
+        &lt;&lt;Pure Fabrication&gt;&gt;
+    }
+    VentaMapper ..&gt; Venta
+    VentaRepository ..&gt; Venta</code></pre>
 <p><strong>Indirection</strong>: asigna la responsabilidad a un objeto intermediario, para mediar entre otros componentes o servicios y evitar que se acoplen directamente (Larman, 2004). La interfaz <code>ProductoService</code> es ese intermediario: <code>VentaServiceImpl</code> nunca habla con <code>ProductoRepository</code> ni con <code>ProductoServiceImpl</code> directamente.</p>
 <p><strong>Protected Variations</strong>: identifica puntos de variación probable y les pone alrededor una interfaz estable, para que el resto del sistema quede protegido de esos cambios (Larman, 2004). La anotación real <code>@NamedInterface("producto-service")</code> sobre el paquete <code>catalogo.producto.service</code> (Spring Modulith) es la forma concreta en que LP2 declara ese punto protegido en código.</p>
-<p><strong>Tabla 6. La misma clase, dos patrones — por qué no es un error</strong></p>
+<p><strong>Figura 26. Indirection y Protected Variations mínimos: la misma interfaz, dos lecturas</strong></p>
+<pre class="mermaid"><code>classDiagram
+    class VentaServiceImpl {
+        &lt;&lt;cliente&gt;&gt;
+    }
+    class ProductoService {
+        &lt;&lt;interfaz, Indirection + Protected Variations&gt;&gt;
+    }
+    class ProductoServiceImpl {
+        &lt;&lt;implementacion real&gt;&gt;
+    }
+    VentaServiceImpl ..&gt; ProductoService : solo conoce la interfaz
+    ProductoService &lt;|.. ProductoServiceImpl</code></pre>
+<p><strong>Tabla 9. La misma clase, dos patrones — por qué no es un error</strong></p>
 <table>
 <thead>
 <tr>
@@ -4447,6 +5019,21 @@ identificador = cliente.obtenerIdentificadorFiscal()
 <p>Indirection describe <strong>cómo</strong> se logra (un intermediario); Protected Variations describe <strong>para qué</strong> (proteger un punto de variación). La misma clase puede —y en este caso debe— cumplir los dos a la vez.</p>
 <h3 id="28-dependency-injection">2.8 Dependency Injection<a class="headerlink" href="#28-dependency-injection" title="Permanent link">&para;</a></h3>
 <p><strong>Dependency Injection</strong> (inyección de dependencias) es el patrón donde un objeto recibe sus colaboradores desde afuera —por constructor, en el caso de Spring con <code>@RequiredArgsConstructor</code>— en vez de crearlos él mismo con <code>new</code> (Fowler, 2004). <code>VentaServiceImpl</code> ya lo aplica: recibe <code>VentaRepository</code>, <code>ProductoService</code> y <code>VentaMapper</code> como parámetros de su constructor, generado por Lombok.</p>
+<p><strong>Figura 27. Dependency Injection mínimo: <code>VentaServiceImpl</code> recibe, no construye</strong></p>
+<pre class="mermaid"><code>classDiagram
+    class VentaServiceImpl {
+        -VentaRepository ventaRepository
+        -ProductoService productoService
+        -VentaMapper ventaMapper
+        +VentaServiceImpl(VentaRepository, ProductoService, VentaMapper)
+    }
+    class VentaRepository
+    class ProductoService
+    class VentaMapper
+    VentaServiceImpl --&gt; VentaRepository : inyectado por constructor
+    VentaServiceImpl --&gt; ProductoService : inyectado por constructor
+    VentaServiceImpl --&gt; VentaMapper : inyectado por constructor</code></pre>
+<p>Ninguna de las tres flechas sale de un <code>new</code> dentro de <code>VentaServiceImpl</code> — las tres llegan desde afuera, resueltas por el contenedor de Spring al momento de levantar la aplicación, no cuando <code>VentaServiceImpl</code> las necesita.</p>
 <p><strong>Error frecuente</strong>: confundir "usar Spring" con "aplicar Dependency Injection". El contenedor de Spring es el <em>mecanismo</em> que resuelve las dependencias automáticamente; el <em>patrón</em> es la decisión de diseño de que una clase nunca construya sus propios colaboradores.</p>
 <h2 id="3-aplica-actividad-practica-guiada">3. Aplica: actividad práctica guiada<a class="headerlink" href="#3-aplica-actividad-practica-guiada" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 115 min.</p>
@@ -4456,7 +5043,7 @@ identificador = cliente.obtenerIdentificadorFiscal()
 <p><strong>Actividades para realizar:</strong></p>
 <ul>
 <li><strong>3.1</strong> Resolver el hueco de Creator con un Factory Method.</li>
-<li><strong>3.2</strong> Reconocer Proxy en el código real.</li>
+<li><strong>3.2</strong> Reconocer Proxy, Singleton, Abstract Factory y Adapter en el código real.</li>
 <li><strong>3.3</strong> Decidir si <code>Venta</code> necesita el patrón State completo.</li>
 <li><strong>3.4</strong> Diseñar la cadena de autorización de ventas (Chain of Responsibility).</li>
 <li><strong>3.5</strong> Diagnosticar y refactorizar con Information Expert.</li>
@@ -4479,8 +5066,8 @@ agregarDetalle(productoId, cantidad, nombreProducto, precioUnitario):
     devolver detalle
 </code></pre></div>
 <p><code>VentaServiceImpl.crear</code> deja de pedirle a <code>VentaMapper</code> que construya el <code>DetalleVenta</code> — pide los datos del producto (a <code>ProductoService</code>, como ya hace hoy) y se los pasa a <code>venta.agregarDetalle(...)</code>, que es ahora quien construye y agrega el objeto. <code>VentaMapper</code> conserva su trabajo de <strong>traducir</strong> <code>Venta</code> a <code>VentaResponse</code> (2.3, Adapter) — construir y traducir son responsabilidades distintas, y este refactor las separa en la clase que corresponde a cada una.</p>
-<h3 id="32-reconocer-proxy-en-el-codigo-real">3.2 Reconocer Proxy en el código real<a class="headerlink" href="#32-reconocer-proxy-en-el-codigo-real" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> evidencia de los dos <em>Proxy</em> de la Tabla 3 (2.3), verificados contra el código y el comportamiento real.</p>
+<h3 id="32-reconocer-proxy-singleton-abstract-factory-y-adapter-en-el-codigo-real">3.2 Reconocer Proxy, Singleton, Abstract Factory y Adapter en el código real<a class="headerlink" href="#32-reconocer-proxy-singleton-abstract-factory-y-adapter-en-el-codigo-real" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> evidencia de los dos <em>Proxy</em> de la Tabla 6 (2.3), del Singleton y el Abstract Factory de la Tabla 5 (2.2), y del Adapter de 2.3, verificados contra el código y el comportamiento real.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// Producto.java — codigo real, S3</span>
 <span class="nd">@ManyToOne</span><span class="p">(</span><span class="n">fetch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FetchType</span><span class="p">.</span><span class="na">LAZY</span><span class="p">)</span>
 <span class="nd">@JoinColumn</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"ID_CATEGORIA"</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
@@ -4492,14 +5079,17 @@ agregarDetalle(productoId, cantidad, nombreProducto, precioUnitario):
 </code></pre></div>
 <p>Ninguna de las dos líneas menciona la palabra "Proxy" — y esa es la evidencia de que el patrón está aplicado correctamente: Hibernate y Spring lo aplican automáticamente, a partir de una anotación, sin que el código de <code>ventas</code> tenga que escribir ninguna clase intermediaria a mano.</p>
 <p><strong>Error frecuente</strong>: serializar una entidad con una relación <code>LAZY</code> fuera de una transacción activa (por ejemplo, devolver la entidad directamente desde un controlador). El <em>proxy</em> de Hibernate lanza <code>LazyInitializationException</code> porque ya no hay transacción para resolver la carga real — es exactamente la razón por la que S8 (2.4) exige exponer siempre un DTO, nunca la entidad directamente.</p>
+<p>Singleton se verifica igual de simple: ningún <code>@Service</code> o <code>@Repository</code> de <code>ventas</code> tiene constructor privado ni método <code>getInstance()</code> — <strong>y no hace falta</strong>, porque el <code>scope</code> por defecto de todo bean de Spring ya es <code>singleton</code> (Figura 5). Basta con inyectar <code>VentaServiceImpl</code> en dos clases distintas (por ejemplo <code>VentaController</code> y un futuro <code>ReporteController</code>) e imprimir su <code>hashCode()</code> para comprobar que ambas reciben el mismo objeto.</p>
+<p><strong>Error frecuente</strong>: declarar un <code>@Service</code> con campos mutables sin pensar en que una sola instancia los comparte entre <strong>todas</strong> las peticiones concurrentes. Si <code>VentaServiceImpl</code> guardara estado en un atributo de instancia (no en parámetros ni en la base de datos), dos usuarios distintos podrían pisarse datos sin saberlo — exactamente el riesgo que el Singleton de framework introduce si la clase no se diseña <em>stateless</em>.</p>
+<p>Abstract Factory se reconoce igual: ningún código de <code>ventas</code> ni de <code>catalogo</code> importa una clase de Hibernate directamente — toda persistencia pasa por las abstracciones de Spring Data, que internamente usan la familia de objetos que <code>EntityManagerFactory</code> fabrica (Figura 6). Adapter se verifica leyendo la firma real de <code>VentaMapper.toResponse(Venta venta) : VentaResponse</code>: recibe <code>Venta</code> y devuelve <code>VentaResponse</code>, sin que ninguna de las dos clases conozca a la otra directamente.</p>
 <h3 id="33-decidir-si-venta-necesita-el-patron-state-completo">3.3 Decidir si <code>Venta</code> necesita el patrón State completo<a class="headerlink" href="#33-decidir-si-venta-necesita-el-patron-state-completo" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> una decisión explícita, aplicando la Tabla 4 (2.4) al <code>EstadoVenta</code> real y previsto de BomERP.</p>
+<p><strong>Producto del paso:</strong> una decisión explícita, aplicando la Tabla 7 (2.4) al <code>EstadoVenta</code> real y previsto de BomERP.</p>
 <div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">enum</span><span class="w"> </span><span class="n">EstadoVenta</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">REGISTRADA</span>
 <span class="w">    </span><span class="c1">// ANULADA, previsto desde S9</span>
 <span class="p">}</span>
 </code></pre></div>
-<p><strong>Tabla 7. Tabla 4 aplicada a <code>EstadoVenta</code></strong></p>
+<p><strong>Tabla 10. Tabla 7 aplicada a <code>EstadoVenta</code></strong></p>
 <table>
 <thead>
 <tr>
@@ -4524,7 +5114,7 @@ agregarDetalle(productoId, cantidad, nombreProducto, precioUnitario):
 </table>
 <p><strong>Decisión:</strong> el <code>enum</code> con validación, ya diseñado en S9 (<code>Venta.anular()</code> comprobando <code>estado == REGISTRADA</code>), sigue siendo la opción correcta — el patrón State completo (una clase <code>EstadoRegistrada</code>, una clase <code>EstadoAnulada</code>, cada una con su propia implementación de <code>anular()</code>) sería sobreingeniería para dos estados con una sola regla. Si en el futuro BomERP agregara una devolución con varios pasos (<code>ANULADA_PARCIAL</code>, <code>EN_REVISION</code>, <code>DEVUELTA</code>, cada una habilitando operaciones distintas), ese sería el momento de migrar a State — no antes.</p>
 <h3 id="34-disenar-la-cadena-de-autorizacion-de-ventas-chain-of-responsibility">3.4 Diseñar la cadena de autorización de ventas (Chain of Responsibility)<a class="headerlink" href="#34-disenar-la-cadena-de-autorizacion-de-ventas-chain-of-responsibility" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> la cadena de autorizadores de la Figura 3 (2.4), con sus tres eslabones y el criterio de monto de cada uno.</p>
+<p><strong>Producto del paso:</strong> la cadena de autorizadores de la Figura 15 (2.4), con sus tres eslabones y el criterio de monto de cada uno.</p>
 <div class="highlight"><pre><span></span><code>// AutorizadorVendedor.java, AutorizadorSupervisor.java, AutorizadorAdmin.java — pseudocodigo
 interface AutorizadorVenta:
     establecerSiguiente(AutorizadorVenta siguiente)
@@ -4552,7 +5142,7 @@ supervisor.establecerSiguiente(admin)
 <p><strong>Error frecuente</strong>: olvidar el caso del último eslabón (<code>AutorizadorAdmin</code>). Si ningún eslabón resuelve la petición y la cadena termina sin un caso por defecto, la autorización queda indefinida — el último eslabón de toda cadena de responsabilidad debe resolver siempre, nunca volver a delegar.</p>
 <h3 id="35-diagnosticar-y-refactorizar-con-information-expert">3.5 Diagnosticar y refactorizar con Information Expert<a class="headerlink" href="#35-diagnosticar-y-refactorizar-con-information-expert" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> el estado real de <code>Venta</code> y <code>Producto</code> frente al diseño de S7, y el refactor que Information Expert exige.</p>
-<p><strong>Tabla 8. Diagnóstico de Information Expert, operación por operación</strong></p>
+<p><strong>Tabla 11. Diagnóstico de Information Expert, operación por operación</strong></p>
 <table>
 <thead>
 <tr>
@@ -4592,7 +5182,7 @@ descontarStock(cantidad):
 <p><code>VentaServiceImpl.crear</code> deja de calcular el total a mano — llama a <code>venta.calcularTotal()</code> después de agregar los detalles (3.1). <code>ProductoServiceImpl.descontarStock</code> deja de comparar <code>stock &lt; cantidad</code> él mismo — llama a <code>producto.descontarStock(cantidad)</code>.</p>
 <p><strong>Error frecuente</strong>: mover <code>calcularTotal()</code> a <code>Venta</code> pero dejar una copia del cálculo en el servicio "por si acaso". Si la regla vive en dos lugares, Information Expert no se aplicó — solo se duplicó el problema.</p>
 <h3 id="36-disenar-el-polimorfismo-de-cliente">3.6 Diseñar el polimorfismo de <code>Cliente</code><a class="headerlink" href="#36-disenar-el-polimorfismo-de-cliente" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> el método polimórfico de <code>Cliente</code> (2.6, Figura 4), documentado como parte del catálogo.</p>
+<p><strong>Producto del paso:</strong> el método polimórfico de <code>Cliente</code> (2.6, Figura 24), documentado como parte del catálogo.</p>
 <p>Ya diseñado en 2.6 — este paso consiste en agregarlo al catálogo final (3.7) con su justificación: <code>Cliente.obtenerIdentificadorFiscal()</code> evita condicionales <code>instanceof</code> para decidir si leer <code>dni</code> o <code>ruc</code>, y el código cliente no cambia si BomERP agrega un tercer tipo de cliente.</p>
 <h3 id="37-catalogar-acoplamientocohesion-y-verificar-los-patrones-de-proteccion-y-dependency-injection">3.7 Catalogar acoplamiento/cohesión y verificar los patrones de protección y Dependency Injection<a class="headerlink" href="#37-catalogar-acoplamientocohesion-y-verificar-los-patrones-de-proteccion-y-dependency-injection" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> el catálogo completo de la sesión, y la verificación de que Pure Fabrication, Indirection, Protected Variations y Dependency Injection ya existen en el código real.</p>
@@ -4605,7 +5195,7 @@ descontarStock(cantidad):
 <span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">ProductoService</span><span class="w"> </span><span class="n">productoService</span><span class="p">;</span>
 <span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">VentaMapper</span><span class="w"> </span><span class="n">ventaMapper</span><span class="p">;</span>
 </code></pre></div>
-<p><strong>Tabla 9. Catálogo completo de patrones de <code>ventas</code></strong></p>
+<p><strong>Tabla 12. Catálogo completo de patrones de <code>ventas</code></strong></p>
 <table>
 <thead>
 <tr>
@@ -4626,6 +5216,16 @@ descontarStock(cantidad):
 <td>GoF</td>
 </tr>
 <tr>
+<td><code>VentaServiceImpl</code>, <code>ProductoServiceImpl</code>, <code>VentaRepository</code>, <code>VentaMapper</code> (beans de Spring)</td>
+<td>Singleton</td>
+<td>GoF</td>
+</tr>
+<tr>
+<td><code>EntityManagerFactory</code> (JPA, configurado por Spring Boot)</td>
+<td>Abstract Factory</td>
+<td>GoF</td>
+</tr>
+<tr>
 <td><code>ProductoService</code></td>
 <td>Facade; Indirection; Protected Variations</td>
 <td>GoF; GRASP</td>
@@ -4638,6 +5238,16 @@ descontarStock(cantidad):
 <tr>
 <td><code>VentaServiceImpl</code> (<code>@Transactional</code>)</td>
 <td>Proxy (de framework)</td>
+<td>GoF</td>
+</tr>
+<tr>
+<td><code>VentaMapper.toResponse(...)</code></td>
+<td>Adapter</td>
+<td>GoF</td>
+</tr>
+<tr>
+<td><code>Reporte</code>/<code>FormatoSalida</code> (previsto, no implementado)</td>
+<td>Bridge</td>
 <td>GoF</td>
 </tr>
 <tr>
@@ -4695,13 +5305,14 @@ descontarStock(cantidad):
 <p><strong>Evidencia de aprendizaje:</strong></p>
 <ul>
 <li>Factory Method diseñado en <code>Venta</code>, resolviendo el hueco de Creator.</li>
-<li>Los dos <em>Proxy</em> reales de LP2 reconocidos y explicados (no solo nombrados).</li>
+<li>Los dos <em>Proxy</em>, el Singleton y el Abstract Factory reales de LP2 reconocidos y explicados (no solo nombrados).</li>
+<li>Adapter (<code>VentaMapper</code>) identificado, y Bridge diseñado como previsto para reportes multi-formato.</li>
 <li>Decisión justificada sobre State completo frente a <code>enum</code> con validación.</li>
 <li>Cadena de autorización de ventas diseñada (Chain of Responsibility), con sus tres eslabones.</li>
 <li>Evento de dominio identificado como Observer, con su formalización prevista en S11.</li>
 <li>Diagnóstico de Information Expert sobre <code>Venta</code> y <code>Producto</code>, con el refactor diseñado.</li>
 <li>Polimorfismo de <code>Cliente</code> diseñado.</li>
-<li>Catálogo completo (Tabla 9), con los nueve patrones GRASP y los ocho patrones GoF seleccionados.</li>
+<li>Catálogo completo (Tabla 12), con los nueve patrones GRASP y los doce patrones GoF seleccionados.</li>
 </ul>
 <h2 id="4-crea-actividad-autonoma">4. Crea: actividad autónoma<a class="headerlink" href="#4-crea-actividad-autonoma" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 2h fuera del aula.</p>
@@ -4709,8 +5320,8 @@ descontarStock(cantidad):
 <p>Reconocimiento y aplicación de patrones GoF y GRASP del módulo del proyecto propio del equipo ya diseñado en S8, documentado en evidencia individual.</p>
 <p>Completa y evidencia estas tareas:</p>
 <ol>
-<li>Identificar, en tu propio módulo, al menos un ejemplo real (o un hueco real, o un diseño previsto) de Factory Method/Creator, Facade, Proxy, Strategy, Chain of Responsibility y Observer, y decidir con la Tabla 4 si State completo o un <code>enum</code> simple es lo correcto para tu caso.</li>
-<li>Catalogar, como la Tabla 9, los nueve patrones GRASP en tu propio módulo — si alguno no aparece todavía, documenta dónde debería aplicarse y por qué no está.</li>
+<li>Identificar, en tu propio módulo, al menos un ejemplo real (o un hueco real, o un diseño previsto) de Factory Method/Creator, Facade, Proxy, Singleton, Abstract Factory, Adapter, Bridge, Strategy, Chain of Responsibility y Observer, y decidir con la Tabla 7 si State completo o un <code>enum</code> simple es lo correcto para tu caso.</li>
+<li>Catalogar, como la Tabla 12, los nueve patrones GRASP en tu propio módulo — si alguno no aparece todavía, documenta dónde debería aplicarse y por qué no está.</li>
 <li>Diagnosticar con Information Expert si tus entidades son anémicas o ricas, y diseñar el refactor de al menos una operación que el diagnóstico exija mover al dominio.</li>
 <li>Si tu dominio tiene (o prevé) una jerarquía de herencia con comportamiento que varía por tipo, diseñar su aplicación de Polymorphism.</li>
 <li>Verificar que tu propio módulo aplica Dependency Injection y, si colabora con otro módulo, Indirection/Protected Variations — con la evidencia real de tu código.</li>
@@ -4735,7 +5346,7 @@ descontarStock(cantidad):
 <p>Incluye capturas o extractos con una breve explicación debajo de cada uno, organizados en los mismos 4 bloques de la rúbrica (4.6):</p>
 <ol>
 <li><em>Patrones GoF reconocidos o aplicados</em><ul>
-<li>Factory Method/Creator, Facade, Proxy, Strategy, Chain of Responsibility, Observer y la decisión sobre State, cada uno con su justificación.</li>
+<li>Factory Method/Creator, Facade, Proxy, Singleton, Abstract Factory, Adapter, Bridge, Strategy, Chain of Responsibility, Observer y la decisión sobre State, cada uno con su justificación.</li>
 </ul>
 </li>
 <li><em>Catálogo GRASP e Information Expert</em><ul>
@@ -4752,7 +5363,7 @@ descontarStock(cantidad):
 </li>
 </ol>
 <p><strong>Error o hallazgo</strong></p>
-<p>Describe un error real: un patrón que al principio catalogaste mal, una decisión de State que reconsideraste después de aplicar la Tabla 4, una operación que el diagnóstico de Information Expert dijo que debía moverse y generó una duplicación que tuviste que limpiar, o un <em>Proxy</em> de framework que no habías notado hasta esta sesión.</p>
+<p>Describe un error real: un patrón que al principio catalogaste mal, una decisión de State que reconsideraste después de aplicar la Tabla 7, una operación que el diagnóstico de Information Expert dijo que debía moverse y generó una duplicación que tuviste que limpiar, o un <em>Proxy</em> de framework que no habías notado hasta esta sesión.</p>
 <p><strong>Reflexión técnica breve</strong></p>
 <p>Responde en 5 a 8 líneas:</p>
 <div class="highlight"><pre><span></span><code>¿Qué patrón de esta sesión reconociste en tu propio proyecto sin
@@ -4763,8 +5374,8 @@ respuesta con el caso de Fowler (1.6).
 <h3 id="44-criterios-minimos-de-aceptacion">4.4 Criterios mínimos de aceptación<a class="headerlink" href="#44-criterios-minimos-de-aceptacion" title="Permanent link">&para;</a></h3>
 <ul>
 <li>El archivo respeta el nombre solicitado.</li>
-<li>Factory Method/Creator, Facade, Proxy, Strategy, Chain of Responsibility y Observer están identificados (reales o diseñados) en el módulo propio, con justificación.</li>
-<li>La decisión sobre State aplica el criterio de la Tabla 4, no una preferencia sin justificar.</li>
+<li>Factory Method/Creator, Facade, Proxy, Singleton, Abstract Factory, Adapter, Bridge, Strategy, Chain of Responsibility y Observer están identificados (reales o diseñados) en el módulo propio, con justificación.</li>
+<li>La decisión sobre State aplica el criterio de la Tabla 7, no una preferencia sin justificar.</li>
 <li>El catálogo GRASP cubre los nueve patrones, cada uno con su clase o diseño correspondiente.</li>
 <li>El diagnóstico de Information Expert evalúa al menos dos operaciones, con una decisión justificada.</li>
 <li>El refactor diseñado mueve lógica genuinamente propia de la entidad (la que tiene la información), sin duplicarla en el servicio.</li>
@@ -4785,9 +5396,10 @@ respuesta con el caso de Fowler (1.6).
 <li>En tu cadena de Chain of Responsibility (o la que diseñaste), ¿qué pasaría si el último eslabón no resolviera siempre la petición?</li>
 <li>¿Por qué un evento de dominio (Observer) no debería obligar a quien lo publica a esperar la respuesta de sus suscriptores?</li>
 <li>Relaciona el caso de Fowler (1.6) con una regla de tu propio proyecto que hoy vive en el lugar equivocado.</li>
+<li>¿Qué riesgo introduce declarar un campo mutable en un <code>@Service</code> de Spring, sabiendo que es Singleton y que una sola instancia atiende a todas las peticiones concurrentes?</li>
 </ol>
 <h3 id="46-rubrica-de-evaluacion">4.6 Rúbrica de evaluación<a class="headerlink" href="#46-rubrica-de-evaluacion" title="Permanent link">&para;</a></h3>
-<p><strong>Tabla 10. Rúbrica de evaluación</strong></p>
+<p><strong>Tabla 13. Rúbrica de evaluación</strong></p>
 <table>
 <thead>
 <tr>
@@ -4804,9 +5416,9 @@ respuesta con el caso de Fowler (1.6).
 <tr>
 <td>1. Patrones GoF reconocidos o aplicados*</td>
 <td style="text-align: right;">25</td>
-<td>Factory Method/Creator, Facade, Proxy, Strategy, Chain of Responsibility y Observer identificados y justificados; decisión sobre State justificada con el criterio de la Tabla 4.</td>
-<td>Los seis presentes, con alguna justificación imprecisa o la decisión de State sin criterio claro.</td>
-<td>Falta más de uno de los seis patrones, o la decisión de State es solo una preferencia.</td>
+<td>Factory Method/Creator, Facade, Proxy, Singleton, Abstract Factory, Adapter, Bridge, Strategy, Chain of Responsibility y Observer identificados y justificados; decisión sobre State justificada con el criterio de la Tabla 7.</td>
+<td>Los diez presentes, con alguna justificación imprecisa o la decisión de State sin criterio claro.</td>
+<td>Falta más de uno de los diez patrones, o la decisión de State es solo una preferencia.</td>
 <td>No presenta patrones GoF reconocidos.</td>
 <td style="text-align: right;"></td>
 </tr>
@@ -4851,15 +5463,16 @@ Indica 2 fortalezas y 2 recomendaciones.
 </code></pre></div>
 <h2 id="5-cierre">5. Cierre<a class="headerlink" href="#5-cierre" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 5 min.</p>
-<p><strong>Resumen breve:</strong> hoy no se intentó cubrir los 32 patrones de GoF y GRASP — se reconocieron los ocho GoF más frecuentes en sistemas empresariales (Factory Method, Builder, Facade, Proxy, Strategy, State —evaluado y descartado por ahora—, Chain of Responsibility y Observer) y los nueve GRASP completos, con la profundidad suficiente para reconocerlos en cualquier proyecto futuro, no solo en <code>ventas</code>. Tres diseños concretos cerraron huecos reales o previstos: Creator/Factory Method (<code>Venta.agregarDetalle</code>), Information Expert (<code>calcularTotal()</code>, <code>descontarStock()</code>) y la cadena de autorización de ventas (Chain of Responsibility); y dos decisiones quedaron documentadas con su criterio: Polymorphism para <code>Cliente</code>, y por qué State completo todavía no se justifica para <code>Venta</code>.</p>
-<p><strong>Dinámica participativa:</strong> en una ronda rápida, cada estudiante comparte en una frase qué patrón de framework (Proxy) descubrió en su propio proyecto sin haberlo escrito a propósito.</p>
-<p><strong>Metacognición:</strong> ¿qué te costó más entender hoy: reconocer un patrón que el framework ya aplica solo (Proxy), o decidir con un criterio explícito si tu dominio justifica el patrón State completo o una cadena de Chain of Responsibility?</p>
+<p><strong>Resumen breve:</strong> hoy no se intentó cubrir los 32 patrones de GoF y GRASP — se reconocieron los doce GoF más frecuentes en sistemas empresariales (Factory Method, Builder, Singleton, Abstract Factory, Facade, Proxy, Adapter, Bridge, Strategy, State —evaluado y descartado por ahora—, Chain of Responsibility y Observer) y los nueve GRASP completos, con la profundidad suficiente para reconocerlos en cualquier proyecto futuro, no solo en <code>ventas</code>. Tres diseños concretos cerraron huecos reales o previstos: Creator/Factory Method (<code>Venta.agregarDetalle</code>), Information Expert (<code>calcularTotal()</code>, <code>descontarStock()</code>) y la cadena de autorización de ventas (Chain of Responsibility); y dos decisiones quedaron documentadas con su criterio: Polymorphism para <code>Cliente</code>, y por qué State completo todavía no se justifica para <code>Venta</code>.</p>
+<p><strong>Dinámica participativa:</strong> en una ronda rápida, cada estudiante comparte en una frase qué patrón de framework (Proxy, Singleton o Abstract Factory) descubrió en su propio proyecto sin haberlo escrito a propósito.</p>
+<p><strong>Metacognición:</strong> ¿qué te costó más entender hoy: reconocer un patrón que el framework ya aplica solo (Proxy, Singleton, Abstract Factory), o decidir con un criterio explícito si tu dominio justifica el patrón State completo o una cadena de Chain of Responsibility?</p>
 <p><strong>Proyección:</strong> S11 extiende el mismo criterio de responsabilidades a la frontera completa de la empresa: APIs externas, servicios de terceros y eventos de dominio — donde el <em>Observer</em> de hoy se formaliza como el mecanismo central de integración.</p>
 <h2 id="bibliografia">Bibliografía<a class="headerlink" href="#bibliografia" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Fowler, M. (2003). <em>AnemicDomainModel</em>. martinfowler.com. https://martinfowler.com/bliki/AnemicDomainModel.html</li>
 <li>Gamma, E., Helm, R., Johnson, R., &amp; Vlissides, J. (1994). <em>Design Patterns: Elements of Reusable Object-Oriented Software</em>. Addison-Wesley.</li>
 <li>Larman, C. (2004). <em>Applying UML and Patterns: An Introduction to Object-Oriented Analysis and Design and Iterative Development</em> (3rd ed.). Prentice Hall.</li>
+<li>Larman, C. (2001). <em>Protected Variation: The Importance of Being Closed</em>. IEEE Software, 18(3), 89-91. https://martinfowler.com/ieeeSoftware/protectedVariation.pdf</li>
 <li>Fowler, M. (2004). <em>Inversion of Control Containers and the Dependency Injection pattern</em>. martinfowler.com. https://martinfowler.com/articles/injection.html</li>
 </ol>
 
