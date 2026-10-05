@@ -4325,7 +4325,7 @@
 <h3 id="13-proposito-de-aprendizaje">1.3 Propósito de aprendizaje<a class="headerlink" href="#13-proposito-de-aprendizaje" title="Permanent link">&para;</a></h3>
 <p>Al concluir la clase, estarás en condiciones de:</p>
 <ul>
-<li><strong>Construir</strong> un formulario transaccional con detalle dinámico que calcula sus propios totales, <strong>validar</strong> la operación completa antes de confirmarla, y <strong>consumir</strong> un endpoint de reporte agregado para presentar una vista de consulta.</li>
+<li><strong>Construir</strong> un formulario transaccional con detalle dinámico que calcula sus propios totales, <strong>validar</strong> la operación completa antes de confirmarla, <strong>presentar</strong> una vista de consulta con agregados, detalle y filtros (estado y rango de fechas), y <strong>diseñar e implementar</strong> de punta a punta una transición de estado con regla de negocio real (anular una venta, restaurando el stock asociado).</li>
 </ul>
 <h3 id="14-producto-de-sesion">1.4 Producto de sesión<a class="headerlink" href="#14-producto-de-sesion" title="Permanent link">&para;</a></h3>
 <p><code>VentaForm</code> en la SPA (<code>lp2/bomerp-frontend</code>): formulario con <code>FormArray</code> de líneas (selección de producto, cantidad, subtotal calculado en vivo), total general recalculado con cada cambio, validación de que exista al menos una línea y de que cada una tenga producto y cantidad válidos, confirmación explícita antes de enviar, y manejo específico de los errores reales del backend (producto inexistente, stock insuficiente). Además, <code>VentaReporteComponent</code>, una vista de consulta que trae <code>GET /api/v1/ventas</code> con filtro por estado y por rango de fechas, calculando en el navegador los agregados (cantidad de ventas, monto total, ticket promedio) a partir de los totales ya calculados por el servidor, mostrando siempre, debajo de cada venta, su detalle real línea por línea, ya incluido en la misma respuesta, con la posibilidad de anular una venta <code>REGISTRADA</code> (<code>PATCH /api/v1/ventas/{id}/anular</code>), restaurando el stock de sus productos.</p>
@@ -5152,7 +5152,7 @@ curl<span class="w"> </span>http://localhost:8080/api/v1/ventas/resumen
 </code></pre></div>
 <p>Tres diferencias con la plantilla de 3.7: el bloque <code>@if (reporte(); as r)</code> se reemplaza por <code>@if (!loading() &amp;&amp; !error())</code> (ya no hay un único objeto <code>reporte</code> que envuelva todo, así que la condición de visibilidad se arma con las señales de carga/error directamente); <code>r.agregado.*</code>/<code>r.ventas</code> se reemplazan por <code>totalVentas()</code>/<code>montoTotal()</code>/<code>ticketPromedio()</code>/<code>ventas()</code>; y <code>venta.cantidadDetalles</code> (un número que <code>VentaResumen</code> ya traía contado) se reemplaza por <code>venta.detalles.length</code> (el mismo conteo, calculado sobre el arreglo que ahora sí está disponible). La fila nueva con la tabla anidada del detalle es agregado puro — no reemplaza nada de 3.7, y se muestra <strong>siempre</strong>, sin ningún botón ni estado que la abra o la cierre: cada venta ya trae su detalle, así que no hay razón para ocultarlo detrás de un clic.</p>
 <p>El segundo <code>&lt;tr&gt;</code> de cada venta vive <strong>dentro</strong> del mismo <code>@for</code>, justo después del primero — en Angular, dos elementos hermanos dentro de un mismo bloque <code>@for</code> se repiten juntos en cada iteración, sin que haga falta ningún contenedor extra que rompa la estructura de <code>&lt;table&gt;</code>.</p>
-<p><strong>Error frecuente</strong>: dejar el <code>&lt;td colspan="4"&gt;</code> de la fila de detalle como <code>colspan="5"</code> (si en algún momento tuviste la versión con el botón de 3.10 anterior) o como un número que no coincide con las columnas reales del <code>&lt;thead&gt;</code> — la tabla anidada queda descuadrada respecto a las columnas de arriba.</p>
+<p><strong>Error frecuente</strong>: que el <code>&lt;td colspan="4"&gt;</code> de la fila de detalle no coincida con el número real de columnas del <code>&lt;thead&gt;</code> — la tabla anidada queda descuadrada respecto a las columnas de arriba. Si más adelante agregas una columna nueva a la tabla principal (como el botón de 3.12), este <code>colspan</code> tiene que subir en la misma proporción.</p>
 <p>Sin ningún estilo, las dos tablas (la de ventas y la de detalle anidada en cada una) se ven idénticas — nada le indica al ojo dónde termina una venta y empieza la siguiente, ni que la segunda tabla es un detalle de la primera, no una fila más. Por eso la plantilla de arriba ya trae las clases <code>reporte-ventas</code>, <code>fila-venta</code>, <code>fila-detalle</code> y <code>tabla-detalle</code>: agrega este bloque a <code>lp2/bomerp-frontend/src/styles.css</code> (el único stylesheet de la app — ningún componente tiene uno propio todavía, S7-S8):</p>
 <div class="highlight"><pre><span></span><code><span class="p">.</span><span class="nc">reporte-ventas</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">width</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="kt">%</span><span class="p">;</span>
@@ -5398,10 +5398,12 @@ curl<span class="w"> </span>http://localhost:8080/api/v1/ventas/resumen
 <li>Calcula en vivo al menos un valor derivado por línea y un total general, usando <code>computed</code> sobre los valores del formulario — ninguno enviado como campo editable al backend.</li>
 <li>Valida la colección completa (al menos una línea) además de los campos de cada línea, y agrega una confirmación explícita antes de enviar, mostrando el resumen de la operación.</li>
 <li>Maneja al menos dos errores reales distintos que tu backend pueda devolver para esta operación, con un mensaje específico para cada uno.</li>
-<li>Construye una vista de consulta o reporte que consuma un endpoint de agregados de tu backend (si no existe todavía, créalo primero, en el curso correspondiente) y pruébala con al menos un filtro.</li>
+<li>Construye una vista de consulta o reporte que traiga la colección completa (con su detalle, no solo un resumen) y calcule al menos un agregado a partir de ella, con un filtro por estado o por categoría probado.</li>
+<li>Agrega un filtro por rango de fechas (u otro campo numérico/fecha relevante de tu dominio) a esa misma vista.</li>
+<li>Diseña e implementa, de punta a punta (backend y frontend), una transición de estado con regla de negocio real sobre tu propia cabecera — equivalente a anular una venta: un nuevo valor de estado, un endpoint que la aplique con al menos una validación (que no se pueda repetir la transición, o la que corresponda a tu dominio), y un botón en la pantalla que la dispare, condicionado al estado actual del registro.</li>
 </ol>
 <h3 id="42-proposito">4.2 Propósito<a class="headerlink" href="#42-proposito" title="Permanent link">&para;</a></h3>
-<p>Que cada estudiante demuestre, de forma individual y fuera del aula, que puede construir un formulario transaccional con detalle dinámico, cálculos derivados, validación compuesta y confirmación, además de una vista de consulta con agregados reales — sin el acompañamiento del docente.</p>
+<p>Que cada estudiante demuestre, de forma individual y fuera del aula, que puede construir un formulario transaccional con detalle dinámico, cálculos derivados, validación compuesta y confirmación, una vista de consulta con agregados, detalle y filtros, y una transición de estado con regla de negocio real (equivalente a anular) — sin el acompañamiento del docente.</p>
 <p>Cada estudiante documenta el formulario transaccional de su propio dominio.</p>
 <h3 id="43-indicaciones">4.3 Indicaciones<a class="headerlink" href="#43-indicaciones" title="Permanent link">&para;</a></h3>
 <p>Entrega un PDF con el siguiente nombre:</p>
@@ -5418,7 +5420,7 @@ curl<span class="w"> </span>http://localhost:8080/api/v1/ventas/resumen
 <li>Link de GitHub:</li>
 </ul>
 <p><strong>Evidencia técnica</strong></p>
-<p>Incluye capturas con una breve explicación debajo de cada una, organizadas en los mismos 4 bloques de la rúbrica (4.6):</p>
+<p>Incluye capturas con una breve explicación debajo de cada una, organizadas en los mismos 5 bloques de la rúbrica (4.6):</p>
 <ol>
 <li><em>Formulario con detalle dinámico</em><ul>
 <li><code>FormArray</code> funcionando, con líneas agregadas y quitadas en vivo.</li>
@@ -5433,7 +5435,11 @@ curl<span class="w"> </span>http://localhost:8080/api/v1/ventas/resumen
 </ul>
 </li>
 <li><em>Consulta o reporte</em><ul>
-<li>La vista de agregados funcionando, con al menos un filtro probado.</li>
+<li>La vista de agregados funcionando, con su detalle y al menos dos filtros probados (estado y rango de fechas, o los que correspondan a tu dominio).</li>
+</ul>
+</li>
+<li><em>Transición de estado con regla de negocio</em><ul>
+<li>El botón que dispara la transición (equivalente a anular), condicionado al estado actual; evidencia de que repetirla una segunda vez es rechazada por el backend; y el efecto colateral real de la operación (por ejemplo, el stock restaurado).</li>
 </ul>
 </li>
 </ol>
@@ -5452,7 +5458,9 @@ caso de Knight Capital (1.6).
 <li>Al menos un valor derivado por línea y el total general se calculan con <code>computed</code>, sin enviarse como campo editable.</li>
 <li>Existe una validación de la colección completa (no solo de campos individuales) y una confirmación explícita con el resumen de la operación antes de enviar.</li>
 <li>Al menos dos errores reales del backend se manejan con mensajes específicos y distintos entre sí.</li>
-<li>La vista de consulta o reporte consume un endpoint real de agregados, probada con al menos un filtro.</li>
+<li>La vista de consulta o reporte trae la colección completa con su detalle (no solo un resumen) y calcula al menos un agregado real a partir de ella.</li>
+<li>Existe al menos un filtro por rango de fechas (o campo equivalente), probado con datos reales.</li>
+<li>La transición de estado (equivalente a anular) está implementada en backend y frontend: endpoint real, validación que impide repetirla, botón condicionado al estado actual, y su efecto colateral (por ejemplo, restaurar stock) verificado con datos reales.</li>
 <li>Cada captura de la evidencia técnica muestra el reloj del sistema y el usuario/perfil visible, sin recortar.</li>
 <li>Las fechas y horas de las capturas son coherentes con el historial de commits de su repositorio en GitHub.</li>
 <li>Incluye un error o hallazgo técnico diagnosticado.</li>
@@ -5465,6 +5473,8 @@ caso de Knight Capital (1.6).
 <li>¿Qué información mínima debería mostrar tu diálogo de confirmación para que sea útil, y no solo un trámite?</li>
 <li>De los errores que manejaste en el punto 5 de tu actividad, ¿cómo distingue tu código cuál mensaje mostrar para cada uno?</li>
 <li>Relaciona el caso de Knight Capital con un escenario concreto de tu propio formulario donde la ausencia de confirmación tendría consecuencias reales.</li>
+<li>En tu transición de estado (equivalente a anular), ¿qué evita que se aplique dos veces sobre el mismo registro, y qué código HTTP responde tu backend si alguien lo intenta?</li>
+<li>¿Por qué el filtro por rango de fechas de tu reporte necesita un botón explícito, y no basta con disparar la consulta en cuanto cambia un solo campo de fecha?</li>
 </ol>
 <h3 id="46-rubrica-de-evaluacion">4.6 Rúbrica de evaluación<a class="headerlink" href="#46-rubrica-de-evaluacion" title="Permanent link">&para;</a></h3>
 <p><strong>Tabla 6. Rúbrica de evaluación</strong></p>
@@ -5483,7 +5493,7 @@ caso de Knight Capital (1.6).
 <tbody>
 <tr>
 <td>1. Formulario con detalle dinámico*</td>
-<td style="text-align: right;">25</td>
+<td style="text-align: right;">20</td>
 <td><code>FormArray</code> completo, agregar/quitar líneas funcional, al menos una línea siempre presente.</td>
 <td>Funcional, con algún caso borde (quitar la última línea) sin resolver.</td>
 <td><code>FormArray</code> incompleto o sin agregar/quitar en vivo.</td>
@@ -5492,7 +5502,7 @@ caso de Knight Capital (1.6).
 </tr>
 <tr>
 <td>2. Cálculos y validación*</td>
-<td style="text-align: right;">25</td>
+<td style="text-align: right;">20</td>
 <td>Subtotales y total recalculados en vivo con <code>computed</code>, validación de colección completa correcta.</td>
 <td>Cálculos correctos, validación de colección incompleta.</td>
 <td>Cálculos manuales (no reactivos) o validación solo de campos individuales.</td>
@@ -5501,7 +5511,7 @@ caso de Knight Capital (1.6).
 </tr>
 <tr>
 <td>3. Confirmación y manejo de errores*</td>
-<td style="text-align: right;">25</td>
+<td style="text-align: right;">20</td>
 <td>Confirmación con resumen real antes de enviar, al menos dos errores del backend manejados con mensajes específicos.</td>
 <td>Confirmación presente, manejo de errores parcial o genérico.</td>
 <td>Confirmación sin resumen útil, o un solo error manejado.</td>
@@ -5509,12 +5519,21 @@ caso de Knight Capital (1.6).
 <td style="text-align: right;"></td>
 </tr>
 <tr>
-<td>4. Consulta o reporte*</td>
-<td style="text-align: right;">25</td>
-<td>Vista de agregados funcional, consumiendo datos reales del backend, con al menos un filtro probado.</td>
-<td>Vista funcional, sin filtro o con agregados incompletos.</td>
-<td>Vista que no usa agregados reales del backend.</td>
+<td>4. Consulta o reporte, con detalle y filtros*</td>
+<td style="text-align: right;">20</td>
+<td>Vista con agregados, detalle real de cada registro, y al menos dos filtros (estado y rango de fechas) probados.</td>
+<td>Vista funcional con detalle, pero con un solo filtro o agregados incompletos.</td>
+<td>Vista que muestra solo un resumen, sin el detalle real, o sin ningún filtro.</td>
 <td>No presenta vista de consulta o reporte.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>5. Transición de estado con regla de negocio*</td>
+<td style="text-align: right;">20</td>
+<td>Endpoint real que aplica la transición, con validación que impide repetirla, botón condicionado en el frontend, y efecto colateral (ej. stock) verificado.</td>
+<td>Transición funcional, con la validación o el efecto colateral incompletos.</td>
+<td>Transición que cambia el estado pero sin ninguna validación de negocio (se puede repetir sin control).</td>
+<td>No presenta la transición de estado.</td>
 <td style="text-align: right;"></td>
 </tr>
 </tbody>
@@ -5531,10 +5550,10 @@ Indica 2 fortalezas y 2 recomendaciones.
 </code></pre></div>
 <h2 id="5-cierre">5. Cierre<a class="headerlink" href="#5-cierre" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 5 min.</p>
-<p><strong>Resumen breve:</strong> hoy el formulario de la SPA dejó de editar una sola entidad a la vez: <code>VentaForm</code> arma una cabecera con una colección variable de líneas (<code>FormArray</code>), calcula subtotales y total en vivo con <code>computed</code> sin invadir nunca lo que el servidor debe calcular, valida la operación completa (no solo cada línea), pide una confirmación explícita con el resumen real antes de enviar, y distingue los errores de negocio del backend (producto inexistente, stock insuficiente) con mensajes específicos. <code>VentaReporteComponent</code> cierra el ciclo mostrando los agregados que el propio backend ya resuelve.</p>
+<p><strong>Resumen breve:</strong> hoy el formulario de la SPA dejó de editar una sola entidad a la vez: <code>VentaForm</code> arma una cabecera con una colección variable de líneas (<code>FormArray</code>), calcula subtotales y total en vivo con <code>computed</code> sin invadir nunca lo que el servidor debe calcular, valida la operación completa (no solo cada línea), pide una confirmación explícita con el resumen real antes de enviar, y distingue los errores de negocio del backend (producto inexistente, stock insuficiente) con mensajes específicos. <code>VentaReporteComponent</code> cierra el ciclo mostrando el detalle real de cada venta con filtros por estado y rango de fechas, y la sesión terminó implementando de punta a punta —backend y frontend— una transición de estado con regla de negocio real: anular una venta, restaurando el stock de sus productos, cerrando una brecha que ADS S9 había diseñado pero nunca implementado.</p>
 <p><strong>Dinámica participativa:</strong> en una ronda rápida, cada estudiante comparte qué información puso en el resumen de su diálogo de confirmación, y por qué eligió esa y no otra.</p>
 <p><strong>Metacognición:</strong> ¿qué te costó más entender hoy: que un <code>FormArray</code> necesita una validación propia además de la de cada línea, o por qué el subtotal que calcula el navegador no es el mismo que termina guardado en el backend?</p>
-<p><strong>Proyección:</strong> S10 protege el backend con usuarios, JWT (<em>JSON Web Token</em>) y roles — el mismo endpoint <code>POST /api/v1/ventas</code> de hoy va a exigir un usuario autenticado, y el <code>vendedorId</code> que ADS S8 marcó como brecha en la matriz de trazabilidad por fin tendrá de dónde salir.</p>
+<p><strong>Proyección:</strong> S10 protege el backend con usuarios, JWT (<em>JSON Web Token</em>) y roles — el mismo endpoint <code>POST /api/v1/ventas</code> de hoy va a exigir un usuario autenticado, el <code>vendedorId</code> que ADS S8 marcó como brecha en la matriz de trazabilidad por fin tendrá de dónde salir, y <code>PATCH /api/v1/ventas/{id}/anular</code> (3.12) podrá por fin restringirse a <code>SUPERVISOR</code>/<code>ADMIN</code>, como ADS S9 lo diseñó desde un principio.</p>
 <h2 id="bibliografia">Bibliografía<a class="headerlink" href="#bibliografia" title="Permanent link">&para;</a></h2>
 <ol>
 <li>U.S. Securities and Exchange Commission. (2013). <em>In the Matter of Knight Capital Americas LLC</em> (Release No. 34-70694). https://www.sec.gov/litigation/admin/2013/34-70694.pdf</li>
