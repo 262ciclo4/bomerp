@@ -3514,10 +3514,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#310-probar-el-formulario-transaccional-completo" class="md-nav__link">
+  <a href="#310-redisenar-el-reporte-para-mostrar-el-detalle-de-cada-venta" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.10 Probar el formulario transaccional completo
+        3.10 Rediseñar el reporte para mostrar el detalle de cada venta
       
     </span>
   </a>
@@ -3525,10 +3525,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#311-relacionar-con-ads-y-bd2" class="md-nav__link">
+  <a href="#311-agregar-filtro-por-rango-de-fechas-al-reporte" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.11 Relacionar con ADS y BD2
+        3.11 Agregar filtro por rango de fechas al reporte
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#312-probar-el-formulario-transaccional-completo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.12 Probar el formulario transaccional completo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#313-relacionar-con-ads-y-bd2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.13 Relacionar con ADS y BD2
       
     </span>
   </a>
@@ -4018,10 +4040,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#310-probar-el-formulario-transaccional-completo" class="md-nav__link">
+  <a href="#310-redisenar-el-reporte-para-mostrar-el-detalle-de-cada-venta" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.10 Probar el formulario transaccional completo
+        3.10 Rediseñar el reporte para mostrar el detalle de cada venta
       
     </span>
   </a>
@@ -4029,10 +4051,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#311-relacionar-con-ads-y-bd2" class="md-nav__link">
+  <a href="#311-agregar-filtro-por-rango-de-fechas-al-reporte" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.11 Relacionar con ADS y BD2
+        3.11 Agregar filtro por rango de fechas al reporte
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#312-probar-el-formulario-transaccional-completo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.12 Probar el formulario transaccional completo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#313-relacionar-con-ads-y-bd2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.13 Relacionar con ADS y BD2
       
     </span>
   </a>
@@ -4206,7 +4250,7 @@
 <li><strong>Construir</strong> un formulario transaccional con detalle dinámico que calcula sus propios totales, <strong>validar</strong> la operación completa antes de confirmarla, y <strong>consumir</strong> un endpoint de reporte agregado para presentar una vista de consulta.</li>
 </ul>
 <h3 id="14-producto-de-sesion">1.4 Producto de sesión<a class="headerlink" href="#14-producto-de-sesion" title="Permanent link">&para;</a></h3>
-<p><code>VentaForm</code> en la SPA (<code>lp2/bomerp-frontend</code>): formulario con <code>FormArray</code> de líneas (selección de producto, cantidad, subtotal calculado en vivo), total general recalculado con cada cambio, validación de que exista al menos una línea y de que cada una tenga producto y cantidad válidos, confirmación explícita antes de enviar, y manejo específico de los errores reales del backend (producto inexistente, stock insuficiente). Además, <code>VentaReporteComponent</code>, una vista de consulta que trae <code>GET /api/v1/ventas/resumen</code> con filtros por estado y rango de fechas, mostrando los agregados (cantidad de ventas, monto total, ticket promedio) y el detalle resumido de cada venta.</p>
+<p><code>VentaForm</code> en la SPA (<code>lp2/bomerp-frontend</code>): formulario con <code>FormArray</code> de líneas (selección de producto, cantidad, subtotal calculado en vivo), total general recalculado con cada cambio, validación de que exista al menos una línea y de que cada una tenga producto y cantidad válidos, confirmación explícita antes de enviar, y manejo específico de los errores reales del backend (producto inexistente, stock insuficiente). Además, <code>VentaReporteComponent</code>, una vista de consulta que trae <code>GET /api/v1/ventas</code> con filtro por estado y por rango de fechas, calculando en el navegador los agregados (cantidad de ventas, monto total, ticket promedio) a partir de los totales ya calculados por el servidor, mostrando siempre, debajo de cada venta, su detalle real línea por línea, ya incluido en la misma respuesta.</p>
 <h3 id="15-metodologia">1.5 Metodología<a class="headerlink" href="#15-metodologia" title="Permanent link">&para;</a></h3>
 <p><strong>Tabla 1. Metodología de la sesión</strong></p>
 <table>
@@ -4225,8 +4269,8 @@
 </tr>
 <tr>
 <td>Clase presencial</td>
-<td>Construcción guiada de <code>VentaForm</code> con detalle dinámico, cálculo de totales, validación, confirmación, y de <code>VentaReporteComponent</code> con sus filtros. Trabajo individual en la propia laptop, siguiendo al docente paso a paso.</td>
-<td>Backend ejecutable y SPA de S8, Pasos 3.1 a 3.10 de esta guía.</td>
+<td>Construcción guiada de <code>VentaForm</code> con detalle dinámico, cálculo de totales, validación, confirmación, y de <code>VentaReporteComponent</code> con sus filtros (estado y rango de fechas) y el detalle real de cada venta. Trabajo individual en la propia laptop, siguiendo al docente paso a paso.</td>
+<td>Backend ejecutable y SPA de S8, Pasos 3.1 a 3.13 de esta guía.</td>
 </tr>
 <tr>
 <td>Evaluación formativa</td>
@@ -4446,7 +4490,9 @@
 <li><strong>3.7</strong> Crear <code>VentaReporteComponent</code> con filtros.</li>
 <li><strong>3.8</strong> Validar la operación y agregar la confirmación.</li>
 <li><strong>3.9</strong> Manejar los errores reales del backend (404, 409).</li>
-<li><strong>3.10</strong> Probar el formulario transaccional completo.</li>
+<li><strong>3.10</strong> Rediseñar el reporte para mostrar el detalle de cada venta.</li>
+<li><strong>3.11</strong> Agregar filtro por rango de fechas al reporte.</li>
+<li><strong>3.12</strong> Probar el formulario transaccional completo.</li>
 </ul>
 <h3 id="31-verificar-el-punto-de-partida">3.1 Verificar el punto de partida<a class="headerlink" href="#31-verificar-el-punto-de-partida" title="Permanent link">&para;</a></h3>
 <p><strong>Punto de partida común:</strong> todo el equipo debe comenzar exactamente desde donde quedó S8, no desde su propio avance individual. Clona la rama <code>s08-crud-tablas-dependientes</code> (el snapshot de cierre de S8):</p>
@@ -4738,7 +4784,7 @@ curl<span class="w"> </span>http://localhost:8080/api/v1/ventas/resumen
 <p>Prueba: agrega dos líneas más, elige productos distintos en cada una, confirma que el total suma las tres, y quita una — el total debe bajar de inmediato.</p>
 <p><strong>Error frecuente</strong>: pegar el botón <code>agregarLinea()</code> dentro del <code>&lt;td&gt;</code> de cada fila, junto al de <code>quitarLinea()</code>, en vez de ponerlo una sola vez después de <code>&lt;/table&gt;</code>. El resultado funciona (cada botón llama al mismo método sin argumentos), pero deja un botón "Agregar línea" repetido por cada línea en pantalla — confuso para quien usa el formulario, y no es el diseño de esta guía: "agregar" es una acción sobre el formulario completo, no sobre una fila en particular, así que su botón vive fuera de la tabla, no dentro de cada <code>&lt;tr&gt;</code>.</p>
 <h3 id="37-crear-ventareportecomponent-con-filtros">3.7 Crear <code>VentaReporteComponent</code> con filtros<a class="headerlink" href="#37-crear-ventareportecomponent-con-filtros" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> la vista de consulta, con los agregados del backend y filtros por estado y rango de fechas (2.6) — construida <strong>antes</strong> que la confirmación de 3.8, porque <code>guardar()</code> necesita poder navegar a una ruta que ya exista.</p>
+<p><strong>Producto del paso:</strong> la vista de consulta, con los agregados del backend y filtro por estado (2.6) — construida <strong>antes</strong> que la confirmación de 3.8, porque <code>guardar()</code> necesita poder navegar a una ruta que ya exista.</p>
 <p>Crea <strong><code>lp2/bomerp-frontend/src/app/features/ventas/venta/venta-reporte.ts</code></strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">CurrencyPipe</span><span class="p">,</span><span class="w"> </span><span class="nx">DatePipe</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/common'</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Component</span><span class="p">,</span><span class="w"> </span><span class="nx">OnInit</span><span class="p">,</span><span class="w"> </span><span class="nx">inject</span><span class="p">,</span><span class="w"> </span><span class="nx">signal</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/core'</span><span class="p">;</span>
@@ -4892,18 +4938,258 @@ curl<span class="w"> </span>http://localhost:8080/api/v1/ventas/resumen
 </code></pre></div>
 <p>El <code>409</code> de <code>StockInsuficienteException</code> ya trae, en su propio mensaje (ADS S8, código real del backend), el nombre del producto y las cantidades disponible/solicitada — por eso este caso muestra <code>mensaje</code> directo en vez de un texto genérico: el backend ya construyó el mensaje más útil posible, repetirlo a mano sería peor que reutilizarlo.</p>
 <p><strong>Error frecuente</strong>: probar el caso de stock insuficiente y no conseguir que el backend lo rechace. La transacción de <code>crear</code> (ADS S8, RN6) descuenta el stock línea por línea, en el orden en que aparecen en el formulario — si quieres forzar el <code>409</code> de la segunda línea, asegúrate de que la <strong>primera</strong> línea sí tenga stock suficiente; si la primera ya falla, el error que ves es el mismo <code>409</code>, pero sobre un producto distinto al que pensabas probar.</p>
-<h3 id="310-probar-el-formulario-transaccional-completo">3.10 Probar el formulario transaccional completo<a class="headerlink" href="#310-probar-el-formulario-transaccional-completo" title="Permanent link">&para;</a></h3>
+<h3 id="310-redisenar-el-reporte-para-mostrar-el-detalle-de-cada-venta">3.10 Rediseñar el reporte para mostrar el detalle de cada venta<a class="headerlink" href="#310-redisenar-el-reporte-para-mostrar-el-detalle-de-cada-venta" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> este paso <strong>reemplaza</strong> la fuente de datos que 3.7 dejó funcionando — no la extiende. <code>GET /api/v1/ventas/resumen</code> nunca trae el detalle línea por línea de una venta (2.6, <code>VentaResumen</code> lo omite a propósito), así que mostrarlo exige cambiar de dónde viene la lista: <code>GET /api/v1/ventas</code> (el mismo endpoint real de <code>buscar</code>, S4) sí devuelve cada venta completa, con su <code>detalles</code> incluido. Como consecuencia, los tres números del agregado (cantidad de ventas, monto total, ticket promedio) dejan de venir pre-calculados del servidor y pasan a calcularse en el propio navegador, a partir de la lista.</p>
+<p>Esto es una excepción deliberada, no una vuelta atrás sobre la regla de 2.3 y 2.5: lo que nunca debe calcular el cliente es el <strong>total de una venta individual</strong> — <code>venta.total</code> sigue viniendo siempre de <code>VentaServiceImpl.crear</code> (S4), nunca recalculado aquí. Lo que sí se calcula en el navegador, desde este paso, es un <strong>agregado sobre totales que ya son de confianza</strong>: sumar y promediar valores que el servidor ya certificó no tiene el mismo riesgo que inventar el total de una transacción nueva. Si prefieres no tocar lo que 3.7 ya dejó funcionando, puedes detenerte ahí — el reporte agregado sigue siendo una entrega válida, solo sin el detalle por venta.</p>
+<p><strong>En <code>venta.model.ts</code></strong>, <code>VentaResumen</code>, <code>VentaAgregado</code> y <code>VentaReporte</code> ya no hacen falta en el frontend — bórralas. <code>VentaResponse</code> (la que ya tenías) alcanza para todo lo que el reporte necesita ahora.</p>
+<p><strong>En <code>venta-service.ts</code>, reemplaza el método <code>reporte</code> completo por este <code>buscar</code>:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="nx">buscar</span><span class="p">(</span><span class="nx">estado?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">ordenarPor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'fecha'</span><span class="p">,</span><span class="w"> </span><span class="nx">direccion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'DESC'</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nx">Observable</span><span class="o">&lt;</span><span class="nx">VentaResponse</span><span class="p">[]</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">params</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">HttpParams</span><span class="p">().</span><span class="nx">set</span><span class="p">(</span><span class="s1">'ordenarPor'</span><span class="p">,</span><span class="w"> </span><span class="nx">ordenarPor</span><span class="p">).</span><span class="nx">set</span><span class="p">(</span><span class="s1">'direccion'</span><span class="p">,</span><span class="w"> </span><span class="nx">direccion</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">estado</span><span class="p">)</span><span class="w"> </span><span class="nx">params</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">params</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'estado'</span><span class="p">,</span><span class="w"> </span><span class="nx">estado</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">http</span><span class="p">.</span><span class="nx">get</span><span class="o">&lt;</span><span class="nx">VentaResponse</span><span class="p">[]</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">api</span><span class="p">.</span><span class="nx">buildUrl</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">resource</span><span class="p">),</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">params</span><span class="w"> </span><span class="p">});</span>
+<span class="w">  </span><span class="p">}</span>
+</code></pre></div>
+<p>Quita también <code>VentaReporte</code> del <code>import</code> de <code>venta.model.ts</code> en este archivo (ya no se usa ningún tipo de ahí salvo <code>VentaRequest</code>/<code>VentaResponse</code>).</p>
+<p><strong>En <code>venta-reporte.ts</code>, reemplaza la clase completa:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">CurrencyPipe</span><span class="p">,</span><span class="w"> </span><span class="nx">DatePipe</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/common'</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Component</span><span class="p">,</span><span class="w"> </span><span class="nx">OnInit</span><span class="p">,</span><span class="w"> </span><span class="nx">computed</span><span class="p">,</span><span class="w"> </span><span class="nx">inject</span><span class="p">,</span><span class="w"> </span><span class="nx">signal</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/core'</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">VentaService</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'./venta-service'</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">VentaResponse</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'./venta.model'</span><span class="p">;</span>
+
+<span class="kd">@Component</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">selector</span><span class="o">:</span><span class="w"> </span><span class="s1">'app-venta-reporte'</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">imports</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">CurrencyPipe</span><span class="p">,</span><span class="w"> </span><span class="nx">DatePipe</span><span class="p">],</span>
+<span class="w">  </span><span class="nx">templateUrl</span><span class="o">:</span><span class="w"> </span><span class="s1">'./venta-reporte.html'</span><span class="p">,</span>
+<span class="p">})</span>
+<span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">VentaReporteComponent</span><span class="w"> </span><span class="k">implements</span><span class="w"> </span><span class="nx">OnInit</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="nx">ventaService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">inject</span><span class="p">(</span><span class="nx">VentaService</span><span class="p">);</span>
+
+<span class="w">  </span><span class="k">protected</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="nx">ventas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">signal</span><span class="o">&lt;</span><span class="nx">VentaResponse</span><span class="p">[]</span><span class="o">&gt;</span><span class="p">([]);</span>
+<span class="w">  </span><span class="k">protected</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="nx">estadoFiltro</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">signal</span><span class="p">(</span><span class="s1">''</span><span class="p">);</span>
+<span class="w">  </span><span class="k">protected</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="nx">error</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">signal</span><span class="o">&lt;</span><span class="kt">string</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kc">null</span><span class="o">&gt;</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+<span class="w">  </span><span class="k">protected</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="nx">loading</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">signal</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+
+<span class="w">  </span><span class="k">protected</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="nx">totalVentas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">computed</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">ventas</span><span class="p">().</span><span class="nx">length</span><span class="p">);</span>
+<span class="w">  </span><span class="k">protected</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="nx">montoTotal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">computed</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">ventas</span><span class="p">().</span><span class="nx">reduce</span><span class="p">((</span><span class="nx">suma</span><span class="p">,</span><span class="w"> </span><span class="nx">v</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">suma</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">v</span><span class="p">.</span><span class="nx">total</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">),</span>
+<span class="w">  </span><span class="p">);</span>
+<span class="w">  </span><span class="k">protected</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="nx">ticketPromedio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">computed</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">totalVentas</span><span class="p">()</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mf">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">0</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kt">this.montoTotal</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">totalVentas</span><span class="p">(),</span>
+<span class="w">  </span><span class="p">);</span>
+
+<span class="w">  </span><span class="nx">ngOnInit</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">cargar</span><span class="p">();</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nx">cargar</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">loading</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">ventaService</span><span class="p">.</span><span class="nx">buscar</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">estadoFiltro</span><span class="p">()</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="kc">undefined</span><span class="p">).</span><span class="nx">subscribe</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">next</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">ventas</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">data</span><span class="p">),</span>
+<span class="w">      </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'No se pudo cargar el reporte de ventas.'</span><span class="p">),</span>
+<span class="w">      </span><span class="nx">complete</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">loading</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="kc">false</span><span class="p">),</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nx">filtrarPorEstado</span><span class="p">(</span><span class="nx">estado</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">estadoFiltro</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">estado</span><span class="p">);</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">cargar</span><span class="p">();</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Tres cambios respecto a 3.7, todos consecuencia del mismo cambio de fuente: <code>reporte</code> (una señal con la forma <code>VentaReporte</code>) se reemplaza por <code>ventas</code> (la lista plana <code>VentaResponse[]</code>); <code>totalVentas</code>/<code>montoTotal</code>/<code>ticketPromedio</code> pasan de ser campos de esa forma a ser <code>computed</code> sobre <code>ventas()</code>, recalculándose solos cada vez que <code>cargar()</code> trae una lista nueva (mismo patrón de 2.3, aplicado a un agregado en vez de a un subtotal por línea); y <code>cargar()</code> llama a <code>buscar</code> en vez de <code>reporte</code>. No hace falta ningún estado para mostrar u ocultar el detalle — se muestra siempre, porque <code>ventas()</code> ya trae el <code>detalles</code> de cada una.</p>
+<p><strong>En <code>venta-reporte.html</code>, reemplaza la plantilla completa:</strong></p>
+<div class="highlight"><pre><span></span><code>@if (loading()) {
+  <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Cargando reporte...<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+}
+@if (error()) {
+  <span class="p">&lt;</span><span class="nt">p</span> <span class="na">class</span><span class="o">=</span><span class="s">"error"</span><span class="p">&gt;</span>{{ error() }}<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+}
+
+<span class="p">&lt;</span><span class="nt">label</span><span class="p">&gt;</span>
+  Filtrar por estado
+  <span class="p">&lt;</span><span class="nt">select</span> <span class="err">#</span><span class="na">filtro</span> <span class="err">(</span><span class="na">change</span><span class="err">)="</span><span class="na">filtrarPorEstado</span><span class="err">(</span><span class="na">filtro</span><span class="err">.</span><span class="na">value</span><span class="err">)"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">option</span> <span class="na">value</span><span class="o">=</span><span class="s">""</span><span class="p">&gt;</span>Todos<span class="p">&lt;/</span><span class="nt">option</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">option</span> <span class="na">value</span><span class="o">=</span><span class="s">"REGISTRADA"</span><span class="p">&gt;</span>Registrada<span class="p">&lt;/</span><span class="nt">option</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">select</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">label</span><span class="p">&gt;</span>
+
+@if (!loading() <span class="err">&amp;&amp;</span> !error()) {
+  <span class="p">&lt;</span><span class="nt">section</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Total de ventas: {{ totalVentas() }}<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Monto total: {{ montoTotal() | currency: 'PEN' : 'S/ ' }}<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Ticket promedio: {{ ticketPromedio() | currency: 'PEN' : 'S/ ' }}<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">section</span><span class="p">&gt;</span>
+
+  <span class="p">&lt;</span><span class="nt">table</span> <span class="na">class</span><span class="o">=</span><span class="s">"reporte-ventas"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">thead</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">tr</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">th</span><span class="p">&gt;</span>Fecha<span class="p">&lt;/</span><span class="nt">th</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">th</span><span class="p">&gt;</span>Estado<span class="p">&lt;/</span><span class="nt">th</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">th</span><span class="p">&gt;</span>Líneas<span class="p">&lt;/</span><span class="nt">th</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">th</span><span class="p">&gt;</span>Total<span class="p">&lt;/</span><span class="nt">th</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="nt">tr</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">thead</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">tbody</span><span class="p">&gt;</span>
+      @for (venta of ventas(); track venta.id) {
+        <span class="p">&lt;</span><span class="nt">tr</span> <span class="na">class</span><span class="o">=</span><span class="s">"fila-venta"</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>{{ venta.fecha | date: 'short' }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>{{ venta.estado }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>{{ venta.detalles.length }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>{{ venta.total | currency: 'PEN' : 'S/ ' }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="nt">tr</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">tr</span> <span class="na">class</span><span class="o">=</span><span class="s">"fila-detalle"</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">td</span> <span class="na">colspan</span><span class="o">=</span><span class="s">"4"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="nt">table</span> <span class="na">class</span><span class="o">=</span><span class="s">"tabla-detalle"</span><span class="p">&gt;</span>
+              <span class="p">&lt;</span><span class="nt">thead</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="nt">tr</span><span class="p">&gt;</span>
+                  <span class="p">&lt;</span><span class="nt">th</span><span class="p">&gt;</span>Producto<span class="p">&lt;/</span><span class="nt">th</span><span class="p">&gt;</span>
+                  <span class="p">&lt;</span><span class="nt">th</span><span class="p">&gt;</span>Cantidad<span class="p">&lt;/</span><span class="nt">th</span><span class="p">&gt;</span>
+                  <span class="p">&lt;</span><span class="nt">th</span><span class="p">&gt;</span>Precio unitario<span class="p">&lt;/</span><span class="nt">th</span><span class="p">&gt;</span>
+                  <span class="p">&lt;</span><span class="nt">th</span><span class="p">&gt;</span>Subtotal<span class="p">&lt;/</span><span class="nt">th</span><span class="p">&gt;</span>
+                <span class="p">&lt;/</span><span class="nt">tr</span><span class="p">&gt;</span>
+              <span class="p">&lt;/</span><span class="nt">thead</span><span class="p">&gt;</span>
+              <span class="p">&lt;</span><span class="nt">tbody</span><span class="p">&gt;</span>
+                @for (detalle of venta.detalles; track detalle.productoId) {
+                  <span class="p">&lt;</span><span class="nt">tr</span><span class="p">&gt;</span>
+                    <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>{{ detalle.nombreProducto }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+                    <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>{{ detalle.cantidad }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+                    <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>{{ detalle.precioUnitario | currency: 'PEN' : 'S/ ' }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+                    <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>{{ detalle.subtotal | currency: 'PEN' : 'S/ ' }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+                  <span class="p">&lt;/</span><span class="nt">tr</span><span class="p">&gt;</span>
+                }
+              <span class="p">&lt;/</span><span class="nt">tbody</span><span class="p">&gt;</span>
+            <span class="p">&lt;/</span><span class="nt">table</span><span class="p">&gt;</span>
+          <span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="nt">tr</span><span class="p">&gt;</span>
+      } @empty {
+        <span class="p">&lt;</span><span class="nt">tr</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">td</span> <span class="na">colspan</span><span class="o">=</span><span class="s">"4"</span><span class="p">&gt;</span>No hay ventas registradas para este filtro.<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="nt">tr</span><span class="p">&gt;</span>
+      }
+    <span class="p">&lt;/</span><span class="nt">tbody</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">table</span><span class="p">&gt;</span>
+}
+</code></pre></div>
+<p>Tres diferencias con la plantilla de 3.7: el bloque <code>@if (reporte(); as r)</code> se reemplaza por <code>@if (!loading() &amp;&amp; !error())</code> (ya no hay un único objeto <code>reporte</code> que envuelva todo, así que la condición de visibilidad se arma con las señales de carga/error directamente); <code>r.agregado.*</code>/<code>r.ventas</code> se reemplazan por <code>totalVentas()</code>/<code>montoTotal()</code>/<code>ticketPromedio()</code>/<code>ventas()</code>; y <code>venta.cantidadDetalles</code> (un número que <code>VentaResumen</code> ya traía contado) se reemplaza por <code>venta.detalles.length</code> (el mismo conteo, calculado sobre el arreglo que ahora sí está disponible). La fila nueva con la tabla anidada del detalle es agregado puro — no reemplaza nada de 3.7, y se muestra <strong>siempre</strong>, sin ningún botón ni estado que la abra o la cierre: cada venta ya trae su detalle, así que no hay razón para ocultarlo detrás de un clic.</p>
+<p>El segundo <code>&lt;tr&gt;</code> de cada venta vive <strong>dentro</strong> del mismo <code>@for</code>, justo después del primero — en Angular, dos elementos hermanos dentro de un mismo bloque <code>@for</code> se repiten juntos en cada iteración, sin que haga falta ningún contenedor extra que rompa la estructura de <code>&lt;table&gt;</code>.</p>
+<p><strong>Error frecuente</strong>: dejar el <code>&lt;td colspan="4"&gt;</code> de la fila de detalle como <code>colspan="5"</code> (si en algún momento tuviste la versión con el botón de 3.10 anterior) o como un número que no coincide con las columnas reales del <code>&lt;thead&gt;</code> — la tabla anidada queda descuadrada respecto a las columnas de arriba.</p>
+<p>Sin ningún estilo, las dos tablas (la de ventas y la de detalle anidada en cada una) se ven idénticas — nada le indica al ojo dónde termina una venta y empieza la siguiente, ni que la segunda tabla es un detalle de la primera, no una fila más. Por eso la plantilla de arriba ya trae las clases <code>reporte-ventas</code>, <code>fila-venta</code>, <code>fila-detalle</code> y <code>tabla-detalle</code>: agrega este bloque a <code>lp2/bomerp-frontend/src/styles.css</code> (el único stylesheet de la app — ningún componente tiene uno propio todavía, S7-S8):</p>
+<div class="highlight"><pre><span></span><code><span class="p">.</span><span class="nc">reporte-ventas</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">width</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="kt">%</span><span class="p">;</span>
+<span class="w">  </span><span class="k">border-collapse</span><span class="p">:</span><span class="w"> </span><span class="kc">collapse</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="p">.</span><span class="nc">reporte-ventas</span><span class="w"> </span><span class="nt">thead</span><span class="w"> </span><span class="nt">th</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">text-align</span><span class="p">:</span><span class="w"> </span><span class="kc">left</span><span class="p">;</span>
+<span class="w">  </span><span class="k">padding</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="kt">rem</span><span class="p">;</span>
+<span class="w">  </span><span class="k">border-bottom</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="kt">px</span><span class="w"> </span><span class="kc">solid</span><span class="w"> </span><span class="mh">#333</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="p">.</span><span class="nc">reporte-ventas</span><span class="w"> </span><span class="p">.</span><span class="nc">fila-venta</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">border-top</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="kt">px</span><span class="w"> </span><span class="kc">solid</span><span class="w"> </span><span class="mh">#ccc</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="p">.</span><span class="nc">reporte-ventas</span><span class="w"> </span><span class="p">.</span><span class="nc">fila-venta</span><span class="w"> </span><span class="nt">td</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">padding</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="kt">rem</span><span class="p">;</span>
+<span class="w">  </span><span class="k">font-weight</span><span class="p">:</span><span class="w"> </span><span class="mi">600</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="p">.</span><span class="nc">reporte-ventas</span><span class="w"> </span><span class="p">.</span><span class="nc">fila-detalle</span><span class="w"> </span><span class="nt">td</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">padding</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mf">0.5</span><span class="kt">rem</span><span class="w"> </span><span class="mf">0.75</span><span class="kt">rem</span><span class="w"> </span><span class="mi">2</span><span class="kt">rem</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="p">.</span><span class="nc">tabla-detalle</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">width</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="kt">%</span><span class="p">;</span>
+<span class="w">  </span><span class="k">background</span><span class="p">:</span><span class="w"> </span><span class="mh">#f4f4f4</span><span class="p">;</span>
+<span class="w">  </span><span class="k">border-radius</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="kt">px</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="p">.</span><span class="nc">tabla-detalle</span><span class="w"> </span><span class="nt">th</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">text-align</span><span class="p">:</span><span class="w"> </span><span class="kc">left</span><span class="p">;</span>
+<span class="w">  </span><span class="k">font-size</span><span class="p">:</span><span class="w"> </span><span class="mf">0.85</span><span class="kt">em</span><span class="p">;</span>
+<span class="w">  </span><span class="k">font-weight</span><span class="p">:</span><span class="w"> </span><span class="mi">600</span><span class="p">;</span>
+<span class="w">  </span><span class="k">color</span><span class="p">:</span><span class="w"> </span><span class="mh">#555</span><span class="p">;</span>
+<span class="w">  </span><span class="k">padding</span><span class="p">:</span><span class="w"> </span><span class="mf">0.25</span><span class="kt">rem</span><span class="w"> </span><span class="mf">0.5</span><span class="kt">rem</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="p">.</span><span class="nc">tabla-detalle</span><span class="w"> </span><span class="nt">td</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">padding</span><span class="p">:</span><span class="w"> </span><span class="mf">0.25</span><span class="kt">rem</span><span class="w"> </span><span class="mf">0.5</span><span class="kt">rem</span><span class="p">;</span>
+<span class="w">  </span><span class="k">font-size</span><span class="p">:</span><span class="w"> </span><span class="mf">0.9</span><span class="kt">em</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>La idea es simple: <code>fila-venta</code> queda en negrita y con un borde superior que marca dónde empieza cada venta nueva; <code>tabla-detalle</code> tiene un fondo gris claro y letra más chica, para que se lea como "lo de adentro de la fila de arriba", no como una tabla al mismo nivel. Ningún selector de aquí toca <code>table</code> a secas — <code>ProductoList</code> (S8) y cualquier otra tabla de la SPA siguen exactamente igual que antes.</p>
+<p>Prueba: abre <strong>Reporte de ventas</strong> con al menos dos ventas registradas — debajo de cada fila debe aparecer, sin ningún clic, su lista de productos con cantidad, precio unitario y subtotal, exactamente lo mismo que mostraba el formulario al registrarla, con un fondo gris claro que la distingue de la fila de la venta. Confirma que donde empieza cada venta nueva se nota un borde — no debe verse como una sola tabla continua de filas sueltas. Verifica también, con las herramientas de desarrollador del navegador (pestaña Red), que cargar el reporte sigue siendo <strong>una sola petición</strong> (<code>GET /api/v1/ventas</code>) — el detalle de todas las ventas llega de una vez, no una por una.</p>
+<h3 id="311-agregar-filtro-por-rango-de-fechas-al-reporte">3.11 Agregar filtro por rango de fechas al reporte<a class="headerlink" href="#311-agregar-filtro-por-rango-de-fechas-al-reporte" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> dos campos de fecha ("Desde"/"Hasta") y un botón "Filtrar por fecha" en <code>VentaReporteComponent</code>, que usan los parámetros <code>desde</code>/<code>hasta</code> que <code>GET /api/v1/ventas</code> ya acepta (visible en Swagger, <code>VentaController.buscar</code>) pero que <code>buscar</code> (3.3) todavía no mandaba — hasta este paso, el filtro de la pantalla solo cubría <code>estado</code>.</p>
+<p><strong>En <code>venta-service.ts</code>, reemplaza la firma de <code>buscar</code> por esta, con <code>desde</code> y <code>hasta</code> agregados:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="nx">buscar</span><span class="p">(</span>
+<span class="w">    </span><span class="nx">estado?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">desde?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">hasta?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">ordenarPor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'fecha'</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">direccion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'DESC'</span><span class="p">,</span>
+<span class="w">  </span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nx">Observable</span><span class="o">&lt;</span><span class="nx">VentaResponse</span><span class="p">[]</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">params</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">HttpParams</span><span class="p">().</span><span class="nx">set</span><span class="p">(</span><span class="s1">'ordenarPor'</span><span class="p">,</span><span class="w"> </span><span class="nx">ordenarPor</span><span class="p">).</span><span class="nx">set</span><span class="p">(</span><span class="s1">'direccion'</span><span class="p">,</span><span class="w"> </span><span class="nx">direccion</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">estado</span><span class="p">)</span><span class="w"> </span><span class="nx">params</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">params</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'estado'</span><span class="p">,</span><span class="w"> </span><span class="nx">estado</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">desde</span><span class="p">)</span><span class="w"> </span><span class="nx">params</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">params</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'desde'</span><span class="p">,</span><span class="w"> </span><span class="nx">desde</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">hasta</span><span class="p">)</span><span class="w"> </span><span class="nx">params</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">params</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'hasta'</span><span class="p">,</span><span class="w"> </span><span class="nx">hasta</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">http</span><span class="p">.</span><span class="nx">get</span><span class="o">&lt;</span><span class="nx">VentaResponse</span><span class="p">[]</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">api</span><span class="p">.</span><span class="nx">buildUrl</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">resource</span><span class="p">),</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">params</span><span class="w"> </span><span class="p">});</span>
+<span class="w">  </span><span class="p">}</span>
+</code></pre></div>
+<p><strong>En <code>venta-reporte.ts</code>, agrega dos señales y actualiza <code>cargar</code>:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="k">protected</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="nx">desdeFiltro</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">signal</span><span class="p">(</span><span class="s1">''</span><span class="p">);</span>
+<span class="w">  </span><span class="k">protected</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="nx">hastaFiltro</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">signal</span><span class="p">(</span><span class="s1">''</span><span class="p">);</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="nx">cargar</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">loading</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">desde</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">desdeFiltro</span><span class="p">()</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="sb">`</span><span class="si">${</span><span class="k">this</span><span class="p">.</span><span class="nx">desdeFiltro</span><span class="p">()</span><span class="si">}</span><span class="sb">T00:00:00`</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kc">undefined</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">hasta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">hastaFiltro</span><span class="p">()</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="sb">`</span><span class="si">${</span><span class="k">this</span><span class="p">.</span><span class="nx">hastaFiltro</span><span class="p">()</span><span class="si">}</span><span class="sb">T23:59:59`</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kc">undefined</span><span class="p">;</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">ventaService</span><span class="p">.</span><span class="nx">buscar</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">estadoFiltro</span><span class="p">()</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="kc">undefined</span><span class="p">,</span><span class="w"> </span><span class="nx">desde</span><span class="p">,</span><span class="w"> </span><span class="nx">hasta</span><span class="p">).</span><span class="nx">subscribe</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">next</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">ventas</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">data</span><span class="p">),</span>
+<span class="w">      </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'No se pudo cargar el reporte de ventas.'</span><span class="p">),</span>
+<span class="w">      </span><span class="nx">complete</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">loading</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="kc">false</span><span class="p">),</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nx">filtrarPorFecha</span><span class="p">(</span><span class="nx">desde</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">hasta</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">desdeFiltro</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">desde</span><span class="p">);</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">hastaFiltro</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">hasta</span><span class="p">);</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">cargar</span><span class="p">();</span>
+<span class="w">  </span><span class="p">}</span>
+</code></pre></div>
+<p>El backend espera <code>LocalDateTime</code> en formato ISO (<code>2026-10-01T00:00:00</code>, ADS S8), pero un <code>&lt;input type="date"&gt;</code> del navegador solo entrega la fecha (<code>2026-10-01</code>, sin hora) — por eso <code>cargar()</code> completa la hora: <code>T00:00:00</code> para "desde" (desde el inicio del día) y <code>T23:59:59</code> para "hasta" (hasta el final del día), así el rango incluye el día completo en ambos extremos, no solo el instante exacto de medianoche.</p>
+<p><strong>En <code>venta-reporte.html</code>, agrega los dos campos y el botón, después del filtro de estado:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">label</span><span class="p">&gt;</span>
+  Desde
+  <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">"date"</span> <span class="err">#</span><span class="na">desde</span> <span class="p">/&gt;</span>
+<span class="p">&lt;/</span><span class="nt">label</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">label</span><span class="p">&gt;</span>
+  Hasta
+  <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">"date"</span> <span class="err">#</span><span class="na">hasta</span> <span class="p">/&gt;</span>
+<span class="p">&lt;/</span><span class="nt">label</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">button</span> <span class="na">type</span><span class="o">=</span><span class="s">"button"</span> <span class="err">(</span><span class="na">click</span><span class="err">)="</span><span class="na">filtrarPorFecha</span><span class="err">(</span><span class="na">desde</span><span class="err">.</span><span class="na">value</span><span class="err">,</span> <span class="na">hasta</span><span class="err">.</span><span class="na">value</span><span class="err">)"</span><span class="p">&gt;</span>Filtrar por fecha<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+</code></pre></div>
+<p>A diferencia del <code>&lt;select&gt;</code> de estado, que filtra en cuanto cambia (<code>(change)="filtrarPorEstado(...)"</code>), el rango de fechas necesita un botón explícito: con dos campos, filtrar en cuanto uno cambia dispararía una consulta con la fecha a medio completar (por ejemplo, "desde" puesto y "hasta" todavía vacío) — el botón espera a que ambos campos tengan el valor que el usuario realmente quiere antes de consultar.</p>
+<p><strong>Error frecuente</strong>: elegir una fecha "Desde" posterior a "Hasta" y no entender por qué el reporte queda vacío. El backend no valida ese caso como error — simplemente no hay ninguna venta cuya fecha caiga en un rango invertido, así que la respuesta es una lista vacía, no un <code>400</code>. Si el reporte se queda sin filas después de filtrar, revisa primero el orden de las fechas antes de sospechar de otra cosa.</p>
+<p>Prueba: con al menos dos ventas registradas en días distintos, filtra con un rango que incluya solo una — debe desaparecer la otra de la tabla y los tres agregados de arriba deben recalcularse sobre la que queda. Deja ambos campos vacíos y haz clic en <strong>Filtrar por fecha</strong> de nuevo: deben volver a aparecer todas.</p>
+<h3 id="312-probar-el-formulario-transaccional-completo">3.12 Probar el formulario transaccional completo<a class="headerlink" href="#312-probar-el-formulario-transaccional-completo" title="Permanent link">&para;</a></h3>
 <p>Con <code>lp2/bomerp-backend</code> corriendo y <code>npm start</code> activo:</p>
 <ol>
 <li>Abre <strong>Nueva venta</strong>, agrega dos líneas con productos distintos y cantidades válidas. Confirma que el subtotal de cada línea y el total se actualizan en vivo al cambiar cualquier cantidad.</li>
 <li>Intenta <strong>Registrar venta</strong> con una línea sin producto elegido: debe quedar marcada como inválida, sin que aparezca el diálogo de confirmación.</li>
 <li>Completa las líneas y haz clic en <strong>Registrar venta</strong>: el diálogo debe mostrar la cantidad de líneas y el total exacto. Cancela una vez (nada debe enviarse) y vuelve a intentarlo confirmando.</li>
 <li>Confirma que la SPA te lleva a <strong>Reporte de ventas</strong> y que la venta recién creada aparece en la tabla, con el total correcto, y que los agregados de arriba (total de ventas, monto total, ticket promedio) cambiaron respecto a antes de registrarla.</li>
+<li>Confirma que el detalle de la venta recién creada (3.10) ya aparece debajo de su fila, sin ningún clic: las líneas deben coincidir exactamente con las que completaste en el formulario.</li>
+<li>Filtra el reporte por un rango de fechas que excluya la venta recién creada (3.11): debe desaparecer de la tabla, y los agregados deben recalcularse sin ella.</li>
 <li>Repite el registro eligiendo una cantidad mayor al stock disponible de un producto: debe aparecer el mensaje específico de stock insuficiente, con el nombre del producto, sin que la venta quede registrada ni el reporte cambie.</li>
 </ol>
 <p><strong>Error frecuente</strong>: el reporte no refleja la venta recién creada. Confirma que <code>guardar()</code> navega a <code>/ventas/reporte</code> <strong>después</strong> de que el <code>POST</code> responda (dentro de <code>next</code>, no antes) — si la navegación ocurriera antes de la respuesta, <code>VentaReporteComponent</code> cargaría el reporte con los datos de antes de guardar.</p>
-<h3 id="311-relacionar-con-ads-y-bd2">3.11 Relacionar con ADS y BD2<a class="headerlink" href="#311-relacionar-con-ads-y-bd2" title="Permanent link">&para;</a></h3>
-<p>Sesión equivalente en los otros dos cursos, misma semana: ADS S9 modela el mismo escenario de "registrar una venta" con diagramas de secuencia y de actividades — el <code>confirm()</code> de 2.5 y 3.8 es, en el frontend, la misma decisión que esa guía documenta como el punto donde el usuario autoriza la operación antes de que el backend la ejecute. BD2 S9 continúa con las vistas y procedimientos que alimentan reportes agregados como el de 3.7 — <code>VentaReporte</code> del backend ya resuelve el agregado en SQL (<code>VentaRepository.agregados</code>), exactamente el tipo de consulta que esa sesión profundiza del lado de la base de datos.</p>
+<h3 id="313-relacionar-con-ads-y-bd2">3.13 Relacionar con ADS y BD2<a class="headerlink" href="#313-relacionar-con-ads-y-bd2" title="Permanent link">&para;</a></h3>
+<p>Sesión equivalente en los otros dos cursos, misma semana: ADS S9 modela el mismo escenario de "registrar una venta" con diagramas de secuencia y de actividades — el <code>confirm()</code> de 2.5 y 3.8 es, en el frontend, la misma decisión que esa guía documenta como el punto donde el usuario autoriza la operación antes de que el backend la ejecute. BD2 S9 continúa con las vistas y procedimientos que alimentan reportes agregados a nivel de base de datos — el backend expone <code>GET /api/v1/ventas/resumen</code>, con su agregado resuelto en SQL (<code>VentaRepository.agregados</code>), que el reporte de 3.7 consume directamente; desde 3.10, el reporte deja de depender de ese agregado (2.6), pero la consulta SQL sigue siendo exactamente el tipo de trabajo que esa sesión profundiza del lado de la base de datos.</p>
 <p><strong>Evidencia de aprendizaje:</strong></p>
 <ul>
 <li>Modelos de <code>Venta</code> y sus DTO, reflejando exactamente los del backend (sin campos inventados).</li>
@@ -4911,8 +5197,9 @@ curl<span class="w"> </span>http://localhost:8080/api/v1/ventas/resumen
 <li>Agregar y quitar líneas dinámicamente, con al menos una línea siempre presente.</li>
 <li>Validación de la operación completa y confirmación explícita antes de enviar.</li>
 <li>Manejo específico de los errores 404 y 409 del backend.</li>
-<li><code>VentaReporteComponent</code> con filtro por estado y agregados reales del servidor.</li>
-<li>Flujo completo probado: registrar una venta, ver el reporte actualizado, y el caso de stock insuficiente.</li>
+<li><code>VentaReporteComponent</code> con filtro por estado, filtro por rango de fechas, y agregados reales del servidor.</li>
+<li>Detalle real de cada venta mostrado siempre en el reporte, sin peticiones adicionales por venta.</li>
+<li>Flujo completo probado: registrar una venta, ver el reporte actualizado, ver su detalle, y el caso de stock insuficiente.</li>
 </ul>
 <h2 id="4-crea-actividad-autonoma">4. Crea: actividad autónoma<a class="headerlink" href="#4-crea-actividad-autonoma" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 2h fuera del aula.</p>
