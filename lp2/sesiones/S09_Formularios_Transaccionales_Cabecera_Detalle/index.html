@@ -3536,10 +3536,22 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#312-probar-el-formulario-transaccional-completo" class="md-nav__link">
+  <a href="#312-agregar-la-facilidad-de-anular-una-venta" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.12 Probar el formulario transaccional completo
+        3.12 Agregar la facilidad de anular una venta
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.12 Agregar la facilidad de anular una venta">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backend
       
     </span>
   </a>
@@ -3547,10 +3559,37 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#313-relacionar-con-ads-y-bd2" class="md-nav__link">
+  <a href="#frontend" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.13 Relacionar con ADS y BD2
+        Frontend
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#313-probar-el-formulario-transaccional-completo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.13 Probar el formulario transaccional completo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#314-relacionar-con-ads-y-bd2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.14 Relacionar con ADS y BD2
       
     </span>
   </a>
@@ -4062,10 +4101,22 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#312-probar-el-formulario-transaccional-completo" class="md-nav__link">
+  <a href="#312-agregar-la-facilidad-de-anular-una-venta" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.12 Probar el formulario transaccional completo
+        3.12 Agregar la facilidad de anular una venta
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.12 Agregar la facilidad de anular una venta">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backend
       
     </span>
   </a>
@@ -4073,10 +4124,37 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#313-relacionar-con-ads-y-bd2" class="md-nav__link">
+  <a href="#frontend" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.13 Relacionar con ADS y BD2
+        Frontend
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#313-probar-el-formulario-transaccional-completo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.13 Probar el formulario transaccional completo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#314-relacionar-con-ads-y-bd2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.14 Relacionar con ADS y BD2
       
     </span>
   </a>
@@ -4250,7 +4328,7 @@
 <li><strong>Construir</strong> un formulario transaccional con detalle dinámico que calcula sus propios totales, <strong>validar</strong> la operación completa antes de confirmarla, y <strong>consumir</strong> un endpoint de reporte agregado para presentar una vista de consulta.</li>
 </ul>
 <h3 id="14-producto-de-sesion">1.4 Producto de sesión<a class="headerlink" href="#14-producto-de-sesion" title="Permanent link">&para;</a></h3>
-<p><code>VentaForm</code> en la SPA (<code>lp2/bomerp-frontend</code>): formulario con <code>FormArray</code> de líneas (selección de producto, cantidad, subtotal calculado en vivo), total general recalculado con cada cambio, validación de que exista al menos una línea y de que cada una tenga producto y cantidad válidos, confirmación explícita antes de enviar, y manejo específico de los errores reales del backend (producto inexistente, stock insuficiente). Además, <code>VentaReporteComponent</code>, una vista de consulta que trae <code>GET /api/v1/ventas</code> con filtro por estado y por rango de fechas, calculando en el navegador los agregados (cantidad de ventas, monto total, ticket promedio) a partir de los totales ya calculados por el servidor, mostrando siempre, debajo de cada venta, su detalle real línea por línea, ya incluido en la misma respuesta.</p>
+<p><code>VentaForm</code> en la SPA (<code>lp2/bomerp-frontend</code>): formulario con <code>FormArray</code> de líneas (selección de producto, cantidad, subtotal calculado en vivo), total general recalculado con cada cambio, validación de que exista al menos una línea y de que cada una tenga producto y cantidad válidos, confirmación explícita antes de enviar, y manejo específico de los errores reales del backend (producto inexistente, stock insuficiente). Además, <code>VentaReporteComponent</code>, una vista de consulta que trae <code>GET /api/v1/ventas</code> con filtro por estado y por rango de fechas, calculando en el navegador los agregados (cantidad de ventas, monto total, ticket promedio) a partir de los totales ya calculados por el servidor, mostrando siempre, debajo de cada venta, su detalle real línea por línea, ya incluido en la misma respuesta, con la posibilidad de anular una venta <code>REGISTRADA</code> (<code>PATCH /api/v1/ventas/{id}/anular</code>), restaurando el stock de sus productos.</p>
 <h3 id="15-metodologia">1.5 Metodología<a class="headerlink" href="#15-metodologia" title="Permanent link">&para;</a></h3>
 <p><strong>Tabla 1. Metodología de la sesión</strong></p>
 <table>
@@ -4269,8 +4347,8 @@
 </tr>
 <tr>
 <td>Clase presencial</td>
-<td>Construcción guiada de <code>VentaForm</code> con detalle dinámico, cálculo de totales, validación, confirmación, y de <code>VentaReporteComponent</code> con sus filtros (estado y rango de fechas) y el detalle real de cada venta. Trabajo individual en la propia laptop, siguiendo al docente paso a paso.</td>
-<td>Backend ejecutable y SPA de S8, Pasos 3.1 a 3.13 de esta guía.</td>
+<td>Construcción guiada de <code>VentaForm</code> con detalle dinámico, cálculo de totales, validación, confirmación, y de <code>VentaReporteComponent</code> con sus filtros (estado y rango de fechas), el detalle real de cada venta y la anulación con restauración de stock. Trabajo individual en la propia laptop, siguiendo al docente paso a paso.</td>
+<td>Backend ejecutable y SPA de S8, Pasos 3.1 a 3.14 de esta guía.</td>
 </tr>
 <tr>
 <td>Evaluación formativa</td>
@@ -4492,7 +4570,8 @@
 <li><strong>3.9</strong> Manejar los errores reales del backend (404, 409).</li>
 <li><strong>3.10</strong> Rediseñar el reporte para mostrar el detalle de cada venta.</li>
 <li><strong>3.11</strong> Agregar filtro por rango de fechas al reporte.</li>
-<li><strong>3.12</strong> Probar el formulario transaccional completo.</li>
+<li><strong>3.12</strong> Agregar la facilidad de anular una venta.</li>
+<li><strong>3.13</strong> Probar el formulario transaccional completo.</li>
 </ul>
 <h3 id="31-verificar-el-punto-de-partida">3.1 Verificar el punto de partida<a class="headerlink" href="#31-verificar-el-punto-de-partida" title="Permanent link">&para;</a></h3>
 <p><strong>Punto de partida común:</strong> todo el equipo debe comenzar exactamente desde donde quedó S8, no desde su propio avance individual. Clona la rama <code>s08-crud-tablas-dependientes</code> (el snapshot de cierre de S8):</p>
@@ -5176,7 +5255,112 @@ curl<span class="w"> </span>http://localhost:8080/api/v1/ventas/resumen
 <p>A diferencia del <code>&lt;select&gt;</code> de estado, que filtra en cuanto cambia (<code>(change)="filtrarPorEstado(...)"</code>), el rango de fechas necesita un botón explícito: con dos campos, filtrar en cuanto uno cambia dispararía una consulta con la fecha a medio completar (por ejemplo, "desde" puesto y "hasta" todavía vacío) — el botón espera a que ambos campos tengan el valor que el usuario realmente quiere antes de consultar.</p>
 <p><strong>Error frecuente</strong>: elegir una fecha "Desde" posterior a "Hasta" y no entender por qué el reporte queda vacío. El backend no valida ese caso como error — simplemente no hay ninguna venta cuya fecha caiga en un rango invertido, así que la respuesta es una lista vacía, no un <code>400</code>. Si el reporte se queda sin filas después de filtrar, revisa primero el orden de las fechas antes de sospechar de otra cosa.</p>
 <p>Prueba: con al menos dos ventas registradas en días distintos, filtra con un rango que incluya solo una — debe desaparecer la otra de la tabla y los tres agregados de arriba deben recalcularse sobre la que queda. Deja ambos campos vacíos y haz clic en <strong>Filtrar por fecha</strong> de nuevo: deben volver a aparecer todas.</p>
-<h3 id="312-probar-el-formulario-transaccional-completo">3.12 Probar el formulario transaccional completo<a class="headerlink" href="#312-probar-el-formulario-transaccional-completo" title="Permanent link">&para;</a></h3>
+<h3 id="312-agregar-la-facilidad-de-anular-una-venta">3.12 Agregar la facilidad de anular una venta<a class="headerlink" href="#312-agregar-la-facilidad-de-anular-una-venta" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> la transición <code>REGISTRADA → ANULADA</code> del ciclo de vida de <code>Venta</code>, diseñada desde ADS S9 (2.5, Figura 6 y Tabla 8 de esa guía) pero nunca implementada hasta hoy — ni <code>ANULADA</code> existía en el backend. Este paso cierra esa brecha de punta a punta: el <code>enum</code> real, el endpoint, la restauración de stock, y el botón en el reporte.</p>
+<p>El permiso de quién puede anular (ADS S9 lo deja condicionado a <code>SUPERVISOR</code>/<code>ADMIN</code>, "mismo criterio que RN8 de S8") <strong>no se implementa todavía</strong> — RN8 depende del <code>vendedorId</code> que viene del JWT, y LP2 recién construye autenticación en S10. Por ahora, cualquiera que use la SPA puede anular cualquier venta <code>REGISTRADA</code>; restringirlo por rol es trabajo de S10-S11, no de hoy.</p>
+<h4 id="backend">Backend<a class="headerlink" href="#backend" title="Permanent link">&para;</a></h4>
+<p><strong>En <code>EstadoVenta.java</code>, agrega el valor que faltaba:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">enum</span><span class="w"> </span><span class="n">EstadoVenta</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">REGISTRADA</span><span class="p">,</span>
+<span class="w">    </span><span class="n">ANULADA</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>En <code>ProductoService.java</code> y <code>ProductoServiceImpl.java</code>, agrega la operación inversa a <code>descontarStock</code> (S4):</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1">// ProductoService.java — nueva firma</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">restaurarStock</span><span class="p">(</span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">Integer</span><span class="w"> </span><span class="n">cantidad</span><span class="p">);</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">// ProductoServiceImpl.java — nueva implementación</span>
+<span class="nd">@Override</span>
+<span class="nd">@Transactional</span>
+<span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">restaurarStock</span><span class="p">(</span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">Integer</span><span class="w"> </span><span class="n">cantidad</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Producto</span><span class="w"> </span><span class="n">producto</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">buscarOFallar</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+<span class="w">    </span><span class="n">producto</span><span class="p">.</span><span class="na">setStock</span><span class="p">(</span><span class="n">producto</span><span class="p">.</span><span class="na">getStock</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">cantidad</span><span class="p">);</span>
+<span class="w">    </span><span class="n">productoRepository</span><span class="p">.</span><span class="na">save</span><span class="p">(</span><span class="n">producto</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>A diferencia de <code>descontarStock</code> (S4), <code>restaurarStock</code> no valida nada — no hay un "stock máximo" que pueda excederse al devolver unidades, así que no hace falta ningún <code>if</code> antes de sumar.</p>
+<p><strong>Crea <code>pe/edu/upeu/bomerp/exception/VentaYaAnuladaException.java</code></strong>, siguiendo el mismo patrón que <code>StockInsuficienteException</code> (S4):</p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.exception</span><span class="p">;</span>
+
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">VentaYaAnuladaException</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">RuntimeException</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">VentaYaAnuladaException</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">mensaje</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">super</span><span class="p">(</span><span class="n">mensaje</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>En <code>GlobalExceptionHandler.java</code>, agrega su manejador</strong> (mismo código <code>409 Conflict</code> que <code>StockInsuficienteException</code>, porque es la misma clase de problema: un estado del recurso que impide la operación, no un dato inválido):</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@ExceptionHandler</span><span class="p">(</span><span class="n">VentaYaAnuladaException</span><span class="p">.</span><span class="na">class</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="nf">handleVentaYaAnulada</span><span class="p">(</span><span class="n">VentaYaAnuladaException</span><span class="w"> </span><span class="n">ex</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="n">body</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">"timestamp"</span><span class="p">,</span><span class="w"> </span><span class="n">Instant</span><span class="p">.</span><span class="na">now</span><span class="p">().</span><span class="na">toString</span><span class="p">());</span>
+<span class="w">    </span><span class="n">body</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">"status"</span><span class="p">,</span><span class="w"> </span><span class="n">HttpStatus</span><span class="p">.</span><span class="na">CONFLICT</span><span class="p">.</span><span class="na">value</span><span class="p">());</span>
+<span class="w">    </span><span class="n">body</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">"error"</span><span class="p">,</span><span class="w"> </span><span class="s">"Conflict"</span><span class="p">);</span>
+<span class="w">    </span><span class="n">body</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">"message"</span><span class="p">,</span><span class="w"> </span><span class="n">ex</span><span class="p">.</span><span class="na">getMessage</span><span class="p">());</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">status</span><span class="p">(</span><span class="n">HttpStatus</span><span class="p">.</span><span class="na">CONFLICT</span><span class="p">).</span><span class="na">body</span><span class="p">(</span><span class="n">body</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>En <code>VentaService.java</code>, agrega la firma:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">VentaResponse</span><span class="w"> </span><span class="nf">anular</span><span class="p">(</span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">);</span>
+</code></pre></div>
+<p><strong>En <code>VentaServiceImpl.java</code>, agrega la implementación:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="nd">@Override</span>
+<span class="nd">@Transactional</span>
+<span class="kd">public</span><span class="w"> </span><span class="n">VentaResponse</span><span class="w"> </span><span class="nf">anular</span><span class="p">(</span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Venta</span><span class="w"> </span><span class="n">venta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ventaRepository</span><span class="p">.</span><span class="na">findById</span><span class="p">(</span><span class="n">id</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">orElseThrow</span><span class="p">(()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ResourceNotFoundException</span><span class="p">(</span><span class="s">"Venta no encontrada: "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">id</span><span class="p">));</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">venta</span><span class="p">.</span><span class="na">getEstado</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">EstadoVenta</span><span class="p">.</span><span class="na">REGISTRADA</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">VentaYaAnuladaException</span><span class="p">(</span><span class="s">"La venta "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">" ya está anulada"</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">DetalleVenta</span><span class="w"> </span><span class="n">detalle</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">venta</span><span class="p">.</span><span class="na">getDetalles</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">productoService</span><span class="p">.</span><span class="na">restaurarStock</span><span class="p">(</span><span class="n">detalle</span><span class="p">.</span><span class="na">getProductoId</span><span class="p">(),</span><span class="w"> </span><span class="n">detalle</span><span class="p">.</span><span class="na">getCantidad</span><span class="p">());</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">venta</span><span class="p">.</span><span class="na">setEstado</span><span class="p">(</span><span class="n">EstadoVenta</span><span class="p">.</span><span class="na">ANULADA</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ventaMapper</span><span class="p">.</span><span class="na">toResponse</span><span class="p">(</span><span class="n">ventaRepository</span><span class="p">.</span><span class="na">save</span><span class="p">(</span><span class="n">venta</span><span class="p">));</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>El <code>for</code> recorre <code>venta.getDetalles()</code> — no <code>request</code>, no un DTO nuevo: la propia relación <code>@OneToMany</code> que <code>Venta</code> ya tiene (S4) basta para saber qué productos y qué cantidades devolver, sin que el cliente mande nada más que el <code>id</code>. El <code>if</code> es la misma regla de la Tabla 8 de ADS S9 ("la venta está en <code>REGISTRADA</code>"): sin él, anular una venta ya anulada devolvería stock una segunda vez, inflándolo.</p>
+<p><strong>En <code>VentaController.java</code>, agrega el endpoint:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="nd">@Operation</span><span class="p">(</span><span class="n">summary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Anula una venta registrada, restaurando el stock de sus productos"</span><span class="p">)</span>
+<span class="nd">@PatchMapping</span><span class="p">(</span><span class="s">"/{id}/anular"</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">VentaResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">anular</span><span class="p">(</span><span class="nd">@PathVariable</span><span class="w"> </span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">ok</span><span class="p">(</span><span class="n">ventaService</span><span class="p">.</span><span class="na">anular</span><span class="p">(</span><span class="n">id</span><span class="p">));</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>PATCH</code>, no <code>PUT</code> ni <code>DELETE</code>: la venta no se reemplaza completa (<code>PUT</code>) ni desaparece (<code>DELETE</code>) — cambia un solo campo, su estado. <code>PATCH /ventas/{id}/anular</code> es la misma convención de acción-sobre-recurso que ya usa el resto de la API (ADS S8).</p>
+<p><strong>Error frecuente</strong>: olvidar que <code>restaurarStock</code> debe ir <strong>antes</strong> de <code>venta.setEstado(EstadoVenta.ANULADA)</code>, no después. El orden en sí no rompe nada (los dos cambios están dentro de la misma transacción, <code>@Transactional</code>, y se confirman juntos o ninguno) — pero sí importa para la legibilidad: el código debe leerse en el mismo orden en que ocurre la regla de negocio real ("se devuelve el stock, y por eso queda anulada"), no al revés.</p>
+<h4 id="frontend">Frontend<a class="headerlink" href="#frontend" title="Permanent link">&para;</a></h4>
+<p><strong>En <code>venta-service.ts</code>, agrega el método:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="nx">anular</span><span class="p">(</span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nx">Observable</span><span class="o">&lt;</span><span class="nx">VentaResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">http</span><span class="p">.</span><span class="nx">patch</span><span class="o">&lt;</span><span class="nx">VentaResponse</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">api</span><span class="p">.</span><span class="nx">buildUrl</span><span class="p">(</span><span class="sb">`</span><span class="si">${</span><span class="k">this</span><span class="p">.</span><span class="nx">resource</span><span class="si">}</span><span class="sb">/</span><span class="si">${</span><span class="nx">id</span><span class="si">}</span><span class="sb">/anular`</span><span class="p">),</span><span class="w"> </span><span class="p">{});</span>
+<span class="w">  </span><span class="p">}</span>
+</code></pre></div>
+<p>El segundo argumento de <code>patch</code> (<code>{}</code>) es el <em>body</em> de la petición — vacío, porque <code>anular</code> no necesita que el cliente mande ningún dato: toda la información que la operación usa (qué productos, qué cantidades) ya vive en el backend, asociada al <code>id</code> de la URL.</p>
+<p><strong>En <code>venta-reporte.ts</code>, agrega el método con su confirmación:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="nx">anular</span><span class="p">(</span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">confirm</span><span class="p">(</span><span class="s1">'¿Anular esta venta? El stock de sus productos se restaurará.'</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">ventaService</span><span class="p">.</span><span class="nx">anular</span><span class="p">(</span><span class="nx">id</span><span class="p">).</span><span class="nx">subscribe</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">next</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">cargar</span><span class="p">(),</span>
+<span class="w">      </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'No se pudo anular la venta.'</span><span class="p">),</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">  </span><span class="p">}</span>
+</code></pre></div>
+<p>Igual que <code>confirmarYGuardar</code> (3.8), una operación que no se puede deshacer desde la pantalla pide confirmación explícita antes de ejecutarse. Si la anulación tiene éxito, <code>next</code> no actualiza la venta a mano — llama a <code>cargar()</code> de nuevo, la misma estrategia que ya usa <code>guardar()</code> al registrar: la fuente de verdad es siempre lo que el backend devuelve en la próxima consulta, no un cálculo local de "cómo debería quedar" el estado.</p>
+<p><strong>En <code>venta-reporte.html</code>, agrega la opción <code>ANULADA</code> al filtro de estado:</strong></p>
+<div class="highlight"><pre><span></span><code>    <span class="p">&lt;</span><span class="nt">option</span> <span class="na">value</span><span class="o">=</span><span class="s">"REGISTRADA"</span><span class="p">&gt;</span>Registrada<span class="p">&lt;/</span><span class="nt">option</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">option</span> <span class="na">value</span><span class="o">=</span><span class="s">"ANULADA"</span><span class="p">&gt;</span>Anulada<span class="p">&lt;/</span><span class="nt">option</span><span class="p">&gt;</span>
+</code></pre></div>
+<p><strong>Y el botón "Anular", visible solo en ventas <code>REGISTRADA</code>:</strong></p>
+<div class="highlight"><pre><span></span><code>          <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>
+            @if (venta.estado === 'REGISTRADA') {
+              <span class="p">&lt;</span><span class="nt">button</span> <span class="na">type</span><span class="o">=</span><span class="s">"button"</span> <span class="err">(</span><span class="na">click</span><span class="err">)="</span><span class="na">anular</span><span class="err">(</span><span class="na">venta</span><span class="err">.</span><span class="na">id</span><span class="err">)"</span><span class="p">&gt;</span>Anular<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+            }
+          <span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+</code></pre></div>
+<p>(agrega también <code>&lt;th&gt;&lt;/th&gt;</code> al <code>&lt;thead&gt;</code> para la columna nueva, y sube los <code>colspan</code> de <code>4</code> a <code>5</code> en la fila de detalle y en la fila <code>@empty</code> — la tabla ahora tiene cinco columnas)</p>
+<p>El <code>@if</code> sobre <code>venta.estado === 'REGISTRADA'</code> no es una validación de formulario — es la misma regla de negocio que el backend ya aplica en <code>anular()</code> (una venta <code>ANULADA</code> no puede volver a anularse), mostrada en pantalla <strong>antes</strong> de que el usuario intente hacer algo que el servidor rechazaría. Si el botón no estuviera condicionado, una venta ya anulada seguiría mostrando "Anular", y el clic terminaría en un <code>409</code> — funcionalmente inofensivo (el backend lo rechaza igual), pero confuso para quien usa el reporte.</p>
+<p><strong>Error frecuente</strong>: anular una venta y no ver el stock restaurado en <strong>Productos</strong>. Confirma que <code>anular()</code> en el frontend realmente llama a <code>cargar()</code> después de la respuesta exitosa (no antes) — y que estás mirando la lista de productos actualizada (recárgala si la tenías abierta en otra pestaña desde antes de anular).</p>
+<p>Prueba: registra una venta de prueba, anota el stock de uno de sus productos antes de anularla. Haz clic en <strong>Anular</strong>, confirma el diálogo, y verifica tres cosas: la venta pasa a <code>ANULADA</code> en el reporte (y su botón "Anular" desaparece), el stock del producto en <strong>Productos</strong> sube exactamente la cantidad que tenía esa línea, y los tres agregados del reporte (total de ventas, monto total, ticket promedio) <strong>no</strong> cambian — siguen contando la venta anulada, porque <code>ventas()</code> (3.7) trae todas las ventas que calcen con el filtro, sin excluir las anuladas por defecto. Intenta anular la misma venta una segunda vez (el botón ya no debería estar, pero si fuerzas la petición con Swagger): debe responder <code>409</code>, con el mensaje "ya está anulada".</p>
+<h3 id="313-probar-el-formulario-transaccional-completo">3.13 Probar el formulario transaccional completo<a class="headerlink" href="#313-probar-el-formulario-transaccional-completo" title="Permanent link">&para;</a></h3>
 <p>Con <code>lp2/bomerp-backend</code> corriendo y <code>npm start</code> activo:</p>
 <ol>
 <li>Abre <strong>Nueva venta</strong>, agrega dos líneas con productos distintos y cantidades válidas. Confirma que el subtotal de cada línea y el total se actualizan en vivo al cambiar cualquier cantidad.</li>
@@ -5185,11 +5369,12 @@ curl<span class="w"> </span>http://localhost:8080/api/v1/ventas/resumen
 <li>Confirma que la SPA te lleva a <strong>Reporte de ventas</strong> y que la venta recién creada aparece en la tabla, con el total correcto, y que los agregados de arriba (total de ventas, monto total, ticket promedio) cambiaron respecto a antes de registrarla.</li>
 <li>Confirma que el detalle de la venta recién creada (3.10) ya aparece debajo de su fila, sin ningún clic: las líneas deben coincidir exactamente con las que completaste en el formulario.</li>
 <li>Filtra el reporte por un rango de fechas que excluya la venta recién creada (3.11): debe desaparecer de la tabla, y los agregados deben recalcularse sin ella.</li>
+<li>Anula la venta recién creada (3.12): verifica que su estado cambia a <code>ANULADA</code>, que el botón "Anular" desaparece, y que el stock de sus productos se restauró en <strong>Productos</strong>.</li>
 <li>Repite el registro eligiendo una cantidad mayor al stock disponible de un producto: debe aparecer el mensaje específico de stock insuficiente, con el nombre del producto, sin que la venta quede registrada ni el reporte cambie.</li>
 </ol>
 <p><strong>Error frecuente</strong>: el reporte no refleja la venta recién creada. Confirma que <code>guardar()</code> navega a <code>/ventas/reporte</code> <strong>después</strong> de que el <code>POST</code> responda (dentro de <code>next</code>, no antes) — si la navegación ocurriera antes de la respuesta, <code>VentaReporteComponent</code> cargaría el reporte con los datos de antes de guardar.</p>
-<h3 id="313-relacionar-con-ads-y-bd2">3.13 Relacionar con ADS y BD2<a class="headerlink" href="#313-relacionar-con-ads-y-bd2" title="Permanent link">&para;</a></h3>
-<p>Sesión equivalente en los otros dos cursos, misma semana: ADS S9 modela el mismo escenario de "registrar una venta" con diagramas de secuencia y de actividades — el <code>confirm()</code> de 2.5 y 3.8 es, en el frontend, la misma decisión que esa guía documenta como el punto donde el usuario autoriza la operación antes de que el backend la ejecute. BD2 S9 continúa con las vistas y procedimientos que alimentan reportes agregados a nivel de base de datos — el backend expone <code>GET /api/v1/ventas/resumen</code>, con su agregado resuelto en SQL (<code>VentaRepository.agregados</code>), que el reporte de 3.7 consume directamente; desde 3.10, el reporte deja de depender de ese agregado (2.6), pero la consulta SQL sigue siendo exactamente el tipo de trabajo que esa sesión profundiza del lado de la base de datos.</p>
+<h3 id="314-relacionar-con-ads-y-bd2">3.14 Relacionar con ADS y BD2<a class="headerlink" href="#314-relacionar-con-ads-y-bd2" title="Permanent link">&para;</a></h3>
+<p>Sesión equivalente en los otros dos cursos, misma semana: ADS S9 modela el mismo escenario de "registrar una venta" con diagramas de secuencia y de actividades — el <code>confirm()</code> de 2.5 y 3.8 es, en el frontend, la misma decisión que esa guía documenta como el punto donde el usuario autoriza la operación antes de que el backend la ejecute. La transición <code>REGISTRADA → ANULADA</code> que ADS S9 diseñó (su Tabla 8) y dejó marcada como brecha sin implementar queda cerrada con 3.12 — la próxima vez que se dicte ADS S9 o S11, esa nota de "brecha en S8/LP2" ya no describe el estado real del proyecto. BD2 S9 continúa con las vistas y procedimientos que alimentan reportes agregados a nivel de base de datos — el backend expone <code>GET /api/v1/ventas/resumen</code>, con su agregado resuelto en SQL (<code>VentaRepository.agregados</code>), que el reporte de 3.7 consume directamente; desde 3.10, el reporte deja de depender de ese agregado (2.6), pero la consulta SQL sigue siendo exactamente el tipo de trabajo que esa sesión profundiza del lado de la base de datos.</p>
 <p><strong>Evidencia de aprendizaje:</strong></p>
 <ul>
 <li>Modelos de <code>Venta</code> y sus DTO, reflejando exactamente los del backend (sin campos inventados).</li>
@@ -5199,7 +5384,8 @@ curl<span class="w"> </span>http://localhost:8080/api/v1/ventas/resumen
 <li>Manejo específico de los errores 404 y 409 del backend.</li>
 <li><code>VentaReporteComponent</code> con filtro por estado, filtro por rango de fechas, y agregados reales del servidor.</li>
 <li>Detalle real de cada venta mostrado siempre en el reporte, sin peticiones adicionales por venta.</li>
-<li>Flujo completo probado: registrar una venta, ver el reporte actualizado, ver su detalle, y el caso de stock insuficiente.</li>
+<li><code>ANULADA</code> implementada de punta a punta (enum, endpoint, restauración de stock, botón condicionado) — cierra una brecha diseñada desde ADS S9.</li>
+<li>Flujo completo probado: registrar una venta, ver el reporte actualizado, ver su detalle, anularla, y el caso de stock insuficiente.</li>
 </ul>
 <h2 id="4-crea-actividad-autonoma">4. Crea: actividad autónoma<a class="headerlink" href="#4-crea-actividad-autonoma" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 2h fuera del aula.</p>
