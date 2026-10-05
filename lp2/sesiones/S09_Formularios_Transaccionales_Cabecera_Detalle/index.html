@@ -3575,10 +3575,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#313-probar-el-formulario-transaccional-completo" class="md-nav__link">
+  <a href="#313-agregar-autocomplete-con-precio-a-la-seleccion-de-producto" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.13 Probar el formulario transaccional completo
+        3.13 Agregar autocomplete con precio a la selección de producto
       
     </span>
   </a>
@@ -3586,10 +3586,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#314-relacionar-con-ads-y-bd2" class="md-nav__link">
+  <a href="#314-probar-el-formulario-transaccional-completo" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.14 Relacionar con ADS y BD2
+        3.14 Probar el formulario transaccional completo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#315-relacionar-con-ads-y-bd2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.15 Relacionar con ADS y BD2
       
     </span>
   </a>
@@ -4140,10 +4151,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#313-probar-el-formulario-transaccional-completo" class="md-nav__link">
+  <a href="#313-agregar-autocomplete-con-precio-a-la-seleccion-de-producto" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.13 Probar el formulario transaccional completo
+        3.13 Agregar autocomplete con precio a la selección de producto
       
     </span>
   </a>
@@ -4151,10 +4162,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#314-relacionar-con-ads-y-bd2" class="md-nav__link">
+  <a href="#314-probar-el-formulario-transaccional-completo" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.14 Relacionar con ADS y BD2
+        3.14 Probar el formulario transaccional completo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#315-relacionar-con-ads-y-bd2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.15 Relacionar con ADS y BD2
       
     </span>
   </a>
@@ -4328,7 +4350,7 @@
 <li><strong>Construir</strong> un formulario transaccional con detalle dinámico que calcula sus propios totales, <strong>validar</strong> la operación completa antes de confirmarla, <strong>presentar</strong> una vista de consulta con agregados, detalle y filtros (estado y rango de fechas), y <strong>diseñar e implementar</strong> de punta a punta una transición de estado con regla de negocio real (anular una venta, restaurando el stock asociado).</li>
 </ul>
 <h3 id="14-producto-de-sesion">1.4 Producto de sesión<a class="headerlink" href="#14-producto-de-sesion" title="Permanent link">&para;</a></h3>
-<p><code>VentaForm</code> en la SPA (<code>lp2/bomerp-frontend</code>): formulario con <code>FormArray</code> de líneas (selección de producto, cantidad, subtotal calculado en vivo), total general recalculado con cada cambio, validación de que exista al menos una línea y de que cada una tenga producto y cantidad válidos, confirmación explícita antes de enviar, y manejo específico de los errores reales del backend (producto inexistente, stock insuficiente). Además, <code>VentaReporteComponent</code>, una vista de consulta que trae <code>GET /api/v1/ventas</code> con filtro por estado y por rango de fechas, calculando en el navegador los agregados (cantidad de ventas, monto total, ticket promedio) a partir de los totales ya calculados por el servidor, mostrando siempre, debajo de cada venta, su detalle real línea por línea, ya incluido en la misma respuesta, con la posibilidad de anular una venta <code>REGISTRADA</code> (<code>PATCH /api/v1/ventas/{id}/anular</code>), restaurando el stock de sus productos.</p>
+<p><code>VentaForm</code> en la SPA (<code>lp2/bomerp-frontend</code>): formulario con <code>FormArray</code> de líneas (producto elegido por autocomplete con su precio visible, cantidad, precio unitario y subtotal calculados en vivo), total general recalculado con cada cambio, validación de que exista al menos una línea y de que cada una tenga producto y cantidad válidos, confirmación explícita antes de enviar, y manejo específico de los errores reales del backend (producto inexistente, stock insuficiente). Además, <code>VentaReporteComponent</code>, una vista de consulta que trae <code>GET /api/v1/ventas</code> con filtro por estado y por rango de fechas, calculando en el navegador los agregados (cantidad de ventas, monto total, ticket promedio) a partir de los totales ya calculados por el servidor, mostrando siempre, debajo de cada venta, su detalle real línea por línea, ya incluido en la misma respuesta, con la posibilidad de anular una venta <code>REGISTRADA</code> (<code>PATCH /api/v1/ventas/{id}/anular</code>), restaurando el stock de sus productos.</p>
 <h3 id="15-metodologia">1.5 Metodología<a class="headerlink" href="#15-metodologia" title="Permanent link">&para;</a></h3>
 <p><strong>Tabla 1. Metodología de la sesión</strong></p>
 <table>
@@ -4347,8 +4369,8 @@
 </tr>
 <tr>
 <td>Clase presencial</td>
-<td>Construcción guiada de <code>VentaForm</code> con detalle dinámico, cálculo de totales, validación, confirmación, y de <code>VentaReporteComponent</code> con sus filtros (estado y rango de fechas), el detalle real de cada venta y la anulación con restauración de stock. Trabajo individual en la propia laptop, siguiendo al docente paso a paso.</td>
-<td>Backend ejecutable y SPA de S8, Pasos 3.1 a 3.14 de esta guía.</td>
+<td>Construcción guiada de <code>VentaForm</code> con detalle dinámico, selección de producto por autocomplete con precio, cálculo de totales, validación, confirmación, y de <code>VentaReporteComponent</code> con sus filtros (estado y rango de fechas), el detalle real de cada venta y la anulación con restauración de stock. Trabajo individual en la propia laptop, siguiendo al docente paso a paso.</td>
+<td>Backend ejecutable y SPA de S8, Pasos 3.1 a 3.15 de esta guía.</td>
 </tr>
 <tr>
 <td>Evaluación formativa</td>
@@ -4571,7 +4593,8 @@
 <li><strong>3.10</strong> Rediseñar el reporte para mostrar el detalle de cada venta.</li>
 <li><strong>3.11</strong> Agregar filtro por rango de fechas al reporte.</li>
 <li><strong>3.12</strong> Agregar la facilidad de anular una venta.</li>
-<li><strong>3.13</strong> Probar el formulario transaccional completo.</li>
+<li><strong>3.13</strong> Agregar autocomplete con precio a la selección de producto.</li>
+<li><strong>3.14</strong> Probar el formulario transaccional completo.</li>
 </ul>
 <h3 id="31-verificar-el-punto-de-partida">3.1 Verificar el punto de partida<a class="headerlink" href="#31-verificar-el-punto-de-partida" title="Permanent link">&para;</a></h3>
 <p><strong>Punto de partida común:</strong> todo el equipo debe comenzar exactamente desde donde quedó S8, no desde su propio avance individual. Clona la rama <code>s08-crud-tablas-dependientes</code> (el snapshot de cierre de S8):</p>
@@ -5360,11 +5383,109 @@ curl<span class="w"> </span>http://localhost:8080/api/v1/ventas/resumen
 <p>El <code>@if</code> sobre <code>venta.estado === 'REGISTRADA'</code> no es una validación de formulario — es la misma regla de negocio que el backend ya aplica en <code>anular()</code> (una venta <code>ANULADA</code> no puede volver a anularse), mostrada en pantalla <strong>antes</strong> de que el usuario intente hacer algo que el servidor rechazaría. Si el botón no estuviera condicionado, una venta ya anulada seguiría mostrando "Anular", y el clic terminaría en un <code>409</code> — funcionalmente inofensivo (el backend lo rechaza igual), pero confuso para quien usa el reporte.</p>
 <p><strong>Error frecuente</strong>: anular una venta y no ver el stock restaurado en <strong>Productos</strong>. Confirma que <code>anular()</code> en el frontend realmente llama a <code>cargar()</code> después de la respuesta exitosa (no antes) — y que estás mirando la lista de productos actualizada (recárgala si la tenías abierta en otra pestaña desde antes de anular).</p>
 <p>Prueba: registra una venta de prueba, anota el stock de uno de sus productos antes de anularla. Haz clic en <strong>Anular</strong>, confirma el diálogo, y verifica tres cosas: la venta pasa a <code>ANULADA</code> en el reporte (y su botón "Anular" desaparece), el stock del producto en <strong>Productos</strong> sube exactamente la cantidad que tenía esa línea, y los tres agregados del reporte (total de ventas, monto total, ticket promedio) <strong>no</strong> cambian — siguen contando la venta anulada, porque <code>ventas()</code> (3.7) trae todas las ventas que calcen con el filtro, sin excluir las anuladas por defecto. Intenta anular la misma venta una segunda vez (el botón ya no debería estar, pero si fuerzas la petición con Swagger): debe responder <code>409</code>, con el mensaje "ya está anulada".</p>
-<h3 id="313-probar-el-formulario-transaccional-completo">3.13 Probar el formulario transaccional completo<a class="headerlink" href="#313-probar-el-formulario-transaccional-completo" title="Permanent link">&para;</a></h3>
+<h3 id="313-agregar-autocomplete-con-precio-a-la-seleccion-de-producto">3.13 Agregar autocomplete con precio a la selección de producto<a class="headerlink" href="#313-agregar-autocomplete-con-precio-a-la-seleccion-de-producto" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> reemplaza el <code>&lt;select&gt;</code> de 3.4 por un campo de autocompletado (Angular Material, ya usado en <code>ProductoList</code>, S8) — con un catálogo grande (500 productos, por ejemplo), un <code>&lt;select&gt;</code> nativo obliga a desplazar una lista larguísima sin poder buscar por texto. El autocomplete filtra mientras el usuario escribe, y cada opción muestra el precio junto al nombre, para comparar antes de elegir. Además, se agrega una columna "Precio unitario" visible una vez elegido el producto, distinta del "Subtotal" que ya existía desde 3.5.</p>
+<p><strong>En <code>venta-form.ts</code>, agrega los imports de Angular Material y ajusta el arreglo <code>imports</code> del componente:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">MatAutocompleteModule</span><span class="p">,</span><span class="w"> </span><span class="nx">MatAutocompleteSelectedEvent</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/material/autocomplete'</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">MatFormFieldModule</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/material/form-field'</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">MatInputModule</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/material/input'</span><span class="p">;</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="kd">@Component</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">selector</span><span class="o">:</span><span class="w"> </span><span class="s1">'app-venta-form'</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">imports</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="nx">ReactiveFormsModule</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">RouterLink</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">CurrencyPipe</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">MatAutocompleteModule</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">MatFormFieldModule</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">MatInputModule</span><span class="p">,</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nx">templateUrl</span><span class="o">:</span><span class="w"> </span><span class="s1">'./venta-form.html'</span><span class="p">,</span>
+<span class="p">})</span>
+</code></pre></div>
+<p><strong>Agrega un campo de búsqueda a cada línea, en <code>crearLinea()</code>:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="nx">crearLinea</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">fb</span><span class="p">.</span><span class="nx">nonNullable</span><span class="p">.</span><span class="nx">group</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">productoId</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="nx">Validators</span><span class="p">.</span><span class="nx">min</span><span class="p">(</span><span class="mf">1</span><span class="p">)]],</span>
+<span class="w">      </span><span class="nx">busqueda</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">''</span><span class="p">],</span>
+<span class="w">      </span><span class="nx">cantidad</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="nx">Validators</span><span class="p">.</span><span class="nx">required</span><span class="p">,</span><span class="w"> </span><span class="nx">Validators</span><span class="p">.</span><span class="nx">min</span><span class="p">(</span><span class="mf">1</span><span class="p">)]],</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">  </span><span class="p">}</span>
+</code></pre></div>
+<p><code>busqueda</code> no es un campo que el backend conozca — es solo el texto que el usuario escribe para filtrar, y nunca se envía (eso se resuelve más abajo, en <code>guardar()</code>). <code>productoId</code> sigue siendo el valor real: el autocomplete solo decide <strong>qué</strong> valor escribirle, nunca deja de ser la fuente de verdad que <code>Validators.min(1)</code> ya validaba desde 3.4.</p>
+<p><strong>Agrega dos <code>computed</code> nuevos, junto a <code>subtotales</code> (3.5):</strong></p>
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="k">protected</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="nx">preciosUnitarios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">computed</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">valoresDetalles</span><span class="p">().</span><span class="nx">map</span><span class="p">((</span><span class="nx">linea</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">producto</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">productos</span><span class="p">().</span><span class="nx">find</span><span class="p">((</span><span class="nx">p</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">p</span><span class="p">.</span><span class="nx">id</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">linea</span><span class="p">.</span><span class="nx">productoId</span><span class="p">);</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="nx">producto</span><span class="o">?</span><span class="p">.</span><span class="nx">precio</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}),</span>
+<span class="w">  </span><span class="p">);</span>
+
+<span class="w">  </span><span class="k">protected</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="nx">opcionesPorLinea</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">computed</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">valoresDetalles</span><span class="p">().</span><span class="nx">map</span><span class="p">((</span><span class="nx">linea</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">texto</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">linea</span><span class="p">.</span><span class="nx">busqueda</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="s1">''</span><span class="p">).</span><span class="nx">toLowerCase</span><span class="p">();</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">productos</span><span class="p">().</span><span class="nx">filter</span><span class="p">((</span><span class="nx">p</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">p</span><span class="p">.</span><span class="nx">nombre</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">().</span><span class="nx">includes</span><span class="p">(</span><span class="nx">texto</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}),</span>
+<span class="w">  </span><span class="p">);</span>
+</code></pre></div>
+<p><code>preciosUnitarios</code> es casi idéntico a <code>subtotales</code> (3.5): la misma búsqueda del producto por <code>id</code>, pero devolviendo <code>precio</code> solo, sin multiplicar por <code>cantidad</code>. <code>opcionesPorLinea</code> reutiliza el mismo <code>valoresDetalles</code> (3.5) que ya reacciona a cada tecla que el usuario escribe — una lista de productos filtrados, una por cada línea del formulario.</p>
+<p><strong>Agrega el método que aplica la selección:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="k">protected</span><span class="w"> </span><span class="nx">seleccionarProducto</span><span class="p">(</span><span class="nx">indice</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span><span class="w"> </span><span class="nx">evento</span><span class="o">:</span><span class="w"> </span><span class="kt">MatAutocompleteSelectedEvent</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">producto</span><span class="o">:</span><span class="w"> </span><span class="kt">Producto</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">evento</span><span class="p">.</span><span class="nx">option</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">lineasForm</span><span class="p">.</span><span class="nx">at</span><span class="p">(</span><span class="nx">indice</span><span class="p">).</span><span class="nx">patchValue</span><span class="p">({</span><span class="w"> </span><span class="nx">productoId</span><span class="o">:</span><span class="w"> </span><span class="kt">producto.id</span><span class="p">,</span><span class="w"> </span><span class="nx">busqueda</span><span class="o">:</span><span class="w"> </span><span class="kt">producto.nombre</span><span class="w"> </span><span class="p">});</span>
+<span class="w">  </span><span class="p">}</span>
+</code></pre></div>
+<p>Cuando el usuario hace clic en una opción, <code>mat-autocomplete</code> entrega el objeto <code>Producto</code> completo que se le pasó a <code>[value]</code> en cada <code>mat-option</code> (abajo) — <code>seleccionarProducto</code> toma ese objeto y escribe <strong>dos</strong> campos a la vez: <code>productoId</code> (el que de verdad se envía) y <code>busqueda</code> (para que el campo de texto muestre el nombre elegido, no se quede con lo que el usuario tecleó a medias).</p>
+<p><strong>Reemplaza el <code>&lt;select&gt;</code> en <code>venta-form.html</code> por el autocomplete, y agrega la columna de precio unitario:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">th</span><span class="p">&gt;</span>Producto<span class="p">&lt;/</span><span class="nt">th</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">th</span><span class="p">&gt;</span>Precio unitario<span class="p">&lt;/</span><span class="nt">th</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">th</span><span class="p">&gt;</span>Cantidad<span class="p">&lt;/</span><span class="nt">th</span><span class="p">&gt;</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>          <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="nt">mat-form-field</span><span class="p">&gt;</span>
+              <span class="p">&lt;</span><span class="nt">input</span>
+                <span class="na">type</span><span class="o">=</span><span class="s">"text"</span>
+                <span class="na">matInput</span>
+                <span class="na">formControlName</span><span class="o">=</span><span class="s">"busqueda"</span>
+                <span class="err">[</span><span class="na">matAutocomplete</span><span class="err">]="</span><span class="na">auto</span><span class="err">"</span>
+                <span class="na">placeholder</span><span class="o">=</span><span class="s">"Buscar producto"</span>
+              <span class="p">/&gt;</span>
+              <span class="p">&lt;</span><span class="nt">mat-autocomplete</span> <span class="err">#</span><span class="na">auto</span><span class="o">=</span><span class="s">"matAutocomplete"</span> <span class="err">(</span><span class="na">optionSelected</span><span class="err">)="</span><span class="na">seleccionarProducto</span><span class="err">($</span><span class="na">index</span><span class="err">,</span> <span class="err">$</span><span class="na">event</span><span class="err">)"</span><span class="p">&gt;</span>
+                @for (producto of opcionesPorLinea()[$index]; track producto.id) {
+                  <span class="p">&lt;</span><span class="nt">mat-option</span> <span class="err">[</span><span class="na">value</span><span class="err">]="</span><span class="na">producto</span><span class="err">"</span><span class="p">&gt;</span>
+                    {{ producto.nombre }} — {{ producto.precio | currency: 'PEN' : 'S/ ' }}
+                  <span class="p">&lt;/</span><span class="nt">mat-option</span><span class="p">&gt;</span>
+                }
+              <span class="p">&lt;/</span><span class="nt">mat-autocomplete</span><span class="p">&gt;</span>
+            <span class="p">&lt;/</span><span class="nt">mat-form-field</span><span class="p">&gt;</span>
+          <span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>{{ preciosUnitarios()[$index] | currency: 'PEN' : 'S/ ' }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+</code></pre></div>
+<p>Y sube el <code>colspan</code> del <code>&lt;tfoot&gt;</code> de <code>2</code> a <code>3</code> (ahora "Producto", "Precio unitario" y "Cantidad" son tres columnas antes de "Total", no dos):</p>
+<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">td</span> <span class="na">colspan</span><span class="o">=</span><span class="s">"3"</span><span class="p">&gt;</span>Total<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+</code></pre></div>
+<p><strong>En <code>guardar()</code>, construye <code>detalles</code> explícitamente en vez de usar <code>form.getRawValue()</code> directo:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="nx">guardar</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">loading</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">detalles</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">lineasForm</span><span class="p">.</span><span class="nx">getRawValue</span><span class="p">().</span><span class="nx">map</span><span class="p">(({</span><span class="w"> </span><span class="nx">productoId</span><span class="p">,</span><span class="w"> </span><span class="nx">cantidad</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span><span class="w"> </span><span class="nx">productoId</span><span class="p">,</span><span class="w"> </span><span class="nx">cantidad</span><span class="w"> </span><span class="p">}));</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">ventaService</span><span class="p">.</span><span class="nx">crear</span><span class="p">({</span><span class="w"> </span><span class="nx">detalles</span><span class="w"> </span><span class="p">}).</span><span class="nx">subscribe</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">next</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">router</span><span class="p">.</span><span class="nx">navigate</span><span class="p">([</span><span class="s1">'/ventas/reporte'</span><span class="p">]),</span>
+<span class="w">      </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="o">:</span><span class="w"> </span><span class="kt">HttpErrorResponse</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">manejarErrorGuardado</span><span class="p">(</span><span class="nx">err</span><span class="p">),</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">  </span><span class="p">}</span>
+</code></pre></div>
+<p><code>form.getRawValue()</code> ahora incluiría <code>busqueda</code> en cada línea — un campo que <code>DetalleVentaRequest</code> (backend) no tiene. Jackson lo ignoraría igual (no hay <code>FAIL_ON_UNKNOWN_PROPERTIES</code> configurado), así que no rompería nada, pero enviar un campo que el backend nunca pidió no es el criterio de esta guía (2.3, RN3/RN4): el formulario nunca debe mandar más de lo que el contrato real espera. Construir <code>detalles</code> explícitamente, campo por campo, deja en el propio código qué se envía y qué no, sin depender de que el backend sea tolerante.</p>
+<p><strong>Error frecuente</strong>: poner <code>[value]="producto.id"</code> en vez de <code>[value]="producto"</code> en <code>mat-option</code>. Si la opción entrega solo el <code>id</code>, <code>seleccionarProducto</code> recibiría un número en <code>evento.option.value</code>, y <code>producto.id</code>/<code>producto.nombre</code> dentro del método fallarían en tiempo de ejecución (<code>Cannot read properties of undefined</code>) — un número no tiene esas propiedades.</p>
+<p>Prueba: abre <strong>Nueva venta</strong>, haz clic en el campo de producto de la primera línea y escribe parte del nombre de un producto real — la lista debe filtrarse mientras escribes, mostrando nombre y precio en cada opción. Selecciona una: el campo debe mostrar el nombre completo, la columna "Precio unitario" debe llenarse, y el "Subtotal" debe calcularse igual que antes. Escribe texto que no coincida con ningún producto: la lista debe quedar vacía. Intenta <strong>Registrar venta</strong> sin haber seleccionado ninguna opción real (solo con texto escrito): el formulario debe seguir inválido, igual que antes con el <code>&lt;select&gt;</code> en <code>0</code>.</p>
+<p><strong>Figura 3. Resultado final: <code>VentaForm</code> con autocomplete, precio unitario y subtotal en vivo</strong></p>
+<p><img alt="Formulario Nueva venta con tres líneas: &quot;Teclado 1&quot; a S/ 20.00, &quot;sd&quot; a S/ 12.00, y una tercera línea todavía con el placeholder &quot;Buscar producto&quot; sin seleccionar, cada una con su cantidad, precio unitario y subtotal, y el total general en S/ 32.00" src="../img/s09-3.13-autocomplete-resultado.png" /></p>
+<p>La tercera línea de la Figura 3, todavía sin producto elegido, es exactamente el caso que <code>Validators.min(1)</code> sobre <code>productoId</code> bloquea: su precio unitario y su subtotal se quedan en <code>S/ 0.00</code> — no porque el cálculo falle, sino porque <code>preciosUnitarios</code>/<code>subtotales</code> (ambos <code>computed</code>) no encuentran ningún producto con <code>id</code> igual a <code>0</code> en <code>productos()</code>, y el formulario completo seguiría inválido si se intentara <strong>Registrar venta</strong> en este estado.</p>
+<h3 id="314-probar-el-formulario-transaccional-completo">3.14 Probar el formulario transaccional completo<a class="headerlink" href="#314-probar-el-formulario-transaccional-completo" title="Permanent link">&para;</a></h3>
 <p>Con <code>lp2/bomerp-backend</code> corriendo y <code>npm start</code> activo:</p>
 <ol>
-<li>Abre <strong>Nueva venta</strong>, agrega dos líneas con productos distintos y cantidades válidas. Confirma que el subtotal de cada línea y el total se actualizan en vivo al cambiar cualquier cantidad.</li>
-<li>Intenta <strong>Registrar venta</strong> con una línea sin producto elegido: debe quedar marcada como inválida, sin que aparezca el diálogo de confirmación.</li>
+<li>Abre <strong>Nueva venta</strong>, agrega dos líneas buscando productos distintos por nombre en el autocomplete (3.13) y cantidades válidas. Confirma que el precio unitario, el subtotal de cada línea y el total se actualizan en vivo.</li>
+<li>Intenta <strong>Registrar venta</strong> con una línea sin seleccionar ningún producto del autocomplete: debe quedar marcada como inválida, sin que aparezca el diálogo de confirmación.</li>
 <li>Completa las líneas y haz clic en <strong>Registrar venta</strong>: el diálogo debe mostrar la cantidad de líneas y el total exacto. Cancela una vez (nada debe enviarse) y vuelve a intentarlo confirmando.</li>
 <li>Confirma que la SPA te lleva a <strong>Reporte de ventas</strong> y que la venta recién creada aparece en la tabla, con el total correcto, y que los agregados de arriba (total de ventas, monto total, ticket promedio) cambiaron respecto a antes de registrarla.</li>
 <li>Confirma que el detalle de la venta recién creada (3.10) ya aparece debajo de su fila, sin ningún clic: las líneas deben coincidir exactamente con las que completaste en el formulario.</li>
@@ -5373,13 +5494,14 @@ curl<span class="w"> </span>http://localhost:8080/api/v1/ventas/resumen
 <li>Repite el registro eligiendo una cantidad mayor al stock disponible de un producto: debe aparecer el mensaje específico de stock insuficiente, con el nombre del producto, sin que la venta quede registrada ni el reporte cambie.</li>
 </ol>
 <p><strong>Error frecuente</strong>: el reporte no refleja la venta recién creada. Confirma que <code>guardar()</code> navega a <code>/ventas/reporte</code> <strong>después</strong> de que el <code>POST</code> responda (dentro de <code>next</code>, no antes) — si la navegación ocurriera antes de la respuesta, <code>VentaReporteComponent</code> cargaría el reporte con los datos de antes de guardar.</p>
-<h3 id="314-relacionar-con-ads-y-bd2">3.14 Relacionar con ADS y BD2<a class="headerlink" href="#314-relacionar-con-ads-y-bd2" title="Permanent link">&para;</a></h3>
+<h3 id="315-relacionar-con-ads-y-bd2">3.15 Relacionar con ADS y BD2<a class="headerlink" href="#315-relacionar-con-ads-y-bd2" title="Permanent link">&para;</a></h3>
 <p>Sesión equivalente en los otros dos cursos, misma semana: ADS S9 modela el mismo escenario de "registrar una venta" con diagramas de secuencia y de actividades — el <code>confirm()</code> de 2.5 y 3.8 es, en el frontend, la misma decisión que esa guía documenta como el punto donde el usuario autoriza la operación antes de que el backend la ejecute. La transición <code>REGISTRADA → ANULADA</code> que ADS S9 diseñó (su Tabla 8) y dejó marcada como brecha sin implementar queda cerrada con 3.12 — la próxima vez que se dicte ADS S9 o S11, esa nota de "brecha en S8/LP2" ya no describe el estado real del proyecto. BD2 S9 continúa con las vistas y procedimientos que alimentan reportes agregados a nivel de base de datos — el backend expone <code>GET /api/v1/ventas/resumen</code>, con su agregado resuelto en SQL (<code>VentaRepository.agregados</code>), que el reporte de 3.7 consume directamente; desde 3.10, el reporte deja de depender de ese agregado (2.6), pero la consulta SQL sigue siendo exactamente el tipo de trabajo que esa sesión profundiza del lado de la base de datos.</p>
 <p><strong>Evidencia de aprendizaje:</strong></p>
 <ul>
 <li>Modelos de <code>Venta</code> y sus DTO, reflejando exactamente los del backend (sin campos inventados).</li>
 <li><code>VentaForm</code> con <code>FormArray</code> de líneas, subtotales y total calculados en vivo.</li>
 <li>Agregar y quitar líneas dinámicamente, con al menos una línea siempre presente.</li>
+<li>Selección de producto por autocomplete, con su precio visible al elegir y en una columna propia.</li>
 <li>Validación de la operación completa y confirmación explícita antes de enviar.</li>
 <li>Manejo específico de los errores 404 y 409 del backend.</li>
 <li><code>VentaReporteComponent</code> con filtro por estado, filtro por rango de fechas, y agregados reales del servidor.</li>
@@ -5394,7 +5516,7 @@ curl<span class="w"> </span>http://localhost:8080/api/v1/ventas/resumen
 <p>Completa y evidencia estas tareas:</p>
 <ol>
 <li>Elige una operación cabecera-detalle de tu propio dominio (una cabecera con una colección variable de líneas, equivalente a <code>Venta</code>/<code>DetalleVenta</code>) y define sus modelos, reflejando exactamente los DTO de tu backend.</li>
-<li>Construye el formulario con <code>FormArray</code>, con al menos una línea inicial y botones para agregar y quitar líneas, manteniendo siempre al menos una.</li>
+<li>Construye el formulario con <code>FormArray</code>, con al menos una línea inicial, botones para agregar y quitar líneas (manteniendo siempre al menos una), y selección del elemento de cada línea por búsqueda/autocomplete (no un <code>&lt;select&gt;</code> con todas las opciones cargadas), mostrando su precio u otro dato relevante antes de elegir.</li>
 <li>Calcula en vivo al menos un valor derivado por línea y un total general, usando <code>computed</code> sobre los valores del formulario — ninguno enviado como campo editable al backend.</li>
 <li>Valida la colección completa (al menos una línea) además de los campos de cada línea, y agrega una confirmación explícita antes de enviar, mostrando el resumen de la operación.</li>
 <li>Maneja al menos dos errores reales distintos que tu backend pueda devolver para esta operación, con un mensaje específico para cada uno.</li>
@@ -5494,8 +5616,8 @@ caso de Knight Capital (1.6).
 <tr>
 <td>1. Formulario con detalle dinámico*</td>
 <td style="text-align: right;">20</td>
-<td><code>FormArray</code> completo, agregar/quitar líneas funcional, al menos una línea siempre presente.</td>
-<td>Funcional, con algún caso borde (quitar la última línea) sin resolver.</td>
+<td><code>FormArray</code> completo, agregar/quitar líneas funcional, al menos una línea siempre presente, producto elegido por búsqueda/autocomplete con su precio visible.</td>
+<td>Funcional, con algún caso borde (quitar la última línea, o selección sin búsqueda) sin resolver.</td>
 <td><code>FormArray</code> incompleto o sin agregar/quitar en vivo.</td>
 <td>No presenta formulario con detalle dinámico.</td>
 <td style="text-align: right;"></td>
