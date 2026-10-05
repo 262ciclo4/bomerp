@@ -2895,6 +2895,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#anexo-bomerp-oracle-no-abre-despues-de-recrear-el-contenedor-ora-01109" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anexo: bomerp-oracle no abre después de recrear el contenedor (ORA-01109)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#bibliografia" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4114,6 +4125,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#anexo-bomerp-oracle-no-abre-despues-de-recrear-el-contenedor-ora-01109" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anexo: bomerp-oracle no abre después de recrear el contenedor (ORA-01109)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#bibliografia" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4720,6 +4742,28 @@ Indica 2 fortalezas y 2 recomendaciones.
 <p><strong>Dinámica participativa:</strong> en una ronda rápida, cada estudiante comparte en una frase qué evento de <code>UNIFIED_AUDIT_TRAIL</code> le pareció más revelador: una sentencia exitosa, un acceso denegado, o un intento de conexión fallido.</p>
 <p><strong>Metacognición:</strong> cada estudiante responde el Anexo de feedback de la sesión, incluido en su evidencia individual (ver 4.3.1). El docente analiza esas respuestas con IA para identificar temas recurrentes o dudas comunes del equipo, y con esos indicadores construye el cierre real de la sesión — que se entrega al inicio de S10, no al final de esta clase.</p>
 <p><strong>Proyección:</strong> S10 toma la misma base de datos ya auditada y optimiza su rendimiento: planes de ejecución, estadísticas con <code>DBMS_STATS</code>, <code>AWR</code> (<em>Automatic Workload Repository</em>) e índices — empezando, justamente, por el índice de <code>VENTAS</code> que hoy se reconstruyó sin ninguna estrategia de optimización todavía.</p>
+<h2 id="anexo-bomerp-oracle-no-abre-despues-de-recrear-el-contenedor-ora-01109">Anexo: <code>bomerp-oracle</code> no abre después de recrear el contenedor (<code>ORA-01109</code>)<a class="headerlink" href="#anexo-bomerp-oracle-no-abre-despues-de-recrear-el-contenedor-ora-01109" title="Permanent link">&para;</a></h2>
+<p><strong>Síntoma:</strong> el backend de LP2 falla al arrancar con <code>ORA-01109: database not open</code>, y SQL Developer no puede conectar a ningún servicio de <code>FREEPDB1</code> — aunque <code>docker logs bomerp-oracle</code> ya haya mostrado <code>DATABASE IS READY TO USE!</code>.</p>
+<p><strong>Causa:</strong> el <code>CREATE TABLESPACE TS_BOMERP</code> de 3.2 crea el datafile sin ruta absoluta (<code>DATAFILE 'ts_bomerp01.dbf'</code>), así que Oracle lo guarda en <code>$ORACLE_HOME/dbs/</code> — dentro de la capa efímera del contenedor, no en el volumen persistente (<code>oracle-data</code>). Si el contenedor se <strong>recrea</strong> (no solo se reinicia), ese datafile se pierde, mientras que los datafiles del sistema (<code>SYSTEM</code>, <code>SYSAUX</code>, <code>USERS</code>, en el volumen persistente) sobreviven. El PDB <code>FREEPDB1</code> se queda en <code>MOUNTED</code> porque no puede abrir uno de sus datafiles, y eso bloquea <strong>cualquier</strong> conexión a ese <em>service name</em> — no solo a <code>TS_BOMERP</code>.</p>
+<p><strong>Diagnóstico</strong> (dentro del contenedor, como <code>sysdba</code>):</p>
+<div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">exec</span> <span class="n">-it</span> <span class="n">bomerp-oracle</span> <span class="n">sqlplus</span> <span class="p">/</span> <span class="n">as</span> <span class="n">sysdba</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">open_mode</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">v$pdbs</span><span class="p">;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">con_id</span><span class="p">,</span><span class="w"> </span><span class="n">file</span><span class="o">#</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">v$datafile</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">'%ts_bomerp%'</span><span class="p">;</span>
+</code></pre></div>
+<p>Si <code>FREEPDB1</code> aparece <code>MOUNTED</code> (no <code>READ WRITE</code>), es exactamente este problema.</p>
+<p><strong>Solución</strong> (el contenido de <code>TS_BOMERP</code> es descartable — es el tablespace de práctica de esta misma sesión, ninguna tabla base depende de él):</p>
+<div class="highlight"><pre><span></span><code><span class="k">ALTER</span><span class="w"> </span><span class="k">SESSION</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">CONTAINER</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FREEPDB1</span><span class="p">;</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">DATAFILE</span><span class="w"> </span><span class="s1">'/opt/oracle/product/26ai/dbhomeFree/dbs/ts_bomerp01.dbf'</span><span class="w"> </span><span class="n">OFFLINE</span><span class="w"> </span><span class="k">DROP</span><span class="p">;</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="n">PLUGGABLE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">FREEPDB1</span><span class="w"> </span><span class="k">OPEN</span><span class="p">;</span>
+<span class="k">DROP</span><span class="w"> </span><span class="n">TABLESPACE</span><span class="w"> </span><span class="n">TS_BOMERP</span><span class="w"> </span><span class="k">INCLUDING</span><span class="w"> </span><span class="n">CONTENTS</span><span class="p">;</span>
+</code></pre></div>
+<p>La ruta exacta del <code>.dbf</code> puede variar entre instancias — confírmala primero con la consulta de diagnóstico de arriba antes de ejecutar el <code>OFFLINE DROP</code>.</p>
+<p><strong>Para que no vuelva a pasar</strong>, al repetir el <code>CREATE TABLESPACE</code> de 3.2, usa una ruta dentro del volumen persistente en vez de solo el nombre del archivo:</p>
+<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="n">TABLESPACE</span><span class="w"> </span><span class="n">TS_BOMERP</span>
+<span class="w">  </span><span class="n">DATAFILE</span><span class="w"> </span><span class="s1">'/opt/oracle/oradata/FREE/FREEPDB1/ts_bomerp01.dbf'</span><span class="w"> </span><span class="k">SIZE</span><span class="w"> </span><span class="mi">100</span><span class="n">M</span>
+<span class="w">  </span><span class="n">AUTOEXTEND</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">NEXT</span><span class="w"> </span><span class="mi">50</span><span class="n">M</span><span class="w"> </span><span class="n">MAXSIZE</span><span class="w"> </span><span class="mi">1</span><span class="k">G</span><span class="p">;</span>
+</code></pre></div>
 <h2 id="bibliografia">Bibliografía<a class="headerlink" href="#bibliografia" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Fortune. (2016, 15 de mayo). <em>SWIFT confirms second cyberattack hit a bank</em>. https://fortune.com/2016/05/15/swift-responsible-bangladesh-heist/</li>

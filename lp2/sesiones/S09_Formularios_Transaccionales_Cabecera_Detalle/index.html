@@ -3481,10 +3481,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#37-validar-la-operacion-y-agregar-la-confirmacion" class="md-nav__link">
+  <a href="#37-crear-ventareportecomponent-con-filtros" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.7 Validar la operación y agregar la confirmación
+        3.7 Crear VentaReporteComponent con filtros
       
     </span>
   </a>
@@ -3492,10 +3492,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#38-manejar-los-errores-reales-del-backend-404-409" class="md-nav__link">
+  <a href="#38-validar-la-operacion-y-agregar-la-confirmacion" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.8 Manejar los errores reales del backend (404, 409)
+        3.8 Validar la operación y agregar la confirmación
       
     </span>
   </a>
@@ -3503,10 +3503,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#39-crear-ventareportecomponent-con-filtros" class="md-nav__link">
+  <a href="#39-manejar-los-errores-reales-del-backend-404-409" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.9 Crear VentaReporteComponent con filtros
+        3.9 Manejar los errores reales del backend (404, 409)
       
     </span>
   </a>
@@ -3985,10 +3985,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#37-validar-la-operacion-y-agregar-la-confirmacion" class="md-nav__link">
+  <a href="#37-crear-ventareportecomponent-con-filtros" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.7 Validar la operación y agregar la confirmación
+        3.7 Crear VentaReporteComponent con filtros
       
     </span>
   </a>
@@ -3996,10 +3996,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#38-manejar-los-errores-reales-del-backend-404-409" class="md-nav__link">
+  <a href="#38-validar-la-operacion-y-agregar-la-confirmacion" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.8 Manejar los errores reales del backend (404, 409)
+        3.8 Validar la operación y agregar la confirmación
       
     </span>
   </a>
@@ -4007,10 +4007,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#39-crear-ventareportecomponent-con-filtros" class="md-nav__link">
+  <a href="#39-manejar-los-errores-reales-del-backend-404-409" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.9 Crear VentaReporteComponent con filtros
+        3.9 Manejar los errores reales del backend (404, 409)
       
     </span>
   </a>
@@ -4443,9 +4443,9 @@
 <li><strong>3.4</strong> Crear <code>VentaForm</code> con el <code>FormArray</code> de líneas.</li>
 <li><strong>3.5</strong> Agregar el cálculo de subtotales y total.</li>
 <li><strong>3.6</strong> Agregar y quitar líneas dinámicamente.</li>
-<li><strong>3.7</strong> Validar la operación y agregar la confirmación.</li>
-<li><strong>3.8</strong> Manejar los errores reales del backend (404, 409).</li>
-<li><strong>3.9</strong> Crear <code>VentaReporteComponent</code> con filtros.</li>
+<li><strong>3.7</strong> Crear <code>VentaReporteComponent</code> con filtros.</li>
+<li><strong>3.8</strong> Validar la operación y agregar la confirmación.</li>
+<li><strong>3.9</strong> Manejar los errores reales del backend (404, 409).</li>
 <li><strong>3.10</strong> Probar el formulario transaccional completo.</li>
 </ul>
 <h3 id="31-verificar-el-punto-de-partida">3.1 Verificar el punto de partida<a class="headerlink" href="#31-verificar-el-punto-de-partida" title="Permanent link">&para;</a></h3>
@@ -4508,6 +4508,54 @@ curl<span class="w"> </span>http://localhost:8080/api/v1/ventas/resumen
 <span class="p">}</span>
 </code></pre></div>
 <p><code>VentaRequest</code> tiene exactamente un campo, <code>detalles</code> — igual que la clase real <code>VentaRequest.java</code> del backend (ADS S8, Tabla 16): ni <code>fecha</code>, ni <code>estado</code>, ni <code>total</code> se escriben desde el cliente.</p>
+<p><strong>Tabla 5. Los 6 modelos del frontend, comparados campo a campo contra los DTO reales del backend</strong></p>
+<table>
+<thead>
+<tr>
+<th>Modelo</th>
+<th>Backend (<code>lp2/bomerp-backend/.../ventas/venta/dto/</code>)</th>
+<th>Frontend (<code>venta.model.ts</code>)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DetalleVentaRequest</code></td>
+<td><code>productoId: Long</code>, <code>cantidad: Integer</code></td>
+<td><code>productoId: number</code>, <code>cantidad: number</code></td>
+</tr>
+<tr>
+<td><code>DetalleVentaResponse</code></td>
+<td><code>productoId: Long</code>, <code>nombreProducto: String</code>, <code>precioUnitario: BigDecimal</code>, <code>cantidad: Integer</code>, <code>subtotal: BigDecimal</code></td>
+<td>mismos 5 campos</td>
+</tr>
+<tr>
+<td><code>VentaRequest</code></td>
+<td>solo <code>detalles: List&lt;DetalleVentaRequest&gt;</code></td>
+<td>solo <code>detalles: DetalleVentaRequest[]</code></td>
+</tr>
+<tr>
+<td><code>VentaResponse</code></td>
+<td><code>id: Long</code>, <code>fecha: LocalDateTime</code>, <code>estado: String</code>, <code>total: BigDecimal</code>, <code>detalles: List&lt;DetalleVentaResponse&gt;</code></td>
+<td>mismos 5 campos</td>
+</tr>
+<tr>
+<td><code>VentaResumen</code></td>
+<td><code>id</code>, <code>fecha</code>, <code>estado</code>, <code>total</code>, <code>cantidadDetalles: long</code></td>
+<td>mismos 5 campos</td>
+</tr>
+<tr>
+<td><code>VentaAgregado</code></td>
+<td><code>totalVentas: long</code>, <code>montoTotal: BigDecimal</code>, <code>ticketPromedio: BigDecimal</code></td>
+<td>mismos 3 campos</td>
+</tr>
+<tr>
+<td><code>VentaReporte</code></td>
+<td><code>agregado: VentaAgregado</code>, <code>ventas: List&lt;VentaResumen&gt;</code></td>
+<td>mismos 2 campos</td>
+</tr>
+</tbody>
+</table>
+<p>Los tipos también calzan: <code>Long</code>/<code>Integer</code>/<code>long</code> se mapean a <code>number</code>, <code>BigDecimal</code> se mapea a <code>number</code> (Jackson lo serializa como número JSON), y <code>LocalDateTime</code> se mapea a <code>string</code> — Spring Boot desactiva <code>SerializationFeature.WRITE_DATES_AS_TIMESTAMPS</code> por defecto (sin configuración explícita de Jackson en <code>application.yml</code>), así que <code>fecha</code> sale como texto ISO-8601, no como un arreglo de timestamp.</p>
 <h3 id="33-crear-ventaservice">3.3 Crear <code>VentaService</code><a class="headerlink" href="#33-crear-ventaservice" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> el servicio HTTP de <code>Venta</code>, con <code>crear</code> y <code>reporte</code>.</p>
 <p>Crea <strong><code>lp2/bomerp-frontend/src/app/features/ventas/venta/venta-service.ts</code></strong>:</p>
@@ -4688,62 +4736,9 @@ curl<span class="w"> </span>http://localhost:8080/api/v1/ventas/resumen
 <div class="highlight"><pre><span></span><code>  <span class="p">&lt;</span><span class="nt">button</span> <span class="na">type</span><span class="o">=</span><span class="s">"button"</span> <span class="err">(</span><span class="na">click</span><span class="err">)="</span><span class="na">agregarLinea</span><span class="err">()"</span><span class="p">&gt;</span>Agregar línea<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
 </code></pre></div>
 <p>Prueba: agrega dos líneas más, elige productos distintos en cada una, confirma que el total suma las tres, y quita una — el total debe bajar de inmediato.</p>
-<h3 id="37-validar-la-operacion-y-agregar-la-confirmacion">3.7 Validar la operación y agregar la confirmación<a class="headerlink" href="#37-validar-la-operacion-y-agregar-la-confirmacion" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> el formulario completo, que no deja enviar una operación inválida y pide confirmación antes de guardar (2.4, 2.5).</p>
-<p>En <code>venta-form.ts</code>, agrega el método de confirmación y el de guardado (todavía sin el manejo específico de errores, eso es 3.8):</p>
-<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="k">protected</span><span class="w"> </span><span class="nx">confirmarYGuardar</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">form</span><span class="p">.</span><span class="nx">invalid</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">form</span><span class="p">.</span><span class="nx">markAllAsTouched</span><span class="p">();</span>
-<span class="w">      </span><span class="k">return</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">cantidadLineas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">lineasForm</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
-<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">resumen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`Vas a registrar una venta de </span><span class="si">${</span><span class="nx">cantidadLineas</span><span class="si">}</span><span class="sb"> línea(s) por un total de `</span><span class="w"> </span><span class="o">+</span>
-<span class="w">      </span><span class="sb">`S/ </span><span class="si">${</span><span class="k">this</span><span class="p">.</span><span class="nx">total</span><span class="p">().</span><span class="nx">toFixed</span><span class="p">(</span><span class="mf">2</span><span class="p">)</span><span class="si">}</span><span class="sb">. ¿Confirmar?`</span><span class="p">;</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">confirm</span><span class="p">(</span><span class="nx">resumen</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
-<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">guardar</span><span class="p">();</span>
-<span class="w">  </span><span class="p">}</span>
-
-<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="nx">guardar</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
-<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">loading</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
-<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">ventaService</span><span class="p">.</span><span class="nx">crear</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">form</span><span class="p">.</span><span class="nx">getRawValue</span><span class="p">()).</span><span class="nx">subscribe</span><span class="p">({</span>
-<span class="w">      </span><span class="nx">next</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">router</span><span class="p">.</span><span class="nx">navigate</span><span class="p">([</span><span class="s1">'/ventas/reporte'</span><span class="p">]),</span>
-<span class="w">      </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="o">:</span><span class="w"> </span><span class="kt">HttpErrorResponse</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">manejarErrorGuardado</span><span class="p">(</span><span class="nx">err</span><span class="p">),</span>
-<span class="w">    </span><span class="p">});</span>
-<span class="w">  </span><span class="p">}</span>
-
-<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="nx">manejarErrorGuardado</span><span class="p">(</span><span class="nx">err</span><span class="o">:</span><span class="w"> </span><span class="kt">HttpErrorResponse</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'No se pudo registrar la venta.'</span><span class="p">);</span>
-<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">loading</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
-<span class="w">  </span><span class="p">}</span>
-</code></pre></div>
-<p>En <code>venta-form.html</code>, reemplaza el cierre del <code>&lt;form&gt;</code> para agregar el botón de confirmar:</p>
-<div class="highlight"><pre><span></span><code>  <span class="p">&lt;</span><span class="nt">button</span> <span class="na">type</span><span class="o">=</span><span class="s">"button"</span> <span class="err">(</span><span class="na">click</span><span class="err">)="</span><span class="na">confirmarYGuardar</span><span class="err">()"</span> <span class="err">[</span><span class="na">disabled</span><span class="err">]="</span><span class="na">loading</span><span class="err">()"</span><span class="p">&gt;</span>Registrar venta<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
-<span class="p">&lt;/</span><span class="nt">form</span><span class="p">&gt;</span>
-</code></pre></div>
-<p>Prueba: deja una línea sin elegir producto e intenta <strong>Registrar venta</strong> — no debe aparecer ningún <code>confirm()</code>, porque el formulario es inválido antes de llegar a esa pregunta. Completa las líneas y vuelve a intentarlo: debe aparecer el diálogo con la cantidad de líneas y el total exacto que se ve en pantalla; si cancelas, nada se envía.</p>
-<h3 id="38-manejar-los-errores-reales-del-backend-404-409">3.8 Manejar los errores reales del backend (404, 409)<a class="headerlink" href="#38-manejar-los-errores-reales-del-backend-404-409" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> los dos errores de negocio reales de <code>VentaServiceImpl.crear</code> (ADS S8, RN1 y RN2) distinguidos con un mensaje específico — mismo criterio que <code>ProductoForm</code> ya aplicó para la categoría que desaparece (S8, 3.8).</p>
-<p>Reemplaza <code>manejarErrorGuardado</code> en <code>venta-form.ts</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="nx">manejarErrorGuardado</span><span class="p">(</span><span class="nx">err</span><span class="o">:</span><span class="w"> </span><span class="kt">HttpErrorResponse</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">mensaje</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">err</span><span class="p">.</span><span class="nx">error</span><span class="o">?</span><span class="p">.</span><span class="nx">message</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="s1">''</span><span class="p">;</span>
-
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mf">404</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">mensaje</span><span class="p">.</span><span class="nx">startsWith</span><span class="p">(</span><span class="s1">'Producto no encontrado'</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'Uno de los productos elegidos ya no existe. Revisa las líneas de la venta.'</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mf">409</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">mensaje</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">'No hay stock suficiente para completar la venta.'</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mf">400</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'Los datos enviados no son válidos. Revisa las líneas de la venta.'</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'No se pudo registrar la venta.'</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">loading</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
-<span class="w">  </span><span class="p">}</span>
-</code></pre></div>
-<p>El <code>409</code> de <code>StockInsuficienteException</code> ya trae, en su propio mensaje (ADS S8, código real del backend), el nombre del producto y las cantidades disponible/solicitada — por eso este caso muestra <code>mensaje</code> directo en vez de un texto genérico: el backend ya construyó el mensaje más útil posible, repetirlo a mano sería peor que reutilizarlo.</p>
-<p><strong>Error frecuente</strong>: probar el caso de stock insuficiente y no conseguir que el backend lo rechace. La transacción de <code>crear</code> (ADS S8, RN6) descuenta el stock línea por línea, en el orden en que aparecen en el formulario — si quieres forzar el <code>409</code> de la segunda línea, asegúrate de que la <strong>primera</strong> línea sí tenga stock suficiente; si la primera ya falla, el error que ves es el mismo <code>409</code>, pero sobre un producto distinto al que pensabas probar.</p>
-<h3 id="39-crear-ventareportecomponent-con-filtros">3.9 Crear <code>VentaReporteComponent</code> con filtros<a class="headerlink" href="#39-crear-ventareportecomponent-con-filtros" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> la vista de consulta, con los agregados del backend y filtros por estado y rango de fechas (2.6).</p>
+<p><strong>Error frecuente</strong>: pegar el botón <code>agregarLinea()</code> dentro del <code>&lt;td&gt;</code> de cada fila, junto al de <code>quitarLinea()</code>, en vez de ponerlo una sola vez después de <code>&lt;/table&gt;</code>. El resultado funciona (cada botón llama al mismo método sin argumentos), pero deja un botón "Agregar línea" repetido por cada línea en pantalla — confuso para quien usa el formulario, y no es el diseño de esta guía: "agregar" es una acción sobre el formulario completo, no sobre una fila en particular, así que su botón vive fuera de la tabla, no dentro de cada <code>&lt;tr&gt;</code>.</p>
+<h3 id="37-crear-ventareportecomponent-con-filtros">3.7 Crear <code>VentaReporteComponent</code> con filtros<a class="headerlink" href="#37-crear-ventareportecomponent-con-filtros" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> la vista de consulta, con los agregados del backend y filtros por estado y rango de fechas (2.6) — construida <strong>antes</strong> que la confirmación de 3.8, porque <code>guardar()</code> necesita poder navegar a una ruta que ya exista.</p>
 <p>Crea <strong><code>lp2/bomerp-frontend/src/app/features/ventas/venta/venta-reporte.ts</code></strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">CurrencyPipe</span><span class="p">,</span><span class="w"> </span><span class="nx">DatePipe</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/common'</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Component</span><span class="p">,</span><span class="w"> </span><span class="nx">OnInit</span><span class="p">,</span><span class="w"> </span><span class="nx">inject</span><span class="p">,</span><span class="w"> </span><span class="nx">signal</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/core'</span><span class="p">;</span>
@@ -4842,6 +4837,61 @@ curl<span class="w"> </span>http://localhost:8080/api/v1/ventas/resumen
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>      <span class="p">&lt;</span><span class="nt">a</span> <span class="na">routerLink</span><span class="o">=</span><span class="s">"/ventas/reporte"</span> <span class="na">routerLinkActive</span><span class="o">=</span><span class="s">"active"</span><span class="p">&gt;</span>Reporte de ventas<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
 </code></pre></div>
+<p>Abre <code>http://localhost:4200/ventas/reporte</code>: debe cargar (sin ventas todavía, la tabla mostrará "No hay ventas registradas para este filtro") — confirma que la ruta existe de verdad antes de seguir a 3.8, que va a depender de ella.</p>
+<h3 id="38-validar-la-operacion-y-agregar-la-confirmacion">3.8 Validar la operación y agregar la confirmación<a class="headerlink" href="#38-validar-la-operacion-y-agregar-la-confirmacion" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> el formulario completo, que no deja enviar una operación inválida y pide confirmación antes de guardar (2.4, 2.5).</p>
+<p>En <code>venta-form.ts</code>, agrega el método de confirmación y el de guardado (todavía sin el manejo específico de errores, eso es 3.9):</p>
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="k">protected</span><span class="w"> </span><span class="nx">confirmarYGuardar</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">form</span><span class="p">.</span><span class="nx">invalid</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">form</span><span class="p">.</span><span class="nx">markAllAsTouched</span><span class="p">();</span>
+<span class="w">      </span><span class="k">return</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">cantidadLineas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">lineasForm</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">resumen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`Vas a registrar una venta de </span><span class="si">${</span><span class="nx">cantidadLineas</span><span class="si">}</span><span class="sb"> línea(s) por un total de `</span><span class="w"> </span><span class="o">+</span>
+<span class="w">      </span><span class="sb">`S/ </span><span class="si">${</span><span class="k">this</span><span class="p">.</span><span class="nx">total</span><span class="p">().</span><span class="nx">toFixed</span><span class="p">(</span><span class="mf">2</span><span class="p">)</span><span class="si">}</span><span class="sb">. ¿Confirmar?`</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">confirm</span><span class="p">(</span><span class="nx">resumen</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">guardar</span><span class="p">();</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="nx">guardar</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">loading</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">ventaService</span><span class="p">.</span><span class="nx">crear</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">form</span><span class="p">.</span><span class="nx">getRawValue</span><span class="p">()).</span><span class="nx">subscribe</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">next</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">router</span><span class="p">.</span><span class="nx">navigate</span><span class="p">([</span><span class="s1">'/ventas/reporte'</span><span class="p">]),</span>
+<span class="w">      </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="o">:</span><span class="w"> </span><span class="kt">HttpErrorResponse</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">manejarErrorGuardado</span><span class="p">(</span><span class="nx">err</span><span class="p">),</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="nx">manejarErrorGuardado</span><span class="p">(</span><span class="nx">err</span><span class="o">:</span><span class="w"> </span><span class="kt">HttpErrorResponse</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'No se pudo registrar la venta.'</span><span class="p">);</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">loading</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+</code></pre></div>
+<p>En <code>venta-form.html</code>, reemplaza el cierre del <code>&lt;form&gt;</code> para agregar el botón de confirmar:</p>
+<div class="highlight"><pre><span></span><code>  <span class="p">&lt;</span><span class="nt">button</span> <span class="na">type</span><span class="o">=</span><span class="s">"button"</span> <span class="err">(</span><span class="na">click</span><span class="err">)="</span><span class="na">confirmarYGuardar</span><span class="err">()"</span> <span class="err">[</span><span class="na">disabled</span><span class="err">]="</span><span class="na">loading</span><span class="err">()"</span><span class="p">&gt;</span>Registrar venta<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">form</span><span class="p">&gt;</span>
+</code></pre></div>
+<p>Prueba: deja una línea sin elegir producto e intenta <strong>Registrar venta</strong> — no debe aparecer ningún <code>confirm()</code>, porque el formulario es inválido antes de llegar a esa pregunta. Completa las líneas, haz clic en <strong>Registrar venta</strong> y cancela el diálogo una vez — nada debe enviarse. Vuelve a intentarlo confirmando esta vez: como <code>/ventas/reporte</code> ya existe (3.7), la venta se guarda de verdad y la SPA te lleva al reporte, donde la venta recién creada debe aparecer.</p>
+<h3 id="39-manejar-los-errores-reales-del-backend-404-409">3.9 Manejar los errores reales del backend (404, 409)<a class="headerlink" href="#39-manejar-los-errores-reales-del-backend-404-409" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> los dos errores de negocio reales de <code>VentaServiceImpl.crear</code> (ADS S8, RN1 y RN2) distinguidos con un mensaje específico — mismo criterio que <code>ProductoForm</code> ya aplicó para la categoría que desaparece (S8, 3.8).</p>
+<p>Reemplaza <code>manejarErrorGuardado</code> en <code>venta-form.ts</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="nx">manejarErrorGuardado</span><span class="p">(</span><span class="nx">err</span><span class="o">:</span><span class="w"> </span><span class="kt">HttpErrorResponse</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">mensaje</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">err</span><span class="p">.</span><span class="nx">error</span><span class="o">?</span><span class="p">.</span><span class="nx">message</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="s1">''</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mf">404</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">mensaje</span><span class="p">.</span><span class="nx">startsWith</span><span class="p">(</span><span class="s1">'Producto no encontrado'</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'Uno de los productos elegidos ya no existe. Revisa las líneas de la venta.'</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mf">409</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">mensaje</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">'No hay stock suficiente para completar la venta.'</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mf">400</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'Los datos enviados no son válidos. Revisa las líneas de la venta.'</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'No se pudo registrar la venta.'</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">loading</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+</code></pre></div>
+<p>El <code>409</code> de <code>StockInsuficienteException</code> ya trae, en su propio mensaje (ADS S8, código real del backend), el nombre del producto y las cantidades disponible/solicitada — por eso este caso muestra <code>mensaje</code> directo en vez de un texto genérico: el backend ya construyó el mensaje más útil posible, repetirlo a mano sería peor que reutilizarlo.</p>
+<p><strong>Error frecuente</strong>: probar el caso de stock insuficiente y no conseguir que el backend lo rechace. La transacción de <code>crear</code> (ADS S8, RN6) descuenta el stock línea por línea, en el orden en que aparecen en el formulario — si quieres forzar el <code>409</code> de la segunda línea, asegúrate de que la <strong>primera</strong> línea sí tenga stock suficiente; si la primera ya falla, el error que ves es el mismo <code>409</code>, pero sobre un producto distinto al que pensabas probar.</p>
 <h3 id="310-probar-el-formulario-transaccional-completo">3.10 Probar el formulario transaccional completo<a class="headerlink" href="#310-probar-el-formulario-transaccional-completo" title="Permanent link">&para;</a></h3>
 <p>Con <code>lp2/bomerp-backend</code> corriendo y <code>npm start</code> activo:</p>
 <ol>
@@ -4853,7 +4903,7 @@ curl<span class="w"> </span>http://localhost:8080/api/v1/ventas/resumen
 </ol>
 <p><strong>Error frecuente</strong>: el reporte no refleja la venta recién creada. Confirma que <code>guardar()</code> navega a <code>/ventas/reporte</code> <strong>después</strong> de que el <code>POST</code> responda (dentro de <code>next</code>, no antes) — si la navegación ocurriera antes de la respuesta, <code>VentaReporteComponent</code> cargaría el reporte con los datos de antes de guardar.</p>
 <h3 id="311-relacionar-con-ads-y-bd2">3.11 Relacionar con ADS y BD2<a class="headerlink" href="#311-relacionar-con-ads-y-bd2" title="Permanent link">&para;</a></h3>
-<p>Sesión equivalente en los otros dos cursos, misma semana: ADS S9 modela el mismo escenario de "registrar una venta" con diagramas de secuencia y de actividades — el <code>confirm()</code> de 2.5 y 3.7 es, en el frontend, la misma decisión que esa guía documenta como el punto donde el usuario autoriza la operación antes de que el backend la ejecute. BD2 S9 continúa con las vistas y procedimientos que alimentan reportes agregados como el de 3.9 — <code>VentaReporte</code> del backend ya resuelve el agregado en SQL (<code>VentaRepository.agregados</code>), exactamente el tipo de consulta que esa sesión profundiza del lado de la base de datos.</p>
+<p>Sesión equivalente en los otros dos cursos, misma semana: ADS S9 modela el mismo escenario de "registrar una venta" con diagramas de secuencia y de actividades — el <code>confirm()</code> de 2.5 y 3.8 es, en el frontend, la misma decisión que esa guía documenta como el punto donde el usuario autoriza la operación antes de que el backend la ejecute. BD2 S9 continúa con las vistas y procedimientos que alimentan reportes agregados como el de 3.7 — <code>VentaReporte</code> del backend ya resuelve el agregado en SQL (<code>VentaRepository.agregados</code>), exactamente el tipo de consulta que esa sesión profundiza del lado de la base de datos.</p>
 <p><strong>Evidencia de aprendizaje:</strong></p>
 <ul>
 <li>Modelos de <code>Venta</code> y sus DTO, reflejando exactamente los del backend (sin campos inventados).</li>
@@ -4944,7 +4994,7 @@ caso de Knight Capital (1.6).
 <li>Relaciona el caso de Knight Capital con un escenario concreto de tu propio formulario donde la ausencia de confirmación tendría consecuencias reales.</li>
 </ol>
 <h3 id="46-rubrica-de-evaluacion">4.6 Rúbrica de evaluación<a class="headerlink" href="#46-rubrica-de-evaluacion" title="Permanent link">&para;</a></h3>
-<p><strong>Tabla 5. Rúbrica de evaluación</strong></p>
+<p><strong>Tabla 6. Rúbrica de evaluación</strong></p>
 <table>
 <thead>
 <tr>
