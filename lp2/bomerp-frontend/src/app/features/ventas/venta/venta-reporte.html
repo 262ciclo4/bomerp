@@ -10,6 +10,7 @@
   <select #filtro (change)="filtrarPorEstado(filtro.value)">
     <option value="">Todos</option>
     <option value="REGISTRADA">Registrada</option>
+    <option value="ANULADA">Anulada</option>
   </select>
 </label>
 
@@ -39,6 +40,7 @@
         <th>Estado</th>
         <th>Líneas</th>
         <th>Total</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -48,9 +50,14 @@
           <td>{{ venta.estado }}</td>
           <td>{{ venta.detalles.length }}</td>
           <td>{{ venta.total | currency: 'PEN' : 'S/ ' }}</td>
+          <td>
+            @if (venta.estado === 'REGISTRADA') {
+              <button type="button" (click)="anular(venta.id)">Anular</button>
+            }
+          </td>
         </tr>
         <tr class="fila-detalle">
-          <td colspan="4">
+          <td colspan="5">
             <table class="tabla-detalle">
               <thead>
                 <tr>
@@ -75,7 +82,7 @@
         </tr>
       } @empty {
         <tr>
-          <td colspan="4">No hay ventas registradas para este filtro.</td>
+          <td colspan="5">No hay ventas registradas para este filtro.</td>
         </tr>
       }
     </tbody>

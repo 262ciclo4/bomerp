@@ -52,4 +52,12 @@ export class VentaReporteComponent implements OnInit {
     this.hastaFiltro.set(hasta);
     this.cargar();
   }
+
+  anular(id: number): void {
+    if (!confirm('¿Anular esta venta? El stock de sus productos se restaurará.')) return;
+    this.ventaService.anular(id).subscribe({
+      next: () => this.cargar(),
+      error: () => this.error.set('No se pudo anular la venta.'),
+    });
+  }
 }

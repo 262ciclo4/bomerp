@@ -27,4 +27,8 @@ export class VentaService {
     if (hasta) params = params.set('hasta', hasta);
     return this.http.get<VentaResponse[]>(this.api.buildUrl(this.resource), { params });
   }
+
+  anular(id: number): Observable<VentaResponse> {
+    return this.http.patch<VentaResponse>(this.api.buildUrl(`${this.resource}/${id}/anular`), {});
+  }
 }

@@ -26,7 +26,7 @@ Al concluir la clase, estarás en condiciones de:
 
 ### 1.4 Producto de sesión
 
-`VentaForm` en la SPA (`lp2/bomerp-frontend`): formulario con `FormArray` de líneas (selección de producto, cantidad, subtotal calculado en vivo), total general recalculado con cada cambio, validación de que exista al menos una línea y de que cada una tenga producto y cantidad válidos, confirmación explícita antes de enviar, y manejo específico de los errores reales del backend (producto inexistente, stock insuficiente). Además, `VentaReporteComponent`, una vista de consulta que trae `GET /api/v1/ventas` con filtro por estado y por rango de fechas, calculando en el navegador los agregados (cantidad de ventas, monto total, ticket promedio) a partir de los totales ya calculados por el servidor, mostrando siempre, debajo de cada venta, su detalle real línea por línea, ya incluido en la misma respuesta.
+`VentaForm` en la SPA (`lp2/bomerp-frontend`): formulario con `FormArray` de líneas (selección de producto, cantidad, subtotal calculado en vivo), total general recalculado con cada cambio, validación de que exista al menos una línea y de que cada una tenga producto y cantidad válidos, confirmación explícita antes de enviar, y manejo específico de los errores reales del backend (producto inexistente, stock insuficiente). Además, `VentaReporteComponent`, una vista de consulta que trae `GET /api/v1/ventas` con filtro por estado y por rango de fechas, calculando en el navegador los agregados (cantidad de ventas, monto total, ticket promedio) a partir de los totales ya calculados por el servidor, mostrando siempre, debajo de cada venta, su detalle real línea por línea, ya incluido en la misma respuesta, con la posibilidad de anular una venta `REGISTRADA` (`PATCH /api/v1/ventas/{id}/anular`), restaurando el stock de sus productos.
 
 ### 1.5 Metodología
 
@@ -35,7 +35,7 @@ Al concluir la clase, estarás en condiciones de:
 | Actividades a Realizar en el Periodo | Orientaciones generales (Orientaciones Metodológicas) | Material de estudio recomendado |
 |---|---|---|
 | Revisión previa individual | Repasar el pseudocódigo de `VentaServiceImpl.crear` (S4) y el contrato REST de `ventas` (ADS S8, Tabla 17): qué campos decide el servidor y qué errores puede devolver (404, 409). Trabajo individual, antes de clase. | S4 (backend), ADS S8 (Tablas 10, 17), S8 LP2 (2.2-2.4). |
-| Clase presencial | Construcción guiada de `VentaForm` con detalle dinámico, cálculo de totales, validación, confirmación, y de `VentaReporteComponent` con sus filtros (estado y rango de fechas) y el detalle real de cada venta. Trabajo individual en la propia laptop, siguiendo al docente paso a paso. | Backend ejecutable y SPA de S8, Pasos 3.1 a 3.13 de esta guía. |
+| Clase presencial | Construcción guiada de `VentaForm` con detalle dinámico, cálculo de totales, validación, confirmación, y de `VentaReporteComponent` con sus filtros (estado y rango de fechas), el detalle real de cada venta y la anulación con restauración de stock. Trabajo individual en la propia laptop, siguiendo al docente paso a paso. | Backend ejecutable y SPA de S8, Pasos 3.1 a 3.14 de esta guía. |
 | Evaluación formativa | Verificación en clase de una venta registrada de punta a punta (con sus líneas, su total y la confirmación) y del reporte reflejando esa venta. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4. | Indicaciones de entrega (4.3), rúbrica de evaluación (4.6). |
 
 ### 1.6 Motivación de la sesión
@@ -236,7 +236,8 @@ Tiempo: 120 min.
 - **3.9** Manejar los errores reales del backend (404, 409).
 - **3.10** Rediseñar el reporte para mostrar el detalle de cada venta.
 - **3.11** Agregar filtro por rango de fechas al reporte.
-- **3.12** Probar el formulario transaccional completo.
+- **3.12** Agregar la facilidad de anular una venta.
+- **3.13** Probar el formulario transaccional completo.
 
 ### 3.1 Verificar el punto de partida
 
@@ -1026,7 +1027,162 @@ A diferencia del `<select>` de estado, que filtra en cuanto cambia (`(change)="f
 
 Prueba: con al menos dos ventas registradas en días distintos, filtra con un rango que incluya solo una — debe desaparecer la otra de la tabla y los tres agregados de arriba deben recalcularse sobre la que queda. Deja ambos campos vacíos y haz clic en **Filtrar por fecha** de nuevo: deben volver a aparecer todas.
 
-### 3.12 Probar el formulario transaccional completo
+### 3.12 Agregar la facilidad de anular una venta
+
+**Producto del paso:** la transición `REGISTRADA → ANULADA` del ciclo de vida de `Venta`, diseñada desde ADS S9 (2.5, Figura 6 y Tabla 8 de esa guía) pero nunca implementada hasta hoy — ni `ANULADA` existía en el backend. Este paso cierra esa brecha de punta a punta: el `enum` real, el endpoint, la restauración de stock, y el botón en el reporte.
+
+El permiso de quién puede anular (ADS S9 lo deja condicionado a `SUPERVISOR`/`ADMIN`, "mismo criterio que RN8 de S8") **no se implementa todavía** — RN8 depende del `vendedorId` que viene del JWT, y LP2 recién construye autenticación en S10. Por ahora, cualquiera que use la SPA puede anular cualquier venta `REGISTRADA`; restringirlo por rol es trabajo de S10-S11, no de hoy.
+
+#### Backend
+
+**En `EstadoVenta.java`, agrega el valor que faltaba:**
+
+```java
+public enum EstadoVenta {
+    REGISTRADA,
+    ANULADA
+}
+```
+
+**En `ProductoService.java` y `ProductoServiceImpl.java`, agrega la operación inversa a `descontarStock` (S4):**
+
+```java
+// ProductoService.java — nueva firma
+void restaurarStock(Long id, Integer cantidad);
+```
+
+```java
+// ProductoServiceImpl.java — nueva implementación
+@Override
+@Transactional
+public void restaurarStock(Long id, Integer cantidad) {
+    Producto producto = buscarOFallar(id);
+    producto.setStock(producto.getStock() + cantidad);
+    productoRepository.save(producto);
+}
+```
+
+A diferencia de `descontarStock` (S4), `restaurarStock` no valida nada — no hay un "stock máximo" que pueda excederse al devolver unidades, así que no hace falta ningún `if` antes de sumar.
+
+**Crea `pe/edu/upeu/bomerp/exception/VentaYaAnuladaException.java`**, siguiendo el mismo patrón que `StockInsuficienteException` (S4):
+
+```java
+package pe.edu.upeu.bomerp.exception;
+
+public class VentaYaAnuladaException extends RuntimeException {
+    public VentaYaAnuladaException(String mensaje) {
+        super(mensaje);
+    }
+}
+```
+
+**En `GlobalExceptionHandler.java`, agrega su manejador** (mismo código `409 Conflict` que `StockInsuficienteException`, porque es la misma clase de problema: un estado del recurso que impide la operación, no un dato inválido):
+
+```java
+@ExceptionHandler(VentaYaAnuladaException.class)
+public ResponseEntity<Map<String, Object>> handleVentaYaAnulada(VentaYaAnuladaException ex) {
+    Map<String, Object> body = new HashMap<>();
+    body.put("timestamp", Instant.now().toString());
+    body.put("status", HttpStatus.CONFLICT.value());
+    body.put("error", "Conflict");
+    body.put("message", ex.getMessage());
+    return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
+}
+```
+
+**En `VentaService.java`, agrega la firma:**
+
+```java
+VentaResponse anular(Long id);
+```
+
+**En `VentaServiceImpl.java`, agrega la implementación:**
+
+```java
+@Override
+@Transactional
+public VentaResponse anular(Long id) {
+    Venta venta = ventaRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Venta no encontrada: " + id));
+    if (venta.getEstado() != EstadoVenta.REGISTRADA) {
+        throw new VentaYaAnuladaException("La venta " + id + " ya está anulada");
+    }
+    for (DetalleVenta detalle : venta.getDetalles()) {
+        productoService.restaurarStock(detalle.getProductoId(), detalle.getCantidad());
+    }
+    venta.setEstado(EstadoVenta.ANULADA);
+    return ventaMapper.toResponse(ventaRepository.save(venta));
+}
+```
+
+El `for` recorre `venta.getDetalles()` — no `request`, no un DTO nuevo: la propia relación `@OneToMany` que `Venta` ya tiene (S4) basta para saber qué productos y qué cantidades devolver, sin que el cliente mande nada más que el `id`. El `if` es la misma regla de la Tabla 8 de ADS S9 ("la venta está en `REGISTRADA`"): sin él, anular una venta ya anulada devolvería stock una segunda vez, inflándolo.
+
+**En `VentaController.java`, agrega el endpoint:**
+
+```java
+@Operation(summary = "Anula una venta registrada, restaurando el stock de sus productos")
+@PatchMapping("/{id}/anular")
+public ResponseEntity<VentaResponse> anular(@PathVariable Long id) {
+    return ResponseEntity.ok(ventaService.anular(id));
+}
+```
+
+`PATCH`, no `PUT` ni `DELETE`: la venta no se reemplaza completa (`PUT`) ni desaparece (`DELETE`) — cambia un solo campo, su estado. `PATCH /ventas/{id}/anular` es la misma convención de acción-sobre-recurso que ya usa el resto de la API (ADS S8).
+
+**Error frecuente**: olvidar que `restaurarStock` debe ir **antes** de `venta.setEstado(EstadoVenta.ANULADA)`, no después. El orden en sí no rompe nada (los dos cambios están dentro de la misma transacción, `@Transactional`, y se confirman juntos o ninguno) — pero sí importa para la legibilidad: el código debe leerse en el mismo orden en que ocurre la regla de negocio real ("se devuelve el stock, y por eso queda anulada"), no al revés.
+
+#### Frontend
+
+**En `venta-service.ts`, agrega el método:**
+
+```ts
+  anular(id: number): Observable<VentaResponse> {
+    return this.http.patch<VentaResponse>(this.api.buildUrl(`${this.resource}/${id}/anular`), {});
+  }
+```
+
+El segundo argumento de `patch` (`{}`) es el *body* de la petición — vacío, porque `anular` no necesita que el cliente mande ningún dato: toda la información que la operación usa (qué productos, qué cantidades) ya vive en el backend, asociada al `id` de la URL.
+
+**En `venta-reporte.ts`, agrega el método con su confirmación:**
+
+```ts
+  anular(id: number): void {
+    if (!confirm('¿Anular esta venta? El stock de sus productos se restaurará.')) return;
+    this.ventaService.anular(id).subscribe({
+      next: () => this.cargar(),
+      error: () => this.error.set('No se pudo anular la venta.'),
+    });
+  }
+```
+
+Igual que `confirmarYGuardar` (3.8), una operación que no se puede deshacer desde la pantalla pide confirmación explícita antes de ejecutarse. Si la anulación tiene éxito, `next` no actualiza la venta a mano — llama a `cargar()` de nuevo, la misma estrategia que ya usa `guardar()` al registrar: la fuente de verdad es siempre lo que el backend devuelve en la próxima consulta, no un cálculo local de "cómo debería quedar" el estado.
+
+**En `venta-reporte.html`, agrega la opción `ANULADA` al filtro de estado:**
+
+```html
+    <option value="REGISTRADA">Registrada</option>
+    <option value="ANULADA">Anulada</option>
+```
+
+**Y el botón "Anular", visible solo en ventas `REGISTRADA`:**
+
+```html
+          <td>
+            @if (venta.estado === 'REGISTRADA') {
+              <button type="button" (click)="anular(venta.id)">Anular</button>
+            }
+          </td>
+```
+
+(agrega también `<th></th>` al `<thead>` para la columna nueva, y sube los `colspan` de `4` a `5` en la fila de detalle y en la fila `@empty` — la tabla ahora tiene cinco columnas)
+
+El `@if` sobre `venta.estado === 'REGISTRADA'` no es una validación de formulario — es la misma regla de negocio que el backend ya aplica en `anular()` (una venta `ANULADA` no puede volver a anularse), mostrada en pantalla **antes** de que el usuario intente hacer algo que el servidor rechazaría. Si el botón no estuviera condicionado, una venta ya anulada seguiría mostrando "Anular", y el clic terminaría en un `409` — funcionalmente inofensivo (el backend lo rechaza igual), pero confuso para quien usa el reporte.
+
+**Error frecuente**: anular una venta y no ver el stock restaurado en **Productos**. Confirma que `anular()` en el frontend realmente llama a `cargar()` después de la respuesta exitosa (no antes) — y que estás mirando la lista de productos actualizada (recárgala si la tenías abierta en otra pestaña desde antes de anular).
+
+Prueba: registra una venta de prueba, anota el stock de uno de sus productos antes de anularla. Haz clic en **Anular**, confirma el diálogo, y verifica tres cosas: la venta pasa a `ANULADA` en el reporte (y su botón "Anular" desaparece), el stock del producto en **Productos** sube exactamente la cantidad que tenía esa línea, y los tres agregados del reporte (total de ventas, monto total, ticket promedio) **no** cambian — siguen contando la venta anulada, porque `ventas()` (3.7) trae todas las ventas que calcen con el filtro, sin excluir las anuladas por defecto. Intenta anular la misma venta una segunda vez (el botón ya no debería estar, pero si fuerzas la petición con Swagger): debe responder `409`, con el mensaje "ya está anulada".
+
+### 3.13 Probar el formulario transaccional completo
 
 Con `lp2/bomerp-backend` corriendo y `npm start` activo:
 
@@ -1036,13 +1192,14 @@ Con `lp2/bomerp-backend` corriendo y `npm start` activo:
 4. Confirma que la SPA te lleva a **Reporte de ventas** y que la venta recién creada aparece en la tabla, con el total correcto, y que los agregados de arriba (total de ventas, monto total, ticket promedio) cambiaron respecto a antes de registrarla.
 5. Confirma que el detalle de la venta recién creada (3.10) ya aparece debajo de su fila, sin ningún clic: las líneas deben coincidir exactamente con las que completaste en el formulario.
 6. Filtra el reporte por un rango de fechas que excluya la venta recién creada (3.11): debe desaparecer de la tabla, y los agregados deben recalcularse sin ella.
-7. Repite el registro eligiendo una cantidad mayor al stock disponible de un producto: debe aparecer el mensaje específico de stock insuficiente, con el nombre del producto, sin que la venta quede registrada ni el reporte cambie.
+7. Anula la venta recién creada (3.12): verifica que su estado cambia a `ANULADA`, que el botón "Anular" desaparece, y que el stock de sus productos se restauró en **Productos**.
+8. Repite el registro eligiendo una cantidad mayor al stock disponible de un producto: debe aparecer el mensaje específico de stock insuficiente, con el nombre del producto, sin que la venta quede registrada ni el reporte cambie.
 
 **Error frecuente**: el reporte no refleja la venta recién creada. Confirma que `guardar()` navega a `/ventas/reporte` **después** de que el `POST` responda (dentro de `next`, no antes) — si la navegación ocurriera antes de la respuesta, `VentaReporteComponent` cargaría el reporte con los datos de antes de guardar.
 
-### 3.13 Relacionar con ADS y BD2
+### 3.14 Relacionar con ADS y BD2
 
-Sesión equivalente en los otros dos cursos, misma semana: ADS S9 modela el mismo escenario de "registrar una venta" con diagramas de secuencia y de actividades — el `confirm()` de 2.5 y 3.8 es, en el frontend, la misma decisión que esa guía documenta como el punto donde el usuario autoriza la operación antes de que el backend la ejecute. BD2 S9 continúa con las vistas y procedimientos que alimentan reportes agregados a nivel de base de datos — el backend expone `GET /api/v1/ventas/resumen`, con su agregado resuelto en SQL (`VentaRepository.agregados`), que el reporte de 3.7 consume directamente; desde 3.10, el reporte deja de depender de ese agregado (2.6), pero la consulta SQL sigue siendo exactamente el tipo de trabajo que esa sesión profundiza del lado de la base de datos.
+Sesión equivalente en los otros dos cursos, misma semana: ADS S9 modela el mismo escenario de "registrar una venta" con diagramas de secuencia y de actividades — el `confirm()` de 2.5 y 3.8 es, en el frontend, la misma decisión que esa guía documenta como el punto donde el usuario autoriza la operación antes de que el backend la ejecute. La transición `REGISTRADA → ANULADA` que ADS S9 diseñó (su Tabla 8) y dejó marcada como brecha sin implementar queda cerrada con 3.12 — la próxima vez que se dicte ADS S9 o S11, esa nota de "brecha en S8/LP2" ya no describe el estado real del proyecto. BD2 S9 continúa con las vistas y procedimientos que alimentan reportes agregados a nivel de base de datos — el backend expone `GET /api/v1/ventas/resumen`, con su agregado resuelto en SQL (`VentaRepository.agregados`), que el reporte de 3.7 consume directamente; desde 3.10, el reporte deja de depender de ese agregado (2.6), pero la consulta SQL sigue siendo exactamente el tipo de trabajo que esa sesión profundiza del lado de la base de datos.
 
 **Evidencia de aprendizaje:**
 
@@ -1053,7 +1210,8 @@ Sesión equivalente en los otros dos cursos, misma semana: ADS S9 modela el mism
 - Manejo específico de los errores 404 y 409 del backend.
 - `VentaReporteComponent` con filtro por estado, filtro por rango de fechas, y agregados reales del servidor.
 - Detalle real de cada venta mostrado siempre en el reporte, sin peticiones adicionales por venta.
-- Flujo completo probado: registrar una venta, ver el reporte actualizado, ver su detalle, y el caso de stock insuficiente.
+- `ANULADA` implementada de punta a punta (enum, endpoint, restauración de stock, botón condicionado) — cierra una brecha diseñada desde ADS S9.
+- Flujo completo probado: registrar una venta, ver el reporte actualizado, ver su detalle, anularla, y el caso de stock insuficiente.
 
 ## 4. Crea: actividad autónoma
 
