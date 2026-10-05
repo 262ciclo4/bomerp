@@ -26,7 +26,7 @@ Al concluir la clase, estarás en condiciones de:
 
 ### 1.4 Producto de sesión
 
-`VentaForm` en la SPA (`lp2/bomerp-frontend`): formulario con `FormArray` de líneas (selección de producto, cantidad, subtotal calculado en vivo), total general recalculado con cada cambio, validación de que exista al menos una línea y de que cada una tenga producto y cantidad válidos, confirmación explícita antes de enviar, y manejo específico de los errores reales del backend (producto inexistente, stock insuficiente). Además, `VentaReporteComponent`, una vista de consulta que trae `GET /api/v1/ventas` con filtro por estado y por rango de fechas, calculando en el navegador los agregados (cantidad de ventas, monto total, ticket promedio) a partir de los totales ya calculados por el servidor, mostrando siempre, debajo de cada venta, su detalle real línea por línea, ya incluido en la misma respuesta, con la posibilidad de anular una venta `REGISTRADA` (`PATCH /api/v1/ventas/{id}/anular`), restaurando el stock de sus productos.
+`VentaForm` en la SPA (`lp2/bomerp-frontend`): formulario con `FormArray` de líneas (producto elegido por autocomplete con su precio visible, cantidad, precio unitario y subtotal calculados en vivo), total general recalculado con cada cambio, validación de que exista al menos una línea y de que cada una tenga producto y cantidad válidos, confirmación explícita antes de enviar, y manejo específico de los errores reales del backend (producto inexistente, stock insuficiente). Además, `VentaReporteComponent`, una vista de consulta que trae `GET /api/v1/ventas` con filtro por estado y por rango de fechas, calculando en el navegador los agregados (cantidad de ventas, monto total, ticket promedio) a partir de los totales ya calculados por el servidor, mostrando siempre, debajo de cada venta, su detalle real línea por línea, ya incluido en la misma respuesta, con la posibilidad de anular una venta `REGISTRADA` (`PATCH /api/v1/ventas/{id}/anular`), restaurando el stock de sus productos.
 
 ### 1.5 Metodología
 
@@ -35,7 +35,7 @@ Al concluir la clase, estarás en condiciones de:
 | Actividades a Realizar en el Periodo | Orientaciones generales (Orientaciones Metodológicas) | Material de estudio recomendado |
 |---|---|---|
 | Revisión previa individual | Repasar el pseudocódigo de `VentaServiceImpl.crear` (S4) y el contrato REST de `ventas` (ADS S8, Tabla 17): qué campos decide el servidor y qué errores puede devolver (404, 409). Trabajo individual, antes de clase. | S4 (backend), ADS S8 (Tablas 10, 17), S8 LP2 (2.2-2.4). |
-| Clase presencial | Construcción guiada de `VentaForm` con detalle dinámico, cálculo de totales, validación, confirmación, y de `VentaReporteComponent` con sus filtros (estado y rango de fechas), el detalle real de cada venta y la anulación con restauración de stock. Trabajo individual en la propia laptop, siguiendo al docente paso a paso. | Backend ejecutable y SPA de S8, Pasos 3.1 a 3.14 de esta guía. |
+| Clase presencial | Construcción guiada de `VentaForm` con detalle dinámico, selección de producto por autocomplete con precio, cálculo de totales, validación, confirmación, y de `VentaReporteComponent` con sus filtros (estado y rango de fechas), el detalle real de cada venta y la anulación con restauración de stock. Trabajo individual en la propia laptop, siguiendo al docente paso a paso. | Backend ejecutable y SPA de S8, Pasos 3.1 a 3.15 de esta guía. |
 | Evaluación formativa | Verificación en clase de una venta registrada de punta a punta (con sus líneas, su total y la confirmación) y del reporte reflejando esa venta. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4. | Indicaciones de entrega (4.3), rúbrica de evaluación (4.6). |
 
 ### 1.6 Motivación de la sesión
@@ -237,7 +237,8 @@ Tiempo: 120 min.
 - **3.10** Rediseñar el reporte para mostrar el detalle de cada venta.
 - **3.11** Agregar filtro por rango de fechas al reporte.
 - **3.12** Agregar la facilidad de anular una venta.
-- **3.13** Probar el formulario transaccional completo.
+- **3.13** Agregar autocomplete con precio a la selección de producto.
+- **3.14** Probar el formulario transaccional completo.
 
 ### 3.1 Verificar el punto de partida
 
@@ -1182,12 +1183,146 @@ El `@if` sobre `venta.estado === 'REGISTRADA'` no es una validación de formular
 
 Prueba: registra una venta de prueba, anota el stock de uno de sus productos antes de anularla. Haz clic en **Anular**, confirma el diálogo, y verifica tres cosas: la venta pasa a `ANULADA` en el reporte (y su botón "Anular" desaparece), el stock del producto en **Productos** sube exactamente la cantidad que tenía esa línea, y los tres agregados del reporte (total de ventas, monto total, ticket promedio) **no** cambian — siguen contando la venta anulada, porque `ventas()` (3.7) trae todas las ventas que calcen con el filtro, sin excluir las anuladas por defecto. Intenta anular la misma venta una segunda vez (el botón ya no debería estar, pero si fuerzas la petición con Swagger): debe responder `409`, con el mensaje "ya está anulada".
 
-### 3.13 Probar el formulario transaccional completo
+### 3.13 Agregar autocomplete con precio a la selección de producto
+
+**Producto del paso:** reemplaza el `<select>` de 3.4 por un campo de autocompletado (Angular Material, ya usado en `ProductoList`, S8) — con un catálogo grande (500 productos, por ejemplo), un `<select>` nativo obliga a desplazar una lista larguísima sin poder buscar por texto. El autocomplete filtra mientras el usuario escribe, y cada opción muestra el precio junto al nombre, para comparar antes de elegir. Además, se agrega una columna "Precio unitario" visible una vez elegido el producto, distinta del "Subtotal" que ya existía desde 3.5.
+
+**En `venta-form.ts`, agrega los imports de Angular Material y ajusta el arreglo `imports` del componente:**
+
+```ts
+import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+```
+
+```ts
+@Component({
+  selector: 'app-venta-form',
+  imports: [
+    ReactiveFormsModule,
+    RouterLink,
+    CurrencyPipe,
+    MatAutocompleteModule,
+    MatFormFieldModule,
+    MatInputModule,
+  ],
+  templateUrl: './venta-form.html',
+})
+```
+
+**Agrega un campo de búsqueda a cada línea, en `crearLinea()`:**
+
+```ts
+  private crearLinea() {
+    return this.fb.nonNullable.group({
+      productoId: [0, [Validators.min(1)]],
+      busqueda: [''],
+      cantidad: [1, [Validators.required, Validators.min(1)]],
+    });
+  }
+```
+
+`busqueda` no es un campo que el backend conozca — es solo el texto que el usuario escribe para filtrar, y nunca se envía (eso se resuelve más abajo, en `guardar()`). `productoId` sigue siendo el valor real: el autocomplete solo decide **qué** valor escribirle, nunca deja de ser la fuente de verdad que `Validators.min(1)` ya validaba desde 3.4.
+
+**Agrega dos `computed` nuevos, junto a `subtotales` (3.5):**
+
+```ts
+  protected readonly preciosUnitarios = computed(() =>
+    this.valoresDetalles().map((linea) => {
+      const producto = this.productos().find((p) => p.id === linea.productoId);
+      return producto?.precio ?? 0;
+    }),
+  );
+
+  protected readonly opcionesPorLinea = computed(() =>
+    this.valoresDetalles().map((linea) => {
+      const texto = (linea.busqueda ?? '').toLowerCase();
+      return this.productos().filter((p) => p.nombre.toLowerCase().includes(texto));
+    }),
+  );
+```
+
+`preciosUnitarios` es casi idéntico a `subtotales` (3.5): la misma búsqueda del producto por `id`, pero devolviendo `precio` solo, sin multiplicar por `cantidad`. `opcionesPorLinea` reutiliza el mismo `valoresDetalles` (3.5) que ya reacciona a cada tecla que el usuario escribe — una lista de productos filtrados, una por cada línea del formulario.
+
+**Agrega el método que aplica la selección:**
+
+```ts
+  protected seleccionarProducto(indice: number, evento: MatAutocompleteSelectedEvent): void {
+    const producto: Producto = evento.option.value;
+    this.lineasForm.at(indice).patchValue({ productoId: producto.id, busqueda: producto.nombre });
+  }
+```
+
+Cuando el usuario hace clic en una opción, `mat-autocomplete` entrega el objeto `Producto` completo que se le pasó a `[value]` en cada `mat-option` (abajo) — `seleccionarProducto` toma ese objeto y escribe **dos** campos a la vez: `productoId` (el que de verdad se envía) y `busqueda` (para que el campo de texto muestre el nombre elegido, no se quede con lo que el usuario tecleó a medias).
+
+**Reemplaza el `<select>` en `venta-form.html` por el autocomplete, y agrega la columna de precio unitario:**
+
+```html
+<th>Producto</th>
+<th>Precio unitario</th>
+<th>Cantidad</th>
+```
+
+```html
+          <td>
+            <mat-form-field>
+              <input
+                type="text"
+                matInput
+                formControlName="busqueda"
+                [matAutocomplete]="auto"
+                placeholder="Buscar producto"
+              />
+              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="seleccionarProducto($index, $event)">
+                @for (producto of opcionesPorLinea()[$index]; track producto.id) {
+                  <mat-option [value]="producto">
+                    {{ producto.nombre }} — {{ producto.precio | currency: 'PEN' : 'S/ ' }}
+                  </mat-option>
+                }
+              </mat-autocomplete>
+            </mat-form-field>
+          </td>
+          <td>{{ preciosUnitarios()[$index] | currency: 'PEN' : 'S/ ' }}</td>
+```
+
+Y sube el `colspan` del `<tfoot>` de `2` a `3` (ahora "Producto", "Precio unitario" y "Cantidad" son tres columnas antes de "Total", no dos):
+
+```html
+<td colspan="3">Total</td>
+```
+
+**En `guardar()`, construye `detalles` explícitamente en vez de usar `form.getRawValue()` directo:**
+
+```ts
+  private guardar(): void {
+    this.error.set(null);
+    this.loading.set(true);
+    const detalles = this.lineasForm.getRawValue().map(({ productoId, cantidad }) => ({ productoId, cantidad }));
+    this.ventaService.crear({ detalles }).subscribe({
+      next: () => this.router.navigate(['/ventas/reporte']),
+      error: (err: HttpErrorResponse) => this.manejarErrorGuardado(err),
+    });
+  }
+```
+
+`form.getRawValue()` ahora incluiría `busqueda` en cada línea — un campo que `DetalleVentaRequest` (backend) no tiene. Jackson lo ignoraría igual (no hay `FAIL_ON_UNKNOWN_PROPERTIES` configurado), así que no rompería nada, pero enviar un campo que el backend nunca pidió no es el criterio de esta guía (2.3, RN3/RN4): el formulario nunca debe mandar más de lo que el contrato real espera. Construir `detalles` explícitamente, campo por campo, deja en el propio código qué se envía y qué no, sin depender de que el backend sea tolerante.
+
+**Error frecuente**: poner `[value]="producto.id"` en vez de `[value]="producto"` en `mat-option`. Si la opción entrega solo el `id`, `seleccionarProducto` recibiría un número en `evento.option.value`, y `producto.id`/`producto.nombre` dentro del método fallarían en tiempo de ejecución (`Cannot read properties of undefined`) — un número no tiene esas propiedades.
+
+Prueba: abre **Nueva venta**, haz clic en el campo de producto de la primera línea y escribe parte del nombre de un producto real — la lista debe filtrarse mientras escribes, mostrando nombre y precio en cada opción. Selecciona una: el campo debe mostrar el nombre completo, la columna "Precio unitario" debe llenarse, y el "Subtotal" debe calcularse igual que antes. Escribe texto que no coincida con ningún producto: la lista debe quedar vacía. Intenta **Registrar venta** sin haber seleccionado ninguna opción real (solo con texto escrito): el formulario debe seguir inválido, igual que antes con el `<select>` en `0`.
+
+**Figura 3. Resultado final: `VentaForm` con autocomplete, precio unitario y subtotal en vivo**
+
+![Formulario Nueva venta con tres líneas: "Teclado 1" a S/ 20.00, "sd" a S/ 12.00, y una tercera línea todavía con el placeholder "Buscar producto" sin seleccionar, cada una con su cantidad, precio unitario y subtotal, y el total general en S/ 32.00](img/s09-3.13-autocomplete-resultado.png)
+
+La tercera línea de la Figura 3, todavía sin producto elegido, es exactamente el caso que `Validators.min(1)` sobre `productoId` bloquea: su precio unitario y su subtotal se quedan en `S/ 0.00` — no porque el cálculo falle, sino porque `preciosUnitarios`/`subtotales` (ambos `computed`) no encuentran ningún producto con `id` igual a `0` en `productos()`, y el formulario completo seguiría inválido si se intentara **Registrar venta** en este estado.
+
+### 3.14 Probar el formulario transaccional completo
 
 Con `lp2/bomerp-backend` corriendo y `npm start` activo:
 
-1. Abre **Nueva venta**, agrega dos líneas con productos distintos y cantidades válidas. Confirma que el subtotal de cada línea y el total se actualizan en vivo al cambiar cualquier cantidad.
-2. Intenta **Registrar venta** con una línea sin producto elegido: debe quedar marcada como inválida, sin que aparezca el diálogo de confirmación.
+1. Abre **Nueva venta**, agrega dos líneas buscando productos distintos por nombre en el autocomplete (3.13) y cantidades válidas. Confirma que el precio unitario, el subtotal de cada línea y el total se actualizan en vivo.
+2. Intenta **Registrar venta** con una línea sin seleccionar ningún producto del autocomplete: debe quedar marcada como inválida, sin que aparezca el diálogo de confirmación.
 3. Completa las líneas y haz clic en **Registrar venta**: el diálogo debe mostrar la cantidad de líneas y el total exacto. Cancela una vez (nada debe enviarse) y vuelve a intentarlo confirmando.
 4. Confirma que la SPA te lleva a **Reporte de ventas** y que la venta recién creada aparece en la tabla, con el total correcto, y que los agregados de arriba (total de ventas, monto total, ticket promedio) cambiaron respecto a antes de registrarla.
 5. Confirma que el detalle de la venta recién creada (3.10) ya aparece debajo de su fila, sin ningún clic: las líneas deben coincidir exactamente con las que completaste en el formulario.
@@ -1197,7 +1332,7 @@ Con `lp2/bomerp-backend` corriendo y `npm start` activo:
 
 **Error frecuente**: el reporte no refleja la venta recién creada. Confirma que `guardar()` navega a `/ventas/reporte` **después** de que el `POST` responda (dentro de `next`, no antes) — si la navegación ocurriera antes de la respuesta, `VentaReporteComponent` cargaría el reporte con los datos de antes de guardar.
 
-### 3.14 Relacionar con ADS y BD2
+### 3.15 Relacionar con ADS y BD2
 
 Sesión equivalente en los otros dos cursos, misma semana: ADS S9 modela el mismo escenario de "registrar una venta" con diagramas de secuencia y de actividades — el `confirm()` de 2.5 y 3.8 es, en el frontend, la misma decisión que esa guía documenta como el punto donde el usuario autoriza la operación antes de que el backend la ejecute. La transición `REGISTRADA → ANULADA` que ADS S9 diseñó (su Tabla 8) y dejó marcada como brecha sin implementar queda cerrada con 3.12 — la próxima vez que se dicte ADS S9 o S11, esa nota de "brecha en S8/LP2" ya no describe el estado real del proyecto. BD2 S9 continúa con las vistas y procedimientos que alimentan reportes agregados a nivel de base de datos — el backend expone `GET /api/v1/ventas/resumen`, con su agregado resuelto en SQL (`VentaRepository.agregados`), que el reporte de 3.7 consume directamente; desde 3.10, el reporte deja de depender de ese agregado (2.6), pero la consulta SQL sigue siendo exactamente el tipo de trabajo que esa sesión profundiza del lado de la base de datos.
 
@@ -1206,6 +1341,7 @@ Sesión equivalente en los otros dos cursos, misma semana: ADS S9 modela el mism
 - Modelos de `Venta` y sus DTO, reflejando exactamente los del backend (sin campos inventados).
 - `VentaForm` con `FormArray` de líneas, subtotales y total calculados en vivo.
 - Agregar y quitar líneas dinámicamente, con al menos una línea siempre presente.
+- Selección de producto por autocomplete, con su precio visible al elegir y en una columna propia.
 - Validación de la operación completa y confirmación explícita antes de enviar.
 - Manejo específico de los errores 404 y 409 del backend.
 - `VentaReporteComponent` con filtro por estado, filtro por rango de fechas, y agregados reales del servidor.
@@ -1224,7 +1360,7 @@ Replicación autónoma de un formulario transaccional cabecera-detalle sobre el 
 Completa y evidencia estas tareas:
 
 1. Elige una operación cabecera-detalle de tu propio dominio (una cabecera con una colección variable de líneas, equivalente a `Venta`/`DetalleVenta`) y define sus modelos, reflejando exactamente los DTO de tu backend.
-2. Construye el formulario con `FormArray`, con al menos una línea inicial y botones para agregar y quitar líneas, manteniendo siempre al menos una.
+2. Construye el formulario con `FormArray`, con al menos una línea inicial, botones para agregar y quitar líneas (manteniendo siempre al menos una), y selección del elemento de cada línea por búsqueda/autocomplete (no un `<select>` con todas las opciones cargadas), mostrando su precio u otro dato relevante antes de elegir.
 3. Calcula en vivo al menos un valor derivado por línea y un total general, usando `computed` sobre los valores del formulario — ninguno enviado como campo editable al backend.
 4. Valida la colección completa (al menos una línea) además de los campos de cada línea, y agrega una confirmación explícita antes de enviar, mostrando el resumen de la operación.
 5. Maneja al menos dos errores reales distintos que tu backend pueda devolver para esta operación, con un mensaje específico para cada uno.
@@ -1318,7 +1454,7 @@ caso de Knight Capital (1.6).
 
 | Criterio | Peso (%) | A (20 pts) | B (15 pts) | C (10 pts) | D (5 pts) | Nivel obtenido |
 |---|---:|---|---|---|---|---:|
-| 1. Formulario con detalle dinámico* | 20 | `FormArray` completo, agregar/quitar líneas funcional, al menos una línea siempre presente. | Funcional, con algún caso borde (quitar la última línea) sin resolver. | `FormArray` incompleto o sin agregar/quitar en vivo. | No presenta formulario con detalle dinámico. | |
+| 1. Formulario con detalle dinámico* | 20 | `FormArray` completo, agregar/quitar líneas funcional, al menos una línea siempre presente, producto elegido por búsqueda/autocomplete con su precio visible. | Funcional, con algún caso borde (quitar la última línea, o selección sin búsqueda) sin resolver. | `FormArray` incompleto o sin agregar/quitar en vivo. | No presenta formulario con detalle dinámico. | |
 | 2. Cálculos y validación* | 20 | Subtotales y total recalculados en vivo con `computed`, validación de colección completa correcta. | Cálculos correctos, validación de colección incompleta. | Cálculos manuales (no reactivos) o validación solo de campos individuales. | No presenta cálculos ni validación de colección. | |
 | 3. Confirmación y manejo de errores* | 20 | Confirmación con resumen real antes de enviar, al menos dos errores del backend manejados con mensajes específicos. | Confirmación presente, manejo de errores parcial o genérico. | Confirmación sin resumen útil, o un solo error manejado. | No presenta confirmación ni manejo de errores. | |
 | 4. Consulta o reporte, con detalle y filtros* | 20 | Vista con agregados, detalle real de cada registro, y al menos dos filtros (estado y rango de fechas) probados. | Vista funcional con detalle, pero con un solo filtro o agregados incompletos. | Vista que muestra solo un resumen, sin el detalle real, o sin ningún filtro. | No presenta vista de consulta o reporte. | |

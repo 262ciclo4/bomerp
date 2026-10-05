@@ -2,6 +2,9 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { ProductoService } from '../../catalogo/producto/producto-service';
 import { Producto } from '../../catalogo/producto/producto.model';
 import { VentaService } from './venta-service';
@@ -10,7 +13,14 @@ import { CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'app-venta-form',
-  imports: [ReactiveFormsModule, RouterLink, CurrencyPipe],
+  imports: [
+    ReactiveFormsModule,
+    RouterLink,
+    CurrencyPipe,
+    MatAutocompleteModule,
+    MatFormFieldModule,
+    MatInputModule,
+  ],
   templateUrl: './venta-form.html',
 })
 export class VentaForm {
@@ -41,6 +51,20 @@ export class VentaForm {
 
   protected readonly total = computed(() => this.subtotales().reduce((suma, s) => suma + s, 0));
 
+  protected readonly preciosUnitarios = computed(() =>
+    this.valoresDetalles().map((linea) => {
+      const producto = this.productos().find((p) => p.id === linea.productoId);
+      return producto?.precio ?? 0;
+    }),
+  );
+
+  protected readonly opcionesPorLinea = computed(() =>
+    this.valoresDetalles().map((linea) => {
+      const texto = (linea.busqueda ?? '').toLowerCase();
+      return this.productos().filter((p) => p.nombre.toLowerCase().includes(texto));
+    }),
+  );
+
   constructor() {
     this.productoService.listar().subscribe({
       next: (data) => this.productos.set(data),
@@ -55,6 +79,7 @@ export class VentaForm {
   private crearLinea() {
     return this.fb.nonNullable.group({
       productoId: [0, [Validators.min(1)]],
+      busqueda: [''],
       cantidad: [1, [Validators.required, Validators.min(1)]],
     });
   }
@@ -67,6 +92,11 @@ export class VentaForm {
     if (this.lineasForm.length > 1) {
       this.lineasForm.removeAt(indice);
     }
+  }
+
+  protected seleccionarProducto(indice: number, evento: MatAutocompleteSelectedEvent): void {
+    const producto: Producto = evento.option.value;
+    this.lineasForm.at(indice).patchValue({ productoId: producto.id, busqueda: producto.nombre });
   }
 
   protected confirmarYGuardar(): void {
@@ -84,7 +114,8 @@ export class VentaForm {
   private guardar(): void {
     this.error.set(null);
     this.loading.set(true);
-    this.ventaService.crear(this.form.getRawValue()).subscribe({
+    const detalles = this.lineasForm.getRawValue().map(({ productoId, cantidad }) => ({ productoId, cantidad }));
+    this.ventaService.crear({ detalles }).subscribe({
       next: () => this.router.navigate(['/ventas/reporte']),
       error: (err: HttpErrorResponse) => this.manejarErrorGuardado(err),
     });
