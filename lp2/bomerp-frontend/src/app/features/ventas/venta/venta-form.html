@@ -43,4 +43,7 @@
   </table>
 
   <button type="button" (click)="agregarLinea()">Agregar línea</button>
+
+    <button type="button" (click)="confirmarYGuardar()" [disabled]="loading()">Registrar venta</button>
 </form>
+

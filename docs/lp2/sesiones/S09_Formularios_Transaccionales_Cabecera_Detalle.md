@@ -26,7 +26,7 @@ Al concluir la clase, estarás en condiciones de:
 
 ### 1.4 Producto de sesión
 
-`VentaForm` en la SPA (`lp2/bomerp-frontend`): formulario con `FormArray` de líneas (selección de producto, cantidad, subtotal calculado en vivo), total general recalculado con cada cambio, validación de que exista al menos una línea y de que cada una tenga producto y cantidad válidos, confirmación explícita antes de enviar, y manejo específico de los errores reales del backend (producto inexistente, stock insuficiente). Además, `VentaReporteComponent`, una vista de consulta que trae `GET /api/v1/ventas/resumen` con filtros por estado y rango de fechas, mostrando los agregados (cantidad de ventas, monto total, ticket promedio) y el detalle resumido de cada venta.
+`VentaForm` en la SPA (`lp2/bomerp-frontend`): formulario con `FormArray` de líneas (selección de producto, cantidad, subtotal calculado en vivo), total general recalculado con cada cambio, validación de que exista al menos una línea y de que cada una tenga producto y cantidad válidos, confirmación explícita antes de enviar, y manejo específico de los errores reales del backend (producto inexistente, stock insuficiente). Además, `VentaReporteComponent`, una vista de consulta que trae `GET /api/v1/ventas` con filtro por estado y por rango de fechas, calculando en el navegador los agregados (cantidad de ventas, monto total, ticket promedio) a partir de los totales ya calculados por el servidor, mostrando siempre, debajo de cada venta, su detalle real línea por línea, ya incluido en la misma respuesta.
 
 ### 1.5 Metodología
 
@@ -35,7 +35,7 @@ Al concluir la clase, estarás en condiciones de:
 | Actividades a Realizar en el Periodo | Orientaciones generales (Orientaciones Metodológicas) | Material de estudio recomendado |
 |---|---|---|
 | Revisión previa individual | Repasar el pseudocódigo de `VentaServiceImpl.crear` (S4) y el contrato REST de `ventas` (ADS S8, Tabla 17): qué campos decide el servidor y qué errores puede devolver (404, 409). Trabajo individual, antes de clase. | S4 (backend), ADS S8 (Tablas 10, 17), S8 LP2 (2.2-2.4). |
-| Clase presencial | Construcción guiada de `VentaForm` con detalle dinámico, cálculo de totales, validación, confirmación, y de `VentaReporteComponent` con sus filtros. Trabajo individual en la propia laptop, siguiendo al docente paso a paso. | Backend ejecutable y SPA de S8, Pasos 3.1 a 3.10 de esta guía. |
+| Clase presencial | Construcción guiada de `VentaForm` con detalle dinámico, cálculo de totales, validación, confirmación, y de `VentaReporteComponent` con sus filtros (estado y rango de fechas) y el detalle real de cada venta. Trabajo individual en la propia laptop, siguiendo al docente paso a paso. | Backend ejecutable y SPA de S8, Pasos 3.1 a 3.13 de esta guía. |
 | Evaluación formativa | Verificación en clase de una venta registrada de punta a punta (con sus líneas, su total y la confirmación) y del reporte reflejando esa venta. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4. | Indicaciones de entrega (4.3), rúbrica de evaluación (4.6). |
 
 ### 1.6 Motivación de la sesión
@@ -234,7 +234,9 @@ Tiempo: 120 min.
 - **3.7** Crear `VentaReporteComponent` con filtros.
 - **3.8** Validar la operación y agregar la confirmación.
 - **3.9** Manejar los errores reales del backend (404, 409).
-- **3.10** Probar el formulario transaccional completo.
+- **3.10** Rediseñar el reporte para mostrar el detalle de cada venta.
+- **3.11** Agregar filtro por rango de fechas al reporte.
+- **3.12** Probar el formulario transaccional completo.
 
 ### 3.1 Verificar el punto de partida
 
@@ -562,7 +564,7 @@ Prueba: agrega dos líneas más, elige productos distintos en cada una, confirma
 
 ### 3.7 Crear `VentaReporteComponent` con filtros
 
-**Producto del paso:** la vista de consulta, con los agregados del backend y filtros por estado y rango de fechas (2.6) — construida **antes** que la confirmación de 3.8, porque `guardar()` necesita poder navegar a una ruta que ya exista.
+**Producto del paso:** la vista de consulta, con los agregados del backend y filtro por estado (2.6) — construida **antes** que la confirmación de 3.8, porque `guardar()` necesita poder navegar a una ruta que ya exista.
 
 Crea **`lp2/bomerp-frontend/src/app/features/ventas/venta/venta-reporte.ts`**:
 
@@ -746,7 +748,285 @@ El `409` de `StockInsuficienteException` ya trae, en su propio mensaje (ADS S8, 
 
 **Error frecuente**: probar el caso de stock insuficiente y no conseguir que el backend lo rechace. La transacción de `crear` (ADS S8, RN6) descuenta el stock línea por línea, en el orden en que aparecen en el formulario — si quieres forzar el `409` de la segunda línea, asegúrate de que la **primera** línea sí tenga stock suficiente; si la primera ya falla, el error que ves es el mismo `409`, pero sobre un producto distinto al que pensabas probar.
 
-### 3.10 Probar el formulario transaccional completo
+### 3.10 Rediseñar el reporte para mostrar el detalle de cada venta
+
+**Producto del paso:** este paso **reemplaza** la fuente de datos que 3.7 dejó funcionando — no la extiende. `GET /api/v1/ventas/resumen` nunca trae el detalle línea por línea de una venta (2.6, `VentaResumen` lo omite a propósito), así que mostrarlo exige cambiar de dónde viene la lista: `GET /api/v1/ventas` (el mismo endpoint real de `buscar`, S4) sí devuelve cada venta completa, con su `detalles` incluido. Como consecuencia, los tres números del agregado (cantidad de ventas, monto total, ticket promedio) dejan de venir pre-calculados del servidor y pasan a calcularse en el propio navegador, a partir de la lista.
+
+Esto es una excepción deliberada, no una vuelta atrás sobre la regla de 2.3 y 2.5: lo que nunca debe calcular el cliente es el **total de una venta individual** — `venta.total` sigue viniendo siempre de `VentaServiceImpl.crear` (S4), nunca recalculado aquí. Lo que sí se calcula en el navegador, desde este paso, es un **agregado sobre totales que ya son de confianza**: sumar y promediar valores que el servidor ya certificó no tiene el mismo riesgo que inventar el total de una transacción nueva. Si prefieres no tocar lo que 3.7 ya dejó funcionando, puedes detenerte ahí — el reporte agregado sigue siendo una entrega válida, solo sin el detalle por venta.
+
+**En `venta.model.ts`**, `VentaResumen`, `VentaAgregado` y `VentaReporte` ya no hacen falta en el frontend — bórralas. `VentaResponse` (la que ya tenías) alcanza para todo lo que el reporte necesita ahora.
+
+**En `venta-service.ts`, reemplaza el método `reporte` completo por este `buscar`:**
+
+```ts
+  buscar(estado?: string, ordenarPor = 'fecha', direccion = 'DESC'): Observable<VentaResponse[]> {
+    let params = new HttpParams().set('ordenarPor', ordenarPor).set('direccion', direccion);
+    if (estado) params = params.set('estado', estado);
+    return this.http.get<VentaResponse[]>(this.api.buildUrl(this.resource), { params });
+  }
+```
+
+Quita también `VentaReporte` del `import` de `venta.model.ts` en este archivo (ya no se usa ningún tipo de ahí salvo `VentaRequest`/`VentaResponse`).
+
+**En `venta-reporte.ts`, reemplaza la clase completa:**
+
+```ts
+import { CurrencyPipe, DatePipe } from '@angular/common';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { VentaService } from './venta-service';
+import { VentaResponse } from './venta.model';
+
+@Component({
+  selector: 'app-venta-reporte',
+  imports: [CurrencyPipe, DatePipe],
+  templateUrl: './venta-reporte.html',
+})
+export class VentaReporteComponent implements OnInit {
+  private readonly ventaService = inject(VentaService);
+
+  protected readonly ventas = signal<VentaResponse[]>([]);
+  protected readonly estadoFiltro = signal('');
+  protected readonly error = signal<string | null>(null);
+  protected readonly loading = signal(false);
+
+  protected readonly totalVentas = computed(() => this.ventas().length);
+  protected readonly montoTotal = computed(() =>
+    this.ventas().reduce((suma, v) => suma + v.total, 0),
+  );
+  protected readonly ticketPromedio = computed(() =>
+    this.totalVentas() === 0 ? 0 : this.montoTotal() / this.totalVentas(),
+  );
+
+  ngOnInit(): void {
+    this.cargar();
+  }
+
+  cargar(): void {
+    this.loading.set(true);
+    this.error.set(null);
+    this.ventaService.buscar(this.estadoFiltro() || undefined).subscribe({
+      next: (data) => this.ventas.set(data),
+      error: () => this.error.set('No se pudo cargar el reporte de ventas.'),
+      complete: () => this.loading.set(false),
+    });
+  }
+
+  filtrarPorEstado(estado: string): void {
+    this.estadoFiltro.set(estado);
+    this.cargar();
+  }
+}
+```
+
+Tres cambios respecto a 3.7, todos consecuencia del mismo cambio de fuente: `reporte` (una señal con la forma `VentaReporte`) se reemplaza por `ventas` (la lista plana `VentaResponse[]`); `totalVentas`/`montoTotal`/`ticketPromedio` pasan de ser campos de esa forma a ser `computed` sobre `ventas()`, recalculándose solos cada vez que `cargar()` trae una lista nueva (mismo patrón de 2.3, aplicado a un agregado en vez de a un subtotal por línea); y `cargar()` llama a `buscar` en vez de `reporte`. No hace falta ningún estado para mostrar u ocultar el detalle — se muestra siempre, porque `ventas()` ya trae el `detalles` de cada una.
+
+**En `venta-reporte.html`, reemplaza la plantilla completa:**
+
+```html
+@if (loading()) {
+  <p>Cargando reporte...</p>
+}
+@if (error()) {
+  <p class="error">{{ error() }}</p>
+}
+
+<label>
+  Filtrar por estado
+  <select #filtro (change)="filtrarPorEstado(filtro.value)">
+    <option value="">Todos</option>
+    <option value="REGISTRADA">Registrada</option>
+  </select>
+</label>
+
+@if (!loading() && !error()) {
+  <section>
+    <p>Total de ventas: {{ totalVentas() }}</p>
+    <p>Monto total: {{ montoTotal() | currency: 'PEN' : 'S/ ' }}</p>
+    <p>Ticket promedio: {{ ticketPromedio() | currency: 'PEN' : 'S/ ' }}</p>
+  </section>
+
+  <table class="reporte-ventas">
+    <thead>
+      <tr>
+        <th>Fecha</th>
+        <th>Estado</th>
+        <th>Líneas</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (venta of ventas(); track venta.id) {
+        <tr class="fila-venta">
+          <td>{{ venta.fecha | date: 'short' }}</td>
+          <td>{{ venta.estado }}</td>
+          <td>{{ venta.detalles.length }}</td>
+          <td>{{ venta.total | currency: 'PEN' : 'S/ ' }}</td>
+        </tr>
+        <tr class="fila-detalle">
+          <td colspan="4">
+            <table class="tabla-detalle">
+              <thead>
+                <tr>
+                  <th>Producto</th>
+                  <th>Cantidad</th>
+                  <th>Precio unitario</th>
+                  <th>Subtotal</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (detalle of venta.detalles; track detalle.productoId) {
+                  <tr>
+                    <td>{{ detalle.nombreProducto }}</td>
+                    <td>{{ detalle.cantidad }}</td>
+                    <td>{{ detalle.precioUnitario | currency: 'PEN' : 'S/ ' }}</td>
+                    <td>{{ detalle.subtotal | currency: 'PEN' : 'S/ ' }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="4">No hay ventas registradas para este filtro.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}
+```
+
+Tres diferencias con la plantilla de 3.7: el bloque `@if (reporte(); as r)` se reemplaza por `@if (!loading() && !error())` (ya no hay un único objeto `reporte` que envuelva todo, así que la condición de visibilidad se arma con las señales de carga/error directamente); `r.agregado.*`/`r.ventas` se reemplazan por `totalVentas()`/`montoTotal()`/`ticketPromedio()`/`ventas()`; y `venta.cantidadDetalles` (un número que `VentaResumen` ya traía contado) se reemplaza por `venta.detalles.length` (el mismo conteo, calculado sobre el arreglo que ahora sí está disponible). La fila nueva con la tabla anidada del detalle es agregado puro — no reemplaza nada de 3.7, y se muestra **siempre**, sin ningún botón ni estado que la abra o la cierre: cada venta ya trae su detalle, así que no hay razón para ocultarlo detrás de un clic.
+
+El segundo `<tr>` de cada venta vive **dentro** del mismo `@for`, justo después del primero — en Angular, dos elementos hermanos dentro de un mismo bloque `@for` se repiten juntos en cada iteración, sin que haga falta ningún contenedor extra que rompa la estructura de `<table>`.
+
+**Error frecuente**: dejar el `<td colspan="4">` de la fila de detalle como `colspan="5"` (si en algún momento tuviste la versión con el botón de 3.10 anterior) o como un número que no coincide con las columnas reales del `<thead>` — la tabla anidada queda descuadrada respecto a las columnas de arriba.
+
+Sin ningún estilo, las dos tablas (la de ventas y la de detalle anidada en cada una) se ven idénticas — nada le indica al ojo dónde termina una venta y empieza la siguiente, ni que la segunda tabla es un detalle de la primera, no una fila más. Por eso la plantilla de arriba ya trae las clases `reporte-ventas`, `fila-venta`, `fila-detalle` y `tabla-detalle`: agrega este bloque a `lp2/bomerp-frontend/src/styles.css` (el único stylesheet de la app — ningún componente tiene uno propio todavía, S7-S8):
+
+```css
+.reporte-ventas {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.reporte-ventas thead th {
+  text-align: left;
+  padding: 0.5rem;
+  border-bottom: 2px solid #333;
+}
+
+.reporte-ventas .fila-venta {
+  border-top: 2px solid #ccc;
+}
+
+.reporte-ventas .fila-venta td {
+  padding: 0.5rem;
+  font-weight: 600;
+}
+
+.reporte-ventas .fila-detalle td {
+  padding: 0 0.5rem 0.75rem 2rem;
+}
+
+.tabla-detalle {
+  width: 100%;
+  background: #f4f4f4;
+  border-radius: 4px;
+}
+
+.tabla-detalle th {
+  text-align: left;
+  font-size: 0.85em;
+  font-weight: 600;
+  color: #555;
+  padding: 0.25rem 0.5rem;
+}
+
+.tabla-detalle td {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.9em;
+}
+```
+
+La idea es simple: `fila-venta` queda en negrita y con un borde superior que marca dónde empieza cada venta nueva; `tabla-detalle` tiene un fondo gris claro y letra más chica, para que se lea como "lo de adentro de la fila de arriba", no como una tabla al mismo nivel. Ningún selector de aquí toca `table` a secas — `ProductoList` (S8) y cualquier otra tabla de la SPA siguen exactamente igual que antes.
+
+Prueba: abre **Reporte de ventas** con al menos dos ventas registradas — debajo de cada fila debe aparecer, sin ningún clic, su lista de productos con cantidad, precio unitario y subtotal, exactamente lo mismo que mostraba el formulario al registrarla, con un fondo gris claro que la distingue de la fila de la venta. Confirma que donde empieza cada venta nueva se nota un borde — no debe verse como una sola tabla continua de filas sueltas. Verifica también, con las herramientas de desarrollador del navegador (pestaña Red), que cargar el reporte sigue siendo **una sola petición** (`GET /api/v1/ventas`) — el detalle de todas las ventas llega de una vez, no una por una.
+
+### 3.11 Agregar filtro por rango de fechas al reporte
+
+**Producto del paso:** dos campos de fecha ("Desde"/"Hasta") y un botón "Filtrar por fecha" en `VentaReporteComponent`, que usan los parámetros `desde`/`hasta` que `GET /api/v1/ventas` ya acepta (visible en Swagger, `VentaController.buscar`) pero que `buscar` (3.3) todavía no mandaba — hasta este paso, el filtro de la pantalla solo cubría `estado`.
+
+**En `venta-service.ts`, reemplaza la firma de `buscar` por esta, con `desde` y `hasta` agregados:**
+
+```ts
+  buscar(
+    estado?: string,
+    desde?: string,
+    hasta?: string,
+    ordenarPor = 'fecha',
+    direccion = 'DESC',
+  ): Observable<VentaResponse[]> {
+    let params = new HttpParams().set('ordenarPor', ordenarPor).set('direccion', direccion);
+    if (estado) params = params.set('estado', estado);
+    if (desde) params = params.set('desde', desde);
+    if (hasta) params = params.set('hasta', hasta);
+    return this.http.get<VentaResponse[]>(this.api.buildUrl(this.resource), { params });
+  }
+```
+
+**En `venta-reporte.ts`, agrega dos señales y actualiza `cargar`:**
+
+```ts
+  protected readonly desdeFiltro = signal('');
+  protected readonly hastaFiltro = signal('');
+```
+
+```ts
+  cargar(): void {
+    this.loading.set(true);
+    this.error.set(null);
+    const desde = this.desdeFiltro() ? `${this.desdeFiltro()}T00:00:00` : undefined;
+    const hasta = this.hastaFiltro() ? `${this.hastaFiltro()}T23:59:59` : undefined;
+    this.ventaService.buscar(this.estadoFiltro() || undefined, desde, hasta).subscribe({
+      next: (data) => this.ventas.set(data),
+      error: () => this.error.set('No se pudo cargar el reporte de ventas.'),
+      complete: () => this.loading.set(false),
+    });
+  }
+
+  filtrarPorFecha(desde: string, hasta: string): void {
+    this.desdeFiltro.set(desde);
+    this.hastaFiltro.set(hasta);
+    this.cargar();
+  }
+```
+
+El backend espera `LocalDateTime` en formato ISO (`2026-10-01T00:00:00`, ADS S8), pero un `<input type="date">` del navegador solo entrega la fecha (`2026-10-01`, sin hora) — por eso `cargar()` completa la hora: `T00:00:00` para "desde" (desde el inicio del día) y `T23:59:59` para "hasta" (hasta el final del día), así el rango incluye el día completo en ambos extremos, no solo el instante exacto de medianoche.
+
+**En `venta-reporte.html`, agrega los dos campos y el botón, después del filtro de estado:**
+
+```html
+<label>
+  Desde
+  <input type="date" #desde />
+</label>
+
+<label>
+  Hasta
+  <input type="date" #hasta />
+</label>
+
+<button type="button" (click)="filtrarPorFecha(desde.value, hasta.value)">Filtrar por fecha</button>
+```
+
+A diferencia del `<select>` de estado, que filtra en cuanto cambia (`(change)="filtrarPorEstado(...)"`), el rango de fechas necesita un botón explícito: con dos campos, filtrar en cuanto uno cambia dispararía una consulta con la fecha a medio completar (por ejemplo, "desde" puesto y "hasta" todavía vacío) — el botón espera a que ambos campos tengan el valor que el usuario realmente quiere antes de consultar.
+
+**Error frecuente**: elegir una fecha "Desde" posterior a "Hasta" y no entender por qué el reporte queda vacío. El backend no valida ese caso como error — simplemente no hay ninguna venta cuya fecha caiga en un rango invertido, así que la respuesta es una lista vacía, no un `400`. Si el reporte se queda sin filas después de filtrar, revisa primero el orden de las fechas antes de sospechar de otra cosa.
+
+Prueba: con al menos dos ventas registradas en días distintos, filtra con un rango que incluya solo una — debe desaparecer la otra de la tabla y los tres agregados de arriba deben recalcularse sobre la que queda. Deja ambos campos vacíos y haz clic en **Filtrar por fecha** de nuevo: deben volver a aparecer todas.
+
+### 3.12 Probar el formulario transaccional completo
 
 Con `lp2/bomerp-backend` corriendo y `npm start` activo:
 
@@ -754,13 +1034,15 @@ Con `lp2/bomerp-backend` corriendo y `npm start` activo:
 2. Intenta **Registrar venta** con una línea sin producto elegido: debe quedar marcada como inválida, sin que aparezca el diálogo de confirmación.
 3. Completa las líneas y haz clic en **Registrar venta**: el diálogo debe mostrar la cantidad de líneas y el total exacto. Cancela una vez (nada debe enviarse) y vuelve a intentarlo confirmando.
 4. Confirma que la SPA te lleva a **Reporte de ventas** y que la venta recién creada aparece en la tabla, con el total correcto, y que los agregados de arriba (total de ventas, monto total, ticket promedio) cambiaron respecto a antes de registrarla.
-5. Repite el registro eligiendo una cantidad mayor al stock disponible de un producto: debe aparecer el mensaje específico de stock insuficiente, con el nombre del producto, sin que la venta quede registrada ni el reporte cambie.
+5. Confirma que el detalle de la venta recién creada (3.10) ya aparece debajo de su fila, sin ningún clic: las líneas deben coincidir exactamente con las que completaste en el formulario.
+6. Filtra el reporte por un rango de fechas que excluya la venta recién creada (3.11): debe desaparecer de la tabla, y los agregados deben recalcularse sin ella.
+7. Repite el registro eligiendo una cantidad mayor al stock disponible de un producto: debe aparecer el mensaje específico de stock insuficiente, con el nombre del producto, sin que la venta quede registrada ni el reporte cambie.
 
 **Error frecuente**: el reporte no refleja la venta recién creada. Confirma que `guardar()` navega a `/ventas/reporte` **después** de que el `POST` responda (dentro de `next`, no antes) — si la navegación ocurriera antes de la respuesta, `VentaReporteComponent` cargaría el reporte con los datos de antes de guardar.
 
-### 3.11 Relacionar con ADS y BD2
+### 3.13 Relacionar con ADS y BD2
 
-Sesión equivalente en los otros dos cursos, misma semana: ADS S9 modela el mismo escenario de "registrar una venta" con diagramas de secuencia y de actividades — el `confirm()` de 2.5 y 3.8 es, en el frontend, la misma decisión que esa guía documenta como el punto donde el usuario autoriza la operación antes de que el backend la ejecute. BD2 S9 continúa con las vistas y procedimientos que alimentan reportes agregados como el de 3.7 — `VentaReporte` del backend ya resuelve el agregado en SQL (`VentaRepository.agregados`), exactamente el tipo de consulta que esa sesión profundiza del lado de la base de datos.
+Sesión equivalente en los otros dos cursos, misma semana: ADS S9 modela el mismo escenario de "registrar una venta" con diagramas de secuencia y de actividades — el `confirm()` de 2.5 y 3.8 es, en el frontend, la misma decisión que esa guía documenta como el punto donde el usuario autoriza la operación antes de que el backend la ejecute. BD2 S9 continúa con las vistas y procedimientos que alimentan reportes agregados a nivel de base de datos — el backend expone `GET /api/v1/ventas/resumen`, con su agregado resuelto en SQL (`VentaRepository.agregados`), que el reporte de 3.7 consume directamente; desde 3.10, el reporte deja de depender de ese agregado (2.6), pero la consulta SQL sigue siendo exactamente el tipo de trabajo que esa sesión profundiza del lado de la base de datos.
 
 **Evidencia de aprendizaje:**
 
@@ -769,8 +1051,9 @@ Sesión equivalente en los otros dos cursos, misma semana: ADS S9 modela el mism
 - Agregar y quitar líneas dinámicamente, con al menos una línea siempre presente.
 - Validación de la operación completa y confirmación explícita antes de enviar.
 - Manejo específico de los errores 404 y 409 del backend.
-- `VentaReporteComponent` con filtro por estado y agregados reales del servidor.
-- Flujo completo probado: registrar una venta, ver el reporte actualizado, y el caso de stock insuficiente.
+- `VentaReporteComponent` con filtro por estado, filtro por rango de fechas, y agregados reales del servidor.
+- Detalle real de cada venta mostrado siempre en el reporte, sin peticiones adicionales por venta.
+- Flujo completo probado: registrar una venta, ver el reporte actualizado, ver su detalle, y el caso de stock insuficiente.
 
 ## 4. Crea: actividad autónoma
 

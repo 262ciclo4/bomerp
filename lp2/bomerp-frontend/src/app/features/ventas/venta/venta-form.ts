@@ -69,4 +69,42 @@ export class VentaForm {
     }
   }
 
+  protected confirmarYGuardar(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+    const cantidadLineas = this.lineasForm.length;
+    const resumen = `Vas a registrar una venta de ${cantidadLineas} línea(s) por un total de ` +
+      `S/ ${this.total().toFixed(2)}. ¿Confirmar?`;
+    if (!confirm(resumen)) return;
+    this.guardar();
+  }
+
+  private guardar(): void {
+    this.error.set(null);
+    this.loading.set(true);
+    this.ventaService.crear(this.form.getRawValue()).subscribe({
+      next: () => this.router.navigate(['/ventas/reporte']),
+      error: (err: HttpErrorResponse) => this.manejarErrorGuardado(err),
+    });
+  }
+
+ private manejarErrorGuardado(err: HttpErrorResponse): void {
+    const mensaje: string = err.error?.message ?? '';
+
+    if (err.status === 404 && mensaje.startsWith('Producto no encontrado')) {
+      this.error.set('Uno de los productos elegidos ya no existe. Revisa las líneas de la venta.');
+    } else if (err.status === 409) {
+      this.error.set(mensaje || 'No hay stock suficiente para completar la venta.');
+    } else if (err.status === 400) {
+      this.error.set('Los datos enviados no son válidos. Revisa las líneas de la venta.');
+    } else {
+      this.error.set('No se pudo registrar la venta.');
+    }
+    this.loading.set(false);
+  }
+
+
+
 }
