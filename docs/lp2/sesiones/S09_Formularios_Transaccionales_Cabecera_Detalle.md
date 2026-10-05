@@ -231,9 +231,9 @@ Tiempo: 120 min.
 - **3.4** Crear `VentaForm` con el `FormArray` de líneas.
 - **3.5** Agregar el cálculo de subtotales y total.
 - **3.6** Agregar y quitar líneas dinámicamente.
-- **3.7** Validar la operación y agregar la confirmación.
-- **3.8** Manejar los errores reales del backend (404, 409).
-- **3.9** Crear `VentaReporteComponent` con filtros.
+- **3.7** Crear `VentaReporteComponent` con filtros.
+- **3.8** Validar la operación y agregar la confirmación.
+- **3.9** Manejar los errores reales del backend (404, 409).
 - **3.10** Probar el formulario transaccional completo.
 
 ### 3.1 Verificar el punto de partida
@@ -311,6 +311,20 @@ export interface VentaReporte {
 ```
 
 `VentaRequest` tiene exactamente un campo, `detalles` — igual que la clase real `VentaRequest.java` del backend (ADS S8, Tabla 16): ni `fecha`, ni `estado`, ni `total` se escriben desde el cliente.
+
+**Tabla 5. Los 6 modelos del frontend, comparados campo a campo contra los DTO reales del backend**
+
+| Modelo | Backend (`lp2/bomerp-backend/.../ventas/venta/dto/`) | Frontend (`venta.model.ts`) |
+|---|---|---|
+| `DetalleVentaRequest` | `productoId: Long`, `cantidad: Integer` | `productoId: number`, `cantidad: number` |
+| `DetalleVentaResponse` | `productoId: Long`, `nombreProducto: String`, `precioUnitario: BigDecimal`, `cantidad: Integer`, `subtotal: BigDecimal` | mismos 5 campos |
+| `VentaRequest` | solo `detalles: List<DetalleVentaRequest>` | solo `detalles: DetalleVentaRequest[]` |
+| `VentaResponse` | `id: Long`, `fecha: LocalDateTime`, `estado: String`, `total: BigDecimal`, `detalles: List<DetalleVentaResponse>` | mismos 5 campos |
+| `VentaResumen` | `id`, `fecha`, `estado`, `total`, `cantidadDetalles: long` | mismos 5 campos |
+| `VentaAgregado` | `totalVentas: long`, `montoTotal: BigDecimal`, `ticketPromedio: BigDecimal` | mismos 3 campos |
+| `VentaReporte` | `agregado: VentaAgregado`, `ventas: List<VentaResumen>` | mismos 2 campos |
+
+Los tipos también calzan: `Long`/`Integer`/`long` se mapean a `number`, `BigDecimal` se mapea a `number` (Jackson lo serializa como número JSON), y `LocalDateTime` se mapea a `string` — Spring Boot desactiva `SerializationFeature.WRITE_DATES_AS_TIMESTAMPS` por defecto (sin configuración explícita de Jackson en `application.yml`), así que `fecha` sale como texto ISO-8601, no como un arreglo de timestamp.
 
 ### 3.3 Crear `VentaService`
 
@@ -544,79 +558,11 @@ En `venta-form.html`, agrega el botón de quitar en cada fila y el de agregar de
 
 Prueba: agrega dos líneas más, elige productos distintos en cada una, confirma que el total suma las tres, y quita una — el total debe bajar de inmediato.
 
-### 3.7 Validar la operación y agregar la confirmación
+**Error frecuente**: pegar el botón `agregarLinea()` dentro del `<td>` de cada fila, junto al de `quitarLinea()`, en vez de ponerlo una sola vez después de `</table>`. El resultado funciona (cada botón llama al mismo método sin argumentos), pero deja un botón "Agregar línea" repetido por cada línea en pantalla — confuso para quien usa el formulario, y no es el diseño de esta guía: "agregar" es una acción sobre el formulario completo, no sobre una fila en particular, así que su botón vive fuera de la tabla, no dentro de cada `<tr>`.
 
-**Producto del paso:** el formulario completo, que no deja enviar una operación inválida y pide confirmación antes de guardar (2.4, 2.5).
+### 3.7 Crear `VentaReporteComponent` con filtros
 
-En `venta-form.ts`, agrega el método de confirmación y el de guardado (todavía sin el manejo específico de errores, eso es 3.8):
-
-```ts
-  protected confirmarYGuardar(): void {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
-    const cantidadLineas = this.lineasForm.length;
-    const resumen = `Vas a registrar una venta de ${cantidadLineas} línea(s) por un total de ` +
-      `S/ ${this.total().toFixed(2)}. ¿Confirmar?`;
-    if (!confirm(resumen)) return;
-    this.guardar();
-  }
-
-  private guardar(): void {
-    this.error.set(null);
-    this.loading.set(true);
-    this.ventaService.crear(this.form.getRawValue()).subscribe({
-      next: () => this.router.navigate(['/ventas/reporte']),
-      error: (err: HttpErrorResponse) => this.manejarErrorGuardado(err),
-    });
-  }
-
-  private manejarErrorGuardado(err: HttpErrorResponse): void {
-    this.error.set('No se pudo registrar la venta.');
-    this.loading.set(false);
-  }
-```
-
-En `venta-form.html`, reemplaza el cierre del `<form>` para agregar el botón de confirmar:
-
-```html
-  <button type="button" (click)="confirmarYGuardar()" [disabled]="loading()">Registrar venta</button>
-</form>
-```
-
-Prueba: deja una línea sin elegir producto e intenta **Registrar venta** — no debe aparecer ningún `confirm()`, porque el formulario es inválido antes de llegar a esa pregunta. Completa las líneas y vuelve a intentarlo: debe aparecer el diálogo con la cantidad de líneas y el total exacto que se ve en pantalla; si cancelas, nada se envía.
-
-### 3.8 Manejar los errores reales del backend (404, 409)
-
-**Producto del paso:** los dos errores de negocio reales de `VentaServiceImpl.crear` (ADS S8, RN1 y RN2) distinguidos con un mensaje específico — mismo criterio que `ProductoForm` ya aplicó para la categoría que desaparece (S8, 3.8).
-
-Reemplaza `manejarErrorGuardado` en `venta-form.ts`:
-
-```ts
-  private manejarErrorGuardado(err: HttpErrorResponse): void {
-    const mensaje: string = err.error?.message ?? '';
-
-    if (err.status === 404 && mensaje.startsWith('Producto no encontrado')) {
-      this.error.set('Uno de los productos elegidos ya no existe. Revisa las líneas de la venta.');
-    } else if (err.status === 409) {
-      this.error.set(mensaje || 'No hay stock suficiente para completar la venta.');
-    } else if (err.status === 400) {
-      this.error.set('Los datos enviados no son válidos. Revisa las líneas de la venta.');
-    } else {
-      this.error.set('No se pudo registrar la venta.');
-    }
-    this.loading.set(false);
-  }
-```
-
-El `409` de `StockInsuficienteException` ya trae, en su propio mensaje (ADS S8, código real del backend), el nombre del producto y las cantidades disponible/solicitada — por eso este caso muestra `mensaje` directo en vez de un texto genérico: el backend ya construyó el mensaje más útil posible, repetirlo a mano sería peor que reutilizarlo.
-
-**Error frecuente**: probar el caso de stock insuficiente y no conseguir que el backend lo rechace. La transacción de `crear` (ADS S8, RN6) descuenta el stock línea por línea, en el orden en que aparecen en el formulario — si quieres forzar el `409` de la segunda línea, asegúrate de que la **primera** línea sí tenga stock suficiente; si la primera ya falla, el error que ves es el mismo `409`, pero sobre un producto distinto al que pensabas probar.
-
-### 3.9 Crear `VentaReporteComponent` con filtros
-
-**Producto del paso:** la vista de consulta, con los agregados del backend y filtros por estado y rango de fechas (2.6).
+**Producto del paso:** la vista de consulta, con los agregados del backend y filtros por estado y rango de fechas (2.6) — construida **antes** que la confirmación de 3.8, porque `guardar()` necesita poder navegar a una ruta que ya exista.
 
 Crea **`lp2/bomerp-frontend/src/app/features/ventas/venta/venta-reporte.ts`**:
 
@@ -728,6 +674,78 @@ Registra la ruta en `app.routes.ts` y el enlace en el layout, junto al de **Nuev
       <a routerLink="/ventas/reporte" routerLinkActive="active">Reporte de ventas</a>
 ```
 
+Abre `http://localhost:4200/ventas/reporte`: debe cargar (sin ventas todavía, la tabla mostrará "No hay ventas registradas para este filtro") — confirma que la ruta existe de verdad antes de seguir a 3.8, que va a depender de ella.
+
+### 3.8 Validar la operación y agregar la confirmación
+
+**Producto del paso:** el formulario completo, que no deja enviar una operación inválida y pide confirmación antes de guardar (2.4, 2.5).
+
+En `venta-form.ts`, agrega el método de confirmación y el de guardado (todavía sin el manejo específico de errores, eso es 3.9):
+
+```ts
+  protected confirmarYGuardar(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+    const cantidadLineas = this.lineasForm.length;
+    const resumen = `Vas a registrar una venta de ${cantidadLineas} línea(s) por un total de ` +
+      `S/ ${this.total().toFixed(2)}. ¿Confirmar?`;
+    if (!confirm(resumen)) return;
+    this.guardar();
+  }
+
+  private guardar(): void {
+    this.error.set(null);
+    this.loading.set(true);
+    this.ventaService.crear(this.form.getRawValue()).subscribe({
+      next: () => this.router.navigate(['/ventas/reporte']),
+      error: (err: HttpErrorResponse) => this.manejarErrorGuardado(err),
+    });
+  }
+
+  private manejarErrorGuardado(err: HttpErrorResponse): void {
+    this.error.set('No se pudo registrar la venta.');
+    this.loading.set(false);
+  }
+```
+
+En `venta-form.html`, reemplaza el cierre del `<form>` para agregar el botón de confirmar:
+
+```html
+  <button type="button" (click)="confirmarYGuardar()" [disabled]="loading()">Registrar venta</button>
+</form>
+```
+
+Prueba: deja una línea sin elegir producto e intenta **Registrar venta** — no debe aparecer ningún `confirm()`, porque el formulario es inválido antes de llegar a esa pregunta. Completa las líneas, haz clic en **Registrar venta** y cancela el diálogo una vez — nada debe enviarse. Vuelve a intentarlo confirmando esta vez: como `/ventas/reporte` ya existe (3.7), la venta se guarda de verdad y la SPA te lleva al reporte, donde la venta recién creada debe aparecer.
+
+### 3.9 Manejar los errores reales del backend (404, 409)
+
+**Producto del paso:** los dos errores de negocio reales de `VentaServiceImpl.crear` (ADS S8, RN1 y RN2) distinguidos con un mensaje específico — mismo criterio que `ProductoForm` ya aplicó para la categoría que desaparece (S8, 3.8).
+
+Reemplaza `manejarErrorGuardado` en `venta-form.ts`:
+
+```ts
+  private manejarErrorGuardado(err: HttpErrorResponse): void {
+    const mensaje: string = err.error?.message ?? '';
+
+    if (err.status === 404 && mensaje.startsWith('Producto no encontrado')) {
+      this.error.set('Uno de los productos elegidos ya no existe. Revisa las líneas de la venta.');
+    } else if (err.status === 409) {
+      this.error.set(mensaje || 'No hay stock suficiente para completar la venta.');
+    } else if (err.status === 400) {
+      this.error.set('Los datos enviados no son válidos. Revisa las líneas de la venta.');
+    } else {
+      this.error.set('No se pudo registrar la venta.');
+    }
+    this.loading.set(false);
+  }
+```
+
+El `409` de `StockInsuficienteException` ya trae, en su propio mensaje (ADS S8, código real del backend), el nombre del producto y las cantidades disponible/solicitada — por eso este caso muestra `mensaje` directo en vez de un texto genérico: el backend ya construyó el mensaje más útil posible, repetirlo a mano sería peor que reutilizarlo.
+
+**Error frecuente**: probar el caso de stock insuficiente y no conseguir que el backend lo rechace. La transacción de `crear` (ADS S8, RN6) descuenta el stock línea por línea, en el orden en que aparecen en el formulario — si quieres forzar el `409` de la segunda línea, asegúrate de que la **primera** línea sí tenga stock suficiente; si la primera ya falla, el error que ves es el mismo `409`, pero sobre un producto distinto al que pensabas probar.
+
 ### 3.10 Probar el formulario transaccional completo
 
 Con `lp2/bomerp-backend` corriendo y `npm start` activo:
@@ -742,7 +760,7 @@ Con `lp2/bomerp-backend` corriendo y `npm start` activo:
 
 ### 3.11 Relacionar con ADS y BD2
 
-Sesión equivalente en los otros dos cursos, misma semana: ADS S9 modela el mismo escenario de "registrar una venta" con diagramas de secuencia y de actividades — el `confirm()` de 2.5 y 3.7 es, en el frontend, la misma decisión que esa guía documenta como el punto donde el usuario autoriza la operación antes de que el backend la ejecute. BD2 S9 continúa con las vistas y procedimientos que alimentan reportes agregados como el de 3.9 — `VentaReporte` del backend ya resuelve el agregado en SQL (`VentaRepository.agregados`), exactamente el tipo de consulta que esa sesión profundiza del lado de la base de datos.
+Sesión equivalente en los otros dos cursos, misma semana: ADS S9 modela el mismo escenario de "registrar una venta" con diagramas de secuencia y de actividades — el `confirm()` de 2.5 y 3.8 es, en el frontend, la misma decisión que esa guía documenta como el punto donde el usuario autoriza la operación antes de que el backend la ejecute. BD2 S9 continúa con las vistas y procedimientos que alimentan reportes agregados como el de 3.7 — `VentaReporte` del backend ya resuelve el agregado en SQL (`VentaRepository.agregados`), exactamente el tipo de consulta que esa sesión profundiza del lado de la base de datos.
 
 **Evidencia de aprendizaje:**
 
@@ -847,7 +865,7 @@ caso de Knight Capital (1.6).
 
 ### 4.6 Rúbrica de evaluación
 
-**Tabla 5. Rúbrica de evaluación**
+**Tabla 6. Rúbrica de evaluación**
 
 | Criterio | Peso (%) | A (20 pts) | B (15 pts) | C (10 pts) | D (5 pts) | Nivel obtenido |
 |---|---:|---|---|---|---|---:|

@@ -572,6 +572,44 @@ Tiempo: 5 min.
 
 **Proyección:** S10 toma la misma base de datos ya auditada y optimiza su rendimiento: planes de ejecución, estadísticas con `DBMS_STATS`, `AWR` (*Automatic Workload Repository*) e índices — empezando, justamente, por el índice de `VENTAS` que hoy se reconstruyó sin ninguna estrategia de optimización todavía.
 
+## Anexo: `bomerp-oracle` no abre después de recrear el contenedor (`ORA-01109`)
+
+**Síntoma:** el backend de LP2 falla al arrancar con `ORA-01109: database not open`, y SQL Developer no puede conectar a ningún servicio de `FREEPDB1` — aunque `docker logs bomerp-oracle` ya haya mostrado `DATABASE IS READY TO USE!`.
+
+**Causa:** el `CREATE TABLESPACE TS_BOMERP` de 3.2 crea el datafile sin ruta absoluta (`DATAFILE 'ts_bomerp01.dbf'`), así que Oracle lo guarda en `$ORACLE_HOME/dbs/` — dentro de la capa efímera del contenedor, no en el volumen persistente (`oracle-data`). Si el contenedor se **recrea** (no solo se reinicia), ese datafile se pierde, mientras que los datafiles del sistema (`SYSTEM`, `SYSAUX`, `USERS`, en el volumen persistente) sobreviven. El PDB `FREEPDB1` se queda en `MOUNTED` porque no puede abrir uno de sus datafiles, y eso bloquea **cualquier** conexión a ese *service name* — no solo a `TS_BOMERP`.
+
+**Diagnóstico** (dentro del contenedor, como `sysdba`):
+
+```powershell
+docker exec -it bomerp-oracle sqlplus / as sysdba
+```
+
+```sql
+SELECT name, open_mode FROM v$pdbs;
+SELECT con_id, file#, name, status FROM v$datafile WHERE name LIKE '%ts_bomerp%';
+```
+
+Si `FREEPDB1` aparece `MOUNTED` (no `READ WRITE`), es exactamente este problema.
+
+**Solución** (el contenido de `TS_BOMERP` es descartable — es el tablespace de práctica de esta misma sesión, ninguna tabla base depende de él):
+
+```sql
+ALTER SESSION SET CONTAINER = FREEPDB1;
+ALTER DATABASE DATAFILE '/opt/oracle/product/26ai/dbhomeFree/dbs/ts_bomerp01.dbf' OFFLINE DROP;
+ALTER PLUGGABLE DATABASE FREEPDB1 OPEN;
+DROP TABLESPACE TS_BOMERP INCLUDING CONTENTS;
+```
+
+La ruta exacta del `.dbf` puede variar entre instancias — confírmala primero con la consulta de diagnóstico de arriba antes de ejecutar el `OFFLINE DROP`.
+
+**Para que no vuelva a pasar**, al repetir el `CREATE TABLESPACE` de 3.2, usa una ruta dentro del volumen persistente en vez de solo el nombre del archivo:
+
+```sql
+CREATE TABLESPACE TS_BOMERP
+  DATAFILE '/opt/oracle/oradata/FREE/FREEPDB1/ts_bomerp01.dbf' SIZE 100M
+  AUTOEXTEND ON NEXT 50M MAXSIZE 1G;
+```
+
 ## Bibliografía
 
 1. Fortune. (2016, 15 de mayo). *SWIFT confirms second cyberattack hit a bank*. https://fortune.com/2016/05/15/swift-responsible-bangladesh-heist/
