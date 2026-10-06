@@ -102,6 +102,7 @@ nav:
           - ADR-002 - Spring Modulith: lp2/adr/ADR-002-spring-modulith.md
           - ADR-003 - Versión exacta de Spring Boot 4.0.7: lp2/adr/ADR-003-spring-boot-4.md
           - ADR-004 - JWT diferido a S10: lp2/adr/ADR-004-jwt-diferido.md
+          - ADR-005 - Seguridad JWT propia, lista para reemplazo en U3: lp2/adr/ADR-005-seguridad-jwt-propio-listo-para-reemplazo.md
       - I. Base backend REST modular de BomERP:
           - S1 - Arquitectura backend REST profesional: lp2/sesiones/S01_Arquitectura_Backend_REST_Profesional.md
           - S2 - CRUD REST completo de Producto: lp2/sesiones/S02_CRUD_REST_Completo_Producto.md
@@ -113,3 +114,5 @@ nav:
           - S7 - Creación y arquitectura de la SPA: lp2/sesiones/S07_Creacion_Arquitectura_SPA.md
           - S8 - CRUD de tablas dependientes: lp2/sesiones/S08_CRUD_Tablas_Dependientes.md
           - S9 - Formularios transaccionales cabecera-detalle: lp2/sesiones/S09_Formularios_Transaccionales_Cabecera_Detalle.md
+          - S10 - Seguridad backend JWT y roles: lp2/sesiones/S10_Seguridad_Backend_JWT_Roles.md
+          - S10 (referencia) - Reemplazo de seguridad por Keycloak: lp2/sesiones/S10b_Seguridad_Backend_Keycloak.md

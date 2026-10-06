@@ -21,5 +21,25 @@ services:
       retries: 10
       start_period: 60s
 
+  seguridad-db:
+    image: postgres:17-alpine
+    container_name: bomerp-seguridad-db
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: bomerp_seguridad
+      POSTGRES_USER: bomerp_seguridad
+      POSTGRES_PASSWORD: 123456
+    volumes:
+      - seguridad-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bomerp_seguridad -d bomerp_seguridad"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+
 volumes:
   oracle-data:
+  seguridad-db-data:

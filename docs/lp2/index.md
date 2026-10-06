@@ -109,7 +109,7 @@ flowchart TB
 - Los módulos se comunican mediante servicios Java públicos, sin Feign ni llamadas HTTP internas.
 - Cada módulo administra sus repositorios y tablas; ningún módulo accede directamente a repositorios ajenos — la regla se verifica automáticamente, no solo se documenta.
 - El sílabo expresa estos resultados de manera general; esta página concreta la implementación elegida para BomERP.
-- Detalle completo de esta decisión: [ADR-001](adr/ADR-001-arquitectura-backend.md), [ADR-002](adr/ADR-002-spring-modulith.md), [ADR-003](adr/ADR-003-spring-boot-4.md) y [ADR-004](adr/ADR-004-jwt-diferido.md).
+- Detalle completo de esta decisión: [ADR-001](adr/ADR-001-arquitectura-backend.md), [ADR-002](adr/ADR-002-spring-modulith.md), [ADR-003](adr/ADR-003-spring-boot-4.md), [ADR-004](adr/ADR-004-jwt-diferido.md) y [ADR-005](adr/ADR-005-seguridad-jwt-propio-listo-para-reemplazo.md).
 
 ## Flujo de trabajo
 
@@ -128,3 +128,4 @@ flowchart TB
 - [ADR-002 - Spring Modulith](adr/ADR-002-spring-modulith.md)
 - [ADR-003 - Versión exacta de Spring Boot](adr/ADR-003-spring-boot-4.md)
 - [ADR-004 - JWT diferido a S10](adr/ADR-004-jwt-diferido.md)
+- [ADR-005 - Seguridad JWT propia, lista para reemplazo en U3](adr/ADR-005-seguridad-jwt-propio-listo-para-reemplazo.md)

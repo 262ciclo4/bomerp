@@ -39,7 +39,7 @@ PowerShell; en macOS/Linux, `.\mvnw.cmd` es `./mvnw`.
 Base de datos (Oracle, contenedor `bomerp-oracle`):
 
 ```powershell
-cd lp2/bomerp-backend
+cd bomerp-backend
 docker compose -f compose-dev.yml up -d
 ```
 
@@ -64,7 +64,7 @@ Verificación:
 Con el backend ya respondiendo, en otra terminal:
 
 ```powershell
-cd lp2/bomerp-frontend
+cd bomerp-frontend
 npm install
 npm start
 ```
@@ -75,10 +75,30 @@ Abre `http://localhost:4200`. El frontend apunta al backend por
 archivo que hay que actualizar. El backend ya acepta ese origen por CORS
 (`bomerp.cors.allowed-origins`, `application-dev.yml`).
 
+### 3. Observabilidad ([`obs/`](obs/)), opcional
+
+No hace falta para desarrollar ni para probar backend/frontend — súbelo solo
+cuando necesites ver métricas o logs agregados. Detalle completo en
+[`obs/README.md`](obs/README.md).
+
+```powershell
+cd ../obs
+docker compose -f compose-dev.yml up -d
+```
+
+Verificación:
+
+- Prometheus: `http://localhost:39090`
+- Grafana: `http://localhost:33000` (usuario `admin`, contraseña `admin`)
+- Loki (logs, vía Grafana, no tiene UI propia): `http://localhost:33100`
+
 ### Detener
 
 ```powershell
 docker compose -f compose-dev.yml down
 ```
 
-`Ctrl+C` detiene el backend y el frontend en sus propias terminales.
+Repite el mismo comando dentro de cada carpeta con un `compose-dev.yml`
+levantado (`bomerp-backend/`, `obs/`) — cada una baja solo sus propios
+contenedores. `Ctrl+C` detiene el backend y el frontend en sus propias
+terminales.
