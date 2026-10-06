@@ -34,6 +34,13 @@ El **orden importa**: primero la base de datos, después el backend, y
 recién con el backend respondiendo, el frontend. Los comandos son de
 PowerShell; en macOS/Linux, `.\mvnw.cmd` es `./mvnw`.
 
+`.\mvnw.cmd spring-boot:run` y `npm start` quedan corriendo en primer plano
+— no devuelven el prompt. Para el siguiente paso, **duplica la pestaña**
+(no cierres ni reuses la que tiene un proceso corriendo: cerrarla apaga ese
+servidor) — la pestaña duplicada hereda el directorio de la que ya tenías
+abierta en `lp2/`, así que cada `cd` de abajo es relativo a `lp2/`, no al
+paso anterior.
+
 ### 1. Backend (`bomerp-backend/`)
 
 Base de datos (Oracle, contenedor `bomerp-oracle`):
@@ -82,7 +89,7 @@ cuando necesites ver métricas o logs agregados. Detalle completo en
 [`obs/README.md`](obs/README.md).
 
 ```powershell
-cd ../obs
+cd obs
 docker compose -f compose-dev.yml up -d
 ```
 
