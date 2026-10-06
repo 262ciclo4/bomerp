@@ -101,11 +101,27 @@ Verificación:
 
 ### Detener
 
+`Ctrl+C` detiene el backend y el frontend en sus propias terminales.
+
+Para los contenedores, cada carpeta con su propio `compose-dev.yml`
+(`bomerp-backend/`, `obs/`) baja solo los suyos:
+
 ```powershell
 docker compose -f compose-dev.yml down
 ```
 
-Repite el mismo comando dentro de cada carpeta con un `compose-dev.yml`
-levantado (`bomerp-backend/`, `obs/`) — cada una baja solo sus propios
-contenedores. `Ctrl+C` detiene el backend y el frontend en sus propias
-terminales.
+Todos los contenedores de `lp2` se nombran con el prefijo `bomerp-`
+(`bomerp-oracle`, `bomerp-seguridad-db`, `bomerp-prometheus-dev`...) — a
+propósito, para poder pararlos todos juntos sin entrar carpeta por carpeta:
+
+```powershell
+docker stop (docker ps --filter "name=bomerp-" -q)
+```
+
+```bash
+docker stop $(docker ps --filter "name=bomerp-" -q)
+```
+
+`docker stop` (no `down`): deja los contenedores creados, listos para un
+`docker start (docker ps -a --filter "name=bomerp-" -q)` rápido la próxima
+vez, en vez de recrearlos desde cero con `compose up`.
