@@ -4681,6 +4681,7 @@
 <li><strong>3.12</strong> Agregar la facilidad de anular una venta.</li>
 <li><strong>3.13</strong> Agregar autocomplete con precio a la selección de producto.</li>
 <li><strong>3.14</strong> Probar el formulario transaccional completo.</li>
+<li><strong>3.15</strong> Relacionar con ADS y BD2.</li>
 </ul>
 <h3 id="31-verificar-el-punto-de-partida">3.1 Verificar el punto de partida<a class="headerlink" href="#31-verificar-el-punto-de-partida" title="Permanent link">&para;</a></h3>
 <p><strong>Punto de partida común:</strong> todo el equipo debe comenzar exactamente desde donde quedó S8, no desde su propio avance individual. Clona la rama <code>s08-crud-tablas-dependientes</code> (el snapshot de cierre de S8):</p>
@@ -4883,7 +4884,7 @@ curl<span class="w"> </span>http://localhost:8080/api/v1/ventas/resumen
       <span class="p">&lt;/</span><span class="nt">tr</span><span class="p">&gt;</span>
     <span class="p">&lt;/</span><span class="nt">thead</span><span class="p">&gt;</span>
     <span class="p">&lt;</span><span class="nt">tbody</span><span class="p">&gt;</span>
-      @for (linea of lineasForm.controls; track $index) {
+      @for (linea of lineasForm.controls; track linea) {
         <span class="p">&lt;</span><span class="nt">tr</span> <span class="err">[</span><span class="na">formGroupName</span><span class="err">]="$</span><span class="na">index</span><span class="err">"</span><span class="p">&gt;</span>
           <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>
             <span class="p">&lt;</span><span class="nt">select</span> <span class="na">formControlName</span><span class="o">=</span><span class="s">"productoId"</span><span class="p">&gt;</span>
@@ -4902,6 +4903,7 @@ curl<span class="w"> </span>http://localhost:8080/api/v1/ventas/resumen
   <span class="p">&lt;/</span><span class="nt">table</span><span class="p">&gt;</span>
 <span class="p">&lt;/</span><span class="nt">form</span><span class="p">&gt;</span>
 </code></pre></div>
+<p><code>track linea</code> (no <code>track $index</code>) importa desde ahora, aunque todavía no se note: 3.6 agrega quitar líneas, y una línea que no es la última puede quitarse — cuando eso pasa, el <code>FormGroup</code> que vivía en el índice 2 pasa a vivir en el índice 1, y todo lo demás se corre un puesto. Si Angular rastreara por <code>$index</code>, interpretaría "la fila del índice 1 sigue siendo la misma de antes" y reutilizaría el <code>&lt;input&gt;</code> tal cual estaba, sin pedirle al formulario reactivo que reescriba su valor visible — el nombre y la cantidad mostrados quedarían pegados a los de la línea que ya no existe. Un <code>FormGroup</code> conserva su identidad como objeto aunque cambie de posición en el arreglo; rastrear por ese objeto le permite a Angular reconocer correctamente qué fila es cuál, sin importar cuántas se hayan quitado antes.</p>
 <p>Regístralo ya en <strong><code>lp2/bomerp-frontend/src/app/app.routes.ts</code></strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="w">      </span><span class="p">{</span>
 <span class="w">        </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'ventas/nueva'</span><span class="p">,</span>
@@ -4969,7 +4971,7 @@ curl<span class="w"> </span>http://localhost:8080/api/v1/ventas/resumen
 <p>(agrega también <code>&lt;th&gt;&lt;/th&gt;</code> al <code>&lt;thead&gt;</code>, para la nueva columna)</p>
 <div class="highlight"><pre><span></span><code>  <span class="p">&lt;</span><span class="nt">button</span> <span class="na">type</span><span class="o">=</span><span class="s">"button"</span> <span class="err">(</span><span class="na">click</span><span class="err">)="</span><span class="na">agregarLinea</span><span class="err">()"</span><span class="p">&gt;</span>Agregar línea<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
 </code></pre></div>
-<p>Prueba: agrega dos líneas más, elige productos distintos en cada una, confirma que el total suma las tres, y quita una — el total debe bajar de inmediato.</p>
+<p>Prueba: agrega dos líneas más, elige productos distintos en cada una, confirma que el total suma las tres, y quita la <strong>primera</strong> (no la última) — el total debe bajar de inmediato, y las dos líneas que quedan deben mostrar, cada una, su propio producto y su propia cantidad, no los de la línea que acabas de quitar.</p>
 <p><strong>Error frecuente</strong>: pegar el botón <code>agregarLinea()</code> dentro del <code>&lt;td&gt;</code> de cada fila, junto al de <code>quitarLinea()</code>, en vez de ponerlo una sola vez después de <code>&lt;/table&gt;</code>. El resultado funciona (cada botón llama al mismo método sin argumentos), pero deja un botón "Agregar línea" repetido por cada línea en pantalla — confuso para quien usa el formulario, y no es el diseño de esta guía: "agregar" es una acción sobre el formulario completo, no sobre una fila en particular, así que su botón vive fuera de la tabla, no dentro de cada <code>&lt;tr&gt;</code>.</p>
 <h3 id="37-crear-ventareportecomponent-con-filtros">3.7 Crear <code>VentaReporteComponent</code> con filtros<a class="headerlink" href="#37-crear-ventareportecomponent-con-filtros" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> la vista de consulta, con los agregados del backend y filtro por estado (2.6) — construida <strong>antes</strong> que la confirmación de 3.8, porque <code>guardar()</code> necesita poder navegar a una ruta que ya exista.</p>
