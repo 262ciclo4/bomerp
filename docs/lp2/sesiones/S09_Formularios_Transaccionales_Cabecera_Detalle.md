@@ -239,6 +239,7 @@ Tiempo: 120 min.
 - **3.12** Agregar la facilidad de anular una venta.
 - **3.13** Agregar autocomplete con precio a la selección de producto.
 - **3.14** Probar el formulario transaccional completo.
+- **3.15** Relacionar con ADS y BD2.
 
 ### 3.1 Verificar el punto de partida
 
@@ -437,7 +438,7 @@ Crea **`lp2/bomerp-frontend/src/app/features/ventas/venta/venta-form.html`** (ve
       </tr>
     </thead>
     <tbody>
-      @for (linea of lineasForm.controls; track $index) {
+      @for (linea of lineasForm.controls; track linea) {
         <tr [formGroupName]="$index">
           <td>
             <select formControlName="productoId">
@@ -456,6 +457,8 @@ Crea **`lp2/bomerp-frontend/src/app/features/ventas/venta/venta-form.html`** (ve
   </table>
 </form>
 ```
+
+`track linea` (no `track $index`) importa desde ahora, aunque todavía no se note: 3.6 agrega quitar líneas, y una línea que no es la última puede quitarse — cuando eso pasa, el `FormGroup` que vivía en el índice 2 pasa a vivir en el índice 1, y todo lo demás se corre un puesto. Si Angular rastreara por `$index`, interpretaría "la fila del índice 1 sigue siendo la misma de antes" y reutilizaría el `<input>` tal cual estaba, sin pedirle al formulario reactivo que reescriba su valor visible — el nombre y la cantidad mostrados quedarían pegados a los de la línea que ya no existe. Un `FormGroup` conserva su identidad como objeto aunque cambie de posición en el arreglo; rastrear por ese objeto le permite a Angular reconocer correctamente qué fila es cuál, sin importar cuántas se hayan quitado antes.
 
 Regístralo ya en **`lp2/bomerp-frontend/src/app/app.routes.ts`**:
 
@@ -560,7 +563,7 @@ En `venta-form.html`, agrega el botón de quitar en cada fila y el de agregar de
   <button type="button" (click)="agregarLinea()">Agregar línea</button>
 ```
 
-Prueba: agrega dos líneas más, elige productos distintos en cada una, confirma que el total suma las tres, y quita una — el total debe bajar de inmediato.
+Prueba: agrega dos líneas más, elige productos distintos en cada una, confirma que el total suma las tres, y quita la **primera** (no la última) — el total debe bajar de inmediato, y las dos líneas que quedan deben mostrar, cada una, su propio producto y su propia cantidad, no los de la línea que acabas de quitar.
 
 **Error frecuente**: pegar el botón `agregarLinea()` dentro del `<td>` de cada fila, junto al de `quitarLinea()`, en vez de ponerlo una sola vez después de `</table>`. El resultado funciona (cada botón llama al mismo método sin argumentos), pero deja un botón "Agregar línea" repetido por cada línea en pantalla — confuso para quien usa el formulario, y no es el diseño de esta guía: "agregar" es una acción sobre el formulario completo, no sobre una fila en particular, así que su botón vive fuera de la tabla, no dentro de cada `<tr>`.
 

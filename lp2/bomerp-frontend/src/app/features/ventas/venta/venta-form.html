@@ -14,7 +14,7 @@
       </tr>
     </thead>
     <tbody>
-      @for (linea of lineasForm.controls; track $index) {
+      @for (linea of lineasForm.controls; track linea) {
         <tr [formGroupName]="$index">
           <td>
             <mat-form-field>
