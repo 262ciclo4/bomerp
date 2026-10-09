@@ -472,7 +472,7 @@ classDiagram
 ```mermaid
 stateDiagram-v2
     [*] --> REGISTRADA : crear()
-    REGISTRADA --> ANULADA : anular() [previsto]
+    REGISTRADA --> ANULADA : anular() [LP2, S9]
     ANULADA --> [*]
 ```
 
@@ -486,7 +486,7 @@ Las Figuras 13 y 14 son la misma realidad vista dos veces: la Figura 13 es la es
 | Cinco o más estados, cada uno habilitando o prohibiendo operaciones distintas | Sí — una clase por estado evita que un único método acumule un `switch` gigante. |
 | Las transiciones válidas cambian seguido (nuevas reglas de negocio agregan estados con frecuencia) | Sí — agregar una clase de estado nueva no obliga a tocar las demás. |
 
-3.3 aplica esta tabla al `EstadoVenta` real de BomERP, que hoy tiene un solo valor (`REGISTRADA`) y uno previsto (`ANULADA`, S9) — y decide, con este criterio, si ya justifica el patrón completo o si el `enum` con validación (como el que S9 ya diseñó) sigue siendo la opción correcta.
+3.3 aplica esta tabla al `EstadoVenta` real de BomERP, que hoy ya tiene sus dos valores implementados (`REGISTRADA` y `ANULADA`, cerrado en LP2 S9) — y decide, con este criterio, si eso justifica el patrón completo o si el `enum` con validación (como el que LP2 S9 ya implementó) sigue siendo la opción correcta.
 
 **Chain of Responsibility** evita que un objeto que envía una petición conozca de antemano cuál objeto la va a manejar: la petición pasa de un manejador a otro, en una cadena, hasta que uno la resuelve (Gamma et al., 1994). Es, de los patrones de comportamiento, el más reconocible en cualquier ERP: **cualquier flujo de aprobación por niveles** (una compra, un descuento, un reembolso) es, estructuralmente, este patrón. `ventas` no lo tiene implementado todavía, pero es un diseño natural y previsto para una regla de negocio real: una venta de monto alto no debería aprobarse automáticamente.
 
@@ -889,12 +889,12 @@ Abstract Factory se reconoce igual: ningún código de `ventas` ni de `catalogo`
 
 ### 3.3 Decidir si `Venta` necesita el patrón State completo
 
-**Producto del paso:** una decisión explícita, aplicando la Tabla 7 (2.4) al `EstadoVenta` real y previsto de BomERP.
+**Producto del paso:** una decisión explícita, aplicando la Tabla 7 (2.4) al `EstadoVenta` real de BomERP.
 
 ```java
 public enum EstadoVenta {
-    REGISTRADA
-    // ANULADA, previsto desde S9
+    REGISTRADA,
+    ANULADA
 }
 ```
 
@@ -902,11 +902,11 @@ public enum EstadoVenta {
 
 | Señal | ¿Se cumple en `Venta` hoy? |
 |---|---|
-| Dos o tres estados, con una sola regla de transición cada uno | Sí — `REGISTRADA` y `ANULADA` (previsto), con una sola precondición cada una (S9, Tabla 8). |
+| Dos o tres estados, con una sola regla de transición cada uno | Sí — `REGISTRADA` y `ANULADA`, con una sola precondición cada una (ADS S9, Tabla 8; implementado en LP2 S9). |
 | Cinco o más estados con comportamiento muy distinto | No. |
 | Las transiciones cambian seguido | No hay evidencia de esto en el sílabo ni en el proyecto. |
 
-**Decisión:** el `enum` con validación, ya diseñado en S9 (`Venta.anular()` comprobando `estado == REGISTRADA`), sigue siendo la opción correcta — el patrón State completo (una clase `EstadoRegistrada`, una clase `EstadoAnulada`, cada una con su propia implementación de `anular()`) sería sobreingeniería para dos estados con una sola regla. Si en el futuro BomERP agregara una devolución con varios pasos (`ANULADA_PARCIAL`, `EN_REVISION`, `DEVUELTA`, cada una habilitando operaciones distintas), ese sería el momento de migrar a State — no antes.
+**Decisión:** el `enum` con validación, ya implementado en LP2 S9 (`Venta.anular()` comprobando `estado == REGISTRADA` antes de transicionar) — el patrón State completo (una clase `EstadoRegistrada`, una clase `EstadoAnulada`, cada una con su propia implementación de `anular()`) sería sobreingeniería para dos estados con una sola regla. Si en el futuro BomERP agregara una devolución con varios pasos (`ANULADA_PARCIAL`, `EN_REVISION`, `DEVUELTA`, cada una habilitando operaciones distintas), ese sería el momento de migrar a State — no antes.
 
 ### 3.4 Diseñar la cadena de autorización de ventas (Chain of Responsibility)
 
