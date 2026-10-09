@@ -4815,7 +4815,7 @@
 <p><strong>Figura 14. El ciclo de vida real de <code>Venta</code>, como <code>enum</code> con validación</strong></p>
 <pre class="mermaid"><code>stateDiagram-v2
     [*] --&gt; REGISTRADA : crear()
-    REGISTRADA --&gt; ANULADA : anular() [previsto]
+    REGISTRADA --&gt; ANULADA : anular() [LP2, S9]
     ANULADA --&gt; [*]</code></pre>
 <p>Las Figuras 13 y 14 son la misma realidad vista dos veces: la Figura 13 es la estructura que el patrón State <em>exigiría</em> (una clase por estado); la Figura 14 es la que <code>Venta</code> tiene de verdad hoy, un solo atributo <code>EstadoVenta</code> con dos valores y una validación. 3.3 aplica la Tabla 7 para justificar, con criterio, por qué la Figura 14 sigue siendo suficiente.</p>
 <p><strong>Tabla 7. Cuándo State (clases) y cuándo un <code>enum</code> con validación basta</strong></p>
@@ -4841,7 +4841,7 @@
 </tr>
 </tbody>
 </table>
-<p>3.3 aplica esta tabla al <code>EstadoVenta</code> real de BomERP, que hoy tiene un solo valor (<code>REGISTRADA</code>) y uno previsto (<code>ANULADA</code>, S9) — y decide, con este criterio, si ya justifica el patrón completo o si el <code>enum</code> con validación (como el que S9 ya diseñó) sigue siendo la opción correcta.</p>
+<p>3.3 aplica esta tabla al <code>EstadoVenta</code> real de BomERP, que hoy ya tiene sus dos valores implementados (<code>REGISTRADA</code> y <code>ANULADA</code>, cerrado en LP2 S9) — y decide, con este criterio, si eso justifica el patrón completo o si el <code>enum</code> con validación (como el que LP2 S9 ya implementó) sigue siendo la opción correcta.</p>
 <p><strong>Chain of Responsibility</strong> evita que un objeto que envía una petición conozca de antemano cuál objeto la va a manejar: la petición pasa de un manejador a otro, en una cadena, hasta que uno la resuelve (Gamma et al., 1994). Es, de los patrones de comportamiento, el más reconocible en cualquier ERP: <strong>cualquier flujo de aprobación por niveles</strong> (una compra, un descuento, un reembolso) es, estructuralmente, este patrón. <code>ventas</code> no lo tiene implementado todavía, pero es un diseño natural y previsto para una regla de negocio real: una venta de monto alto no debería aprobarse automáticamente.</p>
 <p><strong>Figura 15. Chain of Responsibility: autorización de una venta por monto (previsto)</strong></p>
 <pre class="mermaid"><code>flowchart LR
@@ -5167,10 +5167,10 @@ agregarDetalle(productoId, cantidad, nombreProducto, precioUnitario):
 <p><strong>Error frecuente</strong>: declarar un <code>@Service</code> con campos mutables sin pensar en que una sola instancia los comparte entre <strong>todas</strong> las peticiones concurrentes. Si <code>VentaServiceImpl</code> guardara estado en un atributo de instancia (no en parámetros ni en la base de datos), dos usuarios distintos podrían pisarse datos sin saberlo — exactamente el riesgo que el Singleton de framework introduce si la clase no se diseña <em>stateless</em>.</p>
 <p>Abstract Factory se reconoce igual: ningún código de <code>ventas</code> ni de <code>catalogo</code> importa una clase de Hibernate directamente — toda persistencia pasa por las abstracciones de Spring Data, que internamente usan la familia de objetos que <code>EntityManagerFactory</code> fabrica (Figura 6). Adapter se verifica leyendo la firma real de <code>VentaMapper.toResponse(Venta venta) : VentaResponse</code>: recibe <code>Venta</code> y devuelve <code>VentaResponse</code>, sin que ninguna de las dos clases conozca a la otra directamente.</p>
 <h3 id="33-decidir-si-venta-necesita-el-patron-state-completo">3.3 Decidir si <code>Venta</code> necesita el patrón State completo<a class="headerlink" href="#33-decidir-si-venta-necesita-el-patron-state-completo" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> una decisión explícita, aplicando la Tabla 7 (2.4) al <code>EstadoVenta</code> real y previsto de BomERP.</p>
+<p><strong>Producto del paso:</strong> una decisión explícita, aplicando la Tabla 7 (2.4) al <code>EstadoVenta</code> real de BomERP.</p>
 <div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">enum</span><span class="w"> </span><span class="n">EstadoVenta</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">REGISTRADA</span>
-<span class="w">    </span><span class="c1">// ANULADA, previsto desde S9</span>
+<span class="w">    </span><span class="n">REGISTRADA</span><span class="p">,</span>
+<span class="w">    </span><span class="n">ANULADA</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Tabla 10. Tabla 7 aplicada a <code>EstadoVenta</code></strong></p>
@@ -5184,7 +5184,7 @@ agregarDetalle(productoId, cantidad, nombreProducto, precioUnitario):
 <tbody>
 <tr>
 <td>Dos o tres estados, con una sola regla de transición cada uno</td>
-<td>Sí — <code>REGISTRADA</code> y <code>ANULADA</code> (previsto), con una sola precondición cada una (S9, Tabla 8).</td>
+<td>Sí — <code>REGISTRADA</code> y <code>ANULADA</code>, con una sola precondición cada una (ADS S9, Tabla 8; implementado en LP2 S9).</td>
 </tr>
 <tr>
 <td>Cinco o más estados con comportamiento muy distinto</td>
@@ -5196,7 +5196,7 @@ agregarDetalle(productoId, cantidad, nombreProducto, precioUnitario):
 </tr>
 </tbody>
 </table>
-<p><strong>Decisión:</strong> el <code>enum</code> con validación, ya diseñado en S9 (<code>Venta.anular()</code> comprobando <code>estado == REGISTRADA</code>), sigue siendo la opción correcta — el patrón State completo (una clase <code>EstadoRegistrada</code>, una clase <code>EstadoAnulada</code>, cada una con su propia implementación de <code>anular()</code>) sería sobreingeniería para dos estados con una sola regla. Si en el futuro BomERP agregara una devolución con varios pasos (<code>ANULADA_PARCIAL</code>, <code>EN_REVISION</code>, <code>DEVUELTA</code>, cada una habilitando operaciones distintas), ese sería el momento de migrar a State — no antes.</p>
+<p><strong>Decisión:</strong> el <code>enum</code> con validación, ya implementado en LP2 S9 (<code>Venta.anular()</code> comprobando <code>estado == REGISTRADA</code> antes de transicionar) — el patrón State completo (una clase <code>EstadoRegistrada</code>, una clase <code>EstadoAnulada</code>, cada una con su propia implementación de <code>anular()</code>) sería sobreingeniería para dos estados con una sola regla. Si en el futuro BomERP agregara una devolución con varios pasos (<code>ANULADA_PARCIAL</code>, <code>EN_REVISION</code>, <code>DEVUELTA</code>, cada una habilitando operaciones distintas), ese sería el momento de migrar a State — no antes.</p>
 <h3 id="34-disenar-la-cadena-de-autorizacion-de-ventas-chain-of-responsibility">3.4 Diseñar la cadena de autorización de ventas (Chain of Responsibility)<a class="headerlink" href="#34-disenar-la-cadena-de-autorizacion-de-ventas-chain-of-responsibility" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> la cadena de autorizadores de la Figura 15 (2.4), con sus tres eslabones y el criterio de monto de cada uno.</p>
 <div class="highlight"><pre><span></span><code>// AutorizadorVendedor.java, AutorizadorSupervisor.java, AutorizadorAdmin.java — pseudocodigo
