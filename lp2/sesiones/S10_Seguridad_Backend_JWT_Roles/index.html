@@ -5569,26 +5569,7 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>No levantes el backend todavía: <code>AuthServiceImpl</code> inyecta un <code>AuthenticationManager</code> que recién se declara como <em>bean</em> en 3.11, y sin él el arranque falla.</p>
-<p>Con 3.11 escrito y el backend arriba (3.12), registra los cuatro usuarios semilla vía Swagger (<code>POST /api/v1/auth/registro</code>): <code>vendedor1@bomerp.com</code>, <code>vendedor2@bomerp.com</code>, <code>supervisor@bomerp.com</code>, <code>admin@bomerp.com</code>, todos con la misma contraseña de prueba (ej. <code>Bomerp2026!</code>). Los cuatro nacen <code>VENDEDOR</code> (3.9); promueve manualmente a los dos últimos, ahora en Postgres:</p>
-<p>PowerShell:</p>
-<div class="highlight"><pre><span></span><code><span class="sh">@'</span>
-<span class="sh">UPDATE usuario_rol SET rol_id = (SELECT id FROM roles WHERE nombre = 'SUPERVISOR')</span>
-<span class="sh">WHERE usuario_id = (SELECT id FROM usuarios WHERE email = 'supervisor@bomerp.com');</span>
-
-<span class="sh">UPDATE usuario_rol SET rol_id = (SELECT id FROM roles WHERE nombre = 'ADMIN')</span>
-<span class="sh">WHERE usuario_id = (SELECT id FROM usuarios WHERE email = 'admin@bomerp.com');</span>
-<span class="sh">'@</span> <span class="p">|</span> <span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="n">bomerp-seguridad-db</span> <span class="n">psql</span> <span class="n">-U</span> <span class="n">bomerp_seguridad</span> <span class="n">-d</span> <span class="n">bomerp_seguridad</span>
-</code></pre></div>
-<p>bash macOS/Linux:</p>
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>bomerp-seguridad-db<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>bomerp_seguridad<span class="w"> </span>-d<span class="w"> </span>bomerp_seguridad<span class="w"> </span><span class="s">&lt;&lt;'EOF'</span>
-<span class="s">UPDATE usuario_rol SET rol_id = (SELECT id FROM roles WHERE nombre = 'SUPERVISOR')</span>
-<span class="s">WHERE usuario_id = (SELECT id FROM usuarios WHERE email = 'supervisor@bomerp.com');</span>
-
-<span class="s">UPDATE usuario_rol SET rol_id = (SELECT id FROM roles WHERE nombre = 'ADMIN')</span>
-<span class="s">WHERE usuario_id = (SELECT id FROM usuarios WHERE email = 'admin@bomerp.com');</span>
-<span class="s">EOF</span>
-</code></pre></div>
+<p>No levantes el backend todavía: <code>AuthServiceImpl</code> inyecta un <code>AuthenticationManager</code> que recién se declara como <em>bean</em> en 3.11, y sin él el arranque falla. Los cuatro usuarios semilla se registran recién en 3.12, una vez que el backend esté arriba — antes de eso, <code>usuarios</code> está vacía y cualquier <code>SELECT</code> o <code>UPDATE</code> contra ella no tiene nada sobre qué actuar.</p>
 <h4 id="311-completar-securityconfig-como-resource-server">3.11 Completar <code>SecurityConfig</code> como Resource Server<a class="headerlink" href="#311-completar-securityconfig-como-resource-server" title="Permanent link">&para;</a></h4>
 <p><strong>Producto del paso:</strong> <code>PasswordEncoder</code> y <code>AuthenticationManager</code> disponibles para inyectar, el conversor que traduce <code>realm_access.roles</code> al formato que Spring Security espera, y el validador apuntando a <code>/.well-known/jwks.json</code> por configuración — reemplazando, en el mismo archivo y el mismo <em>bean</em> <code>securityFilterChain</code> de 3.5, el <code>anyRequest().permitAll()</code> temporal por autenticación y autorización reales.</p>
 <p>Agrega la propiedad que le dice al <em>Resource Server</em> dónde verificar la firma, en <code>application-dev.yml</code>:</p>
@@ -5670,7 +5651,7 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <p><code>SessionCreationPolicy.STATELESS</code> le indica a Spring Security que no cree ninguna sesión HTTP (2.3). <code>/api/v1/auth/**</code>, <code>/.well-known/jwks.json</code> y Swagger quedan abiertos — nadie tiene JWT antes de hacer login, y la clave pública es pública por definición —; <strong>todo lo demás</strong> exige, como mínimo, un token válido (<code>anyRequest().authenticated()</code>). Las reglas por rol específicas de <code>catalogo</code> y <code>ventas</code> llegan en 3.13 y 3.15, agregadas <strong>antes</strong> de esta línea final (Spring Security aplica la primera regla que coincide).</p>
 <p><strong>Error frecuente</strong>: olvidar que este método <strong>reemplaza por completo</strong> al <code>anyRequest().permitAll()</code> de 3.5 — si quedara alguna llamada a <code>.permitAll()</code> de la versión temporal mezclada con las reglas nuevas, todo seguiría abierto y ninguna de las pruebas de 403 de la Parte B fallaría como debería. Verifica que el cuerpo de <code>authorizeHttpRequests</code> quede exactamente como el bloque anterior, sin restos de la versión mínima.</p>
 <h4 id="312-levantar-y-probar-el-modulo-seguridad-de-punta-a-punta">3.12 Levantar y probar el módulo <code>seguridad</code> de punta a punta<a class="headerlink" href="#312-levantar-y-probar-el-modulo-seguridad-de-punta-a-punta" title="Permanent link">&para;</a></h4>
-<p><strong>Producto del paso:</strong> login real, con un JWT firmado y verificable, y la clave pública publicada.</p>
+<p><strong>Producto del paso:</strong> login real, con un JWT firmado y verificable, la clave pública publicada, y los cuatro usuarios semilla con su rol real.</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd </span><span class="n">lp2</span><span class="p">\</span><span class="n">bomerp-backend</span>
 <span class="p">.\</span><span class="n">mvnw</span><span class="p">.</span><span class="n">cmd</span> <span class="n">spring-boot</span><span class="p">:</span><span class="n">run</span>
 </code></pre></div>
@@ -5682,7 +5663,46 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://localhost:8080/.well-known/jwks.json
 </code></pre></div>
-<p>Resultado esperado: un JSON con un arreglo <code>keys</code>, un único elemento con <code>kty: "RSA"</code> y el <code>kid</code> que <code>JwtKeyConfig</code> generó al arrancar. Registra y luego autentica al usuario <code>vendedor1@bomerp.com</code> (3.10):</p>
+<p>Resultado esperado: un JSON con un arreglo <code>keys</code>, un único elemento con <code>kty: "RSA"</code> y el <code>kid</code> que <code>JwtKeyConfig</code> generó al arrancar.</p>
+<p>Registra los cuatro usuarios semilla (<code>POST /api/v1/auth/registro</code>, 3.10), todos con la misma contraseña de prueba:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$usuarios</span> <span class="p">=</span> <span class="p">@(</span><span class="s1">'vendedor1@bomerp.com'</span><span class="p">,</span> <span class="s1">'vendedor2@bomerp.com'</span><span class="p">,</span> <span class="s1">'supervisor@bomerp.com'</span><span class="p">,</span> <span class="s1">'admin@bomerp.com'</span><span class="p">)</span>
+<span class="k">foreach</span> <span class="p">(</span><span class="nv">$email</span> <span class="k">in</span> <span class="nv">$usuarios</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:8080/api/v1/auth/registro"</span> <span class="p">`</span>
+      <span class="n">-ContentType</span> <span class="s2">"application/json"</span> <span class="p">`</span>
+      <span class="n">-Body</span> <span class="p">(@{</span> <span class="n">email</span> <span class="p">=</span> <span class="nv">$email</span><span class="p">;</span> <span class="n">password</span> <span class="p">=</span> <span class="s2">"Bomerp2026!"</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">ConvertTo-Json</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">for</span><span class="w"> </span>email<span class="w"> </span><span class="k">in</span><span class="w"> </span>vendedor1@bomerp.com<span class="w"> </span>vendedor2@bomerp.com<span class="w"> </span>supervisor@bomerp.com<span class="w"> </span>admin@bomerp.com<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">  </span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8080/api/v1/auth/registro<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-d<span class="w"> </span><span class="s2">"{\"email\": \"</span><span class="nv">$email</span><span class="s2">\", \"password\": \"Bomerp2026!\"}"</span>
+<span class="k">done</span>
+</code></pre></div>
+<p>Resultado esperado: cuatro respuestas <code>201 Created</code> sin cuerpo (<code>AuthController.registro</code> devuelve <code>void</code>). También puedes hacerlo a mano, una por una, desde Swagger (<code>http://localhost:8080/swagger-ui.html</code>, <code>POST /api/v1/auth/registro</code>) si prefieres verlo en el navegador — el resultado en la base de datos es el mismo.</p>
+<p>Los cuatro nacen <code>VENDEDOR</code> (3.9); promueve manualmente a los dos últimos, ahora en Postgres:</p>
+<p>PowerShell:</p>
+<div class="highlight"><pre><span></span><code><span class="sh">@'</span>
+<span class="sh">UPDATE usuario_rol SET rol_id = (SELECT id FROM roles WHERE nombre = 'SUPERVISOR')</span>
+<span class="sh">WHERE usuario_id = (SELECT id FROM usuarios WHERE email = 'supervisor@bomerp.com');</span>
+
+<span class="sh">UPDATE usuario_rol SET rol_id = (SELECT id FROM roles WHERE nombre = 'ADMIN')</span>
+<span class="sh">WHERE usuario_id = (SELECT id FROM usuarios WHERE email = 'admin@bomerp.com');</span>
+<span class="sh">'@</span> <span class="p">|</span> <span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="n">bomerp-seguridad-db</span> <span class="n">psql</span> <span class="n">-U</span> <span class="n">bomerp_seguridad</span> <span class="n">-d</span> <span class="n">bomerp_seguridad</span>
+</code></pre></div>
+<p>bash macOS/Linux:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>bomerp-seguridad-db<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>bomerp_seguridad<span class="w"> </span>-d<span class="w"> </span>bomerp_seguridad<span class="w"> </span><span class="s">&lt;&lt;'EOF'</span>
+<span class="s">UPDATE usuario_rol SET rol_id = (SELECT id FROM roles WHERE nombre = 'SUPERVISOR')</span>
+<span class="s">WHERE usuario_id = (SELECT id FROM usuarios WHERE email = 'supervisor@bomerp.com');</span>
+
+<span class="s">UPDATE usuario_rol SET rol_id = (SELECT id FROM roles WHERE nombre = 'ADMIN')</span>
+<span class="s">WHERE usuario_id = (SELECT id FROM usuarios WHERE email = 'admin@bomerp.com');</span>
+<span class="s">EOF</span>
+</code></pre></div>
+<p>Confirma los cuatro usuarios y su rol real (sin heredoc ni here-string: el mismo comando funciona igual en PowerShell y en bash/macOS/Linux, porque es una sola línea):</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>bomerp-seguridad-db<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>bomerp_seguridad<span class="w"> </span>-d<span class="w"> </span>bomerp_seguridad<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SELECT u.id, u.email, r.nombre AS rol FROM usuarios u JOIN usuario_rol ur ON ur.usuario_id = u.id JOIN roles r ON r.id = ur.rol_id ORDER BY u.id;"</span>
+</code></pre></div>
+<p>Resultado esperado: <code>vendedor1@bomerp.com</code> y <code>vendedor2@bomerp.com</code> en <code>VENDEDOR</code>, <code>supervisor@bomerp.com</code> en <code>SUPERVISOR</code>, <code>admin@bomerp.com</code> en <code>ADMIN</code> — los cuatro roles ya reales, sin ninguno pendiente.</p>
+<p>Con los cuatro usuarios ya creados y promovidos, autentica a <code>vendedor1@bomerp.com</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:8080/api/v1/auth/login"</span> <span class="p">`</span>
   <span class="n">-ContentType</span> <span class="s2">"application/json"</span> <span class="p">`</span>
   <span class="n">-Body</span> <span class="s1">'{"email": "vendedor1@bomerp.com", "password": "Bomerp2026!"}'</span> <span class="p">|</span> <span class="nb">ConvertTo-Json</span>
