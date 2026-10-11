@@ -65,7 +65,7 @@ Agrega el servicio a `lp2/bomerp-backend/compose-dev.yml`:
     restart: unless-stopped
     command: start-dev
     ports:
-      - "8081:8080"
+      - "38080:8080"
     environment:
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin123
@@ -85,11 +85,11 @@ cd lp2/bomerp-backend
 docker compose -f compose-dev.yml up -d keycloak
 ```
 
-El puerto externo es **8081**, no 8080: `bomerp-backend` ya usa el 8080 en DEV (S1), y Keycloak escucha internamente también en el 8080 de su propio contenedor. `start-dev` es el modo de arranque rápido para desarrollo: no pide configurar TLS ni un `hostname` explícito, y por defecto guarda sus datos en un H2 embebido dentro del contenedor, en `/opt/keycloak/data` — **sin el volumen de arriba, ese directorio se pierde en cada `docker compose down` o recreación del contenedor**, y el realm/usuarios de las secciones 3-5 habría que rehacerlos desde cero. Con el volumen, sobrevive igual que `oracle-data`/`seguridad-db-data` ya lo hacen para los otros dos motores. **En producción real, Keycloak nunca se levanta con `start-dev`**: usa `start` (modo *production*, que exige TLS) y su propia base de datos persistente — habitualmente Postgres, igual que `bomerp-seguridad-db` lo fue para el `seguridad` propio (S10, ADR-005) — no el H2 embebido. Esta guía se queda en modo desarrollo porque el objetivo es verificar la integración, no operar Keycloak en producción.
+El puerto externo es **38080**, no 8080: `bomerp-backend` ya usa el 8080 en DEV (S1), y Keycloak escucha internamente también en el 8080 de su propio contenedor — anteponer `3` (bomerp) distingue este puerto de cualquier otro servicio similar en otro curso que corra en la misma laptop (mismo criterio ya aplicado a los puertos Postgres entre repos). `start-dev` es el modo de arranque rápido para desarrollo: no pide configurar TLS ni un `hostname` explícito, y por defecto guarda sus datos en un H2 embebido dentro del contenedor, en `/opt/keycloak/data` — **sin el volumen de arriba, ese directorio se pierde en cada `docker compose down` o recreación del contenedor**, y el realm/usuarios de las secciones 3-5 habría que rehacerlos desde cero. Con el volumen, sobrevive igual que `oracle-data`/`seguridad-db-data` ya lo hacen para los otros dos motores. **En producción real, Keycloak nunca se levanta con `start-dev`**: usa `start` (modo *production*, que exige TLS) y su propia base de datos persistente — habitualmente Postgres, igual que `bomerp-seguridad-db` lo fue para el `seguridad` propio (S10, ADR-005) — no el H2 embebido. Esta guía se queda en modo desarrollo porque el objetivo es verificar la integración, no operar Keycloak en producción.
 
 `KC_BOOTSTRAP_ADMIN_USERNAME`/`KC_BOOTSTRAP_ADMIN_PASSWORD` (Keycloak 26+; versiones anteriores usaban `KEYCLOAK_ADMIN`/`KEYCLOAK_ADMIN_PASSWORD`, ya retiradas) solo crean el usuario administrador la **primera** vez que arranca — cambiarlas después, con el usuario ya creado, no tiene efecto.
 
-Confirma que levantó accediendo a `http://localhost:8081` — debe aparecer la pantalla de bienvenida de Keycloak. Entra a la consola de administración (`Administration Console`) con `admin` / `admin123`.
+Confirma que levantó accediendo a `http://localhost:38080` — debe aparecer la pantalla de bienvenida de Keycloak. Entra a la consola de administración (`Administration Console`) con `admin` / `admin123`.
 
 ## 3. Configurar el realm `bomerp`
 
@@ -145,14 +145,14 @@ Este mapper es el equivalente exacto del que DIST describe para `idCliente` (S07
 **Producto del paso:** confirmación, con un token real, de que `realm_access.roles` y `vendedorId` llegan con el formato esperado — antes de cambiar nada en el código.
 
 ```powershell
-$login = Invoke-RestMethod -Method Post -Uri "http://localhost:8081/realms/bomerp/protocol/openid-connect/token" `
+$login = Invoke-RestMethod -Method Post -Uri "http://localhost:38080/realms/bomerp/protocol/openid-connect/token" `
   -ContentType "application/x-www-form-urlencoded" `
   -Body "grant_type=password&client_id=bomerp-frontend&username=vendedor1@bomerp.com&password=Bomerp2026!"
 $login.access_token
 ```
 
 ```bash
-curl -X POST http://localhost:8081/realms/bomerp/protocol/openid-connect/token \
+curl -X POST http://localhost:38080/realms/bomerp/protocol/openid-connect/token \
   -H "Content-Type: application/x-www-form-urlencoded" \
   -d "grant_type=password&client_id=bomerp-frontend&username=vendedor1@bomerp.com&password=Bomerp2026!"
 ```
@@ -188,7 +188,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8081/realms/bomerp
+          issuer-uri: http://localhost:38080/realms/bomerp
 ```
 
 Con `issuer-uri` (en vez de `jwk-set-uri`), Spring no solo descubre dónde están las claves — además valida que el claim `iss` (*issuer*, emisor) de cada token coincida exactamente con esta URL, y descarga la configuración del realm (incluida su ubicación de JWKS) del documento de descubrimiento estándar de OpenID Connect (`/.well-known/openid-configuration`) que Keycloak sí publica (a diferencia de `seguridad`, que no lo implementaba — S10, 2.4, Tabla 3). Es la única propiedad que cambia; `JwtAuthenticationConverter` (S10, 3.11) no se toca.
