@@ -4013,6 +4013,14 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <li><strong>Authorization</strong> (<em>Autorización</em>): desactivado — no aplica a esta guía (son los <em>fine-grained authorization services</em> de Keycloak, otra funcionalidad aparte).</li>
 <li><strong>Authentication flow</strong> (<em>Flujo de autenticación</em>): deja marcado <strong>Standard flow</strong> (<em>Flujo estándar</em>, viene activado por defecto — es el que usará S11 con <em>Authorization Code</em> + PKCE) y marca además <strong>Direct access grants</strong> (<em>Concesiones de acceso directo</em>). Deja el resto de casillas sin marcar.</li>
 <li><strong>Require PKCE</strong> (<em>Requiere PKCE</em>) y <strong>Require DPoP-bound tokens</strong> (<em>Requerir tokens vinculados a DPoP</em>): déjalos en su valor por defecto (desactivado) — ninguno de los dos aplica todavía, porque esta guía no usa el <em>Standard flow</em> para pedir tokens (eso llega en S11); el icono de advertencia junto a <em>Require PKCE</em> es una recomendación general de seguridad de Keycloak, no un error de esta configuración.</li>
+<li>Siguiente.</li>
+</ul>
+</li>
+<li>Paso <strong>Login settings</strong> (<em>Configuraciones de inicio de sesión</em>): estos campos son para el <em>Standard flow</em> (redirección de navegador) que usará la SPA real en S11 — <em>Direct access grants</em>, el flujo que prueba esta guía, no pasa por el navegador y no los necesita. Aun así, déjalos ya apuntando a donde correrá la SPA (mismo origen que <code>bomerp.cors.allowed-origins</code> en <code>application-dev.yml</code>, S1):<ul>
+<li><strong>Root URL</strong>/<strong>Home URL</strong> (<em>URL raíz</em>/<em>URL de inicio</em>): vacío.</li>
+<li><strong>Valid redirect URIs</strong> (<em>URIs de redirección válidos</em>): <code>http://localhost:4200/*</code>.</li>
+<li><strong>Valid post logout redirect URIs</strong> (<em>URI de redirección de post cierre de sesión válidos</em>): <code>http://localhost:4200/*</code>.</li>
+<li><strong>Web origins</strong> (<em>Orígenes web</em>): <code>http://localhost:4200</code>.</li>
 <li>Guardar.</li>
 </ul>
 </li>
