@@ -4871,6 +4871,32 @@
 docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>compose-dev.yml<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>seguridad-db
 </code></pre></div>
 <p>Con el contenedor arriba, crea las tablas:</p>
+<p>PowerShell:</p>
+<div class="highlight"><pre><span></span><code><span class="sh">@'</span>
+<span class="sh">CREATE TABLE usuarios (</span>
+<span class="sh">    id       BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,</span>
+<span class="sh">    email    VARCHAR(150) NOT NULL UNIQUE,</span>
+<span class="sh">    password VARCHAR(100) NOT NULL,</span>
+<span class="sh">    activo   BOOLEAN NOT NULL DEFAULT TRUE</span>
+<span class="sh">);</span>
+
+<span class="sh">CREATE TABLE roles (</span>
+<span class="sh">    id     BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,</span>
+<span class="sh">    nombre VARCHAR(30) NOT NULL UNIQUE</span>
+<span class="sh">);</span>
+
+<span class="sh">CREATE TABLE usuario_rol (</span>
+<span class="sh">    usuario_id BIGINT NOT NULL REFERENCES usuarios(id),</span>
+<span class="sh">    rol_id     BIGINT NOT NULL REFERENCES roles(id),</span>
+<span class="sh">    PRIMARY KEY (usuario_id, rol_id)</span>
+<span class="sh">);</span>
+
+<span class="sh">INSERT INTO roles (nombre) VALUES ('VENDEDOR');</span>
+<span class="sh">INSERT INTO roles (nombre) VALUES ('SUPERVISOR');</span>
+<span class="sh">INSERT INTO roles (nombre) VALUES ('ADMIN');</span>
+<span class="sh">'@</span> <span class="p">|</span> <span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="n">bomerp-seguridad-db</span> <span class="n">psql</span> <span class="n">-U</span> <span class="n">bomerp_seguridad</span> <span class="n">-d</span> <span class="n">bomerp_seguridad</span>
+</code></pre></div>
+<p>bash macOS/Linux:</p>
 <div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>bomerp-seguridad-db<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>bomerp_seguridad<span class="w"> </span>-d<span class="w"> </span>bomerp_seguridad<span class="w"> </span><span class="s">&lt;&lt;'EOF'</span>
 <span class="s">CREATE TABLE usuarios (</span>
 <span class="s">    id       BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,</span>
@@ -4895,9 +4921,15 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <span class="s">INSERT INTO roles (nombre) VALUES ('ADMIN');</span>
 <span class="s">EOF</span>
 </code></pre></div>
-<p><code>docker exec</code> necesita el flag <code>-i</code> (sin <code>-t</code>) para que el heredoc llegue al <code>psql</code> de adentro: sin él, <code>docker exec</code> no conecta el <code>stdin</code> del host con el del contenedor, y <code>psql</code> no recibe ningún comando. Nota también los nombres en <strong>minúsculas</strong> (<code>usuarios</code>, no <code>USUARIOS</code>): a diferencia de Oracle (mayúsculas, en el resto de BomERP), Postgres pliega a minúsculas cualquier identificador sin comillas — es la primera vez que el proyecto convive con dos motores de base de datos con convenciones distintas. Los tres roles (<code>VENDEDOR</code>, <code>SUPERVISOR</code>, <code>ADMIN</code>) son exactamente los que ADS ya diseñó para <code>ventas</code> (S8, Tabla 10) — esta sesión no inventa roles nuevos, los hace reales.</p>
+<p>PowerShell no tiene heredoc (<code>&lt;&lt;'EOF'</code>) — es sintaxis de bash, por eso falla con "El operador '&lt;' está reservado para uso futuro" si la copias tal cual. El equivalente en PowerShell es un <em>here-string</em> literal (<code>@'...'@</code>, sin interpolación) enviado por <em>pipe</em> (<code>|</code>) a <code>docker exec -i</code>, en vez de redirigido con <code>&lt;&lt;</code>. <code>docker exec</code> necesita el flag <code>-i</code> (sin <code>-t</code>) en ambos casos para que el contenido llegue al <code>psql</code> de adentro: sin él, <code>docker exec</code> no conecta el <code>stdin</code> del host con el del contenedor, y <code>psql</code> no recibe ningún comando. Nota también los nombres en <strong>minúsculas</strong> (<code>usuarios</code>, no <code>USUARIOS</code>): a diferencia de Oracle (mayúsculas, en el resto de BomERP), Postgres pliega a minúsculas cualquier identificador sin comillas — es la primera vez que el proyecto convive con dos motores de base de datos con convenciones distintas. Los tres roles (<code>VENDEDOR</code>, <code>SUPERVISOR</code>, <code>ADMIN</code>) son exactamente los que ADS ya diseñó para <code>ventas</code> (S8, Tabla 10) — esta sesión no inventa roles nuevos, los hace reales.</p>
 <p>Ahora, en Oracle, agrega la columna que <code>ventas</code> necesita para RN5:</p>
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>bomerp-oracle<span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">"sqlplus -s BOM_VENTAS/bom_ventas_pwd@localhost:1521/FREEPDB1"</span><span class="w"> </span><span class="s">&lt;&lt;'EOF'</span>
+<p>PowerShell:</p>
+<div class="highlight"><pre><span></span><code><span class="sh">@'</span>
+<span class="sh">ALTER TABLE VENTAS ADD VENDEDOR_ID NUMBER;</span>
+<span class="sh">'@</span> <span class="p">|</span> <span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="n">bomerp-oracle</span> <span class="n">bash</span> <span class="n">-c</span> <span class="s2">"sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1"</span>
+</code></pre></div>
+<p>bash macOS/Linux:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>bomerp-oracle<span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">"sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1"</span><span class="w"> </span><span class="s">&lt;&lt;'EOF'</span>
 <span class="s">ALTER TABLE VENTAS ADD VENDEDOR_ID NUMBER;</span>
 <span class="s">EOF</span>
 </code></pre></div>
@@ -5478,6 +5510,16 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 </code></pre></div>
 <p>No levantes el backend todavía: <code>AuthServiceImpl</code> inyecta un <code>AuthenticationManager</code> que recién se declara como <em>bean</em> en 3.10, y sin él el arranque falla.</p>
 <p>Con 3.10 escrito y el backend arriba (3.11), registra los cuatro usuarios semilla vía Swagger (<code>POST /api/v1/auth/registro</code>): <code>vendedor1@bomerp.com</code>, <code>vendedor2@bomerp.com</code>, <code>supervisor@bomerp.com</code>, <code>admin@bomerp.com</code>, todos con la misma contraseña de prueba (ej. <code>Bomerp2026!</code>). Los cuatro nacen <code>VENDEDOR</code> (3.8); promueve manualmente a los dos últimos, ahora en Postgres:</p>
+<p>PowerShell:</p>
+<div class="highlight"><pre><span></span><code><span class="sh">@'</span>
+<span class="sh">UPDATE usuario_rol SET rol_id = (SELECT id FROM roles WHERE nombre = 'SUPERVISOR')</span>
+<span class="sh">WHERE usuario_id = (SELECT id FROM usuarios WHERE email = 'supervisor@bomerp.com');</span>
+
+<span class="sh">UPDATE usuario_rol SET rol_id = (SELECT id FROM roles WHERE nombre = 'ADMIN')</span>
+<span class="sh">WHERE usuario_id = (SELECT id FROM usuarios WHERE email = 'admin@bomerp.com');</span>
+<span class="sh">'@</span> <span class="p">|</span> <span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="n">bomerp-seguridad-db</span> <span class="n">psql</span> <span class="n">-U</span> <span class="n">bomerp_seguridad</span> <span class="n">-d</span> <span class="n">bomerp_seguridad</span>
+</code></pre></div>
+<p>bash macOS/Linux:</p>
 <div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>bomerp-seguridad-db<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>bomerp_seguridad<span class="w"> </span>-d<span class="w"> </span>bomerp_seguridad<span class="w"> </span><span class="s">&lt;&lt;'EOF'</span>
 <span class="s">UPDATE usuario_rol SET rol_id = (SELECT id FROM roles WHERE nombre = 'SUPERVISOR')</span>
 <span class="s">WHERE usuario_id = (SELECT id FROM usuarios WHERE email = 'supervisor@bomerp.com');</span>
