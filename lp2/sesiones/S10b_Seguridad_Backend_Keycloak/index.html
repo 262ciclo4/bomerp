@@ -4031,9 +4031,18 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <h3 id="51-crear-los-usuarios-y-asignarles-rol">5.1 Crear los usuarios y asignarles rol<a class="headerlink" href="#51-crear-los-usuarios-y-asignarles-rol" title="Permanent link">&para;</a></h3>
 <p>Por cada uno de <code>vendedor1@bomerp.com</code>, <code>vendedor2@bomerp.com</code>, <code>supervisor@bomerp.com</code>, <code>admin@bomerp.com</code>:</p>
 <ol>
-<li><strong>Users</strong> (<em>Usuarios</em>) → <strong>Add user</strong> (<em>Agregar usuario</em>). <em>Username</em>: el email. <em>Email verified</em> (<em>Correo verificado</em>): activado (para no complicar el flujo con verificación de correo en esta guía).</li>
+<li><strong>Users</strong> (<em>Usuarios</em>) → <strong>Add user</strong> (<em>Agregar usuario</em>) → <strong>Crear usuario</strong>.<ul>
+<li><strong>Required user actions</strong> (<em>Acciones de usuario requeridas</em>): déjalo <strong>vacío</strong>, sin seleccionar ninguna. Si marcas algo aquí (ej. <em>Update Password</em>), Keycloak lo exige en el primer login — rompe el flujo de <em>Direct access grants</em> de la sección 6, igual que dejar la contraseña como <em>Temporary</em> (paso 2 de abajo).</li>
+<li><strong>Email verified</strong> (<em>Correo electrónico verificado</em>): activado (para no complicar el flujo con verificación de correo en esta guía).</li>
+<li><strong>Select a locale</strong> (<em>Seleccionar una configuración regional</em>): opcional, es el idioma de <strong>ese usuario en particular</strong> (distinto de 3.0/3.2, que son el idioma por defecto del realm) — déjalo en <em>Idioma predeterminado</em> o elige <code>Español</code> si quieres forzarlo para este usuario puntual.</li>
+<li><strong>Username</strong> (<em>Nombre de usuario</em>): el email completo (ej. <code>vendedor1@bomerp.com</code>).</li>
+<li><strong>Email</strong> (<em>Correo electrónico</em>): el mismo email, repetido en este campo aparte.</li>
+<li><em>Nombre</em>/<em>Apellido</em>/<em>Grupos</em>: opcionales, déjalos vacíos.</li>
+<li><strong>Crear</strong>.</li>
+</ul>
+</li>
 <li>Pestaña <strong>Credentials</strong> (<em>Credenciales</em>) → <strong>Set password</strong> (<em>Establecer contraseña</em>): <code>Bomerp2026!</code>, <em>Temporary</em> (<em>Temporal</em>): <strong>desactivado</strong> (si queda activado, Keycloak exige cambiarla en el primer login, lo que rompe el flujo de <em>Direct access grants</em> de la sección 6).</li>
-<li>Pestaña <strong>Role mapping</strong> (<em>Asignación de roles</em>) → <strong>Assign role</strong> (<em>Asignar rol</em>): <code>VENDEDOR</code> para los dos primeros, <code>SUPERVISOR</code> y <code>ADMIN</code> para los otros dos, respectivamente — el mismo criterio de promoción manual que S10 ya aplicaba a mano sobre Postgres (3.10), ahora sobre la consola de Keycloak.</li>
+<li>Pestaña <strong>Role mapping</strong> (<em>Mapeo de roles</em>) → <strong>Assign role</strong> (<em>Asignar rol</em>) → en el dropdown, elige <strong>Realm roles</strong> (<em>Roles de realm</em>, no <em>Roles de cliente</em>) — ahí aparece la lista del paso 3 de la sección 3 (<code>ADMIN</code>, <code>SUPERVISOR</code>, <code>VENDEDOR</code>, más dos roles propios de Keycloak: <code>offline_access</code>, <code>uma_authorization</code>, que no tocas). Marca <code>VENDEDOR</code> para los dos primeros usuarios, <code>SUPERVISOR</code> y <code>ADMIN</code> para los otros dos, respectivamente, y <strong>Asignar</strong> — el mismo criterio de promoción manual que S10 ya aplicaba a mano sobre Postgres (3.10), ahora sobre la consola de Keycloak.</li>
 </ol>
 <h3 id="52-agregar-el-atributo-vendedorid">5.2 Agregar el atributo <code>vendedorId</code><a class="headerlink" href="#52-agregar-el-atributo-vendedorid" title="Permanent link">&para;</a></h3>
 <p>Pestaña <strong>Attributes</strong> (<em>Atributos</em>), de cada usuario → agrega la clave <code>vendedorId</code> con un valor numérico.</p>
