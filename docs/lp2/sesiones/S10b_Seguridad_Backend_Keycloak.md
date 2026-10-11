@@ -130,18 +130,15 @@ Al crearlo, Keycloak cambia solo el realm activo al que acabas de crear — lo v
 
 3. Con `bomerp` como realm activo, ve a **Realm roles** → **Create role**, y crea los tres, uno por uno: `VENDEDOR`, `SUPERVISOR`, `ADMIN`.
 
-### 3.1 (Opcional) Pasar la consola de este realm a español
+### 3.1 (Opcional) Español — dos configuraciones distintas, no una
 
-Ya con el realm `bomerp` creado y seleccionado (no `master`):
+Son dos cosas separadas, cada una en un realm distinto:
 
-1. En el menú lateral, entra a **Realm settings** (*Configuraciones del realm*).
-2. Abre la pestaña **Localization** (*Localización*).
-3. Dentro, en la sub-pestaña **Localizations** (*Localizaciones*) (es la que abre por defecto), activa el interruptor **Internationalization** (*Internacionalización*) → **Enabled**/**Habilitado**.
-4. En el campo **Supported locales** (*Idiomas admitidos*), agrega `español` (deja `inglés` también, no lo quites).
-5. En **Default locale** (*Idioma predeterminado*), elige `español`.
-6. **Save** (*Guardar*).
+**A. Idioma del Admin Console (el menú, los botones — lo que ves tú como administrador):** el Admin Console es una sola aplicación compartida por todo Keycloak, no por realm — su idioma sigue la configuración de **`master`**, nunca la de `bomerp`. Cambia al realm `master` (selector arriba a la izquierda) → **Realm settings** → **Localization** → **Locales** → activa **Internationalization**, agrega `Spanish` a *Supported locales*, elige `Spanish` en *Default locale* → **Save**. Recarga la página.
 
-Recarga la página — la consola de este realm (menú lateral, pestañas, botones) debería aparecer en español desde ahora.
+**B. Idioma de la pantalla de login (lo que verán tus usuarios, ej. `vendedor1@bomerp.com`, al autenticarse):** esta sí se configura en `bomerp` — es exactamente lo que ya hiciste en la captura: **Realm settings** → **Localization** → **Locales**, con `bomerp` como realm activo. No afecta el Admin Console, pero sí define en qué idioma aparece el formulario de login que Keycloak sirve en `/realms/bomerp/...` (relevante recién cuando S11 construya el flujo real de login contra Keycloak).
+
+Si solo quieres el Admin Console en español, basta con A. Si además quieres que la pantalla de login de tus usuarios finales aparezca en español, necesitas las dos.
 
 3.1 es por realm, no global: si lo activaste antes en `master` (para la consola misma), eso **no** se hereda a `bomerp` — hay que repetirlo aquí para que tanto la consola de administración de este realm como, más adelante, la pantalla de login que verán tus usuarios (si no la reemplazas por la tuya propia) aparezcan en español.
 
