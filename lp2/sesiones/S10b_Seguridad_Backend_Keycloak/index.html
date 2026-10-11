@@ -3481,6 +3481,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#74-retirar-seguridad-db" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 Retirar seguridad-db
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3730,6 +3741,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#74-retirar-seguridad-db" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 Retirar seguridad-db
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3969,15 +3991,30 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <p>El claim se lee como <code>Number</code> (no <code>Long</code> directo) porque el JSON (<em>JavaScript Object Notation</em>) no distingue tamaños de entero — el mismo detalle que DIST ya documentó para <code>idCliente</code> (S07, 3.22). <code>VentaServiceImpl</code>, <code>VentaRepository</code> y las reglas <code>hasRole</code>/<code>hasAnyRole</code> de <code>SecurityConfig</code> (S10, 3.13, 3.15) <strong>no cambian</strong>: siguen recibiendo exactamente el mismo <code>Long vendedorId</code> que recibían antes, solo que ahora llega por un claim distinto.</p>
 <h3 id="73-confirmar-que-catalogo-y-ventas-no-se-tocan">7.3 Confirmar que <code>catalogo</code> y <code>ventas</code> no se tocan<a class="headerlink" href="#73-confirmar-que-catalogo-y-ventas-no-se-tocan" title="Permanent link">&para;</a></h3>
 <p>Revisa <code>SecurityConfig.securityFilterChain</code>, <code>CategoriaController</code>/<code>ProductoController</code> y el resto de <code>VentaController</code> (lo que no sea <code>crear</code>/<code>buscar</code>/<code>obtener</code>): ningún <code>hasRole</code>, ningún <code>requestMatchers</code>, ninguna regla cambia. Si encuentras que necesitas tocar algo ahí, la migración se desvió de lo que esta guía describe — revisa el paso anterior.</p>
+<h3 id="74-retirar-seguridad-db">7.4 Retirar <code>seguridad-db</code><a class="headerlink" href="#74-retirar-seguridad-db" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> <code>bomerp-backend</code> corre sin el Postgres de <code>seguridad</code> — Keycloak es, desde este punto, el único almacén de identidad.</p>
+<p>Con 7.1-7.3 confirmados, <code>seguridad-db</code> ya no tiene ningún lector: nadie en el código vigente lo consulta (el <code>vendedorId</code> que necesitaba su <code>id</code> numérico ya se copió a mano en 5.2). No lo dejes corriendo "por si acaso" — si Keycloak es de verdad el reemplazo, el sistema tiene que demostrar que funciona sin él <strong>antes</strong> de la prueba final de la sección 8, no después.</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd </span><span class="n">lp2</span><span class="p">\</span><span class="n">bomerp-backend</span>
+<span class="n">docker</span> <span class="n">compose</span> <span class="o">-f</span> <span class="n">compose-dev</span><span class="p">.</span><span class="n">yml</span> <span class="n">stop</span> <span class="n">seguridad-db</span>
+<span class="n">docker</span> <span class="n">compose</span> <span class="o">-f</span> <span class="n">compose-dev</span><span class="p">.</span><span class="n">yml</span> <span class="nb">rm </span><span class="o">-f</span> <span class="n">seguridad-db</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>lp2/bomerp-backend
+docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>compose-dev.yml<span class="w"> </span>stop<span class="w"> </span>seguridad-db
+docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>compose-dev.yml<span class="w"> </span>rm<span class="w"> </span>-f<span class="w"> </span>seguridad-db
+</code></pre></div>
+<p>Quita también el bloque <code>seguridad-db:</code> completo de <code>compose-dev.yml</code> (el que agregó S10, 3.2) y la línea <code>seguridad-db-data:</code> de <code>volumes:</code> al final del archivo — ya ningún servicio la usa. Si quieres conservar los datos históricos antes de liberar el volumen (los <code>vendedorId</code> ya están a salvo en los atributos de usuario de Keycloak; esto es solo por si quieres consultar algo más adelante), identifica el volumen real y bórralo:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>volume<span class="w"> </span>ls<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>seguridad
+docker<span class="w"> </span>volume<span class="w"> </span>rm<span class="w"> </span>&lt;nombre-exacto-que-aparezca&gt;
+</code></pre></div>
 <h2 id="8-probar-de-punta-a-punta">8. Probar de punta a punta<a class="headerlink" href="#8-probar-de-punta-a-punta" title="Permanent link">&para;</a></h2>
-<p><strong>Producto del paso:</strong> la misma matriz de accesos que S10 verificó (3.16, Tabla 5), ahora contra tokens de Keycloak.</p>
+<p><strong>Producto del paso:</strong> la misma matriz de accesos que S10 verificó (3.16, Tabla 5), ahora contra tokens de Keycloak — con <code>seguridad-db</code> ya retirado (7.4), esta prueba confirma que el reemplazo es real, no solo que Keycloak "también funciona" en paralelo.</p>
 <p>Reinicia <code>bomerp-backend</code> (lee la propiedad nueva de 7.1) y repite exactamente las pruebas de S10 (3.16), pero obteniendo cada token con el comando de la sección 6 (cambiando el usuario). Resultado esperado: <strong>la misma Tabla 5</strong> — mismos códigos HTTP, para los mismos casos, con tokens que ahora vienen de un proceso distinto.</p>
 <p><strong>Error frecuente</strong>: <code>403</code> donde S10 esperaba <code>200</code>, con un token que en jwt.io se ve correcto. Causa más común: el usuario de Keycloak no tiene el <em>realm role</em> asignado (5.1), o el <em>client scope</em> con el mapper de <code>vendedorId</code> (5.3) no quedó asociado al cliente <code>bomerp-frontend</code> que usaste para pedir el token.</p>
 <h2 id="9-que-queda-pendiente">9. Qué queda pendiente<a class="headerlink" href="#9-que-queda-pendiente" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>S11</strong> reconfigura el cliente <code>bomerp-frontend</code> para <em>Authorization Code</em> + PKCE (S10, 2.4) — el flujo real que usará la SPA, desactivando <em>Direct access grants</em> (sección 4). El login deja de ser un formulario propio de BomERP: redirige a la pantalla de Keycloak.</li>
 <li><strong>Limpieza del paquete <code>seguridad</code></strong>: <code>AuthController</code>, <code>JwtService</code>, <code>JwksController</code>, <code>JwtKeyConfig</code>, <code>SecurityConfig</code> (las piezas de <code>seguridad</code>, no <code>OracleDataSourceConfig</code>), <code>SeguridadDataSourceConfig</code> y las entidades <code>Usuario</code>/<code>Rol</code> quedan sin ningún código que los invoque — pueden borrarse de <code>bomerp-backend</code> en un commit aparte, sin que eso afecte a <code>catalogo</code> ni a <code>ventas</code> (la discusión de por qué esto es una limpieza de archivos y no una migración se documentó en el chat de diseño de S10, no en una guía).</li>
-<li><strong><code>compose-dev.yml</code></strong>: el servicio <code>seguridad-db</code> (Postgres) deja de usarse — puedes quitarlo, o dejarlo mientras conserves datos históricos que quieras consultar.</li>
+<li><strong><code>compose-dev.yml</code></strong>: <code>seguridad-db</code> ya se retiró en 7.4 — este punto queda aquí solo como referencia, no como pendiente.</li>
 <li><strong><code>pom.xml</code></strong>: <code>spring-security-oauth2-jose</code> (firmaba el JWT propio) deja de hacer falta; <code>spring-boot-starter-security-oauth2-resource-server</code> <strong>sigue haciendo falta</strong> (sigue validando, ahora contra Keycloak); el driver <code>org.postgresql:postgresql</code> se retira solo si ningún otro módulo de BomERP usa Postgres.</li>
 <li><strong>Producción real</strong>: <code>start-dev</code> (sección 2) no es apto para producción — exige modo <code>start</code>, TLS y una base de datos persistente propia para Keycloak (ver la nota de la sección 2).</li>
 </ul>
