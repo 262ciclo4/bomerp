@@ -3404,15 +3404,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#5-crear-los-usuarios-semilla-con-su-vendedorid" class="md-nav__link">
+  <a href="#5-crear-los-usuarios-semilla" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. Crear los usuarios semilla con su vendedorId
+        5. Crear los usuarios semilla
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="5. Crear los usuarios semilla con su vendedorId">
+    <nav class="md-nav" aria-label="5. Crear los usuarios semilla">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -3427,21 +3427,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#52-agregar-el-atributo-vendedorid" class="md-nav__link">
+  <a href="#52-migrar-las-ventas-ya-registradas-al-nuevo-sub" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.2 Agregar el atributo vendedorId
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#53-agregar-el-protocol-mapper-que-lleva-vendedorid-al-token" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5.3 Agregar el protocol mapper que lleva vendedorId al token
+        5.2 Migrar las ventas ya registradas al nuevo sub
       
     </span>
   </a>
@@ -3488,10 +3477,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#72-cambiar-como-se-lee-vendedorid" class="md-nav__link">
+  <a href="#72-confirmar-que-catalogo-y-ventas-no-se-tocan" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7.2 Cambiar cómo se lee vendedorId
+        7.2 Confirmar que catalogo y ventas no se tocan
       
     </span>
   </a>
@@ -3499,21 +3488,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#73-confirmar-que-catalogo-y-ventas-no-se-tocan" class="md-nav__link">
+  <a href="#73-retirar-seguridad-db" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7.3 Confirmar que catalogo y ventas no se tocan
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#74-retirar-seguridad-db" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        7.4 Retirar seguridad-db
+        7.3 Retirar seguridad-db
       
     </span>
   </a>
@@ -3692,15 +3670,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#5-crear-los-usuarios-semilla-con-su-vendedorid" class="md-nav__link">
+  <a href="#5-crear-los-usuarios-semilla" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. Crear los usuarios semilla con su vendedorId
+        5. Crear los usuarios semilla
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="5. Crear los usuarios semilla con su vendedorId">
+    <nav class="md-nav" aria-label="5. Crear los usuarios semilla">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -3715,21 +3693,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#52-agregar-el-atributo-vendedorid" class="md-nav__link">
+  <a href="#52-migrar-las-ventas-ya-registradas-al-nuevo-sub" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.2 Agregar el atributo vendedorId
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#53-agregar-el-protocol-mapper-que-lleva-vendedorid-al-token" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5.3 Agregar el protocol mapper que lleva vendedorId al token
+        5.2 Migrar las ventas ya registradas al nuevo sub
       
     </span>
   </a>
@@ -3776,10 +3743,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#72-cambiar-como-se-lee-vendedorid" class="md-nav__link">
+  <a href="#72-confirmar-que-catalogo-y-ventas-no-se-tocan" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7.2 Cambiar cómo se lee vendedorId
+        7.2 Confirmar que catalogo y ventas no se tocan
       
     </span>
   </a>
@@ -3787,21 +3754,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#73-confirmar-que-catalogo-y-ventas-no-se-tocan" class="md-nav__link">
+  <a href="#73-retirar-seguridad-db" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7.3 Confirmar que catalogo y ventas no se tocan
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#74-retirar-seguridad-db" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        7.4 Retirar seguridad-db
+        7.3 Retirar seguridad-db
       
     </span>
   </a>
@@ -3918,7 +3874,7 @@
 </tr>
 <tr>
 <td>Cómo se lee <code>vendedorId</code> en <code>VentaController</code></td>
-<td>Sí — de <code>jwt.getSubject()</code> a un claim propio (3 más abajo)</td>
+<td><strong>No</strong> — sigue siendo <code>jwt.getSubject()</code>, sin tocar (detalle abajo)</td>
 </tr>
 <tr>
 <td>Paquete <code>seguridad</code> (<code>AuthController</code>, <code>JwtService</code>, <code>JwksController</code>, <code>JwtKeyConfig</code>, entidades)</td>
@@ -3930,7 +3886,7 @@
 </tr>
 </tbody>
 </table>
-<p>El único punto que <strong>sí</strong> exige un cambio de código (no solo de configuración) es cómo se obtiene <code>vendedorId</code>: hoy sale de <code>jwt.getSubject()</code> porque el <code>sub</code> que emite <code>seguridad</code> es, por diseño, el <code>id</code> numérico de <code>Usuario</code>. El <code>sub</code> que emite Keycloak es un UUID (<em>Universally Unique Identifier</em>) propio del usuario en el realm — nunca el <code>vendedorId</code> de BomERP. La sección 5 resuelve esto exactamente como ya lo resuelve DIST para su propio <code>idCliente</code> (S07, Tabla 6): un <strong>atributo de usuario</strong> en Keycloak más un <strong>protocol mapper</strong> que lo agrega al token como un claim propio, separado de <code>sub</code>.</p>
+<p>Ningún punto de la tabla exige cambiar código — y eso no es casualidad, es la razón por la que <code>vendedorId</code> se diseñó como <code>String</code> desde S10 (3.2, 3.14), no como <code>Long</code>: el <code>sub</code> que emite <code>seguridad</code> hoy es el <code>id</code> numérico de <code>Usuario</code> convertido a texto (ej. <code>"3"</code>); el que emite Keycloak es un UUID (<em>Universally Unique Identifier</em>) propio del realm (ej. <code>"3fa85f64-5717-4562-b3fc-2c963f66afa6"</code>) — dos formatos de texto distintos, pero <code>VentaController</code> nunca los interpreta como número, solo los guarda tal cual. A diferencia de DIST, que sí necesita un <strong>atributo de usuario</strong> + <strong>protocol mapper</strong> para <code>idCliente</code> (S07, Tabla 6, porque <code>idCliente</code> identifica a una entidad de negocio aparte del usuario), aquí <code>vendedorId</code> <strong>es</strong> literalmente <code>sub</code> — no hace falta configurar nada nuevo en Keycloak para que viaje en el token, porque <code>sub</code> viaja siempre, en cualquier token, sin configuración. Lo único real que exige este cambio de emisor es <strong>migrar los datos que ya existen</strong>: las ventas creadas bajo <code>seguridad</code> tienen <code>VENDEDOR_ID</code> con el <code>id</code> numérico viejo, no con el UUID nuevo — la sección 5 lo resuelve.</p>
 <h2 id="2-descargar-y-levantar-keycloak">2. Descargar y levantar Keycloak<a class="headerlink" href="#2-descargar-y-levantar-keycloak" title="Permanent link">&para;</a></h2>
 <p><strong>Producto del paso:</strong> Keycloak corriendo en modo desarrollo, con su propio Postgres (no el H2 embebido por defecto) y consola de administración accesible.</p>
 <p>Agrega los dos servicios a <code>lp2/bomerp-backend/compose-dev.yml</code> — un Postgres propio para Keycloak, igual en espíritu al que S10 ya usó para <code>seguridad</code> (3.2), y el propio Keycloak apuntando a él:</p>
@@ -4026,8 +3982,8 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 </li>
 </ol>
 <p><strong>Error frecuente, y por qué es intencional dejarlo así documentado</strong>: <em>Direct access grants</em> corresponde al mismo flujo que la RFC 9700 desaconseja (S10, 2.4, cita textual: <em>"MUST NOT be used"</em>) — la razón por la que <code>seguridad</code> también lo usaba era la misma: es un atajo de laboratorio, no el diseño final. Úsalo aquí únicamente para verificar que Keycloak emite tokens válidos antes de construir el flujo real; S11 reconfigura este mismo cliente para <em>Authorization Code</em> + PKCE (<em>Proof Key for Code Exchange</em>) y <strong>desactiva</strong> <em>Direct access grants</em> como parte de ese trabajo — no antes.</p>
-<h2 id="5-crear-los-usuarios-semilla-con-su-vendedorid">5. Crear los usuarios semilla con su <code>vendedorId</code><a class="headerlink" href="#5-crear-los-usuarios-semilla-con-su-vendedorid" title="Permanent link">&para;</a></h2>
-<p><strong>Producto del paso:</strong> los mismos cuatro usuarios de S10 (3.10), ahora en Keycloak, con el dato que RN5/RN8 necesitan (ADS S8) viajando en un claim propio, no en <code>sub</code>.</p>
+<h2 id="5-crear-los-usuarios-semilla">5. Crear los usuarios semilla<a class="headerlink" href="#5-crear-los-usuarios-semilla" title="Permanent link">&para;</a></h2>
+<p><strong>Producto del paso:</strong> los mismos cuatro usuarios de S10 (3.10), ahora en Keycloak. <code>vendedorId</code> no necesita ningún paso aparte — es literalmente <code>sub</code> (1, Tabla 1), y <code>sub</code> viaja en cualquier token sin configurar nada.</p>
 <h3 id="51-crear-los-usuarios-y-asignarles-rol">5.1 Crear los usuarios y asignarles rol<a class="headerlink" href="#51-crear-los-usuarios-y-asignarles-rol" title="Permanent link">&para;</a></h3>
 <p>Por cada uno de <code>vendedor1@bomerp.com</code>, <code>vendedor2@bomerp.com</code>, <code>supervisor@bomerp.com</code>, <code>admin@bomerp.com</code>:</p>
 <ol>
@@ -4044,25 +4000,38 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <li>Pestaña <strong>Credentials</strong> (<em>Credenciales</em>) → <strong>Set password</strong> (<em>Establecer contraseña</em>): <code>Bomerp2026!</code>, <em>Temporary</em> (<em>Temporal</em>): <strong>desactivado</strong> (si queda activado, Keycloak exige cambiarla en el primer login, lo que rompe el flujo de <em>Direct access grants</em> de la sección 6).</li>
 <li>Pestaña <strong>Role mapping</strong> (<em>Mapeo de roles</em>) → <strong>Assign role</strong> (<em>Asignar rol</em>) → en el dropdown, elige <strong>Realm roles</strong> (<em>Roles de realm</em>, no <em>Roles de cliente</em>) — ahí aparece la lista del paso 3 de la sección 3 (<code>ADMIN</code>, <code>SUPERVISOR</code>, <code>VENDEDOR</code>, más dos roles propios de Keycloak: <code>offline_access</code>, <code>uma_authorization</code>, que no tocas). Marca <code>VENDEDOR</code> para los dos primeros usuarios, <code>SUPERVISOR</code> y <code>ADMIN</code> para los otros dos, respectivamente, y <strong>Asignar</strong> — el mismo criterio de promoción manual que S10 ya aplicaba a mano sobre Postgres (3.10), ahora sobre la consola de Keycloak.</li>
 </ol>
-<h3 id="52-agregar-el-atributo-vendedorid">5.2 Agregar el atributo <code>vendedorId</code><a class="headerlink" href="#52-agregar-el-atributo-vendedorid" title="Permanent link">&para;</a></h3>
-<p><strong>Error frecuente</strong>: no encontrar la pestaña <strong>Attributes</strong> (<em>Atributos</em>) en el detalle del usuario — no está oculta ni movida, <strong>no existe todavía</strong>. Por defecto, Keycloak bloquea cualquier atributo que no esté declarado explícitamente en el <em>User profile</em> del realm (los <em>unmanaged attributes</em>), y <code>vendedorId</code> no es uno de los campos estándar (email, nombre, apellido...). Habilítalo una vez, a nivel de <code>bomerp</code>:</p>
+<h3 id="52-migrar-las-ventas-ya-registradas-al-nuevo-sub">5.2 Migrar las ventas ya registradas al nuevo <code>sub</code><a class="headerlink" href="#52-migrar-las-ventas-ya-registradas-al-nuevo-sub" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> las ventas que <code>vendedor1</code>/<code>vendedor2</code> ya crearon bajo <code>seguridad</code> (S10) siguen asociadas a su dueño real, ahora con el <code>sub</code> nuevo de Keycloak.</p>
+<p><code>vendedorId</code> no necesita ningún atributo ni <em>protocol mapper</em> — es <code>jwt.getSubject()</code> tal cual (1). Pero eso no resuelve solo el dato que <strong>ya existe</strong>: cada fila de <code>VENTAS</code> creada hasta hoy tiene <code>VENDEDOR_ID</code> con el <code>id</code> numérico-como-texto que <code>seguridad</code> usaba (ej. <code>"3"</code>), y el <code>sub</code> que Keycloak va a emitir para ese mismo usuario es un UUID distinto (ej. <code>"3fa85f64-5717-4562-b3fc-2c963f66afa6"</code>) — nadie los conecta solo. Sin este paso, esas ventas viejas siguen existiendo, pero <code>obtener</code>/<code>buscar</code> (S10, 3.15) ya no las reconoce como propias de ese vendedor.</p>
 <ol>
-<li>Con <code>bomerp</code> como realm activo, ve a <strong>Realm settings</strong> (<em>Configuraciones del realm</em>) → pestaña <strong>General</strong>.</li>
-<li>Busca <strong>Unmanaged attributes</strong> (<em>Atributos no administrados</em>) y cámbialo de <code>Disabled</code> a <strong>Admin can edit</strong> (<em>El administrador puede editar</em>) — no <code>Enabled</code> a secas: esa opción también expondría <code>vendedorId</code> para que el propio usuario lo edite desde su <em>Account Console</em>, y es un dato que solo el administrador debe poder tocar.</li>
-<li>Guardar.</li>
+<li>Obtén el <code>id</code> viejo de cada usuario (todavía en <code>bomerp-seguridad-db</code>, antes de 7.3):</li>
 </ol>
-<p>Recién ahora aparece la pestaña <strong>Attributes</strong> (<em>Atributos</em>) en el detalle de cada usuario. Ahí, agrega la clave <code>vendedorId</code> con un valor numérico.</p>
-<p>Si quieres que las ventas ya registradas con el emisor propio de S10 sigan teniendo un <code>vendedorId</code> coherente, usa el mismo <code>id</code> que ese usuario tenía en <code>bomerp-seguridad-db</code> (<code>SELECT id FROM usuarios WHERE email = '...'</code>, Postgres) como valor del atributo aquí — Keycloak no migra ese dato solo, porque son dos almacenes de identidad completamente independientes (2.1 de S10).</p>
-<h3 id="53-agregar-el-protocol-mapper-que-lleva-vendedorid-al-token">5.3 Agregar el <em>protocol mapper</em> que lleva <code>vendedorId</code> al token<a class="headerlink" href="#53-agregar-el-protocol-mapper-que-lleva-vendedorid-al-token" title="Permanent link">&para;</a></h3>
-<p>Un atributo de usuario, por sí solo, <strong>no</strong> viaja en el token — hay que decirle a Keycloak explícitamente que lo agregue como claim.</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>bomerp-seguridad-db<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>bomerp_seguridad<span class="w"> </span>-d<span class="w"> </span>bomerp_seguridad<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SELECT id, email FROM usuarios WHERE email IN ('vendedor1@bomerp.com','vendedor2@bomerp.com','supervisor@bomerp.com','admin@bomerp.com');"</span>
+</code></pre></div>
 <ol>
-<li><strong>Clients</strong> (<em>Clientes</em>) → <code>bomerp-frontend</code> → pestaña <strong>Client scopes</strong> (<em>Ámbitos de cliente</em>) → abre el <em>scope</em> dedicado (<code>bomerp-frontend-dedicated</code>).</li>
-<li>Pestaña <strong>Mappers</strong> (<em>Mapeadores</em>) → <strong>Add mapper</strong> (<em>Añadir mapeador</em>) → <strong>By configuration</strong> (<em>Por configuración</em>) → <strong>User Attribute</strong> (<em>Atributo de usuario</em>).</li>
-<li><em>Name</em> (<em>Nombre</em>): <code>vendedorId</code>. <em>User Attribute</em> (<em>Atributo de usuario</em>): <code>vendedorId</code>. <em>Token Claim Name</em> (<em>Nombre de la declaración del token</em>): <code>vendedorId</code>. <em>Claim JSON Type</em> (<em>Tipo JSON de la declaración</em>): <code>long</code>. Activa <strong>Add to access token</strong> (<em>Añadir al token de acceso</em>). Guardar.</li>
+<li>Obtén el UUID nuevo de cada usuario, directo de <code>keycloak-db</code> (el Postgres que armamos en la sección 2):</li>
 </ol>
-<p>Este mapper es el equivalente exacto del que DIST describe para <code>idCliente</code> (S07, Tabla 6: <em>"User attribute + protocol mapper que lo agrega al token"</em>) — la técnica es la misma, solo cambia el nombre del claim.</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>bomerp-keycloak-db<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>bomerp_keycloak<span class="w"> </span>-d<span class="w"> </span>bomerp_keycloak<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SELECT u.id, u.email FROM user_entity u JOIN realm r ON r.id = u.realm_id WHERE r.name = 'bomerp' AND u.email IN ('vendedor1@bomerp.com','vendedor2@bomerp.com','supervisor@bomerp.com','admin@bomerp.com');"</span>
+</code></pre></div>
+<p>No verifiqué <code>user_entity</code>/<code>realm</code> contra una instancia real — si el nombre exacto de la tabla no calza, lista las tablas con <code>\dt</code> dentro de <code>psql</code> y ajusta la consulta; el resto del procedimiento no cambia.</p>
+<ol>
+<li>Con ambos resultados en mano (un <code>id</code> viejo y un UUID nuevo por cada email), actualiza Oracle — un <code>UPDATE</code> por usuario, solo para los que realmente tengan ventas:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="sh">@'</span>
+<span class="sh">UPDATE VENTAS SET VENDEDOR_ID = '&lt;uuid-nuevo-de-vendedor1&gt;' WHERE VENDEDOR_ID = '&lt;id-viejo-de-vendedor1&gt;';</span>
+<span class="sh">UPDATE VENTAS SET VENDEDOR_ID = '&lt;uuid-nuevo-de-vendedor2&gt;' WHERE VENDEDOR_ID = '&lt;id-viejo-de-vendedor2&gt;';</span>
+<span class="sh">COMMIT;</span>
+<span class="sh">'@</span> <span class="p">|</span> <span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="n">bomerp-oracle</span> <span class="n">bash</span> <span class="n">-c</span> <span class="s2">"sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1"</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>bomerp-oracle<span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">"sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1"</span><span class="w"> </span><span class="s">&lt;&lt;'EOF'</span>
+<span class="s">UPDATE VENTAS SET VENDEDOR_ID = '&lt;uuid-nuevo-de-vendedor1&gt;' WHERE VENDEDOR_ID = '&lt;id-viejo-de-vendedor1&gt;';</span>
+<span class="s">UPDATE VENTAS SET VENDEDOR_ID = '&lt;uuid-nuevo-de-vendedor2&gt;' WHERE VENDEDOR_ID = '&lt;id-viejo-de-vendedor2&gt;';</span>
+<span class="s">COMMIT;</span>
+<span class="s">EOF</span>
+</code></pre></div>
+<p>Es una migración de <strong>un solo dato, una sola vez</strong> — no una dependencia permanente entre Keycloak y la base vieja. <code>SUPERVISOR</code>/<code>ADMIN</code> no necesitan este paso: ven todas las ventas sin filtrar por <code>vendedorId</code> (RN8 solo aplica a <code>VENDEDOR</code>).</p>
 <h2 id="6-verificar-el-token-antes-de-tocar-bomerp-backend">6. Verificar el token antes de tocar <code>bomerp-backend</code><a class="headerlink" href="#6-verificar-el-token-antes-de-tocar-bomerp-backend" title="Permanent link">&para;</a></h2>
-<p><strong>Producto del paso:</strong> confirmación, con un token real, de que <code>realm_access.roles</code> y <code>vendedorId</code> llegan con el formato esperado — antes de cambiar nada en el código.</p>
+<p><strong>Producto del paso:</strong> confirmación, con un token real, de que <code>realm_access.roles</code> llega con el formato esperado y <code>sub</code> es el UUID del usuario — antes de cambiar nada en el código.</p>
 <div class="highlight"><pre><span></span><code><span class="nv">$login</span> <span class="p">=</span> <span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:38080/realms/bomerp/protocol/openid-connect/token"</span> <span class="p">`</span>
   <span class="n">-ContentType</span> <span class="s2">"application/x-www-form-urlencoded"</span> <span class="p">`</span>
   <span class="n">-Body</span> <span class="s2">"grant_type=password&amp;client_id=bomerp-frontend&amp;username=vendedor1@bomerp.com&amp;password=Bomerp2026!"</span>
@@ -4072,7 +4041,7 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/x-www-form-urlencoded"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-d<span class="w"> </span><span class="s2">"grant_type=password&amp;client_id=bomerp-frontend&amp;username=vendedor1@bomerp.com&amp;password=Bomerp2026!"</span>
 </code></pre></div>
-<p>Pega el <code>access_token</code> recibido en <a href="https://jwt.io">jwt.io</a> (inspección visual únicamente, 2.3 de S10) y confirma tres cosas: <code>realm_access.roles</code> trae <code>["VENDEDOR"]</code>; existe un claim <code>vendedorId</code> con el valor numérico que pusiste en 5.2; y <code>sub</code> es un UUID, no el mismo número — exactamente la diferencia que la sección 1 anticipó.</p>
+<p>Pega el <code>access_token</code> recibido en <a href="https://jwt.io">jwt.io</a> (inspección visual únicamente, 2.3 de S10) y confirma dos cosas: <code>realm_access.roles</code> trae <code>["VENDEDOR"]</code>; y <code>sub</code> es un UUID, no el <code>"3"</code> de antes — exactamente la diferencia que la sección 1 anticipó, y la razón por la que 5.2 migró las ventas viejas a ese nuevo valor.</p>
 <p><code>POST /realms/bomerp/protocol/openid-connect/token</code> es el endpoint estándar de token de Keycloak (OAuth 2.0/OpenID Connect, S10 2.4) — equivalente a <code>POST /api/v1/auth/login</code> de <code>seguridad</code>, pero ya no es un endpoint propio de BomERP.</p>
 <p><strong>Error frecuente</strong>: comparar el <code>expires_in</code> de este token con el de <code>seguridad</code> y asumir que algo está mal. Por defecto, el realm nuevo trae el <em>access token</em> del propio Keycloak (<em>Realm settings</em> → <em>Tokens</em> → <em>Access Token Lifespan</em>) en <strong>5 minutos</strong>, no en la hora que <code>jwt.expiracion-segundos</code> dejaba en S10 (3.8) — token expirado a mitad de una prueba no es un bug de la integración, solo un valor por defecto distinto. Ajusta ese campo en el realm si las pruebas de la sección 8 te quedan cortas de tiempo.</p>
 <h2 id="7-integrar-bomerp-backend-con-keycloak">7. Integrar <code>bomerp-backend</code> con Keycloak<a class="headerlink" href="#7-integrar-bomerp-backend-con-keycloak" title="Permanent link">&para;</a></h2>
@@ -4095,28 +4064,11 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <span class="w">          </span><span class="nt">issuer-uri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://localhost:38080/realms/bomerp</span>
 </code></pre></div>
 <p>Con <code>issuer-uri</code> (en vez de <code>jwk-set-uri</code>), Spring no solo descubre dónde están las claves — además valida que el claim <code>iss</code> (<em>issuer</em>, emisor) de cada token coincida exactamente con esta URL, y descarga la configuración del realm (incluida su ubicación de JWKS) del documento de descubrimiento estándar de OpenID Connect (<code>/.well-known/openid-configuration</code>) que Keycloak sí publica (a diferencia de <code>seguridad</code>, que no lo implementaba — S10, 2.4, Tabla 3). Es la única propiedad que cambia; <code>JwtAuthenticationConverter</code> (S10, 3.11) no se toca.</p>
-<h3 id="72-cambiar-como-se-lee-vendedorid">7.2 Cambiar cómo se lee <code>vendedorId</code><a class="headerlink" href="#72-cambiar-como-se-lee-vendedorid" title="Permanent link">&para;</a></h3>
-<p><strong><code>VentaController.crear</code></strong> — reemplaza <code>jwt.getSubject()</code> por el claim propio:</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@PostMapping</span>
-<span class="nd">@ResponseStatus</span><span class="p">(</span><span class="n">HttpStatus</span><span class="p">.</span><span class="na">CREATED</span><span class="p">)</span>
-<span class="kd">public</span><span class="w"> </span><span class="n">VentaResponse</span><span class="w"> </span><span class="nf">crear</span><span class="p">(</span><span class="nd">@Valid</span><span class="w"> </span><span class="nd">@RequestBody</span><span class="w"> </span><span class="n">VentaRequest</span><span class="w"> </span><span class="n">request</span><span class="p">,</span><span class="w"> </span><span class="nd">@AuthenticationPrincipal</span><span class="w"> </span><span class="n">Jwt</span><span class="w"> </span><span class="n">jwt</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">Number</span><span class="w"> </span><span class="n">claimVendedorId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">jwt</span><span class="p">.</span><span class="na">getClaim</span><span class="p">(</span><span class="s">"vendedorId"</span><span class="p">);</span>
-<span class="w">    </span><span class="n">Long</span><span class="w"> </span><span class="n">vendedorId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">claimVendedorId</span><span class="p">.</span><span class="na">longValue</span><span class="p">();</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ventaService</span><span class="p">.</span><span class="na">crear</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="w"> </span><span class="n">vendedorId</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div>
-<p>Mismo ajuste en <code>buscar</code>/<code>obtener</code> (S10, 3.15), reemplazando <code>Long.valueOf(jwt.getSubject())</code> por la misma lectura:</p>
-<div class="highlight"><pre><span></span><code><span class="kd">private</span><span class="w"> </span><span class="n">Long</span><span class="w"> </span><span class="nf">vendedorIdDe</span><span class="p">(</span><span class="n">Jwt</span><span class="w"> </span><span class="n">jwt</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">Number</span><span class="w"> </span><span class="n">claim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">jwt</span><span class="p">.</span><span class="na">getClaim</span><span class="p">(</span><span class="s">"vendedorId"</span><span class="p">);</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">claim</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">claim</span><span class="p">.</span><span class="na">longValue</span><span class="p">();</span>
-<span class="p">}</span>
-</code></pre></div>
-<p>El claim se lee como <code>Number</code> (no <code>Long</code> directo) porque el JSON (<em>JavaScript Object Notation</em>) no distingue tamaños de entero — el mismo detalle que DIST ya documentó para <code>idCliente</code> (S07, 3.22). <code>VentaServiceImpl</code>, <code>VentaRepository</code> y las reglas <code>hasRole</code>/<code>hasAnyRole</code> de <code>SecurityConfig</code> (S10, 3.13, 3.15) <strong>no cambian</strong>: siguen recibiendo exactamente el mismo <code>Long vendedorId</code> que recibían antes, solo que ahora llega por un claim distinto.</p>
-<h3 id="73-confirmar-que-catalogo-y-ventas-no-se-tocan">7.3 Confirmar que <code>catalogo</code> y <code>ventas</code> no se tocan<a class="headerlink" href="#73-confirmar-que-catalogo-y-ventas-no-se-tocan" title="Permanent link">&para;</a></h3>
-<p>Revisa <code>SecurityConfig.securityFilterChain</code>, <code>CategoriaController</code>/<code>ProductoController</code> y el resto de <code>VentaController</code> (lo que no sea <code>crear</code>/<code>buscar</code>/<code>obtener</code>): ningún <code>hasRole</code>, ningún <code>requestMatchers</code>, ninguna regla cambia. Si encuentras que necesitas tocar algo ahí, la migración se desvió de lo que esta guía describe — revisa el paso anterior.</p>
-<h3 id="74-retirar-seguridad-db">7.4 Retirar <code>seguridad-db</code><a class="headerlink" href="#74-retirar-seguridad-db" title="Permanent link">&para;</a></h3>
+<h3 id="72-confirmar-que-catalogo-y-ventas-no-se-tocan">7.2 Confirmar que <code>catalogo</code> y <code>ventas</code> no se tocan<a class="headerlink" href="#72-confirmar-que-catalogo-y-ventas-no-se-tocan" title="Permanent link">&para;</a></h3>
+<p>Revisa <code>SecurityConfig.securityFilterChain</code>, <code>CategoriaController</code>/<code>ProductoController</code> y <strong>todo</strong> <code>VentaController</code>, incluido <code>crear</code>/<code>buscar</code>/<code>obtener</code>: ningún <code>hasRole</code>, ningún <code>requestMatchers</code>, ninguna línea de código cambia — <code>jwt.getSubject()</code> sigue ahí exactamente igual que en S10 (3.14-3.15), porque <code>vendedorId</code> nunca se interpretó como número (1). Si encuentras que necesitas tocar algo ahí, la migración se desvió de lo que esta guía describe — revisa el paso anterior.</p>
+<h3 id="73-retirar-seguridad-db">7.3 Retirar <code>seguridad-db</code><a class="headerlink" href="#73-retirar-seguridad-db" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> <code>bomerp-backend</code> corre sin el Postgres de <code>seguridad</code> — Keycloak es, desde este punto, el único almacén de identidad.</p>
-<p>Con 7.1-7.3 confirmados, <code>seguridad-db</code> ya no tiene ningún lector: nadie en el código vigente lo consulta (el <code>vendedorId</code> que necesitaba su <code>id</code> numérico ya se copió a mano en 5.2). No lo dejes corriendo "por si acaso" — si Keycloak es de verdad el reemplazo, el sistema tiene que demostrar que funciona sin él <strong>antes</strong> de la prueba final de la sección 8, no después.</p>
+<p>Con 7.1-7.2 confirmados y la migración de 5.2 ya hecha, <code>seguridad-db</code> ya no tiene ningún lector: nadie en el código vigente lo consulta, y las ventas viejas ya apuntan al <code>sub</code> nuevo. No lo dejes corriendo "por si acaso" — si Keycloak es de verdad el reemplazo, el sistema tiene que demostrar que funciona sin él <strong>antes</strong> de la prueba final de la sección 8, no después.</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd </span><span class="n">lp2</span><span class="p">\</span><span class="n">bomerp-backend</span>
 <span class="n">docker</span> <span class="n">compose</span> <span class="o">-f</span> <span class="n">compose-dev</span><span class="p">.</span><span class="n">yml</span> <span class="n">stop</span> <span class="n">seguridad-db</span>
 <span class="n">docker</span> <span class="n">compose</span> <span class="o">-f</span> <span class="n">compose-dev</span><span class="p">.</span><span class="n">yml</span> <span class="nb">rm </span><span class="o">-f</span> <span class="n">seguridad-db</span>
@@ -4130,16 +4082,17 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 docker<span class="w"> </span>volume<span class="w"> </span>rm<span class="w"> </span>&lt;nombre-exacto-que-aparezca&gt;
 </code></pre></div>
 <h2 id="8-probar-de-punta-a-punta">8. Probar de punta a punta<a class="headerlink" href="#8-probar-de-punta-a-punta" title="Permanent link">&para;</a></h2>
-<p><strong>Producto del paso:</strong> la misma matriz de accesos que S10 verificó (3.16, Tabla 5), ahora contra tokens de Keycloak — con <code>seguridad-db</code> ya retirado (7.4), esta prueba confirma que el reemplazo es real, no solo que Keycloak "también funciona" en paralelo.</p>
+<p><strong>Producto del paso:</strong> la misma matriz de accesos que S10 verificó (3.16, Tabla 5), ahora contra tokens de Keycloak — con <code>seguridad-db</code> ya retirado (7.3), esta prueba confirma que el reemplazo es real, no solo que Keycloak "también funciona" en paralelo.</p>
 <p>Reinicia <code>bomerp-backend</code> (lee la propiedad nueva de 7.1) y repite exactamente las pruebas de S10 (3.16), pero obteniendo cada token con el comando de la sección 6 (cambiando el usuario). Resultado esperado: <strong>la misma Tabla 5</strong> — mismos códigos HTTP, para los mismos casos, con tokens que ahora vienen de un proceso distinto.</p>
-<p><strong>Error frecuente</strong>: <code>403</code> donde S10 esperaba <code>200</code>, con un token que en jwt.io se ve correcto. Causa más común: el usuario de Keycloak no tiene el <em>realm role</em> asignado (5.1), o el <em>client scope</em> con el mapper de <code>vendedorId</code> (5.3) no quedó asociado al cliente <code>bomerp-frontend</code> que usaste para pedir el token.</p>
+<p><strong>Error frecuente</strong>: <code>403</code> donde S10 esperaba <code>200</code>, con un token que en jwt.io se ve correcto. Causa más común: el usuario de Keycloak no tiene el <em>realm role</em> asignado (5.1), o la venta que estás consultando todavía tiene el <code>VENDEDOR_ID</code> viejo porque 5.2 no se corrió (o se corrió con el <code>id</code>/UUID equivocado) para ese usuario.</p>
 <h2 id="9-que-queda-pendiente">9. Qué queda pendiente<a class="headerlink" href="#9-que-queda-pendiente" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>S11</strong> reconfigura el cliente <code>bomerp-frontend</code> para <em>Authorization Code</em> + PKCE (S10, 2.4) — el flujo real que usará la SPA, desactivando <em>Direct access grants</em> (sección 4). El login deja de ser un formulario propio de BomERP: redirige a la pantalla de Keycloak.</li>
 <li><strong>Limpieza del paquete <code>seguridad</code></strong>: <code>AuthController</code>, <code>JwtService</code>, <code>JwksController</code>, <code>JwtKeyConfig</code>, <code>SecurityConfig</code> (las piezas de <code>seguridad</code>, no <code>OracleDataSourceConfig</code>), <code>SeguridadDataSourceConfig</code> y las entidades <code>Usuario</code>/<code>Rol</code> quedan sin ningún código que los invoque — pueden borrarse de <code>bomerp-backend</code> en un commit aparte, sin que eso afecte a <code>catalogo</code> ni a <code>ventas</code> (la discusión de por qué esto es una limpieza de archivos y no una migración se documentó en el chat de diseño de S10, no en una guía).</li>
-<li><strong><code>compose-dev.yml</code></strong>: <code>seguridad-db</code> ya se retiró en 7.4 — este punto queda aquí solo como referencia, no como pendiente.</li>
+<li><strong><code>compose-dev.yml</code></strong>: <code>seguridad-db</code> ya se retiró en 7.3 — este punto queda aquí solo como referencia, no como pendiente.</li>
 <li><strong><code>pom.xml</code></strong>: <code>spring-security-oauth2-jose</code> (firmaba el JWT propio) deja de hacer falta; <code>spring-boot-starter-security-oauth2-resource-server</code> <strong>sigue haciendo falta</strong> (sigue validando, ahora contra Keycloak); el driver <code>org.postgresql:postgresql</code> se retira solo si ningún otro módulo de BomERP usa Postgres.</li>
 <li><strong>Producción real</strong>: el motor de base de datos ya queda resuelto desde la sección 2 (<code>keycloak-db</code>, Postgres). Lo que falta es <code>start-dev</code> (sección 2) en sí — no es apto para producción, exige modo <code>start</code> y TLS, ninguno de los dos configurado aquí (ver la nota de la sección 2).</li>
+<li><strong><code>vendedorId</code> para usuarios nuevos: resuelto por el propio rediseño</strong>: con <code>vendedorId = sub</code> (texto, no número — S10, 3.2/3.14), un vendedor creado <strong>después</strong> de este reemplazo no necesita ningún paso manual — Keycloak le genera su UUID solo, al crearlo, y ese UUID es automáticamente su <code>vendedorId</code> desde la primera venta que registre. Esto era un problema real con el diseño anterior (un <code>vendedorId</code> numérico no tenía de dónde salir sin una tabla aparte); dejó de serlo en cuanto <code>vendedorId</code> se diseñó como texto desde S10.</li>
 </ul>
 <h2 id="bibliografia">Bibliografía<a class="headerlink" href="#bibliografia" title="Permanent link">&para;</a></h2>
 <ol>
