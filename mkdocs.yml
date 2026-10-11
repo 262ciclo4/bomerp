@@ -92,6 +92,7 @@ nav:
           - S7 - Arquitectura Oracle e instancia: bd2/sesiones/S07_Arquitectura_Oracle_Instancia.md
           - S8 - Gestión de usuarios, roles y privilegios: bd2/sesiones/S08_Usuarios_Roles_Privilegios.md
           - S9 - Administración del almacenamiento y seguridad: bd2/sesiones/S09_Almacenamiento_Seguridad_Auditoria.md
+          - S10 - Optimización del rendimiento: bd2/sesiones/S10_Optimizacion_Rendimiento.md
   - LP2:
       - Inicio: lp2/index.md
       - Silabos:

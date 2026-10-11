@@ -191,11 +191,11 @@ La recomendación profesional actual es delegar identidad a un proveedor dedicad
 | Emisor del token | `AuthController` + `JwtService` | El IdP externo | No |
 | Usuarios, contraseñas y roles | Tablas `usuarios`, `roles`, `usuario_rol` en Postgres propio (`bomerp-seguridad-db`) | Usuarios y roles del IdP, en su propio almacén (también separado de Oracle) | No |
 | Claim de roles | `realm_access.roles` | `realm_access.roles` (mismo formato en Keycloak) | No |
-| Identificador del usuario (`sub`) | `id` numérico de `usuarios` | Identificador propio del IdP | No |
+| Identificador del usuario (`sub`) | `id` numérico de `usuarios` | Identificador propio del IdP (un UUID, en Keycloak) | **Sí** — `VentaController` lee `vendedorId` de `jwt.getSubject()` (3.13-3.14); con un IdP real, `sub` deja de ser ese `id`, y `vendedorId` tiene que viajar en un claim propio aparte (detalle completo en la guía de referencia de Keycloak) |
 | Dónde se valida la firma | `SecurityConfig`, por la propiedad `jwk-set-uri` → `http://localhost:8080/.well-known/jwks.json` (2.1) | `SecurityConfig`, por la misma propiedad → `issuer-uri` del IdP | **No el código** — solo el valor de una propiedad |
 | SSO, login social, refresh token | No existen | Incluidos | — |
 
-Esta sesión no implementa ningún paso de la columna central: queda como dirección documentada (ADR-005), no como entregable de U3 — el sílabo de S13-S16 no la menciona. Lo único que esta sesión garantiza es que, si esa decisión se toma más adelante, el cambio quede acotado a una propiedad de configuración y a dónde los clientes piden su token, nunca a los controllers o services de `catalogo` y `ventas`.
+Esta sesión no implementa ningún paso de la columna central: queda como dirección documentada (ADR-005), no como entregable de U3 — el sílabo de S13-S16 no la menciona. Lo que esta sesión garantiza es que, si esa decisión se toma más adelante, el cambio queda casi todo acotado a una propiedad de configuración y a dónde los clientes piden su token — con una única excepción real, ya anotada en la Tabla 4: cómo `VentaController` lee `vendedorId` del token, porque ese dato depende de qué pone el emisor en `sub`, y eso sí cambia de un emisor a otro.
 
 ### 2.7 Observabilidad y diagnóstico de 401/403
 
@@ -955,11 +955,17 @@ import org.springframework.security.core.AuthenticationException;
 
 ```java
 @ExceptionHandler(AuthenticationException.class)
-public ResponseEntity<Map<String, String>> handleAuthentication(AuthenticationException ex) {
-    return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body(Map.of("error", "Credenciales invalidas"));
+public ResponseEntity<Map<String, Object>> handleAuthentication(AuthenticationException ex) {
+    Map<String, Object> body = new HashMap<>();
+    body.put("timestamp", Instant.now().toString());
+    body.put("status", HttpStatus.UNAUTHORIZED.value());
+    body.put("error", "Unauthorized");
+    body.put("message", "Credenciales invalidas");
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
 }
 ```
+
+Mismo patrón que ya usan `handleNotFound`/`handleStockInsuficiente` en este archivo (`Map<String, Object>` con `timestamp`/`status`/`error`/`message`) — no un `Map<String, String>` de un solo campo nuevo.
 
 El mensaje es **fijo**, sin importar la causa (contraseña incorrecta o email inexistente): revelar cuál falló le regala información a quien intenta adivinar credenciales ajenas.
 
@@ -1237,31 +1243,34 @@ En `SecurityConfig.securityFilterChain` (3.10), agrega, también antes de `.anyR
 
 ```java
 .requestMatchers(HttpMethod.POST, "/api/v1/ventas").hasAnyRole("VENDEDOR", "SUPERVISOR")
-.requestMatchers(HttpMethod.GET, "/api/v1/ventas/reporte").hasAnyRole("SUPERVISOR", "ADMIN")
+.requestMatchers(HttpMethod.GET, "/api/v1/ventas/resumen").hasAnyRole("SUPERVISOR", "ADMIN")
 .requestMatchers(HttpMethod.PATCH, "/api/v1/ventas/*/anular").hasAnyRole("SUPERVISOR", "ADMIN")
 .requestMatchers("/api/v1/ventas/**").hasAnyRole("VENDEDOR", "SUPERVISOR", "ADMIN")
 ```
 
-El orden importa: la regla de `reporte` y la de `anular` van **antes** de la regla general `/api/v1/ventas/**`, porque Spring Security aplica la primera que coincide (2.4) — si la regla general fuera primera, `reporte` y `anular` nunca llegarían a exigir el rol correcto.
+**Error frecuente**: escribir esta regla como `/api/v1/ventas/reporte` (el nombre de la operación tal como la diseñó ADS, S9) en vez de `/api/v1/ventas/resumen` — el endpoint real que `VentaController` ya expone (3.8 de S9) se llama `resumen`, no `reporte`. Si el *matcher* no coincide con la ruta real, Spring Security nunca la intercepta con esta regla específica: la petición cae en la regla general `/api/v1/ventas/**` de abajo, que permite los tres roles — el reporte quedaría accesible para `VENDEDOR`, exactamente lo que esta regla debía impedir.
+
+El orden importa: la regla de `resumen` y la de `anular` van **antes** de la regla general `/api/v1/ventas/**`, porque Spring Security aplica la primera que coincide (2.4) — si la regla general fuera primera, `resumen` y `anular` nunca llegarían a exigir el rol correcto.
 
 RN8 (un `VENDEDOR` solo ve sus propias ventas) no se resuelve por ruta — las tres roles pueden llamar a `buscar`/`obtener`, pero el **contenido** que cada uno ve depende de su identidad, no solo de su rol (2.4, ABAC). Eso se resuelve dentro del servicio. **`VentaController`** — agrega `@AuthenticationPrincipal Jwt jwt` a `buscar` y `obtener`, y pasa el rol/`vendedorId` al servicio:
 
 ```java
 @GetMapping
-public List<VentaResponse> buscar(@RequestParam(required = false) EstadoVenta estado,
-                                   @RequestParam(required = false) LocalDateTime desde,
-                                   @RequestParam(required = false) LocalDateTime hasta,
-                                   @RequestParam(defaultValue = "fecha") String ordenarPor,
-                                   @RequestParam(defaultValue = "DESC") String direccion,
-                                   @AuthenticationPrincipal Jwt jwt) {
+public ResponseEntity<List<VentaResponse>> buscar(
+        @RequestParam(required = false) EstadoVenta estado,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime desde,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime hasta,
+        @RequestParam(defaultValue = "fecha") String ordenarPor,
+        @RequestParam(defaultValue = "DESC") String direccion,
+        @AuthenticationPrincipal Jwt jwt) {
     Long vendedorId = esVendedor(jwt) ? Long.valueOf(jwt.getSubject()) : null;
-    return ventaService.buscar(estado, desde, hasta, ordenarPor, direccion, vendedorId);
+    return ResponseEntity.ok(ventaService.buscar(estado, desde, hasta, ordenarPor, direccion, vendedorId));
 }
 
 @GetMapping("/{id}")
-public VentaResponse obtener(@PathVariable Long id, @AuthenticationPrincipal Jwt jwt) {
+public ResponseEntity<VentaResponse> obtener(@PathVariable Long id, @AuthenticationPrincipal Jwt jwt) {
     Long vendedorId = esVendedor(jwt) ? Long.valueOf(jwt.getSubject()) : null;
-    return ventaService.obtener(id, vendedorId);
+    return ResponseEntity.ok(ventaService.obtener(id, vendedorId));
 }
 
 private boolean esVendedor(Jwt jwt) {
@@ -1270,6 +1279,8 @@ private boolean esVendedor(Jwt jwt) {
     return roles instanceof Collection<?> lista && lista.size() == 1 && lista.contains("VENDEDOR");
 }
 ```
+
+Mantén el resto de la firma tal cual ya está en tu código (`@Operation`, el `log.info(...)` de `buscar`) — el único cambio real es el parámetro `@AuthenticationPrincipal Jwt jwt` nuevo y el `vendedorId` calculado a partir de él; el tipo de retorno (`ResponseEntity<...>`) no cambia respecto a S9.
 
 `vendedorId` llega `null` para `SUPERVISOR`/`ADMIN` (ven todas) y con un valor real solo para `VENDEDOR` — el mismo patrón que ADS ya anticipó en su diseño de `VentaRepository` (S8, Tabla 14: "`vendedorId` es el parámetro que agrega el diseño para RN8; LP2 aún no lo tiene"). Actualiza `VentaService`/`VentaServiceImpl`:
 
@@ -1314,10 +1325,17 @@ public class AccesoDenegadoException extends RuntimeException {
 
 ```java
 @ExceptionHandler(AccesoDenegadoException.class)
-public ResponseEntity<Map<String, String>> handleAccesoDenegado(AccesoDenegadoException ex) {
-    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("error", ex.getMessage()));
+public ResponseEntity<Map<String, Object>> handleAccesoDenegado(AccesoDenegadoException ex) {
+    Map<String, Object> body = new HashMap<>();
+    body.put("timestamp", Instant.now().toString());
+    body.put("status", HttpStatus.FORBIDDEN.value());
+    body.put("error", "Forbidden");
+    body.put("message", ex.getMessage());
+    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(body);
 }
 ```
+
+Mismo patrón que el resto de `GlobalExceptionHandler` (`Map<String, Object>` con `timestamp`/`status`/`error`/`message`), no uno nuevo de un solo campo.
 
 Responder `403` (y no `404`) cuando un `VENDEDOR` pide, por `id`, una venta ajena es una decisión deliberada: `403` le dice "existe, pero no es tuya"; `404` escondería incluso esa información. Esta sesión elige `403` porque ya existe un mecanismo de autorización explícito (RBAC) que lo justifica — la pregunta de 1.6.2 queda abierta a propósito para que la discutas en clase.
 
@@ -1336,7 +1354,7 @@ try {
 }
 ```
 
-Resultado esperado: `403` — la venta existe, pero no es de `vendedor2`. Con el token de `supervisor`, la misma consulta responde `200 OK` con la venta completa. Con el token de `vendedor1` intentando `GET /api/v1/ventas/reporte`, responde `403` (el rol no alcanza, 3.14); con `supervisor`, `200 OK`.
+Resultado esperado: `403` — la venta existe, pero no es de `vendedor2`. Con el token de `supervisor`, la misma consulta responde `200 OK` con la venta completa. Con el token de `vendedor1` intentando `GET /api/v1/ventas/resumen`, responde `403` (el rol no alcanza, 3.14); con `supervisor`, `200 OK`.
 
 **Tabla 5. Matriz de accesos verificada**
 
@@ -1344,7 +1362,7 @@ Resultado esperado: `403` — la venta existe, pero no es de `vendedor2`. Con el
 |---|---|---|---|---|
 | `POST /api/v1/ventas` | `201` | — | `201` | `401` |
 | `GET /api/v1/ventas/{id}` | `200` | `403` | `200` | `401` |
-| `GET /api/v1/ventas/reporte` | `403` | `403` | `200` | `401` |
+| `GET /api/v1/ventas/resumen` | `403` | `403` | `200` | `401` |
 | `PATCH /api/v1/ventas/{id}/anular` | `403` | `403` | `200` | `401` |
 
 ### Parte C — Diagnóstico
@@ -1484,7 +1502,7 @@ Indica 2 fortalezas y 2 recomendaciones.
 
 Tiempo: 5 min.
 
-**Resumen breve:** hoy el backend de BomERP dejó de responder a cualquiera sin preguntar nada. El módulo `seguridad` — con su propio Postgres, separado del Oracle de `catalogo`/`ventas` — construye usuarios con contraseña BCrypt, roles `VENDEDOR`/`SUPERVISOR`/`ADMIN`, y un JWT firmado con clave asimétrica cuya mitad pública se publica en `/.well-known/jwks.json`, consumida por `SecurityConfig` mediante una propiedad de configuración y no por código. `vendedorId` — la brecha que ADS S8 identificó desde su diseño (RN5/RN8) — por fin tiene de dónde salir: del claim `sub` de un token ya validado, nunca de un campo que el cliente declare sobre sí mismo. `reporte` y `anular`, diseñados por ADS S9 como operaciones de `SUPERVISOR`/`ADMIN` pero sin ningún mecanismo para hacerlo cumplir hasta hoy, quedaron por fin restringidos. Todo esto se construyó a mano, de forma deliberadamente temporal (ADR-005): el dato aislado y la validación por configuración quedan listos para que un proveedor de identidad externo lo reemplace más adelante, si el proyecto lo adopta, sin tocar ni `catalogo` ni `ventas`.
+**Resumen breve:** hoy el backend de BomERP dejó de responder a cualquiera sin preguntar nada. El módulo `seguridad` — con su propio Postgres, separado del Oracle de `catalogo`/`ventas` — construye usuarios con contraseña BCrypt, roles `VENDEDOR`/`SUPERVISOR`/`ADMIN`, y un JWT firmado con clave asimétrica cuya mitad pública se publica en `/.well-known/jwks.json`, consumida por `SecurityConfig` mediante una propiedad de configuración y no por código. `vendedorId` — la brecha que ADS S8 identificó desde su diseño (RN5/RN8) — por fin tiene de dónde salir: del claim `sub` de un token ya validado, nunca de un campo que el cliente declare sobre sí mismo. `reporte` y `anular`, diseñados por ADS S9 como operaciones de `SUPERVISOR`/`ADMIN` pero sin ningún mecanismo para hacerlo cumplir hasta hoy, quedaron por fin restringidos. Todo esto se construyó a mano, de forma deliberadamente temporal (ADR-005): el dato aislado y la validación por configuración quedan listos para que un proveedor de identidad externo lo reemplace más adelante, si el proyecto lo adopta, con el cambio acotado casi del todo a configuración — salvo una excepción real y ya documentada (2.6, Tabla 4): cómo `VentaController` lee `vendedorId` del token.
 
 **Dinámica participativa:** en una ronda rápida, cada estudiante comparte qué código HTTP eligió para "un `VENDEDOR` pide una venta ajena" (`403` o `404`) y por qué.
 

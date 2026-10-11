@@ -82,13 +82,17 @@ consume vía JPA (convención `BOM_<MODULO>` en `@Table(schema = ...)`, ver
 Las guías de sesión en `docs/bd2/sesiones/` **no tienen el mismo nivel de
 detalle entre sí**:
 
-- `S01` (508 líneas) y `S02` (352 líneas) están completamente desarrolladas
-  con el caso concreto de BomERP (esquema `BOM_CATALOGO`, scripts
-  enlazados, salida esperada literal, rúbrica).
-- `S03`, `S04`, `S05`, `S07`-`S11`, `S13`-`S15` son **plantillas genéricas
-  de 98 líneas** (secciones con campos en blanco tipo "Dominio del
-  equipo: ___", "Concepto central de la sesión: ___"), sin el mismo nivel
-  de script/resultado concreto que S01-S02.
+- `S01`-`S10` están completamente desarrolladas con el caso concreto de
+  BomERP (esquemas reales, scripts enlazados o incluidos, salida esperada
+  literal, rúbrica) — no son plantillas genéricas, esta nota estaba
+  desactualizada. `S10` además tiene su script real verificado en
+  `bd2/tuning/01_optimizacion_rendimiento.sql`, corrido contra
+  `bomerp-oracle` el 2026-10-10.
+- `S11`, `S13`-`S15` siguen siendo **plantillas genéricas de 98 líneas**
+  (secciones con campos en blanco tipo "Dominio del equipo: ___"), sin el
+  mismo nivel de script/resultado concreto que S01-S10. Verificar de
+  nuevo antes de asumir que siguen así — esta lista también puede quedar
+  desactualizada a medida que se desarrollen.
 - `S06`, `S12`, `S16` son sesiones de evaluación (34 líneas, sin
   contenido técnico nuevo).
 
