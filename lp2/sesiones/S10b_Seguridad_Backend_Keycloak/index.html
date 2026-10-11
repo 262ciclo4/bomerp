@@ -4007,7 +4007,7 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <p><strong>Producto del paso:</strong> un <em>client</em> en el realm <code>bomerp</code> que permita pedir un token para probar la integración antes de construir la SPA real (S11).</p>
 <ol>
 <li><strong>Clients</strong> (<em>Clientes</em>) → <strong>Create client</strong> (<em>Crear cliente</em>).</li>
-<li><em>Client type</em> (<em>Tipo de cliente</em>): <code>OpenID Connect</code>. <em>Client ID</em>: <code>bomerp-frontend</code>. Siguiente.</li>
+<li>Paso <strong>General settings</strong> (<em>Configuraciones generales</em>): <em>Client type</em> (<em>Tipo de cliente</em>): <code>OpenID Connect</code>. <em>Client ID</em> (<em>ID de cliente</em>): <code>bomerp-frontend</code>. <em>Name</em>/<em>Description</em> (<em>Nombre</em>/<em>Descripción</em>): opcionales, déjalos vacíos. <strong>Always display in UI</strong> (<em>Mostrar siempre en la interfaz de usuario</em>): déjalo <strong>desactivado</strong> — solo importa si quieres que este cliente aparezca listado en el <em>Account Console</em> de Keycloak incluso sin sesión activa, algo que no necesitas para un cliente de prueba. Siguiente.</li>
 <li><em>Client authentication</em> (<em>Autenticación de cliente</em>): <strong>desactivado</strong> (es un <em>public client</em> — la SPA de S11 no puede guardar un secreto, 2.4 de S10). Siguiente.</li>
 <li>En <strong>Capability config</strong> (<em>Configuración de capacidad</em>), activa <strong>Direct access grants</strong> (<em>Concesiones de acceso directo</em>) — habilita el flujo <em>Resource Owner Password Credentials</em> <strong>solo para las pruebas de esta guía</strong>. Guardar.</li>
 </ol>
