@@ -1487,6 +1487,13 @@ private boolean esVendedor(Jwt jwt) {
 }
 ```
 
+Agrega los imports que faltan (`AuthenticationPrincipal`/`Jwt` ya quedaron en 3.14; `Map`/`Collection` son nuevos en este archivo, los necesita `esVendedor`):
+
+```java
+import java.util.Collection;
+import java.util.Map;
+```
+
 Mantén el resto de la firma tal cual ya está en tu código (`@Operation`, el `log.info(...)` de `buscar`) — el único cambio real es el parámetro `@AuthenticationPrincipal Jwt jwt` nuevo y el `vendedorId` calculado a partir de él; el tipo de retorno (`ResponseEntity<...>`) no cambia respecto a S9.
 
 `vendedorId` llega `null` para `SUPERVISOR`/`ADMIN` (ven todas) y con un valor real solo para `VENDEDOR` — el mismo patrón que ADS ya anticipó en su diseño de `VentaRepository` (S8, Tabla 14: "`vendedorId` es el parámetro que agrega el diseño para RN8; LP2 aún no lo tiene"). Actualiza `VentaService`/`VentaServiceImpl`:
@@ -1520,9 +1527,33 @@ public VentaResponse obtener(Long id, Long vendedorId) {
 }
 ```
 
-`VentaRepository.buscar` gana un parámetro `Long vendedorId` (`null` = sin filtrar), igual que ADS ya diseñó. Crea `AccesoDenegadoException` (en `pe.edu.upeu.bomerp.exception`, mismo paquete que `ResourceNotFoundException`) y su manejador en `GlobalExceptionHandler`, respondiendo `403`:
+`VentaRepository.buscar` gana un parámetro `Long vendedorId` (`null` = sin filtrar), igual que ADS ya diseñó — mismo patrón que `estado`/`desde`/`hasta`, condición opcional dentro del propio `@Query`:
 
 ```java
+@EntityGraph(attributePaths = "detalles")
+@Query("""
+    SELECT v FROM Venta v
+    WHERE (:estado IS NULL OR v.estado = :estado)
+      AND (:desde IS NULL OR v.fecha >= :desde)
+      AND (:hasta IS NULL OR v.fecha <= :hasta)
+      AND (:vendedorId IS NULL OR v.vendedorId = :vendedorId)
+    """)
+List<Venta> buscar(@Param("estado") EstadoVenta estado,
+                    @Param("desde") LocalDateTime desde,
+                    @Param("hasta") LocalDateTime hasta,
+                    @Param("vendedorId") Long vendedorId,
+                    Sort sort);
+```
+
+Con `vendedorId = null` (`SUPERVISOR`/`ADMIN`, calculado por `esVendedor(jwt)` en el controlador) la condición `:vendedorId IS NULL OR ...` siempre es verdadera y no filtra nada — ven todas las ventas. Con un valor real (`VENDEDOR`), filtra solo las suyas. `buscarResumen`/`agregados` (el endpoint `resumen`) **no** necesitan este parámetro: ya están restringidos a `SUPERVISOR`/`ADMIN` en `SecurityConfig` (3.15), ningún `VENDEDOR` llega a llamarlos.
+
+Crea `AccesoDenegadoException` (en `pe.edu.upeu.bomerp.exception`, mismo paquete que `ResourceNotFoundException`) y su manejador en `GlobalExceptionHandler`, respondiendo `403`:
+
+**`lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/exception/AccesoDenegadoException.java`:**
+
+```java
+package pe.edu.upeu.bomerp.exception;
+
 public class AccesoDenegadoException extends RuntimeException {
     public AccesoDenegadoException(String mensaje) {
         super(mensaje);
