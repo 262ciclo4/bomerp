@@ -5930,7 +5930,43 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <p>Responder <code>403</code> (y no <code>404</code>) cuando un <code>VENDEDOR</code> pide, por <code>id</code>, una venta ajena es una decisión deliberada: <code>403</code> le dice "existe, pero no es tuya"; <code>404</code> escondería incluso esa información. Esta sesión elige <code>403</code> porque ya existe un mecanismo de autorización explícito (RBAC) que lo justifica — la pregunta de 1.6.2 queda abierta a propósito para que la discutas en clase.</p>
 <h4 id="316-probar-accesos-permitidos-y-denegados">3.16 Probar accesos permitidos y denegados<a class="headerlink" href="#316-probar-accesos-permitidos-y-denegados" title="Permanent link">&para;</a></h4>
 <p><strong>Producto del paso:</strong> evidencia real de los tres roles contra <code>ventas</code>.</p>
-<p>Obtén un token por cada rol (3.12) y guárdalo en una variable (<code>$tokenVendedor1</code>, <code>$tokenVendedor2</code>, <code>$tokenSupervisor</code>). Con el token de <code>vendedor1</code>, crea una venta (queda con su <code>vendedorId</code>). Con el token de <code>vendedor2</code>, intenta consultarla por <code>id</code>:</p>
+<p>Obtén un token por cada rol (3.12) y guárdalo en una variable:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$tokenVendedor1</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:8080/api/v1/auth/login"</span> <span class="p">`</span>
+  <span class="n">-ContentType</span> <span class="s2">"application/json"</span> <span class="p">`</span>
+  <span class="n">-Body</span> <span class="s1">'{"email": "vendedor1@bomerp.com", "password": "Bomerp2026!"}'</span><span class="p">).</span><span class="n">accessToken</span>
+
+<span class="nv">$tokenVendedor2</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:8080/api/v1/auth/login"</span> <span class="p">`</span>
+  <span class="n">-ContentType</span> <span class="s2">"application/json"</span> <span class="p">`</span>
+  <span class="n">-Body</span> <span class="s1">'{"email": "vendedor2@bomerp.com", "password": "Bomerp2026!"}'</span><span class="p">).</span><span class="n">accessToken</span>
+
+<span class="nv">$tokenSupervisor</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:8080/api/v1/auth/login"</span> <span class="p">`</span>
+  <span class="n">-ContentType</span> <span class="s2">"application/json"</span> <span class="p">`</span>
+  <span class="n">-Body</span> <span class="s1">'{"email": "supervisor@bomerp.com", "password": "Bomerp2026!"}'</span><span class="p">).</span><span class="n">accessToken</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nv">tokenVendedor1</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8080/api/v1/auth/login<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"email": "vendedor1@bomerp.com", "password": "Bomerp2026!"}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">'.accessToken'</span><span class="k">)</span>
+
+<span class="nv">tokenVendedor2</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8080/api/v1/auth/login<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"email": "vendedor2@bomerp.com", "password": "Bomerp2026!"}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">'.accessToken'</span><span class="k">)</span>
+
+<span class="nv">tokenSupervisor</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8080/api/v1/auth/login<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"email": "supervisor@bomerp.com", "password": "Bomerp2026!"}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">'.accessToken'</span><span class="k">)</span>
+</code></pre></div>
+<p>Con el token de <code>vendedor1</code>, crea una venta (queda con su <code>vendedorId</code>) — ajusta <code>productoId</code> a uno real de tu <code>catalogo</code> (<code>GET /api/v1/productos</code>):</p>
+<div class="highlight"><pre><span></span><code><span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:8080/api/v1/ventas"</span> <span class="p">`</span>
+  <span class="n">-Headers</span> <span class="p">@{</span> <span class="n">Authorization</span> <span class="p">=</span> <span class="s2">"Bearer $tokenVendedor1"</span> <span class="p">}</span> <span class="p">`</span>
+  <span class="n">-ContentType</span> <span class="s2">"application/json"</span> <span class="p">`</span>
+  <span class="n">-Body</span> <span class="s1">'{"detalles": [{"productoId": 1, "cantidad": 2}]}'</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8080/api/v1/ventas<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="nv">$tokenVendedor1</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"detalles": [{"productoId": 1, "cantidad": 2}]}'</span>
+</code></pre></div>
+<p>Resultado esperado: <code>201 Created</code>, con el <code>id</code> de la venta recién creada (lo necesitas para el siguiente paso). Con el token de <code>vendedor2</code>, intenta consultarla por ese <code>id</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="k">try</span> <span class="p">{</span>
   <span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Get</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:8080/api/v1/ventas/1"</span> <span class="p">`</span>
     <span class="n">-Headers</span> <span class="p">@{</span> <span class="n">Authorization</span> <span class="p">=</span> <span class="s2">"Bearer $tokenVendedor2"</span> <span class="p">}</span>
