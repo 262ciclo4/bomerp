@@ -4972,8 +4972,8 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <p><strong><code>lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/OracleDataSourceConfig.java</code></strong> (paquete raíz: gobierna <strong>todos</strong> los módulos que persisten en Oracle, no uno solo):</p>
 <div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp</span><span class="p">;</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.boot.jdbc.autoconfigure.DataSourceProperties</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.boot.context.properties.ConfigurationProperties</span><span class="p">;</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.boot.jdbc.DataSourceBuilder</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.context.annotation.Bean</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.context.annotation.Configuration</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.context.annotation.Primary</span><span class="p">;</span>
@@ -4996,8 +4996,14 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <span class="w">    </span><span class="nd">@Primary</span>
 <span class="w">    </span><span class="nd">@Bean</span>
 <span class="w">    </span><span class="nd">@ConfigurationProperties</span><span class="p">(</span><span class="s">"spring.datasource"</span><span class="p">)</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">DataSource</span><span class="w"> </span><span class="nf">oracleDataSource</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">DataSourceBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">().</span><span class="na">build</span><span class="p">();</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">DataSourceProperties</span><span class="w"> </span><span class="nf">oracleDataSourceProperties</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DataSourceProperties</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Primary</span>
+<span class="w">    </span><span class="nd">@Bean</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">DataSource</span><span class="w"> </span><span class="nf">oracleDataSource</span><span class="p">(</span><span class="n">DataSourceProperties</span><span class="w"> </span><span class="n">oracleDataSourceProperties</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">oracleDataSourceProperties</span><span class="p">.</span><span class="na">initializeDataSourceBuilder</span><span class="p">().</span><span class="na">build</span><span class="p">();</span>
 <span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="nd">@Primary</span>
@@ -5024,8 +5030,8 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <p><strong><code>lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/seguridad/SeguridadDataSourceConfig.java</code></strong> (dentro del propio módulo: es infraestructura que solo <code>seguridad</code> usa):</p>
 <div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.seguridad</span><span class="p">;</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.boot.jdbc.autoconfigure.DataSourceProperties</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.boot.context.properties.ConfigurationProperties</span><span class="p">;</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.boot.jdbc.DataSourceBuilder</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.context.annotation.Bean</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.context.annotation.Configuration</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.data.jpa.repository.config.EnableJpaRepositories</span><span class="p">;</span>
@@ -5046,8 +5052,13 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 
 <span class="w">    </span><span class="nd">@Bean</span>
 <span class="w">    </span><span class="nd">@ConfigurationProperties</span><span class="p">(</span><span class="s">"bomerp.datasource.seguridad"</span><span class="p">)</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">DataSource</span><span class="w"> </span><span class="nf">seguridadDataSource</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">DataSourceBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">().</span><span class="na">build</span><span class="p">();</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">DataSourceProperties</span><span class="w"> </span><span class="nf">seguridadDataSourceProperties</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DataSourceProperties</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Bean</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">DataSource</span><span class="w"> </span><span class="nf">seguridadDataSource</span><span class="p">(</span><span class="n">DataSourceProperties</span><span class="w"> </span><span class="n">seguridadDataSourceProperties</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">seguridadDataSourceProperties</span><span class="p">.</span><span class="na">initializeDataSourceBuilder</span><span class="p">().</span><span class="na">build</span><span class="p">();</span>
 <span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="nd">@Bean</span>
@@ -5068,6 +5079,7 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <span class="p">}</span>
 </code></pre></div>
 <p>Cada <code>@EnableJpaRepositories</code> acota, con <code>basePackages</code>, qué repositorios usa cada <code>EntityManagerFactory</code> — sin eso, Spring Data JPA no sabría si <code>UsuarioRepository</code> habla con Oracle o con Postgres. <code>@Primary</code> en los tres <em>beans</em> de Oracle importa: cualquier otro <em>bean</em> del proyecto que pida un <code>DataSource</code>/<code>EntityManagerFactory</code>/<code>PlatformTransactionManager</code> genérico (por ejemplo, un futuro <code>@Transactional</code> sin especificar cuál) recibe el de Oracle por defecto, ya que es el motor de la mayoría de los módulos.</p>
+<p>Los dos <code>DataSource</code> se arman en <strong>dos pasos</strong>, no uno (<code>DataSourceProperties</code> primero, el <code>DataSource</code> después a partir de ella) — no es el atajo más corto que existe (<code>DataSourceBuilder.create().build()</code> bindeado directo con <code>@ConfigurationProperties</code> parece más simple), pero ese atajo tiene un defecto real: construye un <code>HikariDataSource</code> "pelado" y le intenta bindear la propiedad <code>url</code> tal cual, cuando Hikari internamente espera <code>jdbcUrl</code> (no tiene ningún método <code>setUrl()</code>) — el arranque falla con <code>jdbcUrl is required with driverClassName</code>, con <code>driverClassName</code> sí bindeado y <code>jdbcUrl</code> vacío. <code>DataSourceProperties.initializeDataSourceBuilder()</code> es la pieza intermedia que sí sabe traducir <code>url</code> al nombre que cada implementación necesita, sin importar cuál termine eligiendo Spring Boot.</p>
 <p><strong>Error frecuente</strong>: olvidar <code>@Primary</code> en el lado de Oracle. Sin él, Spring Boot no sabe cuál de los dos <code>DataSource</code> usar quién no especifica uno, y el arranque falla con <code>NoUniqueBeanDefinitionException</code>. Esta infraestructura se configura una sola vez, en esta sesión, y no se vuelve a tocar.</p>
 <h4 id="35-crear-las-entidades-usuario-y-rol">3.5 Crear las entidades <code>Usuario</code> y <code>Rol</code><a class="headerlink" href="#35-crear-las-entidades-usuario-y-rol" title="Permanent link">&para;</a></h4>
 <p><strong>Producto del paso:</strong> <code>Usuario</code> y <code>Rol</code>, relacionados de muchos a muchos, mapeados contra las tablas de Postgres (3.2).</p>
