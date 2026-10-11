@@ -3366,10 +3366,21 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#31-opcional-espanol-dos-configuraciones-distintas-no-una" class="md-nav__link">
+  <a href="#30-opcional-espanol-dos-configuraciones-distintas-no-una" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.1 (Opcional) Español — dos configuraciones distintas, no una
+        3.0 (Opcional) Español — dos configuraciones distintas, no una
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-opcional-espanol-para-la-pantalla-de-login-de-bomerp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 (Opcional) Español para la pantalla de login de bomerp
       
     </span>
   </a>
@@ -3643,10 +3654,21 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#31-opcional-espanol-dos-configuraciones-distintas-no-una" class="md-nav__link">
+  <a href="#30-opcional-espanol-dos-configuraciones-distintas-no-una" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.1 (Opcional) Español — dos configuraciones distintas, no una
+        3.0 (Opcional) Español — dos configuraciones distintas, no una
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-opcional-espanol-para-la-pantalla-de-login-de-bomerp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 (Opcional) Español para la pantalla de login de bomerp
       
     </span>
   </a>
@@ -3964,6 +3986,12 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <p>Confirma que levantó accediendo a <code>http://localhost:38080</code> — debe aparecer la pantalla de bienvenida de Keycloak. Entra a la consola de administración (<code>Administration Console</code>) con <code>admin</code> / <code>admin123</code>.</p>
 <h2 id="3-configurar-el-realm-bomerp">3. Configurar el realm <code>bomerp</code><a class="headerlink" href="#3-configurar-el-realm-bomerp" title="Permanent link">&para;</a></h2>
 <p><strong>Producto del paso:</strong> un realm propio (no el <code>master</code> por defecto, reservado para administrar Keycloak mismo), con los tres roles que <code>ventas</code> ya usa.</p>
+<h3 id="30-opcional-espanol-dos-configuraciones-distintas-no-una">3.0 (Opcional) Español — dos configuraciones distintas, no una<a class="headerlink" href="#30-opcional-espanol-dos-configuraciones-distintas-no-una" title="Permanent link">&para;</a></h3>
+<p>Son dos cosas separadas, cada una en un realm distinto; esta es la primera y conviene hacerla <strong>antes</strong> de crear <code>bomerp</code>, para ver el resto de esta guía ya en español:</p>
+<p><strong>A. Idioma del Admin Console (el menú, los botones — lo que ves tú como administrador):</strong> el Admin Console es una sola aplicación compartida por todo Keycloak, no por realm — su idioma sigue la configuración de <strong><code>master</code></strong>, nunca la de <code>bomerp</code>. Con <code>master</code> como realm activo (el único que existe por ahora) → <strong>Realm settings</strong> → <strong>Localization</strong> → <strong>Locales</strong> → activa <strong>Internationalization</strong>, agrega <code>Spanish</code> a <em>Supported locales</em>, elige <code>Spanish</code> en <em>Default locale</em> → <strong>Save</strong>. Recarga la página.</p>
+<p><strong>B. Idioma de la pantalla de login (lo que verán tus usuarios, ej. <code>vendedor1@bomerp.com</code>, al autenticarse):</strong> esta se configura en <code>bomerp</code>, no en <code>master</code> — se hace más abajo, en 3.2, una vez creado el realm. No afecta el Admin Console, solo el formulario de login que Keycloak sirve en <code>/realms/bomerp/...</code> (relevante recién cuando S11 construya el flujo real de login contra Keycloak).</p>
+<p>Si solo quieres el Admin Console en español, basta con A. Si además quieres que la pantalla de login de tus usuarios finales aparezca en español, haz también 3.2.</p>
+<p>De aquí en adelante, cada referencia a un botón o pestaña de la consola trae el término en inglés (el que usa la documentación oficial de Keycloak) seguido de su traducción aproximada entre paréntesis — si tu consola está en español y el texto exacto no calza del todo, guíate por la posición/ícono, no por la traducción literal: no verifiqué cada cadena contra una consola real en español.</p>
 <ol>
 <li>En el menú lateral izquierdo, entra a <strong>Manage realms</strong> (<em>Administrar realms</em>) → clic en <strong>Create realm</strong> (<em>Crear realm</em>).</li>
 <li><em>Realm name</em>: <code>bomerp</code>. Deja <strong>Resource file</strong> vacío (es solo para importar un realm ya exportado como JSON, no aplica aquí). Crear.</li>
@@ -3972,14 +4000,9 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <ol>
 <li>Con <code>bomerp</code> como realm activo, ve a <strong>Realm roles</strong> → <strong>Create role</strong>, y crea los tres, uno por uno: <code>VENDEDOR</code>, <code>SUPERVISOR</code>, <code>ADMIN</code>.</li>
 </ol>
-<h3 id="31-opcional-espanol-dos-configuraciones-distintas-no-una">3.1 (Opcional) Español — dos configuraciones distintas, no una<a class="headerlink" href="#31-opcional-espanol-dos-configuraciones-distintas-no-una" title="Permanent link">&para;</a></h3>
-<p>Son dos cosas separadas, cada una en un realm distinto:</p>
-<p><strong>A. Idioma del Admin Console (el menú, los botones — lo que ves tú como administrador):</strong> el Admin Console es una sola aplicación compartida por todo Keycloak, no por realm — su idioma sigue la configuración de <strong><code>master</code></strong>, nunca la de <code>bomerp</code>. Cambia al realm <code>master</code> (selector arriba a la izquierda) → <strong>Realm settings</strong> → <strong>Localization</strong> → <strong>Locales</strong> → activa <strong>Internationalization</strong>, agrega <code>Spanish</code> a <em>Supported locales</em>, elige <code>Spanish</code> en <em>Default locale</em> → <strong>Save</strong>. Recarga la página.</p>
-<p><strong>B. Idioma de la pantalla de login (lo que verán tus usuarios, ej. <code>vendedor1@bomerp.com</code>, al autenticarse):</strong> esta sí se configura en <code>bomerp</code> — es exactamente lo que ya hiciste en la captura: <strong>Realm settings</strong> → <strong>Localization</strong> → <strong>Locales</strong>, con <code>bomerp</code> como realm activo. No afecta el Admin Console, pero sí define en qué idioma aparece el formulario de login que Keycloak sirve en <code>/realms/bomerp/...</code> (relevante recién cuando S11 construya el flujo real de login contra Keycloak).</p>
-<p>Si solo quieres el Admin Console en español, basta con A. Si además quieres que la pantalla de login de tus usuarios finales aparezca en español, necesitas las dos.</p>
-<p>3.1 es por realm, no global: si lo activaste antes en <code>master</code> (para la consola misma), eso <strong>no</strong> se hereda a <code>bomerp</code> — hay que repetirlo aquí para que tanto la consola de administración de este realm como, más adelante, la pantalla de login que verán tus usuarios (si no la reemplazas por la tuya propia) aparezcan en español.</p>
-<p>De aquí en adelante, cada referencia a un botón o pestaña de la consola trae el término en inglés (el que usa la documentación oficial de Keycloak) seguido de su traducción aproximada entre paréntesis — si tu consola está en español y el texto exacto no calza del todo, guíate por la posición/ícono, no por la traducción literal: no verifiqué cada cadena contra una consola real en español.</p>
 <p>Estos son <strong>realm roles</strong> (no <em>client roles</em>) a propósito: Keycloak los agrega al token bajo el claim <code>realm_access.roles</code> — el mismo nombre que <code>JwtService</code> de <code>seguridad</code> ya usaba (S10, 3.8) y que <code>JwtAuthenticationConverter</code> ya sabe leer (S10, 3.11). Es el primer punto donde se confirma la promesa de la Tabla 4: cero cambios en ese conversor.</p>
+<h3 id="32-opcional-espanol-para-la-pantalla-de-login-de-bomerp">3.2 (Opcional) Español para la pantalla de login de <code>bomerp</code><a class="headerlink" href="#32-opcional-espanol-para-la-pantalla-de-login-de-bomerp" title="Permanent link">&para;</a></h3>
+<p>Con <code>bomerp</code> como realm activo (no <code>master</code>): <strong>Realm settings</strong> → <strong>Localization</strong> → <strong>Locales</strong> → activa <strong>Internationalization</strong>, agrega <code>Spanish</code> a <em>Supported locales</em>, elige <code>Spanish</code> en <em>Default locale</em> → <strong>Save</strong>. Es exactamente la misma pantalla de 3.0.A, pero ahora sobre <code>bomerp</code> — y afecta algo distinto (3.0.B).</p>
 <h2 id="4-crear-el-cliente-para-pruebas">4. Crear el cliente para pruebas<a class="headerlink" href="#4-crear-el-cliente-para-pruebas" title="Permanent link">&para;</a></h2>
 <p><strong>Producto del paso:</strong> un <em>client</em> en el realm <code>bomerp</code> que permita pedir un token para probar la integración antes de construir la SPA real (S11).</p>
 <ol>
