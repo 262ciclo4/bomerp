@@ -6028,18 +6028,19 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 </code></pre></div>
 <p>Repite el caso 2 de 3.16 (token válido, rol insuficiente) y el caso de un token vencido (espera a que pase <code>jwt.expiracion-segundos</code>, o reduce ese valor temporalmente a <code>10</code> para la prueba) y compara, en el log, el motivo exacto de cada rechazo (2.7). Vuelve el nivel de log a su valor anterior al terminar.</p>
 <h2 id="4-crea-actividad-autonoma">4. Crea: actividad autónoma<a class="headerlink" href="#4-crea-actividad-autonoma" title="Permanent link">&para;</a></h2>
-<p>Tiempo: 2h fuera del aula.</p>
+<p>Tiempo: 4h fuera del aula.</p>
 <h3 id="41-actividad">4.1 Actividad<a class="headerlink" href="#41-actividad" title="Permanent link">&para;</a></h3>
-<p>Replicación autónoma del patrón de protección por rol sobre <code>categoria</code> (no trabajada en clase) y una primera pieza hacia ABAC (<em>Attribute-Based Access Control</em>, DIST S07, 2.3), documentada en evidencia individual.</p>
-<p>Completa y evidencia estas tareas:</p>
+<p>Construcción autónoma del módulo <code>seguridad</code> completo — igual al construido hoy en clase sobre BomERP, pero sobre <strong>tu propio proyecto</strong> (el dominio que declaraste en tu <code>brief.md</code> de S2, no BomERP) — protegiendo tu módulo no transaccional (equivalente a <code>catalogo</code>) por rol, y una primera pieza hacia ABAC (<em>Attribute-Based Access Control</em>, DIST S07, 2.3), documentada en evidencia individual.</p>
+<p>Completa y evidencia estas tareas, sobre tu propio proyecto:</p>
 <ol>
-<li>Protege <code>CategoriaController</code> con el mismo criterio de <code>catalogo</code> en general (3.13): consultar exige cualquier rol autenticado; crear, editar y eliminar exigen <code>ADMIN</code>.</li>
+<li>Construye tu propio módulo <code>seguridad</code>: Postgres propio, entidades <code>Usuario</code>/<code>Rol</code>, contraseñas con BCrypt, <code>AuthController</code> (<code>login</code>/<code>registro</code>), y un JWT firmado con clave RSA (RS256) cuya clave pública se publica en <code>/.well-known/jwks.json</code> — mismo patrón de 3.5-3.12, con los roles reales de tu propio dominio (no necesariamente llamados <code>VENDEDOR</code>/<code>SUPERVISOR</code>/<code>ADMIN</code>).</li>
+<li>Protege tu módulo no transaccional con el mismo criterio que <code>catalogo</code> en clase: consultar exige cualquier rol autenticado; crear, editar y eliminar exigen el rol administrador de tu propio dominio.</li>
 <li>Agrega <code>GET /api/v1/auth/perfil</code>, que devuelva el email y los roles del usuario autenticado leyendo directamente el <code>Jwt</code> (sin consultar la base de datos) — el primer paso hacia comparar un atributo del usuario con un atributo del recurso (DIST S07, 2.3).</li>
-<li>Prueba, con los cuatro usuarios semilla (3.10), los cuatro casos de <code>categoria</code>: sin token, con rol <code>VENDEDOR</code> consultando, con rol <code>VENDEDOR</code> intentando modificar (denegado), con rol <code>ADMIN</code> modificando (permitido).</li>
-<li>Documenta la matriz de accesos de <code>categoria</code>, con el mismo formato de la Tabla 5 (3.16).</li>
+<li>Prueba, con al menos dos usuarios reales de tu propio dominio (uno con el rol más restringido, uno con el rol administrador), los cuatro casos contra tu módulo protegido: sin token, rol restringido consultando, rol restringido intentando modificar (denegado), rol administrador modificando (permitido).</li>
+<li>Documenta la matriz de accesos de tu módulo, con el mismo formato de la Tabla 5 (3.16).</li>
 </ol>
 <h3 id="42-proposito">4.2 Propósito<a class="headerlink" href="#42-proposito" title="Permanent link">&para;</a></h3>
-<p>Que cada estudiante demuestre, de forma individual y fuera del aula, que puede aplicar el patrón de protección por rol a una entidad distinta de la trabajada en clase, y que puede leer un claim propio del JWT sin apoyo del docente.</p>
+<p>Que cada estudiante demuestre, de forma individual y fuera del aula, que puede construir autenticación JWT con clave asimétrica y autorización por rol de punta a punta sobre su <strong>propio proyecto</strong> — no solo replicar lo visto en clase sobre BomERP — y que puede leer un claim propio del JWT sin apoyo del docente.</p>
 <h3 id="43-indicaciones">4.3 Indicaciones<a class="headerlink" href="#43-indicaciones" title="Permanent link">&para;</a></h3>
 <p>Entrega un PDF con el siguiente nombre:</p>
 <div class="highlight"><pre><span></span><code>S10_LP2_Equipo##_ApellidoNombre.pdf
@@ -6058,15 +6059,15 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <p>Incluye capturas con una breve explicación debajo de cada una, organizadas en los mismos 5 bloques de la rúbrica (4.6):</p>
 <ol>
 <li><em>Login y token</em><ul>
-<li>Login real con un usuario semilla, con el <code>accessToken</code> recibido.</li>
+<li>Login real con un usuario de tu propio proyecto, con el <code>accessToken</code> recibido.</li>
 </ul>
 </li>
-<li><em>Protección de <code>categoria</code></em><ul>
-<li>Consulta permitida sin rol específico, y modificación denegada (<code>403</code>) con un rol que no es <code>ADMIN</code>.</li>
+<li><em>Protección de tu módulo no transaccional</em><ul>
+<li>Consulta permitida sin rol específico, y modificación denegada (<code>403</code>) con un rol que no es el administrador de tu dominio.</li>
 </ul>
 </li>
 <li><em>Modificación permitida</em><ul>
-<li>La misma modificación anterior, ahora con el token de <code>ADMIN</code>, respondiendo <code>201</code>/<code>200</code>.</li>
+<li>La misma modificación anterior, ahora con el token del rol administrador, respondiendo <code>201</code>/<code>200</code>.</li>
 </ul>
 </li>
 <li><em>Perfil desde el JWT</em><ul>
@@ -6074,7 +6075,7 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 </ul>
 </li>
 <li><em>Matriz de accesos</em><ul>
-<li>La tabla de <code>categoria</code> completa, con los cuatro casos probados.</li>
+<li>La tabla de tu módulo completa, con los cuatro casos probados.</li>
 </ul>
 </li>
 </ol>
@@ -6089,10 +6090,11 @@ respuesta con lo que hace distinto a RN8 de una simple protección por rol.
 <h3 id="44-criterios-minimos-de-aceptacion">4.4 Criterios mínimos de aceptación<a class="headerlink" href="#44-criterios-minimos-de-aceptacion" title="Permanent link">&para;</a></h3>
 <ul>
 <li>El archivo respeta el nombre solicitado.</li>
-<li><code>CategoriaController</code> exige autenticación para consultar y rol <code>ADMIN</code> para crear, editar y eliminar.</li>
+<li>Tu propio módulo <code>seguridad</code> tiene Postgres propio, login real y JWT firmado con RS256, con la clave pública publicada en <code>/.well-known/jwks.json</code>.</li>
+<li>El controlador de tu módulo no transaccional exige autenticación para consultar y el rol administrador de tu dominio para crear, editar y eliminar.</li>
 <li><code>GET /api/v1/auth/perfil</code> devuelve el email y los roles reales del usuario autenticado, leídos del <code>Jwt</code>, sin consultar la base de datos.</li>
-<li>Existe evidencia real de los cuatro casos (sin token, rol insuficiente, rol correcto, consulta libre) contra <code>categoria</code>.</li>
-<li>La matriz de accesos de <code>categoria</code> está completa, sin filas vacías.</li>
+<li>Existe evidencia real de los cuatro casos (sin token, rol insuficiente, rol correcto, consulta libre) contra tu módulo no transaccional.</li>
+<li>La matriz de accesos de tu módulo está completa, sin filas vacías.</li>
 <li>Cada captura de la evidencia técnica muestra el reloj del sistema y el usuario/perfil visible, sin recortar.</li>
 <li>Las fechas y horas de las capturas son coherentes con el historial de commits de su repositorio en GitHub.</li>
 <li>Incluye un error o hallazgo técnico diagnosticado.</li>
@@ -6101,7 +6103,7 @@ respuesta con lo que hace distinto a RN8 de una simple protección por rol.
 <h3 id="45-preguntas-de-defensa">4.5 Preguntas de defensa<a class="headerlink" href="#45-preguntas-de-defensa" title="Permanent link">&para;</a></h3>
 <ol>
 <li>¿Por qué esta sesión firma el JWT con RS256 (clave asimétrica) y no con HS256 (clave simétrica), si ambos viven dentro del mismo proceso?</li>
-<li>¿Qué pasaría si alguien, sin ningún token, llamara directamente a <code>POST /api/v1/categorias</code>? ¿Y si tuviera un token válido de <code>VENDEDOR</code>?</li>
+<li>¿Qué pasaría si alguien, sin ningún token, llamara directamente al endpoint de creación de tu módulo no transaccional? ¿Y si tuviera un token válido con el rol más restringido de tu dominio?</li>
 <li>¿Por qué <code>vendedorId</code> nunca estuvo en <code>VentaRequest</code>, a diferencia de <code>idCliente</code> en el caso de DIST que sí hubo que quitar del DTO?</li>
 <li>¿Qué diferencia de fondo hay entre que <code>buscar</code>/<code>obtener</code> nieguen el acceso por <strong>rol</strong> (RBAC) y que lo nieguen por <strong>ser dueño del registro</strong> (RN8)? ¿Cuál de las dos resuelve <code>SecurityConfig</code> y cuál el servicio?</li>
 <li>Si BomERP reemplazara el módulo <code>seguridad</code> por Keycloak (2.6, ADR-005), ¿qué cambiaría y qué no, según lo que implementaste hoy?</li>
@@ -6124,21 +6126,21 @@ respuesta con lo que hace distinto a RN8 de una simple protección por rol.
 </thead>
 <tbody>
 <tr>
-<td>1. Autenticación JWT*</td>
+<td>1. Autenticación JWT en tu propio proyecto*</td>
 <td style="text-align: right;">20</td>
-<td>Login real funcional, token firmado con RS256, claims <code>sub</code> y <code>realm_access.roles</code> correctos, clave pública publicada en <code>/.well-known/jwks.json</code>.</td>
+<td>Login real funcional sobre tu propio módulo <code>seguridad</code>, token firmado con RS256, claims <code>sub</code> y <code>realm_access.roles</code> correctos, clave pública publicada en <code>/.well-known/jwks.json</code>.</td>
 <td>Login funcional, con algún claim incompleto o mal nombrado.</td>
 <td>Login funcional, pero sin verificación real de la firma.</td>
 <td>No presenta login ni token funcional.</td>
 <td style="text-align: right;"></td>
 </tr>
 <tr>
-<td>2. Protección de <code>categoria</code> por rol*</td>
+<td>2. Protección de tu módulo no transaccional por rol*</td>
 <td style="text-align: right;">20</td>
-<td>Consulta abierta a cualquier autenticado, escritura restringida a <code>ADMIN</code>, verificado con los cuatro casos.</td>
+<td>Consulta abierta a cualquier autenticado, escritura restringida al rol administrador de tu dominio, verificado con los cuatro casos.</td>
 <td>Protección funcional, con algún caso sin verificar.</td>
 <td>Protección parcial (solo algunos métodos HTTP cubiertos).</td>
-<td>No protege <code>categoria</code>.</td>
+<td>No protege tu módulo no transaccional.</td>
 <td style="text-align: right;"></td>
 </tr>
 <tr>
@@ -6153,7 +6155,7 @@ respuesta con lo que hace distinto a RN8 de una simple protección por rol.
 <tr>
 <td>4. Matriz de accesos*</td>
 <td style="text-align: right;">20</td>
-<td>Matriz completa de <code>categoria</code>, con los cuatro casos reales y sus códigos HTTP correctos.</td>
+<td>Matriz completa de tu módulo, con los cuatro casos reales y sus códigos HTTP correctos.</td>
 <td>Matriz completa, con algún código HTTP incorrecto.</td>
 <td>Matriz incompleta.</td>
 <td>No presenta matriz de accesos.</td>
