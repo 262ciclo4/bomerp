@@ -1099,33 +1099,7 @@ public class AuthController {
 }
 ```
 
-No levantes el backend todavía: `AuthServiceImpl` inyecta un `AuthenticationManager` que recién se declara como *bean* en 3.11, y sin él el arranque falla.
-
-Con 3.11 escrito y el backend arriba (3.12), registra los cuatro usuarios semilla vía Swagger (`POST /api/v1/auth/registro`): `vendedor1@bomerp.com`, `vendedor2@bomerp.com`, `supervisor@bomerp.com`, `admin@bomerp.com`, todos con la misma contraseña de prueba (ej. `Bomerp2026!`). Los cuatro nacen `VENDEDOR` (3.9); promueve manualmente a los dos últimos, ahora en Postgres:
-
-PowerShell:
-
-```powershell
-@'
-UPDATE usuario_rol SET rol_id = (SELECT id FROM roles WHERE nombre = 'SUPERVISOR')
-WHERE usuario_id = (SELECT id FROM usuarios WHERE email = 'supervisor@bomerp.com');
-
-UPDATE usuario_rol SET rol_id = (SELECT id FROM roles WHERE nombre = 'ADMIN')
-WHERE usuario_id = (SELECT id FROM usuarios WHERE email = 'admin@bomerp.com');
-'@ | docker exec -i bomerp-seguridad-db psql -U bomerp_seguridad -d bomerp_seguridad
-```
-
-bash macOS/Linux:
-
-```bash
-docker exec -i bomerp-seguridad-db psql -U bomerp_seguridad -d bomerp_seguridad <<'EOF'
-UPDATE usuario_rol SET rol_id = (SELECT id FROM roles WHERE nombre = 'SUPERVISOR')
-WHERE usuario_id = (SELECT id FROM usuarios WHERE email = 'supervisor@bomerp.com');
-
-UPDATE usuario_rol SET rol_id = (SELECT id FROM roles WHERE nombre = 'ADMIN')
-WHERE usuario_id = (SELECT id FROM usuarios WHERE email = 'admin@bomerp.com');
-EOF
-```
+No levantes el backend todavía: `AuthServiceImpl` inyecta un `AuthenticationManager` que recién se declara como *bean* en 3.11, y sin él el arranque falla. Los cuatro usuarios semilla se registran recién en 3.12, una vez que el backend esté arriba — antes de eso, `usuarios` está vacía y cualquier `SELECT` o `UPDATE` contra ella no tiene nada sobre qué actuar.
 
 #### 3.11 Completar `SecurityConfig` como Resource Server
 
@@ -1220,7 +1194,7 @@ public class SecurityConfig {
 
 #### 3.12 Levantar y probar el módulo `seguridad` de punta a punta
 
-**Producto del paso:** login real, con un JWT firmado y verificable, y la clave pública publicada.
+**Producto del paso:** login real, con un JWT firmado y verificable, la clave pública publicada, y los cuatro usuarios semilla con su rol real.
 
 ```powershell
 cd lp2\bomerp-backend
@@ -1242,7 +1216,64 @@ Invoke-RestMethod -Method Get -Uri "http://localhost:8080/.well-known/jwks.json"
 curl http://localhost:8080/.well-known/jwks.json
 ```
 
-Resultado esperado: un JSON con un arreglo `keys`, un único elemento con `kty: "RSA"` y el `kid` que `JwtKeyConfig` generó al arrancar. Registra y luego autentica al usuario `vendedor1@bomerp.com` (3.10):
+Resultado esperado: un JSON con un arreglo `keys`, un único elemento con `kty: "RSA"` y el `kid` que `JwtKeyConfig` generó al arrancar.
+
+Registra los cuatro usuarios semilla (`POST /api/v1/auth/registro`, 3.10), todos con la misma contraseña de prueba:
+
+```powershell
+$usuarios = @('vendedor1@bomerp.com', 'vendedor2@bomerp.com', 'supervisor@bomerp.com', 'admin@bomerp.com')
+foreach ($email in $usuarios) {
+    Invoke-RestMethod -Method Post -Uri "http://localhost:8080/api/v1/auth/registro" `
+      -ContentType "application/json" `
+      -Body (@{ email = $email; password = "Bomerp2026!" } | ConvertTo-Json)
+}
+```
+
+```bash
+for email in vendedor1@bomerp.com vendedor2@bomerp.com supervisor@bomerp.com admin@bomerp.com; do
+  curl -X POST http://localhost:8080/api/v1/auth/registro \
+    -H "Content-Type: application/json" \
+    -d "{\"email\": \"$email\", \"password\": \"Bomerp2026!\"}"
+done
+```
+
+Resultado esperado: cuatro respuestas `201 Created` sin cuerpo (`AuthController.registro` devuelve `void`). También puedes hacerlo a mano, una por una, desde Swagger (`http://localhost:8080/swagger-ui.html`, `POST /api/v1/auth/registro`) si prefieres verlo en el navegador — el resultado en la base de datos es el mismo.
+
+Los cuatro nacen `VENDEDOR` (3.9); promueve manualmente a los dos últimos, ahora en Postgres:
+
+PowerShell:
+
+```powershell
+@'
+UPDATE usuario_rol SET rol_id = (SELECT id FROM roles WHERE nombre = 'SUPERVISOR')
+WHERE usuario_id = (SELECT id FROM usuarios WHERE email = 'supervisor@bomerp.com');
+
+UPDATE usuario_rol SET rol_id = (SELECT id FROM roles WHERE nombre = 'ADMIN')
+WHERE usuario_id = (SELECT id FROM usuarios WHERE email = 'admin@bomerp.com');
+'@ | docker exec -i bomerp-seguridad-db psql -U bomerp_seguridad -d bomerp_seguridad
+```
+
+bash macOS/Linux:
+
+```bash
+docker exec -i bomerp-seguridad-db psql -U bomerp_seguridad -d bomerp_seguridad <<'EOF'
+UPDATE usuario_rol SET rol_id = (SELECT id FROM roles WHERE nombre = 'SUPERVISOR')
+WHERE usuario_id = (SELECT id FROM usuarios WHERE email = 'supervisor@bomerp.com');
+
+UPDATE usuario_rol SET rol_id = (SELECT id FROM roles WHERE nombre = 'ADMIN')
+WHERE usuario_id = (SELECT id FROM usuarios WHERE email = 'admin@bomerp.com');
+EOF
+```
+
+Confirma los cuatro usuarios y su rol real (sin heredoc ni here-string: el mismo comando funciona igual en PowerShell y en bash/macOS/Linux, porque es una sola línea):
+
+```shell
+docker exec -i bomerp-seguridad-db psql -U bomerp_seguridad -d bomerp_seguridad -c "SELECT u.id, u.email, r.nombre AS rol FROM usuarios u JOIN usuario_rol ur ON ur.usuario_id = u.id JOIN roles r ON r.id = ur.rol_id ORDER BY u.id;"
+```
+
+Resultado esperado: `vendedor1@bomerp.com` y `vendedor2@bomerp.com` en `VENDEDOR`, `supervisor@bomerp.com` en `SUPERVISOR`, `admin@bomerp.com` en `ADMIN` — los cuatro roles ya reales, sin ninguno pendiente.
+
+Con los cuatro usuarios ya creados y promovidos, autentica a `vendedor1@bomerp.com`:
 
 ```powershell
 Invoke-RestMethod -Method Post -Uri "http://localhost:8080/api/v1/auth/login" `

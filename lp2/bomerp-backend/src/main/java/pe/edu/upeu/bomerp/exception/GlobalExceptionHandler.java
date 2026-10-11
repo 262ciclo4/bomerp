@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.security.core.AuthenticationException;
 
 import java.time.Instant;
 import java.util.HashMap;
@@ -52,4 +53,15 @@ public class GlobalExceptionHandler {
         body.put("message", ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
     }
+
+@ExceptionHandler(AuthenticationException.class)
+public ResponseEntity<Map<String, Object>> handleAuthentication(AuthenticationException ex) {
+    Map<String, Object> body = new HashMap<>();
+    body.put("timestamp", Instant.now().toString());
+    body.put("status", HttpStatus.UNAUTHORIZED.value());
+    body.put("error", "Unauthorized");
+    body.put("message", "Credenciales invalidas");
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
+}
+
 }

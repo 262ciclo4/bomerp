@@ -48,3 +48,6 @@ management:
     health:
       show-details: always
 
+jwt:
+  issuer: bomerp-backend
+  expiracion-segundos: 3600
