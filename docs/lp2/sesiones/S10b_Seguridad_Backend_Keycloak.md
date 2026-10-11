@@ -125,10 +125,22 @@ Confirma que levantó accediendo a `http://localhost:38080` — debe aparecer la
 
 1. En la esquina superior izquierda, donde dice `master`, abre el selector de *realm* y elige **Create realm**.
 2. *Realm name*: `bomerp`. Crear.
-3. (Opcional, consola en español) Dentro del realm `bomerp`, ve a **Realm settings** (*Configuraciones del realm*) → pestaña **Localization** (*Localización*) → sub-pestaña **Localizations** (*Localizaciones*): activa **Internationalization** (*Internacionalización*), agrega `español` a *Idiomas admitidos*, y elígelo también como *Idioma predeterminado*. Guardar.
-4. Dentro del realm `bomerp`, ve a **Realm roles** → **Create role**, y crea los tres, uno por uno: `VENDEDOR`, `SUPERVISOR`, `ADMIN`.
+3. Dentro del realm `bomerp`, ve a **Realm roles** → **Create role**, y crea los tres, uno por uno: `VENDEDOR`, `SUPERVISOR`, `ADMIN`.
 
-El paso 3 es por realm, no global: si lo activaste antes en `master` (para la consola misma), eso **no** se hereda a `bomerp` — hay que repetirlo aquí para que tanto la consola de administración de este realm como, más adelante, la pantalla de login que verán tus usuarios (si no la reemplazas por la tuya propia) aparezcan en español.
+### 3.1 (Opcional) Pasar la consola de este realm a español
+
+Ya con el realm `bomerp` creado y seleccionado (no `master`):
+
+1. En el menú lateral, entra a **Realm settings** (*Configuraciones del realm*).
+2. Abre la pestaña **Localization** (*Localización*).
+3. Dentro, en la sub-pestaña **Localizations** (*Localizaciones*) (es la que abre por defecto), activa el interruptor **Internationalization** (*Internacionalización*) → **Enabled**/**Habilitado**.
+4. En el campo **Supported locales** (*Idiomas admitidos*), agrega `español` (deja `inglés` también, no lo quites).
+5. En **Default locale** (*Idioma predeterminado*), elige `español`.
+6. **Save** (*Guardar*).
+
+Recarga la página — la consola de este realm (menú lateral, pestañas, botones) debería aparecer en español desde ahora.
+
+3.1 es por realm, no global: si lo activaste antes en `master` (para la consola misma), eso **no** se hereda a `bomerp` — hay que repetirlo aquí para que tanto la consola de administración de este realm como, más adelante, la pantalla de login que verán tus usuarios (si no la reemplazas por la tuya propia) aparezcan en español.
 
 De aquí en adelante, cada referencia a un botón o pestaña de la consola trae el término en inglés (el que usa la documentación oficial de Keycloak) seguido de su traducción aproximada entre paréntesis — si tu consola está en español y el texto exacto no calza del todo, guíate por la posición/ícono, no por la traducción literal: no verifiqué cada cadena contra una consola real en español.
 
