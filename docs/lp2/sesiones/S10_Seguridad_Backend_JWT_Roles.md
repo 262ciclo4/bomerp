@@ -311,6 +311,36 @@ docker compose -f compose-dev.yml up -d seguridad-db
 
 Con el contenedor arriba, crea las tablas:
 
+PowerShell:
+
+```powershell
+@'
+CREATE TABLE usuarios (
+    id       BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    email    VARCHAR(150) NOT NULL UNIQUE,
+    password VARCHAR(100) NOT NULL,
+    activo   BOOLEAN NOT NULL DEFAULT TRUE
+);
+
+CREATE TABLE roles (
+    id     BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nombre VARCHAR(30) NOT NULL UNIQUE
+);
+
+CREATE TABLE usuario_rol (
+    usuario_id BIGINT NOT NULL REFERENCES usuarios(id),
+    rol_id     BIGINT NOT NULL REFERENCES roles(id),
+    PRIMARY KEY (usuario_id, rol_id)
+);
+
+INSERT INTO roles (nombre) VALUES ('VENDEDOR');
+INSERT INTO roles (nombre) VALUES ('SUPERVISOR');
+INSERT INTO roles (nombre) VALUES ('ADMIN');
+'@ | docker exec -i bomerp-seguridad-db psql -U bomerp_seguridad -d bomerp_seguridad
+```
+
+bash macOS/Linux:
+
 ```bash
 docker exec -i bomerp-seguridad-db psql -U bomerp_seguridad -d bomerp_seguridad <<'EOF'
 CREATE TABLE usuarios (
@@ -337,12 +367,22 @@ INSERT INTO roles (nombre) VALUES ('ADMIN');
 EOF
 ```
 
-`docker exec` necesita el flag `-i` (sin `-t`) para que el heredoc llegue al `psql` de adentro: sin él, `docker exec` no conecta el `stdin` del host con el del contenedor, y `psql` no recibe ningún comando. Nota también los nombres en **minúsculas** (`usuarios`, no `USUARIOS`): a diferencia de Oracle (mayúsculas, en el resto de BomERP), Postgres pliega a minúsculas cualquier identificador sin comillas — es la primera vez que el proyecto convive con dos motores de base de datos con convenciones distintas. Los tres roles (`VENDEDOR`, `SUPERVISOR`, `ADMIN`) son exactamente los que ADS ya diseñó para `ventas` (S8, Tabla 10) — esta sesión no inventa roles nuevos, los hace reales.
+PowerShell no tiene heredoc (`<<'EOF'`) — es sintaxis de bash, por eso falla con "El operador '<' está reservado para uso futuro" si la copias tal cual. El equivalente en PowerShell es un *here-string* literal (`@'...'@`, sin interpolación) enviado por *pipe* (`|`) a `docker exec -i`, en vez de redirigido con `<<`. `docker exec` necesita el flag `-i` (sin `-t`) en ambos casos para que el contenido llegue al `psql` de adentro: sin él, `docker exec` no conecta el `stdin` del host con el del contenedor, y `psql` no recibe ningún comando. Nota también los nombres en **minúsculas** (`usuarios`, no `USUARIOS`): a diferencia de Oracle (mayúsculas, en el resto de BomERP), Postgres pliega a minúsculas cualquier identificador sin comillas — es la primera vez que el proyecto convive con dos motores de base de datos con convenciones distintas. Los tres roles (`VENDEDOR`, `SUPERVISOR`, `ADMIN`) son exactamente los que ADS ya diseñó para `ventas` (S8, Tabla 10) — esta sesión no inventa roles nuevos, los hace reales.
 
 Ahora, en Oracle, agrega la columna que `ventas` necesita para RN5:
 
+PowerShell:
+
+```powershell
+@'
+ALTER TABLE VENTAS ADD VENDEDOR_ID NUMBER;
+'@ | docker exec -i bomerp-oracle bash -c "sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1"
+```
+
+bash macOS/Linux:
+
 ```bash
-docker exec -i bomerp-oracle bash -c "sqlplus -s BOM_VENTAS/bom_ventas_pwd@localhost:1521/FREEPDB1" <<'EOF'
+docker exec -i bomerp-oracle bash -c "sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1" <<'EOF'
 ALTER TABLE VENTAS ADD VENDEDOR_ID NUMBER;
 EOF
 ```
@@ -1015,6 +1055,20 @@ public class AuthController {
 No levantes el backend todavía: `AuthServiceImpl` inyecta un `AuthenticationManager` que recién se declara como *bean* en 3.10, y sin él el arranque falla.
 
 Con 3.10 escrito y el backend arriba (3.11), registra los cuatro usuarios semilla vía Swagger (`POST /api/v1/auth/registro`): `vendedor1@bomerp.com`, `vendedor2@bomerp.com`, `supervisor@bomerp.com`, `admin@bomerp.com`, todos con la misma contraseña de prueba (ej. `Bomerp2026!`). Los cuatro nacen `VENDEDOR` (3.8); promueve manualmente a los dos últimos, ahora en Postgres:
+
+PowerShell:
+
+```powershell
+@'
+UPDATE usuario_rol SET rol_id = (SELECT id FROM roles WHERE nombre = 'SUPERVISOR')
+WHERE usuario_id = (SELECT id FROM usuarios WHERE email = 'supervisor@bomerp.com');
+
+UPDATE usuario_rol SET rol_id = (SELECT id FROM roles WHERE nombre = 'ADMIN')
+WHERE usuario_id = (SELECT id FROM usuarios WHERE email = 'admin@bomerp.com');
+'@ | docker exec -i bomerp-seguridad-db psql -U bomerp_seguridad -d bomerp_seguridad
+```
+
+bash macOS/Linux:
 
 ```bash
 docker exec -i bomerp-seguridad-db psql -U bomerp_seguridad -d bomerp_seguridad <<'EOF'
