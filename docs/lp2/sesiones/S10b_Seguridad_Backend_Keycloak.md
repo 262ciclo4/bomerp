@@ -153,7 +153,7 @@ Con `bomerp` como realm activo (no `master`): **Realm settings** → **Localizat
 **Producto del paso:** un *client* en el realm `bomerp` que permita pedir un token para probar la integración antes de construir la SPA real (S11).
 
 1. **Clients** (*Clientes*) → **Create client** (*Crear cliente*).
-2. *Client type* (*Tipo de cliente*): `OpenID Connect`. *Client ID*: `bomerp-frontend`. Siguiente.
+2. Paso **General settings** (*Configuraciones generales*): *Client type* (*Tipo de cliente*): `OpenID Connect`. *Client ID* (*ID de cliente*): `bomerp-frontend`. *Name*/*Description* (*Nombre*/*Descripción*): opcionales, déjalos vacíos. **Always display in UI** (*Mostrar siempre en la interfaz de usuario*): déjalo **desactivado** — solo importa si quieres que este cliente aparezca listado en el *Account Console* de Keycloak incluso sin sesión activa, algo que no necesitas para un cliente de prueba. Siguiente.
 3. *Client authentication* (*Autenticación de cliente*): **desactivado** (es un *public client* — la SPA de S11 no puede guardar un secreto, 2.4 de S10). Siguiente.
 4. En **Capability config** (*Configuración de capacidad*), activa **Direct access grants** (*Concesiones de acceso directo*) — habilita el flujo *Resource Owner Password Credentials* **solo para las pruebas de esta guía**. Guardar.
 
