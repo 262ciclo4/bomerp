@@ -3965,9 +3965,12 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <h2 id="3-configurar-el-realm-bomerp">3. Configurar el realm <code>bomerp</code><a class="headerlink" href="#3-configurar-el-realm-bomerp" title="Permanent link">&para;</a></h2>
 <p><strong>Producto del paso:</strong> un realm propio (no el <code>master</code> por defecto, reservado para administrar Keycloak mismo), con los tres roles que <code>ventas</code> ya usa.</p>
 <ol>
-<li>En la esquina superior izquierda, donde dice <code>master</code>, abre el selector de <em>realm</em> y elige <strong>Create realm</strong>.</li>
-<li><em>Realm name</em>: <code>bomerp</code>. Crear.</li>
-<li>Dentro del realm <code>bomerp</code>, ve a <strong>Realm roles</strong> → <strong>Create role</strong>, y crea los tres, uno por uno: <code>VENDEDOR</code>, <code>SUPERVISOR</code>, <code>ADMIN</code>.</li>
+<li>En el menú lateral izquierdo, entra a <strong>Manage realms</strong> (<em>Administrar realms</em>) → clic en <strong>Create realm</strong> (<em>Crear realm</em>).</li>
+<li><em>Realm name</em>: <code>bomerp</code>. Deja <strong>Resource file</strong> vacío (es solo para importar un realm ya exportado como JSON, no aplica aquí). Crear.</li>
+</ol>
+<p>Al crearlo, Keycloak cambia solo el realm activo al que acabas de crear — lo ves en la esquina superior izquierda, donde antes decía <code>master</code> ahora dice <code>bomerp</code> (<code>Current realm</code>). No hace falta ningún paso extra para "entrar" a <code>bomerp</code>: todo lo que sigue ya ocurre ahí.</p>
+<ol>
+<li>Con <code>bomerp</code> como realm activo, ve a <strong>Realm roles</strong> → <strong>Create role</strong>, y crea los tres, uno por uno: <code>VENDEDOR</code>, <code>SUPERVISOR</code>, <code>ADMIN</code>.</li>
 </ol>
 <h3 id="31-opcional-pasar-la-consola-de-este-realm-a-espanol">3.1 (Opcional) Pasar la consola de este realm a español<a class="headerlink" href="#31-opcional-pasar-la-consola-de-este-realm-a-espanol" title="Permanent link">&para;</a></h3>
 <p>Ya con el realm <code>bomerp</code> creado y seleccionado (no <code>master</code>):</p>
