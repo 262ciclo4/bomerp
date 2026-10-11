@@ -4827,7 +4827,10 @@
 <ul>
 <li><strong>3.16</strong> Diagnosticar 401 vs. 403 con logs.</li>
 </ul>
-<p><strong>Punto de partida común:</strong> todo el equipo debe comenzar exactamente desde donde quedó S9. Confirma que el backend (<code>lp2/bomerp-backend</code>) y la SPA (<code>lp2/bomerp-frontend</code>) de S9 siguen corriendo sin autenticación — si alguno falla en arrancar, el problema es de una sesión anterior, no de esta.</p>
+<p><strong>Punto de partida común:</strong> todo el equipo debe comenzar exactamente desde donde quedó S9, no desde su propio avance individual. Clona la rama <code>s09-form-cabecera-detalle</code> (el snapshot de cierre de S9):</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>--branch<span class="w"> </span>s09-form-cabecera-detalle<span class="w"> </span>https://github.com/262ciclo4/bomerp.git
+</code></pre></div>
+<p>Confirma que el backend (<code>lp2/bomerp-backend</code>) y la SPA (<code>lp2/bomerp-frontend</code>) siguen corriendo sin autenticación — si alguno falla en arrancar, el problema es de una sesión anterior, no de esta.</p>
 <h3 id="parte-a-construir-el-modulo-seguridad">Parte A — Construir el módulo <code>seguridad</code><a class="headerlink" href="#parte-a-construir-el-modulo-seguridad" title="Permanent link">&para;</a></h3>
 <h4 id="31-verificar-el-punto-de-partida">3.1 Verificar el punto de partida<a class="headerlink" href="#31-verificar-el-punto-de-partida" title="Permanent link">&para;</a></h4>
 <p><strong>Producto del paso:</strong> confirmación de que <code>bomerp-backend</code> sigue corriendo contra Oracle, y de que hoy ningún endpoint pide autenticación.</p>
@@ -4846,7 +4849,7 @@
 <span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bomerp-seguridad-db</span>
 <span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
 <span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"5432:5432"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"5431:5432"</span>
 <span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">POSTGRES_DB</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bomerp_seguridad</span>
 <span class="w">      </span><span class="nt">POSTGRES_USER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bomerp_seguridad</span>
@@ -4860,7 +4863,7 @@
 <span class="w">      </span><span class="nt">retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
 <span class="w">      </span><span class="nt">start_period</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15s</span>
 </code></pre></div>
-<p>Y agrega <code>seguridad-db-data:</code> junto a <code>oracle-data:</code>, bajo <code>volumes:</code>. Levanta el contenedor nuevo sin tocar el de Oracle que ya está corriendo:</p>
+<p>El puerto de host es <code>5431</code>, no el <code>5432</code> por defecto de Postgres — evita chocar con un Postgres que ya pudieras tener instalado localmente en Windows, y con <code>pagatu-catalogo-ms</code> (DIST), que ya usa <code>15432</code>; dentro del contenedor (y dentro de la red de Docker) sigue siendo el <code>5432</code> estándar, nadie más lo necesita saber. Agrega <code>seguridad-db-data:</code> junto a <code>oracle-data:</code>, bajo <code>volumes:</code>. Levanta el contenedor nuevo sin tocar el de Oracle que ya está corriendo:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd </span><span class="n">lp2</span><span class="p">\</span><span class="n">bomerp-backend</span>
 <span class="n">docker</span> <span class="n">compose</span> <span class="o">-f</span> <span class="n">compose-dev</span><span class="p">.</span><span class="n">yml</span> <span class="n">up</span> <span class="n">-d</span> <span class="n">seguridad-db</span>
 </code></pre></div>
@@ -4929,7 +4932,7 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <div class="highlight"><pre><span></span><code><span class="nt">bomerp</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">datasource</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">seguridad</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jdbc:postgresql://localhost:5432/bomerp_seguridad</span>
+<span class="w">      </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jdbc:postgresql://localhost:5431/bomerp_seguridad</span>
 <span class="w">      </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bomerp_seguridad</span>
 <span class="w">      </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">123456</span>
 <span class="w">      </span><span class="nt">driver-class-name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">org.postgresql.Driver</span>
