@@ -5955,20 +5955,21 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"email": "supervisor@bomerp.com", "password": "Bomerp2026!"}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">'.accessToken'</span><span class="k">)</span>
 </code></pre></div>
-<p>Con el token de <code>vendedor1</code>, crea una venta (queda con su <code>vendedorId</code>) — ajusta <code>productoId</code> a uno real de tu <code>catalogo</code> (<code>GET /api/v1/productos</code>):</p>
-<div class="highlight"><pre><span></span><code><span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:8080/api/v1/ventas"</span> <span class="p">`</span>
+<p>Con el token de <code>vendedor1</code>, crea una venta (queda con su <code>vendedorId</code>) — ajusta <code>productoId</code> a uno real de tu <code>catalogo</code> (<code>GET /api/v1/productos</code>), y guarda el <code>id</code> de la venta creada, no lo des por <code>1</code>: en una tabla ya usada desde S4, el siguiente <code>id</code> es el que sea (en la práctica, un número ya muy por encima de <code>1</code>):</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$venta</span> <span class="p">=</span> <span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:8080/api/v1/ventas"</span> <span class="p">`</span>
   <span class="n">-Headers</span> <span class="p">@{</span> <span class="n">Authorization</span> <span class="p">=</span> <span class="s2">"Bearer $tokenVendedor1"</span> <span class="p">}</span> <span class="p">`</span>
   <span class="n">-ContentType</span> <span class="s2">"application/json"</span> <span class="p">`</span>
   <span class="n">-Body</span> <span class="s1">'{"detalles": [{"productoId": 1, "cantidad": 2}]}'</span>
+<span class="nv">$ventaId</span> <span class="p">=</span> <span class="nv">$venta</span><span class="p">.</span><span class="n">id</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8080/api/v1/ventas<span class="w"> </span><span class="se">\</span>
+<div class="highlight"><pre><span></span><code><span class="nv">ventaId</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8080/api/v1/ventas<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="nv">$tokenVendedor1</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"detalles": [{"productoId": 1, "cantidad": 2}]}'</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"detalles": [{"productoId": 1, "cantidad": 2}]}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">'.id'</span><span class="k">)</span>
 </code></pre></div>
-<p>Resultado esperado: <code>201 Created</code>, con el <code>id</code> de la venta recién creada (lo necesitas para el siguiente paso). Con el token de <code>vendedor2</code>, intenta consultarla por ese <code>id</code>:</p>
+<p>Resultado esperado: <code>201 Created</code>, con <code>$ventaId</code> apuntando a la venta recién creada. Con el token de <code>vendedor2</code>, intenta consultarla por ese <code>id</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="k">try</span> <span class="p">{</span>
-  <span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Get</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:8080/api/v1/ventas/1"</span> <span class="p">`</span>
+  <span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Get</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:8080/api/v1/ventas/$ventaId"</span> <span class="p">`</span>
     <span class="n">-Headers</span> <span class="p">@{</span> <span class="n">Authorization</span> <span class="p">=</span> <span class="s2">"Bearer $tokenVendedor2"</span> <span class="p">}</span>
 <span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
   <span class="nv">$_</span><span class="p">.</span><span class="n">Exception</span><span class="p">.</span><span class="n">Response</span><span class="p">.</span><span class="n">StatusCode</span><span class="p">.</span><span class="n">value__</span>
