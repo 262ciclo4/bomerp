@@ -43,7 +43,8 @@ springdoc:
 
 logging:
   level:
-    pe.edu.upeu.bomerp: DEBUG
+    pe.edu.upeu.bomerp: DEBUG        
+    org.springframework.security: DEBUG   # el que agrega 3.17: el motor de Spring Security
 
 management:
   endpoints:
