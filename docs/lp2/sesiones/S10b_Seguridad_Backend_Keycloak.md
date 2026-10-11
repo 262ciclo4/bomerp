@@ -99,7 +99,7 @@ Confirma que levantó accediendo a `http://localhost:8081` — debe aparecer la 
 2. *Realm name*: `bomerp`. Crear.
 3. Dentro del realm `bomerp`, ve a **Realm roles** → **Create role**, y crea los tres, uno por uno: `VENDEDOR`, `SUPERVISOR`, `ADMIN`.
 
-Estos son **realm roles** (no *client roles*) a propósito: Keycloak los agrega al token bajo el claim `realm_access.roles` — el mismo nombre que `JwtService` de `seguridad` ya usaba (S10, 3.7) y que `JwtAuthenticationConverter` ya sabe leer (S10, 3.10). Es el primer punto donde se confirma la promesa de la Tabla 4: cero cambios en ese conversor.
+Estos son **realm roles** (no *client roles*) a propósito: Keycloak los agrega al token bajo el claim `realm_access.roles` — el mismo nombre que `JwtService` de `seguridad` ya usaba (S10, 3.8) y que `JwtAuthenticationConverter` ya sabe leer (S10, 3.11). Es el primer punto donde se confirma la promesa de la Tabla 4: cero cambios en ese conversor.
 
 ## 4. Crear el cliente para pruebas
 
@@ -114,7 +114,7 @@ Estos son **realm roles** (no *client roles*) a propósito: Keycloak los agrega 
 
 ## 5. Crear los usuarios semilla con su `vendedorId`
 
-**Producto del paso:** los mismos cuatro usuarios de S10 (3.9), ahora en Keycloak, con el dato que RN5/RN8 necesitan (ADS S8) viajando en un claim propio, no en `sub`.
+**Producto del paso:** los mismos cuatro usuarios de S10 (3.10), ahora en Keycloak, con el dato que RN5/RN8 necesitan (ADS S8) viajando en un claim propio, no en `sub`.
 
 ### 5.1 Crear los usuarios y asignarles rol
 
@@ -122,7 +122,7 @@ Por cada uno de `vendedor1@bomerp.com`, `vendedor2@bomerp.com`, `supervisor@bome
 
 1. **Users** → **Add user**. *Username*: el email. *Email verified*: activado (para no complicar el flujo con verificación de correo en esta guía).
 2. Pestaña **Credentials** → **Set password**: `Bomerp2026!`, *Temporary*: **desactivado** (si queda activado, Keycloak exige cambiarla en el primer login, lo que rompe el flujo de *Direct access grants* de la sección 6).
-3. Pestaña **Role mapping** → **Assign role**: `VENDEDOR` para los dos primeros, `SUPERVISOR` y `ADMIN` para los otros dos, respectivamente — el mismo criterio de promoción manual que S10 ya aplicaba a mano sobre Postgres (3.9), ahora sobre la consola de Keycloak.
+3. Pestaña **Role mapping** → **Assign role**: `VENDEDOR` para los dos primeros, `SUPERVISOR` y `ADMIN` para los otros dos, respectivamente — el mismo criterio de promoción manual que S10 ya aplicaba a mano sobre Postgres (3.10), ahora sobre la consola de Keycloak.
 
 ### 5.2 Agregar el atributo `vendedorId`
 
@@ -161,7 +161,7 @@ Pega el `access_token` recibido en [jwt.io](https://jwt.io) (inspección visual 
 
 `POST /realms/bomerp/protocol/openid-connect/token` es el endpoint estándar de token de Keycloak (OAuth 2.0/OpenID Connect, S10 2.4) — equivalente a `POST /api/v1/auth/login` de `seguridad`, pero ya no es un endpoint propio de BomERP.
 
-**Error frecuente**: comparar el `expires_in` de este token con el de `seguridad` y asumir que algo está mal. Por defecto, el realm nuevo trae el *access token* del propio Keycloak (*Realm settings* → *Tokens* → *Access Token Lifespan*) en **5 minutos**, no en la hora que `jwt.expiracion-segundos` dejaba en S10 (3.7) — token expirado a mitad de una prueba no es un bug de la integración, solo un valor por defecto distinto. Ajusta ese campo en el realm si las pruebas de la sección 8 te quedan cortas de tiempo.
+**Error frecuente**: comparar el `expires_in` de este token con el de `seguridad` y asumir que algo está mal. Por defecto, el realm nuevo trae el *access token* del propio Keycloak (*Realm settings* → *Tokens* → *Access Token Lifespan*) en **5 minutos**, no en la hora que `jwt.expiracion-segundos` dejaba en S10 (3.8) — token expirado a mitad de una prueba no es un bug de la integración, solo un valor por defecto distinto. Ajusta ese campo en el realm si las pruebas de la sección 8 te quedan cortas de tiempo.
 
 ## 7. Integrar `bomerp-backend` con Keycloak
 
@@ -169,7 +169,7 @@ Pega el `access_token` recibido en [jwt.io](https://jwt.io) (inspección visual 
 
 ### 7.1 Cambiar la propiedad de validación
 
-En `lp2/bomerp-backend/src/main/resources/application-dev.yml`, reemplaza el bloque que S10 dejó (3.10):
+En `lp2/bomerp-backend/src/main/resources/application-dev.yml`, reemplaza el bloque que S10 dejó (3.11):
 
 ```yaml
 spring:
@@ -191,7 +191,7 @@ spring:
           issuer-uri: http://localhost:8081/realms/bomerp
 ```
 
-Con `issuer-uri` (en vez de `jwk-set-uri`), Spring no solo descubre dónde están las claves — además valida que el claim `iss` (*issuer*, emisor) de cada token coincida exactamente con esta URL, y descarga la configuración del realm (incluida su ubicación de JWKS) del documento de descubrimiento estándar de OpenID Connect (`/.well-known/openid-configuration`) que Keycloak sí publica (a diferencia de `seguridad`, que no lo implementaba — S10, 2.4, Tabla 3). Es la única propiedad que cambia; `JwtAuthenticationConverter` (S10, 3.10) no se toca.
+Con `issuer-uri` (en vez de `jwk-set-uri`), Spring no solo descubre dónde están las claves — además valida que el claim `iss` (*issuer*, emisor) de cada token coincida exactamente con esta URL, y descarga la configuración del realm (incluida su ubicación de JWKS) del documento de descubrimiento estándar de OpenID Connect (`/.well-known/openid-configuration`) que Keycloak sí publica (a diferencia de `seguridad`, que no lo implementaba — S10, 2.4, Tabla 3). Es la única propiedad que cambia; `JwtAuthenticationConverter` (S10, 3.11) no se toca.
 
 ### 7.2 Cambiar cómo se lee `vendedorId`
 
@@ -207,7 +207,7 @@ public VentaResponse crear(@Valid @RequestBody VentaRequest request, @Authentica
 }
 ```
 
-Mismo ajuste en `buscar`/`obtener` (S10, 3.14), reemplazando `Long.valueOf(jwt.getSubject())` por la misma lectura:
+Mismo ajuste en `buscar`/`obtener` (S10, 3.15), reemplazando `Long.valueOf(jwt.getSubject())` por la misma lectura:
 
 ```java
 private Long vendedorIdDe(Jwt jwt) {
@@ -216,7 +216,7 @@ private Long vendedorIdDe(Jwt jwt) {
 }
 ```
 
-El claim se lee como `Number` (no `Long` directo) porque el JSON (*JavaScript Object Notation*) no distingue tamaños de entero — el mismo detalle que DIST ya documentó para `idCliente` (S07, 3.22). `VentaServiceImpl`, `VentaRepository` y las reglas `hasRole`/`hasAnyRole` de `SecurityConfig` (S10, 3.12, 3.14) **no cambian**: siguen recibiendo exactamente el mismo `Long vendedorId` que recibían antes, solo que ahora llega por un claim distinto.
+El claim se lee como `Number` (no `Long` directo) porque el JSON (*JavaScript Object Notation*) no distingue tamaños de entero — el mismo detalle que DIST ya documentó para `idCliente` (S07, 3.22). `VentaServiceImpl`, `VentaRepository` y las reglas `hasRole`/`hasAnyRole` de `SecurityConfig` (S10, 3.13, 3.15) **no cambian**: siguen recibiendo exactamente el mismo `Long vendedorId` que recibían antes, solo que ahora llega por un claim distinto.
 
 ### 7.3 Confirmar que `catalogo` y `ventas` no se tocan
 
@@ -224,9 +224,9 @@ Revisa `SecurityConfig.securityFilterChain`, `CategoriaController`/`ProductoCont
 
 ## 8. Probar de punta a punta
 
-**Producto del paso:** la misma matriz de accesos que S10 verificó (3.15, Tabla 5), ahora contra tokens de Keycloak.
+**Producto del paso:** la misma matriz de accesos que S10 verificó (3.16, Tabla 5), ahora contra tokens de Keycloak.
 
-Reinicia `bomerp-backend` (lee la propiedad nueva de 7.1) y repite exactamente las pruebas de S10 (3.15), pero obteniendo cada token con el comando de la sección 6 (cambiando el usuario). Resultado esperado: **la misma Tabla 5** — mismos códigos HTTP, para los mismos casos, con tokens que ahora vienen de un proceso distinto.
+Reinicia `bomerp-backend` (lee la propiedad nueva de 7.1) y repite exactamente las pruebas de S10 (3.16), pero obteniendo cada token con el comando de la sección 6 (cambiando el usuario). Resultado esperado: **la misma Tabla 5** — mismos códigos HTTP, para los mismos casos, con tokens que ahora vienen de un proceso distinto.
 
 **Error frecuente**: `403` donde S10 esperaba `200`, con un token que en jwt.io se ve correcto. Causa más común: el usuario de Keycloak no tiene el *realm role* asignado (5.1), o el *client scope* con el mapper de `vendedorId` (5.3) no quedó asociado al cliente `bomerp-frontend` que usaste para pedir el token.
 
