@@ -4995,6 +4995,7 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <p><strong><code>lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/OracleDataSourceConfig.java</code></strong> (paquete raíz: gobierna <strong>todos</strong> los módulos que persisten en Oracle, no uno solo):</p>
 <div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp</span><span class="p">;</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.beans.factory.annotation.Qualifier</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.boot.jdbc.autoconfigure.DataSourceProperties</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.boot.context.properties.ConfigurationProperties</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.context.annotation.Bean</span><span class="p">;</span>
@@ -5025,13 +5026,13 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 
 <span class="w">    </span><span class="nd">@Primary</span>
 <span class="w">    </span><span class="nd">@Bean</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">DataSource</span><span class="w"> </span><span class="nf">oracleDataSource</span><span class="p">(</span><span class="n">DataSourceProperties</span><span class="w"> </span><span class="n">oracleDataSourceProperties</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">DataSource</span><span class="w"> </span><span class="nf">oracleDataSource</span><span class="p">(</span><span class="nd">@Qualifier</span><span class="p">(</span><span class="s">"oracleDataSourceProperties"</span><span class="p">)</span><span class="w"> </span><span class="n">DataSourceProperties</span><span class="w"> </span><span class="n">oracleDataSourceProperties</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">oracleDataSourceProperties</span><span class="p">.</span><span class="na">initializeDataSourceBuilder</span><span class="p">().</span><span class="na">build</span><span class="p">();</span>
 <span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="nd">@Primary</span>
 <span class="w">    </span><span class="nd">@Bean</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">LocalContainerEntityManagerFactoryBean</span><span class="w"> </span><span class="nf">oracleEntityManagerFactory</span><span class="p">(</span><span class="n">DataSource</span><span class="w"> </span><span class="n">oracleDataSource</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">LocalContainerEntityManagerFactoryBean</span><span class="w"> </span><span class="nf">oracleEntityManagerFactory</span><span class="p">(</span><span class="nd">@Qualifier</span><span class="p">(</span><span class="s">"oracleDataSource"</span><span class="p">)</span><span class="w"> </span><span class="n">DataSource</span><span class="w"> </span><span class="n">oracleDataSource</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="n">LocalContainerEntityManagerFactoryBean</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">LocalContainerEntityManagerFactoryBean</span><span class="p">();</span>
 <span class="w">        </span><span class="n">factory</span><span class="p">.</span><span class="na">setDataSource</span><span class="p">(</span><span class="n">oracleDataSource</span><span class="p">);</span>
 <span class="w">        </span><span class="n">factory</span><span class="p">.</span><span class="na">setPackagesToScan</span><span class="p">(</span><span class="s">"pe.edu.upeu.bomerp.catalogo"</span><span class="p">,</span><span class="w"> </span><span class="s">"pe.edu.upeu.bomerp.ventas"</span><span class="p">);</span>
@@ -5045,7 +5046,7 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <span class="w">    </span><span class="nd">@Primary</span>
 <span class="w">    </span><span class="nd">@Bean</span>
 <span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">PlatformTransactionManager</span><span class="w"> </span><span class="nf">oracleTransactionManager</span><span class="p">(</span>
-<span class="w">            </span><span class="n">LocalContainerEntityManagerFactoryBean</span><span class="w"> </span><span class="n">oracleEntityManagerFactory</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nd">@Qualifier</span><span class="p">(</span><span class="s">"oracleEntityManagerFactory"</span><span class="p">)</span><span class="w"> </span><span class="n">LocalContainerEntityManagerFactoryBean</span><span class="w"> </span><span class="n">oracleEntityManagerFactory</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">JpaTransactionManager</span><span class="p">(</span><span class="n">oracleEntityManagerFactory</span><span class="p">.</span><span class="na">getObject</span><span class="p">());</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
@@ -5053,6 +5054,7 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <p><strong><code>lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/seguridad/SeguridadDataSourceConfig.java</code></strong> (dentro del propio módulo: es infraestructura que solo <code>seguridad</code> usa):</p>
 <div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.seguridad</span><span class="p">;</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.beans.factory.annotation.Qualifier</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.boot.jdbc.autoconfigure.DataSourceProperties</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.boot.context.properties.ConfigurationProperties</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.context.annotation.Bean</span><span class="p">;</span>
@@ -5080,12 +5082,12 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="nd">@Bean</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">DataSource</span><span class="w"> </span><span class="nf">seguridadDataSource</span><span class="p">(</span><span class="n">DataSourceProperties</span><span class="w"> </span><span class="n">seguridadDataSourceProperties</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">DataSource</span><span class="w"> </span><span class="nf">seguridadDataSource</span><span class="p">(</span><span class="nd">@Qualifier</span><span class="p">(</span><span class="s">"seguridadDataSourceProperties"</span><span class="p">)</span><span class="w"> </span><span class="n">DataSourceProperties</span><span class="w"> </span><span class="n">seguridadDataSourceProperties</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">seguridadDataSourceProperties</span><span class="p">.</span><span class="na">initializeDataSourceBuilder</span><span class="p">().</span><span class="na">build</span><span class="p">();</span>
 <span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="nd">@Bean</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">LocalContainerEntityManagerFactoryBean</span><span class="w"> </span><span class="nf">seguridadEntityManagerFactory</span><span class="p">(</span><span class="n">DataSource</span><span class="w"> </span><span class="n">seguridadDataSource</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">LocalContainerEntityManagerFactoryBean</span><span class="w"> </span><span class="nf">seguridadEntityManagerFactory</span><span class="p">(</span><span class="nd">@Qualifier</span><span class="p">(</span><span class="s">"seguridadDataSource"</span><span class="p">)</span><span class="w"> </span><span class="n">DataSource</span><span class="w"> </span><span class="n">seguridadDataSource</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="n">LocalContainerEntityManagerFactoryBean</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">LocalContainerEntityManagerFactoryBean</span><span class="p">();</span>
 <span class="w">        </span><span class="n">factory</span><span class="p">.</span><span class="na">setDataSource</span><span class="p">(</span><span class="n">seguridadDataSource</span><span class="p">);</span>
 <span class="w">        </span><span class="n">factory</span><span class="p">.</span><span class="na">setPackagesToScan</span><span class="p">(</span><span class="s">"pe.edu.upeu.bomerp.seguridad"</span><span class="p">);</span>
@@ -5096,12 +5098,13 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 
 <span class="w">    </span><span class="nd">@Bean</span>
 <span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">PlatformTransactionManager</span><span class="w"> </span><span class="nf">seguridadTransactionManager</span><span class="p">(</span>
-<span class="w">            </span><span class="n">LocalContainerEntityManagerFactoryBean</span><span class="w"> </span><span class="n">seguridadEntityManagerFactory</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nd">@Qualifier</span><span class="p">(</span><span class="s">"seguridadEntityManagerFactory"</span><span class="p">)</span><span class="w"> </span><span class="n">LocalContainerEntityManagerFactoryBean</span><span class="w"> </span><span class="n">seguridadEntityManagerFactory</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">JpaTransactionManager</span><span class="p">(</span><span class="n">seguridadEntityManagerFactory</span><span class="p">.</span><span class="na">getObject</span><span class="p">());</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 <p>Cada <code>@EnableJpaRepositories</code> acota, con <code>basePackages</code>, qué repositorios usa cada <code>EntityManagerFactory</code> — sin eso, Spring Data JPA no sabría si <code>UsuarioRepository</code> habla con Oracle o con Postgres. <code>@Primary</code> en los tres <em>beans</em> de Oracle importa: cualquier otro <em>bean</em> del proyecto que pida un <code>DataSource</code>/<code>EntityManagerFactory</code>/<code>PlatformTransactionManager</code> genérico (por ejemplo, un futuro <code>@Transactional</code> sin especificar cuál) recibe el de Oracle por defecto, ya que es el motor de la mayoría de los módulos.</p>
+<p><strong>Error frecuente</strong>: omitir el <code>@Qualifier</code> de cada parámetro, confiando en que el nombre del parámetro (<code>seguridadDataSource</code>, igual al nombre del <em>bean</em>) baste para que Spring elija el correcto. No basta: como <code>oracleDataSource</code> está marcado <code>@Primary</code>, Spring lo resuelve <strong>antes</strong> de intentar hacer <em>match</em> por nombre — cualquier parámetro de tipo <code>DataSource</code> (o <code>DataSourceProperties</code>, o <code>LocalContainerEntityManagerFactoryBean</code>) que no traiga <code>@Qualifier</code> recibe silenciosamente el de Oracle, sin ningún error de arranque. El síntoma es confuso: el backend arranca, <code>seguridadEntityManagerFactory</code> se crea, y recién Hibernate falla con <code>missing table [roles]</code> — porque está validando el esquema de <code>seguridad</code> contra Oracle, donde esa tabla nunca existió (correctamente: vive en Postgres). <code>@Qualifier("seguridadDataSource")</code> fuerza la elección explícita, sin depender de que el nombre "le gane" al <code>@Primary</code>.</p>
 <p>Los dos <code>DataSource</code> se arman en <strong>dos pasos</strong>, no uno (<code>DataSourceProperties</code> primero, el <code>DataSource</code> después a partir de ella) — no es el atajo más corto que existe (<code>DataSourceBuilder.create().build()</code> bindeado directo con <code>@ConfigurationProperties</code> parece más simple), pero ese atajo tiene un defecto real: construye un <code>HikariDataSource</code> "pelado" y le intenta bindear la propiedad <code>url</code> tal cual, cuando Hikari internamente espera <code>jdbcUrl</code> (no tiene ningún método <code>setUrl()</code>) — el arranque falla con <code>jdbcUrl is required with driverClassName</code>, con <code>driverClassName</code> sí bindeado y <code>jdbcUrl</code> vacío. <code>DataSourceProperties.initializeDataSourceBuilder()</code> es la pieza intermedia que sí sabe traducir <code>url</code> al nombre que cada implementación necesita, sin importar cuál termine eligiendo Spring Boot.</p>
 <p><strong>Error frecuente</strong>: olvidar <code>@Primary</code> en el lado de Oracle. Sin él, Spring Boot no sabe cuál de los dos <code>DataSource</code> usar quién no especifica uno, y el arranque falla con <code>NoUniqueBeanDefinitionException</code>. Esta infraestructura se configura una sola vez, en esta sesión, y no se vuelve a tocar.</p>
 <h4 id="35-configurar-spring-security-minimo-temporal">3.5 Configurar Spring Security mínimo (temporal)<a class="headerlink" href="#35-configurar-spring-security-minimo-temporal" title="Permanent link">&para;</a></h4>
@@ -5429,10 +5432,11 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.seguridad.auth.dto.LoginRequest</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.seguridad.auth.dto.LoginResponse</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.seguridad.auth.dto.RegistroRequest</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.seguridad.auth.dto.RegistroResponse</span><span class="p">;</span>
 
 <span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">AuthService</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">LoginResponse</span><span class="w"> </span><span class="nf">login</span><span class="p">(</span><span class="n">LoginRequest</span><span class="w"> </span><span class="n">request</span><span class="p">);</span>
-<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">registrar</span><span class="p">(</span><span class="n">RegistroRequest</span><span class="w"> </span><span class="n">request</span><span class="p">);</span>
+<span class="w">    </span><span class="n">RegistroResponse</span><span class="w"> </span><span class="nf">registrar</span><span class="p">(</span><span class="n">RegistroRequest</span><span class="w"> </span><span class="n">request</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong><code>lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/seguridad/auth/dto/RegistroRequest.java</code>:</strong></p>
@@ -5456,6 +5460,19 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">password</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div>
+<p><strong><code>lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/seguridad/auth/dto/RegistroResponse.java</code>:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.seguridad.auth.dto</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Builder</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Getter</span><span class="p">;</span>
+
+<span class="nd">@Getter</span>
+<span class="nd">@Builder</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">RegistroResponse</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">email</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
 <p><strong><code>lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/seguridad/auth/service/AuthServiceImpl.java</code>:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.seguridad.auth.service</span><span class="p">;</span>
 
@@ -5467,6 +5484,7 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.seguridad.auth.dto.LoginRequest</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.seguridad.auth.dto.LoginResponse</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.seguridad.auth.dto.RegistroRequest</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.seguridad.auth.dto.RegistroResponse</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.seguridad.usuario.entity.Rol</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.seguridad.usuario.entity.Usuario</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.seguridad.usuario.repository.RolRepository</span><span class="p">;</span>
@@ -5498,7 +5516,7 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="nd">@Override</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">registrar</span><span class="p">(</span><span class="n">RegistroRequest</span><span class="w"> </span><span class="n">request</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">RegistroResponse</span><span class="w"> </span><span class="nf">registrar</span><span class="p">(</span><span class="n">RegistroRequest</span><span class="w"> </span><span class="n">request</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="n">Rol</span><span class="w"> </span><span class="n">vendedor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rolRepository</span><span class="p">.</span><span class="na">findByNombre</span><span class="p">(</span><span class="s">"VENDEDOR"</span><span class="p">).</span><span class="na">orElseThrow</span><span class="p">();</span>
 
 <span class="w">        </span><span class="n">Usuario</span><span class="w"> </span><span class="n">usuario</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Usuario</span><span class="p">();</span>
@@ -5507,6 +5525,11 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <span class="w">        </span><span class="n">usuario</span><span class="p">.</span><span class="na">setRoles</span><span class="p">(</span><span class="n">Set</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">vendedor</span><span class="p">));</span>
 
 <span class="w">        </span><span class="n">usuarioRepository</span><span class="p">.</span><span class="na">save</span><span class="p">(</span><span class="n">usuario</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">RegistroResponse</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
+<span class="w">                </span><span class="p">.</span><span class="na">id</span><span class="p">(</span><span class="n">usuario</span><span class="p">.</span><span class="na">getId</span><span class="p">())</span>
+<span class="w">                </span><span class="p">.</span><span class="na">email</span><span class="p">(</span><span class="n">usuario</span><span class="p">.</span><span class="na">getEmail</span><span class="p">())</span>
+<span class="w">                </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -5549,6 +5572,7 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.seguridad.auth.dto.LoginRequest</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.seguridad.auth.dto.LoginResponse</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.seguridad.auth.dto.RegistroRequest</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.seguridad.auth.dto.RegistroResponse</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.seguridad.auth.service.AuthService</span><span class="p">;</span>
 
 <span class="nd">@RestController</span>
@@ -5564,14 +5588,15 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 
 <span class="w">    </span><span class="nd">@PostMapping</span><span class="p">(</span><span class="s">"/registro"</span><span class="p">)</span>
 <span class="w">    </span><span class="nd">@ResponseStatus</span><span class="p">(</span><span class="n">HttpStatus</span><span class="p">.</span><span class="na">CREATED</span><span class="p">)</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">registro</span><span class="p">(</span><span class="nd">@Valid</span><span class="w"> </span><span class="nd">@RequestBody</span><span class="w"> </span><span class="n">RegistroRequest</span><span class="w"> </span><span class="n">request</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">authService</span><span class="p">.</span><span class="na">registrar</span><span class="p">(</span><span class="n">request</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">RegistroResponse</span><span class="w"> </span><span class="nf">registro</span><span class="p">(</span><span class="nd">@Valid</span><span class="w"> </span><span class="nd">@RequestBody</span><span class="w"> </span><span class="n">RegistroRequest</span><span class="w"> </span><span class="n">request</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">authService</span><span class="p">.</span><span class="na">registrar</span><span class="p">(</span><span class="n">request</span><span class="p">);</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
+<p><code>registro</code> devuelve el recurso creado (<code>id</code>, <code>email</code>), igual que <code>CategoriaController.crear</code>/<code>ProductoController.crear</code> — nunca el <code>password</code>, ni siquiera su hash: <code>RegistroResponse</code> no tiene ese campo, así que no hay riesgo de exponerlo por accidente aunque alguien lo agregue sin querer a <code>Usuario</code> más adelante.</p>
 <p>No levantes el backend todavía: <code>AuthServiceImpl</code> inyecta un <code>AuthenticationManager</code> que recién se declara como <em>bean</em> en 3.11, y sin él el arranque falla. Los cuatro usuarios semilla se registran recién en 3.12, una vez que el backend esté arriba — antes de eso, <code>usuarios</code> está vacía y cualquier <code>SELECT</code> o <code>UPDATE</code> contra ella no tiene nada sobre qué actuar.</p>
 <h4 id="311-completar-securityconfig-como-resource-server">3.11 Completar <code>SecurityConfig</code> como Resource Server<a class="headerlink" href="#311-completar-securityconfig-como-resource-server" title="Permanent link">&para;</a></h4>
-<p><strong>Producto del paso:</strong> <code>PasswordEncoder</code> y <code>AuthenticationManager</code> disponibles para inyectar, el conversor que traduce <code>realm_access.roles</code> al formato que Spring Security espera, y el validador apuntando a <code>/.well-known/jwks.json</code> por configuración — reemplazando, en el mismo archivo y el mismo <em>bean</em> <code>securityFilterChain</code> de 3.5, el <code>anyRequest().permitAll()</code> temporal por autenticación y autorización reales.</p>
+<p><strong>Producto del paso:</strong> <code>PasswordEncoder</code> y <code>AuthenticationManager</code> disponibles para inyectar, el conversor que traduce <code>realm_access.roles</code> al formato que Spring Security espera, el validador apuntando a <code>/.well-known/jwks.json</code> por configuración — reemplazando, en el mismo archivo y el mismo <em>bean</em> <code>securityFilterChain</code> de 3.5, el <code>anyRequest().permitAll()</code> temporal por autenticación y autorización reales —, y el candado (<em>Authorize</em>) en Swagger UI para poder probar los endpoints protegidos desde ahí.</p>
 <p>Agrega la propiedad que le dice al <em>Resource Server</em> dónde verificar la firma, en <code>application-dev.yml</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">spring</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">security</span><span class="p">:</span>
@@ -5649,6 +5674,40 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <span class="p">}</span>
 </code></pre></div>
 <p><code>SessionCreationPolicy.STATELESS</code> le indica a Spring Security que no cree ninguna sesión HTTP (2.3). <code>/api/v1/auth/**</code>, <code>/.well-known/jwks.json</code> y Swagger quedan abiertos — nadie tiene JWT antes de hacer login, y la clave pública es pública por definición —; <strong>todo lo demás</strong> exige, como mínimo, un token válido (<code>anyRequest().authenticated()</code>). Las reglas por rol específicas de <code>catalogo</code> y <code>ventas</code> llegan en 3.13 y 3.15, agregadas <strong>antes</strong> de esta línea final (Spring Security aplica la primera regla que coincide).</p>
+<p><code>SecurityFilterChain</code> protege los endpoints, pero Swagger UI todavía no tiene cómo mandar un <code>Authorization: Bearer ...</code> en cada "Try it out" — eso no es cosa de <code>SecurityConfig</code>, sino de la documentación OpenAPI. Agrega el esquema de seguridad en <code>OpenApiConfig</code> (el mismo archivo de S1, ahora con el candado):</p>
+<p><strong><code>lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/OpenApiConfig.java</code>:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">io.swagger.v3.oas.models.Components</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io.swagger.v3.oas.models.OpenAPI</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io.swagger.v3.oas.models.info.Info</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io.swagger.v3.oas.models.security.SecurityRequirement</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io.swagger.v3.oas.models.security.SecurityScheme</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.context.annotation.Bean</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.context.annotation.Configuration</span><span class="p">;</span>
+
+<span class="nd">@Configuration</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">OpenApiConfig</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">ESQUEMA_JWT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"bearerAuth"</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Bean</span>
+<span class="w">    </span><span class="n">OpenAPI</span><span class="w"> </span><span class="nf">bomErpOpenApi</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">OpenAPI</span><span class="p">()</span>
+<span class="w">                </span><span class="p">.</span><span class="na">info</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">Info</span><span class="p">()</span>
+<span class="w">                        </span><span class="p">.</span><span class="na">title</span><span class="p">(</span><span class="s">"BomERP API"</span><span class="p">)</span>
+<span class="w">                        </span><span class="p">.</span><span class="na">version</span><span class="p">(</span><span class="s">"v1"</span><span class="p">)</span>
+<span class="w">                        </span><span class="p">.</span><span class="na">description</span><span class="p">(</span><span class="s">"Contrato REST del backend unico de LP2"</span><span class="p">))</span>
+<span class="w">                </span><span class="p">.</span><span class="na">components</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">Components</span><span class="p">().</span><span class="na">addSecuritySchemes</span><span class="p">(</span><span class="n">ESQUEMA_JWT</span><span class="p">,</span>
+<span class="w">                        </span><span class="k">new</span><span class="w"> </span><span class="n">SecurityScheme</span><span class="p">()</span>
+<span class="w">                                </span><span class="p">.</span><span class="na">type</span><span class="p">(</span><span class="n">SecurityScheme</span><span class="p">.</span><span class="na">Type</span><span class="p">.</span><span class="na">HTTP</span><span class="p">)</span>
+<span class="w">                                </span><span class="p">.</span><span class="na">scheme</span><span class="p">(</span><span class="s">"bearer"</span><span class="p">)</span>
+<span class="w">                                </span><span class="p">.</span><span class="na">bearerFormat</span><span class="p">(</span><span class="s">"JWT"</span><span class="p">)))</span>
+<span class="w">                </span><span class="p">.</span><span class="na">addSecurityItem</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">SecurityRequirement</span><span class="p">().</span><span class="na">addList</span><span class="p">(</span><span class="n">ESQUEMA_JWT</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Mismo patrón que <code>pagatu-orden-ms</code> en DIST (S07): declara un esquema <code>bearerAuth</code> (tipo <code>HTTP</code>, <code>bearer</code>, formato <code>JWT</code>) y lo agrega como requisito de seguridad global. Con esto, Swagger UI (<code>http://localhost:8080/swagger-ui.html</code>) muestra el botón <strong>Authorize</strong> arriba a la derecha — pega ahí el <code>accessToken</code> de un login (sin el prefijo <code>Bearer</code>, Swagger lo agrega solo) y cada "Try it out" de ahí en adelante manda el header automáticamente, incluso contra rutas protegidas.</p>
 <p><strong>Error frecuente</strong>: olvidar que este método <strong>reemplaza por completo</strong> al <code>anyRequest().permitAll()</code> de 3.5 — si quedara alguna llamada a <code>.permitAll()</code> de la versión temporal mezclada con las reglas nuevas, todo seguiría abierto y ninguna de las pruebas de 403 de la Parte B fallaría como debería. Verifica que el cuerpo de <code>authorizeHttpRequests</code> quede exactamente como el bloque anterior, sin restos de la versión mínima.</p>
 <h4 id="312-levantar-y-probar-el-modulo-seguridad-de-punta-a-punta">3.12 Levantar y probar el módulo <code>seguridad</code> de punta a punta<a class="headerlink" href="#312-levantar-y-probar-el-modulo-seguridad-de-punta-a-punta" title="Permanent link">&para;</a></h4>
 <p><strong>Producto del paso:</strong> login real, con un JWT firmado y verificable, la clave pública publicada, y los cuatro usuarios semilla con su rol real.</p>
