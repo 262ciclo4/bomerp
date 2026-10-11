@@ -190,7 +190,13 @@ Por cada uno de `vendedor1@bomerp.com`, `vendedor2@bomerp.com`, `supervisor@bome
 
 ### 5.2 Agregar el atributo `vendedorId`
 
-Pestaña **Attributes** (*Atributos*), de cada usuario → agrega la clave `vendedorId` con un valor numérico.
+**Error frecuente**: no encontrar la pestaña **Attributes** (*Atributos*) en el detalle del usuario — no está oculta ni movida, **no existe todavía**. Por defecto, Keycloak bloquea cualquier atributo que no esté declarado explícitamente en el *User profile* del realm (los *unmanaged attributes*), y `vendedorId` no es uno de los campos estándar (email, nombre, apellido...). Habilítalo una vez, a nivel de `bomerp`:
+
+1. Con `bomerp` como realm activo, ve a **Realm settings** (*Configuraciones del realm*) → pestaña **General**.
+2. Busca **Unmanaged attributes** (*Atributos no administrados*) y cámbialo de `Disabled` a **Admin can edit** (*El administrador puede editar*) — no `Enabled` a secas: esa opción también expondría `vendedorId` para que el propio usuario lo edite desde su *Account Console*, y es un dato que solo el administrador debe poder tocar.
+3. Guardar.
+
+Recién ahora aparece la pestaña **Attributes** (*Atributos*) en el detalle de cada usuario. Ahí, agrega la clave `vendedorId` con un valor numérico.
 
 Si quieres que las ventas ya registradas con el emisor propio de S10 sigan teniendo un `vendedorId` coherente, usa el mismo `id` que ese usuario tenía en `bomerp-seguridad-db` (`SELECT id FROM usuarios WHERE email = '...'`, Postgres) como valor del atributo aquí — Keycloak no migra ese dato solo, porque son dos almacenes de identidad completamente independientes (2.1 de S10).
 
