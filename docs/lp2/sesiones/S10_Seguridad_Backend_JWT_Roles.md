@@ -442,8 +442,8 @@ bomerp:
 ```java
 package pe.edu.upeu.bomerp;
 
+import org.springframework.boot.jdbc.autoconfigure.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -466,8 +466,14 @@ public class OracleDataSourceConfig {
     @Primary
     @Bean
     @ConfigurationProperties("spring.datasource")
-    public DataSource oracleDataSource() {
-        return DataSourceBuilder.create().build();
+    public DataSourceProperties oracleDataSourceProperties() {
+        return new DataSourceProperties();
+    }
+
+    @Primary
+    @Bean
+    public DataSource oracleDataSource(DataSourceProperties oracleDataSourceProperties) {
+        return oracleDataSourceProperties.initializeDataSourceBuilder().build();
     }
 
     @Primary
@@ -497,8 +503,8 @@ public class OracleDataSourceConfig {
 ```java
 package pe.edu.upeu.bomerp.seguridad;
 
+import org.springframework.boot.jdbc.autoconfigure.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -519,8 +525,13 @@ public class SeguridadDataSourceConfig {
 
     @Bean
     @ConfigurationProperties("bomerp.datasource.seguridad")
-    public DataSource seguridadDataSource() {
-        return DataSourceBuilder.create().build();
+    public DataSourceProperties seguridadDataSourceProperties() {
+        return new DataSourceProperties();
+    }
+
+    @Bean
+    public DataSource seguridadDataSource(DataSourceProperties seguridadDataSourceProperties) {
+        return seguridadDataSourceProperties.initializeDataSourceBuilder().build();
     }
 
     @Bean
@@ -542,6 +553,8 @@ public class SeguridadDataSourceConfig {
 ```
 
 Cada `@EnableJpaRepositories` acota, con `basePackages`, qué repositorios usa cada `EntityManagerFactory` — sin eso, Spring Data JPA no sabría si `UsuarioRepository` habla con Oracle o con Postgres. `@Primary` en los tres *beans* de Oracle importa: cualquier otro *bean* del proyecto que pida un `DataSource`/`EntityManagerFactory`/`PlatformTransactionManager` genérico (por ejemplo, un futuro `@Transactional` sin especificar cuál) recibe el de Oracle por defecto, ya que es el motor de la mayoría de los módulos.
+
+Los dos `DataSource` se arman en **dos pasos**, no uno (`DataSourceProperties` primero, el `DataSource` después a partir de ella) — no es el atajo más corto que existe (`DataSourceBuilder.create().build()` bindeado directo con `@ConfigurationProperties` parece más simple), pero ese atajo tiene un defecto real: construye un `HikariDataSource` "pelado" y le intenta bindear la propiedad `url` tal cual, cuando Hikari internamente espera `jdbcUrl` (no tiene ningún método `setUrl()`) — el arranque falla con `jdbcUrl is required with driverClassName`, con `driverClassName` sí bindeado y `jdbcUrl` vacío. `DataSourceProperties.initializeDataSourceBuilder()` es la pieza intermedia que sí sabe traducir `url` al nombre que cada implementación necesita, sin importar cuál termine eligiendo Spring Boot.
 
 **Error frecuente**: olvidar `@Primary` en el lado de Oracle. Sin él, Spring Boot no sabe cuál de los dos `DataSource` usar quién no especifica uno, y el arranque falla con `NoUniqueBeanDefinitionException`. Esta infraestructura se configura una sola vez, en esta sesión, y no se vuelve a tocar.
 
