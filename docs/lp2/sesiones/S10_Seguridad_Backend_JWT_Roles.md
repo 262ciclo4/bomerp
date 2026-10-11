@@ -36,8 +36,8 @@ Módulo `seguridad` (paquete nuevo, con su propio Postgres — no Oracle, 2.1): 
 | Actividades a Realizar en el Periodo | Orientaciones generales (Orientaciones Metodológicas) | Material de estudio recomendado |
 |---|---|---|
 | Revisión previa individual | Repasar ADS S8 (Tabla 10, RN5, RN8) y ADS S9 (Figura 6, Tabla 8): qué rol ejecuta cada operación de `ventas` y qué transición de estado quedó sin permiso definido. Confirmar que el backend y la SPA de S9 siguen corriendo sin autenticación. Trabajo individual, antes de clase. | ADS S8 (Tabla 10), ADS S9 (Tabla 8), S9 LP2 (3.12). |
-| Clase presencial | Construcción guiada del módulo `seguridad` de punta a punta (Postgres propio, usuarios, roles, JWT, login), protección de `catalogo` y `ventas` por rol, y migración de `vendedorId` del request al claim del JWT. Trabajo individual en la propia laptop, siguiendo al docente paso a paso; consulta inmediata ante un `401`/`403` inesperado. | Pasos 3.1 a 3.16 de esta guía. |
-| Evaluación formativa | Revisión en clase de la matriz de accesos (3.15): login con cada rol, un acceso permitido y uno denegado por rol para `ventas`, y una venta creada con el `vendedorId` tomado del JWT. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4. | Indicaciones de entrega (4.3), rúbrica de evaluación (4.6). |
+| Clase presencial | Construcción guiada del módulo `seguridad` de punta a punta (Postgres propio, usuarios, roles, JWT, login), protección de `catalogo` y `ventas` por rol, y migración de `vendedorId` del request al claim del JWT. Trabajo individual en la propia laptop, siguiendo al docente paso a paso; consulta inmediata ante un `401`/`403` inesperado. | Pasos 3.1 a 3.17 de esta guía. |
+| Evaluación formativa | Revisión en clase de la matriz de accesos (3.16): login con cada rol, un acceso permitido y uno denegado por rol para `ventas`, y una venta creada con el `vendedorId` tomado del JWT. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4. | Indicaciones de entrega (4.3), rúbrica de evaluación (4.6). |
 
 ### 1.6 Motivación de la sesión
 
@@ -120,7 +120,7 @@ flowchart TB
     SC -->|"4b. rol autorizado,<br/>vendedorId = sub"| Ven
 ```
 
-Dos decisiones, no una, separan esta arquitectura del resto de BomERP. **Dónde vive el dato**: `seguridad` no persiste en el Oracle de `catalogo`/`ventas` — vive en su propio Postgres (`bomerp-seguridad-db`, contenedor nuevo), porque ningún proveedor de identidad real (Keycloak incluido) comparte motor de base de datos con la aplicación que protege (ADR-005). El proceso Spring Boot sigue siendo **uno solo** (ADR-001, ADR-002 no cambian): lo que gana son dos pares explícitos de `DataSource`/`EntityManagerFactory` en vez del único autoconfigurado (3.4). **Cómo se validan los tokens**: `SecurityConfig` no recibe la clave de firma por una referencia directa de código a `JwtKeyConfig` — la descubre por la propiedad `jwk-set-uri`, apuntando hoy a la propia aplicación (`http://localhost:8080/.well-known/jwks.json`, 3.7/3.10). Es el mismo mecanismo con el que DIST conecta dos *procesos* distintos (S07, 3.17); aquí conecta dos *configuraciones* dentro del mismo proceso, pero por la misma razón: que reemplazar el emisor después sea cambiar una URL, no recompilar nada. Cada apartado siguiente desarrolla una pieza de la sesión, en el mismo orden del Índice (1.2).
+Dos decisiones, no una, separan esta arquitectura del resto de BomERP. **Dónde vive el dato**: `seguridad` no persiste en el Oracle de `catalogo`/`ventas` — vive en su propio Postgres (`bomerp-seguridad-db`, contenedor nuevo), porque ningún proveedor de identidad real (Keycloak incluido) comparte motor de base de datos con la aplicación que protege (ADR-005). El proceso Spring Boot sigue siendo **uno solo** (ADR-001, ADR-002 no cambian): lo que gana son dos pares explícitos de `DataSource`/`EntityManagerFactory` en vez del único autoconfigurado (3.4). **Cómo se validan los tokens**: `SecurityConfig` no recibe la clave de firma por una referencia directa de código a `JwtKeyConfig` — la descubre por la propiedad `jwk-set-uri`, apuntando hoy a la propia aplicación (`http://localhost:8080/.well-known/jwks.json`, 3.8/3.11). Es el mismo mecanismo con el que DIST conecta dos *procesos* distintos (S07, 3.17); aquí conecta dos *configuraciones* dentro del mismo proceso, pero por la misma razón: que reemplazar el emisor después sea cambiar una URL, no recompilar nada. Cada apartado siguiente desarrolla una pieza de la sesión, en el mismo orden del Índice (1.2).
 
 ### 2.2 Usuarios, contraseñas con hash y datos semilla
 
@@ -140,7 +140,7 @@ Esta sesión usa **BCrypt**, el algoritmo que trae Spring Security listo para us
 
 **Error frecuente**: confundir *hash* con *cifrado* (*encryption*). Un valor cifrado se puede **descifrar** con la clave correcta — tiene sentido cuando alguien necesita recuperar el original (por ejemplo, un número de tarjeta). Un hash de contraseña **no se descifra nunca**: ni la propia aplicación puede recuperar la contraseña original a partir de su hash. Por eso "recuperar contraseña" en cualquier sistema real nunca muestra la contraseña anterior — genera una nueva.
 
-Los datos semilla de esta sesión (3.9) no se insertan con una contraseña en texto plano en un script SQL: se crean a través del propio endpoint de registro (`POST /api/v1/auth/registro`), para que el hash lo calcule el mismo código que lo calculará para cualquier usuario real más adelante.
+Los datos semilla de esta sesión (3.10) no se insertan con una contraseña en texto plano en un script SQL: se crean a través del propio endpoint de registro (`POST /api/v1/auth/registro`), para que el hash lo calcule el mismo código que lo calculará para cualquier usuario real más adelante.
 
 ### 2.3 Autenticación stateless con JWT (clave asimétrica)
 
@@ -151,9 +151,9 @@ Hay dos formas de firmar un JWT, y la diferencia importa incluso dentro de un so
 - **Simétrica (HS256):** una única clave secreta firma *y* verifica. Quien conoce el secreto también puede *fabricar* un token válido de cualquier rol — si ese secreto apareciera alguna vez en un log o en un commit, cualquiera con él podría emitir un JWT de `ADMIN`.
 - **Asimétrica (RS256, usada hoy):** un par de claves. La **privada** firma (vive solo dentro de `JwtKeyConfig`); la **pública** verifica, y puede exponerse sin riesgo — de hecho, es exactamente lo que Keycloak expone en su documento de descubrimiento (2.6), y lo que `seguridad` expone en `/.well-known/jwks.json` (2.1). Nadie que solo tenga la clave pública puede fabricar un token nuevo, solo verificar uno existente.
 
-El par de claves se genera **una sola vez, al arrancar** la aplicación (3.7) y vive en memoria durante toda la ejecución. Eso significa que cada vez que reinicias el backend, los JWT emitidos antes del reinicio dejan de verificar (la firma ya no coincide con ninguna clave que la aplicación recuerde) — tendrás que volver a hacer login después de cada reinicio durante esta sesión.
+El par de claves se genera **una sola vez, al arrancar** la aplicación (3.8) y vive en memoria durante toda la ejecución. Eso significa que cada vez que reinicias el backend, los JWT emitidos antes del reinicio dejan de verificar (la firma ya no coincide con ninguna clave que la aplicación recuerde) — tendrás que volver a hacer login después de cada reinicio durante esta sesión.
 
-**Error frecuente**: asumir que un JWT se puede "cerrar sesión" de la misma forma que una sesión tradicional. Como el token no depende de ningún estado en el servidor, invalidarlo antes de su expiración natural exige un mecanismo aparte (una lista negra de tokens revocados) — fuera del alcance de esta sesión. Por eso `jwt.expiracion-segundos` (3.7) es un valor corto en un sistema real; aquí se deja en una hora para no complicar las pruebas manuales de la clase.
+**Error frecuente**: asumir que un JWT se puede "cerrar sesión" de la misma forma que una sesión tradicional. Como el token no depende de ningún estado en el servidor, invalidarlo antes de su expiración natural exige un mecanismo aparte (una lista negra de tokens revocados) — fuera del alcance de esta sesión. Por eso `jwt.expiracion-segundos` (3.8) es un valor corto en un sistema real; aquí se deja en una hora para no complicar las pruebas manuales de la clase.
 
 ### 2.4 Autorización basada en roles (RBAC)
 
@@ -170,7 +170,7 @@ Autenticación responde *quién eres*; autorización responde *qué puedes hacer
 
 `catalogo` no tiene un diseño de roles propio en ADS (su sílabo no lo pidió hasta ahora), así que esta sesión aplica el criterio más simple que no contradice nada ya construido: consultar (`GET`) exige solo estar autenticado, con cualquier rol; modificar (`POST`/`PUT`/`DELETE`) exige `ADMIN`.
 
-Los roles de un usuario viajan dentro del JWT como el claim `realm_access.roles` (`["VENDEDOR"]`, `["ADMIN"]`) — el mismo nombre de claim que usa Keycloak (2.6) — y Spring Security los compara contra cada regla `hasRole(...)` o `hasAnyRole(...)` declarada en `SecurityConfig` (3.12, 3.14).
+Los roles de un usuario viajan dentro del JWT como el claim `realm_access.roles` (`["VENDEDOR"]`, `["ADMIN"]`) — el mismo nombre de claim que usa Keycloak (2.6) — y Spring Security los compara contra cada regla `hasRole(...)` o `hasAnyRole(...)` declarada en `SecurityConfig` (3.13, 3.15).
 
 Cuando la autorización falla, el código HTTP dice **cuál** de las dos preguntas falló: `401 Unauthorized` significa que no se pudo confirmar *quién eres* (sin token, token mal formado, firma inválida o expirado); `403 Forbidden` significa que sí se confirmó, pero ese rol (o ese dueño, en el caso de RN8) no alcanza para esa operación.
 
@@ -178,7 +178,7 @@ Cuando la autorización falla, el código HTTP dice **cuál** de las dos pregunt
 
 Hasta S9, `VentaRequest` nunca tuvo un campo `vendedorId` — no porque no hiciera falta, sino porque todavía no existía ningún usuario autenticado del que tomarlo (ADR-004). El error que evitamos no es "quitarle un campo peligroso al DTO (*Data Transfer Object*, objeto de transferencia de datos) de entrada", como sí tuvo que hacer DIST con `idCliente` (S7, 3.20): es no agregarlo nunca ahí, directamente. Cualquier dato que el propio cliente declare sobre sí mismo en el cuerpo de un request (igual que el `idCliente` del caso de DIST, igual que el número de documento de First American) no es un dato confiable — hay que tomarlo de algo que el cliente no controla.
 
-`VentaController.crear` (3.13) toma el identificador del usuario autenticado del claim **`sub`** del JWT ya validado, vía `@AuthenticationPrincipal Jwt jwt`, y se lo pasa al servicio aparte del `request` — exactamente el mismo mecanismo que usa DIST para `idCliente` (S7, 3.22), aplicado aquí desde el principio, sin DTO que migrar. `buscar`/`obtener` (3.14) usan el mismo claim para aplicar RN8: si el rol autenticado es `VENDEDOR`, el servicio filtra por su propio `vendedorId`; si es `SUPERVISOR` o `ADMIN`, ve todas.
+`VentaController.crear` (3.14) toma el identificador del usuario autenticado del claim **`sub`** del JWT ya validado, vía `@AuthenticationPrincipal Jwt jwt`, y se lo pasa al servicio aparte del `request` — exactamente el mismo mecanismo que usa DIST para `idCliente` (S7, 3.22), aplicado aquí desde el principio, sin DTO que migrar. `buscar`/`obtener` (3.15) usan el mismo claim para aplicar RN8: si el rol autenticado es `VENDEDOR`, el servicio filtra por su propio `vendedorId`; si es `SUPERVISOR` o `ADMIN`, ve todas.
 
 ### 2.6 Hacia un proveedor de identidad externo: qué queda listo para el reemplazo
 
@@ -191,7 +191,7 @@ La recomendación profesional actual es delegar identidad a un proveedor dedicad
 | Emisor del token | `AuthController` + `JwtService` | El IdP externo | No |
 | Usuarios, contraseñas y roles | Tablas `usuarios`, `roles`, `usuario_rol` en Postgres propio (`bomerp-seguridad-db`) | Usuarios y roles del IdP, en su propio almacén (también separado de Oracle) | No |
 | Claim de roles | `realm_access.roles` | `realm_access.roles` (mismo formato en Keycloak) | No |
-| Identificador del usuario (`sub`) | `id` numérico de `usuarios` | Identificador propio del IdP (un UUID, en Keycloak) | **Sí** — `VentaController` lee `vendedorId` de `jwt.getSubject()` (3.13-3.14); con un IdP real, `sub` deja de ser ese `id`, y `vendedorId` tiene que viajar en un claim propio aparte (detalle completo en la guía de referencia de Keycloak) |
+| Identificador del usuario (`sub`) | `id` numérico de `usuarios` | Identificador propio del IdP (un UUID, en Keycloak) | **Sí** — `VentaController` lee `vendedorId` de `jwt.getSubject()` (3.14-3.15); con un IdP real, `sub` deja de ser ese `id`, y `vendedorId` tiene que viajar en un claim propio aparte (detalle completo en la guía de referencia de Keycloak) |
 | Dónde se valida la firma | `SecurityConfig`, por la propiedad `jwk-set-uri` → `http://localhost:8080/.well-known/jwks.json` (2.1) | `SecurityConfig`, por la misma propiedad → `issuer-uri` del IdP | **No el código** — solo el valor de una propiedad |
 | SSO, login social, refresh token | No existen | Incluidos | — |
 
@@ -203,7 +203,7 @@ Cuando una petición falla con `401` o `403`, el problema puede estar en tres lu
 
 1. **El JWT no se envió o está mal formado** — revisa el header `Authorization` que realmente salió del cliente (`Bearer ` + token, sin comillas ni espacios de más).
 2. **El JWT no se pudo verificar o expiró** — revisa que no hayas **reiniciado** el backend desde que pediste el token (2.3: el par de claves se regenera al arrancar, y los tokens anteriores dejan de verificar), y que `GET /.well-known/jwks.json` responda (2.1) — sin él, `SecurityConfig` no tiene con qué verificar ninguna firma.
-3. **El JWT es válido pero el rol (o el dueño, RN8) no alcanza para esa operación** — revisa la regla de `SecurityConfig` (3.12, 3.14) contra el rol real del claim `realm_access.roles`, o la comparación de `vendedorId` en el servicio.
+3. **El JWT es válido pero el rol (o el dueño, RN8) no alcanza para esa operación** — revisa la regla de `SecurityConfig` (3.13, 3.15) contra el rol real del claim `realm_access.roles`, o la comparación de `vendedorId` en el servicio.
 
 Para distinguir estos tres casos sin adivinar, sube el nivel de log de seguridad mientras diagnosticas (`logging.level.org.springframework.security: DEBUG`): el log dice el motivo exacto del rechazo.
 
@@ -215,7 +215,7 @@ Tiempo: 4h.
 
 **Propósito de la actividad:** que cada estudiante implemente autenticación stateless con JWT firmado con clave asimétrica y autorización basada en roles, aplicando exactamente los permisos que ADS ya diseñó para `ventas` (S8, Tabla 10), y verificando con evidencia real accesos permitidos y denegados — no solo el caso feliz.
 
-**Orientaciones metodológicas:** el docente construye el módulo `seguridad` de punta a punta frente a la clase (Parte A), protege `catalogo` y `ventas` (Parte B), y cierra con diagnóstico de 401/403 (Parte C); los estudiantes replican cada paso en su propia laptop, y provocan ellos mismos los casos denegados (3.15) para ver el `401`/`403` real en su propia consola.
+**Orientaciones metodológicas:** el docente construye el módulo `seguridad` de punta a punta frente a la clase (Parte A), protege `catalogo` y `ventas` (Parte B), y cierra con diagnóstico de 401/403 (Parte C); los estudiantes replican cada paso en su propia laptop, y provocan ellos mismos los casos denegados (3.16) para ver el `401`/`403` real en su propia consola.
 
 **Actividades para realizar:**
 
@@ -225,24 +225,25 @@ Tiempo: 4h.
 - **3.2** Levantar Postgres para `seguridad` y crear sus tablas.
 - **3.3** Agregar Spring Security, el driver de Postgres y la librería de firma JWT.
 - **3.4** Configurar el datasource de Postgres y el `EntityManager` de `seguridad`.
-- **3.5** Crear las entidades `Usuario` y `Rol`.
-- **3.6** Crear el repositorio y el `UserDetailsService`.
-- **3.7** Generar el par de claves RSA, crear el servicio de JWT y publicar la clave pública.
-- **3.8** Hashear contraseñas y crear el servicio de autenticación.
-- **3.9** Crear `AuthController` y los usuarios semilla.
-- **3.10** Configurar Spring Security como Resource Server.
-- **3.11** Levantar y probar el módulo `seguridad` de punta a punta.
+- **3.5** Configurar Spring Security mínimo (temporal), para no bloquear el arranque con el login por defecto.
+- **3.6** Crear las entidades `Usuario` y `Rol`.
+- **3.7** Crear el repositorio y el `UserDetailsService`.
+- **3.8** Generar el par de claves RSA, crear el servicio de JWT y publicar la clave pública.
+- **3.9** Hashear contraseñas y crear el servicio de autenticación.
+- **3.10** Crear `AuthController` y los usuarios semilla.
+- **3.11** Completar `SecurityConfig` como Resource Server.
+- **3.12** Levantar y probar el módulo `seguridad` de punta a punta.
 
 *Parte B — Proteger `catalogo` y `ventas` por rol:*
 
-- **3.12** Proteger las rutas de `catalogo` por rol.
-- **3.13** Agregar `vendedorId` a `Venta` y tomarlo del JWT en `crear`.
-- **3.14** Filtrar y restringir `ventas` por rol (RN8, `reporte`, `anular`).
-- **3.15** Probar accesos permitidos y denegados.
+- **3.13** Proteger las rutas de `catalogo` por rol.
+- **3.14** Agregar `vendedorId` a `Venta` y tomarlo del JWT en `crear`.
+- **3.15** Filtrar y restringir `ventas` por rol (RN8, `reporte`, `anular`).
+- **3.16** Probar accesos permitidos y denegados.
 
 *Parte C — Diagnóstico:*
 
-- **3.16** Diagnosticar 401 vs. 403 con logs.
+- **3.17** Diagnosticar 401 vs. 403 con logs.
 
 **Punto de partida común:** todo el equipo debe comenzar exactamente desde donde quedó S9, no desde su propio avance individual. Clona la rama `s09-form-cabecera-detalle` (el snapshot de cierre de S9):
 
@@ -387,9 +388,9 @@ ALTER TABLE VENTAS ADD VENDEDOR_ID NUMBER;
 EOF
 ```
 
-`VENDEDOR_ID` se agrega **sin** `NOT NULL`: las ventas creadas en S4-S9 (antes de que existiera ningún usuario autenticado) quedan con esta columna en `NULL`, y eso está bien — no se reescribe el pasado. Toda venta creada **desde hoy en adelante** sí la trae, porque el propio servicio la completa (3.13). Ajusta la contraseña de `BOM_VENTAS` a la que tu equipo usó en S4, si fue distinta a este ejemplo.
+`VENDEDOR_ID` se agrega **sin** `NOT NULL`: las ventas creadas en S4-S9 (antes de que existiera ningún usuario autenticado) quedan con esta columna en `NULL`, y eso está bien — no se reescribe el pasado. Toda venta creada **desde hoy en adelante** sí la trae, porque el propio servicio la completa (3.14). Ajusta la contraseña de `BOM_VENTAS` a la que tu equipo usó en S4, si fue distinta a este ejemplo.
 
-**Error frecuente**: arrancar el backend (3.11) antes de que `bomerp-seguridad-db` termine de iniciar. El `healthcheck` del servicio tarda unos segundos; si el backend intenta conectarse antes, falla con un error de conexión rechazada. Confirma con `docker ps` que `bomerp-seguridad-db` diga `healthy`, no solo `Up`, antes de levantar el backend.
+**Error frecuente**: arrancar el backend (3.12) antes de que `bomerp-seguridad-db` termine de iniciar. El `healthcheck` del servicio tarda unos segundos; si el backend intenta conectarse antes, falla con un error de conexión rechazada. Confirma con `docker ps` que `bomerp-seguridad-db` diga `healthy`, no solo `Up`, antes de levantar el backend.
 
 #### 3.3 Agregar Spring Security, el driver de Postgres y la librería de firma JWT
 
@@ -558,7 +559,40 @@ Los dos `DataSource` se arman en **dos pasos**, no uno (`DataSourceProperties` p
 
 **Error frecuente**: olvidar `@Primary` en el lado de Oracle. Sin él, Spring Boot no sabe cuál de los dos `DataSource` usar quién no especifica uno, y el arranque falla con `NoUniqueBeanDefinitionException`. Esta infraestructura se configura una sola vez, en esta sesión, y no se vuelve a tocar.
 
-#### 3.5 Crear las entidades `Usuario` y `Rol`
+#### 3.5 Configurar Spring Security mínimo (temporal)
+
+**Producto del paso:** `SecurityFilterChain` propio, sin restricciones todavía, que evita que Spring Security bloquee el backend con su login por defecto durante el resto de la construcción del módulo (3.6-3.10).
+
+Desde que `spring-boot-starter-security` quedó en el `pom.xml` (3.3), Spring Security se autoconfigura solo en cuanto detecta la dependencia: bloquea **toda** petición detrás de un formulario en `/login` y una contraseña generada al azar (visible en el log de arranque, `Using generated security password: ...`). Si reinicias el backend para probar cualquiera de los pasos siguientes antes de declarar un `SecurityFilterChain` propio, cualquier URL — incluido Swagger — redirige ahí. Esta configuración mínima reemplaza ese comportamiento por defecto desde ya, aunque todavía no valide ningún JWT: eso llega en 3.11, una vez que exista algo que validar.
+
+**`lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/SecurityConfig.java`** (paquete raíz):
+
+```java
+package pe.edu.upeu.bomerp;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
+
+@Configuration
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
+        return http.build();
+    }
+}
+```
+
+**Error frecuente**: dejar esta versión así de abierta más allá de esta sesión. `anyRequest().permitAll()` es deliberadamente temporal — un andamio para seguir construyendo (3.6-3.10) sin la pantalla de login por defecto de por medio —, no la configuración final: 3.11 reemplaza este método por la versión que sí autentica y autoriza, sobre el mismo archivo y el mismo *bean*.
+
+#### 3.6 Crear las entidades `Usuario` y `Rol`
 
 **Producto del paso:** `Usuario` y `Rol`, relacionados de muchos a muchos, mapeados contra las tablas de Postgres (3.2).
 
@@ -645,7 +679,7 @@ public class Usuario {
 
 Ningún `@Table`/`@JoinTable` lleva `schema = "..."`: en Postgres, `seguridad` usa el esquema `public` por defecto (su propia base de datos ya aísla sus tablas, 2.1) — a diferencia de Oracle, donde cada módulo necesita su propio esquema **dentro** de la misma base. `roles` usa `FetchType.EAGER` (a diferencia del `LAZY` por defecto que rige el resto de BomERP, CLAUDE.md) **a propósito**: Spring Security necesita los roles del usuario en el mismo momento en que lo autentica, dentro de la misma petición de login — no hay ningún riesgo de N+1 porque `Usuario` se carga una sola vez por login, no en un listado.
 
-#### 3.6 Crear el repositorio y el `UserDetailsService`
+#### 3.7 Crear el repositorio y el `UserDetailsService`
 
 **Producto del paso:** Spring Security puede cargar un `Usuario` por su email y leer sus roles.
 
@@ -705,9 +739,9 @@ public class UsuarioDetailsService implements UserDetailsService {
 }
 ```
 
-Spring Security descubre este `UserDetailsService` solo (es el único *bean* de ese tipo) y lo usa dentro del `AuthenticationManager` (3.10) para validar email y contraseña en el login (3.8) — ningún código propio compara contraseñas a mano.
+Spring Security descubre este `UserDetailsService` solo (es el único *bean* de ese tipo) y lo usa dentro del `AuthenticationManager` (3.11) para validar email y contraseña en el login (3.9) — ningún código propio compara contraseñas a mano.
 
-#### 3.7 Generar el par de claves RSA, crear el servicio de JWT y publicar la clave pública
+#### 3.8 Generar el par de claves RSA, crear el servicio de JWT y publicar la clave pública
 
 **Producto del paso:** un par de claves RSA en memoria, el servicio que firma un JWT con la clave privada, y `/.well-known/jwks.json` publicando la pública.
 
@@ -779,7 +813,7 @@ public class JwksController {
 }
 ```
 
-`toPublicJWK()` descarta la mitad privada: este endpoint **solo** puede exponer la clave pública. `SecurityConfig` (3.10) la consume por configuración (`jwk-set-uri`), apuntando hoy a la propia aplicación — es lo que de verdad permite que un IdP externo lo reemplace después cambiando solo esa URL (2.1, ADR-005), aunque hoy ambos extremos vivan en el mismo proceso.
+`toPublicJWK()` descarta la mitad privada: este endpoint **solo** puede exponer la clave pública. `SecurityConfig` (3.11) la consume por configuración (`jwk-set-uri`), apuntando hoy a la propia aplicación — es lo que de verdad permite que un IdP externo lo reemplace después cambiando solo esa URL (2.1, ADR-005), aunque hoy ambos extremos vivan en el mismo proceso.
 
 **`lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/seguridad/auth/service/JwtService.java`:**
 
@@ -841,7 +875,7 @@ public class JwtService {
 }
 ```
 
-Los nombres de los claims no son arbitrarios: `sub` (identificador del usuario) y `realm_access.roles` son los mismos que emite Keycloak (2.6) — por eso el conversor de roles de `SecurityConfig` (3.10) funcionaría igual si, más adelante, el emisor cambiara.
+Los nombres de los claims no son arbitrarios: `sub` (identificador del usuario) y `realm_access.roles` son los mismos que emite Keycloak (2.6) — por eso el conversor de roles de `SecurityConfig` (3.11) funcionaría igual si, más adelante, el emisor cambiara.
 
 Agrega las dos propiedades que `JwtService` necesita, en `lp2/bomerp-backend/src/main/resources/application-dev.yml`, al final del archivo:
 
@@ -851,7 +885,7 @@ jwt:
   expiracion-segundos: 3600
 ```
 
-#### 3.8 Hashear contraseñas y crear el servicio de autenticación
+#### 3.9 Hashear contraseñas y crear el servicio de autenticación
 
 **Producto del paso:** `PasswordEncoder` disponible como *bean*, y el servicio que valida credenciales y emite el token.
 
@@ -990,7 +1024,7 @@ public class AuthServiceImpl implements AuthService {
 }
 ```
 
-`authenticate(...)` lanza una excepción si las credenciales no son válidas — nunca devuelve "falso". Si llega a la línea siguiente, el usuario **ya está autenticado**, y recién ahí se lo vuelve a cargar para armar el JWT con su `id` y sus roles. `registrar` siempre asigna el rol `VENDEDOR`: el registro público **no debe poder elegir su propio rol** — eso sería dejar que cualquiera se autoasigne `ADMIN`. Promover a un usuario a `SUPERVISOR` o `ADMIN` es, en esta sesión, una operación administrativa directa sobre la base de datos (3.9) — no existe todavía ninguna pantalla de gestión de usuarios, igual criterio que BD2 ya usa para sus propios roles de Oracle (S8 BD2).
+`authenticate(...)` lanza una excepción si las credenciales no son válidas — nunca devuelve "falso". Si llega a la línea siguiente, el usuario **ya está autenticado**, y recién ahí se lo vuelve a cargar para armar el JWT con su `id` y sus roles. `registrar` siempre asigna el rol `VENDEDOR`: el registro público **no debe poder elegir su propio rol** — eso sería dejar que cualquiera se autoasigne `ADMIN`. Promover a un usuario a `SUPERVISOR` o `ADMIN` es, en esta sesión, una operación administrativa directa sobre la base de datos (3.10) — no existe todavía ninguna pantalla de gestión de usuarios, igual criterio que BD2 ya usa para sus propios roles de Oracle (S8 BD2).
 
 Agrega `RolRepository`, en `lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/seguridad/usuario/repository/RolRepository.java`:
 
@@ -1028,7 +1062,7 @@ Mismo patrón que ya usan `handleNotFound`/`handleStockInsuficiente` en este arc
 
 El mensaje es **fijo**, sin importar la causa (contraseña incorrecta o email inexistente): revelar cuál falló le regala información a quien intenta adivinar credenciales ajenas.
 
-#### 3.9 Crear `AuthController` y los usuarios semilla
+#### 3.10 Crear `AuthController` y los usuarios semilla
 
 **Producto del paso:** `POST /api/v1/auth/login` y `POST /api/v1/auth/registro` funcionales, y cuatro usuarios reales (dos `VENDEDOR`, un `SUPERVISOR`, un `ADMIN`).
 
@@ -1065,9 +1099,9 @@ public class AuthController {
 }
 ```
 
-No levantes el backend todavía: `AuthServiceImpl` inyecta un `AuthenticationManager` que recién se declara como *bean* en 3.10, y sin él el arranque falla.
+No levantes el backend todavía: `AuthServiceImpl` inyecta un `AuthenticationManager` que recién se declara como *bean* en 3.11, y sin él el arranque falla.
 
-Con 3.10 escrito y el backend arriba (3.11), registra los cuatro usuarios semilla vía Swagger (`POST /api/v1/auth/registro`): `vendedor1@bomerp.com`, `vendedor2@bomerp.com`, `supervisor@bomerp.com`, `admin@bomerp.com`, todos con la misma contraseña de prueba (ej. `Bomerp2026!`). Los cuatro nacen `VENDEDOR` (3.8); promueve manualmente a los dos últimos, ahora en Postgres:
+Con 3.11 escrito y el backend arriba (3.12), registra los cuatro usuarios semilla vía Swagger (`POST /api/v1/auth/registro`): `vendedor1@bomerp.com`, `vendedor2@bomerp.com`, `supervisor@bomerp.com`, `admin@bomerp.com`, todos con la misma contraseña de prueba (ej. `Bomerp2026!`). Los cuatro nacen `VENDEDOR` (3.9); promueve manualmente a los dos últimos, ahora en Postgres:
 
 PowerShell:
 
@@ -1093,9 +1127,9 @@ WHERE usuario_id = (SELECT id FROM usuarios WHERE email = 'admin@bomerp.com');
 EOF
 ```
 
-#### 3.10 Configurar Spring Security como Resource Server
+#### 3.11 Completar `SecurityConfig` como Resource Server
 
-**Producto del paso:** `PasswordEncoder` y `AuthenticationManager` disponibles para inyectar, el conversor que traduce `realm_access.roles` al formato que Spring Security espera, y el validador apuntando a `/.well-known/jwks.json` por configuración.
+**Producto del paso:** `PasswordEncoder` y `AuthenticationManager` disponibles para inyectar, el conversor que traduce `realm_access.roles` al formato que Spring Security espera, y el validador apuntando a `/.well-known/jwks.json` por configuración — reemplazando, en el mismo archivo y el mismo *bean* `securityFilterChain` de 3.5, el `anyRequest().permitAll()` temporal por autenticación y autorización reales.
 
 Agrega la propiedad que le dice al *Resource Server* dónde verificar la firma, en `application-dev.yml`:
 
@@ -1110,7 +1144,7 @@ spring:
 
 Con solo esta propiedad, Spring Boot arma el `JwtDecoder` por su cuenta: descarga el JWKS (*JSON Web Key Set*, 2.3) la primera vez que llega un token, lo guarda en memoria, y verifica firma y expiración de cada token siguiente. **No hay ningún `JwtDecoder` que escribir a mano** — es, además, la única línea que cambiaría el día que un IdP externo reemplace a `seguridad` (2.6, Tabla 4).
 
-**`lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/SecurityConfig.java`** (paquete raíz, junto a `JwtKeyConfig` y `OpenApiConfig`):
+**`lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/SecurityConfig.java`** (el mismo archivo de 3.5, ahora completo):
 
 ```java
 package pe.edu.upeu.bomerp;
@@ -1180,11 +1214,11 @@ public class SecurityConfig {
 }
 ```
 
-`SessionCreationPolicy.STATELESS` le indica a Spring Security que no cree ninguna sesión HTTP (2.3). `/api/v1/auth/**`, `/.well-known/jwks.json` y Swagger quedan abiertos — nadie tiene JWT antes de hacer login, y la clave pública es pública por definición —; **todo lo demás** exige, como mínimo, un token válido (`anyRequest().authenticated()`). Las reglas por rol específicas de `catalogo` y `ventas` llegan en 3.12 y 3.14, agregadas **antes** de esta línea final (Spring Security aplica la primera regla que coincide).
+`SessionCreationPolicy.STATELESS` le indica a Spring Security que no cree ninguna sesión HTTP (2.3). `/api/v1/auth/**`, `/.well-known/jwks.json` y Swagger quedan abiertos — nadie tiene JWT antes de hacer login, y la clave pública es pública por definición —; **todo lo demás** exige, como mínimo, un token válido (`anyRequest().authenticated()`). Las reglas por rol específicas de `catalogo` y `ventas` llegan en 3.13 y 3.15, agregadas **antes** de esta línea final (Spring Security aplica la primera regla que coincide).
 
-**Error frecuente**: agregar `spring-boot-starter-security` y no declarar ningún `SecurityFilterChain` propio. Spring Security se autoconfigura por defecto en cuanto detecta la dependencia — bloquea todo con un formulario de login y una contraseña generada al azar (visible en el log de arranque). Este `SecurityFilterChain` explícito reemplaza esa configuración por defecto.
+**Error frecuente**: olvidar que este método **reemplaza por completo** al `anyRequest().permitAll()` de 3.5 — si quedara alguna llamada a `.permitAll()` de la versión temporal mezclada con las reglas nuevas, todo seguiría abierto y ninguna de las pruebas de 403 de la Parte B fallaría como debería. Verifica que el cuerpo de `authorizeHttpRequests` quede exactamente como el bloque anterior, sin restos de la versión mínima.
 
-#### 3.11 Levantar y probar el módulo `seguridad` de punta a punta
+#### 3.12 Levantar y probar el módulo `seguridad` de punta a punta
 
 **Producto del paso:** login real, con un JWT firmado y verificable, y la clave pública publicada.
 
@@ -1208,7 +1242,7 @@ Invoke-RestMethod -Method Get -Uri "http://localhost:8080/.well-known/jwks.json"
 curl http://localhost:8080/.well-known/jwks.json
 ```
 
-Resultado esperado: un JSON con un arreglo `keys`, un único elemento con `kty: "RSA"` y el `kid` que `JwtKeyConfig` generó al arrancar. Registra y luego autentica al usuario `vendedor1@bomerp.com` (3.9):
+Resultado esperado: un JSON con un arreglo `keys`, un único elemento con `kty: "RSA"` y el `kid` que `JwtKeyConfig` generó al arrancar. Registra y luego autentica al usuario `vendedor1@bomerp.com` (3.10):
 
 ```powershell
 Invoke-RestMethod -Method Post -Uri "http://localhost:8080/api/v1/auth/login" `
@@ -1236,11 +1270,11 @@ Puedes pegar el valor de `accessToken` en [jwt.io](https://jwt.io) **solo para i
 
 ### Parte B — Proteger `catalogo` y `ventas` por rol
 
-#### 3.12 Proteger las rutas de `catalogo` por rol
+#### 3.13 Proteger las rutas de `catalogo` por rol
 
 **Producto del paso:** consultar `catalogo` exige estar autenticado (cualquier rol); modificarlo exige `ADMIN`.
 
-En `SecurityConfig.securityFilterChain` (3.10), agrega estas reglas **antes** de `.anyRequest().authenticated()`:
+En `SecurityConfig.securityFilterChain` (3.11), agrega estas reglas **antes** de `.anyRequest().authenticated()`:
 
 ```java
 .requestMatchers(HttpMethod.GET, "/api/v1/productos/**", "/api/v1/categorias/**").authenticated()
@@ -1257,7 +1291,7 @@ import org.springframework.http.HttpMethod;
 
 ADS no diseñó roles para `catalogo` (su sílabo no lo pidió) — este es el criterio más simple que no contradice nada ya construido: cualquier usuario autenticado consulta, solo `ADMIN` modifica.
 
-#### 3.13 Agregar `vendedorId` a `Venta` y tomarlo del JWT en `crear`
+#### 3.14 Agregar `vendedorId` a `Venta` y tomarlo del JWT en `crear`
 
 **Producto del paso:** `Venta` tiene `vendedorId`; `crear` lo toma del claim `sub` del JWT ya validado (RN5, ADS S8).
 
@@ -1306,13 +1340,13 @@ public VentaResponse crear(VentaRequest request, Long vendedorId) {
     // el resto del método sigue exactamente igual que en S9
 ```
 
-`jwt.getSubject()` entrega el claim `sub` como texto — el mismo `id` numérico que `JwtService.generarToken` (3.7) escribió con `String.valueOf(usuario.getId())`. `VentaRequest` **nunca** tuvo un campo `vendedorId` (a diferencia de `idCliente` en DIST, que sí hubo que quitar de `OrdenRequest`): esta sesión no migra nada en el DTO de entrada, solo agrega el dato por un canal que el cliente nunca controló.
+`jwt.getSubject()` entrega el claim `sub` como texto — el mismo `id` numérico que `JwtService.generarToken` (3.8) escribió con `String.valueOf(usuario.getId())`. `VentaRequest` **nunca** tuvo un campo `vendedorId` (a diferencia de `idCliente` en DIST, que sí hubo que quitar de `OrdenRequest`): esta sesión no migra nada en el DTO de entrada, solo agrega el dato por un canal que el cliente nunca controló.
 
-#### 3.14 Filtrar y restringir `ventas` por rol
+#### 3.15 Filtrar y restringir `ventas` por rol
 
 **Producto del paso:** `crear` exige `VENDEDOR` o `SUPERVISOR`; `buscar`/`obtener` filtran por `vendedorId` cuando el rol es `VENDEDOR` (RN8); `reporte` y `anular` exigen `SUPERVISOR` o `ADMIN` — cerrando la brecha que ADS S9 (Figura 6, Tabla 8) dejó pendiente.
 
-En `SecurityConfig.securityFilterChain` (3.10), agrega, también antes de `.anyRequest().authenticated()`:
+En `SecurityConfig.securityFilterChain` (3.11), agrega, también antes de `.anyRequest().authenticated()`:
 
 ```java
 .requestMatchers(HttpMethod.POST, "/api/v1/ventas").hasAnyRole("VENDEDOR", "SUPERVISOR")
@@ -1412,11 +1446,11 @@ Mismo patrón que el resto de `GlobalExceptionHandler` (`Map<String, Object>` co
 
 Responder `403` (y no `404`) cuando un `VENDEDOR` pide, por `id`, una venta ajena es una decisión deliberada: `403` le dice "existe, pero no es tuya"; `404` escondería incluso esa información. Esta sesión elige `403` porque ya existe un mecanismo de autorización explícito (RBAC) que lo justifica — la pregunta de 1.6.2 queda abierta a propósito para que la discutas en clase.
 
-#### 3.15 Probar accesos permitidos y denegados
+#### 3.16 Probar accesos permitidos y denegados
 
 **Producto del paso:** evidencia real de los tres roles contra `ventas`.
 
-Obtén un token por cada rol (3.11) y guárdalo en una variable (`$tokenVendedor1`, `$tokenVendedor2`, `$tokenSupervisor`). Con el token de `vendedor1`, crea una venta (queda con su `vendedorId`). Con el token de `vendedor2`, intenta consultarla por `id`:
+Obtén un token por cada rol (3.12) y guárdalo en una variable (`$tokenVendedor1`, `$tokenVendedor2`, `$tokenSupervisor`). Con el token de `vendedor1`, crea una venta (queda con su `vendedorId`). Con el token de `vendedor2`, intenta consultarla por `id`:
 
 ```powershell
 try {
@@ -1427,7 +1461,7 @@ try {
 }
 ```
 
-Resultado esperado: `403` — la venta existe, pero no es de `vendedor2`. Con el token de `supervisor`, la misma consulta responde `200 OK` con la venta completa. Con el token de `vendedor1` intentando `GET /api/v1/ventas/resumen`, responde `403` (el rol no alcanza, 3.14); con `supervisor`, `200 OK`.
+Resultado esperado: `403` — la venta existe, pero no es de `vendedor2`. Con el token de `supervisor`, la misma consulta responde `200 OK` con la venta completa. Con el token de `vendedor1` intentando `GET /api/v1/ventas/resumen`, responde `403` (el rol no alcanza, 3.15); con `supervisor`, `200 OK`.
 
 **Tabla 5. Matriz de accesos verificada**
 
@@ -1440,7 +1474,7 @@ Resultado esperado: `403` — la venta existe, pero no es de `vendedor2`. Con el
 
 ### Parte C — Diagnóstico
 
-#### 3.16 Diagnosticar 401 vs. 403 con logs
+#### 3.17 Diagnosticar 401 vs. 403 con logs
 
 **Producto del paso:** capacidad de distinguir, con evidencia, por qué una petición concreta falló.
 
@@ -1452,7 +1486,7 @@ logging:
     org.springframework.security: DEBUG
 ```
 
-Repite el caso 2 de 3.15 (token válido, rol insuficiente) y el caso de un token vencido (espera a que pase `jwt.expiracion-segundos`, o reduce ese valor temporalmente a `10` para la prueba) y compara, en el log, el motivo exacto de cada rechazo (2.7). Vuelve el nivel de log a su valor anterior al terminar.
+Repite el caso 2 de 3.16 (token válido, rol insuficiente) y el caso de un token vencido (espera a que pase `jwt.expiracion-segundos`, o reduce ese valor temporalmente a `10` para la prueba) y compara, en el log, el motivo exacto de cada rechazo (2.7). Vuelve el nivel de log a su valor anterior al terminar.
 
 ## 4. Crea: actividad autónoma
 
@@ -1464,10 +1498,10 @@ Replicación autónoma del patrón de protección por rol sobre `categoria` (no 
 
 Completa y evidencia estas tareas:
 
-1. Protege `CategoriaController` con el mismo criterio de `catalogo` en general (3.12): consultar exige cualquier rol autenticado; crear, editar y eliminar exigen `ADMIN`.
+1. Protege `CategoriaController` con el mismo criterio de `catalogo` en general (3.13): consultar exige cualquier rol autenticado; crear, editar y eliminar exigen `ADMIN`.
 2. Agrega `GET /api/v1/auth/perfil`, que devuelva el email y los roles del usuario autenticado leyendo directamente el `Jwt` (sin consultar la base de datos) — el primer paso hacia comparar un atributo del usuario con un atributo del recurso (DIST S07, 2.3).
-3. Prueba, con los cuatro usuarios semilla (3.9), los cuatro casos de `categoria`: sin token, con rol `VENDEDOR` consultando, con rol `VENDEDOR` intentando modificar (denegado), con rol `ADMIN` modificando (permitido).
-4. Documenta la matriz de accesos de `categoria`, con el mismo formato de la Tabla 5 (3.15).
+3. Prueba, con los cuatro usuarios semilla (3.10), los cuatro casos de `categoria`: sin token, con rol `VENDEDOR` consultando, con rol `VENDEDOR` intentando modificar (denegado), con rol `ADMIN` modificando (permitido).
+4. Documenta la matriz de accesos de `categoria`, con el mismo formato de la Tabla 5 (3.16).
 
 ### 4.2 Propósito
 
