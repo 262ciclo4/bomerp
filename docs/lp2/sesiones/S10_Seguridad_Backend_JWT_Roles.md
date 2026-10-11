@@ -244,7 +244,13 @@ Tiempo: 4h.
 
 - **3.16** Diagnosticar 401 vs. 403 con logs.
 
-**Punto de partida común:** todo el equipo debe comenzar exactamente desde donde quedó S9. Confirma que el backend (`lp2/bomerp-backend`) y la SPA (`lp2/bomerp-frontend`) de S9 siguen corriendo sin autenticación — si alguno falla en arrancar, el problema es de una sesión anterior, no de esta.
+**Punto de partida común:** todo el equipo debe comenzar exactamente desde donde quedó S9, no desde su propio avance individual. Clona la rama `s09-form-cabecera-detalle` (el snapshot de cierre de S9):
+
+```bash
+git clone --branch s09-form-cabecera-detalle https://github.com/262ciclo4/bomerp.git
+```
+
+Confirma que el backend (`lp2/bomerp-backend`) y la SPA (`lp2/bomerp-frontend`) siguen corriendo sin autenticación — si alguno falla en arrancar, el problema es de una sesión anterior, no de esta.
 
 ### Parte A — Construir el módulo `seguridad`
 
@@ -276,7 +282,7 @@ Con el backend arriba, confirma que `GET /api/v1/ventas` responde `200 OK` sin n
     container_name: bomerp-seguridad-db
     restart: unless-stopped
     ports:
-      - "5432:5432"
+      - "5431:5432"
     environment:
       POSTGRES_DB: bomerp_seguridad
       POSTGRES_USER: bomerp_seguridad
@@ -291,7 +297,7 @@ Con el backend arriba, confirma que `GET /api/v1/ventas` responde `200 OK` sin n
       start_period: 15s
 ```
 
-Y agrega `seguridad-db-data:` junto a `oracle-data:`, bajo `volumes:`. Levanta el contenedor nuevo sin tocar el de Oracle que ya está corriendo:
+El puerto de host es `5431`, no el `5432` por defecto de Postgres — evita chocar con un Postgres que ya pudieras tener instalado localmente en Windows, y con `pagatu-catalogo-ms` (DIST), que ya usa `15432`; dentro del contenedor (y dentro de la red de Docker) sigue siendo el `5432` estándar, nadie más lo necesita saber. Agrega `seguridad-db-data:` junto a `oracle-data:`, bajo `volumes:`. Levanta el contenedor nuevo sin tocar el de Oracle que ya está corriendo:
 
 ```powershell
 cd lp2\bomerp-backend
@@ -385,7 +391,7 @@ Agrega la propiedad del datasource de Postgres en `lp2/bomerp-backend/src/main/r
 bomerp:
   datasource:
     seguridad:
-      url: jdbc:postgresql://localhost:5432/bomerp_seguridad
+      url: jdbc:postgresql://localhost:5431/bomerp_seguridad
       username: bomerp_seguridad
       password: 123456
       driver-class-name: org.postgresql.Driver

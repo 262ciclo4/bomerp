@@ -26,7 +26,7 @@ services:
     container_name: bomerp-seguridad-db
     restart: unless-stopped
     ports:
-      - "5432:5432"
+      - "5431:5432"
     environment:
       POSTGRES_DB: bomerp_seguridad
       POSTGRES_USER: bomerp_seguridad
