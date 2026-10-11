@@ -1581,7 +1581,53 @@ Responder `403` (y no `404`) cuando un `VENDEDOR` pide, por `id`, una venta ajen
 
 **Producto del paso:** evidencia real de los tres roles contra `ventas`.
 
-Obtén un token por cada rol (3.12) y guárdalo en una variable (`$tokenVendedor1`, `$tokenVendedor2`, `$tokenSupervisor`). Con el token de `vendedor1`, crea una venta (queda con su `vendedorId`). Con el token de `vendedor2`, intenta consultarla por `id`:
+Obtén un token por cada rol (3.12) y guárdalo en una variable:
+
+```powershell
+$tokenVendedor1 = (Invoke-RestMethod -Method Post -Uri "http://localhost:8080/api/v1/auth/login" `
+  -ContentType "application/json" `
+  -Body '{"email": "vendedor1@bomerp.com", "password": "Bomerp2026!"}').accessToken
+
+$tokenVendedor2 = (Invoke-RestMethod -Method Post -Uri "http://localhost:8080/api/v1/auth/login" `
+  -ContentType "application/json" `
+  -Body '{"email": "vendedor2@bomerp.com", "password": "Bomerp2026!"}').accessToken
+
+$tokenSupervisor = (Invoke-RestMethod -Method Post -Uri "http://localhost:8080/api/v1/auth/login" `
+  -ContentType "application/json" `
+  -Body '{"email": "supervisor@bomerp.com", "password": "Bomerp2026!"}').accessToken
+```
+
+```bash
+tokenVendedor1=$(curl -s -X POST http://localhost:8080/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "vendedor1@bomerp.com", "password": "Bomerp2026!"}' | jq -r '.accessToken')
+
+tokenVendedor2=$(curl -s -X POST http://localhost:8080/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "vendedor2@bomerp.com", "password": "Bomerp2026!"}' | jq -r '.accessToken')
+
+tokenSupervisor=$(curl -s -X POST http://localhost:8080/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "supervisor@bomerp.com", "password": "Bomerp2026!"}' | jq -r '.accessToken')
+```
+
+Con el token de `vendedor1`, crea una venta (queda con su `vendedorId`) — ajusta `productoId` a uno real de tu `catalogo` (`GET /api/v1/productos`):
+
+```powershell
+Invoke-RestMethod -Method Post -Uri "http://localhost:8080/api/v1/ventas" `
+  -Headers @{ Authorization = "Bearer $tokenVendedor1" } `
+  -ContentType "application/json" `
+  -Body '{"detalles": [{"productoId": 1, "cantidad": 2}]}'
+```
+
+```bash
+curl -X POST http://localhost:8080/api/v1/ventas \
+  -H "Authorization: Bearer $tokenVendedor1" \
+  -H "Content-Type: application/json" \
+  -d '{"detalles": [{"productoId": 1, "cantidad": 2}]}'
+```
+
+Resultado esperado: `201 Created`, con el `id` de la venta recién creada (lo necesitas para el siguiente paso). Con el token de `vendedor2`, intenta consultarla por ese `id`:
 
 ```powershell
 try {
