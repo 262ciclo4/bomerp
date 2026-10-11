@@ -3362,6 +3362,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="3. Configurar el realm bomerp">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-opcional-pasar-la-consola-de-este-realm-a-espanol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 (Opcional) Pasar la consola de este realm a español
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3621,6 +3638,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="3. Configurar el realm bomerp">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-opcional-pasar-la-consola-de-este-realm-a-espanol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 (Opcional) Pasar la consola de este realm a español
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -3933,10 +3967,20 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <ol>
 <li>En la esquina superior izquierda, donde dice <code>master</code>, abre el selector de <em>realm</em> y elige <strong>Create realm</strong>.</li>
 <li><em>Realm name</em>: <code>bomerp</code>. Crear.</li>
-<li>(Opcional, consola en español) Dentro del realm <code>bomerp</code>, ve a <strong>Realm settings</strong> (<em>Configuraciones del realm</em>) → pestaña <strong>Localization</strong> (<em>Localización</em>) → sub-pestaña <strong>Localizations</strong> (<em>Localizaciones</em>): activa <strong>Internationalization</strong> (<em>Internacionalización</em>), agrega <code>español</code> a <em>Idiomas admitidos</em>, y elígelo también como <em>Idioma predeterminado</em>. Guardar.</li>
 <li>Dentro del realm <code>bomerp</code>, ve a <strong>Realm roles</strong> → <strong>Create role</strong>, y crea los tres, uno por uno: <code>VENDEDOR</code>, <code>SUPERVISOR</code>, <code>ADMIN</code>.</li>
 </ol>
-<p>El paso 3 es por realm, no global: si lo activaste antes en <code>master</code> (para la consola misma), eso <strong>no</strong> se hereda a <code>bomerp</code> — hay que repetirlo aquí para que tanto la consola de administración de este realm como, más adelante, la pantalla de login que verán tus usuarios (si no la reemplazas por la tuya propia) aparezcan en español.</p>
+<h3 id="31-opcional-pasar-la-consola-de-este-realm-a-espanol">3.1 (Opcional) Pasar la consola de este realm a español<a class="headerlink" href="#31-opcional-pasar-la-consola-de-este-realm-a-espanol" title="Permanent link">&para;</a></h3>
+<p>Ya con el realm <code>bomerp</code> creado y seleccionado (no <code>master</code>):</p>
+<ol>
+<li>En el menú lateral, entra a <strong>Realm settings</strong> (<em>Configuraciones del realm</em>).</li>
+<li>Abre la pestaña <strong>Localization</strong> (<em>Localización</em>).</li>
+<li>Dentro, en la sub-pestaña <strong>Localizations</strong> (<em>Localizaciones</em>) (es la que abre por defecto), activa el interruptor <strong>Internationalization</strong> (<em>Internacionalización</em>) → <strong>Enabled</strong>/<strong>Habilitado</strong>.</li>
+<li>En el campo <strong>Supported locales</strong> (<em>Idiomas admitidos</em>), agrega <code>español</code> (deja <code>inglés</code> también, no lo quites).</li>
+<li>En <strong>Default locale</strong> (<em>Idioma predeterminado</em>), elige <code>español</code>.</li>
+<li><strong>Save</strong> (<em>Guardar</em>).</li>
+</ol>
+<p>Recarga la página — la consola de este realm (menú lateral, pestañas, botones) debería aparecer en español desde ahora.</p>
+<p>3.1 es por realm, no global: si lo activaste antes en <code>master</code> (para la consola misma), eso <strong>no</strong> se hereda a <code>bomerp</code> — hay que repetirlo aquí para que tanto la consola de administración de este realm como, más adelante, la pantalla de login que verán tus usuarios (si no la reemplazas por la tuya propia) aparezcan en español.</p>
 <p>De aquí en adelante, cada referencia a un botón o pestaña de la consola trae el término en inglés (el que usa la documentación oficial de Keycloak) seguido de su traducción aproximada entre paréntesis — si tu consola está en español y el texto exacto no calza del todo, guíate por la posición/ícono, no por la traducción literal: no verifiqué cada cadena contra una consola real en español.</p>
 <p>Estos son <strong>realm roles</strong> (no <em>client roles</em>) a propósito: Keycloak los agrega al token bajo el claim <code>realm_access.roles</code> — el mismo nombre que <code>JwtService</code> de <code>seguridad</code> ya usaba (S10, 3.8) y que <code>JwtAuthenticationConverter</code> ya sabe leer (S10, 3.11). Es el primer punto donde se confirma la promesa de la Tabla 4: cero cambios en ese conversor.</p>
 <h2 id="4-crear-el-cliente-para-pruebas">4. Crear el cliente para pruebas<a class="headerlink" href="#4-crear-el-cliente-para-pruebas" title="Permanent link">&para;</a></h2>
