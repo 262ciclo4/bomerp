@@ -177,9 +177,16 @@ Con `bomerp` como realm activo (no `master`): **Realm settings** → **Localizat
 
 Por cada uno de `vendedor1@bomerp.com`, `vendedor2@bomerp.com`, `supervisor@bomerp.com`, `admin@bomerp.com`:
 
-1. **Users** (*Usuarios*) → **Add user** (*Agregar usuario*). *Username*: el email. *Email verified* (*Correo verificado*): activado (para no complicar el flujo con verificación de correo en esta guía).
+1. **Users** (*Usuarios*) → **Add user** (*Agregar usuario*) → **Crear usuario**.
+    - **Required user actions** (*Acciones de usuario requeridas*): déjalo **vacío**, sin seleccionar ninguna. Si marcas algo aquí (ej. *Update Password*), Keycloak lo exige en el primer login — rompe el flujo de *Direct access grants* de la sección 6, igual que dejar la contraseña como *Temporary* (paso 2 de abajo).
+    - **Email verified** (*Correo electrónico verificado*): activado (para no complicar el flujo con verificación de correo en esta guía).
+    - **Select a locale** (*Seleccionar una configuración regional*): opcional, es el idioma de **ese usuario en particular** (distinto de 3.0/3.2, que son el idioma por defecto del realm) — déjalo en *Idioma predeterminado* o elige `Español` si quieres forzarlo para este usuario puntual.
+    - **Username** (*Nombre de usuario*): el email completo (ej. `vendedor1@bomerp.com`).
+    - **Email** (*Correo electrónico*): el mismo email, repetido en este campo aparte.
+    - *Nombre*/*Apellido*/*Grupos*: opcionales, déjalos vacíos.
+    - **Crear**.
 2. Pestaña **Credentials** (*Credenciales*) → **Set password** (*Establecer contraseña*): `Bomerp2026!`, *Temporary* (*Temporal*): **desactivado** (si queda activado, Keycloak exige cambiarla en el primer login, lo que rompe el flujo de *Direct access grants* de la sección 6).
-3. Pestaña **Role mapping** (*Asignación de roles*) → **Assign role** (*Asignar rol*): `VENDEDOR` para los dos primeros, `SUPERVISOR` y `ADMIN` para los otros dos, respectivamente — el mismo criterio de promoción manual que S10 ya aplicaba a mano sobre Postgres (3.10), ahora sobre la consola de Keycloak.
+3. Pestaña **Role mapping** (*Mapeo de roles*) → **Assign role** (*Asignar rol*) → en el dropdown, elige **Realm roles** (*Roles de realm*, no *Roles de cliente*) — ahí aparece la lista del paso 3 de la sección 3 (`ADMIN`, `SUPERVISOR`, `VENDEDOR`, más dos roles propios de Keycloak: `offline_access`, `uma_authorization`, que no tocas). Marca `VENDEDOR` para los dos primeros usuarios, `SUPERVISOR` y `ADMIN` para los otros dos, respectivamente, y **Asignar** — el mismo criterio de promoción manual que S10 ya aplicaba a mano sobre Postgres (3.10), ahora sobre la consola de Keycloak.
 
 ### 5.2 Agregar el atributo `vendedorId`
 
