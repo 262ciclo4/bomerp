@@ -1,5 +1,6 @@
 package pe.edu.upeu.bomerp.seguridad;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.jdbc.autoconfigure.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -27,12 +28,12 @@ public class SeguridadDataSourceConfig {
     }
 
     @Bean
-    public DataSource seguridadDataSource(DataSourceProperties seguridadDataSourceProperties) {
+    public DataSource seguridadDataSource(@Qualifier("seguridadDataSourceProperties") DataSourceProperties seguridadDataSourceProperties) {
         return seguridadDataSourceProperties.initializeDataSourceBuilder().build();
     }
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean seguridadEntityManagerFactory(DataSource seguridadDataSource) {
+    public LocalContainerEntityManagerFactoryBean seguridadEntityManagerFactory(@Qualifier("seguridadDataSource") DataSource seguridadDataSource) {
         LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
         factory.setDataSource(seguridadDataSource);
         factory.setPackagesToScan("pe.edu.upeu.bomerp.seguridad");
@@ -43,7 +44,7 @@ public class SeguridadDataSourceConfig {
 
     @Bean
     public PlatformTransactionManager seguridadTransactionManager(
-            LocalContainerEntityManagerFactoryBean seguridadEntityManagerFactory) {
+            @Qualifier("seguridadEntityManagerFactory") LocalContainerEntityManagerFactoryBean seguridadEntityManagerFactory) {
         return new JpaTransactionManager(seguridadEntityManagerFactory.getObject());
     }
 }

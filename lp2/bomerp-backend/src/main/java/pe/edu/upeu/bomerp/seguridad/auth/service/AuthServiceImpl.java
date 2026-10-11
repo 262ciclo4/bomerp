@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import pe.edu.upeu.bomerp.seguridad.auth.dto.LoginRequest;
 import pe.edu.upeu.bomerp.seguridad.auth.dto.LoginResponse;
 import pe.edu.upeu.bomerp.seguridad.auth.dto.RegistroRequest;
+import pe.edu.upeu.bomerp.seguridad.auth.dto.RegistroResponse;
 import pe.edu.upeu.bomerp.seguridad.usuario.entity.Rol;
 import pe.edu.upeu.bomerp.seguridad.usuario.entity.Usuario;
 import pe.edu.upeu.bomerp.seguridad.usuario.repository.RolRepository;
@@ -39,7 +40,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void registrar(RegistroRequest request) {
+    public RegistroResponse registrar(RegistroRequest request) {
         Rol vendedor = rolRepository.findByNombre("VENDEDOR").orElseThrow();
 
         Usuario usuario = new Usuario();
@@ -48,5 +49,10 @@ public class AuthServiceImpl implements AuthService {
         usuario.setRoles(Set.of(vendedor));
 
         usuarioRepository.save(usuario);
+
+        return RegistroResponse.builder()
+                .id(usuario.getId())
+                .email(usuario.getEmail())
+                .build();
     }
 }

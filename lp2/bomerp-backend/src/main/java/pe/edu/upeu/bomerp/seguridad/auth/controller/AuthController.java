@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import pe.edu.upeu.bomerp.seguridad.auth.dto.LoginRequest;
 import pe.edu.upeu.bomerp.seguridad.auth.dto.LoginResponse;
 import pe.edu.upeu.bomerp.seguridad.auth.dto.RegistroRequest;
+import pe.edu.upeu.bomerp.seguridad.auth.dto.RegistroResponse;
 import pe.edu.upeu.bomerp.seguridad.auth.service.AuthService;
 
 @RestController
@@ -22,7 +23,7 @@ public class AuthController {
 
     @PostMapping("/registro")
     @ResponseStatus(HttpStatus.CREATED)
-    public void registro(@Valid @RequestBody RegistroRequest request) {
-        authService.registrar(request);
+    public RegistroResponse registro(@Valid @RequestBody RegistroRequest request) {
+        return authService.registrar(request);
     }
 }

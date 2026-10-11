@@ -443,6 +443,7 @@ bomerp:
 ```java
 package pe.edu.upeu.bomerp;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.jdbc.autoconfigure.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -473,13 +474,13 @@ public class OracleDataSourceConfig {
 
     @Primary
     @Bean
-    public DataSource oracleDataSource(DataSourceProperties oracleDataSourceProperties) {
+    public DataSource oracleDataSource(@Qualifier("oracleDataSourceProperties") DataSourceProperties oracleDataSourceProperties) {
         return oracleDataSourceProperties.initializeDataSourceBuilder().build();
     }
 
     @Primary
     @Bean
-    public LocalContainerEntityManagerFactoryBean oracleEntityManagerFactory(DataSource oracleDataSource) {
+    public LocalContainerEntityManagerFactoryBean oracleEntityManagerFactory(@Qualifier("oracleDataSource") DataSource oracleDataSource) {
         LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
         factory.setDataSource(oracleDataSource);
         factory.setPackagesToScan("pe.edu.upeu.bomerp.catalogo", "pe.edu.upeu.bomerp.ventas");
@@ -493,7 +494,7 @@ public class OracleDataSourceConfig {
     @Primary
     @Bean
     public PlatformTransactionManager oracleTransactionManager(
-            LocalContainerEntityManagerFactoryBean oracleEntityManagerFactory) {
+            @Qualifier("oracleEntityManagerFactory") LocalContainerEntityManagerFactoryBean oracleEntityManagerFactory) {
         return new JpaTransactionManager(oracleEntityManagerFactory.getObject());
     }
 }
@@ -504,6 +505,7 @@ public class OracleDataSourceConfig {
 ```java
 package pe.edu.upeu.bomerp.seguridad;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.jdbc.autoconfigure.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -531,12 +533,12 @@ public class SeguridadDataSourceConfig {
     }
 
     @Bean
-    public DataSource seguridadDataSource(DataSourceProperties seguridadDataSourceProperties) {
+    public DataSource seguridadDataSource(@Qualifier("seguridadDataSourceProperties") DataSourceProperties seguridadDataSourceProperties) {
         return seguridadDataSourceProperties.initializeDataSourceBuilder().build();
     }
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean seguridadEntityManagerFactory(DataSource seguridadDataSource) {
+    public LocalContainerEntityManagerFactoryBean seguridadEntityManagerFactory(@Qualifier("seguridadDataSource") DataSource seguridadDataSource) {
         LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
         factory.setDataSource(seguridadDataSource);
         factory.setPackagesToScan("pe.edu.upeu.bomerp.seguridad");
@@ -547,13 +549,15 @@ public class SeguridadDataSourceConfig {
 
     @Bean
     public PlatformTransactionManager seguridadTransactionManager(
-            LocalContainerEntityManagerFactoryBean seguridadEntityManagerFactory) {
+            @Qualifier("seguridadEntityManagerFactory") LocalContainerEntityManagerFactoryBean seguridadEntityManagerFactory) {
         return new JpaTransactionManager(seguridadEntityManagerFactory.getObject());
     }
 }
 ```
 
 Cada `@EnableJpaRepositories` acota, con `basePackages`, qué repositorios usa cada `EntityManagerFactory` — sin eso, Spring Data JPA no sabría si `UsuarioRepository` habla con Oracle o con Postgres. `@Primary` en los tres *beans* de Oracle importa: cualquier otro *bean* del proyecto que pida un `DataSource`/`EntityManagerFactory`/`PlatformTransactionManager` genérico (por ejemplo, un futuro `@Transactional` sin especificar cuál) recibe el de Oracle por defecto, ya que es el motor de la mayoría de los módulos.
+
+**Error frecuente**: omitir el `@Qualifier` de cada parámetro, confiando en que el nombre del parámetro (`seguridadDataSource`, igual al nombre del *bean*) baste para que Spring elija el correcto. No basta: como `oracleDataSource` está marcado `@Primary`, Spring lo resuelve **antes** de intentar hacer *match* por nombre — cualquier parámetro de tipo `DataSource` (o `DataSourceProperties`, o `LocalContainerEntityManagerFactoryBean`) que no traiga `@Qualifier` recibe silenciosamente el de Oracle, sin ningún error de arranque. El síntoma es confuso: el backend arranca, `seguridadEntityManagerFactory` se crea, y recién Hibernate falla con `missing table [roles]` — porque está validando el esquema de `seguridad` contra Oracle, donde esa tabla nunca existió (correctamente: vive en Postgres). `@Qualifier("seguridadDataSource")` fuerza la elección explícita, sin depender de que el nombre "le gane" al `@Primary`.
 
 Los dos `DataSource` se arman en **dos pasos**, no uno (`DataSourceProperties` primero, el `DataSource` después a partir de ella) — no es el atajo más corto que existe (`DataSourceBuilder.create().build()` bindeado directo con `@ConfigurationProperties` parece más simple), pero ese atajo tiene un defecto real: construye un `HikariDataSource` "pelado" y le intenta bindear la propiedad `url` tal cual, cuando Hikari internamente espera `jdbcUrl` (no tiene ningún método `setUrl()`) — el arranque falla con `jdbcUrl is required with driverClassName`, con `driverClassName` sí bindeado y `jdbcUrl` vacío. `DataSourceProperties.initializeDataSourceBuilder()` es la pieza intermedia que sí sabe traducir `url` al nombre que cada implementación necesita, sin importar cuál termine eligiendo Spring Boot.
 
@@ -936,10 +940,11 @@ package pe.edu.upeu.bomerp.seguridad.auth.service;
 import pe.edu.upeu.bomerp.seguridad.auth.dto.LoginRequest;
 import pe.edu.upeu.bomerp.seguridad.auth.dto.LoginResponse;
 import pe.edu.upeu.bomerp.seguridad.auth.dto.RegistroRequest;
+import pe.edu.upeu.bomerp.seguridad.auth.dto.RegistroResponse;
 
 public interface AuthService {
     LoginResponse login(LoginRequest request);
-    void registrar(RegistroRequest request);
+    RegistroResponse registrar(RegistroRequest request);
 }
 ```
 
@@ -967,6 +972,22 @@ public class RegistroRequest {
 }
 ```
 
+**`lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/seguridad/auth/dto/RegistroResponse.java`:**
+
+```java
+package pe.edu.upeu.bomerp.seguridad.auth.dto;
+
+import lombok.Builder;
+import lombok.Getter;
+
+@Getter
+@Builder
+public class RegistroResponse {
+    private Long id;
+    private String email;
+}
+```
+
 **`lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/seguridad/auth/service/AuthServiceImpl.java`:**
 
 ```java
@@ -980,6 +1001,7 @@ import org.springframework.stereotype.Service;
 import pe.edu.upeu.bomerp.seguridad.auth.dto.LoginRequest;
 import pe.edu.upeu.bomerp.seguridad.auth.dto.LoginResponse;
 import pe.edu.upeu.bomerp.seguridad.auth.dto.RegistroRequest;
+import pe.edu.upeu.bomerp.seguridad.auth.dto.RegistroResponse;
 import pe.edu.upeu.bomerp.seguridad.usuario.entity.Rol;
 import pe.edu.upeu.bomerp.seguridad.usuario.entity.Usuario;
 import pe.edu.upeu.bomerp.seguridad.usuario.repository.RolRepository;
@@ -1011,7 +1033,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void registrar(RegistroRequest request) {
+    public RegistroResponse registrar(RegistroRequest request) {
         Rol vendedor = rolRepository.findByNombre("VENDEDOR").orElseThrow();
 
         Usuario usuario = new Usuario();
@@ -1020,6 +1042,11 @@ public class AuthServiceImpl implements AuthService {
         usuario.setRoles(Set.of(vendedor));
 
         usuarioRepository.save(usuario);
+
+        return RegistroResponse.builder()
+                .id(usuario.getId())
+                .email(usuario.getEmail())
+                .build();
     }
 }
 ```
@@ -1078,6 +1105,7 @@ import org.springframework.web.bind.annotation.*;
 import pe.edu.upeu.bomerp.seguridad.auth.dto.LoginRequest;
 import pe.edu.upeu.bomerp.seguridad.auth.dto.LoginResponse;
 import pe.edu.upeu.bomerp.seguridad.auth.dto.RegistroRequest;
+import pe.edu.upeu.bomerp.seguridad.auth.dto.RegistroResponse;
 import pe.edu.upeu.bomerp.seguridad.auth.service.AuthService;
 
 @RestController
@@ -1093,17 +1121,19 @@ public class AuthController {
 
     @PostMapping("/registro")
     @ResponseStatus(HttpStatus.CREATED)
-    public void registro(@Valid @RequestBody RegistroRequest request) {
-        authService.registrar(request);
+    public RegistroResponse registro(@Valid @RequestBody RegistroRequest request) {
+        return authService.registrar(request);
     }
 }
 ```
+
+`registro` devuelve el recurso creado (`id`, `email`), igual que `CategoriaController.crear`/`ProductoController.crear` — nunca el `password`, ni siquiera su hash: `RegistroResponse` no tiene ese campo, así que no hay riesgo de exponerlo por accidente aunque alguien lo agregue sin querer a `Usuario` más adelante.
 
 No levantes el backend todavía: `AuthServiceImpl` inyecta un `AuthenticationManager` que recién se declara como *bean* en 3.11, y sin él el arranque falla. Los cuatro usuarios semilla se registran recién en 3.12, una vez que el backend esté arriba — antes de eso, `usuarios` está vacía y cualquier `SELECT` o `UPDATE` contra ella no tiene nada sobre qué actuar.
 
 #### 3.11 Completar `SecurityConfig` como Resource Server
 
-**Producto del paso:** `PasswordEncoder` y `AuthenticationManager` disponibles para inyectar, el conversor que traduce `realm_access.roles` al formato que Spring Security espera, y el validador apuntando a `/.well-known/jwks.json` por configuración — reemplazando, en el mismo archivo y el mismo *bean* `securityFilterChain` de 3.5, el `anyRequest().permitAll()` temporal por autenticación y autorización reales.
+**Producto del paso:** `PasswordEncoder` y `AuthenticationManager` disponibles para inyectar, el conversor que traduce `realm_access.roles` al formato que Spring Security espera, el validador apuntando a `/.well-known/jwks.json` por configuración — reemplazando, en el mismo archivo y el mismo *bean* `securityFilterChain` de 3.5, el `anyRequest().permitAll()` temporal por autenticación y autorización reales —, y el candado (*Authorize*) en Swagger UI para poder probar los endpoints protegidos desde ahí.
 
 Agrega la propiedad que le dice al *Resource Server* dónde verificar la firma, en `application-dev.yml`:
 
@@ -1189,6 +1219,45 @@ public class SecurityConfig {
 ```
 
 `SessionCreationPolicy.STATELESS` le indica a Spring Security que no cree ninguna sesión HTTP (2.3). `/api/v1/auth/**`, `/.well-known/jwks.json` y Swagger quedan abiertos — nadie tiene JWT antes de hacer login, y la clave pública es pública por definición —; **todo lo demás** exige, como mínimo, un token válido (`anyRequest().authenticated()`). Las reglas por rol específicas de `catalogo` y `ventas` llegan en 3.13 y 3.15, agregadas **antes** de esta línea final (Spring Security aplica la primera regla que coincide).
+
+`SecurityFilterChain` protege los endpoints, pero Swagger UI todavía no tiene cómo mandar un `Authorization: Bearer ...` en cada "Try it out" — eso no es cosa de `SecurityConfig`, sino de la documentación OpenAPI. Agrega el esquema de seguridad en `OpenApiConfig` (el mismo archivo de S1, ahora con el candado):
+
+**`lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/OpenApiConfig.java`:**
+
+```java
+package pe.edu.upeu.bomerp;
+
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class OpenApiConfig {
+
+    private static final String ESQUEMA_JWT = "bearerAuth";
+
+    @Bean
+    OpenAPI bomErpOpenApi() {
+        return new OpenAPI()
+                .info(new Info()
+                        .title("BomERP API")
+                        .version("v1")
+                        .description("Contrato REST del backend unico de LP2"))
+                .components(new Components().addSecuritySchemes(ESQUEMA_JWT,
+                        new SecurityScheme()
+                                .type(SecurityScheme.Type.HTTP)
+                                .scheme("bearer")
+                                .bearerFormat("JWT")))
+                .addSecurityItem(new SecurityRequirement().addList(ESQUEMA_JWT));
+    }
+}
+```
+
+Mismo patrón que `pagatu-orden-ms` en DIST (S07): declara un esquema `bearerAuth` (tipo `HTTP`, `bearer`, formato `JWT`) y lo agrega como requisito de seguridad global. Con esto, Swagger UI (`http://localhost:8080/swagger-ui.html`) muestra el botón **Authorize** arriba a la derecha — pega ahí el `accessToken` de un login (sin el prefijo `Bearer `, Swagger lo agrega solo) y cada "Try it out" de ahí en adelante manda el header automáticamente, incluso contra rutas protegidas.
 
 **Error frecuente**: olvidar que este método **reemplaza por completo** al `anyRequest().permitAll()` de 3.5 — si quedara alguna llamada a `.permitAll()` de la versión temporal mezclada con las reglas nuevas, todo seguiría abierto y ninguna de las pruebas de 403 de la Parte B fallaría como debería. Verifica que el cuerpo de `authorizeHttpRequests` quede exactamente como el bloque anterior, sin restos de la versión mínima.
 
