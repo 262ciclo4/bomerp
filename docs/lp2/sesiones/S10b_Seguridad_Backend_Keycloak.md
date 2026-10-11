@@ -222,9 +222,34 @@ El claim se lee como `Number` (no `Long` directo) porque el JSON (*JavaScript Ob
 
 Revisa `SecurityConfig.securityFilterChain`, `CategoriaController`/`ProductoController` y el resto de `VentaController` (lo que no sea `crear`/`buscar`/`obtener`): ningún `hasRole`, ningún `requestMatchers`, ninguna regla cambia. Si encuentras que necesitas tocar algo ahí, la migración se desvió de lo que esta guía describe — revisa el paso anterior.
 
+### 7.4 Retirar `seguridad-db`
+
+**Producto del paso:** `bomerp-backend` corre sin el Postgres de `seguridad` — Keycloak es, desde este punto, el único almacén de identidad.
+
+Con 7.1-7.3 confirmados, `seguridad-db` ya no tiene ningún lector: nadie en el código vigente lo consulta (el `vendedorId` que necesitaba su `id` numérico ya se copió a mano en 5.2). No lo dejes corriendo "por si acaso" — si Keycloak es de verdad el reemplazo, el sistema tiene que demostrar que funciona sin él **antes** de la prueba final de la sección 8, no después.
+
+```powershell
+cd lp2\bomerp-backend
+docker compose -f compose-dev.yml stop seguridad-db
+docker compose -f compose-dev.yml rm -f seguridad-db
+```
+
+```bash
+cd lp2/bomerp-backend
+docker compose -f compose-dev.yml stop seguridad-db
+docker compose -f compose-dev.yml rm -f seguridad-db
+```
+
+Quita también el bloque `seguridad-db:` completo de `compose-dev.yml` (el que agregó S10, 3.2) y la línea `seguridad-db-data:` de `volumes:` al final del archivo — ya ningún servicio la usa. Si quieres conservar los datos históricos antes de liberar el volumen (los `vendedorId` ya están a salvo en los atributos de usuario de Keycloak; esto es solo por si quieres consultar algo más adelante), identifica el volumen real y bórralo:
+
+```bash
+docker volume ls | grep seguridad
+docker volume rm <nombre-exacto-que-aparezca>
+```
+
 ## 8. Probar de punta a punta
 
-**Producto del paso:** la misma matriz de accesos que S10 verificó (3.16, Tabla 5), ahora contra tokens de Keycloak.
+**Producto del paso:** la misma matriz de accesos que S10 verificó (3.16, Tabla 5), ahora contra tokens de Keycloak — con `seguridad-db` ya retirado (7.4), esta prueba confirma que el reemplazo es real, no solo que Keycloak "también funciona" en paralelo.
 
 Reinicia `bomerp-backend` (lee la propiedad nueva de 7.1) y repite exactamente las pruebas de S10 (3.16), pero obteniendo cada token con el comando de la sección 6 (cambiando el usuario). Resultado esperado: **la misma Tabla 5** — mismos códigos HTTP, para los mismos casos, con tokens que ahora vienen de un proceso distinto.
 
@@ -234,7 +259,7 @@ Reinicia `bomerp-backend` (lee la propiedad nueva de 7.1) y repite exactamente l
 
 - **S11** reconfigura el cliente `bomerp-frontend` para *Authorization Code* + PKCE (S10, 2.4) — el flujo real que usará la SPA, desactivando *Direct access grants* (sección 4). El login deja de ser un formulario propio de BomERP: redirige a la pantalla de Keycloak.
 - **Limpieza del paquete `seguridad`**: `AuthController`, `JwtService`, `JwksController`, `JwtKeyConfig`, `SecurityConfig` (las piezas de `seguridad`, no `OracleDataSourceConfig`), `SeguridadDataSourceConfig` y las entidades `Usuario`/`Rol` quedan sin ningún código que los invoque — pueden borrarse de `bomerp-backend` en un commit aparte, sin que eso afecte a `catalogo` ni a `ventas` (la discusión de por qué esto es una limpieza de archivos y no una migración se documentó en el chat de diseño de S10, no en una guía).
-- **`compose-dev.yml`**: el servicio `seguridad-db` (Postgres) deja de usarse — puedes quitarlo, o dejarlo mientras conserves datos históricos que quieras consultar.
+- **`compose-dev.yml`**: `seguridad-db` ya se retiró en 7.4 — este punto queda aquí solo como referencia, no como pendiente.
 - **`pom.xml`**: `spring-security-oauth2-jose` (firmaba el JWT propio) deja de hacer falta; `spring-boot-starter-security-oauth2-resource-server` **sigue haciendo falta** (sigue validando, ahora contra Keycloak); el driver `org.postgresql:postgresql` se retira solo si ningún otro módulo de BomERP usa Postgres.
 - **Producción real**: `start-dev` (sección 2) no es apto para producción — exige modo `start`, TLS y una base de datos persistente propia para Keycloak (ver la nota de la sección 2).
 
