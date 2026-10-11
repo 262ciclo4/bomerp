@@ -30,7 +30,7 @@ public interface VentaRepository extends JpaRepository<Venta, Long> {
 List<Venta> buscar(@Param("estado") EstadoVenta estado,
                     @Param("desde") LocalDateTime desde,
                     @Param("hasta") LocalDateTime hasta,
-                    @Param("vendedorId") Long vendedorId,
+                    @Param("vendedorId") String vendedorId,
                     Sort sort);
 
 

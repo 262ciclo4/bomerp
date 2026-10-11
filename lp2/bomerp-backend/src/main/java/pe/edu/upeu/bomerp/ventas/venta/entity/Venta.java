@@ -42,6 +42,6 @@ public class Venta {
     @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DetalleVenta> detalles = new ArrayList<>();
 
-    @Column(name = "VENDEDOR_ID")
-    private Long vendedorId;
+    @Column(name = "VENDEDOR_ID", length = 36)
+    private String vendedorId;
 }

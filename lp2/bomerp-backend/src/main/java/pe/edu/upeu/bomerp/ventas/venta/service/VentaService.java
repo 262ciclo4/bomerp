@@ -9,9 +9,9 @@ import java.util.List;
 
 public interface VentaService {
 List<VentaResponse> buscar(EstadoVenta estado, LocalDateTime desde, LocalDateTime hasta,
-                            String ordenarPor, String direccion, Long vendedorId);
-VentaResponse obtener(Long id, Long vendedorId);
-    VentaResponse crear(VentaRequest request, Long vendedorId);
+                            String ordenarPor, String direccion, String vendedorId);
+VentaResponse obtener(Long id, String vendedorId);
+    VentaResponse crear(VentaRequest request, String vendedorId);
     VentaReporte reporte(EstadoVenta estado, LocalDateTime desde, LocalDateTime hasta);
     VentaResponse anular(Long id);
 }

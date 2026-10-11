@@ -46,11 +46,11 @@ Confirmando lo que ya decía la Tabla 4 de S10 (2.6), ahora con el detalle que f
 | `SecurityConfig` (propiedad `jwk-set-uri` → `issuer-uri`) | Sí — una línea de `application-dev.yml` |
 | `JwtAuthenticationConverter` (lee `realm_access.roles`) | **No** — Keycloak emite el claim con el mismo nombre |
 | `catalogo`, `ventas` (controllers, services, reglas `hasRole`) | **No** |
-| Cómo se lee `vendedorId` en `VentaController` | Sí — de `jwt.getSubject()` a un claim propio (3 más abajo) |
+| Cómo se lee `vendedorId` en `VentaController` | **No** — sigue siendo `jwt.getSubject()`, sin tocar (detalle abajo) |
 | Paquete `seguridad` (`AuthController`, `JwtService`, `JwksController`, `JwtKeyConfig`, entidades) | Se retira — queda sin uso, ver sección 7 |
 | Contenedor `bomerp-seguridad-db` (Postgres) | Se retira — Keycloak trae su propio almacenamiento |
 
-El único punto que **sí** exige un cambio de código (no solo de configuración) es cómo se obtiene `vendedorId`: hoy sale de `jwt.getSubject()` porque el `sub` que emite `seguridad` es, por diseño, el `id` numérico de `Usuario`. El `sub` que emite Keycloak es un UUID (*Universally Unique Identifier*) propio del usuario en el realm — nunca el `vendedorId` de BomERP. La sección 5 resuelve esto exactamente como ya lo resuelve DIST para su propio `idCliente` (S07, Tabla 6): un **atributo de usuario** en Keycloak más un **protocol mapper** que lo agrega al token como un claim propio, separado de `sub`.
+Ningún punto de la tabla exige cambiar código — y eso no es casualidad, es la razón por la que `vendedorId` se diseñó como `String` desde S10 (3.2, 3.14), no como `Long`: el `sub` que emite `seguridad` hoy es el `id` numérico de `Usuario` convertido a texto (ej. `"3"`); el que emite Keycloak es un UUID (*Universally Unique Identifier*) propio del realm (ej. `"3fa85f64-5717-4562-b3fc-2c963f66afa6"`) — dos formatos de texto distintos, pero `VentaController` nunca los interpreta como número, solo los guarda tal cual. A diferencia de DIST, que sí necesita un **atributo de usuario** + **protocol mapper** para `idCliente` (S07, Tabla 6, porque `idCliente` identifica a una entidad de negocio aparte del usuario), aquí `vendedorId` **es** literalmente `sub` — no hace falta configurar nada nuevo en Keycloak para que viaje en el token, porque `sub` viaja siempre, en cualquier token, sin configuración. Lo único real que exige este cambio de emisor es **migrar los datos que ya existen**: las ventas creadas bajo `seguridad` tienen `VENDEDOR_ID` con el `id` numérico viejo, no con el UUID nuevo — la sección 5 lo resuelve.
 
 ## 2. Descargar y levantar Keycloak
 
@@ -169,9 +169,9 @@ Con `bomerp` como realm activo (no `master`): **Realm settings** → **Localizat
 
 **Error frecuente, y por qué es intencional dejarlo así documentado**: *Direct access grants* corresponde al mismo flujo que la RFC 9700 desaconseja (S10, 2.4, cita textual: *"MUST NOT be used"*) — la razón por la que `seguridad` también lo usaba era la misma: es un atajo de laboratorio, no el diseño final. Úsalo aquí únicamente para verificar que Keycloak emite tokens válidos antes de construir el flujo real; S11 reconfigura este mismo cliente para *Authorization Code* + PKCE (*Proof Key for Code Exchange*) y **desactiva** *Direct access grants* como parte de ese trabajo — no antes.
 
-## 5. Crear los usuarios semilla con su `vendedorId`
+## 5. Crear los usuarios semilla
 
-**Producto del paso:** los mismos cuatro usuarios de S10 (3.10), ahora en Keycloak, con el dato que RN5/RN8 necesitan (ADS S8) viajando en un claim propio, no en `sub`.
+**Producto del paso:** los mismos cuatro usuarios de S10 (3.10), ahora en Keycloak. `vendedorId` no necesita ningún paso aparte — es literalmente `sub` (1, Tabla 1), y `sub` viaja en cualquier token sin configurar nada.
 
 ### 5.1 Crear los usuarios y asignarles rol
 
@@ -188,31 +188,49 @@ Por cada uno de `vendedor1@bomerp.com`, `vendedor2@bomerp.com`, `supervisor@bome
 2. Pestaña **Credentials** (*Credenciales*) → **Set password** (*Establecer contraseña*): `Bomerp2026!`, *Temporary* (*Temporal*): **desactivado** (si queda activado, Keycloak exige cambiarla en el primer login, lo que rompe el flujo de *Direct access grants* de la sección 6).
 3. Pestaña **Role mapping** (*Mapeo de roles*) → **Assign role** (*Asignar rol*) → en el dropdown, elige **Realm roles** (*Roles de realm*, no *Roles de cliente*) — ahí aparece la lista del paso 3 de la sección 3 (`ADMIN`, `SUPERVISOR`, `VENDEDOR`, más dos roles propios de Keycloak: `offline_access`, `uma_authorization`, que no tocas). Marca `VENDEDOR` para los dos primeros usuarios, `SUPERVISOR` y `ADMIN` para los otros dos, respectivamente, y **Asignar** — el mismo criterio de promoción manual que S10 ya aplicaba a mano sobre Postgres (3.10), ahora sobre la consola de Keycloak.
 
-### 5.2 Agregar el atributo `vendedorId`
+### 5.2 Migrar las ventas ya registradas al nuevo `sub`
 
-**Error frecuente**: no encontrar la pestaña **Attributes** (*Atributos*) en el detalle del usuario — no está oculta ni movida, **no existe todavía**. Por defecto, Keycloak bloquea cualquier atributo que no esté declarado explícitamente en el *User profile* del realm (los *unmanaged attributes*), y `vendedorId` no es uno de los campos estándar (email, nombre, apellido...). Habilítalo una vez, a nivel de `bomerp`:
+**Producto del paso:** las ventas que `vendedor1`/`vendedor2` ya crearon bajo `seguridad` (S10) siguen asociadas a su dueño real, ahora con el `sub` nuevo de Keycloak.
 
-1. Con `bomerp` como realm activo, ve a **Realm settings** (*Configuraciones del realm*) → pestaña **General**.
-2. Busca **Unmanaged attributes** (*Atributos no administrados*) y cámbialo de `Disabled` a **Admin can edit** (*El administrador puede editar*) — no `Enabled` a secas: esa opción también expondría `vendedorId` para que el propio usuario lo edite desde su *Account Console*, y es un dato que solo el administrador debe poder tocar.
-3. Guardar.
+`vendedorId` no necesita ningún atributo ni *protocol mapper* — es `jwt.getSubject()` tal cual (1). Pero eso no resuelve solo el dato que **ya existe**: cada fila de `VENTAS` creada hasta hoy tiene `VENDEDOR_ID` con el `id` numérico-como-texto que `seguridad` usaba (ej. `"3"`), y el `sub` que Keycloak va a emitir para ese mismo usuario es un UUID distinto (ej. `"3fa85f64-5717-4562-b3fc-2c963f66afa6"`) — nadie los conecta solo. Sin este paso, esas ventas viejas siguen existiendo, pero `obtener`/`buscar` (S10, 3.15) ya no las reconoce como propias de ese vendedor.
 
-Recién ahora aparece la pestaña **Attributes** (*Atributos*) en el detalle de cada usuario. Ahí, agrega la clave `vendedorId` con un valor numérico.
+1. Obtén el `id` viejo de cada usuario (todavía en `bomerp-seguridad-db`, antes de 7.3):
 
-Si quieres que las ventas ya registradas con el emisor propio de S10 sigan teniendo un `vendedorId` coherente, usa el mismo `id` que ese usuario tenía en `bomerp-seguridad-db` (`SELECT id FROM usuarios WHERE email = '...'`, Postgres) como valor del atributo aquí — Keycloak no migra ese dato solo, porque son dos almacenes de identidad completamente independientes (2.1 de S10).
+```bash
+docker exec -i bomerp-seguridad-db psql -U bomerp_seguridad -d bomerp_seguridad -c "SELECT id, email FROM usuarios WHERE email IN ('vendedor1@bomerp.com','vendedor2@bomerp.com','supervisor@bomerp.com','admin@bomerp.com');"
+```
 
-### 5.3 Agregar el *protocol mapper* que lleva `vendedorId` al token
+2. Obtén el UUID nuevo de cada usuario, directo de `keycloak-db` (el Postgres que armamos en la sección 2):
 
-Un atributo de usuario, por sí solo, **no** viaja en el token — hay que decirle a Keycloak explícitamente que lo agregue como claim.
+```bash
+docker exec -i bomerp-keycloak-db psql -U bomerp_keycloak -d bomerp_keycloak -c "SELECT u.id, u.email FROM user_entity u JOIN realm r ON r.id = u.realm_id WHERE r.name = 'bomerp' AND u.email IN ('vendedor1@bomerp.com','vendedor2@bomerp.com','supervisor@bomerp.com','admin@bomerp.com');"
+```
 
-1. **Clients** (*Clientes*) → `bomerp-frontend` → pestaña **Client scopes** (*Ámbitos de cliente*) → abre el *scope* dedicado (`bomerp-frontend-dedicated`).
-2. Pestaña **Mappers** (*Mapeadores*) → **Add mapper** (*Añadir mapeador*) → **By configuration** (*Por configuración*) → **User Attribute** (*Atributo de usuario*).
-3. *Name* (*Nombre*): `vendedorId`. *User Attribute* (*Atributo de usuario*): `vendedorId`. *Token Claim Name* (*Nombre de la declaración del token*): `vendedorId`. *Claim JSON Type* (*Tipo JSON de la declaración*): `long`. Activa **Add to access token** (*Añadir al token de acceso*). Guardar.
+No verifiqué `user_entity`/`realm` contra una instancia real — si el nombre exacto de la tabla no calza, lista las tablas con `\dt` dentro de `psql` y ajusta la consulta; el resto del procedimiento no cambia.
 
-Este mapper es el equivalente exacto del que DIST describe para `idCliente` (S07, Tabla 6: *"User attribute + protocol mapper que lo agrega al token"*) — la técnica es la misma, solo cambia el nombre del claim.
+3. Con ambos resultados en mano (un `id` viejo y un UUID nuevo por cada email), actualiza Oracle — un `UPDATE` por usuario, solo para los que realmente tengan ventas:
+
+```powershell
+@'
+UPDATE VENTAS SET VENDEDOR_ID = '<uuid-nuevo-de-vendedor1>' WHERE VENDEDOR_ID = '<id-viejo-de-vendedor1>';
+UPDATE VENTAS SET VENDEDOR_ID = '<uuid-nuevo-de-vendedor2>' WHERE VENDEDOR_ID = '<id-viejo-de-vendedor2>';
+COMMIT;
+'@ | docker exec -i bomerp-oracle bash -c "sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1"
+```
+
+```bash
+docker exec -i bomerp-oracle bash -c "sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1" <<'EOF'
+UPDATE VENTAS SET VENDEDOR_ID = '<uuid-nuevo-de-vendedor1>' WHERE VENDEDOR_ID = '<id-viejo-de-vendedor1>';
+UPDATE VENTAS SET VENDEDOR_ID = '<uuid-nuevo-de-vendedor2>' WHERE VENDEDOR_ID = '<id-viejo-de-vendedor2>';
+COMMIT;
+EOF
+```
+
+Es una migración de **un solo dato, una sola vez** — no una dependencia permanente entre Keycloak y la base vieja. `SUPERVISOR`/`ADMIN` no necesitan este paso: ven todas las ventas sin filtrar por `vendedorId` (RN8 solo aplica a `VENDEDOR`).
 
 ## 6. Verificar el token antes de tocar `bomerp-backend`
 
-**Producto del paso:** confirmación, con un token real, de que `realm_access.roles` y `vendedorId` llegan con el formato esperado — antes de cambiar nada en el código.
+**Producto del paso:** confirmación, con un token real, de que `realm_access.roles` llega con el formato esperado y `sub` es el UUID del usuario — antes de cambiar nada en el código.
 
 ```powershell
 $login = Invoke-RestMethod -Method Post -Uri "http://localhost:38080/realms/bomerp/protocol/openid-connect/token" `
@@ -227,7 +245,7 @@ curl -X POST http://localhost:38080/realms/bomerp/protocol/openid-connect/token 
   -d "grant_type=password&client_id=bomerp-frontend&username=vendedor1@bomerp.com&password=Bomerp2026!"
 ```
 
-Pega el `access_token` recibido en [jwt.io](https://jwt.io) (inspección visual únicamente, 2.3 de S10) y confirma tres cosas: `realm_access.roles` trae `["VENDEDOR"]`; existe un claim `vendedorId` con el valor numérico que pusiste en 5.2; y `sub` es un UUID, no el mismo número — exactamente la diferencia que la sección 1 anticipó.
+Pega el `access_token` recibido en [jwt.io](https://jwt.io) (inspección visual únicamente, 2.3 de S10) y confirma dos cosas: `realm_access.roles` trae `["VENDEDOR"]`; y `sub` es un UUID, no el `"3"` de antes — exactamente la diferencia que la sección 1 anticipó, y la razón por la que 5.2 migró las ventas viejas a ese nuevo valor.
 
 `POST /realms/bomerp/protocol/openid-connect/token` es el endpoint estándar de token de Keycloak (OAuth 2.0/OpenID Connect, S10 2.4) — equivalente a `POST /api/v1/auth/login` de `seguridad`, pero ya no es un endpoint propio de BomERP.
 
@@ -263,40 +281,15 @@ spring:
 
 Con `issuer-uri` (en vez de `jwk-set-uri`), Spring no solo descubre dónde están las claves — además valida que el claim `iss` (*issuer*, emisor) de cada token coincida exactamente con esta URL, y descarga la configuración del realm (incluida su ubicación de JWKS) del documento de descubrimiento estándar de OpenID Connect (`/.well-known/openid-configuration`) que Keycloak sí publica (a diferencia de `seguridad`, que no lo implementaba — S10, 2.4, Tabla 3). Es la única propiedad que cambia; `JwtAuthenticationConverter` (S10, 3.11) no se toca.
 
-### 7.2 Cambiar cómo se lee `vendedorId`
+### 7.2 Confirmar que `catalogo` y `ventas` no se tocan
 
-**`VentaController.crear`** — reemplaza `jwt.getSubject()` por el claim propio:
+Revisa `SecurityConfig.securityFilterChain`, `CategoriaController`/`ProductoController` y **todo** `VentaController`, incluido `crear`/`buscar`/`obtener`: ningún `hasRole`, ningún `requestMatchers`, ninguna línea de código cambia — `jwt.getSubject()` sigue ahí exactamente igual que en S10 (3.14-3.15), porque `vendedorId` nunca se interpretó como número (1). Si encuentras que necesitas tocar algo ahí, la migración se desvió de lo que esta guía describe — revisa el paso anterior.
 
-```java
-@PostMapping
-@ResponseStatus(HttpStatus.CREATED)
-public VentaResponse crear(@Valid @RequestBody VentaRequest request, @AuthenticationPrincipal Jwt jwt) {
-    Number claimVendedorId = jwt.getClaim("vendedorId");
-    Long vendedorId = claimVendedorId.longValue();
-    return ventaService.crear(request, vendedorId);
-}
-```
-
-Mismo ajuste en `buscar`/`obtener` (S10, 3.15), reemplazando `Long.valueOf(jwt.getSubject())` por la misma lectura:
-
-```java
-private Long vendedorIdDe(Jwt jwt) {
-    Number claim = jwt.getClaim("vendedorId");
-    return claim == null ? null : claim.longValue();
-}
-```
-
-El claim se lee como `Number` (no `Long` directo) porque el JSON (*JavaScript Object Notation*) no distingue tamaños de entero — el mismo detalle que DIST ya documentó para `idCliente` (S07, 3.22). `VentaServiceImpl`, `VentaRepository` y las reglas `hasRole`/`hasAnyRole` de `SecurityConfig` (S10, 3.13, 3.15) **no cambian**: siguen recibiendo exactamente el mismo `Long vendedorId` que recibían antes, solo que ahora llega por un claim distinto.
-
-### 7.3 Confirmar que `catalogo` y `ventas` no se tocan
-
-Revisa `SecurityConfig.securityFilterChain`, `CategoriaController`/`ProductoController` y el resto de `VentaController` (lo que no sea `crear`/`buscar`/`obtener`): ningún `hasRole`, ningún `requestMatchers`, ninguna regla cambia. Si encuentras que necesitas tocar algo ahí, la migración se desvió de lo que esta guía describe — revisa el paso anterior.
-
-### 7.4 Retirar `seguridad-db`
+### 7.3 Retirar `seguridad-db`
 
 **Producto del paso:** `bomerp-backend` corre sin el Postgres de `seguridad` — Keycloak es, desde este punto, el único almacén de identidad.
 
-Con 7.1-7.3 confirmados, `seguridad-db` ya no tiene ningún lector: nadie en el código vigente lo consulta (el `vendedorId` que necesitaba su `id` numérico ya se copió a mano en 5.2). No lo dejes corriendo "por si acaso" — si Keycloak es de verdad el reemplazo, el sistema tiene que demostrar que funciona sin él **antes** de la prueba final de la sección 8, no después.
+Con 7.1-7.2 confirmados y la migración de 5.2 ya hecha, `seguridad-db` ya no tiene ningún lector: nadie en el código vigente lo consulta, y las ventas viejas ya apuntan al `sub` nuevo. No lo dejes corriendo "por si acaso" — si Keycloak es de verdad el reemplazo, el sistema tiene que demostrar que funciona sin él **antes** de la prueba final de la sección 8, no después.
 
 ```powershell
 cd lp2\bomerp-backend
@@ -319,19 +312,20 @@ docker volume rm <nombre-exacto-que-aparezca>
 
 ## 8. Probar de punta a punta
 
-**Producto del paso:** la misma matriz de accesos que S10 verificó (3.16, Tabla 5), ahora contra tokens de Keycloak — con `seguridad-db` ya retirado (7.4), esta prueba confirma que el reemplazo es real, no solo que Keycloak "también funciona" en paralelo.
+**Producto del paso:** la misma matriz de accesos que S10 verificó (3.16, Tabla 5), ahora contra tokens de Keycloak — con `seguridad-db` ya retirado (7.3), esta prueba confirma que el reemplazo es real, no solo que Keycloak "también funciona" en paralelo.
 
 Reinicia `bomerp-backend` (lee la propiedad nueva de 7.1) y repite exactamente las pruebas de S10 (3.16), pero obteniendo cada token con el comando de la sección 6 (cambiando el usuario). Resultado esperado: **la misma Tabla 5** — mismos códigos HTTP, para los mismos casos, con tokens que ahora vienen de un proceso distinto.
 
-**Error frecuente**: `403` donde S10 esperaba `200`, con un token que en jwt.io se ve correcto. Causa más común: el usuario de Keycloak no tiene el *realm role* asignado (5.1), o el *client scope* con el mapper de `vendedorId` (5.3) no quedó asociado al cliente `bomerp-frontend` que usaste para pedir el token.
+**Error frecuente**: `403` donde S10 esperaba `200`, con un token que en jwt.io se ve correcto. Causa más común: el usuario de Keycloak no tiene el *realm role* asignado (5.1), o la venta que estás consultando todavía tiene el `VENDEDOR_ID` viejo porque 5.2 no se corrió (o se corrió con el `id`/UUID equivocado) para ese usuario.
 
 ## 9. Qué queda pendiente
 
 - **S11** reconfigura el cliente `bomerp-frontend` para *Authorization Code* + PKCE (S10, 2.4) — el flujo real que usará la SPA, desactivando *Direct access grants* (sección 4). El login deja de ser un formulario propio de BomERP: redirige a la pantalla de Keycloak.
 - **Limpieza del paquete `seguridad`**: `AuthController`, `JwtService`, `JwksController`, `JwtKeyConfig`, `SecurityConfig` (las piezas de `seguridad`, no `OracleDataSourceConfig`), `SeguridadDataSourceConfig` y las entidades `Usuario`/`Rol` quedan sin ningún código que los invoque — pueden borrarse de `bomerp-backend` en un commit aparte, sin que eso afecte a `catalogo` ni a `ventas` (la discusión de por qué esto es una limpieza de archivos y no una migración se documentó en el chat de diseño de S10, no en una guía).
-- **`compose-dev.yml`**: `seguridad-db` ya se retiró en 7.4 — este punto queda aquí solo como referencia, no como pendiente.
+- **`compose-dev.yml`**: `seguridad-db` ya se retiró en 7.3 — este punto queda aquí solo como referencia, no como pendiente.
 - **`pom.xml`**: `spring-security-oauth2-jose` (firmaba el JWT propio) deja de hacer falta; `spring-boot-starter-security-oauth2-resource-server` **sigue haciendo falta** (sigue validando, ahora contra Keycloak); el driver `org.postgresql:postgresql` se retira solo si ningún otro módulo de BomERP usa Postgres.
 - **Producción real**: el motor de base de datos ya queda resuelto desde la sección 2 (`keycloak-db`, Postgres). Lo que falta es `start-dev` (sección 2) en sí — no es apto para producción, exige modo `start` y TLS, ninguno de los dos configurado aquí (ver la nota de la sección 2).
+- **`vendedorId` para usuarios nuevos: resuelto por el propio rediseño**: con `vendedorId = sub` (texto, no número — S10, 3.2/3.14), un vendedor creado **después** de este reemplazo no necesita ningún paso manual — Keycloak le genera su UUID solo, al crearlo, y ese UUID es automáticamente su `vendedorId` desde la primera venta que registre. Esto era un problema real con el diseño anterior (un `vendedorId` numérico no tenía de dónde salir sin una tabla aparte); dejó de serlo en cuanto `vendedorId` se diseñó como texto desde S10.
 
 ## Bibliografía
 

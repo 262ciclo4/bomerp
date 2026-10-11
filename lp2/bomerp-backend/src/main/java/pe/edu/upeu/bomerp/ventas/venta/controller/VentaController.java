@@ -39,7 +39,7 @@ public class VentaController {
             @RequestParam(defaultValue = "fecha") String ordenarPor,
             @RequestParam(defaultValue = "DESC") String direccion,
             @AuthenticationPrincipal Jwt jwt) {
-        Long vendedorId = esVendedor(jwt) ? Long.valueOf(jwt.getSubject()) : null;
+        String vendedorId = esVendedor(jwt) ? jwt.getSubject() : null;
         return ResponseEntity.ok(ventaService.buscar(estado, desde, hasta, ordenarPor, direccion, vendedorId));
     }
 
@@ -55,7 +55,7 @@ public class VentaController {
     @Operation(summary = "Consulta una venta por id, con sus detalles")
     @GetMapping("/{id}")
     public ResponseEntity<VentaResponse> obtener(@PathVariable Long id, @AuthenticationPrincipal Jwt jwt) {
-        Long vendedorId = esVendedor(jwt) ? Long.valueOf(jwt.getSubject()) : null;
+        String vendedorId = esVendedor(jwt) ? jwt.getSubject() : null;
         return ResponseEntity.ok(ventaService.obtener(id, vendedorId));
     }
 
@@ -63,7 +63,7 @@ public class VentaController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public VentaResponse crear(@Valid @RequestBody VentaRequest request, @AuthenticationPrincipal Jwt jwt) {
-        Long vendedorId = Long.valueOf(jwt.getSubject());
+        String vendedorId = jwt.getSubject();
         return ventaService.crear(request, vendedorId);
     }
 

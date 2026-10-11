@@ -34,7 +34,7 @@ public class VentaServiceImpl implements VentaService {
     @Override
     @Transactional(readOnly = true)
     public List<VentaResponse> buscar(EstadoVenta estado, LocalDateTime desde, LocalDateTime hasta,
-            String ordenarPor, String direccion, Long vendedorId) {
+            String ordenarPor, String direccion, String vendedorId) {
         Sort.Direction dir = "ASC".equalsIgnoreCase(direccion) ? Sort.Direction.ASC : Sort.Direction.DESC;
         Sort sort = Sort.by(dir, ordenarPor);
         return ventaRepository.buscar(estado, desde, hasta, vendedorId, sort).stream()
@@ -43,7 +43,7 @@ public class VentaServiceImpl implements VentaService {
 
     @Override
     @Transactional(readOnly = true)
-    public VentaResponse obtener(Long id, Long vendedorId) {
+    public VentaResponse obtener(Long id, String vendedorId) {
         Venta venta = ventaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Venta no encontrada: " + id));
         if (vendedorId != null && !vendedorId.equals(venta.getVendedorId())) {
@@ -54,7 +54,7 @@ public class VentaServiceImpl implements VentaService {
 
     @Override
     @Transactional
-    public VentaResponse crear(VentaRequest request, Long vendedorId) {
+    public VentaResponse crear(VentaRequest request, String vendedorId) {
         Venta venta = new Venta();
         venta.setFecha(LocalDateTime.now());
         venta.setEstado(EstadoVenta.REGISTRADA);

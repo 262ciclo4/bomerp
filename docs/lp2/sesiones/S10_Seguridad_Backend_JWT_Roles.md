@@ -191,11 +191,11 @@ La recomendación profesional actual es delegar identidad a un proveedor dedicad
 | Emisor del token | `AuthController` + `JwtService` | El IdP externo | No |
 | Usuarios, contraseñas y roles | Tablas `usuarios`, `roles`, `usuario_rol` en Postgres propio (`bomerp-seguridad-db`) | Usuarios y roles del IdP, en su propio almacén (también separado de Oracle) | No |
 | Claim de roles | `realm_access.roles` | `realm_access.roles` (mismo formato en Keycloak) | No |
-| Identificador del usuario (`sub`) | `id` numérico de `usuarios` | Identificador propio del IdP (un UUID, en Keycloak) | **Sí** — `VentaController` lee `vendedorId` de `jwt.getSubject()` (3.14-3.15); con un IdP real, `sub` deja de ser ese `id`, y `vendedorId` tiene que viajar en un claim propio aparte (detalle completo en la guía de referencia de Keycloak) |
+| Identificador del usuario (`sub`) | `id` numérico de `usuarios`, convertido a texto | Identificador propio del IdP (un UUID, en Keycloak) | No — `VentaController` lee `vendedorId` de `jwt.getSubject()` (3.14-3.15) y lo guarda tal cual, como texto (`VARCHAR2(36)` en Oracle, 3.2); nunca lo convierte a número, así que da igual que `sub` sea `"3"` hoy o un UUID después |
 | Dónde se valida la firma | `SecurityConfig`, por la propiedad `jwk-set-uri` → `http://localhost:8080/.well-known/jwks.json` (2.1) | `SecurityConfig`, por la misma propiedad → `issuer-uri` del IdP | **No el código** — solo el valor de una propiedad |
 | SSO, login social, refresh token | No existen | Incluidos | — |
 
-Esta sesión no implementa ningún paso de la columna central: queda como dirección documentada (ADR-005), no como entregable de U3 — el sílabo de S13-S16 no la menciona. Lo que esta sesión garantiza es que, si esa decisión se toma más adelante, el cambio queda casi todo acotado a una propiedad de configuración y a dónde los clientes piden su token — con una única excepción real, ya anotada en la Tabla 4: cómo `VentaController` lee `vendedorId` del token, porque ese dato depende de qué pone el emisor en `sub`, y eso sí cambia de un emisor a otro.
+Esta sesión no implementa ningún paso de la columna central: queda como dirección documentada (ADR-005), no como entregable de U3 — el sílabo de S13-S16 no la menciona. Lo que esta sesión garantiza es que, si esa decisión se toma más adelante, el cambio queda **completamente** acotado a una propiedad de configuración y a dónde los clientes piden su token — sin ninguna excepción: `vendedorId` se diseñó desde hoy como texto, nunca como número, precisamente para no depender de qué formato tenga `sub` en cada emisor (detalle completo en la guía de referencia de Keycloak).
 
 ### 2.7 Observabilidad y diagnóstico de 401/403
 
@@ -376,7 +376,7 @@ PowerShell:
 
 ```powershell
 @'
-ALTER TABLE VENTAS ADD VENDEDOR_ID NUMBER;
+ALTER TABLE VENTAS ADD VENDEDOR_ID VARCHAR2(36);
 '@ | docker exec -i bomerp-oracle bash -c "sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1"
 ```
 
@@ -384,11 +384,11 @@ bash macOS/Linux:
 
 ```bash
 docker exec -i bomerp-oracle bash -c "sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1" <<'EOF'
-ALTER TABLE VENTAS ADD VENDEDOR_ID NUMBER;
+ALTER TABLE VENTAS ADD VENDEDOR_ID VARCHAR2(36);
 EOF
 ```
 
-`VENDEDOR_ID` se agrega **sin** `NOT NULL`: las ventas creadas en S4-S9 (antes de que existiera ningún usuario autenticado) quedan con esta columna en `NULL`, y eso está bien — no se reescribe el pasado. Toda venta creada **desde hoy en adelante** sí la trae, porque el propio servicio la completa (3.14). Ajusta la contraseña de `BOM_VENTAS` a la que tu equipo usó en S4, si fue distinta a este ejemplo.
+`VENDEDOR_ID` es `VARCHAR2(36)`, no un número: el valor que guarda es el claim `sub` del JWT tal cual (3.14) — hoy, en `seguridad`, `sub` es el `id` de `Usuario` convertido a texto (ej. `"3"`), pero el mismo campo queda listo para que, si el emisor cambia a un proveedor externo como Keycloak (2.6, ADR-005), `sub` sea un UUID (36 caracteres) sin tener que tocar el esquema otra vez. Se agrega **sin** `NOT NULL`: las ventas creadas en S4-S9 (antes de que existiera ningún usuario autenticado) quedan con esta columna en `NULL`, y eso está bien — no se reescribe el pasado. Toda venta creada **desde hoy en adelante** sí la trae, porque el propio servicio la completa (3.14). Ajusta la contraseña de `BOM_VENTAS` a la que tu equipo usó en S4, si fue distinta a este ejemplo.
 
 **Error frecuente**: arrancar el backend (3.12) antes de que `bomerp-seguridad-db` termine de iniciar. El `healthcheck` del servicio tarda unos segundos; si el backend intenta conectarse antes, falla con un error de conexión rechazada. Confirma con `docker ps` que `bomerp-seguridad-db` diga `healthy`, no solo `Up`, antes de levantar el backend.
 
@@ -1398,8 +1398,8 @@ ADS no diseñó roles para `catalogo` (su sílabo no lo pidió) — este es el c
 **`lp2/bomerp-backend/.../ventas/venta/entity/Venta.java`** — agrega el campo:
 
 ```java
-@Column(name = "VENDEDOR_ID")
-private Long vendedorId;
+@Column(name = "VENDEDOR_ID", length = 36)
+private String vendedorId;
 ```
 
 **`VentaController.crear`** — reemplaza la firma del método:
@@ -1408,7 +1408,7 @@ private Long vendedorId;
 @PostMapping
 @ResponseStatus(HttpStatus.CREATED)
 public VentaResponse crear(@Valid @RequestBody VentaRequest request, @AuthenticationPrincipal Jwt jwt) {
-    Long vendedorId = Long.valueOf(jwt.getSubject());
+    String vendedorId = jwt.getSubject();
     return ventaService.crear(request, vendedorId);
 }
 ```
@@ -1423,7 +1423,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 **`VentaService`** — actualiza la firma:
 
 ```java
-VentaResponse crear(VentaRequest request, Long vendedorId);
+VentaResponse crear(VentaRequest request, String vendedorId);
 ```
 
 **`VentaServiceImpl.crear`** — recibe `vendedorId` aparte y lo asigna a la cabecera; el resto del método (validar cada línea, descontar stock, calcular el total) no tiene ninguna relación con `vendedorId` y queda intacto:
@@ -1431,7 +1431,7 @@ VentaResponse crear(VentaRequest request, Long vendedorId);
 ```java
 @Override
 @Transactional
-public VentaResponse crear(VentaRequest request, Long vendedorId) {
+public VentaResponse crear(VentaRequest request, String vendedorId) {
     Venta venta = new Venta();
     venta.setFecha(LocalDateTime.now());
     venta.setEstado(EstadoVenta.REGISTRADA);
@@ -1440,7 +1440,7 @@ public VentaResponse crear(VentaRequest request, Long vendedorId) {
     // el resto del método sigue exactamente igual que en S9
 ```
 
-`jwt.getSubject()` entrega el claim `sub` como texto — el mismo `id` numérico que `JwtService.generarToken` (3.8) escribió con `String.valueOf(usuario.getId())`. `VentaRequest` **nunca** tuvo un campo `vendedorId` (a diferencia de `idCliente` en DIST, que sí hubo que quitar de `OrdenRequest`): esta sesión no migra nada en el DTO de entrada, solo agrega el dato por un canal que el cliente nunca controló.
+`jwt.getSubject()` entrega el claim `sub` como texto — `vendedorId` se guarda **tal cual**, sin convertir a número. Hoy, en `seguridad`, ese texto es el `id` de `Usuario` convertido a `String` por `JwtService.generarToken` (3.8, `String.valueOf(usuario.getId())`); si el emisor cambia a un proveedor externo como Keycloak más adelante (2.6, ADR-005), `sub` pasa a ser un UUID — y como `vendedorId` nunca se interpretó como número, ese cambio no exige tocar ni la columna de Oracle ni este código, solo el emisor. `VentaRequest` **nunca** tuvo un campo `vendedorId` (a diferencia de `idCliente` en DIST, que sí hubo que quitar de `OrdenRequest`): esta sesión no migra nada en el DTO de entrada, solo agrega el dato por un canal que el cliente nunca controló.
 
 #### 3.15 Filtrar y restringir `ventas` por rol
 
@@ -1470,13 +1470,13 @@ public ResponseEntity<List<VentaResponse>> buscar(
         @RequestParam(defaultValue = "fecha") String ordenarPor,
         @RequestParam(defaultValue = "DESC") String direccion,
         @AuthenticationPrincipal Jwt jwt) {
-    Long vendedorId = esVendedor(jwt) ? Long.valueOf(jwt.getSubject()) : null;
+    String vendedorId = esVendedor(jwt) ? jwt.getSubject() : null;
     return ResponseEntity.ok(ventaService.buscar(estado, desde, hasta, ordenarPor, direccion, vendedorId));
 }
 
 @GetMapping("/{id}")
 public ResponseEntity<VentaResponse> obtener(@PathVariable Long id, @AuthenticationPrincipal Jwt jwt) {
-    Long vendedorId = esVendedor(jwt) ? Long.valueOf(jwt.getSubject()) : null;
+    String vendedorId = esVendedor(jwt) ? jwt.getSubject() : null;
     return ResponseEntity.ok(ventaService.obtener(id, vendedorId));
 }
 
@@ -1500,15 +1500,15 @@ Mantén el resto de la firma tal cual ya está en tu código (`@Operation`, el `
 
 ```java
 List<VentaResponse> buscar(EstadoVenta estado, LocalDateTime desde, LocalDateTime hasta,
-                            String ordenarPor, String direccion, Long vendedorId);
-VentaResponse obtener(Long id, Long vendedorId);
+                            String ordenarPor, String direccion, String vendedorId);
+VentaResponse obtener(Long id, String vendedorId);
 ```
 
 ```java
 @Override
 @Transactional(readOnly = true)
 public List<VentaResponse> buscar(EstadoVenta estado, LocalDateTime desde, LocalDateTime hasta,
-                                   String ordenarPor, String direccion, Long vendedorId) {
+                                   String ordenarPor, String direccion, String vendedorId) {
     Sort.Direction dir = "ASC".equalsIgnoreCase(direccion) ? Sort.Direction.ASC : Sort.Direction.DESC;
     Sort sort = Sort.by(dir, ordenarPor);
     return ventaRepository.buscar(estado, desde, hasta, vendedorId, sort).stream()
@@ -1517,7 +1517,7 @@ public List<VentaResponse> buscar(EstadoVenta estado, LocalDateTime desde, Local
 
 @Override
 @Transactional(readOnly = true)
-public VentaResponse obtener(Long id, Long vendedorId) {
+public VentaResponse obtener(Long id, String vendedorId) {
     Venta venta = ventaRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Venta no encontrada: " + id));
     if (vendedorId != null && !vendedorId.equals(venta.getVendedorId())) {
@@ -1527,7 +1527,7 @@ public VentaResponse obtener(Long id, Long vendedorId) {
 }
 ```
 
-`VentaRepository.buscar` gana un parámetro `Long vendedorId` (`null` = sin filtrar), igual que ADS ya diseñó — mismo patrón que `estado`/`desde`/`hasta`, condición opcional dentro del propio `@Query`:
+`VentaRepository.buscar` gana un parámetro `String vendedorId` (`null` = sin filtrar), igual que ADS ya diseñó — mismo patrón que `estado`/`desde`/`hasta`, condición opcional dentro del propio `@Query`:
 
 ```java
 @EntityGraph(attributePaths = "detalles")
@@ -1541,7 +1541,7 @@ public VentaResponse obtener(Long id, Long vendedorId) {
 List<Venta> buscar(@Param("estado") EstadoVenta estado,
                     @Param("desde") LocalDateTime desde,
                     @Param("hasta") LocalDateTime hasta,
-                    @Param("vendedorId") Long vendedorId,
+                    @Param("vendedorId") String vendedorId,
                     Sort sort);
 ```
 
@@ -1789,7 +1789,7 @@ Indica 2 fortalezas y 2 recomendaciones.
 
 Tiempo: 5 min.
 
-**Resumen breve:** hoy el backend de BomERP dejó de responder a cualquiera sin preguntar nada. El módulo `seguridad` — con su propio Postgres, separado del Oracle de `catalogo`/`ventas` — construye usuarios con contraseña BCrypt, roles `VENDEDOR`/`SUPERVISOR`/`ADMIN`, y un JWT firmado con clave asimétrica cuya mitad pública se publica en `/.well-known/jwks.json`, consumida por `SecurityConfig` mediante una propiedad de configuración y no por código. `vendedorId` — la brecha que ADS S8 identificó desde su diseño (RN5/RN8) — por fin tiene de dónde salir: del claim `sub` de un token ya validado, nunca de un campo que el cliente declare sobre sí mismo. `reporte` y `anular`, diseñados por ADS S9 como operaciones de `SUPERVISOR`/`ADMIN` pero sin ningún mecanismo para hacerlo cumplir hasta hoy, quedaron por fin restringidos. Todo esto se construyó a mano, de forma deliberadamente temporal (ADR-005): el dato aislado y la validación por configuración quedan listos para que un proveedor de identidad externo lo reemplace más adelante, si el proyecto lo adopta, con el cambio acotado casi del todo a configuración — salvo una excepción real y ya documentada (2.6, Tabla 4): cómo `VentaController` lee `vendedorId` del token.
+**Resumen breve:** hoy el backend de BomERP dejó de responder a cualquiera sin preguntar nada. El módulo `seguridad` — con su propio Postgres, separado del Oracle de `catalogo`/`ventas` — construye usuarios con contraseña BCrypt, roles `VENDEDOR`/`SUPERVISOR`/`ADMIN`, y un JWT firmado con clave asimétrica cuya mitad pública se publica en `/.well-known/jwks.json`, consumida por `SecurityConfig` mediante una propiedad de configuración y no por código. `vendedorId` — la brecha que ADS S8 identificó desde su diseño (RN5/RN8) — por fin tiene de dónde salir: del claim `sub` de un token ya validado, nunca de un campo que el cliente declare sobre sí mismo. `reporte` y `anular`, diseñados por ADS S9 como operaciones de `SUPERVISOR`/`ADMIN` pero sin ningún mecanismo para hacerlo cumplir hasta hoy, quedaron por fin restringidos. Todo esto se construyó a mano, de forma deliberadamente temporal (ADR-005): el dato aislado y la validación por configuración quedan listos para que un proveedor de identidad externo lo reemplace más adelante, si el proyecto lo adopta, con el cambio acotado **completamente** a configuración (2.6, Tabla 4) — `vendedorId` se guarda como texto, no como número, precisamente para que no le importe si el `sub` que lo llena es un `id` de Postgres o un UUID de otro emisor.
 
 **Dinámica participativa:** en una ronda rápida, cada estudiante comparte qué código HTTP eligió para "un `VENDEDOR` pide una venta ajena" (`403` o `404`) y por qué.
 
