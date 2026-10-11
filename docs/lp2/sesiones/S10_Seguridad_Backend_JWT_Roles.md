@@ -1668,22 +1668,23 @@ Repite el caso 2 de 3.16 (token válido, rol insuficiente) y el caso de un token
 
 ## 4. Crea: actividad autónoma
 
-Tiempo: 2h fuera del aula.
+Tiempo: 4h fuera del aula.
 
 ### 4.1 Actividad
 
-Replicación autónoma del patrón de protección por rol sobre `categoria` (no trabajada en clase) y una primera pieza hacia ABAC (*Attribute-Based Access Control*, DIST S07, 2.3), documentada en evidencia individual.
+Construcción autónoma del módulo `seguridad` completo — igual al construido hoy en clase sobre BomERP, pero sobre **tu propio proyecto** (el dominio que declaraste en tu `brief.md` de S2, no BomERP) — protegiendo tu módulo no transaccional (equivalente a `catalogo`) por rol, y una primera pieza hacia ABAC (*Attribute-Based Access Control*, DIST S07, 2.3), documentada en evidencia individual.
 
-Completa y evidencia estas tareas:
+Completa y evidencia estas tareas, sobre tu propio proyecto:
 
-1. Protege `CategoriaController` con el mismo criterio de `catalogo` en general (3.13): consultar exige cualquier rol autenticado; crear, editar y eliminar exigen `ADMIN`.
-2. Agrega `GET /api/v1/auth/perfil`, que devuelva el email y los roles del usuario autenticado leyendo directamente el `Jwt` (sin consultar la base de datos) — el primer paso hacia comparar un atributo del usuario con un atributo del recurso (DIST S07, 2.3).
-3. Prueba, con los cuatro usuarios semilla (3.10), los cuatro casos de `categoria`: sin token, con rol `VENDEDOR` consultando, con rol `VENDEDOR` intentando modificar (denegado), con rol `ADMIN` modificando (permitido).
-4. Documenta la matriz de accesos de `categoria`, con el mismo formato de la Tabla 5 (3.16).
+1. Construye tu propio módulo `seguridad`: Postgres propio, entidades `Usuario`/`Rol`, contraseñas con BCrypt, `AuthController` (`login`/`registro`), y un JWT firmado con clave RSA (RS256) cuya clave pública se publica en `/.well-known/jwks.json` — mismo patrón de 3.5-3.12, con los roles reales de tu propio dominio (no necesariamente llamados `VENDEDOR`/`SUPERVISOR`/`ADMIN`).
+2. Protege tu módulo no transaccional con el mismo criterio que `catalogo` en clase: consultar exige cualquier rol autenticado; crear, editar y eliminar exigen el rol administrador de tu propio dominio.
+3. Agrega `GET /api/v1/auth/perfil`, que devuelva el email y los roles del usuario autenticado leyendo directamente el `Jwt` (sin consultar la base de datos) — el primer paso hacia comparar un atributo del usuario con un atributo del recurso (DIST S07, 2.3).
+4. Prueba, con al menos dos usuarios reales de tu propio dominio (uno con el rol más restringido, uno con el rol administrador), los cuatro casos contra tu módulo protegido: sin token, rol restringido consultando, rol restringido intentando modificar (denegado), rol administrador modificando (permitido).
+5. Documenta la matriz de accesos de tu módulo, con el mismo formato de la Tabla 5 (3.16).
 
 ### 4.2 Propósito
 
-Que cada estudiante demuestre, de forma individual y fuera del aula, que puede aplicar el patrón de protección por rol a una entidad distinta de la trabajada en clase, y que puede leer un claim propio del JWT sin apoyo del docente.
+Que cada estudiante demuestre, de forma individual y fuera del aula, que puede construir autenticación JWT con clave asimétrica y autorización por rol de punta a punta sobre su **propio proyecto** — no solo replicar lo visto en clase sobre BomERP — y que puede leer un claim propio del JWT sin apoyo del docente.
 
 ### 4.3 Indicaciones
 
@@ -1710,15 +1711,15 @@ Cada captura de pantalla del informe debe mostrar, sin recortar, el reloj del si
 Incluye capturas con una breve explicación debajo de cada una, organizadas en los mismos 5 bloques de la rúbrica (4.6):
 
 1. *Login y token*
-    - Login real con un usuario semilla, con el `accessToken` recibido.
-2. *Protección de `categoria`*
-    - Consulta permitida sin rol específico, y modificación denegada (`403`) con un rol que no es `ADMIN`.
+    - Login real con un usuario de tu propio proyecto, con el `accessToken` recibido.
+2. *Protección de tu módulo no transaccional*
+    - Consulta permitida sin rol específico, y modificación denegada (`403`) con un rol que no es el administrador de tu dominio.
 3. *Modificación permitida*
-    - La misma modificación anterior, ahora con el token de `ADMIN`, respondiendo `201`/`200`.
+    - La misma modificación anterior, ahora con el token del rol administrador, respondiendo `201`/`200`.
 4. *Perfil desde el JWT*
     - `GET /api/v1/auth/perfil` devolviendo el email y los roles reales del token usado.
 5. *Matriz de accesos*
-    - La tabla de `categoria` completa, con los cuatro casos probados.
+    - La tabla de tu módulo completa, con los cuatro casos probados.
 
 **Error o hallazgo**
 
@@ -1737,10 +1738,11 @@ respuesta con lo que hace distinto a RN8 de una simple protección por rol.
 ### 4.4 Criterios mínimos de aceptación
 
 - El archivo respeta el nombre solicitado.
-- `CategoriaController` exige autenticación para consultar y rol `ADMIN` para crear, editar y eliminar.
+- Tu propio módulo `seguridad` tiene Postgres propio, login real y JWT firmado con RS256, con la clave pública publicada en `/.well-known/jwks.json`.
+- El controlador de tu módulo no transaccional exige autenticación para consultar y el rol administrador de tu dominio para crear, editar y eliminar.
 - `GET /api/v1/auth/perfil` devuelve el email y los roles reales del usuario autenticado, leídos del `Jwt`, sin consultar la base de datos.
-- Existe evidencia real de los cuatro casos (sin token, rol insuficiente, rol correcto, consulta libre) contra `categoria`.
-- La matriz de accesos de `categoria` está completa, sin filas vacías.
+- Existe evidencia real de los cuatro casos (sin token, rol insuficiente, rol correcto, consulta libre) contra tu módulo no transaccional.
+- La matriz de accesos de tu módulo está completa, sin filas vacías.
 - Cada captura de la evidencia técnica muestra el reloj del sistema y el usuario/perfil visible, sin recortar.
 - Las fechas y horas de las capturas son coherentes con el historial de commits de su repositorio en GitHub.
 - Incluye un error o hallazgo técnico diagnosticado.
@@ -1749,7 +1751,7 @@ respuesta con lo que hace distinto a RN8 de una simple protección por rol.
 ### 4.5 Preguntas de defensa
 
 1. ¿Por qué esta sesión firma el JWT con RS256 (clave asimétrica) y no con HS256 (clave simétrica), si ambos viven dentro del mismo proceso?
-2. ¿Qué pasaría si alguien, sin ningún token, llamara directamente a `POST /api/v1/categorias`? ¿Y si tuviera un token válido de `VENDEDOR`?
+2. ¿Qué pasaría si alguien, sin ningún token, llamara directamente al endpoint de creación de tu módulo no transaccional? ¿Y si tuviera un token válido con el rol más restringido de tu dominio?
 3. ¿Por qué `vendedorId` nunca estuvo en `VentaRequest`, a diferencia de `idCliente` en el caso de DIST que sí hubo que quitar del DTO?
 4. ¿Qué diferencia de fondo hay entre que `buscar`/`obtener` nieguen el acceso por **rol** (RBAC) y que lo nieguen por **ser dueño del registro** (RN8)? ¿Cuál de las dos resuelve `SecurityConfig` y cuál el servicio?
 5. Si BomERP reemplazara el módulo `seguridad` por Keycloak (2.6, ADR-005), ¿qué cambiaría y qué no, según lo que implementaste hoy?
@@ -1762,10 +1764,10 @@ respuesta con lo que hace distinto a RN8 de una simple protección por rol.
 
 | Criterio | Peso (%) | A (20 pts) | B (15 pts) | C (10 pts) | D (5 pts) | Nivel obtenido |
 |---|---:|---|---|---|---|---:|
-| 1. Autenticación JWT* | 20 | Login real funcional, token firmado con RS256, claims `sub` y `realm_access.roles` correctos, clave pública publicada en `/.well-known/jwks.json`. | Login funcional, con algún claim incompleto o mal nombrado. | Login funcional, pero sin verificación real de la firma. | No presenta login ni token funcional. | |
-| 2. Protección de `categoria` por rol* | 20 | Consulta abierta a cualquier autenticado, escritura restringida a `ADMIN`, verificado con los cuatro casos. | Protección funcional, con algún caso sin verificar. | Protección parcial (solo algunos métodos HTTP cubiertos). | No protege `categoria`. | |
+| 1. Autenticación JWT en tu propio proyecto* | 20 | Login real funcional sobre tu propio módulo `seguridad`, token firmado con RS256, claims `sub` y `realm_access.roles` correctos, clave pública publicada en `/.well-known/jwks.json`. | Login funcional, con algún claim incompleto o mal nombrado. | Login funcional, pero sin verificación real de la firma. | No presenta login ni token funcional. | |
+| 2. Protección de tu módulo no transaccional por rol* | 20 | Consulta abierta a cualquier autenticado, escritura restringida al rol administrador de tu dominio, verificado con los cuatro casos. | Protección funcional, con algún caso sin verificar. | Protección parcial (solo algunos métodos HTTP cubiertos). | No protege tu módulo no transaccional. | |
 | 3. Perfil desde el JWT* | 20 | `GET /api/v1/auth/perfil` devuelve email y roles reales, leídos directo del `Jwt`. | Funcional, pero consulta innecesariamente la base de datos. | Endpoint presente pero con datos incorrectos o incompletos. | No presenta el endpoint. | |
-| 4. Matriz de accesos* | 20 | Matriz completa de `categoria`, con los cuatro casos reales y sus códigos HTTP correctos. | Matriz completa, con algún código HTTP incorrecto. | Matriz incompleta. | No presenta matriz de accesos. | |
+| 4. Matriz de accesos* | 20 | Matriz completa de tu módulo, con los cuatro casos reales y sus códigos HTTP correctos. | Matriz completa, con algún código HTTP incorrecto. | Matriz incompleta. | No presenta matriz de accesos. | |
 | 5. Error/hallazgo y reflexión* | 20 | Error real diagnosticado con causa y solución claras; reflexión conecta RN8 con el caso de First American. | Ambos presentes, con alguno superficial. | Solo uno de los dos presentado con profundidad. | No presenta ninguno de los dos. | |
 
 \* Agregado manual.
