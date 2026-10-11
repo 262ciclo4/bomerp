@@ -1611,27 +1611,28 @@ tokenSupervisor=$(curl -s -X POST http://localhost:8080/api/v1/auth/login \
   -d '{"email": "supervisor@bomerp.com", "password": "Bomerp2026!"}' | jq -r '.accessToken')
 ```
 
-Con el token de `vendedor1`, crea una venta (queda con su `vendedorId`) — ajusta `productoId` a uno real de tu `catalogo` (`GET /api/v1/productos`):
+Con el token de `vendedor1`, crea una venta (queda con su `vendedorId`) — ajusta `productoId` a uno real de tu `catalogo` (`GET /api/v1/productos`), y guarda el `id` de la venta creada, no lo des por `1`: en una tabla ya usada desde S4, el siguiente `id` es el que sea (en la práctica, un número ya muy por encima de `1`):
 
 ```powershell
-Invoke-RestMethod -Method Post -Uri "http://localhost:8080/api/v1/ventas" `
+$venta = Invoke-RestMethod -Method Post -Uri "http://localhost:8080/api/v1/ventas" `
   -Headers @{ Authorization = "Bearer $tokenVendedor1" } `
   -ContentType "application/json" `
   -Body '{"detalles": [{"productoId": 1, "cantidad": 2}]}'
+$ventaId = $venta.id
 ```
 
 ```bash
-curl -X POST http://localhost:8080/api/v1/ventas \
+ventaId=$(curl -s -X POST http://localhost:8080/api/v1/ventas \
   -H "Authorization: Bearer $tokenVendedor1" \
   -H "Content-Type: application/json" \
-  -d '{"detalles": [{"productoId": 1, "cantidad": 2}]}'
+  -d '{"detalles": [{"productoId": 1, "cantidad": 2}]}' | jq -r '.id')
 ```
 
-Resultado esperado: `201 Created`, con el `id` de la venta recién creada (lo necesitas para el siguiente paso). Con el token de `vendedor2`, intenta consultarla por ese `id`:
+Resultado esperado: `201 Created`, con `$ventaId` apuntando a la venta recién creada. Con el token de `vendedor2`, intenta consultarla por ese `id`:
 
 ```powershell
 try {
-  Invoke-RestMethod -Method Get -Uri "http://localhost:8080/api/v1/ventas/1" `
+  Invoke-RestMethod -Method Get -Uri "http://localhost:8080/api/v1/ventas/$ventaId" `
     -Headers @{ Authorization = "Bearer $tokenVendedor2" }
 } catch {
   $_.Exception.Response.StatusCode.value__
