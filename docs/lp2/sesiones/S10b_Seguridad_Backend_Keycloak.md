@@ -547,7 +547,23 @@ Lo construido hasta 7.2 deja a `bomerp-backend` validando tokens de Keycloak, pe
 
 **Solo si nunca construiste `seguridad`.** Si ya la tenías, S10 (3.14-3.15) ya dejó esto construido exactamente igual — salta a 7.4.
 
-**Producto del paso:** `Venta` tiene `vendedorId`; `crear` lo toma del claim `sub` del JWT ya validado (RN5, ADS S8); `buscar`/`obtener` filtran por dueño cuando el rol es `VENDEDOR` (RN8); un `VENDEDOR` que pide, por `id`, una venta ajena recibe `403`, no `404`.
+**Producto del paso:** `VENTAS` gana la columna `VENDEDOR_ID`; `Venta` tiene `vendedorId`; `crear` lo toma del claim `sub` del JWT ya validado (RN5, ADS S8); `buscar`/`obtener` filtran por dueño cuando el rol es `VENDEDOR` (RN8); un `VENDEDOR` que pide, por `id`, una venta ajena recibe `403`, no `404`.
+
+Primero, la columna — si ya la verificaste en el Anexo (porque salió `NUMBER` en tu rama), sáltate esto, ya quedó en `VARCHAR2(36)`:
+
+```powershell
+@'
+ALTER TABLE VENTAS ADD VENDEDOR_ID VARCHAR2(36);
+'@ | docker exec -i bomerp-oracle bash -c "sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1"
+```
+
+```bash
+docker exec -i bomerp-oracle bash -c "sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1" <<'EOF'
+ALTER TABLE VENTAS ADD VENDEDOR_ID VARCHAR2(36);
+EOF
+```
+
+Sin `NOT NULL` a propósito: las ventas creadas en S4-S9 (antes de que existiera cualquier autenticación) quedan con esta columna en `NULL`, y eso está bien — no se reescribe el pasado. Toda venta creada desde hoy en adelante sí la trae, porque el propio servicio la completa (más abajo).
 
 **`lp2/bomerp-backend/.../ventas/venta/entity/Venta.java`** — agrega el campo:
 
@@ -620,9 +636,11 @@ public ResponseEntity<VentaResponse> obtener(@PathVariable Long id, @Authenticat
 private boolean esVendedor(Jwt jwt) {
     Map<String, Object> realmAccess = jwt.getClaim("realm_access");
     Object roles = realmAccess == null ? null : realmAccess.get("roles");
-    return roles instanceof Collection<?> lista && lista.size() == 1 && lista.contains("VENDEDOR");
+    return roles instanceof Collection<?> lista && lista.contains("VENDEDOR");
 }
 ```
+
+**Diferencia real con S10 (3.15), no cosmética**: ahí `esVendedor` exigía además `lista.size() == 1` — funcionaba porque `JwtService` de `seguridad` (3.8) solo agregaba el rol real, nada más. Keycloak no: `realm_access.roles` de **cualquier** usuario trae, además de `VENDEDOR`, los roles propios del realm (`offline_access`, `uma_authorization`, sección 5) — el tamaño de la lista nunca es `1`. Con esa condición, `esVendedor` devolvería `false` siempre, `vendedorId` quedaría `null` para todos, y RN8 dejaría de filtrar nada — un `VENDEDOR` vería todas las ventas, en silencio, sin ningún error que lo delate. `lista.contains("VENDEDOR")` solo pregunta por el rol que importa, sin importar qué más traiga la lista.
 
 Agrega los imports que faltan (`AuthenticationPrincipal`/`Jwt` ya quedaron arriba; `Map`/`Collection` son nuevos en este archivo, los necesita `esVendedor`):
 
