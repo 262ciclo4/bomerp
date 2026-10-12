@@ -4810,6 +4810,61 @@
 </tbody>
 </table>
 <p>Esta sesión no implementa ningún paso de la columna central: queda como dirección documentada (ADR-005), no como entregable de U3 — el sílabo de S13-S16 no la menciona. Lo que esta sesión garantiza es que, si esa decisión se toma más adelante, el cambio queda <strong>completamente</strong> acotado a una propiedad de configuración y a dónde los clientes piden su token — sin ninguna excepción: <code>vendedorId</code> se diseñó desde hoy como texto, nunca como número, precisamente para no depender de qué formato tenga <code>sub</code> en cada emisor (detalle completo en la guía de referencia de Keycloak).</p>
+<p><strong>¿Qué flujo de OAuth 2.0 usa <code>seguridad</code> hoy, y cuál usará Keycloak?</strong> Un <strong>flujo</strong> (<em>grant type</em>) define cómo un <em>client</em> obtiene un token, y depende de dos preguntas: ¿hay una persona presente para iniciar sesión?, y ¿el <em>client</em> puede guardar un secreto sin que nadie lo vea? Una aplicación con su propio backend sí puede (<em>confidential client</em>); una SPA que corre en el navegador, o una app móvil, no (<em>public client</em>) — cualquiera puede inspeccionar su código.</p>
+<p><strong>Tabla 5. Flujos de OAuth 2.0 relevantes para BomERP</strong></p>
+<table>
+<thead>
+<tr>
+<th>Flujo</th>
+<th>¿Hay persona?</th>
+<th>¿El <em>client</em> guarda un secreto?</th>
+<th>Cuándo se usa</th>
+<th>En BomERP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><em>Resource Owner Password Credentials</em></td>
+<td>Sí</td>
+<td>—</td>
+<td>El <em>client</em> recibe el usuario y la contraseña y los envía al servidor. <strong>No usar</strong> (RFC 9700).</td>
+<td><code>POST /api/v1/auth/login</code> de hoy se parece a este flujo.</td>
+</tr>
+<tr>
+<td><em>Authorization Code</em></td>
+<td>Sí</td>
+<td>Sí (<em>confidential client</em>)</td>
+<td>Aplicación web con backend propio: el navegador va al servidor de autorización, la aplicación recibe un <code>code</code> de un solo uso y su backend lo canjea por tokens con su <code>client_secret</code>.</td>
+<td>No se usa hoy — <code>bomerp-backend</code> nunca inicia un login por cuenta propia.</td>
+</tr>
+<tr>
+<td><em>Authorization Code</em> + <strong>PKCE</strong> (<em>Proof Key for Code Exchange</em>)</td>
+<td>Sí</td>
+<td>No (<em>public client</em>)</td>
+<td>Aplicaciones que no pueden proteger un secreto (SPA, <em>Single-Page Application</em>; apps móviles). Es la recomendación estándar actual, incluso con backend propio.</td>
+<td>El flujo que usará la SPA Angular con Keycloak (S11) — demostrado a mano, paso a paso, en la guía de referencia de Keycloak.</td>
+</tr>
+</tbody>
+</table>
+<p><em>Nota.</em> Adaptado de <em>OAuth2 / OpenID Connect</em>, por SACAViX, s. f., System Design (https://systemdesign.sacavix.com/patterns/oauth2-security).</p>
+<p><strong>Authorization Code.</strong> Lo importante es <strong>por dónde viaja cada cosa</strong>: el navegador solo ve el <code>code</code> (que por sí solo no sirve de nada), y el canje por tokens ocurre de servidor a servidor, con el <code>client_secret</code>, sin pasar nunca por el navegador.</p>
+<p><strong>Figura 3. Flujo <em>Authorization Code</em></strong></p>
+<pre class="mermaid"><code>sequenceDiagram
+    actor U as Usuario
+    participant A as Aplicación web (backend)
+    participant AS as Servidor de autorización
+    participant API as API protegida
+
+    U-&gt;&gt;AS: 1. login (redirigido desde la aplicación)
+    AS--&gt;&gt;A: 2. redirect + code (un solo uso)
+    A-&gt;&gt;AS: 3. code + client_secret
+    AS--&gt;&gt;A: 4. access_token
+    A-&gt;&gt;API: 5. Authorization: Bearer access_token
+    API--&gt;&gt;A: 6. 200 OK</code></pre>
+<p><em>Nota.</em> Adaptado de <em>OAuth2 / OpenID Connect</em>, por SACAViX, s. f., System Design (https://systemdesign.sacavix.com/patterns/oauth2-security).</p>
+<p>Con <strong>PKCE</strong>, una SPA que no puede guardar un <code>client_secret</code> lo reemplaza por un valor aleatorio que inventa en cada login (<code>code_verifier</code>): envía primero su hash (<code>code_challenge</code>), y al canjear el <code>code</code> presenta el <code>code_verifier</code> original — el servidor calcula el hash y comprueba que coincide. Quien intercepte el <code>code</code> en el <em>redirect</em> no puede canjearlo sin ese valor, porque un hash no se puede invertir.</p>
+<p><strong>¿Qué flujo usa <code>seguridad</code> hoy?</strong> Uno solo: <code>POST /api/v1/auth/login</code> se parece al <em>Resource Owner Password Credentials</em> — el <em>client</em> manda usuario y contraseña directo al servidor y recibe un <code>access_token</code>. "Se parece", no "es": <code>seguridad</code> no es un servidor OAuth 2.0 completo, su endpoint no recibe <code>grant_type</code> ni <code>client_id</code>; solo imita lo esencial, por eso responde con los nombres estándar <code>accessToken</code>, <code>tokenType</code>, <code>expiresIn</code> (3.9). <em>Authorization Code</em> + PKCE llega recién con Keycloak y la SPA de S11.</p>
+<p><strong>¿Qué es la RFC 9700?</strong> La <strong>RFC 9700</strong>, <em>Best Current Practice for OAuth 2.0 Security</em> (Lodderstedt et al., 2025; BCP 240 — <em>Best Current Practice</em>, la serie de RFC que fija la práctica recomendada vigente, no un protocolo nuevo), es la guía oficial actual de seguridad de OAuth 2.0. Dos puntos aplican directo a esta sesión: su <strong>sección 2.4</strong> dice que <em>Resource Owner Password Credentials</em> <strong>"MUST NOT be used"</strong> — exactamente el flujo que imita <code>seguridad</code>, y por eso es deliberadamente temporal (ADR-005), no un diseño final; su <strong>sección 2.1.1</strong> exige que los <em>clients</em> públicos <strong>"MUST"</strong> usar PKCE — la razón por la que la SPA de S11 usará <em>Authorization Code</em> + PKCE, no <em>Authorization Code</em> simple.</p>
 <h3 id="27-observabilidad-y-diagnostico-de-401403">2.7 Observabilidad y diagnóstico de 401/403<a class="headerlink" href="#27-observabilidad-y-diagnostico-de-401403" title="Permanent link">&para;</a></h3>
 <p>Cuando una petición falla con <code>401</code> o <code>403</code>, el problema puede estar en tres lugares distintos, y diagnosticarlo bien depende de saber cuál:</p>
 <ol>
@@ -5986,7 +6041,7 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <span class="p">}</span>
 </code></pre></div>
 <p>Resultado esperado: <code>403</code> — la venta existe, pero no es de <code>vendedor2</code>. Con el token de <code>supervisor</code>, la misma consulta responde <code>200 OK</code> con la venta completa. Con el token de <code>vendedor1</code> intentando <code>GET /api/v1/ventas/resumen</code>, responde <code>403</code> (el rol no alcanza, 3.15); con <code>supervisor</code>, <code>200 OK</code>.</p>
-<p><strong>Tabla 5. Matriz de accesos verificada</strong></p>
+<p><strong>Tabla 6. Matriz de accesos verificada</strong></p>
 <table>
 <thead>
 <tr>
@@ -6047,7 +6102,7 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <li>Protege tu módulo no transaccional con el mismo criterio que <code>catalogo</code> en clase: consultar exige cualquier rol autenticado; crear, editar y eliminar exigen el rol administrador de tu propio dominio.</li>
 <li>Agrega <code>GET /api/v1/auth/perfil</code>, que devuelva el email y los roles del usuario autenticado leyendo directamente el <code>Jwt</code> (sin consultar la base de datos) — el primer paso hacia comparar un atributo del usuario con un atributo del recurso (DIST S07, 2.3).</li>
 <li>Prueba, con al menos dos usuarios reales de tu propio dominio (uno con el rol más restringido, uno con el rol administrador), los cuatro casos contra tu módulo protegido: sin token, rol restringido consultando, rol restringido intentando modificar (denegado), rol administrador modificando (permitido).</li>
-<li>Documenta la matriz de accesos de tu módulo, con el mismo formato de la Tabla 5 (3.16).</li>
+<li>Documenta la matriz de accesos de tu módulo, con el mismo formato de la Tabla 6 (3.16).</li>
 </ol>
 <h3 id="42-proposito">4.2 Propósito<a class="headerlink" href="#42-proposito" title="Permanent link">&para;</a></h3>
 <p>Que cada estudiante demuestre, de forma individual y fuera del aula, que puede construir autenticación JWT con clave asimétrica y autorización por rol de punta a punta sobre su <strong>propio proyecto</strong> — no solo replicar lo visto en clase sobre BomERP — y que puede leer un claim propio del JWT sin apoyo del docente.</p>
@@ -6121,7 +6176,7 @@ respuesta con lo que hace distinto a RN8 de una simple protección por rol.
 <li>¿Por qué el registro público (<code>/auth/registro</code>) nunca debería permitir que quien se registra elija su propio rol?</li>
 </ol>
 <h3 id="46-rubrica-de-evaluacion">4.6 Rúbrica de evaluación<a class="headerlink" href="#46-rubrica-de-evaluacion" title="Permanent link">&para;</a></h3>
-<p><strong>Tabla 6. Rúbrica de evaluación</strong></p>
+<p><strong>Tabla 7. Rúbrica de evaluación</strong></p>
 <table>
 <thead>
 <tr>
@@ -6203,6 +6258,8 @@ Indica 2 fortalezas y 2 recomendaciones.
 <li>Krebs, B. (2019, 24 de mayo). <em>First American Financial Corp. Leaked Hundreds of Millions of Title Insurance Records</em>. KrebsOnSecurity. https://krebsonsecurity.com/2019/05/first-american-financial-corp-leaked-hundreds-of-millions-of-title-insurance-records/</li>
 <li>Spring Security. (2026). <em>OAuth2 Resource Server: JWT</em>. https://docs.spring.io/spring-security/reference/servlet/oauth2/resource-server/jwt.html</li>
 <li>Spring Security. (2026). <em>Password Storage</em>. https://docs.spring.io/spring-security/reference/features/authentication/password-storage.html</li>
+<li>Lodderstedt, T., Bradley, J., Labunets, A., &amp; Fett, D. (2025). <em>Best Current Practice for OAuth 2.0 Security</em> (RFC 9700). IETF. https://datatracker.ietf.org/doc/html/rfc9700</li>
+<li>SACAViX. (s. f.). <em>OAuth2 / OpenID Connect</em>. System Design. https://systemdesign.sacavix.com/patterns/oauth2-security</li>
 </ol>
 
 

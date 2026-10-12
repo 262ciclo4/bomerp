@@ -3512,6 +3512,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="8. Probar de punta a punta">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-opcional-simular-el-login-real-con-redirect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 (Opcional) Simular el login real, con redirect
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3778,6 +3795,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="8. Probar de punta a punta">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-opcional-simular-el-login-real-con-redirect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 (Opcional) Simular el login real, con redirect
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3965,7 +3999,7 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <li><strong>Clients</strong> (<em>Clientes</em>) → <strong>Create client</strong> (<em>Crear cliente</em>).</li>
 <li>Paso <strong>General settings</strong> (<em>Configuraciones generales</em>): <em>Client type</em> (<em>Tipo de cliente</em>): <code>OpenID Connect</code>. <em>Client ID</em> (<em>ID de cliente</em>): <code>bomerp-frontend</code>. <em>Name</em>/<em>Description</em> (<em>Nombre</em>/<em>Descripción</em>): opcionales, déjalos vacíos. <strong>Always display in UI</strong> (<em>Mostrar siempre en la interfaz de usuario</em>): déjalo <strong>desactivado</strong> — solo importa si quieres que este cliente aparezca listado en el <em>Account Console</em> de Keycloak incluso sin sesión activa, algo que no necesitas para un cliente de prueba. Siguiente.</li>
 <li>Paso <strong>Capability config</strong> (<em>Configuración de capacidades</em>) — todo en una sola pantalla:<ul>
-<li><strong>Client authentication</strong> (<em>Autenticación del cliente</em>): <strong>desactivado</strong> (es un <em>public client</em> — la SPA de S11 no puede guardar un secreto, 2.4 de S10).</li>
+<li><strong>Client authentication</strong> (<em>Autenticación del cliente</em>): <strong>desactivado</strong> (es un <em>public client</em> — la SPA de S11 no puede guardar un secreto, 2.6 de S10).</li>
 <li><strong>Authorization</strong> (<em>Autorización</em>): desactivado — no aplica a esta guía (son los <em>fine-grained authorization services</em> de Keycloak, otra funcionalidad aparte).</li>
 <li><strong>Authentication flow</strong> (<em>Flujo de autenticación</em>): deja marcado <strong>Standard flow</strong> (<em>Flujo estándar</em>, viene activado por defecto — es el que usará S11 con <em>Authorization Code</em> + PKCE) y marca además <strong>Direct access grants</strong> (<em>Concesiones de acceso directo</em>). Deja el resto de casillas sin marcar.</li>
 <li><strong>Require PKCE</strong> (<em>Requiere PKCE</em>) y <strong>Require DPoP-bound tokens</strong> (<em>Requerir tokens vinculados a DPoP</em>): déjalos en su valor por defecto (desactivado) — ninguno de los dos aplica todavía, porque esta guía no usa el <em>Standard flow</em> para pedir tokens (eso llega en S11); el icono de advertencia junto a <em>Require PKCE</em> es una recomendación general de seguridad de Keycloak, no un error de esta configuración.</li>
@@ -3981,7 +4015,7 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 </ul>
 </li>
 </ol>
-<p><strong>Error frecuente, y por qué es intencional dejarlo así documentado</strong>: <em>Direct access grants</em> corresponde al mismo flujo que la RFC 9700 desaconseja (S10, 2.4, cita textual: <em>"MUST NOT be used"</em>) — la razón por la que <code>seguridad</code> también lo usaba era la misma: es un atajo de laboratorio, no el diseño final. Úsalo aquí únicamente para verificar que Keycloak emite tokens válidos antes de construir el flujo real; S11 reconfigura este mismo cliente para <em>Authorization Code</em> + PKCE (<em>Proof Key for Code Exchange</em>) y <strong>desactiva</strong> <em>Direct access grants</em> como parte de ese trabajo — no antes.</p>
+<p><strong>Error frecuente, y por qué es intencional dejarlo así documentado</strong>: <em>Direct access grants</em> corresponde al mismo flujo que la RFC 9700 desaconseja (S10, 2.6, cita textual: <em>"MUST NOT be used"</em>) — la razón por la que <code>seguridad</code> también lo usaba era la misma: es un atajo de laboratorio, no el diseño final. Úsalo aquí únicamente para verificar que Keycloak emite tokens válidos antes de construir el flujo real; S11 reconfigura este mismo cliente para <em>Authorization Code</em> + PKCE (<em>Proof Key for Code Exchange</em>) y <strong>desactiva</strong> <em>Direct access grants</em> como parte de ese trabajo — no antes.</p>
 <h2 id="5-crear-los-usuarios-semilla">5. Crear los usuarios semilla<a class="headerlink" href="#5-crear-los-usuarios-semilla" title="Permanent link">&para;</a></h2>
 <p><strong>Producto del paso:</strong> los mismos cuatro usuarios de S10 (3.10), ahora en Keycloak. <code>vendedorId</code> no necesita ningún paso aparte — es literalmente <code>sub</code> (1, Tabla 1), y <code>sub</code> viaja en cualquier token sin configurar nada.</p>
 <h3 id="51-crear-los-usuarios-y-asignarles-rol">5.1 Crear los usuarios y asignarles rol<a class="headerlink" href="#51-crear-los-usuarios-y-asignarles-rol" title="Permanent link">&para;</a></h3>
@@ -3993,13 +4027,30 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <li><strong>Select a locale</strong> (<em>Seleccionar una configuración regional</em>): opcional, es el idioma de <strong>ese usuario en particular</strong> (distinto de 3.0/3.2, que son el idioma por defecto del realm) — déjalo en <em>Idioma predeterminado</em> o elige <code>Español</code> si quieres forzarlo para este usuario puntual.</li>
 <li><strong>Username</strong> (<em>Nombre de usuario</em>): el email completo (ej. <code>vendedor1@bomerp.com</code>).</li>
 <li><strong>Email</strong> (<em>Correo electrónico</em>): el mismo email, repetido en este campo aparte.</li>
-<li><em>Nombre</em>/<em>Apellido</em>/<em>Grupos</em>: opcionales, déjalos vacíos.</li>
+<li><strong>First name</strong>/<strong>Last name</strong> (<em>Nombre</em>/<em>Apellido</em>): <strong>no los dejes vacíos</strong> — pon cualquier valor real (ej. <code>Vendedor</code>/<code>Uno</code>). No son cosméticos: el realm trae activa <code>VERIFY_PROFILE</code> (<em>Verify Profile</em>, ver "Error frecuente" abajo), que Keycloak evalúa en cada login — con estos dos campos vacíos, el perfil nunca se considera completo y el login falla, aunque la contraseña sea correcta.</li>
+<li><em>Grupos</em>: opcional, déjalo vacío.</li>
 <li><strong>Crear</strong>.</li>
 </ul>
 </li>
 <li>Pestaña <strong>Credentials</strong> (<em>Credenciales</em>) → <strong>Set password</strong> (<em>Establecer contraseña</em>): <code>Bomerp2026!</code>, <em>Temporary</em> (<em>Temporal</em>): <strong>desactivado</strong> (si queda activado, Keycloak exige cambiarla en el primer login, lo que rompe el flujo de <em>Direct access grants</em> de la sección 6).</li>
 <li>Pestaña <strong>Role mapping</strong> (<em>Mapeo de roles</em>) → <strong>Assign role</strong> (<em>Asignar rol</em>) → en el dropdown, elige <strong>Realm roles</strong> (<em>Roles de realm</em>, no <em>Roles de cliente</em>) — ahí aparece la lista del paso 3 de la sección 3 (<code>ADMIN</code>, <code>SUPERVISOR</code>, <code>VENDEDOR</code>, más dos roles propios de Keycloak: <code>offline_access</code>, <code>uma_authorization</code>, que no tocas). Marca <code>VENDEDOR</code> para los dos primeros usuarios, <code>SUPERVISOR</code> y <code>ADMIN</code> para los otros dos, respectivamente, y <strong>Asignar</strong> — el mismo criterio de promoción manual que S10 ya aplicaba a mano sobre Postgres (3.10), ahora sobre la consola de Keycloak.</li>
 </ol>
+<p><strong>Error frecuente</strong>: login en la sección 6 responde <code>{"error":"invalid_grant","error_description":"Account is not fully set up"}</code>, aunque el usuario no tenga ninguna <em>required action</em> explícita en la pestaña <strong>Details</strong>, la contraseña no sea <em>Temporary</em>, y ningún <em>required action</em> del realm esté marcado como <em>default</em> (<code>SELECT ... FROM required_action_provider</code> da <code>default_action = f</code> en todas). La causa real: <code>VERIFY_PROFILE</code> (<em>Verify Profile</em>) viene <code>enabled</code> en este realm, y esa acción se calcula <strong>dinámicamente en cada login</strong>, no como fila guardada — revisa si <code>first_name</code>/<code>last_name</code> quedaron vacíos (si usaste la consola en vez de la API, puede pasar aunque los hayas escrito):</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>bomerp-keycloak-db<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>bomerp_keycloak<span class="w"> </span>-d<span class="w"> </span>bomerp_keycloak<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SELECT email, first_name, last_name, email_verified FROM user_entity WHERE email = 'vendedor1@bomerp.com';"</span>
+</code></pre></div>
+<p>Corrige lo que falte (ejemplo con los cuatro usuarios — ajusta los nombres):</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>bomerp-keycloak-db<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>bomerp_keycloak<span class="w"> </span>-d<span class="w"> </span>bomerp_keycloak<span class="w"> </span>-c<span class="w"> </span><span class="s2">"</span>
+<span class="s2">UPDATE user_entity SET first_name = 'Vendedor', last_name = 'Uno', email_verified = true WHERE email = 'vendedor1@bomerp.com';</span>
+<span class="s2">UPDATE user_entity SET first_name = 'Vendedor', last_name = 'Dos', email_verified = true WHERE email = 'vendedor2@bomerp.com';</span>
+<span class="s2">UPDATE user_entity SET first_name = 'Supervisor', last_name = 'Uno', email_verified = true WHERE email = 'supervisor@bomerp.com';</span>
+<span class="s2">UPDATE user_entity SET first_name = 'Admin', last_name = 'Uno', email_verified = true WHERE email = 'admin@bomerp.com';</span>
+<span class="s2">"</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="n">bomerp-keycloak-db</span> <span class="n">psql</span> <span class="n">-U</span> <span class="n">bomerp_keycloak</span> <span class="n">-d</span> <span class="n">bomerp_keycloak</span> <span class="n">-c</span> <span class="s2">"UPDATE user_entity SET first_name = 'Vendedor', last_name = 'Uno', email_verified = true WHERE email = 'vendedor1@bomerp.com'; UPDATE user_entity SET first_name = 'Vendedor', last_name = 'Dos', email_verified = true WHERE email = 'vendedor2@bomerp.com'; UPDATE user_entity SET first_name = 'Supervisor', last_name = 'Uno', email_verified = true WHERE email = 'supervisor@bomerp.com'; UPDATE user_entity SET first_name = 'Admin', last_name = 'Uno', email_verified = true WHERE email = 'admin@bomerp.com';"</span>
+</code></pre></div>
+<p>Reinicia Keycloak después de cualquier cambio directo por SQL contra <code>keycloak-db</code> (no confirmé si cachea en memoria o no, pero es gratis hacerlo y evita dudarlo):</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>restart<span class="w"> </span>bomerp-keycloak
+</code></pre></div>
 <h3 id="52-migrar-las-ventas-ya-registradas-al-nuevo-sub">5.2 Migrar las ventas ya registradas al nuevo <code>sub</code><a class="headerlink" href="#52-migrar-las-ventas-ya-registradas-al-nuevo-sub" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> las ventas que <code>vendedor1</code>/<code>vendedor2</code> ya crearon bajo <code>seguridad</code> (S10) siguen asociadas a su dueño real, ahora con el <code>sub</code> nuevo de Keycloak.</p>
 <p><code>vendedorId</code> no necesita ningún atributo ni <em>protocol mapper</em> — es <code>jwt.getSubject()</code> tal cual (1). Pero eso no resuelve solo el dato que <strong>ya existe</strong>: cada fila de <code>VENTAS</code> creada hasta hoy tiene <code>VENDEDOR_ID</code> con el <code>id</code> numérico-como-texto que <code>seguridad</code> usaba (ej. <code>"3"</code>), y el <code>sub</code> que Keycloak va a emitir para ese mismo usuario es un UUID distinto (ej. <code>"3fa85f64-5717-4562-b3fc-2c963f66afa6"</code>) — nadie los conecta solo. Sin este paso, esas ventas viejas siguen existiendo, pero <code>obtener</code>/<code>buscar</code> (S10, 3.15) ya no las reconoce como propias de ese vendedor.</p>
@@ -4013,22 +4064,38 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 </ol>
 <div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>bomerp-keycloak-db<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>bomerp_keycloak<span class="w"> </span>-d<span class="w"> </span>bomerp_keycloak<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SELECT u.id, u.email FROM user_entity u JOIN realm r ON r.id = u.realm_id WHERE r.name = 'bomerp' AND u.email IN ('vendedor1@bomerp.com','vendedor2@bomerp.com','supervisor@bomerp.com','admin@bomerp.com');"</span>
 </code></pre></div>
-<p>No verifiqué <code>user_entity</code>/<code>realm</code> contra una instancia real — si el nombre exacto de la tabla no calza, lista las tablas con <code>\dt</code> dentro de <code>psql</code> y ajusta la consulta; el resto del procedimiento no cambia.</p>
+<p><code>user_entity</code>/<code>realm</code> son los nombres reales (verificado contra una instancia real de Keycloak 26.8) — si en otra versión no calzan, lista las tablas con <code>\dt</code> dentro de <code>psql</code> y ajusta la consulta; el resto del procedimiento no cambia.</p>
 <ol>
-<li>Con ambos resultados en mano (un <code>id</code> viejo y un UUID nuevo por cada email), actualiza Oracle — un <code>UPDATE</code> por usuario, solo para los que realmente tengan ventas:</li>
+<li>Con ambos resultados en mano (un <code>id</code> viejo y un UUID nuevo por cada email), actualiza Oracle — un <code>UPDATE</code> por usuario, solo para los que realmente tengan ventas. Ejemplo real (los valores van a ser distintos en tu base):</li>
 </ol>
+<div class="highlight"><pre><span></span><code>bomerp-seguridad-db          keycloak-db
+id | email                   id (UUID)                             | email
+---|-------------------      --------------------------------------|----------------------
+3  | vendedor1@bomerp.com     516ef047-ffbc-470f-b397-6d4a3fe8fbfa  | vendedor1@bomerp.com
+4  | vendedor2@bomerp.com     0c265d28-60e9-4954-b7e7-36006cb8c2c5  | vendedor2@bomerp.com
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="sh">@'</span>
-<span class="sh">UPDATE VENTAS SET VENDEDOR_ID = '&lt;uuid-nuevo-de-vendedor1&gt;' WHERE VENDEDOR_ID = '&lt;id-viejo-de-vendedor1&gt;';</span>
-<span class="sh">UPDATE VENTAS SET VENDEDOR_ID = '&lt;uuid-nuevo-de-vendedor2&gt;' WHERE VENDEDOR_ID = '&lt;id-viejo-de-vendedor2&gt;';</span>
+<span class="sh">UPDATE VENTAS SET VENDEDOR_ID = '516ef047-ffbc-470f-b397-6d4a3fe8fbfa' WHERE VENDEDOR_ID = '3';</span>
+<span class="sh">UPDATE VENTAS SET VENDEDOR_ID = '0c265d28-60e9-4954-b7e7-36006cb8c2c5' WHERE VENDEDOR_ID = '4';</span>
 <span class="sh">COMMIT;</span>
 <span class="sh">'@</span> <span class="p">|</span> <span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="n">bomerp-oracle</span> <span class="n">bash</span> <span class="n">-c</span> <span class="s2">"sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1"</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>bomerp-oracle<span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">"sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1"</span><span class="w"> </span><span class="s">&lt;&lt;'EOF'</span>
-<span class="s">UPDATE VENTAS SET VENDEDOR_ID = '&lt;uuid-nuevo-de-vendedor1&gt;' WHERE VENDEDOR_ID = '&lt;id-viejo-de-vendedor1&gt;';</span>
-<span class="s">UPDATE VENTAS SET VENDEDOR_ID = '&lt;uuid-nuevo-de-vendedor2&gt;' WHERE VENDEDOR_ID = '&lt;id-viejo-de-vendedor2&gt;';</span>
+<span class="s">UPDATE VENTAS SET VENDEDOR_ID = '516ef047-ffbc-470f-b397-6d4a3fe8fbfa' WHERE VENDEDOR_ID = '3';</span>
+<span class="s">UPDATE VENTAS SET VENDEDOR_ID = '0c265d28-60e9-4954-b7e7-36006cb8c2c5' WHERE VENDEDOR_ID = '4';</span>
 <span class="s">COMMIT;</span>
 <span class="s">EOF</span>
 </code></pre></div>
+<p>Reemplaza el <code>WHERE VENDEDOR_ID = '&lt;id-viejo&gt;'</code> y el valor nuevo con los que te devolvieron tus propias consultas de los pasos 1-2 — no copies los de este ejemplo. Confirma el resultado:</p>
+<div class="highlight"><pre><span></span><code><span class="sh">@'</span>
+<span class="sh">SELECT ID, VENDEDOR_ID FROM VENTAS WHERE VENDEDOR_ID IS NOT NULL ORDER BY ID;</span>
+<span class="sh">'@</span> <span class="p">|</span> <span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="n">bomerp-oracle</span> <span class="n">bash</span> <span class="n">-c</span> <span class="s2">"sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1"</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>bomerp-oracle<span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">"sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1"</span><span class="w"> </span><span class="s">&lt;&lt;'EOF'</span>
+<span class="s">SELECT ID, VENDEDOR_ID FROM VENTAS WHERE VENDEDOR_ID IS NOT NULL ORDER BY ID;</span>
+<span class="s">EOF</span>
+</code></pre></div>
+<p>Filtra solo las que tienen <code>VENDEDOR_ID</code> (el resto de S4-S9 sigue en <code>NULL</code>, no hace falta verlas). Resultado esperado: cada venta migrada muestra ya el UUID nuevo, no el <code>id</code> numérico viejo.</p>
 <p>Es una migración de <strong>un solo dato, una sola vez</strong> — no una dependencia permanente entre Keycloak y la base vieja. <code>SUPERVISOR</code>/<code>ADMIN</code> no necesitan este paso: ven todas las ventas sin filtrar por <code>vendedorId</code> (RN8 solo aplica a <code>VENDEDOR</code>).</p>
 <h2 id="6-verificar-el-token-antes-de-tocar-bomerp-backend">6. Verificar el token antes de tocar <code>bomerp-backend</code><a class="headerlink" href="#6-verificar-el-token-antes-de-tocar-bomerp-backend" title="Permanent link">&para;</a></h2>
 <p><strong>Producto del paso:</strong> confirmación, con un token real, de que <code>realm_access.roles</code> llega con el formato esperado y <code>sub</code> es el UUID del usuario — antes de cambiar nada en el código.</p>
@@ -4063,7 +4130,7 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <span class="w">        </span><span class="nt">jwt</span><span class="p">:</span>
 <span class="w">          </span><span class="nt">issuer-uri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://localhost:38080/realms/bomerp</span>
 </code></pre></div>
-<p>Con <code>issuer-uri</code> (en vez de <code>jwk-set-uri</code>), Spring no solo descubre dónde están las claves — además valida que el claim <code>iss</code> (<em>issuer</em>, emisor) de cada token coincida exactamente con esta URL, y descarga la configuración del realm (incluida su ubicación de JWKS) del documento de descubrimiento estándar de OpenID Connect (<code>/.well-known/openid-configuration</code>) que Keycloak sí publica (a diferencia de <code>seguridad</code>, que no lo implementaba — S10, 2.4, Tabla 3). Es la única propiedad que cambia; <code>JwtAuthenticationConverter</code> (S10, 3.11) no se toca.</p>
+<p>Con <code>issuer-uri</code> (en vez de <code>jwk-set-uri</code>), Spring no solo descubre dónde están las claves — además valida que el claim <code>iss</code> (<em>issuer</em>, emisor) de cada token coincida exactamente con esta URL, y descarga la configuración del realm (incluida su ubicación de JWKS) del documento de descubrimiento estándar de OpenID Connect (<code>/.well-known/openid-configuration</code>) que Keycloak sí publica (a diferencia de <code>seguridad</code>, que no lo implementaba — S10, 2.6). Es la única propiedad que cambia; <code>JwtAuthenticationConverter</code> (S10, 3.11) no se toca.</p>
 <h3 id="72-confirmar-que-catalogo-y-ventas-no-se-tocan">7.2 Confirmar que <code>catalogo</code> y <code>ventas</code> no se tocan<a class="headerlink" href="#72-confirmar-que-catalogo-y-ventas-no-se-tocan" title="Permanent link">&para;</a></h3>
 <p>Revisa <code>SecurityConfig.securityFilterChain</code>, <code>CategoriaController</code>/<code>ProductoController</code> y <strong>todo</strong> <code>VentaController</code>, incluido <code>crear</code>/<code>buscar</code>/<code>obtener</code>: ningún <code>hasRole</code>, ningún <code>requestMatchers</code>, ninguna línea de código cambia — <code>jwt.getSubject()</code> sigue ahí exactamente igual que en S10 (3.14-3.15), porque <code>vendedorId</code> nunca se interpretó como número (1). Si encuentras que necesitas tocar algo ahí, la migración se desvió de lo que esta guía describe — revisa el paso anterior.</p>
 <h3 id="73-retirar-seguridad-db">7.3 Retirar <code>seguridad-db</code><a class="headerlink" href="#73-retirar-seguridad-db" title="Permanent link">&para;</a></h3>
@@ -4082,12 +4149,111 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 docker<span class="w"> </span>volume<span class="w"> </span>rm<span class="w"> </span>&lt;nombre-exacto-que-aparezca&gt;
 </code></pre></div>
 <h2 id="8-probar-de-punta-a-punta">8. Probar de punta a punta<a class="headerlink" href="#8-probar-de-punta-a-punta" title="Permanent link">&para;</a></h2>
-<p><strong>Producto del paso:</strong> la misma matriz de accesos que S10 verificó (3.16, Tabla 5), ahora contra tokens de Keycloak — con <code>seguridad-db</code> ya retirado (7.3), esta prueba confirma que el reemplazo es real, no solo que Keycloak "también funciona" en paralelo.</p>
-<p>Reinicia <code>bomerp-backend</code> (lee la propiedad nueva de 7.1) y repite exactamente las pruebas de S10 (3.16), pero obteniendo cada token con el comando de la sección 6 (cambiando el usuario). Resultado esperado: <strong>la misma Tabla 5</strong> — mismos códigos HTTP, para los mismos casos, con tokens que ahora vienen de un proceso distinto.</p>
+<p><strong>Producto del paso:</strong> la misma matriz de accesos que S10 verificó (3.16, Tabla 6), ahora contra tokens de Keycloak — con <code>seguridad-db</code> ya retirado (7.3), esta prueba confirma que el reemplazo es real, no solo que Keycloak "también funciona" en paralelo.</p>
+<p>Reinicia <code>bomerp-backend</code> (lee la propiedad nueva de 7.1) y repite las pruebas de S10 (3.16), pero obteniendo cada token de Keycloak en vez de <code>/api/v1/auth/login</code>.</p>
+<ol>
+<li>Un token por rol:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nv">$tokenVendedor1</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:38080/realms/bomerp/protocol/openid-connect/token"</span> <span class="p">`</span>
+  <span class="n">-ContentType</span> <span class="s2">"application/x-www-form-urlencoded"</span> <span class="p">`</span>
+  <span class="n">-Body</span> <span class="s2">"grant_type=password&amp;client_id=bomerp-frontend&amp;username=vendedor1@bomerp.com&amp;password=Bomerp2026!"</span><span class="p">).</span><span class="n">access_token</span>
+
+<span class="nv">$tokenVendedor2</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:38080/realms/bomerp/protocol/openid-connect/token"</span> <span class="p">`</span>
+  <span class="n">-ContentType</span> <span class="s2">"application/x-www-form-urlencoded"</span> <span class="p">`</span>
+  <span class="n">-Body</span> <span class="s2">"grant_type=password&amp;client_id=bomerp-frontend&amp;username=vendedor2@bomerp.com&amp;password=Bomerp2026!"</span><span class="p">).</span><span class="n">access_token</span>
+
+<span class="nv">$tokenSupervisor</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:38080/realms/bomerp/protocol/openid-connect/token"</span> <span class="p">`</span>
+  <span class="n">-ContentType</span> <span class="s2">"application/x-www-form-urlencoded"</span> <span class="p">`</span>
+  <span class="n">-Body</span> <span class="s2">"grant_type=password&amp;client_id=bomerp-frontend&amp;username=supervisor@bomerp.com&amp;password=Bomerp2026!"</span><span class="p">).</span><span class="n">access_token</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nv">tokenVendedor1</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:38080/realms/bomerp/protocol/openid-connect/token<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/x-www-form-urlencoded"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s2">"grant_type=password&amp;client_id=bomerp-frontend&amp;username=vendedor1@bomerp.com&amp;password=Bomerp2026!"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">'.access_token'</span><span class="k">)</span>
+
+<span class="nv">tokenVendedor2</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:38080/realms/bomerp/protocol/openid-connect/token<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/x-www-form-urlencoded"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s2">"grant_type=password&amp;client_id=bomerp-frontend&amp;username=vendedor2@bomerp.com&amp;password=Bomerp2026!"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">'.access_token'</span><span class="k">)</span>
+
+<span class="nv">tokenSupervisor</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:38080/realms/bomerp/protocol/openid-connect/token<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/x-www-form-urlencoded"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s2">"grant_type=password&amp;client_id=bomerp-frontend&amp;username=supervisor@bomerp.com&amp;password=Bomerp2026!"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">'.access_token'</span><span class="k">)</span>
+</code></pre></div>
+<ol>
+<li>La venta que ya migraste en 5.2 (<code>vendedor1</code>) es la prueba de dueño perfecta — sustituye <code>$ventaId</code> por su <code>ID</code> real en Oracle (ej. <code>2261</code>):</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nv">$ventaId</span> <span class="p">=</span> <span class="n">2261</span>
+<span class="k">try</span> <span class="p">{</span>
+  <span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Get</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:8080/api/v1/ventas/$ventaId"</span> <span class="p">`</span>
+    <span class="n">-Headers</span> <span class="p">@{</span> <span class="n">Authorization</span> <span class="p">=</span> <span class="s2">"Bearer $tokenVendedor2"</span> <span class="p">}</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+  <span class="nv">$_</span><span class="p">.</span><span class="n">Exception</span><span class="p">.</span><span class="n">Response</span><span class="p">.</span><span class="n">StatusCode</span><span class="p">.</span><span class="n">value__</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nv">ventaId</span><span class="o">=</span><span class="m">2261</span>
+curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">"%{http_code}\n"</span><span class="w"> </span>http://localhost:8080/api/v1/ventas/<span class="nv">$ventaId</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="nv">$tokenVendedor2</span><span class="s2">"</span>
+</code></pre></div>
+<p>Resultado esperado: <code>403</code> (no es de <code>vendedor2</code>). Con <code>$tokenSupervisor</code> en el mismo header, <code>200 OK</code> con la venta completa.</p>
+<ol>
+<li><code>resumen</code>, igual que en S10 — <code>403</code> con <code>vendedor1</code>, <code>200</code> con <code>supervisor</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="k">try</span> <span class="p">{</span>
+  <span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Get</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:8080/api/v1/ventas/resumen"</span> <span class="p">`</span>
+    <span class="n">-Headers</span> <span class="p">@{</span> <span class="n">Authorization</span> <span class="p">=</span> <span class="s2">"Bearer $tokenVendedor1"</span> <span class="p">}</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+  <span class="nv">$_</span><span class="p">.</span><span class="n">Exception</span><span class="p">.</span><span class="n">Response</span><span class="p">.</span><span class="n">StatusCode</span><span class="p">.</span><span class="n">value__</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">"%{http_code}\n"</span><span class="w"> </span>http://localhost:8080/api/v1/ventas/resumen<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="nv">$tokenVendedor1</span><span class="s2">"</span>
+</code></pre></div>
+<p>Resultado esperado: la misma Tabla 6 de S10 (3.16) — mismos códigos HTTP, para los mismos casos, con tokens que ahora vienen de un proceso distinto.</p>
 <p><strong>Error frecuente</strong>: <code>403</code> donde S10 esperaba <code>200</code>, con un token que en jwt.io se ve correcto. Causa más común: el usuario de Keycloak no tiene el <em>realm role</em> asignado (5.1), o la venta que estás consultando todavía tiene el <code>VENDEDOR_ID</code> viejo porque 5.2 no se corrió (o se corrió con el <code>id</code>/UUID equivocado) para ese usuario.</p>
+<h3 id="81-opcional-simular-el-login-real-con-redirect">8.1 (Opcional) Simular el login real, con redirect<a class="headerlink" href="#81-opcional-simular-el-login-real-con-redirect" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> ver, con tus propios ojos, el flujo <em>Authorization Code</em> que usará la SPA en S11 — el que <strong>sí</strong> redirige al navegador a la pantalla de Keycloak, en vez del <em>Direct Access Grant</em> (atajo de laboratorio) que usaste en toda esta guía.</p>
+<p>No hace falta construir la SPA para verlo: el cliente <code>bomerp-frontend</code> ya tiene <strong>Standard flow</strong> activado (4, paso 3) y <code>http://localhost:4200/*</code> como <em>redirect URI</em> válido (4, paso 4), aunque todavía no haya nada corriendo ahí.</p>
+<ol>
+<li>Arma la URL de autorización a mano y ábrela en el navegador:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>http://localhost:38080/realms/bomerp/protocol/openid-connect/auth?client_id=bomerp-frontend&amp;redirect_uri=http://localhost:4200/callback&amp;response_type=code&amp;scope=openid
+</code></pre></div>
+<ol>
+<li>Verás la pantalla de login del realm <strong><code>bomerp</code></strong> (no <code>master</code> — si te aparece pidiendo <code>admin</code>, revisa que la URL diga <code>/realms/bomerp/...</code>, no <code>/realms/master/...</code>). Entra con <code>vendedor1@bomerp.com</code> / <code>Bomerp2026!</code>.</li>
+</ol>
+<p><strong>Figura 2. Pantalla de login de Keycloak para el realm <code>bomerp</code></strong></p>
+<p><img alt="Pantalla de login hospedada por Keycloak para el realm bomerp, con el título BOMERP, campos de usuario (vendedor1@bomerp.com) y contraseña, y la URL localhost:38080/realms/bomerp/login-actions/authenticate" src="../img/s10b-8.1-login-keycloak-bomerp.png" /></p>
+<p>Nota la URL de la barra de direcciones: <code>localhost:38080/realms/bomerp/...</code> — confirma que el formulario lo sirve Keycloak, no <code>bomerp-backend</code> ni ninguna SPA propia (a diferencia del login de <code>seguridad</code>, S10 3.10, que era un formulario de BomERP).</p>
+<ol>
+<li>
+<p>El navegador intenta redirigir a <code>http://localhost:4200/callback?code=...&amp;state=...</code> — como ahí no hay ninguna SPA corriendo todavía, la pestaña muestra error de conexión. Eso es <strong>esperado</strong>: lo que importa es la URL a la que llegó. Cópiala de la barra de direcciones y mira el parámetro <code>code</code> — esa es la prueba de que el flujo completo (login en Keycloak → redirect de vuelta con un código) ya funciona de punta a punta, sin que <code>bomerp-backend</code> ni ninguna SPA hayan intervenido todavía.</p>
+</li>
+<li>
+<p>(Opcional) Cambia ese <code>code</code> por un token real, a mano, antes de que expire (son pocos segundos a minutos):</p>
+</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nv">$code</span> <span class="p">=</span> <span class="s2">"&lt;pega aquí el valor de code de la URL&gt;"</span>
+<span class="nv">$login2</span> <span class="p">=</span> <span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:38080/realms/bomerp/protocol/openid-connect/token"</span> <span class="p">`</span>
+  <span class="n">-ContentType</span> <span class="s2">"application/x-www-form-urlencoded"</span> <span class="p">`</span>
+  <span class="n">-Body</span> <span class="s2">"grant_type=authorization_code&amp;client_id=bomerp-frontend&amp;redirect_uri=http://localhost:4200/callback&amp;code=$code"</span>
+<span class="nv">$login2</span><span class="p">.</span><span class="n">access_token</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:38080/realms/bomerp/protocol/openid-connect/token<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/x-www-form-urlencoded"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s2">"grant_type=authorization_code&amp;client_id=bomerp-frontend&amp;redirect_uri=http://localhost:4200/callback&amp;code=&lt;pega aquí el code&gt;"</span>
+</code></pre></div>
+<p>Lo que S11 construye de verdad es que la SPA, corriendo en <code>localhost:4200</code>, capture ese <code>code</code> sola (sin que tú lo copies a mano) y haga este último intercambio automáticamente, además de agregar PKCE (4, paso 3, <em>Require PKCE</em>) — esta sección solo demuestra que el mecanismo de fondo ya está activo desde ahora, sin tocar ni una línea de <code>bomerp-backend</code>.</p>
+<ol>
+<li>(Opcional) Cambiar de usuario o cerrar sesión. Si repites la URL del paso 1 tal cual, Keycloak reconoce la cookie de sesión que ya tienes y te deja pasar <strong>sin pedir login de nuevo</strong> (es SSO funcionando, no un error) — para probar con otro usuario necesitas una de estas dos:</li>
+</ol>
+<p>Cerrar la sesión de Keycloak:</p>
+<div class="highlight"><pre><span></span><code>http://localhost:38080/realms/bomerp/protocol/openid-connect/logout?client_id=bomerp-frontend&amp;post_logout_redirect_uri=http://localhost:4200
+</code></pre></div>
+<p>O forzar un login nuevo sin cerrar la sesión existente, agregando <code>&amp;prompt=login</code> a la URL del paso 1:</p>
+<div class="highlight"><pre><span></span><code>http://localhost:38080/realms/bomerp/protocol/openid-connect/auth?client_id=bomerp-frontend&amp;redirect_uri=http://localhost:4200/callback&amp;response_type=code&amp;scope=openid&amp;prompt=login
+</code></pre></div>
 <h2 id="9-que-queda-pendiente">9. Qué queda pendiente<a class="headerlink" href="#9-que-queda-pendiente" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>S11</strong> reconfigura el cliente <code>bomerp-frontend</code> para <em>Authorization Code</em> + PKCE (S10, 2.4) — el flujo real que usará la SPA, desactivando <em>Direct access grants</em> (sección 4). El login deja de ser un formulario propio de BomERP: redirige a la pantalla de Keycloak.</li>
+<li><strong>S11</strong> reconfigura el cliente <code>bomerp-frontend</code> para <em>Authorization Code</em> + PKCE (S10, 2.6) — el flujo real que usará la SPA, desactivando <em>Direct access grants</em> (sección 4) y activando <strong>Require PKCE</strong>. El login deja de ser un formulario propio de BomERP: redirige a la pantalla de Keycloak, igual que viste en 8.1, pero capturado y completado por la SPA en vez de a mano.</li>
 <li><strong>Limpieza del paquete <code>seguridad</code></strong>: <code>AuthController</code>, <code>JwtService</code>, <code>JwksController</code>, <code>JwtKeyConfig</code>, <code>SecurityConfig</code> (las piezas de <code>seguridad</code>, no <code>OracleDataSourceConfig</code>), <code>SeguridadDataSourceConfig</code> y las entidades <code>Usuario</code>/<code>Rol</code> quedan sin ningún código que los invoque — pueden borrarse de <code>bomerp-backend</code> en un commit aparte, sin que eso afecte a <code>catalogo</code> ni a <code>ventas</code> (la discusión de por qué esto es una limpieza de archivos y no una migración se documentó en el chat de diseño de S10, no en una guía).</li>
 <li><strong><code>compose-dev.yml</code></strong>: <code>seguridad-db</code> ya se retiró en 7.3 — este punto queda aquí solo como referencia, no como pendiente.</li>
 <li><strong><code>pom.xml</code></strong>: <code>spring-security-oauth2-jose</code> (firmaba el JWT propio) deja de hacer falta; <code>spring-boot-starter-security-oauth2-resource-server</code> <strong>sigue haciendo falta</strong> (sigue validando, ahora contra Keycloak); el driver <code>org.postgresql:postgresql</code> se retira solo si ningún otro módulo de BomERP usa Postgres.</li>
