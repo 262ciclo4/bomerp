@@ -6,7 +6,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: http://localhost:8080/.well-known/jwks.json
+          issuer-uri: http://localhost:38080/realms/bomerp
+          #jwk-set-uri: http://localhost:8080/.well-known/jwks.json
 
   datasource:
     url: jdbc:oracle:thin:@localhost:1521/FREEPDB1
