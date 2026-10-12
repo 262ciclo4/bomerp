@@ -8,7 +8,18 @@ Esta guía **no** es una sesión del sílabo: ninguna fila de `silabo_lp2_2026_2
 
 Úsala si tu equipo decide adoptar Keycloak en U3 o después — no antes, y no como parte de la evaluación de S10 o S11. La sesión S10 real queda exactamente como está; esta guía no le resta ni le agrega alcance.
 
-**Requisito:** haber completado S10 (`seguridad` funcionando, con Postgres propio y `SecurityConfig` validando por `jwk-set-uri`) — esta guía parte de ese estado y lo reemplaza.
+**Requisito real:** no necesitas tener `seguridad` construido ni corriendo — nunca coexiste con Keycloak, uno reemplaza al otro. Lo indispensable de S10 es la lógica de autorización que vive en `bomerp-backend` y no depende de quién emite el token:
+
+- **3.2** — la columna `VENDEDOR_ID VARCHAR2(36)` en `VENTAS` (el `ALTER TABLE`; la parte de Postgres/`seguridad` de ese mismo punto no aplica aquí).
+- **3.3** — solo 2 de las 4 dependencias de `pom.xml`: `spring-boot-starter-security` y `spring-boot-starter-security-oauth2-resource-server`. **No** agregues `spring-security-oauth2-jose` (firma JWT — la hace Keycloak, no `bomerp-backend`) ni el driver `postgresql` (era para la BD propia de `seguridad`).
+- **3.11** — solo el bloque de `OpenApiConfig` (el candado *Authorize* de Swagger). El `SecurityConfig` de ese mismo punto (con `PasswordEncoder`, `AuthenticationManager`, `jwk-set-uri`, y los `permitAll` de `/api/v1/auth/**`/`/.well-known/jwks.json`) **no** aplica tal cual — esos *beans* y rutas son específicos de `seguridad`, que nunca existe en tu camino; escribe `securityFilterChain` directo con `issuer-uri` (7.1) y sin esos dos `permitAll`, y agrégale las reglas de `catalogo`/`ventas` de 3.13/3.15.
+- **3.13** — las reglas de `catalogo` por rol en `SecurityConfig`.
+- **3.14** — `vendedorId` como `String` en `Venta`, leído de `jwt.getSubject()` en `VentaController.crear`.
+- **3.15** — las reglas de `ventas` por rol (`buscar`/`obtener`/`esVendedor`, `resumen`/`anular`).
+
+Si ya construiste `seguridad` completo (3.1-3.12, 3.16-3.17) y vas a reemplazarlo paso a paso, parte de ese estado: esta guía lo asume y lo retira en la sección 7 (incluida la migración de datos viejos de 5.2). Si en cambio vas a ir directo a Keycloak sin construir `seguridad` nunca, las secciones 5.2 y 7.3-7.4 no aplican — no hay `seguridad`/Postgres propio que migrar ni retirar — y saltas directo de los cuatro puntos de arriba a la sección 2.
+
+Las secciones 1 y 2 de S10 (teoría de JWT/RBAC) y 4-5 (actividad autónoma, cierre) son independientes de cuál camino tomes: se evalúan igual en ambos casos.
 
 ## 1. Qué cambia y qué no
 
@@ -36,6 +47,42 @@ flowchart TB
 
     Antes --> Despues
 ```
+
+### 1.1 Arquitectura de la sesión
+
+**Figura 2. Keycloak vive fuera de `bomerp-backend`, en su propio contenedor; `SecurityConfig` lo consume por configuración, no por código**
+
+```mermaid
+flowchart TB
+    Cliente["Cliente<br/>PowerShell / bash / Swagger"]
+
+    subgraph KC["Keycloak (localhost:38080)<br/>contenedor aparte — NO es bomerp-backend"]
+        direction TB
+        KCEndpoint["realm bomerp<br/>POST /realms/bomerp/protocol/openid-connect/token"]
+    end
+
+    subgraph BE["bomerp-backend (un solo proceso Spring Boot)"]
+        direction TB
+        SC["SecurityConfig<br/>Resource Server<br/>valida firma + rol"]
+        Ventas["ventas"]
+        Catalogo["catalogo"]
+        SC -->|"4b. rol autorizado<br/>vendedorId = sub"| Ventas
+        SC -->|"4a. rol autorizado"| Catalogo
+    end
+
+    PG[("Postgres<br/>bomerp-keycloak-db<br/>usuarios, roles")]
+    ORA[("Oracle<br/>BOM_CATALOGO, BOM_VENTAS")]
+
+    Cliente -->|"1. email + password"| KC
+    KC -->|"2. access_token (JWT, RS256)<br/>sub, realm_access.roles"| Cliente
+    Cliente -->|"3. Authorization: Bearer JWT"| SC
+    SC -.->|"issuer-uri<br/>(propiedad de configuración)"| KC
+    KC --> PG
+    Ventas --> ORA
+    Catalogo --> ORA
+```
+
+La diferencia con la Figura 2 de S10 (2.1) no es solo el nombre de la caja: ahí `seguridad` vivía **dentro** del mismo proceso Spring Boot que `ventas`/`catalogo` (un recuadro más, mismo deploy, mismo JVM). Keycloak nunca entra a ese recuadro — es un contenedor aparte, con su propio ciclo de vida y su propio Postgres, y `bomerp-backend` solo lo conoce por una URL (`issuer-uri`). Eso es justo lo que vuelve el reemplazo una propiedad de configuración y no un cambio de código: `SecurityConfig` nunca importa nada de Keycloak, solo le pregunta por HTTP si una firma es válida.
 
 Confirmando lo que ya decía la Tabla 4 de S10 (2.6), ahora con el detalle que faltaba:
 
@@ -299,7 +346,7 @@ curl -X POST http://localhost:38080/realms/bomerp/protocol/openid-connect/token 
 
 Pega el `access_token` recibido en [jwt.io](https://jwt.io) (inspección visual únicamente, 2.3 de S10) y confirma dos cosas: `realm_access.roles` trae `["VENDEDOR"]`; y `sub` es un UUID, no el `"3"` de antes — exactamente la diferencia que la sección 1 anticipó, y la razón por la que 5.2 migró las ventas viejas a ese nuevo valor.
 
-`POST /realms/bomerp/protocol/openid-connect/token` es el endpoint estándar de token de Keycloak (OAuth 2.0/OpenID Connect, S10 2.4) — equivalente a `POST /api/v1/auth/login` de `seguridad`, pero ya no es un endpoint propio de BomERP.
+`POST /realms/bomerp/protocol/openid-connect/token` es el endpoint estándar de token de Keycloak (OAuth 2.0/OpenID Connect, S10 2.6) — equivalente a `POST /api/v1/auth/login` de `seguridad`, pero ya no es un endpoint propio de BomERP.
 
 **Error frecuente**: comparar el `expires_in` de este token con el de `seguridad` y asumir que algo está mal. Por defecto, el realm nuevo trae el *access token* del propio Keycloak (*Realm settings* → *Tokens* → *Access Token Lifespan*) en **5 minutos**, no en la hora que `jwt.expiracion-segundos` dejaba en S10 (3.8) — token expirado a mitad de una prueba no es un bug de la integración, solo un valor por defecto distinto. Ajusta ese campo en el realm si las pruebas de la sección 8 te quedan cortas de tiempo.
 
@@ -355,12 +402,76 @@ docker compose -f compose-dev.yml stop seguridad-db
 docker compose -f compose-dev.yml rm -f seguridad-db
 ```
 
-Quita también el bloque `seguridad-db:` completo de `compose-dev.yml` (el que agregó S10, 3.2) y la línea `seguridad-db-data:` de `volumes:` al final del archivo — ya ningún servicio la usa. Si quieres conservar los datos históricos antes de liberar el volumen (los `vendedorId` ya están a salvo en los atributos de usuario de Keycloak; esto es solo por si quieres consultar algo más adelante), identifica el volumen real y bórralo:
+Quita también el bloque `seguridad-db:` completo de `compose-dev.yml` (el que agregó S10, 3.2) y la línea `seguridad-db-data:` de `volumes:` al final del archivo — ya ningún servicio la usa. Si quieres conservar los datos históricos antes de liberar el volumen (los `vendedorId` migrados ya quedaron a salvo en Oracle, 5.2; esto es solo por si quieres consultar algo más del Postgres viejo), identifica el volumen real y bórralo:
+
+```powershell
+docker volume ls | Select-String seguridad
+docker volume rm <nombre-exacto-que-aparezca>
+```
 
 ```bash
 docker volume ls | grep seguridad
 docker volume rm <nombre-exacto-que-aparezca>
 ```
+
+El nombre real sigue el patrón `<nombre-del-proyecto-compose>_<nombre-del-volumen>` — por ejemplo, `bomerp-backend-dev_seguridad-db-data` (el prefijo `bomerp-backend-dev` viene de `name:` en `compose-dev.yml`, 1). Usa el que te devuelva tu propio `Select-String`/`grep`, no copies este literal.
+
+### 7.4 Limpiar el código de `seguridad`
+
+**Producto del paso:** `bomerp-backend` sin ningún archivo que ya nadie invoca — no solo sin el contenedor.
+
+Son cuatro piezas, no solo la carpeta `seguridad` — dos se borran, una se queda, una se edita:
+
+1. **Borra la carpeta completa** `lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/seguridad/` — de un solo golpe, con todo lo que tiene adentro (`AuthController`, `JwksController`, `JwtService`, `AuthService`/`AuthServiceImpl`, los DTO: `LoginRequest`/`LoginResponse`/`RegistroRequest`/`RegistroResponse`, las entidades `Usuario`/`Rol`, sus repositorios, `UsuarioDetailsService` y `SeguridadDataSourceConfig`). Nada de `catalogo`/`ventas` depende de este paquete:
+
+```powershell
+Remove-Item -Recurse -Force "lp2\bomerp-backend\src\main\java\pe\edu\upeu\bomerp\seguridad"
+```
+
+```bash
+rm -rf lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/seguridad
+```
+
+2. **Borra también `JwtKeyConfig.java`** — vive en el paquete raíz (`pe.edu.upeu.bomerp`), **no** dentro de `seguridad/`, así que el paso 1 no lo toca solo. Nadie necesita generar un par RSA propio: Keycloak administra sus propias claves.
+
+```powershell
+Remove-Item -Force "lp2\bomerp-backend\src\main\java\pe\edu\upeu\bomerp\JwtKeyConfig.java"
+```
+
+```bash
+rm lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/JwtKeyConfig.java
+```
+
+3. **`SecurityConfig.java` (paquete raíz) NO se borra** — ahí sigue el `securityFilterChain` real que protege `catalogo`/`ventas`, y el `JwtAuthenticationConverter` que lee `realm_access.roles` sin que le importe quién firmó el token (7.2). Lo único que queda huérfano ahí son los *beans* `passwordEncoder()` y `authenticationManager()` — ya nadie los inyecta sin `AuthServiceImpl`; puedes quitarlos o dejarlos, ninguna de las dos rompe nada.
+4. **`pom.xml`** — quita estos dos bloques (los que agregó S10, 3.3):
+
+```xml
+<dependency>
+    <groupId>org.springframework.security</groupId>
+    <artifactId>spring-security-oauth2-jose</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.postgresql</groupId>
+    <artifactId>postgresql</artifactId>
+    <scope>runtime</scope>
+</dependency>
+```
+
+`spring-security-oauth2-jose` solo servía para **firmar** el JWT propio con `NimbusJwtEncoder`; Keycloak firma los suyos, `bomerp-backend` nunca firma nada. `org.postgresql:postgresql` queda huérfano porque nada más en `bomerp-backend` usa Postgres hoy (revisa primero que ningún otro módulo lo necesite antes de quitarlo). **No** quites `spring-boot-starter-security-oauth2-resource-server` — ese sigue validando tokens, ahora contra Keycloak.
+
+5. **(Opcional) Simplifica `OracleDataSourceConfig.java`.** Esa clase existe desde 3.4 de S10 por una sola razón: desambiguar **dos** `DataSource` (`@Primary`/`@Qualifier`, S10 3.4 "Error frecuente"). Con `SeguridadDataSourceConfig` borrado (punto 1), vuelve a haber uno solo — exactamente la situación de antes de S10, cuando Spring Boot autoconfiguraba todo él solo a partir de `spring.datasource.*` (`application-dev.yml`, que ya tiene esas propiedades y no cambia). Puedes borrar el archivo completo:
+
+```powershell
+Remove-Item -Force "lp2\bomerp-backend\src\main\java\pe\edu\upeu\bomerp\OracleDataSourceConfig.java"
+```
+
+```bash
+rm lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/OracleDataSourceConfig.java
+```
+
+Spring Boot vuelve a armar `DataSource`/`EntityManagerFactory`/`TransactionManager` solo, y sigue encontrando los repositorios de `catalogo`/`ventas` sin `@EnableJpaRepositories` explícito, porque están en subpaquetes de `pe.edu.upeu.bomerp` (el paquete de `BomerpBackendApplication`) — el escaneo por defecto los cubre igual. **No lo he probado contra tu proyecto real** — recompila y prueba `catalogo`/`ventas` (8) después de borrarlo; si algo falla, lo más seguro es restaurar el archivo (`git checkout` sobre él) en vez de perseguir el error a mitad de la guía.
+
+Recompila (`.\mvnw.cmd spring-boot:run` desde cero) y repite una consulta protegida (8) para confirmar que nada se rompió al borrar.
 
 ## 8. Probar de punta a punta
 
@@ -452,7 +563,7 @@ http://localhost:38080/realms/bomerp/protocol/openid-connect/auth?client_id=bome
 
 2. Verás la pantalla de login del realm **`bomerp`** (no `master` — si te aparece pidiendo `admin`, revisa que la URL diga `/realms/bomerp/...`, no `/realms/master/...`). Entra con `vendedor1@bomerp.com` / `Bomerp2026!`.
 
-**Figura 2. Pantalla de login de Keycloak para el realm `bomerp`**
+**Figura 3. Pantalla de login de Keycloak para el realm `bomerp`**
 
 ![Pantalla de login hospedada por Keycloak para el realm bomerp, con el título BOMERP, campos de usuario (vendedor1@bomerp.com) y contraseña, y la URL localhost:38080/realms/bomerp/login-actions/authenticate](img/s10b-8.1-login-keycloak-bomerp.png)
 
@@ -492,12 +603,35 @@ O forzar un login nuevo sin cerrar la sesión existente, agregando `&prompt=logi
 http://localhost:38080/realms/bomerp/protocol/openid-connect/auth?client_id=bomerp-frontend&redirect_uri=http://localhost:4200/callback&response_type=code&scope=openid&prompt=login
 ```
 
+6. (Opcional) Probar el *refresh token*. Tanto el paso 4 de aquí (*Authorization Code*) como el token de la sección 6 (*Direct Access Grant*) ya incluyen un `refresh_token` en la respuesta, sin configurar nada extra en Keycloak — revísalo:
+
+```powershell
+$login2 | ConvertTo-Json
+```
+
+Cámbialo por un `access_token` nuevo, sin volver a pedir usuario/contraseña — es justo lo que una SPA real hace sola, en segundo plano, poco antes de que el token actual expire:
+
+```powershell
+$refreshed = Invoke-RestMethod -Method Post -Uri "http://localhost:38080/realms/bomerp/protocol/openid-connect/token" `
+  -ContentType "application/x-www-form-urlencoded" `
+  -Body "grant_type=refresh_token&client_id=bomerp-frontend&refresh_token=$($login2.refresh_token)"
+$refreshed.access_token
+```
+
+```bash
+refreshedAccessToken=$(curl -s -X POST http://localhost:38080/realms/bomerp/protocol/openid-connect/token \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=refresh_token&client_id=bomerp-frontend&refresh_token=$refreshToken" | jq -r '.access_token')
+```
+
+`bomerp-backend` nunca ve ni usa el `refresh_token` — es un *Resource Server*, solo valida `access_token` en cada request. El refresco es trabajo exclusivo del cliente (la SPA en S11, vía `keycloak-js`/`angular-oauth2-oidc`), nunca del backend.
+
 ## 9. Qué queda pendiente
 
 - **S11** reconfigura el cliente `bomerp-frontend` para *Authorization Code* + PKCE (S10, 2.6) — el flujo real que usará la SPA, desactivando *Direct access grants* (sección 4) y activando **Require PKCE**. El login deja de ser un formulario propio de BomERP: redirige a la pantalla de Keycloak, igual que viste en 8.1, pero capturado y completado por la SPA en vez de a mano.
-- **Limpieza del paquete `seguridad`**: `AuthController`, `JwtService`, `JwksController`, `JwtKeyConfig`, `SecurityConfig` (las piezas de `seguridad`, no `OracleDataSourceConfig`), `SeguridadDataSourceConfig` y las entidades `Usuario`/`Rol` quedan sin ningún código que los invoque — pueden borrarse de `bomerp-backend` en un commit aparte, sin que eso afecte a `catalogo` ni a `ventas` (la discusión de por qué esto es una limpieza de archivos y no una migración se documentó en el chat de diseño de S10, no en una guía).
+- **Limpieza del paquete `seguridad`**: ya se hizo en 7.4 — este punto queda aquí solo como referencia, no como pendiente.
 - **`compose-dev.yml`**: `seguridad-db` ya se retiró en 7.3 — este punto queda aquí solo como referencia, no como pendiente.
-- **`pom.xml`**: `spring-security-oauth2-jose` (firmaba el JWT propio) deja de hacer falta; `spring-boot-starter-security-oauth2-resource-server` **sigue haciendo falta** (sigue validando, ahora contra Keycloak); el driver `org.postgresql:postgresql` se retira solo si ningún otro módulo de BomERP usa Postgres.
+- **`pom.xml`**: ya se limpió en 7.4 — este punto queda aquí solo como referencia, no como pendiente.
 - **Producción real**: el motor de base de datos ya queda resuelto desde la sección 2 (`keycloak-db`, Postgres). Lo que falta es `start-dev` (sección 2) en sí — no es apto para producción, exige modo `start` y TLS, ninguno de los dos configurado aquí (ver la nota de la sección 2).
 - **`vendedorId` para usuarios nuevos: resuelto por el propio rediseño**: con `vendedorId = sub` (texto, no número — S10, 3.2/3.14), un vendedor creado **después** de este reemplazo no necesita ningún paso manual — Keycloak le genera su UUID solo, al crearlo, y ese UUID es automáticamente su `vendedorId` desde la primera venta que registre. Esto era un problema real con el diseño anterior (un `vendedorId` numérico no tenía de dónde salir sin una tabla aparte); dejó de serlo en cuanto `vendedorId` se diseñó como texto desde S10.
 
