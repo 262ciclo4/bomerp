@@ -3956,11 +3956,13 @@
 <h2 id="1-que-cambia-y-que-no">1. Qué cambia y qué no<a class="headerlink" href="#1-que-cambia-y-que-no" title="Permanent link">&para;</a></h2>
 <p><strong>Figura 1. Antes y después del reemplazo</strong></p>
 <pre class="mermaid"><code>flowchart TB
-    subgraph Antes["Hoy (S10)"]
+    subgraph Antes["S10 (antes)"]
         direction TB
         ClienteA["Cliente"]
-        AuthA["seguridad&lt;br/&gt;emite el JWT"]
-        SCA["SecurityConfig&lt;br/&gt;jwk-set-uri → localhost:8080"]
+        subgraph BackendA["bomerp-backend"]
+            AuthA["seguridad&lt;br/&gt;emite el JWT"]
+            SCA["SecurityConfig&lt;br/&gt;jwk-set-uri → localhost:8080"]
+        end
         ClienteA --&gt; AuthA
         SCA -.-&gt; AuthA
     end
@@ -3968,8 +3970,12 @@
     subgraph Despues["Después (esta guía)"]
         direction TB
         ClienteD["Cliente"]
-        KC["Keycloak&lt;br/&gt;realm bomerp&lt;br/&gt;emite el JWT"]
-        SCD["SecurityConfig&lt;br/&gt;issuer-uri → Keycloak"]
+        subgraph BackendD["bomerp-backend"]
+            SCD["SecurityConfig&lt;br/&gt;issuer-uri → Keycloak"]
+        end
+        subgraph KeycloakD["Keycloak"]
+            KC["realm bomerp&lt;br/&gt;emite el JWT"]
+        end
         ClienteD --&gt; KC
         SCD -.-&gt; KC
     end
@@ -3985,7 +3991,7 @@
         KCEndpoint["realm bomerp&lt;br/&gt;POST /realms/bomerp/protocol/openid-connect/token"]
     end
 
-    subgraph BE["bomerp-backend (un solo proceso Spring Boot)"]
+    subgraph BE["bomerp-backend"]
         direction TB
         SC["SecurityConfig&lt;br/&gt;Resource Server&lt;br/&gt;valida firma + rol"]
         Ventas["ventas"]
