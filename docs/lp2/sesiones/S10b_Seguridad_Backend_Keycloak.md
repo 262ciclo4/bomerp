@@ -10,12 +10,48 @@ Esta guía **no** es una sesión del sílabo: ninguna fila de `silabo_lp2_2026_2
 
 **Requisito real:** no necesitas tener `seguridad` construido ni corriendo — nunca coexiste con Keycloak, uno reemplaza al otro. Lo indispensable de S10 es la lógica de autorización que vive en `bomerp-backend` y no depende de quién emite el token:
 
-- **3.2** — la columna `VENDEDOR_ID VARCHAR2(36)` en `VENTAS` (el `ALTER TABLE`; la parte de Postgres/`seguridad` de ese mismo punto no aplica aquí).
+- **3.2** — la columna `VENDEDOR_ID VARCHAR2(36)` en `VENTAS` (el `ALTER TABLE`; la parte de Postgres/`seguridad` de ese mismo punto no aplica aquí). **Verifica el tipo antes de asumir que ya la tienes**: la rama congelada `s10-seguridad-jwt-roles` la guardó como `NUMBER` (diseño previo a [ADR-005](../adr/ADR-005-seguridad-jwt-propio-listo-para-reemplazo.md), antes de decidir que `vendedorId` sería texto listo para un UUID) — código abajo para corregirla.
 - **3.3** — solo 2 de las 4 dependencias de `pom.xml`: `spring-boot-starter-security` y `spring-boot-starter-security-oauth2-resource-server`. **No** agregues `spring-security-oauth2-jose` (firma JWT — la hace Keycloak, no `bomerp-backend`) ni el driver `postgresql` (era para la BD propia de `seguridad`).
 - **3.11** — solo el bloque de `OpenApiConfig` (el candado *Authorize* de Swagger). El `SecurityConfig` de ese mismo punto (con `PasswordEncoder`, `AuthenticationManager`, `jwk-set-uri`, y los `permitAll` de `/api/v1/auth/**`/`/.well-known/jwks.json`) **no** aplica tal cual — esos *beans* y rutas son específicos de `seguridad`, que nunca existe en tu camino; escribe `securityFilterChain` directo con `issuer-uri` (7.1) y sin esos dos `permitAll`, y agrégale las reglas de `catalogo`/`ventas` de 3.13/3.15.
 - **3.13** — las reglas de `catalogo` por rol en `SecurityConfig`.
 - **3.14** — `vendedorId` como `String` en `Venta`, leído de `jwt.getSubject()` en `VentaController.crear`.
 - **3.15** — las reglas de `ventas` por rol (`buscar`/`obtener`/`esVendedor`, `resumen`/`anular`).
+
+Confirma el tipo real de la columna antes de seguir:
+
+```powershell
+@'
+DESC VENTAS;
+'@ | docker exec -i bomerp-oracle bash -c "sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1"
+```
+
+```bash
+docker exec -i bomerp-oracle bash -c "sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1" <<'EOF'
+DESC VENTAS;
+EOF
+```
+
+Si `VENDEDOR_ID` sale como `NUMBER`, el `ALTER TABLE ... ADD` de 3.2 va a fallar porque la columna ya existe — conviértela en vez de agregarla. Oracle no deja cambiar el tipo de una columna con datos (`ORA-01439`), así que el camino seguro es: columna nueva, copiar convirtiendo a texto, borrar la vieja, renombrar:
+
+```powershell
+@'
+ALTER TABLE VENTAS ADD VENDEDOR_ID_TMP VARCHAR2(36);
+UPDATE VENTAS SET VENDEDOR_ID_TMP = TO_CHAR(VENDEDOR_ID) WHERE VENDEDOR_ID IS NOT NULL;
+ALTER TABLE VENTAS DROP COLUMN VENDEDOR_ID;
+ALTER TABLE VENTAS RENAME COLUMN VENDEDOR_ID_TMP TO VENDEDOR_ID;
+'@ | docker exec -i bomerp-oracle bash -c "sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1"
+```
+
+```bash
+docker exec -i bomerp-oracle bash -c "sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1" <<'EOF'
+ALTER TABLE VENTAS ADD VENDEDOR_ID_TMP VARCHAR2(36);
+UPDATE VENTAS SET VENDEDOR_ID_TMP = TO_CHAR(VENDEDOR_ID) WHERE VENDEDOR_ID IS NOT NULL;
+ALTER TABLE VENTAS DROP COLUMN VENDEDOR_ID;
+ALTER TABLE VENTAS RENAME COLUMN VENDEDOR_ID_TMP TO VENDEDOR_ID;
+EOF
+```
+
+Repite el `DESC VENTAS` de arriba: `VENDEDOR_ID` debe quedar como `VARCHAR2(36)`, sin `NOT NULL`. Los valores que ya tenía (el `id` numérico-como-texto de `usuarios`, ej. `"3"`) sobreviven la conversión — 5.2 los reemplaza por el UUID nuevo de Keycloak.
 
 Si ya construiste `seguridad` completo (3.1-3.12, 3.16-3.17) y vas a reemplazarlo paso a paso, parte de ese estado: esta guía lo asume y lo retira en la sección 7 (incluida la migración de datos viejos de 5.2). Si en cambio vas a ir directo a Keycloak sin construir `seguridad` nunca, las secciones 5.2 y 7.3-7.4 no aplican — no hay `seguridad`/Postgres propio que migrar ni retirar — y saltas directo de los cuatro puntos de arriba a la sección 2.
 
@@ -629,11 +665,7 @@ refreshedAccessToken=$(curl -s -X POST http://localhost:38080/realms/bomerp/prot
 ## 9. Qué queda pendiente
 
 - **S11** reconfigura el cliente `bomerp-frontend` para *Authorization Code* + PKCE (S10, 2.6) — el flujo real que usará la SPA, desactivando *Direct access grants* (sección 4) y activando **Require PKCE**. El login deja de ser un formulario propio de BomERP: redirige a la pantalla de Keycloak, igual que viste en 8.1, pero capturado y completado por la SPA en vez de a mano.
-- **Limpieza del paquete `seguridad`**: ya se hizo en 7.4 — este punto queda aquí solo como referencia, no como pendiente.
-- **`compose-dev.yml`**: `seguridad-db` ya se retiró en 7.3 — este punto queda aquí solo como referencia, no como pendiente.
-- **`pom.xml`**: ya se limpió en 7.4 — este punto queda aquí solo como referencia, no como pendiente.
 - **Producción real**: el motor de base de datos ya queda resuelto desde la sección 2 (`keycloak-db`, Postgres). Lo que falta es `start-dev` (sección 2) en sí — no es apto para producción, exige modo `start` y TLS, ninguno de los dos configurado aquí (ver la nota de la sección 2).
-- **`vendedorId` para usuarios nuevos: resuelto por el propio rediseño**: con `vendedorId = sub` (texto, no número — S10, 3.2/3.14), un vendedor creado **después** de este reemplazo no necesita ningún paso manual — Keycloak le genera su UUID solo, al crearlo, y ese UUID es automáticamente su `vendedorId` desde la primera venta que registre. Esto era un problema real con el diseño anterior (un `vendedorId` numérico no tenía de dónde salir sin una tabla aparte); dejó de serlo en cuanto `vendedorId` se diseñó como texto desde S10.
 
 ## Bibliografía
 

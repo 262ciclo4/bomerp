@@ -1171,3 +1171,5 @@ Tiempo: 5 min.
 3. Larman, C. (2004). *Applying UML and Patterns: An Introduction to Object-Oriented Analysis and Design and Iterative Development* (3rd ed.). Prentice Hall.
 4. Larman, C. (2001). *Protected Variation: The Importance of Being Closed*. IEEE Software, 18(3), 89-91. https://martinfowler.com/ieeeSoftware/protectedVariation.pdf
 5. Fowler, M. (2004). *Inversion of Control Containers and the Dependency Injection pattern*. martinfowler.com. https://martinfowler.com/articles/injection.html
+6. Liskov, B. (1987). Keynote address - data abstraction and hierarchy. *ACM SIGPLAN Notices*, 23(5), 17-34.
+7. Meyer, B. (1988). *Object-Oriented Software Construction*. Prentice Hall.

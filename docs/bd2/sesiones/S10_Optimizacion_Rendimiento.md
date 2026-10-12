@@ -588,10 +588,9 @@ Tiempo: 5 min.
 
 ## Bibliografía
 
-1. Fortune. (2016, 15 de mayo). *SWIFT confirms second cyberattack hit a bank*. https://fortune.com/2016/05/15/swift-responsible-bangladesh-heist/
-2. Oracle Corporation. (2024g). *Verifying That Indexes Are Being Used*. SQL Tuning Guide. https://docs.oracle.com/en/database/oracle/oracle-database/23/tgsql/indexes-and-table-access.html
-3. Oracle Corporation. (2024h). *Oracle Diagnostics Pack*. Licensing Information. https://docs.oracle.com/en/database/oracle/oracle-database/23/dblic/Licensing-Information.html
-4. Oracle Corporation. (2024i). *DBMS_STATS*. PL/SQL Packages and Types Reference. https://docs.oracle.com/en/database/oracle/oracle-database/23/arpls/DBMS_STATS.html
-5. Oracle Corporation. (2024j). *Managing the Automatic Workload Repository*. Database Performance Tuning Guide. https://docs.oracle.com/en/database/oracle/oracle-database/23/tgdba/gathering-database-statistics.html
-6. Oracle Corporation. (2024k). *Dynamic Performance (V$) Views*. Database Reference. https://docs.oracle.com/en/database/oracle/oracle-database/23/refrn/dynamic-performance-V-views.html
-7. Oracle Corporation. (2024l). *Using Composite Indexes*. SQL Tuning Guide. https://docs.oracle.com/en/database/oracle/oracle-database/23/tgsql/indexes-and-table-access.html
+1. Oracle Corporation. (2024g). *Verifying That Indexes Are Being Used*. SQL Tuning Guide. https://docs.oracle.com/en/database/oracle/oracle-database/23/tgsql/indexes-and-table-access.html
+2. Oracle Corporation. (2024h). *Oracle Diagnostics Pack*. Licensing Information. https://docs.oracle.com/en/database/oracle/oracle-database/23/dblic/Licensing-Information.html
+3. Oracle Corporation. (2024i). *DBMS_STATS*. PL/SQL Packages and Types Reference. https://docs.oracle.com/en/database/oracle/oracle-database/23/arpls/DBMS_STATS.html
+4. Oracle Corporation. (2024j). *Managing the Automatic Workload Repository*. Database Performance Tuning Guide. https://docs.oracle.com/en/database/oracle/oracle-database/23/tgdba/gathering-database-statistics.html
+5. Oracle Corporation. (2024k). *Dynamic Performance (V$) Views*. Database Reference. https://docs.oracle.com/en/database/oracle/oracle-database/23/refrn/dynamic-performance-V-views.html
+6. Oracle Corporation. (2024l). *Using Composite Indexes*. SQL Tuning Guide. https://docs.oracle.com/en/database/oracle/oracle-database/23/tgsql/indexes-and-table-access.html
