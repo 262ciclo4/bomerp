@@ -3360,6 +3360,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#parte-a-keycloak-sin-tocar-bomerp-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parte A — Keycloak, sin tocar bomerp-backend
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#2-descargar-y-levantar-keycloak" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3383,10 +3394,21 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#30-opcional-espanol-dos-configuraciones-distintas-no-una" class="md-nav__link">
+  <a href="#30-opcional-espanol-en-el-admin-console" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.0 (Opcional) Español — dos configuraciones distintas, no una
+        3.0 (Opcional) Español en el Admin Console
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#31-crear-el-realm-y-los-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Crear el realm y los roles
       
     </span>
   </a>
@@ -3429,25 +3451,25 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="5. Crear los usuarios semilla">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#51-crear-los-usuarios-y-asignarles-rol" class="md-nav__link">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-verificar-el-token-antes-de-tocar-bomerp-backend" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.1 Crear los usuarios y asignarles rol
+        6. Verificar el token antes de tocar bomerp-backend
       
     </span>
   </a>
   
-</li>
+    <nav class="md-nav" aria-label="6. Verificar el token antes de tocar bomerp-backend">
+      <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#52-migrar-las-ventas-ya-registradas-al-nuevo-sub" class="md-nav__link">
+  <a href="#61-opcional-simular-el-login-real-con-redirect" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.2 Migrar las ventas ya registradas al nuevo sub
+        6.1 (Opcional) Simular el login real, con redirect
       
     </span>
   </a>
@@ -3460,10 +3482,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#6-verificar-el-token-antes-de-tocar-bomerp-backend" class="md-nav__link">
+  <a href="#parte-b-integrar-bomerp-backend-con-keycloak" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6. Verificar el token antes de tocar bomerp-backend
+        Parte B — Integrar bomerp-backend con Keycloak
       
     </span>
   </a>
@@ -3494,10 +3516,38 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#72-confirmar-que-catalogo-y-ventas-no-se-tocan" class="md-nav__link">
+  <a href="#72-agregar-las-dependencias-y-escribir-securityconfigopenapiconfig-si-vas-directo-a-keycloak" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7.2 Confirmar que catalogo y ventas no se tocan
+        7.2 Agregar las dependencias y escribir SecurityConfig/OpenApiConfig (si vas directo a Keycloak)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-c-profundizar-cerrar-la-migracion-y-verificar-que-ventas-filtra-por-dueno" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parte C — Profundizar: cerrar la migración y verificar que ventas filtra por dueño
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte C — Profundizar: cerrar la migración y verificar que ventas filtra por dueño">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#73-agregar-vendedorid-a-venta-y-filtrar-ventas-por-dueno-si-vas-directo-a-keycloak" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 Agregar vendedorId a Venta y filtrar ventas por dueño (si vas directo a Keycloak)
       
     </span>
   </a>
@@ -3505,10 +3555,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#73-retirar-seguridad-db" class="md-nav__link">
+  <a href="#74-confirmar-que-catalogo-y-ventas-no-se-tocan" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7.3 Retirar seguridad-db
+        7.4 Confirmar que catalogo y ventas no se tocan
       
     </span>
   </a>
@@ -3516,10 +3566,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#74-limpiar-el-codigo-de-seguridad" class="md-nav__link">
+  <a href="#75-migrar-las-ventas-ya-registradas-al-nuevo-sub" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7.4 Limpiar el código de seguridad
+        7.5 Migrar las ventas ya registradas al nuevo sub
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#76-retirar-seguridad-db" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.6 Retirar seguridad-db
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#77-limpiar-el-codigo-de-seguridad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.7 Limpiar el código de seguridad
       
     </span>
   </a>
@@ -3540,23 +3612,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="8. Probar de punta a punta">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#81-opcional-simular-el-login-real-con-redirect" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        8.1 (Opcional) Simular el login real, con redirect
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -3564,6 +3619,17 @@
     <span class="md-ellipsis">
       
         9. Qué queda pendiente
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anexo-convertir-vendedor_id-de-number-a-varchar2-si-tu-rama-quedo-con-el-diseno-anterior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anexo: Convertir VENDEDOR_ID de NUMBER a VARCHAR2 (si tu rama quedó con el diseño anterior)
       
     </span>
   </a>
@@ -3671,6 +3737,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#parte-a-keycloak-sin-tocar-bomerp-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parte A — Keycloak, sin tocar bomerp-backend
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#2-descargar-y-levantar-keycloak" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3694,10 +3771,21 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#30-opcional-espanol-dos-configuraciones-distintas-no-una" class="md-nav__link">
+  <a href="#30-opcional-espanol-en-el-admin-console" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.0 (Opcional) Español — dos configuraciones distintas, no una
+        3.0 (Opcional) Español en el Admin Console
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#31-crear-el-realm-y-los-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Crear el realm y los roles
       
     </span>
   </a>
@@ -3740,25 +3828,25 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="5. Crear los usuarios semilla">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#51-crear-los-usuarios-y-asignarles-rol" class="md-nav__link">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-verificar-el-token-antes-de-tocar-bomerp-backend" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.1 Crear los usuarios y asignarles rol
+        6. Verificar el token antes de tocar bomerp-backend
       
     </span>
   </a>
   
-</li>
+    <nav class="md-nav" aria-label="6. Verificar el token antes de tocar bomerp-backend">
+      <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#52-migrar-las-ventas-ya-registradas-al-nuevo-sub" class="md-nav__link">
+  <a href="#61-opcional-simular-el-login-real-con-redirect" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.2 Migrar las ventas ya registradas al nuevo sub
+        6.1 (Opcional) Simular el login real, con redirect
       
     </span>
   </a>
@@ -3771,10 +3859,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#6-verificar-el-token-antes-de-tocar-bomerp-backend" class="md-nav__link">
+  <a href="#parte-b-integrar-bomerp-backend-con-keycloak" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6. Verificar el token antes de tocar bomerp-backend
+        Parte B — Integrar bomerp-backend con Keycloak
       
     </span>
   </a>
@@ -3805,10 +3893,38 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#72-confirmar-que-catalogo-y-ventas-no-se-tocan" class="md-nav__link">
+  <a href="#72-agregar-las-dependencias-y-escribir-securityconfigopenapiconfig-si-vas-directo-a-keycloak" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7.2 Confirmar que catalogo y ventas no se tocan
+        7.2 Agregar las dependencias y escribir SecurityConfig/OpenApiConfig (si vas directo a Keycloak)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-c-profundizar-cerrar-la-migracion-y-verificar-que-ventas-filtra-por-dueno" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parte C — Profundizar: cerrar la migración y verificar que ventas filtra por dueño
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte C — Profundizar: cerrar la migración y verificar que ventas filtra por dueño">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#73-agregar-vendedorid-a-venta-y-filtrar-ventas-por-dueno-si-vas-directo-a-keycloak" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 Agregar vendedorId a Venta y filtrar ventas por dueño (si vas directo a Keycloak)
       
     </span>
   </a>
@@ -3816,10 +3932,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#73-retirar-seguridad-db" class="md-nav__link">
+  <a href="#74-confirmar-que-catalogo-y-ventas-no-se-tocan" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7.3 Retirar seguridad-db
+        7.4 Confirmar que catalogo y ventas no se tocan
       
     </span>
   </a>
@@ -3827,10 +3943,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#74-limpiar-el-codigo-de-seguridad" class="md-nav__link">
+  <a href="#75-migrar-las-ventas-ya-registradas-al-nuevo-sub" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7.4 Limpiar el código de seguridad
+        7.5 Migrar las ventas ya registradas al nuevo sub
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#76-retirar-seguridad-db" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.6 Retirar seguridad-db
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#77-limpiar-el-codigo-de-seguridad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.7 Limpiar el código de seguridad
       
     </span>
   </a>
@@ -3851,23 +3989,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="8. Probar de punta a punta">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#81-opcional-simular-el-login-real-con-redirect" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        8.1 (Opcional) Simular el login real, con redirect
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -3875,6 +3996,17 @@
     <span class="md-ellipsis">
       
         9. Qué queda pendiente
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anexo-convertir-vendedor_id-de-number-a-varchar2-si-tu-rama-quedo-con-el-diseno-anterior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anexo: Convertir VENDEDOR_ID de NUMBER a VARCHAR2 (si tu rama quedó con el diseño anterior)
       
     </span>
   </a>
@@ -3917,41 +4049,22 @@
 <h2 id="0-que-es-esta-guia-y-que-no-es">0. Qué es esta guía y qué no es<a class="headerlink" href="#0-que-es-esta-guia-y-que-no-es" title="Permanent link">&para;</a></h2>
 <p>Esta guía <strong>no</strong> es una sesión del sílabo: ninguna fila de <code>silabo_lp2_2026_2.md</code> ni de <code>docs/lp2/index.md</code> la pide, no tiene metodología, caso de motivación, actividad autónoma ni rúbrica, y no se evalúa. Es la continuación directa de <a href="../S10_Seguridad_Backend_JWT_Roles/">S10_Seguridad_Backend_JWT_Roles.md</a> — la sesión real y evaluada —, que construyó el módulo <code>seguridad</code> deliberadamente temporal y "listo para reemplazo" (<a href="../../adr/ADR-005-seguridad-jwt-propio-listo-para-reemplazo/">ADR-005</a>, 2.6 de esa guía, Tabla 4). Esta guía documenta, paso a paso y verificado, el reemplazo que esa ADR dejó como dirección arquitectónica sin construir: <strong>desde descargar Keycloak hasta que <code>bomerp-backend</code> valide tokens suyos en vez de los propios</strong>.</p>
 <p>Úsala si tu equipo decide adoptar Keycloak en U3 o después — no antes, y no como parte de la evaluación de S10 o S11. La sesión S10 real queda exactamente como está; esta guía no le resta ni le agrega alcance.</p>
+<p>La guía está dividida en tres partes, en el orden en que de verdad hace falta tocar cada pieza:</p>
+<ul>
+<li><strong>Parte A</strong> (secciones 2-6) construye y prueba Keycloak solo — realm, cliente, usuarios, un token real inspeccionado, y hasta el flujo completo de login con redirect (6.1). <strong>Nada de esto toca <code>bomerp-backend</code></strong> — ni un archivo, ni un reinicio.</li>
+<li><strong>Parte B</strong> (7.1-7.2) es el mínimo que deja a <code>bomerp-backend</code> validando tokens de Keycloak: cambiar la propiedad de validación, y —si nunca construiste <code>seguridad</code>— el <code>pom.xml</code> y el <code>SecurityConfig</code>/<code>OpenApiConfig</code> completos. Si ya construiste <code>seguridad</code> (3.14-3.15 de S10 ya te dejaron <code>vendedorId</code>/RN8 funcionando), <strong>con esto ya alcanza para la sesión</strong>: <code>catalogo</code> y <code>ventas</code> quedan protegidos por Keycloak de punta a punta. Si fuiste directo a Keycloak, sigue a 7.3.</li>
+<li><strong>Parte C</strong> (7.3 en adelante) profundiza: 7.3 es indispensable si fuiste directo a Keycloak — agrega <code>vendedorId</code> a <code>Venta</code> y el filtro por dueño (RN8), que en tu camino nunca se construyó. De 7.4 en adelante, confirma que nada de <code>catalogo</code>/<code>ventas</code> cambió si ya tenías <code>seguridad</code>, migra los datos viejos si aplica, retira lo que sobra, y verifica con la matriz completa que cada <code>VENDEDOR</code> sigue viendo solo sus propias ventas mientras <code>SUPERVISOR</code>/<code>ADMIN</code> las ven todas — ahora con tokens de Keycloak en vez de <code>seguridad</code>.</li>
+</ul>
 <p><strong>Requisito real:</strong> no necesitas tener <code>seguridad</code> construido ni corriendo — nunca coexiste con Keycloak, uno reemplaza al otro. Lo indispensable de S10 es la lógica de autorización que vive en <code>bomerp-backend</code> y no depende de quién emite el token:</p>
 <ul>
-<li><strong>3.2</strong> — la columna <code>VENDEDOR_ID VARCHAR2(36)</code> en <code>VENTAS</code> (el <code>ALTER TABLE</code>; la parte de Postgres/<code>seguridad</code> de ese mismo punto no aplica aquí). <strong>Verifica el tipo antes de asumir que ya la tienes</strong>: la rama congelada <code>s10-seguridad-jwt-roles</code> la guardó como <code>NUMBER</code> (diseño previo a <a href="../../adr/ADR-005-seguridad-jwt-propio-listo-para-reemplazo/">ADR-005</a>, antes de decidir que <code>vendedorId</code> sería texto listo para un UUID) — código abajo para corregirla.</li>
-<li><strong>3.3</strong> — solo 2 de las 4 dependencias de <code>pom.xml</code>: <code>spring-boot-starter-security</code> y <code>spring-boot-starter-security-oauth2-resource-server</code>. <strong>No</strong> agregues <code>spring-security-oauth2-jose</code> (firma JWT — la hace Keycloak, no <code>bomerp-backend</code>) ni el driver <code>postgresql</code> (era para la BD propia de <code>seguridad</code>).</li>
-<li><strong>3.11</strong> — solo el bloque de <code>OpenApiConfig</code> (el candado <em>Authorize</em> de Swagger). El <code>SecurityConfig</code> de ese mismo punto (con <code>PasswordEncoder</code>, <code>AuthenticationManager</code>, <code>jwk-set-uri</code>, y los <code>permitAll</code> de <code>/api/v1/auth/**</code>/<code>/.well-known/jwks.json</code>) <strong>no</strong> aplica tal cual — esos <em>beans</em> y rutas son específicos de <code>seguridad</code>, que nunca existe en tu camino; escribe <code>securityFilterChain</code> directo con <code>issuer-uri</code> (7.1) y sin esos dos <code>permitAll</code>, y agrégale las reglas de <code>catalogo</code>/<code>ventas</code> de 3.13/3.15.</li>
+<li><strong>3.2</strong> — la columna <code>VENDEDOR_ID VARCHAR2(36)</code> en <code>VENTAS</code> (el <code>ALTER TABLE</code>; la parte de Postgres/<code>seguridad</code> de ese mismo punto no aplica aquí). <strong>Verifica el tipo antes de asumir que ya la tienes</strong>: la rama congelada <code>s10-seguridad-jwt-roles</code> la guardó como <code>NUMBER</code> (diseño previo a <a href="../../adr/ADR-005-seguridad-jwt-propio-listo-para-reemplazo/">ADR-005</a>, antes de decidir que <code>vendedorId</code> sería texto listo para un UUID) — si es tu caso, el Anexo al final de esta guía trae el código para corregirla, antes de seguir.</li>
+<li><strong>3.3</strong> — solo 2 de las 4 dependencias de <code>pom.xml</code>: <code>spring-boot-starter-security</code> y <code>spring-boot-starter-security-oauth2-resource-server</code>. <strong>No</strong> agregues <code>spring-security-oauth2-jose</code> (firma JWT — la hace Keycloak, no <code>bomerp-backend</code>) ni el driver <code>postgresql</code> (era para la BD propia de <code>seguridad</code>). Si nunca construiste <code>seguridad</code>, 7.2 trae el bloque exacto a pegar.</li>
+<li><strong>3.11</strong> — solo el bloque de <code>OpenApiConfig</code> (el candado <em>Authorize</em> de Swagger). El <code>SecurityConfig</code> de ese mismo punto (con <code>PasswordEncoder</code>, <code>AuthenticationManager</code>, <code>jwk-set-uri</code>, y los <code>permitAll</code> de <code>/api/v1/auth/**</code>/<code>/.well-known/jwks.json</code>) <strong>no</strong> aplica tal cual — esos <em>beans</em> y rutas son específicos de <code>seguridad</code>, que nunca existe en tu camino; 7.2 trae la versión directa a Keycloak, sin esos dos <code>permitAll</code>, con las reglas de <code>catalogo</code>/<code>ventas</code> de 3.13/3.15 ya incluidas.</li>
 <li><strong>3.13</strong> — las reglas de <code>catalogo</code> por rol en <code>SecurityConfig</code>.</li>
 <li><strong>3.14</strong> — <code>vendedorId</code> como <code>String</code> en <code>Venta</code>, leído de <code>jwt.getSubject()</code> en <code>VentaController.crear</code>.</li>
 <li><strong>3.15</strong> — las reglas de <code>ventas</code> por rol (<code>buscar</code>/<code>obtener</code>/<code>esVendedor</code>, <code>resumen</code>/<code>anular</code>).</li>
 </ul>
-<p>Confirma el tipo real de la columna antes de seguir:</p>
-<div class="highlight"><pre><span></span><code><span class="sh">@'</span>
-<span class="sh">DESC VENTAS;</span>
-<span class="sh">'@</span> <span class="p">|</span> <span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="n">bomerp-oracle</span> <span class="n">bash</span> <span class="n">-c</span> <span class="s2">"sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1"</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>bomerp-oracle<span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">"sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1"</span><span class="w"> </span><span class="s">&lt;&lt;'EOF'</span>
-<span class="s">DESC VENTAS;</span>
-<span class="s">EOF</span>
-</code></pre></div>
-<p>Si <code>VENDEDOR_ID</code> sale como <code>NUMBER</code>, el <code>ALTER TABLE ... ADD</code> de 3.2 va a fallar porque la columna ya existe — conviértela en vez de agregarla. Oracle no deja cambiar el tipo de una columna con datos (<code>ORA-01439</code>), así que el camino seguro es: columna nueva, copiar convirtiendo a texto, borrar la vieja, renombrar:</p>
-<div class="highlight"><pre><span></span><code><span class="sh">@'</span>
-<span class="sh">ALTER TABLE VENTAS ADD VENDEDOR_ID_TMP VARCHAR2(36);</span>
-<span class="sh">UPDATE VENTAS SET VENDEDOR_ID_TMP = TO_CHAR(VENDEDOR_ID) WHERE VENDEDOR_ID IS NOT NULL;</span>
-<span class="sh">ALTER TABLE VENTAS DROP COLUMN VENDEDOR_ID;</span>
-<span class="sh">ALTER TABLE VENTAS RENAME COLUMN VENDEDOR_ID_TMP TO VENDEDOR_ID;</span>
-<span class="sh">'@</span> <span class="p">|</span> <span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="n">bomerp-oracle</span> <span class="n">bash</span> <span class="n">-c</span> <span class="s2">"sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1"</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>bomerp-oracle<span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">"sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1"</span><span class="w"> </span><span class="s">&lt;&lt;'EOF'</span>
-<span class="s">ALTER TABLE VENTAS ADD VENDEDOR_ID_TMP VARCHAR2(36);</span>
-<span class="s">UPDATE VENTAS SET VENDEDOR_ID_TMP = TO_CHAR(VENDEDOR_ID) WHERE VENDEDOR_ID IS NOT NULL;</span>
-<span class="s">ALTER TABLE VENTAS DROP COLUMN VENDEDOR_ID;</span>
-<span class="s">ALTER TABLE VENTAS RENAME COLUMN VENDEDOR_ID_TMP TO VENDEDOR_ID;</span>
-<span class="s">EOF</span>
-</code></pre></div>
-<p>Repite el <code>DESC VENTAS</code> de arriba: <code>VENDEDOR_ID</code> debe quedar como <code>VARCHAR2(36)</code>, sin <code>NOT NULL</code>. Los valores que ya tenía (el <code>id</code> numérico-como-texto de <code>usuarios</code>, ej. <code>"3"</code>) sobreviven la conversión — 5.2 los reemplaza por el UUID nuevo de Keycloak.</p>
-<p>Si ya construiste <code>seguridad</code> completo (3.1-3.12, 3.16-3.17) y vas a reemplazarlo paso a paso, parte de ese estado: esta guía lo asume y lo retira en la sección 7 (incluida la migración de datos viejos de 5.2). Si en cambio vas a ir directo a Keycloak sin construir <code>seguridad</code> nunca, las secciones 5.2 y 7.3-7.4 no aplican — no hay <code>seguridad</code>/Postgres propio que migrar ni retirar — y saltas directo de los cuatro puntos de arriba a la sección 2.</p>
+<p>Si ya construiste <code>seguridad</code> completo (3.1-3.12, 3.16-3.17) y vas a reemplazarlo paso a paso, parte de ese estado: esta guía lo asume y lo retira en 7.6-7.7 (incluida la migración de datos viejos de 7.5) — 7.3 tampoco aplica, porque S10 (3.14-3.15) ya te lo dejó construido. Si en cambio vas a ir directo a Keycloak sin construir <code>seguridad</code> nunca, las secciones 7.3, 7.5, 7.6 y 7.7 traen notas explícitas de qué aplica y qué no — no hay <code>seguridad</code>/Postgres propio que migrar ni retirar, y los cuatro puntos de arriba se resuelven directo en 7.2-7.3.</p>
 <p>Las secciones 1 y 2 de S10 (teoría de JWT/RBAC) y 4-5 (actividad autónoma, cierre) son independientes de cuál camino tomes: se evalúan igual en ambos casos.</p>
 <h2 id="1-que-cambia-y-que-no">1. Qué cambia y qué no<a class="headerlink" href="#1-que-cambia-y-que-no" title="Permanent link">&para;</a></h2>
 <p><strong>Figura 1. Antes y después del reemplazo</strong></p>
@@ -4039,15 +4152,17 @@
 </tr>
 <tr>
 <td>Paquete <code>seguridad</code> (<code>AuthController</code>, <code>JwtService</code>, <code>JwksController</code>, <code>JwtKeyConfig</code>, entidades)</td>
-<td>Se retira — queda sin uso, ver sección 7</td>
+<td>Se retira si existía — queda sin uso, ver 7.7</td>
 </tr>
 <tr>
 <td>Contenedor <code>bomerp-seguridad-db</code> (Postgres)</td>
-<td>Se retira — Keycloak trae su propio almacenamiento</td>
+<td>Se retira si existía — Keycloak trae su propio almacenamiento</td>
 </tr>
 </tbody>
 </table>
-<p>Ningún punto de la tabla exige cambiar código — y eso no es casualidad, es la razón por la que <code>vendedorId</code> se diseñó como <code>String</code> desde S10 (3.2, 3.14), no como <code>Long</code>: el <code>sub</code> que emite <code>seguridad</code> hoy es el <code>id</code> numérico de <code>Usuario</code> convertido a texto (ej. <code>"3"</code>); el que emite Keycloak es un UUID (<em>Universally Unique Identifier</em>) propio del realm (ej. <code>"3fa85f64-5717-4562-b3fc-2c963f66afa6"</code>) — dos formatos de texto distintos, pero <code>VentaController</code> nunca los interpreta como número, solo los guarda tal cual. A diferencia de DIST, que sí necesita un <strong>atributo de usuario</strong> + <strong>protocol mapper</strong> para <code>idCliente</code> (S07, Tabla 6, porque <code>idCliente</code> identifica a una entidad de negocio aparte del usuario), aquí <code>vendedorId</code> <strong>es</strong> literalmente <code>sub</code> — no hace falta configurar nada nuevo en Keycloak para que viaje en el token, porque <code>sub</code> viaja siempre, en cualquier token, sin configuración. Lo único real que exige este cambio de emisor es <strong>migrar los datos que ya existen</strong>: las ventas creadas bajo <code>seguridad</code> tienen <code>VENDEDOR_ID</code> con el <code>id</code> numérico viejo, no con el UUID nuevo — la sección 5 lo resuelve.</p>
+<p>Ningún punto de la tabla exige cambiar código — y eso no es casualidad, es la razón por la que <code>vendedorId</code> se diseñó como <code>String</code> desde S10 (3.2, 3.14), no como <code>Long</code>: el <code>sub</code> que emite <code>seguridad</code> hoy es el <code>id</code> numérico de <code>Usuario</code> convertido a texto (ej. <code>"3"</code>); el que emite Keycloak es un UUID (<em>Universally Unique Identifier</em>) propio del realm (ej. <code>"3fa85f64-5717-4562-b3fc-2c963f66afa6"</code>) — dos formatos de texto distintos, pero <code>VentaController</code> nunca los interpreta como número, solo los guarda tal cual. A diferencia de DIST, que sí necesita un <strong>atributo de usuario</strong> + <strong>protocol mapper</strong> para <code>idCliente</code> (S07, Tabla 6, porque <code>idCliente</code> identifica a una entidad de negocio aparte del usuario), aquí <code>vendedorId</code> <strong>es</strong> literalmente <code>sub</code> — no hace falta configurar nada nuevo en Keycloak para que viaje en el token, porque <code>sub</code> viaja siempre, en cualquier token, sin configuración. Lo único real que exige este cambio de emisor, si ya tenías ventas creadas bajo <code>seguridad</code>, es <strong>migrar los datos que ya existen</strong> — 7.5 lo resuelve.</p>
+<h2 id="parte-a-keycloak-sin-tocar-bomerp-backend">Parte A — Keycloak, sin tocar <code>bomerp-backend</code><a class="headerlink" href="#parte-a-keycloak-sin-tocar-bomerp-backend" title="Permanent link">&para;</a></h2>
+<p>Las secciones 2 a 6 levantan, configuran y prueban Keycloak de punta a punta. En ningún momento se edita, reinicia ni recompila <code>bomerp-backend</code> — todo lo que sigue hasta el final de la sección 6 se verifica contra Keycloak directamente, con PowerShell/<code>curl</code>/el navegador.</p>
 <h2 id="2-descargar-y-levantar-keycloak">2. Descargar y levantar Keycloak<a class="headerlink" href="#2-descargar-y-levantar-keycloak" title="Permanent link">&para;</a></h2>
 <p><strong>Producto del paso:</strong> Keycloak corriendo en modo desarrollo, con su propio Postgres (no el H2 embebido por defecto) y consola de administración accesible.</p>
 <p>Agrega los dos servicios a <code>lp2/bomerp-backend/compose-dev.yml</code> — un Postgres propio para Keycloak, igual en espíritu al que S10 ya usó para <code>seguridad</code> (3.2), y el propio Keycloak apuntando a él:</p>
@@ -4090,7 +4205,12 @@
 <span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">keycloak-data:/opt/keycloak/data</span>
 </code></pre></div>
-<p>Y agrega <code>keycloak-db-data:</code> y <code>keycloak-data:</code> junto a <code>oracle-data:</code>/<code>seguridad-db-data:</code>, bajo <code>volumes:</code>.</p>
+<p>Y agrega <code>keycloak-data:</code> y <code>keycloak-db-data:</code> junto a <code>oracle-data:</code>, bajo <code>volumes:</code> — <code>seguridad-db-data:</code> solo aparece ahí si seguiste S10 y construiste <code>seguridad</code> (Parte C lo retira en 7.6; si fuiste directo a Keycloak, nunca existió):</p>
+<div class="highlight"><pre><span></span><code><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">oracle-data</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">keycloak-data</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">keycloak-db-data</span><span class="p">:</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="nb">cd </span><span class="n">lp2</span><span class="p">\</span><span class="n">bomerp-backend</span>
 <span class="n">docker</span> <span class="n">compose</span> <span class="o">-f</span> <span class="n">compose-dev</span><span class="p">.</span><span class="n">yml</span> <span class="n">up</span> <span class="n">-d</span> <span class="n">keycloak-db</span> <span class="n">keycloak</span>
 </code></pre></div>
@@ -4098,16 +4218,15 @@
 docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>compose-dev.yml<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>keycloak-db<span class="w"> </span>keycloak
 </code></pre></div>
 <p><code>KC_DB_URL</code> usa <code>keycloak-db</code> (el nombre del servicio, no <code>localhost</code>) como host: Keycloak y su Postgres se hablan <strong>dentro</strong> de la red de Docker Compose, por el puerto <strong>interno</strong> <code>5432</code> — el <code>35432</code> publicado hacia el host es solo para que tú, desde fuera (<code>psql</code>, una herramienta gráfica), puedas inspeccionarlo si hace falta; <code>bomerp-backend</code> nunca se conecta a <code>keycloak-db</code> directamente. <code>depends_on: condition: service_healthy</code> evita el mismo error que S10 ya documentó para <code>bomerp-seguridad-db</code> (3.2): si Keycloak intenta conectarse antes de que Postgres esté listo, falla al arrancar.</p>
-<p>El puerto externo de Keycloak es <strong>38080</strong>, no 8080: <code>bomerp-backend</code> ya usa el 8080 en DEV (S1), y Keycloak escucha internamente también en el 8080 de su propio contenedor — anteponer <code>3</code> (bomerp) distingue este puerto de cualquier otro servicio similar en otro curso que corra en la misma laptop (mismo criterio ya aplicado a los puertos Postgres entre repos, y ahora también al puerto de <code>keycloak-db</code>, <code>35432</code>). <code>start-dev</code> es el modo de arranque rápido para desarrollo: no pide configurar TLS ni un <code>hostname</code> explícito — pero con <code>KC_DB</code> apuntando a Postgres, los datos (realm, usuarios, clients) ya <strong>no</strong> dependen del H2 embebido ni del volumen <code>keycloak-data</code>: viven en <code>keycloak-db-data</code>, igual que <code>oracle-data</code>/<code>seguridad-db-data</code> lo hacen para los otros dos motores. El volumen <code>keycloak-data</code> igual se conserva (Keycloak guarda ahí configuración local propia, no el realm), pero ya no es el único lugar que importa para no perder el trabajo de las secciones 3-5. <strong>En producción real</strong> sigue faltando un paso más: <code>start</code> (modo <em>production</em>, que exige TLS) en vez de <code>start-dev</code> — el motor de base de datos ya queda resuelto desde esta guía, lo único pendiente para producción real es TLS y el <em>hostname</em> explícito.</p>
+<p>El puerto externo de Keycloak es <strong>38080</strong>, no 8080: <code>bomerp-backend</code> ya usa el 8080 en DEV (S1), y Keycloak escucha internamente también en el 8080 de su propio contenedor — anteponer <code>3</code> (bomerp) distingue este puerto de cualquier otro servicio similar en otro curso que corra en la misma laptop (mismo criterio ya aplicado a los puertos Postgres entre repos, y ahora también al puerto de <code>keycloak-db</code>, <code>35432</code>). <code>start-dev</code> es el modo de arranque rápido para desarrollo: no pide configurar TLS ni un <em>hostname</em> explícito — pero con <code>KC_DB</code> apuntando a Postgres, los datos (realm, usuarios, clients) ya <strong>no</strong> dependen del H2 embebido ni del volumen <code>keycloak-data</code>: viven en <code>keycloak-db-data</code>, igual que <code>oracle-data</code>/<code>seguridad-db-data</code> lo hacen para los otros dos motores. El volumen <code>keycloak-data</code> igual se conserva (Keycloak guarda ahí configuración local propia, no el realm), pero ya no es el único lugar que importa para no perder el trabajo de las secciones 3-6. <strong>En producción real</strong> sigue faltando un paso más: <code>start</code> (modo <em>production</em>, que exige TLS) en vez de <code>start-dev</code> — el motor de base de datos ya queda resuelto desde esta guía, lo único pendiente para producción real es TLS y el <em>hostname</em> explícito.</p>
 <p><code>KC_BOOTSTRAP_ADMIN_USERNAME</code>/<code>KC_BOOTSTRAP_ADMIN_PASSWORD</code> (Keycloak 26+; versiones anteriores usaban <code>KEYCLOAK_ADMIN</code>/<code>KEYCLOAK_ADMIN_PASSWORD</code>, ya retiradas) solo crean el usuario administrador la <strong>primera</strong> vez que arranca — cambiarlas después, con el usuario ya creado, no tiene efecto.</p>
 <p>Confirma que levantó accediendo a <code>http://localhost:38080</code> — debe aparecer la pantalla de bienvenida de Keycloak. Entra a la consola de administración (<code>Administration Console</code>) con <code>admin</code> / <code>admin123</code>.</p>
 <h2 id="3-configurar-el-realm-bomerp">3. Configurar el realm <code>bomerp</code><a class="headerlink" href="#3-configurar-el-realm-bomerp" title="Permanent link">&para;</a></h2>
 <p><strong>Producto del paso:</strong> un realm propio (no el <code>master</code> por defecto, reservado para administrar Keycloak mismo), con los tres roles que <code>ventas</code> ya usa.</p>
-<h3 id="30-opcional-espanol-dos-configuraciones-distintas-no-una">3.0 (Opcional) Español — dos configuraciones distintas, no una<a class="headerlink" href="#30-opcional-espanol-dos-configuraciones-distintas-no-una" title="Permanent link">&para;</a></h3>
-<p>Son dos cosas separadas, cada una en un realm distinto; esta es la primera y conviene hacerla <strong>antes</strong> de crear <code>bomerp</code>, para ver el resto de esta guía ya en español:</p>
-<p><strong>A. Idioma del Admin Console (el menú, los botones — lo que ves tú como administrador):</strong> el Admin Console es una sola aplicación compartida por todo Keycloak, no por realm — su idioma sigue la configuración de <strong><code>master</code></strong>, nunca la de <code>bomerp</code>. Con <code>master</code> como realm activo (el único que existe por ahora) → <strong>Realm settings</strong> → <strong>Localization</strong> → <strong>Locales</strong> → activa <strong>Internationalization</strong>, agrega <code>Spanish</code> a <em>Supported locales</em>, elige <code>Spanish</code> en <em>Default locale</em> → <strong>Save</strong>. Recarga la página.</p>
-<p><strong>B. Idioma de la pantalla de login (lo que verán tus usuarios, ej. <code>vendedor1@bomerp.com</code>, al autenticarse):</strong> esta se configura en <code>bomerp</code>, no en <code>master</code> — se hace más abajo, en 3.2, una vez creado el realm. No afecta el Admin Console, solo el formulario de login que Keycloak sirve en <code>/realms/bomerp/...</code> (relevante recién cuando S11 construya el flujo real de login contra Keycloak).</p>
-<p>Si solo quieres el Admin Console en español, basta con A. Si además quieres que la pantalla de login de tus usuarios finales aparezca en español, haz también 3.2.</p>
+<h3 id="30-opcional-espanol-en-el-admin-console">3.0 (Opcional) Español en el Admin Console<a class="headerlink" href="#30-opcional-espanol-en-el-admin-console" title="Permanent link">&para;</a></h3>
+<p>Conviene hacer esto <strong>antes</strong> de crear <code>bomerp</code>, para ver el resto de esta guía ya en español. El Admin Console es una sola aplicación compartida por todo Keycloak, no por realm — su idioma sigue la configuración de <strong><code>master</code></strong>, nunca la de <code>bomerp</code>. Con <code>master</code> como realm activo (el único que existe por ahora) → <strong>Realm settings</strong> → <strong>Localization</strong> → <strong>Locales</strong> → activa <strong>Internationalization</strong>, agrega <code>Spanish</code> a <em>Supported locales</em>, elige <code>Spanish</code> en <em>Default locale</em> → <strong>Save</strong>. Recarga la página.</p>
+<p>Esto solo cambia el menú y los botones que ves tú como administrador — no afecta la pantalla de login que verán tus usuarios (ej. <code>vendedor1@bomerp.com</code>, al autenticarse); esa se configura por separado, en 3.2, una vez creado el realm <code>bomerp</code>. Si solo quieres el Admin Console en español, basta con este paso; si además quieres que la pantalla de login de tus usuarios finales aparezca en español, haz también 3.2.</p>
+<h3 id="31-crear-el-realm-y-los-roles">3.1 Crear el realm y los roles<a class="headerlink" href="#31-crear-el-realm-y-los-roles" title="Permanent link">&para;</a></h3>
 <p>De aquí en adelante, cada referencia a un botón o pestaña de la consola trae el término en inglés (el que usa la documentación oficial de Keycloak) seguido de su traducción aproximada entre paréntesis — si tu consola está en español y el texto exacto no calza del todo, guíate por la posición/ícono, no por la traducción literal: no verifiqué cada cadena contra una consola real en español.</p>
 <ol>
 <li>En el menú lateral izquierdo, entra a <strong>Manage realms</strong> (<em>Administrar realms</em>) → clic en <strong>Create realm</strong> (<em>Crear realm</em>).</li>
@@ -4119,7 +4238,7 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 </ol>
 <p>Estos son <strong>realm roles</strong> (no <em>client roles</em>) a propósito: Keycloak los agrega al token bajo el claim <code>realm_access.roles</code> — el mismo nombre que <code>JwtService</code> de <code>seguridad</code> ya usaba (S10, 3.8) y que <code>JwtAuthenticationConverter</code> ya sabe leer (S10, 3.11). Es el primer punto donde se confirma la promesa de la Tabla 4: cero cambios en ese conversor.</p>
 <h3 id="32-opcional-espanol-para-la-pantalla-de-login-de-bomerp">3.2 (Opcional) Español para la pantalla de login de <code>bomerp</code><a class="headerlink" href="#32-opcional-espanol-para-la-pantalla-de-login-de-bomerp" title="Permanent link">&para;</a></h3>
-<p>Con <code>bomerp</code> como realm activo (no <code>master</code>): <strong>Realm settings</strong> → <strong>Localization</strong> → <strong>Locales</strong> → activa <strong>Internationalization</strong>, agrega <code>Spanish</code> a <em>Supported locales</em>, elige <code>Spanish</code> en <em>Default locale</em> → <strong>Save</strong>. Es exactamente la misma pantalla de 3.0.A, pero ahora sobre <code>bomerp</code> — y afecta algo distinto (3.0.B).</p>
+<p>Con <code>bomerp</code> como realm activo (no <code>master</code>): <strong>Realm settings</strong> → <strong>Localization</strong> → <strong>Locales</strong> → activa <strong>Internationalization</strong>, agrega <code>Spanish</code> a <em>Supported locales</em>, elige <code>Spanish</code> en <em>Default locale</em> → <strong>Save</strong>. Es exactamente la misma pantalla de 3.0, pero ahora sobre <code>bomerp</code> — y afecta algo distinto: esta es la que ven tus usuarios al autenticarse, no el Admin Console.</p>
 <h2 id="4-crear-el-cliente-para-pruebas">4. Crear el cliente para pruebas<a class="headerlink" href="#4-crear-el-cliente-para-pruebas" title="Permanent link">&para;</a></h2>
 <p><strong>Producto del paso:</strong> un <em>client</em> en el realm <code>bomerp</code> que permita pedir un token para probar la integración antes de construir la SPA real (S11).</p>
 <ol>
@@ -4145,15 +4264,14 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <p><strong>Error frecuente, y por qué es intencional dejarlo así documentado</strong>: <em>Direct access grants</em> corresponde al mismo flujo que la RFC 9700 desaconseja (S10, 2.6, cita textual: <em>"MUST NOT be used"</em>) — la razón por la que <code>seguridad</code> también lo usaba era la misma: es un atajo de laboratorio, no el diseño final. Úsalo aquí únicamente para verificar que Keycloak emite tokens válidos antes de construir el flujo real; S11 reconfigura este mismo cliente para <em>Authorization Code</em> + PKCE (<em>Proof Key for Code Exchange</em>) y <strong>desactiva</strong> <em>Direct access grants</em> como parte de ese trabajo — no antes.</p>
 <h2 id="5-crear-los-usuarios-semilla">5. Crear los usuarios semilla<a class="headerlink" href="#5-crear-los-usuarios-semilla" title="Permanent link">&para;</a></h2>
 <p><strong>Producto del paso:</strong> los mismos cuatro usuarios de S10 (3.10), ahora en Keycloak. <code>vendedorId</code> no necesita ningún paso aparte — es literalmente <code>sub</code> (1, Tabla 1), y <code>sub</code> viaja en cualquier token sin configurar nada.</p>
-<h3 id="51-crear-los-usuarios-y-asignarles-rol">5.1 Crear los usuarios y asignarles rol<a class="headerlink" href="#51-crear-los-usuarios-y-asignarles-rol" title="Permanent link">&para;</a></h3>
 <p>Por cada uno de <code>vendedor1@bomerp.com</code>, <code>vendedor2@bomerp.com</code>, <code>supervisor@bomerp.com</code>, <code>admin@bomerp.com</code>:</p>
 <ol>
 <li><strong>Users</strong> (<em>Usuarios</em>) → <strong>Add user</strong> (<em>Agregar usuario</em>) → <strong>Crear usuario</strong>.<ul>
 <li><strong>Required user actions</strong> (<em>Acciones de usuario requeridas</em>): déjalo <strong>vacío</strong>, sin seleccionar ninguna. Si marcas algo aquí (ej. <em>Update Password</em>), Keycloak lo exige en el primer login — rompe el flujo de <em>Direct access grants</em> de la sección 6, igual que dejar la contraseña como <em>Temporary</em> (paso 2 de abajo).</li>
 <li><strong>Email verified</strong> (<em>Correo electrónico verificado</em>): activado (para no complicar el flujo con verificación de correo en esta guía).</li>
 <li><strong>Select a locale</strong> (<em>Seleccionar una configuración regional</em>): opcional, es el idioma de <strong>ese usuario en particular</strong> (distinto de 3.0/3.2, que son el idioma por defecto del realm) — déjalo en <em>Idioma predeterminado</em> o elige <code>Español</code> si quieres forzarlo para este usuario puntual.</li>
-<li><strong>Username</strong> (<em>Nombre de usuario</em>): el email completo (ej. <code>vendedor1@bomerp.com</code>).</li>
-<li><strong>Email</strong> (<em>Correo electrónico</em>): el mismo email, repetido en este campo aparte.</li>
+<li><strong>Username</strong> (<em>Nombre de usuario</em>): el nombre corto, sin dominio (ej. <code>vendedor1</code>) — es el identificador que usarás al pedir un token (6), no el email.</li>
+<li><strong>Email</strong> (<em>Correo electrónico</em>): el email completo (ej. <code>vendedor1@bomerp.com</code>).</li>
 <li><strong>First name</strong>/<strong>Last name</strong> (<em>Nombre</em>/<em>Apellido</em>): <strong>no los dejes vacíos</strong> — pon cualquier valor real (ej. <code>Vendedor</code>/<code>Uno</code>). No son cosméticos: el realm trae activa <code>VERIFY_PROFILE</code> (<em>Verify Profile</em>, ver "Error frecuente" abajo), que Keycloak evalúa en cada login — con estos dos campos vacíos, el perfil nunca se considera completo y el login falla, aunque la contraseña sea correcta.</li>
 <li><em>Grupos</em>: opcional, déjalo vacío.</li>
 <li><strong>Crear</strong>.</li>
@@ -4165,7 +4283,7 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <p><strong>Error frecuente</strong>: login en la sección 6 responde <code>{"error":"invalid_grant","error_description":"Account is not fully set up"}</code>, aunque el usuario no tenga ninguna <em>required action</em> explícita en la pestaña <strong>Details</strong>, la contraseña no sea <em>Temporary</em>, y ningún <em>required action</em> del realm esté marcado como <em>default</em> (<code>SELECT ... FROM required_action_provider</code> da <code>default_action = f</code> en todas). La causa real: <code>VERIFY_PROFILE</code> (<em>Verify Profile</em>) viene <code>enabled</code> en este realm, y esa acción se calcula <strong>dinámicamente en cada login</strong>, no como fila guardada — revisa si <code>first_name</code>/<code>last_name</code> quedaron vacíos (si usaste la consola en vez de la API, puede pasar aunque los hayas escrito):</p>
 <div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>bomerp-keycloak-db<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>bomerp_keycloak<span class="w"> </span>-d<span class="w"> </span>bomerp_keycloak<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SELECT email, first_name, last_name, email_verified FROM user_entity WHERE email = 'vendedor1@bomerp.com';"</span>
 </code></pre></div>
-<p>Corrige lo que falte (ejemplo con los cuatro usuarios — ajusta los nombres):</p>
+<p><strong>(Opcional, solo si el <code>SELECT</code> de arriba muestra algo vacío)</strong> — si seguiste el paso 1 tal cual (<code>First name</code>/<code>Last name</code> ya llenos), esto no debería hacer falta. Corrige lo que falte (ejemplo con los cuatro usuarios — ajusta los nombres):</p>
 <div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>bomerp-keycloak-db<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>bomerp_keycloak<span class="w"> </span>-d<span class="w"> </span>bomerp_keycloak<span class="w"> </span>-c<span class="w"> </span><span class="s2">"</span>
 <span class="s2">UPDATE user_entity SET first_name = 'Vendedor', last_name = 'Uno', email_verified = true WHERE email = 'vendedor1@bomerp.com';</span>
 <span class="s2">UPDATE user_entity SET first_name = 'Vendedor', last_name = 'Dos', email_verified = true WHERE email = 'vendedor2@bomerp.com';</span>
@@ -4175,214 +4293,25 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="n">bomerp-keycloak-db</span> <span class="n">psql</span> <span class="n">-U</span> <span class="n">bomerp_keycloak</span> <span class="n">-d</span> <span class="n">bomerp_keycloak</span> <span class="n">-c</span> <span class="s2">"UPDATE user_entity SET first_name = 'Vendedor', last_name = 'Uno', email_verified = true WHERE email = 'vendedor1@bomerp.com'; UPDATE user_entity SET first_name = 'Vendedor', last_name = 'Dos', email_verified = true WHERE email = 'vendedor2@bomerp.com'; UPDATE user_entity SET first_name = 'Supervisor', last_name = 'Uno', email_verified = true WHERE email = 'supervisor@bomerp.com'; UPDATE user_entity SET first_name = 'Admin', last_name = 'Uno', email_verified = true WHERE email = 'admin@bomerp.com';"</span>
 </code></pre></div>
-<p>Reinicia Keycloak después de cualquier cambio directo por SQL contra <code>keycloak-db</code> (no confirmé si cachea en memoria o no, pero es gratis hacerlo y evita dudarlo):</p>
+<p><strong>(Opcional, solo si corriste el <code>UPDATE</code> directo por SQL de arriba)</strong> — crear o editar un usuario desde la consola nunca necesita esto, Keycloak lo aplica al instante; el reinicio es solo por precaución tras tocar <code>keycloak-db</code> por fuera de la aplicación (no confirmé si cachea en memoria o no, pero es gratis hacerlo y evita dudarlo):</p>
 <div class="highlight"><pre><span></span><code>docker<span class="w"> </span>restart<span class="w"> </span>bomerp-keycloak
 </code></pre></div>
-<h3 id="52-migrar-las-ventas-ya-registradas-al-nuevo-sub">5.2 Migrar las ventas ya registradas al nuevo <code>sub</code><a class="headerlink" href="#52-migrar-las-ventas-ya-registradas-al-nuevo-sub" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> las ventas que <code>vendedor1</code>/<code>vendedor2</code> ya crearon bajo <code>seguridad</code> (S10) siguen asociadas a su dueño real, ahora con el <code>sub</code> nuevo de Keycloak.</p>
-<p><code>vendedorId</code> no necesita ningún atributo ni <em>protocol mapper</em> — es <code>jwt.getSubject()</code> tal cual (1). Pero eso no resuelve solo el dato que <strong>ya existe</strong>: cada fila de <code>VENTAS</code> creada hasta hoy tiene <code>VENDEDOR_ID</code> con el <code>id</code> numérico-como-texto que <code>seguridad</code> usaba (ej. <code>"3"</code>), y el <code>sub</code> que Keycloak va a emitir para ese mismo usuario es un UUID distinto (ej. <code>"3fa85f64-5717-4562-b3fc-2c963f66afa6"</code>) — nadie los conecta solo. Sin este paso, esas ventas viejas siguen existiendo, pero <code>obtener</code>/<code>buscar</code> (S10, 3.15) ya no las reconoce como propias de ese vendedor.</p>
-<ol>
-<li>Obtén el <code>id</code> viejo de cada usuario (todavía en <code>bomerp-seguridad-db</code>, antes de 7.3):</li>
-</ol>
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>bomerp-seguridad-db<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>bomerp_seguridad<span class="w"> </span>-d<span class="w"> </span>bomerp_seguridad<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SELECT id, email FROM usuarios WHERE email IN ('vendedor1@bomerp.com','vendedor2@bomerp.com','supervisor@bomerp.com','admin@bomerp.com');"</span>
-</code></pre></div>
-<ol>
-<li>Obtén el UUID nuevo de cada usuario, directo de <code>keycloak-db</code> (el Postgres que armamos en la sección 2):</li>
-</ol>
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>bomerp-keycloak-db<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>bomerp_keycloak<span class="w"> </span>-d<span class="w"> </span>bomerp_keycloak<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SELECT u.id, u.email FROM user_entity u JOIN realm r ON r.id = u.realm_id WHERE r.name = 'bomerp' AND u.email IN ('vendedor1@bomerp.com','vendedor2@bomerp.com','supervisor@bomerp.com','admin@bomerp.com');"</span>
-</code></pre></div>
-<p><code>user_entity</code>/<code>realm</code> son los nombres reales (verificado contra una instancia real de Keycloak 26.8) — si en otra versión no calzan, lista las tablas con <code>\dt</code> dentro de <code>psql</code> y ajusta la consulta; el resto del procedimiento no cambia.</p>
-<ol>
-<li>Con ambos resultados en mano (un <code>id</code> viejo y un UUID nuevo por cada email), actualiza Oracle — un <code>UPDATE</code> por usuario, solo para los que realmente tengan ventas. Ejemplo real (los valores van a ser distintos en tu base):</li>
-</ol>
-<div class="highlight"><pre><span></span><code>bomerp-seguridad-db          keycloak-db
-id | email                   id (UUID)                             | email
----|-------------------      --------------------------------------|----------------------
-3  | vendedor1@bomerp.com     516ef047-ffbc-470f-b397-6d4a3fe8fbfa  | vendedor1@bomerp.com
-4  | vendedor2@bomerp.com     0c265d28-60e9-4954-b7e7-36006cb8c2c5  | vendedor2@bomerp.com
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="sh">@'</span>
-<span class="sh">UPDATE VENTAS SET VENDEDOR_ID = '516ef047-ffbc-470f-b397-6d4a3fe8fbfa' WHERE VENDEDOR_ID = '3';</span>
-<span class="sh">UPDATE VENTAS SET VENDEDOR_ID = '0c265d28-60e9-4954-b7e7-36006cb8c2c5' WHERE VENDEDOR_ID = '4';</span>
-<span class="sh">COMMIT;</span>
-<span class="sh">'@</span> <span class="p">|</span> <span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="n">bomerp-oracle</span> <span class="n">bash</span> <span class="n">-c</span> <span class="s2">"sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1"</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>bomerp-oracle<span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">"sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1"</span><span class="w"> </span><span class="s">&lt;&lt;'EOF'</span>
-<span class="s">UPDATE VENTAS SET VENDEDOR_ID = '516ef047-ffbc-470f-b397-6d4a3fe8fbfa' WHERE VENDEDOR_ID = '3';</span>
-<span class="s">UPDATE VENTAS SET VENDEDOR_ID = '0c265d28-60e9-4954-b7e7-36006cb8c2c5' WHERE VENDEDOR_ID = '4';</span>
-<span class="s">COMMIT;</span>
-<span class="s">EOF</span>
-</code></pre></div>
-<p>Reemplaza el <code>WHERE VENDEDOR_ID = '&lt;id-viejo&gt;'</code> y el valor nuevo con los que te devolvieron tus propias consultas de los pasos 1-2 — no copies los de este ejemplo. Confirma el resultado:</p>
-<div class="highlight"><pre><span></span><code><span class="sh">@'</span>
-<span class="sh">SELECT ID, VENDEDOR_ID FROM VENTAS WHERE VENDEDOR_ID IS NOT NULL ORDER BY ID;</span>
-<span class="sh">'@</span> <span class="p">|</span> <span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="n">bomerp-oracle</span> <span class="n">bash</span> <span class="n">-c</span> <span class="s2">"sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1"</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>bomerp-oracle<span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">"sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1"</span><span class="w"> </span><span class="s">&lt;&lt;'EOF'</span>
-<span class="s">SELECT ID, VENDEDOR_ID FROM VENTAS WHERE VENDEDOR_ID IS NOT NULL ORDER BY ID;</span>
-<span class="s">EOF</span>
-</code></pre></div>
-<p>Filtra solo las que tienen <code>VENDEDOR_ID</code> (el resto de S4-S9 sigue en <code>NULL</code>, no hace falta verlas). Resultado esperado: cada venta migrada muestra ya el UUID nuevo, no el <code>id</code> numérico viejo.</p>
-<p>Es una migración de <strong>un solo dato, una sola vez</strong> — no una dependencia permanente entre Keycloak y la base vieja. <code>SUPERVISOR</code>/<code>ADMIN</code> no necesitan este paso: ven todas las ventas sin filtrar por <code>vendedorId</code> (RN8 solo aplica a <code>VENDEDOR</code>).</p>
 <h2 id="6-verificar-el-token-antes-de-tocar-bomerp-backend">6. Verificar el token antes de tocar <code>bomerp-backend</code><a class="headerlink" href="#6-verificar-el-token-antes-de-tocar-bomerp-backend" title="Permanent link">&para;</a></h2>
 <p><strong>Producto del paso:</strong> confirmación, con un token real, de que <code>realm_access.roles</code> llega con el formato esperado y <code>sub</code> es el UUID del usuario — antes de cambiar nada en el código.</p>
 <div class="highlight"><pre><span></span><code><span class="nv">$login</span> <span class="p">=</span> <span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:38080/realms/bomerp/protocol/openid-connect/token"</span> <span class="p">`</span>
   <span class="n">-ContentType</span> <span class="s2">"application/x-www-form-urlencoded"</span> <span class="p">`</span>
-  <span class="n">-Body</span> <span class="s2">"grant_type=password&amp;client_id=bomerp-frontend&amp;username=vendedor1@bomerp.com&amp;password=Bomerp2026!"</span>
+  <span class="n">-Body</span> <span class="s2">"grant_type=password&amp;client_id=bomerp-frontend&amp;username=vendedor1&amp;password=Bomerp2026!"</span>
 <span class="nv">$login</span><span class="p">.</span><span class="n">access_token</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:38080/realms/bomerp/protocol/openid-connect/token<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/x-www-form-urlencoded"</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s2">"grant_type=password&amp;client_id=bomerp-frontend&amp;username=vendedor1@bomerp.com&amp;password=Bomerp2026!"</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s2">"grant_type=password&amp;client_id=bomerp-frontend&amp;username=vendedor1&amp;password=Bomerp2026!"</span>
 </code></pre></div>
-<p>Pega el <code>access_token</code> recibido en <a href="https://jwt.io">jwt.io</a> (inspección visual únicamente, 2.3 de S10) y confirma dos cosas: <code>realm_access.roles</code> trae <code>["VENDEDOR"]</code>; y <code>sub</code> es un UUID, no el <code>"3"</code> de antes — exactamente la diferencia que la sección 1 anticipó, y la razón por la que 5.2 migró las ventas viejas a ese nuevo valor.</p>
+<p>Pega el <code>access_token</code> recibido en <a href="https://jwt.io">jwt.io</a> (inspección visual únicamente, 2.3 de S10) y confirma dos cosas: <code>realm_access.roles</code> trae <code>["VENDEDOR"]</code>; y <code>sub</code> es un UUID, no el <code>"3"</code> de antes — exactamente la diferencia que la sección 1 anticipó.</p>
 <p><code>POST /realms/bomerp/protocol/openid-connect/token</code> es el endpoint estándar de token de Keycloak (OAuth 2.0/OpenID Connect, S10 2.6) — equivalente a <code>POST /api/v1/auth/login</code> de <code>seguridad</code>, pero ya no es un endpoint propio de BomERP.</p>
 <p><strong>Error frecuente</strong>: comparar el <code>expires_in</code> de este token con el de <code>seguridad</code> y asumir que algo está mal. Por defecto, el realm nuevo trae el <em>access token</em> del propio Keycloak (<em>Realm settings</em> → <em>Tokens</em> → <em>Access Token Lifespan</em>) en <strong>5 minutos</strong>, no en la hora que <code>jwt.expiracion-segundos</code> dejaba en S10 (3.8) — token expirado a mitad de una prueba no es un bug de la integración, solo un valor por defecto distinto. Ajusta ese campo en el realm si las pruebas de la sección 8 te quedan cortas de tiempo.</p>
-<h2 id="7-integrar-bomerp-backend-con-keycloak">7. Integrar <code>bomerp-backend</code> con Keycloak<a class="headerlink" href="#7-integrar-bomerp-backend-con-keycloak" title="Permanent link">&para;</a></h2>
-<p><strong>Producto del paso:</strong> <code>SecurityConfig</code> valida tokens de Keycloak; <code>catalogo</code> y <code>ventas</code> siguen funcionando sin que se les toque una línea.</p>
-<h3 id="71-cambiar-la-propiedad-de-validacion">7.1 Cambiar la propiedad de validación<a class="headerlink" href="#71-cambiar-la-propiedad-de-validacion" title="Permanent link">&para;</a></h3>
-<p>En <code>lp2/bomerp-backend/src/main/resources/application-dev.yml</code>, reemplaza el bloque que S10 dejó (3.11):</p>
-<div class="highlight"><pre><span></span><code><span class="nt">spring</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">security</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">oauth2</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">resourceserver</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">jwt</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">jwk-set-uri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://localhost:8080/.well-known/jwks.json</span>
-</code></pre></div>
-<p>por:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">spring</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">security</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">oauth2</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">resourceserver</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">jwt</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">issuer-uri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://localhost:38080/realms/bomerp</span>
-</code></pre></div>
-<p>Con <code>issuer-uri</code> (en vez de <code>jwk-set-uri</code>), Spring no solo descubre dónde están las claves — además valida que el claim <code>iss</code> (<em>issuer</em>, emisor) de cada token coincida exactamente con esta URL, y descarga la configuración del realm (incluida su ubicación de JWKS) del documento de descubrimiento estándar de OpenID Connect (<code>/.well-known/openid-configuration</code>) que Keycloak sí publica (a diferencia de <code>seguridad</code>, que no lo implementaba — S10, 2.6). Es la única propiedad que cambia; <code>JwtAuthenticationConverter</code> (S10, 3.11) no se toca.</p>
-<h3 id="72-confirmar-que-catalogo-y-ventas-no-se-tocan">7.2 Confirmar que <code>catalogo</code> y <code>ventas</code> no se tocan<a class="headerlink" href="#72-confirmar-que-catalogo-y-ventas-no-se-tocan" title="Permanent link">&para;</a></h3>
-<p>Revisa <code>SecurityConfig.securityFilterChain</code>, <code>CategoriaController</code>/<code>ProductoController</code> y <strong>todo</strong> <code>VentaController</code>, incluido <code>crear</code>/<code>buscar</code>/<code>obtener</code>: ningún <code>hasRole</code>, ningún <code>requestMatchers</code>, ninguna línea de código cambia — <code>jwt.getSubject()</code> sigue ahí exactamente igual que en S10 (3.14-3.15), porque <code>vendedorId</code> nunca se interpretó como número (1). Si encuentras que necesitas tocar algo ahí, la migración se desvió de lo que esta guía describe — revisa el paso anterior.</p>
-<h3 id="73-retirar-seguridad-db">7.3 Retirar <code>seguridad-db</code><a class="headerlink" href="#73-retirar-seguridad-db" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> <code>bomerp-backend</code> corre sin el Postgres de <code>seguridad</code> — Keycloak es, desde este punto, el único almacén de identidad.</p>
-<p>Con 7.1-7.2 confirmados y la migración de 5.2 ya hecha, <code>seguridad-db</code> ya no tiene ningún lector: nadie en el código vigente lo consulta, y las ventas viejas ya apuntan al <code>sub</code> nuevo. No lo dejes corriendo "por si acaso" — si Keycloak es de verdad el reemplazo, el sistema tiene que demostrar que funciona sin él <strong>antes</strong> de la prueba final de la sección 8, no después.</p>
-<div class="highlight"><pre><span></span><code><span class="nb">cd </span><span class="n">lp2</span><span class="p">\</span><span class="n">bomerp-backend</span>
-<span class="n">docker</span> <span class="n">compose</span> <span class="o">-f</span> <span class="n">compose-dev</span><span class="p">.</span><span class="n">yml</span> <span class="n">stop</span> <span class="n">seguridad-db</span>
-<span class="n">docker</span> <span class="n">compose</span> <span class="o">-f</span> <span class="n">compose-dev</span><span class="p">.</span><span class="n">yml</span> <span class="nb">rm </span><span class="o">-f</span> <span class="n">seguridad-db</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>lp2/bomerp-backend
-docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>compose-dev.yml<span class="w"> </span>stop<span class="w"> </span>seguridad-db
-docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>compose-dev.yml<span class="w"> </span>rm<span class="w"> </span>-f<span class="w"> </span>seguridad-db
-</code></pre></div>
-<p>Quita también el bloque <code>seguridad-db:</code> completo de <code>compose-dev.yml</code> (el que agregó S10, 3.2) y la línea <code>seguridad-db-data:</code> de <code>volumes:</code> al final del archivo — ya ningún servicio la usa. Si quieres conservar los datos históricos antes de liberar el volumen (los <code>vendedorId</code> migrados ya quedaron a salvo en Oracle, 5.2; esto es solo por si quieres consultar algo más del Postgres viejo), identifica el volumen real y bórralo:</p>
-<div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">volume</span> <span class="nb">ls </span><span class="p">|</span> <span class="nb">Select-String</span> <span class="n">seguridad</span>
-<span class="n">docker</span> <span class="n">volume</span> <span class="nb">rm </span><span class="p">&lt;</span><span class="n">nombre-exacto-que-aparezca</span><span class="p">&gt;</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>volume<span class="w"> </span>ls<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>seguridad
-docker<span class="w"> </span>volume<span class="w"> </span>rm<span class="w"> </span>&lt;nombre-exacto-que-aparezca&gt;
-</code></pre></div>
-<p>El nombre real sigue el patrón <code>&lt;nombre-del-proyecto-compose&gt;_&lt;nombre-del-volumen&gt;</code> — por ejemplo, <code>bomerp-backend-dev_seguridad-db-data</code> (el prefijo <code>bomerp-backend-dev</code> viene de <code>name:</code> en <code>compose-dev.yml</code>, 1). Usa el que te devuelva tu propio <code>Select-String</code>/<code>grep</code>, no copies este literal.</p>
-<h3 id="74-limpiar-el-codigo-de-seguridad">7.4 Limpiar el código de <code>seguridad</code><a class="headerlink" href="#74-limpiar-el-codigo-de-seguridad" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> <code>bomerp-backend</code> sin ningún archivo que ya nadie invoca — no solo sin el contenedor.</p>
-<p>Son cuatro piezas, no solo la carpeta <code>seguridad</code> — dos se borran, una se queda, una se edita:</p>
-<ol>
-<li><strong>Borra la carpeta completa</strong> <code>lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/seguridad/</code> — de un solo golpe, con todo lo que tiene adentro (<code>AuthController</code>, <code>JwksController</code>, <code>JwtService</code>, <code>AuthService</code>/<code>AuthServiceImpl</code>, los DTO: <code>LoginRequest</code>/<code>LoginResponse</code>/<code>RegistroRequest</code>/<code>RegistroResponse</code>, las entidades <code>Usuario</code>/<code>Rol</code>, sus repositorios, <code>UsuarioDetailsService</code> y <code>SeguridadDataSourceConfig</code>). Nada de <code>catalogo</code>/<code>ventas</code> depende de este paquete:</li>
-</ol>
-<div class="highlight"><pre><span></span><code><span class="nb">Remove-Item</span> <span class="n">-Recurse</span> <span class="n">-Force</span> <span class="s2">"lp2\bomerp-backend\src\main\java\pe\edu\upeu\bomerp\seguridad"</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code>rm<span class="w"> </span>-rf<span class="w"> </span>lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/seguridad
-</code></pre></div>
-<ol>
-<li><strong>Borra también <code>JwtKeyConfig.java</code></strong> — vive en el paquete raíz (<code>pe.edu.upeu.bomerp</code>), <strong>no</strong> dentro de <code>seguridad/</code>, así que el paso 1 no lo toca solo. Nadie necesita generar un par RSA propio: Keycloak administra sus propias claves.</li>
-</ol>
-<div class="highlight"><pre><span></span><code><span class="nb">Remove-Item</span> <span class="n">-Force</span> <span class="s2">"lp2\bomerp-backend\src\main\java\pe\edu\upeu\bomerp\JwtKeyConfig.java"</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code>rm<span class="w"> </span>lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/JwtKeyConfig.java
-</code></pre></div>
-<ol>
-<li><strong><code>SecurityConfig.java</code> (paquete raíz) NO se borra</strong> — ahí sigue el <code>securityFilterChain</code> real que protege <code>catalogo</code>/<code>ventas</code>, y el <code>JwtAuthenticationConverter</code> que lee <code>realm_access.roles</code> sin que le importe quién firmó el token (7.2). Lo único que queda huérfano ahí son los <em>beans</em> <code>passwordEncoder()</code> y <code>authenticationManager()</code> — ya nadie los inyecta sin <code>AuthServiceImpl</code>; puedes quitarlos o dejarlos, ninguna de las dos rompe nada.</li>
-<li><strong><code>pom.xml</code></strong> — quita estos dos bloques (los que agregó S10, 3.3):</li>
-</ol>
-<div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
-<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.springframework.security<span class="nt">&lt;/groupId&gt;</span>
-<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>spring-security-oauth2-jose<span class="nt">&lt;/artifactId&gt;</span>
-<span class="nt">&lt;/dependency&gt;</span>
-<span class="nt">&lt;dependency&gt;</span>
-<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.postgresql<span class="nt">&lt;/groupId&gt;</span>
-<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>postgresql<span class="nt">&lt;/artifactId&gt;</span>
-<span class="w">    </span><span class="nt">&lt;scope&gt;</span>runtime<span class="nt">&lt;/scope&gt;</span>
-<span class="nt">&lt;/dependency&gt;</span>
-</code></pre></div>
-<p><code>spring-security-oauth2-jose</code> solo servía para <strong>firmar</strong> el JWT propio con <code>NimbusJwtEncoder</code>; Keycloak firma los suyos, <code>bomerp-backend</code> nunca firma nada. <code>org.postgresql:postgresql</code> queda huérfano porque nada más en <code>bomerp-backend</code> usa Postgres hoy (revisa primero que ningún otro módulo lo necesite antes de quitarlo). <strong>No</strong> quites <code>spring-boot-starter-security-oauth2-resource-server</code> — ese sigue validando tokens, ahora contra Keycloak.</p>
-<ol>
-<li><strong>(Opcional) Simplifica <code>OracleDataSourceConfig.java</code>.</strong> Esa clase existe desde 3.4 de S10 por una sola razón: desambiguar <strong>dos</strong> <code>DataSource</code> (<code>@Primary</code>/<code>@Qualifier</code>, S10 3.4 "Error frecuente"). Con <code>SeguridadDataSourceConfig</code> borrado (punto 1), vuelve a haber uno solo — exactamente la situación de antes de S10, cuando Spring Boot autoconfiguraba todo él solo a partir de <code>spring.datasource.*</code> (<code>application-dev.yml</code>, que ya tiene esas propiedades y no cambia). Puedes borrar el archivo completo:</li>
-</ol>
-<div class="highlight"><pre><span></span><code><span class="nb">Remove-Item</span> <span class="n">-Force</span> <span class="s2">"lp2\bomerp-backend\src\main\java\pe\edu\upeu\bomerp\OracleDataSourceConfig.java"</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code>rm<span class="w"> </span>lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/OracleDataSourceConfig.java
-</code></pre></div>
-<p>Spring Boot vuelve a armar <code>DataSource</code>/<code>EntityManagerFactory</code>/<code>TransactionManager</code> solo, y sigue encontrando los repositorios de <code>catalogo</code>/<code>ventas</code> sin <code>@EnableJpaRepositories</code> explícito, porque están en subpaquetes de <code>pe.edu.upeu.bomerp</code> (el paquete de <code>BomerpBackendApplication</code>) — el escaneo por defecto los cubre igual. <strong>No lo he probado contra tu proyecto real</strong> — recompila y prueba <code>catalogo</code>/<code>ventas</code> (8) después de borrarlo; si algo falla, lo más seguro es restaurar el archivo (<code>git checkout</code> sobre él) en vez de perseguir el error a mitad de la guía.</p>
-<p>Recompila (<code>.\mvnw.cmd spring-boot:run</code> desde cero) y repite una consulta protegida (8) para confirmar que nada se rompió al borrar.</p>
-<h2 id="8-probar-de-punta-a-punta">8. Probar de punta a punta<a class="headerlink" href="#8-probar-de-punta-a-punta" title="Permanent link">&para;</a></h2>
-<p><strong>Producto del paso:</strong> la misma matriz de accesos que S10 verificó (3.16, Tabla 6), ahora contra tokens de Keycloak — con <code>seguridad-db</code> ya retirado (7.3), esta prueba confirma que el reemplazo es real, no solo que Keycloak "también funciona" en paralelo.</p>
-<p>Reinicia <code>bomerp-backend</code> (lee la propiedad nueva de 7.1) y repite las pruebas de S10 (3.16), pero obteniendo cada token de Keycloak en vez de <code>/api/v1/auth/login</code>.</p>
-<ol>
-<li>Un token por rol:</li>
-</ol>
-<div class="highlight"><pre><span></span><code><span class="nv">$tokenVendedor1</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:38080/realms/bomerp/protocol/openid-connect/token"</span> <span class="p">`</span>
-  <span class="n">-ContentType</span> <span class="s2">"application/x-www-form-urlencoded"</span> <span class="p">`</span>
-  <span class="n">-Body</span> <span class="s2">"grant_type=password&amp;client_id=bomerp-frontend&amp;username=vendedor1@bomerp.com&amp;password=Bomerp2026!"</span><span class="p">).</span><span class="n">access_token</span>
-
-<span class="nv">$tokenVendedor2</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:38080/realms/bomerp/protocol/openid-connect/token"</span> <span class="p">`</span>
-  <span class="n">-ContentType</span> <span class="s2">"application/x-www-form-urlencoded"</span> <span class="p">`</span>
-  <span class="n">-Body</span> <span class="s2">"grant_type=password&amp;client_id=bomerp-frontend&amp;username=vendedor2@bomerp.com&amp;password=Bomerp2026!"</span><span class="p">).</span><span class="n">access_token</span>
-
-<span class="nv">$tokenSupervisor</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:38080/realms/bomerp/protocol/openid-connect/token"</span> <span class="p">`</span>
-  <span class="n">-ContentType</span> <span class="s2">"application/x-www-form-urlencoded"</span> <span class="p">`</span>
-  <span class="n">-Body</span> <span class="s2">"grant_type=password&amp;client_id=bomerp-frontend&amp;username=supervisor@bomerp.com&amp;password=Bomerp2026!"</span><span class="p">).</span><span class="n">access_token</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="nv">tokenVendedor1</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:38080/realms/bomerp/protocol/openid-connect/token<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/x-www-form-urlencoded"</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s2">"grant_type=password&amp;client_id=bomerp-frontend&amp;username=vendedor1@bomerp.com&amp;password=Bomerp2026!"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">'.access_token'</span><span class="k">)</span>
-
-<span class="nv">tokenVendedor2</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:38080/realms/bomerp/protocol/openid-connect/token<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/x-www-form-urlencoded"</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s2">"grant_type=password&amp;client_id=bomerp-frontend&amp;username=vendedor2@bomerp.com&amp;password=Bomerp2026!"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">'.access_token'</span><span class="k">)</span>
-
-<span class="nv">tokenSupervisor</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:38080/realms/bomerp/protocol/openid-connect/token<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/x-www-form-urlencoded"</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s2">"grant_type=password&amp;client_id=bomerp-frontend&amp;username=supervisor@bomerp.com&amp;password=Bomerp2026!"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">'.access_token'</span><span class="k">)</span>
-</code></pre></div>
-<ol>
-<li>La venta que ya migraste en 5.2 (<code>vendedor1</code>) es la prueba de dueño perfecta — sustituye <code>$ventaId</code> por su <code>ID</code> real en Oracle (ej. <code>2261</code>):</li>
-</ol>
-<div class="highlight"><pre><span></span><code><span class="nv">$ventaId</span> <span class="p">=</span> <span class="n">2261</span>
-<span class="k">try</span> <span class="p">{</span>
-  <span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Get</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:8080/api/v1/ventas/$ventaId"</span> <span class="p">`</span>
-    <span class="n">-Headers</span> <span class="p">@{</span> <span class="n">Authorization</span> <span class="p">=</span> <span class="s2">"Bearer $tokenVendedor2"</span> <span class="p">}</span>
-<span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
-  <span class="nv">$_</span><span class="p">.</span><span class="n">Exception</span><span class="p">.</span><span class="n">Response</span><span class="p">.</span><span class="n">StatusCode</span><span class="p">.</span><span class="n">value__</span>
-<span class="p">}</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="nv">ventaId</span><span class="o">=</span><span class="m">2261</span>
-curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">"%{http_code}\n"</span><span class="w"> </span>http://localhost:8080/api/v1/ventas/<span class="nv">$ventaId</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="nv">$tokenVendedor2</span><span class="s2">"</span>
-</code></pre></div>
-<p>Resultado esperado: <code>403</code> (no es de <code>vendedor2</code>). Con <code>$tokenSupervisor</code> en el mismo header, <code>200 OK</code> con la venta completa.</p>
-<ol>
-<li><code>resumen</code>, igual que en S10 — <code>403</code> con <code>vendedor1</code>, <code>200</code> con <code>supervisor</code>:</li>
-</ol>
-<div class="highlight"><pre><span></span><code><span class="k">try</span> <span class="p">{</span>
-  <span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Get</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:8080/api/v1/ventas/resumen"</span> <span class="p">`</span>
-    <span class="n">-Headers</span> <span class="p">@{</span> <span class="n">Authorization</span> <span class="p">=</span> <span class="s2">"Bearer $tokenVendedor1"</span> <span class="p">}</span>
-<span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
-  <span class="nv">$_</span><span class="p">.</span><span class="n">Exception</span><span class="p">.</span><span class="n">Response</span><span class="p">.</span><span class="n">StatusCode</span><span class="p">.</span><span class="n">value__</span>
-<span class="p">}</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">"%{http_code}\n"</span><span class="w"> </span>http://localhost:8080/api/v1/ventas/resumen<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="nv">$tokenVendedor1</span><span class="s2">"</span>
-</code></pre></div>
-<p>Resultado esperado: la misma Tabla 6 de S10 (3.16) — mismos códigos HTTP, para los mismos casos, con tokens que ahora vienen de un proceso distinto.</p>
-<p><strong>Error frecuente</strong>: <code>403</code> donde S10 esperaba <code>200</code>, con un token que en jwt.io se ve correcto. Causa más común: el usuario de Keycloak no tiene el <em>realm role</em> asignado (5.1), o la venta que estás consultando todavía tiene el <code>VENDEDOR_ID</code> viejo porque 5.2 no se corrió (o se corrió con el <code>id</code>/UUID equivocado) para ese usuario.</p>
-<h3 id="81-opcional-simular-el-login-real-con-redirect">8.1 (Opcional) Simular el login real, con redirect<a class="headerlink" href="#81-opcional-simular-el-login-real-con-redirect" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> ver, con tus propios ojos, el flujo <em>Authorization Code</em> que usará la SPA en S11 — el que <strong>sí</strong> redirige al navegador a la pantalla de Keycloak, en vez del <em>Direct Access Grant</em> (atajo de laboratorio) que usaste en toda esta guía.</p>
+<h3 id="61-opcional-simular-el-login-real-con-redirect">6.1 (Opcional) Simular el login real, con redirect<a class="headerlink" href="#61-opcional-simular-el-login-real-con-redirect" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> ver, con tus propios ojos, el flujo <em>Authorization Code</em> que usará la SPA en S11 — el que <strong>sí</strong> redirige al navegador a la pantalla de Keycloak, en vez del <em>Direct Access Grant</em> (atajo de laboratorio) que usaste en el resto de esta guía. Sigue sin tocar <code>bomerp-backend</code>.</p>
 <p>No hace falta construir la SPA para verlo: el cliente <code>bomerp-frontend</code> ya tiene <strong>Standard flow</strong> activado (4, paso 3) y <code>http://localhost:4200/*</code> como <em>redirect URI</em> válido (4, paso 4), aunque todavía no haya nada corriendo ahí.</p>
 <ol>
 <li>Arma la URL de autorización a mano y ábrela en el navegador:</li>
@@ -4439,11 +4368,468 @@ curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>
 <span class="w">  </span>-d<span class="w"> </span><span class="s2">"grant_type=refresh_token&amp;client_id=bomerp-frontend&amp;refresh_token=</span><span class="nv">$refreshToken</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">'.access_token'</span><span class="k">)</span>
 </code></pre></div>
 <p><code>bomerp-backend</code> nunca ve ni usa el <code>refresh_token</code> — es un <em>Resource Server</em>, solo valida <code>access_token</code> en cada request. El refresco es trabajo exclusivo del cliente (la SPA en S11, vía <code>keycloak-js</code>/<code>angular-oauth2-oidc</code>), nunca del backend.</p>
+<h2 id="parte-b-integrar-bomerp-backend-con-keycloak">Parte B — Integrar <code>bomerp-backend</code> con Keycloak<a class="headerlink" href="#parte-b-integrar-bomerp-backend-con-keycloak" title="Permanent link">&para;</a></h2>
+<p>A partir de aquí sí se edita, recompila y reinicia <code>bomerp-backend</code> — todo sobre el Keycloak que la Parte A ya dejó funcionando y verificado. Parte B termina en 7.2: con la propiedad de validación cambiada y (si aplica) <code>pom.xml</code>/<code>SecurityConfig</code>/<code>OpenApiConfig</code> en su lugar, <code>bomerp-backend</code> ya valida tokens de Keycloak — <strong>ya alcanza para la sesión</strong> si ya construiste <code>seguridad</code> (3.14-3.15 de S10 ya te dejaron <code>vendedorId</code>/RN8 funcionando). Si vas directo a Keycloak, sigue hasta 7.3: ahí es indispensable, es donde <code>ventas</code> aprende por primera vez de quién es cada venta. De 7.4 en adelante, Parte C es la profundización: confirmar, migrar, retirar lo que sobra, y verificar con la matriz completa que <code>ventas</code> sigue filtrando por dueño.</p>
+<h2 id="7-integrar-bomerp-backend-con-keycloak">7. Integrar <code>bomerp-backend</code> con Keycloak<a class="headerlink" href="#7-integrar-bomerp-backend-con-keycloak" title="Permanent link">&para;</a></h2>
+<p><strong>Producto del paso:</strong> <code>SecurityConfig</code> valida tokens de Keycloak; <code>catalogo</code> y <code>ventas</code> siguen funcionando sin que se les toque una línea.</p>
+<h3 id="71-cambiar-la-propiedad-de-validacion">7.1 Cambiar la propiedad de validación<a class="headerlink" href="#71-cambiar-la-propiedad-de-validacion" title="Permanent link">&para;</a></h3>
+<p>Si ya construiste <code>seguridad</code> y tenías <code>jwk-set-uri</code> configurado (S10, 3.11), reemplaza ese bloque en <code>lp2/bomerp-backend/src/main/resources/application-dev.yml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">spring</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">security</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">oauth2</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">resourceserver</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">jwt</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">jwk-set-uri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://localhost:8080/.well-known/jwks.json</span>
+</code></pre></div>
+<p>por:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">spring</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">security</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">oauth2</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">resourceserver</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">jwt</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">issuer-uri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://localhost:38080/realms/bomerp</span>
+</code></pre></div>
+<p>Si nunca construiste <code>seguridad</code>, no hay nada que reemplazar — agrega el bloque de <code>issuer-uri</code> directamente, es la única propiedad de seguridad que <code>application-dev.yml</code> necesita.</p>
+<p>Con <code>issuer-uri</code> (en vez de <code>jwk-set-uri</code>), Spring no solo descubre dónde están las claves — además valida que el claim <code>iss</code> (<em>issuer</em>, emisor) de cada token coincida exactamente con esta URL, y descarga la configuración del realm (incluida su ubicación de JWKS) del documento de descubrimiento estándar de OpenID Connect (<code>/.well-known/openid-configuration</code>) que Keycloak sí publica (a diferencia de <code>seguridad</code>, que no lo implementaba — S10, 2.6).</p>
+<h3 id="72-agregar-las-dependencias-y-escribir-securityconfigopenapiconfig-si-vas-directo-a-keycloak">7.2 Agregar las dependencias y escribir <code>SecurityConfig</code>/<code>OpenApiConfig</code> (si vas directo a Keycloak)<a class="headerlink" href="#72-agregar-las-dependencias-y-escribir-securityconfigopenapiconfig-si-vas-directo-a-keycloak" title="Permanent link">&para;</a></h3>
+<p><strong>Solo si nunca construiste <code>seguridad</code>.</strong> Si ya la tenías y la estás reemplazando paso a paso, ya tienes <code>pom.xml</code> (S10, 3.3), <code>SecurityConfig</code> (S10, 3.11) y <code>vendedorId</code>/RN8 (S10, 3.14-3.15) — salta directo a 7.4, y pasa por 7.7 más abajo para limpiar lo que sobra.</p>
+<p><strong><code>pom.xml</code></strong> — agrega, dentro de <code>&lt;dependencies&gt;</code>, solo estas dos (sin <code>&lt;version&gt;</code>, las gestiona <code>spring-boot-starter-parent</code>, ADR-003):</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>spring-boot-starter-security<span class="nt">&lt;/artifactId&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>spring-boot-starter-security-oauth2-resource-server<span class="nt">&lt;/artifactId&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div>
+<p><strong>No</strong> agregues <code>spring-security-oauth2-jose</code> (sirve para <strong>firmar</strong> JWT; Keycloak firma los suyos, <code>bomerp-backend</code> nunca firma nada) ni el driver <code>postgresql</code> (era solo para la BD propia de <code>seguridad</code>, que nunca existe en este camino).</p>
+<p><strong><code>lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/SecurityConfig.java</code></strong> (archivo nuevo):</p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.context.annotation.Bean</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.context.annotation.Configuration</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.http.HttpMethod</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.security.config.annotation.web.builders.HttpSecurity</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.security.config.http.SessionCreationPolicy</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.security.core.GrantedAuthority</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.security.core.authority.SimpleGrantedAuthority</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.security.web.SecurityFilterChain</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Collection</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Map</span><span class="p">;</span>
+
+<span class="nd">@Configuration</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">SecurityConfig</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@Bean</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">JwtAuthenticationConverter</span><span class="w"> </span><span class="nf">jwtAuthenticationConverter</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">JwtAuthenticationConverter</span><span class="w"> </span><span class="n">converter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">JwtAuthenticationConverter</span><span class="p">();</span>
+<span class="w">        </span><span class="n">converter</span><span class="p">.</span><span class="na">setJwtGrantedAuthoritiesConverter</span><span class="p">(</span><span class="n">jwt</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">realmAccess</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">jwt</span><span class="p">.</span><span class="na">getClaimAsMap</span><span class="p">(</span><span class="s">"realm_access"</span><span class="p">);</span>
+<span class="w">            </span><span class="n">Object</span><span class="w"> </span><span class="n">roles</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">realmAccess</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">realmAccess</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="s">"roles"</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">roles</span><span class="w"> </span><span class="k">instanceof</span><span class="w"> </span><span class="n">Collection</span><span class="o">&lt;?&gt;</span><span class="w"> </span><span class="n">lista</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">List</span><span class="p">.</span><span class="o">&lt;</span><span class="n">GrantedAuthority</span><span class="o">&gt;</span><span class="n">of</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">lista</span><span class="p">.</span><span class="na">stream</span><span class="p">()</span>
+<span class="w">                    </span><span class="p">.</span><span class="na">map</span><span class="p">(</span><span class="n">rol</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">(</span><span class="n">GrantedAuthority</span><span class="p">)</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">SimpleGrantedAuthority</span><span class="p">(</span><span class="s">"ROLE_"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">rol</span><span class="p">))</span>
+<span class="w">                    </span><span class="p">.</span><span class="na">toList</span><span class="p">();</span>
+<span class="w">        </span><span class="p">});</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">converter</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Bean</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">SecurityFilterChain</span><span class="w"> </span><span class="nf">securityFilterChain</span><span class="p">(</span><span class="n">HttpSecurity</span><span class="w"> </span><span class="n">http</span><span class="p">,</span>
+<span class="w">                                                     </span><span class="n">JwtAuthenticationConverter</span><span class="w"> </span><span class="n">jwtAuthenticationConverter</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">http</span>
+<span class="w">                </span><span class="p">.</span><span class="na">csrf</span><span class="p">(</span><span class="n">csrf</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">csrf</span><span class="p">.</span><span class="na">disable</span><span class="p">())</span>
+<span class="w">                </span><span class="p">.</span><span class="na">sessionManagement</span><span class="p">(</span><span class="n">session</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">session</span><span class="p">.</span><span class="na">sessionCreationPolicy</span><span class="p">(</span><span class="n">SessionCreationPolicy</span><span class="p">.</span><span class="na">STATELESS</span><span class="p">))</span>
+<span class="w">                </span><span class="p">.</span><span class="na">authorizeHttpRequests</span><span class="p">(</span><span class="n">auth</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">auth</span>
+<span class="w">                        </span><span class="p">.</span><span class="na">requestMatchers</span><span class="p">(</span><span class="s">"/actuator/**"</span><span class="p">,</span><span class="w"> </span><span class="s">"/swagger-ui.html"</span><span class="p">,</span><span class="w"> </span><span class="s">"/swagger-ui/**"</span><span class="p">,</span><span class="w"> </span><span class="s">"/v3/api-docs/**"</span><span class="p">).</span><span class="na">permitAll</span><span class="p">()</span>
+<span class="w">                        </span><span class="p">.</span><span class="na">requestMatchers</span><span class="p">(</span><span class="n">HttpMethod</span><span class="p">.</span><span class="na">GET</span><span class="p">,</span><span class="w"> </span><span class="s">"/api/v1/productos/**"</span><span class="p">,</span><span class="w"> </span><span class="s">"/api/v1/categorias/**"</span><span class="p">).</span><span class="na">authenticated</span><span class="p">()</span>
+<span class="w">                        </span><span class="p">.</span><span class="na">requestMatchers</span><span class="p">(</span><span class="n">HttpMethod</span><span class="p">.</span><span class="na">POST</span><span class="p">,</span><span class="w"> </span><span class="s">"/api/v1/productos/**"</span><span class="p">,</span><span class="w"> </span><span class="s">"/api/v1/categorias/**"</span><span class="p">).</span><span class="na">hasRole</span><span class="p">(</span><span class="s">"ADMIN"</span><span class="p">)</span>
+<span class="w">                        </span><span class="p">.</span><span class="na">requestMatchers</span><span class="p">(</span><span class="n">HttpMethod</span><span class="p">.</span><span class="na">PUT</span><span class="p">,</span><span class="w"> </span><span class="s">"/api/v1/productos/**"</span><span class="p">,</span><span class="w"> </span><span class="s">"/api/v1/categorias/**"</span><span class="p">).</span><span class="na">hasRole</span><span class="p">(</span><span class="s">"ADMIN"</span><span class="p">)</span>
+<span class="w">                        </span><span class="p">.</span><span class="na">requestMatchers</span><span class="p">(</span><span class="n">HttpMethod</span><span class="p">.</span><span class="na">DELETE</span><span class="p">,</span><span class="w"> </span><span class="s">"/api/v1/productos/**"</span><span class="p">,</span><span class="w"> </span><span class="s">"/api/v1/categorias/**"</span><span class="p">).</span><span class="na">hasRole</span><span class="p">(</span><span class="s">"ADMIN"</span><span class="p">)</span>
+<span class="w">                        </span><span class="p">.</span><span class="na">requestMatchers</span><span class="p">(</span><span class="n">HttpMethod</span><span class="p">.</span><span class="na">POST</span><span class="p">,</span><span class="w"> </span><span class="s">"/api/v1/ventas"</span><span class="p">).</span><span class="na">hasAnyRole</span><span class="p">(</span><span class="s">"VENDEDOR"</span><span class="p">,</span><span class="w"> </span><span class="s">"SUPERVISOR"</span><span class="p">)</span>
+<span class="w">                        </span><span class="p">.</span><span class="na">requestMatchers</span><span class="p">(</span><span class="n">HttpMethod</span><span class="p">.</span><span class="na">GET</span><span class="p">,</span><span class="w"> </span><span class="s">"/api/v1/ventas/resumen"</span><span class="p">).</span><span class="na">hasAnyRole</span><span class="p">(</span><span class="s">"SUPERVISOR"</span><span class="p">,</span><span class="w"> </span><span class="s">"ADMIN"</span><span class="p">)</span>
+<span class="w">                        </span><span class="p">.</span><span class="na">requestMatchers</span><span class="p">(</span><span class="n">HttpMethod</span><span class="p">.</span><span class="na">PATCH</span><span class="p">,</span><span class="w"> </span><span class="s">"/api/v1/ventas/*/anular"</span><span class="p">).</span><span class="na">hasAnyRole</span><span class="p">(</span><span class="s">"SUPERVISOR"</span><span class="p">,</span><span class="w"> </span><span class="s">"ADMIN"</span><span class="p">)</span>
+<span class="w">                        </span><span class="p">.</span><span class="na">requestMatchers</span><span class="p">(</span><span class="s">"/api/v1/ventas/**"</span><span class="p">).</span><span class="na">hasAnyRole</span><span class="p">(</span><span class="s">"VENDEDOR"</span><span class="p">,</span><span class="w"> </span><span class="s">"SUPERVISOR"</span><span class="p">,</span><span class="w"> </span><span class="s">"ADMIN"</span><span class="p">)</span>
+<span class="w">                        </span><span class="p">.</span><span class="na">anyRequest</span><span class="p">().</span><span class="na">authenticated</span><span class="p">()</span>
+<span class="w">                </span><span class="p">)</span>
+<span class="w">                </span><span class="p">.</span><span class="na">oauth2ResourceServer</span><span class="p">(</span><span class="n">oauth2</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">oauth2</span>
+<span class="w">                        </span><span class="p">.</span><span class="na">jwt</span><span class="p">(</span><span class="n">jwt</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">jwt</span><span class="p">.</span><span class="na">jwtAuthenticationConverter</span><span class="p">(</span><span class="n">jwtAuthenticationConverter</span><span class="p">)));</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">http</span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Compara esta versión con la de S10 (3.11): no hay <code>PasswordEncoder</code> ni <code>AuthenticationManager</code> (nadie hace login contra una base local), y no hay <code>permitAll</code> para <code>/api/v1/auth/**</code> ni <code>/.well-known/jwks.json</code> — ninguno de los dos existe en este camino, no hay nada que dejar abierto ahí. Las reglas por rol de <code>catalogo</code> (S10, 3.13) y <code>ventas</code> (S10, 3.15) ya están ahí, <strong>antes</strong> de <code>.anyRequest().authenticated()</code>, exactamente como en S10 — copiadas tal cual, sin que el cambio de emisor les toque una línea. Con esto, Parte B ya protege de verdad por rol, no solo exige un token válido: Parte C (RN8) prueba precisamente esa distinción con tokens de Keycloak.</p>
+<p><strong><code>lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/OpenApiConfig.java</code></strong> (archivo nuevo — el candado de Swagger, mismo patrón que <code>pagatu-orden-ms</code> en DIST S07):</p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">io.swagger.v3.oas.models.Components</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io.swagger.v3.oas.models.OpenAPI</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io.swagger.v3.oas.models.info.Info</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io.swagger.v3.oas.models.security.SecurityRequirement</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io.swagger.v3.oas.models.security.SecurityScheme</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.context.annotation.Bean</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.context.annotation.Configuration</span><span class="p">;</span>
+
+<span class="nd">@Configuration</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">OpenApiConfig</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">ESQUEMA_JWT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"bearerAuth"</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Bean</span>
+<span class="w">    </span><span class="n">OpenAPI</span><span class="w"> </span><span class="nf">bomErpOpenApi</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">OpenAPI</span><span class="p">()</span>
+<span class="w">                </span><span class="p">.</span><span class="na">info</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">Info</span><span class="p">()</span>
+<span class="w">                        </span><span class="p">.</span><span class="na">title</span><span class="p">(</span><span class="s">"BomERP API"</span><span class="p">)</span>
+<span class="w">                        </span><span class="p">.</span><span class="na">version</span><span class="p">(</span><span class="s">"v1"</span><span class="p">)</span>
+<span class="w">                        </span><span class="p">.</span><span class="na">description</span><span class="p">(</span><span class="s">"Contrato REST del backend unico de LP2"</span><span class="p">))</span>
+<span class="w">                </span><span class="p">.</span><span class="na">components</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">Components</span><span class="p">().</span><span class="na">addSecuritySchemes</span><span class="p">(</span><span class="n">ESQUEMA_JWT</span><span class="p">,</span>
+<span class="w">                        </span><span class="k">new</span><span class="w"> </span><span class="n">SecurityScheme</span><span class="p">()</span>
+<span class="w">                                </span><span class="p">.</span><span class="na">type</span><span class="p">(</span><span class="n">SecurityScheme</span><span class="p">.</span><span class="na">Type</span><span class="p">.</span><span class="na">HTTP</span><span class="p">)</span>
+<span class="w">                                </span><span class="p">.</span><span class="na">scheme</span><span class="p">(</span><span class="s">"bearer"</span><span class="p">)</span>
+<span class="w">                                </span><span class="p">.</span><span class="na">bearerFormat</span><span class="p">(</span><span class="s">"JWT"</span><span class="p">)))</span>
+<span class="w">                </span><span class="p">.</span><span class="na">addSecurityItem</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">SecurityRequirement</span><span class="p">().</span><span class="na">addList</span><span class="p">(</span><span class="n">ESQUEMA_JWT</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Con esto, Swagger UI (<code>http://localhost:8080/swagger-ui.html</code>) muestra el botón <strong>Authorize</strong> arriba a la derecha — pega ahí el <code>access_token</code> de la sección 6 (sin el prefijo <code>Bearer</code>, Swagger lo agrega solo) y cada "Try it out" manda el header automáticamente, incluso contra rutas protegidas.</p>
+<h2 id="parte-c-profundizar-cerrar-la-migracion-y-verificar-que-ventas-filtra-por-dueno">Parte C — Profundizar: cerrar la migración y verificar que <code>ventas</code> filtra por dueño<a class="headerlink" href="#parte-c-profundizar-cerrar-la-migracion-y-verificar-que-ventas-filtra-por-dueno" title="Permanent link">&para;</a></h2>
+<p>Lo construido hasta 7.2 deja a <code>bomerp-backend</code> validando tokens de Keycloak, pero <code>ventas</code> todavía no sabe de quién es cada venta. <strong>7.3 sí es indispensable si vas directo a Keycloak</strong> (sección 0 ya lo marca: 3.14-3.15 de S10) — sin ella, <code>crear</code> nunca guarda <code>vendedorId</code>, y RN8 no existe. De 7.4 en adelante, en cambio, es la profundización que confirma que el reemplazo no rompió nada y verifica RN8 (<code>VENDEDOR</code> ve solo sus propias ventas, <code>SUPERVISOR</code>/<code>ADMIN</code> las ven todas) con tokens reales de Keycloak en vez de los de <code>seguridad</code>.</p>
+<h3 id="73-agregar-vendedorid-a-venta-y-filtrar-ventas-por-dueno-si-vas-directo-a-keycloak">7.3 Agregar <code>vendedorId</code> a <code>Venta</code> y filtrar <code>ventas</code> por dueño (si vas directo a Keycloak)<a class="headerlink" href="#73-agregar-vendedorid-a-venta-y-filtrar-ventas-por-dueno-si-vas-directo-a-keycloak" title="Permanent link">&para;</a></h3>
+<p><strong>Solo si nunca construiste <code>seguridad</code>.</strong> Si ya la tenías, S10 (3.14-3.15) ya dejó esto construido exactamente igual — salta a 7.4.</p>
+<p><strong>Producto del paso:</strong> <code>Venta</code> tiene <code>vendedorId</code>; <code>crear</code> lo toma del claim <code>sub</code> del JWT ya validado (RN5, ADS S8); <code>buscar</code>/<code>obtener</code> filtran por dueño cuando el rol es <code>VENDEDOR</code> (RN8); un <code>VENDEDOR</code> que pide, por <code>id</code>, una venta ajena recibe <code>403</code>, no <code>404</code>.</p>
+<p><strong><code>lp2/bomerp-backend/.../ventas/venta/entity/Venta.java</code></strong> — agrega el campo:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"VENDEDOR_ID"</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">36</span><span class="p">)</span>
+<span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">vendedorId</span><span class="p">;</span>
+</code></pre></div>
+<p><strong><code>VentaController.crear</code></strong> — reemplaza la firma del método:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@PostMapping</span>
+<span class="nd">@ResponseStatus</span><span class="p">(</span><span class="n">HttpStatus</span><span class="p">.</span><span class="na">CREATED</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="n">VentaResponse</span><span class="w"> </span><span class="nf">crear</span><span class="p">(</span><span class="nd">@Valid</span><span class="w"> </span><span class="nd">@RequestBody</span><span class="w"> </span><span class="n">VentaRequest</span><span class="w"> </span><span class="n">request</span><span class="p">,</span><span class="w"> </span><span class="nd">@AuthenticationPrincipal</span><span class="w"> </span><span class="n">Jwt</span><span class="w"> </span><span class="n">jwt</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">vendedorId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">jwt</span><span class="p">.</span><span class="na">getSubject</span><span class="p">();</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ventaService</span><span class="p">.</span><span class="na">crear</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="w"> </span><span class="n">vendedorId</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Agrega los imports:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.security.core.annotation.AuthenticationPrincipal</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.security.oauth2.jwt.Jwt</span><span class="p">;</span>
+</code></pre></div>
+<p><strong><code>VentaService</code></strong> — actualiza la firma:</p>
+<div class="highlight"><pre><span></span><code><span class="n">VentaResponse</span><span class="w"> </span><span class="nf">crear</span><span class="p">(</span><span class="n">VentaRequest</span><span class="w"> </span><span class="n">request</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">vendedorId</span><span class="p">);</span>
+</code></pre></div>
+<p><strong><code>VentaServiceImpl.crear</code></strong> — recibe <code>vendedorId</code> aparte y lo asigna a la cabecera; el resto del método (validar cada línea, descontar stock, calcular el total) no tiene ninguna relación con <code>vendedorId</code> y queda intacto:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@Override</span>
+<span class="nd">@Transactional</span>
+<span class="kd">public</span><span class="w"> </span><span class="n">VentaResponse</span><span class="w"> </span><span class="nf">crear</span><span class="p">(</span><span class="n">VentaRequest</span><span class="w"> </span><span class="n">request</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">vendedorId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Venta</span><span class="w"> </span><span class="n">venta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Venta</span><span class="p">();</span>
+<span class="w">    </span><span class="n">venta</span><span class="p">.</span><span class="na">setFecha</span><span class="p">(</span><span class="n">LocalDateTime</span><span class="p">.</span><span class="na">now</span><span class="p">());</span>
+<span class="w">    </span><span class="n">venta</span><span class="p">.</span><span class="na">setEstado</span><span class="p">(</span><span class="n">EstadoVenta</span><span class="p">.</span><span class="na">REGISTRADA</span><span class="p">);</span>
+<span class="w">    </span><span class="n">venta</span><span class="p">.</span><span class="na">setVendedorId</span><span class="p">(</span><span class="n">vendedorId</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// el resto del método sigue exactamente igual que en S9</span>
+</code></pre></div>
+<p><code>jwt.getSubject()</code> entrega el claim <code>sub</code> como texto, directo del UUID que emite Keycloak — <code>vendedorId</code> se guarda <strong>tal cual</strong>, sin convertir a número. <code>VentaRequest</code> <strong>nunca</strong> tiene un campo <code>vendedorId</code> (a diferencia de <code>idCliente</code> en DIST, que sí hay que quitar de <code>OrdenRequest</code>): este dato nunca llega por un canal que el cliente controle, siempre por el claim del token.</p>
+<p>RN8 (un <code>VENDEDOR</code> solo ve sus propias ventas) no se resuelve por ruta — las tres roles pueden llamar a <code>buscar</code>/<code>obtener</code>, pero el <strong>contenido</strong> que cada uno ve depende de su identidad, no solo de su rol (ABAC). Eso se resuelve dentro del servicio. <strong><code>VentaController</code></strong> — agrega <code>@AuthenticationPrincipal Jwt jwt</code> a <code>buscar</code> y <code>obtener</code>, y pasa el rol/<code>vendedorId</code> al servicio:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@GetMapping</span>
+<span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">VentaResponse</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="nf">buscar</span><span class="p">(</span>
+<span class="w">        </span><span class="nd">@RequestParam</span><span class="p">(</span><span class="n">required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span><span class="w"> </span><span class="n">EstadoVenta</span><span class="w"> </span><span class="n">estado</span><span class="p">,</span>
+<span class="w">        </span><span class="nd">@RequestParam</span><span class="p">(</span><span class="n">required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span><span class="w"> </span><span class="nd">@DateTimeFormat</span><span class="p">(</span><span class="n">iso</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DateTimeFormat</span><span class="p">.</span><span class="na">ISO</span><span class="p">.</span><span class="na">DATE_TIME</span><span class="p">)</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">desde</span><span class="p">,</span>
+<span class="w">        </span><span class="nd">@RequestParam</span><span class="p">(</span><span class="n">required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span><span class="w"> </span><span class="nd">@DateTimeFormat</span><span class="p">(</span><span class="n">iso</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DateTimeFormat</span><span class="p">.</span><span class="na">ISO</span><span class="p">.</span><span class="na">DATE_TIME</span><span class="p">)</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">hasta</span><span class="p">,</span>
+<span class="w">        </span><span class="nd">@RequestParam</span><span class="p">(</span><span class="n">defaultValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"fecha"</span><span class="p">)</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">ordenarPor</span><span class="p">,</span>
+<span class="w">        </span><span class="nd">@RequestParam</span><span class="p">(</span><span class="n">defaultValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"DESC"</span><span class="p">)</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">direccion</span><span class="p">,</span>
+<span class="w">        </span><span class="nd">@AuthenticationPrincipal</span><span class="w"> </span><span class="n">Jwt</span><span class="w"> </span><span class="n">jwt</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">vendedorId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">esVendedor</span><span class="p">(</span><span class="n">jwt</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">jwt</span><span class="p">.</span><span class="na">getSubject</span><span class="p">()</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">ok</span><span class="p">(</span><span class="n">ventaService</span><span class="p">.</span><span class="na">buscar</span><span class="p">(</span><span class="n">estado</span><span class="p">,</span><span class="w"> </span><span class="n">desde</span><span class="p">,</span><span class="w"> </span><span class="n">hasta</span><span class="p">,</span><span class="w"> </span><span class="n">ordenarPor</span><span class="p">,</span><span class="w"> </span><span class="n">direccion</span><span class="p">,</span><span class="w"> </span><span class="n">vendedorId</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="nd">@GetMapping</span><span class="p">(</span><span class="s">"/{id}"</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">VentaResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">obtener</span><span class="p">(</span><span class="nd">@PathVariable</span><span class="w"> </span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="nd">@AuthenticationPrincipal</span><span class="w"> </span><span class="n">Jwt</span><span class="w"> </span><span class="n">jwt</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">vendedorId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">esVendedor</span><span class="p">(</span><span class="n">jwt</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">jwt</span><span class="p">.</span><span class="na">getSubject</span><span class="p">()</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">ok</span><span class="p">(</span><span class="n">ventaService</span><span class="p">.</span><span class="na">obtener</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">vendedorId</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="kd">private</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">esVendedor</span><span class="p">(</span><span class="n">Jwt</span><span class="w"> </span><span class="n">jwt</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">realmAccess</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">jwt</span><span class="p">.</span><span class="na">getClaim</span><span class="p">(</span><span class="s">"realm_access"</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Object</span><span class="w"> </span><span class="n">roles</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">realmAccess</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">realmAccess</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="s">"roles"</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">roles</span><span class="w"> </span><span class="k">instanceof</span><span class="w"> </span><span class="n">Collection</span><span class="o">&lt;?&gt;</span><span class="w"> </span><span class="n">lista</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">lista</span><span class="p">.</span><span class="na">size</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">lista</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="s">"VENDEDOR"</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Agrega los imports que faltan (<code>AuthenticationPrincipal</code>/<code>Jwt</code> ya quedaron arriba; <code>Map</code>/<code>Collection</code> son nuevos en este archivo, los necesita <code>esVendedor</code>):</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Collection</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Map</span><span class="p">;</span>
+</code></pre></div>
+<p><code>vendedorId</code> llega <code>null</code> para <code>SUPERVISOR</code>/<code>ADMIN</code> (ven todas) y con un valor real solo para <code>VENDEDOR</code>. Actualiza <code>VentaService</code>/<code>VentaServiceImpl</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">List</span><span class="o">&lt;</span><span class="n">VentaResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">buscar</span><span class="p">(</span><span class="n">EstadoVenta</span><span class="w"> </span><span class="n">estado</span><span class="p">,</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">desde</span><span class="p">,</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">hasta</span><span class="p">,</span>
+<span class="w">                            </span><span class="n">String</span><span class="w"> </span><span class="n">ordenarPor</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">direccion</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">vendedorId</span><span class="p">);</span>
+<span class="n">VentaResponse</span><span class="w"> </span><span class="nf">obtener</span><span class="p">(</span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">vendedorId</span><span class="p">);</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nd">@Override</span>
+<span class="nd">@Transactional</span><span class="p">(</span><span class="n">readOnly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">VentaResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">buscar</span><span class="p">(</span><span class="n">EstadoVenta</span><span class="w"> </span><span class="n">estado</span><span class="p">,</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">desde</span><span class="p">,</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">hasta</span><span class="p">,</span>
+<span class="w">                                   </span><span class="n">String</span><span class="w"> </span><span class="n">ordenarPor</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">direccion</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">vendedorId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Sort</span><span class="p">.</span><span class="na">Direction</span><span class="w"> </span><span class="n">dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"ASC"</span><span class="p">.</span><span class="na">equalsIgnoreCase</span><span class="p">(</span><span class="n">direccion</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">Sort</span><span class="p">.</span><span class="na">Direction</span><span class="p">.</span><span class="na">ASC</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Sort</span><span class="p">.</span><span class="na">Direction</span><span class="p">.</span><span class="na">DESC</span><span class="p">;</span>
+<span class="w">    </span><span class="n">Sort</span><span class="w"> </span><span class="n">sort</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Sort</span><span class="p">.</span><span class="na">by</span><span class="p">(</span><span class="n">dir</span><span class="p">,</span><span class="w"> </span><span class="n">ordenarPor</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ventaRepository</span><span class="p">.</span><span class="na">buscar</span><span class="p">(</span><span class="n">estado</span><span class="p">,</span><span class="w"> </span><span class="n">desde</span><span class="p">,</span><span class="w"> </span><span class="n">hasta</span><span class="p">,</span><span class="w"> </span><span class="n">vendedorId</span><span class="p">,</span><span class="w"> </span><span class="n">sort</span><span class="p">).</span><span class="na">stream</span><span class="p">()</span>
+<span class="w">            </span><span class="p">.</span><span class="na">map</span><span class="p">(</span><span class="n">ventaMapper</span><span class="p">::</span><span class="n">toResponse</span><span class="p">).</span><span class="na">toList</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="nd">@Override</span>
+<span class="nd">@Transactional</span><span class="p">(</span><span class="n">readOnly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="n">VentaResponse</span><span class="w"> </span><span class="nf">obtener</span><span class="p">(</span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">vendedorId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Venta</span><span class="w"> </span><span class="n">venta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ventaRepository</span><span class="p">.</span><span class="na">findById</span><span class="p">(</span><span class="n">id</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">orElseThrow</span><span class="p">(()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ResourceNotFoundException</span><span class="p">(</span><span class="s">"Venta no encontrada: "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">id</span><span class="p">));</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">vendedorId</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">vendedorId</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="n">venta</span><span class="p">.</span><span class="na">getVendedorId</span><span class="p">()))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">AccesoDenegadoException</span><span class="p">(</span><span class="s">"No tienes acceso a esta venta"</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ventaMapper</span><span class="p">.</span><span class="na">toResponse</span><span class="p">(</span><span class="n">venta</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>VentaRepository.buscar</code> gana un parámetro <code>String vendedorId</code> (<code>null</code> = sin filtrar), condición opcional dentro del propio <code>@Query</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@EntityGraph</span><span class="p">(</span><span class="n">attributePaths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"detalles"</span><span class="p">)</span>
+<span class="nd">@Query</span><span class="p">(</span><span class="s">"""</span>
+<span class="s">    SELECT v FROM Venta v</span>
+<span class="s">    WHERE (:estado IS NULL OR v.estado = :estado)</span>
+<span class="s">      AND (:desde IS NULL OR v.fecha &gt;= :desde)</span>
+<span class="s">      AND (:hasta IS NULL OR v.fecha &lt;= :hasta)</span>
+<span class="s">      AND (:vendedorId IS NULL OR v.vendedorId = :vendedorId)</span>
+<span class="s">    """</span><span class="p">)</span>
+<span class="n">List</span><span class="o">&lt;</span><span class="n">Venta</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">buscar</span><span class="p">(</span><span class="nd">@Param</span><span class="p">(</span><span class="s">"estado"</span><span class="p">)</span><span class="w"> </span><span class="n">EstadoVenta</span><span class="w"> </span><span class="n">estado</span><span class="p">,</span>
+<span class="w">                    </span><span class="nd">@Param</span><span class="p">(</span><span class="s">"desde"</span><span class="p">)</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">desde</span><span class="p">,</span>
+<span class="w">                    </span><span class="nd">@Param</span><span class="p">(</span><span class="s">"hasta"</span><span class="p">)</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">hasta</span><span class="p">,</span>
+<span class="w">                    </span><span class="nd">@Param</span><span class="p">(</span><span class="s">"vendedorId"</span><span class="p">)</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">vendedorId</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">Sort</span><span class="w"> </span><span class="n">sort</span><span class="p">);</span>
+</code></pre></div>
+<p>Con <code>vendedorId = null</code> (<code>SUPERVISOR</code>/<code>ADMIN</code>) la condición <code>:vendedorId IS NULL OR ...</code> siempre es verdadera y no filtra nada — ven todas las ventas. Con un valor real (<code>VENDEDOR</code>), filtra solo las suyas. <code>resumen</code> <strong>no</strong> necesita este parámetro: ya está restringido a <code>SUPERVISOR</code>/<code>ADMIN</code> en <code>SecurityConfig</code> (7.2), ningún <code>VENDEDOR</code> llega a llamarlo.</p>
+<p>Crea <code>AccesoDenegadoException</code> (en <code>pe.edu.upeu.bomerp.exception</code>, mismo paquete que <code>ResourceNotFoundException</code>) y su manejador en <code>GlobalExceptionHandler</code>, respondiendo <code>403</code>:</p>
+<p><strong><code>lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/exception/AccesoDenegadoException.java</code>:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp.exception</span><span class="p">;</span>
+
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">AccesoDenegadoException</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">RuntimeException</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">AccesoDenegadoException</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">mensaje</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">super</span><span class="p">(</span><span class="n">mensaje</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nd">@ExceptionHandler</span><span class="p">(</span><span class="n">AccesoDenegadoException</span><span class="p">.</span><span class="na">class</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="nf">handleAccesoDenegado</span><span class="p">(</span><span class="n">AccesoDenegadoException</span><span class="w"> </span><span class="n">ex</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="n">body</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">"timestamp"</span><span class="p">,</span><span class="w"> </span><span class="n">Instant</span><span class="p">.</span><span class="na">now</span><span class="p">().</span><span class="na">toString</span><span class="p">());</span>
+<span class="w">    </span><span class="n">body</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">"status"</span><span class="p">,</span><span class="w"> </span><span class="n">HttpStatus</span><span class="p">.</span><span class="na">FORBIDDEN</span><span class="p">.</span><span class="na">value</span><span class="p">());</span>
+<span class="w">    </span><span class="n">body</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">"error"</span><span class="p">,</span><span class="w"> </span><span class="s">"Forbidden"</span><span class="p">);</span>
+<span class="w">    </span><span class="n">body</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">"message"</span><span class="p">,</span><span class="w"> </span><span class="n">ex</span><span class="p">.</span><span class="na">getMessage</span><span class="p">());</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">status</span><span class="p">(</span><span class="n">HttpStatus</span><span class="p">.</span><span class="na">FORBIDDEN</span><span class="p">).</span><span class="na">body</span><span class="p">(</span><span class="n">body</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Mismo patrón que el resto de <code>GlobalExceptionHandler</code> (<code>Map&lt;String, Object&gt;</code> con <code>timestamp</code>/<code>status</code>/<code>error</code>/<code>message</code>), no uno nuevo de un solo campo. Responder <code>403</code> (y no <code>404</code>) cuando un <code>VENDEDOR</code> pide, por <code>id</code>, una venta ajena es deliberado: <code>403</code> le dice "existe, pero no es tuya"; <code>404</code> escondería incluso esa información.</p>
+<h3 id="74-confirmar-que-catalogo-y-ventas-no-se-tocan">7.4 Confirmar que <code>catalogo</code> y <code>ventas</code> no se tocan<a class="headerlink" href="#74-confirmar-que-catalogo-y-ventas-no-se-tocan" title="Permanent link">&para;</a></h3>
+<p>Revisa <code>SecurityConfig.securityFilterChain</code>, <code>CategoriaController</code>/<code>ProductoController</code> y <strong>todo</strong> <code>VentaController</code>, incluido <code>crear</code>/<code>buscar</code>/<code>obtener</code>: ningún <code>hasRole</code>, ningún <code>requestMatchers</code>, ninguna línea de código cambia por el solo hecho de que el emisor del token sea distinto — <code>jwt.getSubject()</code> sigue ahí exactamente igual que en S10 (3.14-3.15), porque <code>vendedorId</code> nunca se interpretó como número (1). Si ya construiste <code>seguridad</code> y encuentras que necesitas tocar algo ahí, la migración se desvió de lo que esta guía describe — revisa 7.1.</p>
+<h3 id="75-migrar-las-ventas-ya-registradas-al-nuevo-sub">7.5 Migrar las ventas ya registradas al nuevo <code>sub</code><a class="headerlink" href="#75-migrar-las-ventas-ya-registradas-al-nuevo-sub" title="Permanent link">&para;</a></h3>
+<p><strong>Solo si ya construiste <code>seguridad</code> y tiene ventas reales creadas bajo ese módulo.</strong> Si fuiste directo a Keycloak (7.2-7.3), no hay ningún dato viejo que migrar — salta a 7.6.</p>
+<p><strong>Producto del paso:</strong> las ventas que <code>vendedor1</code>/<code>vendedor2</code> ya crearon bajo <code>seguridad</code> (S10) siguen asociadas a su dueño real, ahora con el <code>sub</code> nuevo de Keycloak.</p>
+<p><code>vendedorId</code> no necesita ningún atributo ni <em>protocol mapper</em> — es <code>jwt.getSubject()</code> tal cual (1). Pero eso no resuelve solo el dato que <strong>ya existe</strong>: cada fila de <code>VENTAS</code> creada hasta hoy tiene <code>VENDEDOR_ID</code> con el <code>id</code> numérico-como-texto que <code>seguridad</code> usaba (ej. <code>"3"</code>), y el <code>sub</code> que Keycloak va a emitir para ese mismo usuario es un UUID distinto (ej. <code>"3fa85f64-5717-4562-b3fc-2c963f66afa6"</code>) — nadie los conecta solo. Sin este paso, esas ventas viejas siguen existiendo, pero <code>obtener</code>/<code>buscar</code> (S10, 3.15) ya no las reconoce como propias de ese vendedor.</p>
+<ol>
+<li>Obtén el <code>id</code> viejo de cada usuario (todavía en <code>bomerp-seguridad-db</code>, antes de 7.6):</li>
+</ol>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>bomerp-seguridad-db<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>bomerp_seguridad<span class="w"> </span>-d<span class="w"> </span>bomerp_seguridad<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SELECT id, email FROM usuarios WHERE email IN ('vendedor1@bomerp.com','vendedor2@bomerp.com','supervisor@bomerp.com','admin@bomerp.com');"</span>
+</code></pre></div>
+<ol>
+<li>Obtén el UUID nuevo de cada usuario, directo de <code>keycloak-db</code> (el Postgres que armamos en la sección 2):</li>
+</ol>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>bomerp-keycloak-db<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>bomerp_keycloak<span class="w"> </span>-d<span class="w"> </span>bomerp_keycloak<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SELECT u.id, u.email FROM user_entity u JOIN realm r ON r.id = u.realm_id WHERE r.name = 'bomerp' AND u.email IN ('vendedor1@bomerp.com','vendedor2@bomerp.com','supervisor@bomerp.com','admin@bomerp.com');"</span>
+</code></pre></div>
+<p><code>user_entity</code>/<code>realm</code> son los nombres reales (verificado contra una instancia real de Keycloak 26.8) — si en otra versión no calzan, lista las tablas con <code>\dt</code> dentro de <code>psql</code> y ajusta la consulta; el resto del procedimiento no cambia.</p>
+<ol>
+<li>Con ambos resultados en mano (un <code>id</code> viejo y un UUID nuevo por cada email), actualiza Oracle — un <code>UPDATE</code> por usuario, solo para los que realmente tengan ventas. Ejemplo real (los valores van a ser distintos en tu base):</li>
+</ol>
+<div class="highlight"><pre><span></span><code>bomerp-seguridad-db          keycloak-db
+id | email                   id (UUID)                             | email
+---|-------------------      --------------------------------------|----------------------
+3  | vendedor1@bomerp.com     516ef047-ffbc-470f-b397-6d4a3fe8fbfa  | vendedor1@bomerp.com
+4  | vendedor2@bomerp.com     0c265d28-60e9-4954-b7e7-36006cb8c2c5  | vendedor2@bomerp.com
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="sh">@'</span>
+<span class="sh">UPDATE VENTAS SET VENDEDOR_ID = '516ef047-ffbc-470f-b397-6d4a3fe8fbfa' WHERE VENDEDOR_ID = '3';</span>
+<span class="sh">UPDATE VENTAS SET VENDEDOR_ID = '0c265d28-60e9-4954-b7e7-36006cb8c2c5' WHERE VENDEDOR_ID = '4';</span>
+<span class="sh">COMMIT;</span>
+<span class="sh">'@</span> <span class="p">|</span> <span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="n">bomerp-oracle</span> <span class="n">bash</span> <span class="n">-c</span> <span class="s2">"sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1"</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>bomerp-oracle<span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">"sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1"</span><span class="w"> </span><span class="s">&lt;&lt;'EOF'</span>
+<span class="s">UPDATE VENTAS SET VENDEDOR_ID = '516ef047-ffbc-470f-b397-6d4a3fe8fbfa' WHERE VENDEDOR_ID = '3';</span>
+<span class="s">UPDATE VENTAS SET VENDEDOR_ID = '0c265d28-60e9-4954-b7e7-36006cb8c2c5' WHERE VENDEDOR_ID = '4';</span>
+<span class="s">COMMIT;</span>
+<span class="s">EOF</span>
+</code></pre></div>
+<p>Reemplaza el <code>WHERE VENDEDOR_ID = '&lt;id-viejo&gt;'</code> y el valor nuevo con los que te devolvieron tus propias consultas de los pasos 1-2 — no copies los de este ejemplo. Confirma el resultado:</p>
+<div class="highlight"><pre><span></span><code><span class="sh">@'</span>
+<span class="sh">SELECT ID, VENDEDOR_ID FROM VENTAS WHERE VENDEDOR_ID IS NOT NULL ORDER BY ID;</span>
+<span class="sh">'@</span> <span class="p">|</span> <span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="n">bomerp-oracle</span> <span class="n">bash</span> <span class="n">-c</span> <span class="s2">"sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1"</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>bomerp-oracle<span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">"sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1"</span><span class="w"> </span><span class="s">&lt;&lt;'EOF'</span>
+<span class="s">SELECT ID, VENDEDOR_ID FROM VENTAS WHERE VENDEDOR_ID IS NOT NULL ORDER BY ID;</span>
+<span class="s">EOF</span>
+</code></pre></div>
+<p>Filtra solo las que tienen <code>VENDEDOR_ID</code> (el resto de S4-S9 sigue en <code>NULL</code>, no hace falta verlas). Resultado esperado: cada venta migrada muestra ya el UUID nuevo, no el <code>id</code> numérico viejo.</p>
+<p>Es una migración de <strong>un solo dato, una sola vez</strong> — no una dependencia permanente entre Keycloak y la base vieja. <code>SUPERVISOR</code>/<code>ADMIN</code> no necesitan este paso: ven todas las ventas sin filtrar por <code>vendedorId</code> (RN8 solo aplica a <code>VENDEDOR</code>).</p>
+<h3 id="76-retirar-seguridad-db">7.6 Retirar <code>seguridad-db</code><a class="headerlink" href="#76-retirar-seguridad-db" title="Permanent link">&para;</a></h3>
+<p><strong>Solo si construiste <code>seguridad</code>.</strong> Si fuiste directo a Keycloak, nunca existió este contenedor — salta a 7.7.</p>
+<p><strong>Producto del paso:</strong> <code>bomerp-backend</code> corre sin el Postgres de <code>seguridad</code> — Keycloak es, desde este punto, el único almacén de identidad.</p>
+<p>Con 7.1-7.4 confirmados y la migración de 7.5 ya hecha, <code>seguridad-db</code> ya no tiene ningún lector: nadie en el código vigente lo consulta, y las ventas viejas ya apuntan al <code>sub</code> nuevo. No lo dejes corriendo "por si acaso" — si Keycloak es de verdad el reemplazo, el sistema tiene que demostrar que funciona sin él <strong>antes</strong> de la prueba final de la sección 8, no después.</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd </span><span class="n">lp2</span><span class="p">\</span><span class="n">bomerp-backend</span>
+<span class="n">docker</span> <span class="n">compose</span> <span class="o">-f</span> <span class="n">compose-dev</span><span class="p">.</span><span class="n">yml</span> <span class="n">stop</span> <span class="n">seguridad-db</span>
+<span class="n">docker</span> <span class="n">compose</span> <span class="o">-f</span> <span class="n">compose-dev</span><span class="p">.</span><span class="n">yml</span> <span class="nb">rm </span><span class="o">-f</span> <span class="n">seguridad-db</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>lp2/bomerp-backend
+docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>compose-dev.yml<span class="w"> </span>stop<span class="w"> </span>seguridad-db
+docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>compose-dev.yml<span class="w"> </span>rm<span class="w"> </span>-f<span class="w"> </span>seguridad-db
+</code></pre></div>
+<p>Quita también el bloque <code>seguridad-db:</code> completo de <code>compose-dev.yml</code> (el que agregó S10, 3.2) y la línea <code>seguridad-db-data:</code> de <code>volumes:</code> al final del archivo — ya ningún servicio la usa. Si quieres conservar los datos históricos antes de liberar el volumen (los <code>vendedorId</code> migrados ya quedaron a salvo en Oracle, 7.5; esto es solo por si quieres consultar algo más del Postgres viejo), identifica el volumen real y bórralo:</p>
+<div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">volume</span> <span class="nb">ls </span><span class="p">|</span> <span class="nb">Select-String</span> <span class="n">seguridad</span>
+<span class="n">docker</span> <span class="n">volume</span> <span class="nb">rm </span><span class="p">&lt;</span><span class="n">nombre-exacto-que-aparezca</span><span class="p">&gt;</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>volume<span class="w"> </span>ls<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>seguridad
+docker<span class="w"> </span>volume<span class="w"> </span>rm<span class="w"> </span>&lt;nombre-exacto-que-aparezca&gt;
+</code></pre></div>
+<p>El nombre real sigue el patrón <code>&lt;nombre-del-proyecto-compose&gt;_&lt;nombre-del-volumen&gt;</code> — por ejemplo, <code>bomerp-backend-dev_seguridad-db-data</code> (el prefijo <code>bomerp-backend-dev</code> viene de <code>name:</code> en <code>compose-dev.yml</code>, 1). Usa el que te devuelva tu propio <code>Select-String</code>/<code>grep</code>, no copies este literal.</p>
+<h3 id="77-limpiar-el-codigo-de-seguridad">7.7 Limpiar el código de <code>seguridad</code><a class="headerlink" href="#77-limpiar-el-codigo-de-seguridad" title="Permanent link">&para;</a></h3>
+<p><strong>Solo si construiste <code>seguridad</code>.</strong> Si fuiste directo a Keycloak, ninguna de estas cinco piezas existe en tu proyecto — no hay nada que limpiar, salta directo a la sección 8.</p>
+<p><strong>Producto del paso:</strong> <code>bomerp-backend</code> sin ningún archivo que ya nadie invoca — no solo sin el contenedor.</p>
+<p>Son cuatro piezas, no solo la carpeta <code>seguridad</code> — dos se borran, una se queda, una se edita:</p>
+<ol>
+<li><strong>Borra la carpeta completa</strong> <code>lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/seguridad/</code> — de un solo golpe, con todo lo que tiene adentro (<code>AuthController</code>, <code>JwksController</code>, <code>JwtService</code>, <code>AuthService</code>/<code>AuthServiceImpl</code>, los DTO: <code>LoginRequest</code>/<code>LoginResponse</code>/<code>RegistroRequest</code>/<code>RegistroResponse</code>, las entidades <code>Usuario</code>/<code>Rol</code>, sus repositorios, <code>UsuarioDetailsService</code> y <code>SeguridadDataSourceConfig</code>). Nada de <code>catalogo</code>/<code>ventas</code> depende de este paquete:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nb">Remove-Item</span> <span class="n">-Recurse</span> <span class="n">-Force</span> <span class="s2">"lp2\bomerp-backend\src\main\java\pe\edu\upeu\bomerp\seguridad"</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>rm<span class="w"> </span>-rf<span class="w"> </span>lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/seguridad
+</code></pre></div>
+<ol>
+<li><strong>Borra también <code>JwtKeyConfig.java</code></strong> — vive en el paquete raíz (<code>pe.edu.upeu.bomerp</code>), <strong>no</strong> dentro de <code>seguridad/</code>, así que el paso 1 no lo toca solo. Nadie necesita generar un par RSA propio: Keycloak administra sus propias claves.</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nb">Remove-Item</span> <span class="n">-Force</span> <span class="s2">"lp2\bomerp-backend\src\main\java\pe\edu\upeu\bomerp\JwtKeyConfig.java"</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>rm<span class="w"> </span>lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/JwtKeyConfig.java
+</code></pre></div>
+<ol>
+<li><strong><code>SecurityConfig.java</code> (paquete raíz) NO se borra</strong> — ahí sigue el <code>securityFilterChain</code> real que protege <code>catalogo</code>/<code>ventas</code>, y el <code>JwtAuthenticationConverter</code> que lee <code>realm_access.roles</code> sin que le importe quién firmó el token (7.4). Lo único que queda huérfano ahí son los <em>beans</em> <code>passwordEncoder()</code> y <code>authenticationManager()</code> — ya nadie los inyecta sin <code>AuthServiceImpl</code>; puedes quitarlos o dejarlos, ninguna de las dos rompe nada.</li>
+<li><strong><code>pom.xml</code></strong> — quita estos dos bloques (los que agregó S10, 3.3):</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.springframework.security<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>spring-security-oauth2-jose<span class="nt">&lt;/artifactId&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.postgresql<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>postgresql<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;scope&gt;</span>runtime<span class="nt">&lt;/scope&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div>
+<p><code>spring-security-oauth2-jose</code> solo servía para <strong>firmar</strong> el JWT propio con <code>NimbusJwtEncoder</code>; Keycloak firma los suyos, <code>bomerp-backend</code> nunca firma nada. <code>org.postgresql:postgresql</code> queda huérfano porque nada más en <code>bomerp-backend</code> usa Postgres hoy (revisa primero que ningún otro módulo lo necesite antes de quitarlo). <strong>No</strong> quites <code>spring-boot-starter-security-oauth2-resource-server</code> — ese sigue validando tokens, ahora contra Keycloak.</p>
+<ol>
+<li><strong>(Opcional) Simplifica <code>OracleDataSourceConfig.java</code>.</strong> Esa clase existe desde 3.4 de S10 por una sola razón: desambiguar <strong>dos</strong> <code>DataSource</code> (<code>@Primary</code>/<code>@Qualifier</code>, S10 3.4 "Error frecuente"). Con <code>SeguridadDataSourceConfig</code> borrado (punto 1), vuelve a haber uno solo — exactamente la situación de antes de S10, cuando Spring Boot autoconfiguraba todo él solo a partir de <code>spring.datasource.*</code> (<code>application-dev.yml</code>, que ya tiene esas propiedades y no cambia). Puedes borrar el archivo completo:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nb">Remove-Item</span> <span class="n">-Force</span> <span class="s2">"lp2\bomerp-backend\src\main\java\pe\edu\upeu\bomerp\OracleDataSourceConfig.java"</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>rm<span class="w"> </span>lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/OracleDataSourceConfig.java
+</code></pre></div>
+<p>Spring Boot vuelve a armar <code>DataSource</code>/<code>EntityManagerFactory</code>/<code>TransactionManager</code> solo, y sigue encontrando los repositorios de <code>catalogo</code>/<code>ventas</code> sin <code>@EnableJpaRepositories</code> explícito, porque están en subpaquetes de <code>pe.edu.upeu.bomerp</code> (el paquete de <code>BomerpBackendApplication</code>) — el escaneo por defecto los cubre igual. <strong>No lo he probado contra tu proyecto real</strong> — recompila y prueba <code>catalogo</code>/<code>ventas</code> (8) después de borrarlo; si algo falla, lo más seguro es restaurar el archivo (<code>git checkout</code> sobre él) en vez de perseguir el error a mitad de la guía.</p>
+<p>Recompila (<code>.\mvnw.cmd spring-boot:run</code> desde cero) y repite una consulta protegida (8) para confirmar que nada se rompió al borrar.</p>
+<h2 id="8-probar-de-punta-a-punta">8. Probar de punta a punta<a class="headerlink" href="#8-probar-de-punta-a-punta" title="Permanent link">&para;</a></h2>
+<p><strong>Producto del paso:</strong> la misma matriz de accesos que S10 verificó (3.16, Tabla 6), ahora contra tokens de Keycloak — con <code>seguridad-db</code> ya retirado si aplicaba (7.6), esta prueba confirma que el reemplazo es real, no solo que Keycloak "también funciona" en paralelo.</p>
+<p>Reinicia <code>bomerp-backend</code> (lee la propiedad nueva de 7.1) y repite las pruebas de S10 (3.16), pero obteniendo cada token de Keycloak en vez de <code>/api/v1/auth/login</code>.</p>
+<ol>
+<li>Un token por rol:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nv">$tokenVendedor1</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:38080/realms/bomerp/protocol/openid-connect/token"</span> <span class="p">`</span>
+  <span class="n">-ContentType</span> <span class="s2">"application/x-www-form-urlencoded"</span> <span class="p">`</span>
+  <span class="n">-Body</span> <span class="s2">"grant_type=password&amp;client_id=bomerp-frontend&amp;username=vendedor1&amp;password=Bomerp2026!"</span><span class="p">).</span><span class="n">access_token</span>
+
+<span class="nv">$tokenVendedor2</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:38080/realms/bomerp/protocol/openid-connect/token"</span> <span class="p">`</span>
+  <span class="n">-ContentType</span> <span class="s2">"application/x-www-form-urlencoded"</span> <span class="p">`</span>
+  <span class="n">-Body</span> <span class="s2">"grant_type=password&amp;client_id=bomerp-frontend&amp;username=vendedor2&amp;password=Bomerp2026!"</span><span class="p">).</span><span class="n">access_token</span>
+
+<span class="nv">$tokenSupervisor</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:38080/realms/bomerp/protocol/openid-connect/token"</span> <span class="p">`</span>
+  <span class="n">-ContentType</span> <span class="s2">"application/x-www-form-urlencoded"</span> <span class="p">`</span>
+  <span class="n">-Body</span> <span class="s2">"grant_type=password&amp;client_id=bomerp-frontend&amp;username=supervisor&amp;password=Bomerp2026!"</span><span class="p">).</span><span class="n">access_token</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nv">tokenVendedor1</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:38080/realms/bomerp/protocol/openid-connect/token<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/x-www-form-urlencoded"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s2">"grant_type=password&amp;client_id=bomerp-frontend&amp;username=vendedor1&amp;password=Bomerp2026!"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">'.access_token'</span><span class="k">)</span>
+
+<span class="nv">tokenVendedor2</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:38080/realms/bomerp/protocol/openid-connect/token<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/x-www-form-urlencoded"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s2">"grant_type=password&amp;client_id=bomerp-frontend&amp;username=vendedor2&amp;password=Bomerp2026!"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">'.access_token'</span><span class="k">)</span>
+
+<span class="nv">tokenSupervisor</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:38080/realms/bomerp/protocol/openid-connect/token<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/x-www-form-urlencoded"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s2">"grant_type=password&amp;client_id=bomerp-frontend&amp;username=supervisor&amp;password=Bomerp2026!"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">'.access_token'</span><span class="k">)</span>
+</code></pre></div>
+<ol>
+<li>La venta que ya migraste en 7.5 (<code>vendedor1</code>) es la prueba de dueño perfecta — sustituye <code>$ventaId</code> por su <code>ID</code> real en Oracle (ej. <code>2261</code>). Si fuiste directo a Keycloak y no tienes ninguna venta migrada, crea una venta nueva con <code>vendedor1</code> (S10, 3.16) y usa su <code>ID</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nv">$ventaId</span> <span class="p">=</span> <span class="n">2261</span>
+<span class="k">try</span> <span class="p">{</span>
+  <span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Get</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:8080/api/v1/ventas/$ventaId"</span> <span class="p">`</span>
+    <span class="n">-Headers</span> <span class="p">@{</span> <span class="n">Authorization</span> <span class="p">=</span> <span class="s2">"Bearer $tokenVendedor2"</span> <span class="p">}</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+  <span class="nv">$_</span><span class="p">.</span><span class="n">Exception</span><span class="p">.</span><span class="n">Response</span><span class="p">.</span><span class="n">StatusCode</span><span class="p">.</span><span class="n">value__</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nv">ventaId</span><span class="o">=</span><span class="m">2261</span>
+curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">"%{http_code}\n"</span><span class="w"> </span>http://localhost:8080/api/v1/ventas/<span class="nv">$ventaId</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="nv">$tokenVendedor2</span><span class="s2">"</span>
+</code></pre></div>
+<p>Resultado esperado: <code>403</code> (no es de <code>vendedor2</code>). Con <code>$tokenSupervisor</code> en el mismo header, <code>200 OK</code> con la venta completa.</p>
+<ol>
+<li><code>resumen</code>, igual que en S10 — <code>403</code> con <code>vendedor1</code>, <code>200</code> con <code>supervisor</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="k">try</span> <span class="p">{</span>
+  <span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Get</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:8080/api/v1/ventas/resumen"</span> <span class="p">`</span>
+    <span class="n">-Headers</span> <span class="p">@{</span> <span class="n">Authorization</span> <span class="p">=</span> <span class="s2">"Bearer $tokenVendedor1"</span> <span class="p">}</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+  <span class="nv">$_</span><span class="p">.</span><span class="n">Exception</span><span class="p">.</span><span class="n">Response</span><span class="p">.</span><span class="n">StatusCode</span><span class="p">.</span><span class="n">value__</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">"%{http_code}\n"</span><span class="w"> </span>http://localhost:8080/api/v1/ventas/resumen<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="nv">$tokenVendedor1</span><span class="s2">"</span>
+</code></pre></div>
+<p>Resultado esperado: la misma Tabla 6 de S10 (3.16) — mismos códigos HTTP, para los mismos casos, con tokens que ahora vienen de un proceso distinto.</p>
+<p><strong>Error frecuente</strong>: <code>403</code> donde S10 esperaba <code>200</code>, con un token que en jwt.io se ve correcto. Causa más común: el usuario de Keycloak no tiene el <em>realm role</em> asignado (sección 5), o la venta que estás consultando todavía tiene el <code>VENDEDOR_ID</code> viejo porque 7.5 no se corrió (o se corrió con el <code>id</code>/UUID equivocado) para ese usuario.</p>
 <h2 id="9-que-queda-pendiente">9. Qué queda pendiente<a class="headerlink" href="#9-que-queda-pendiente" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>S11</strong> reconfigura el cliente <code>bomerp-frontend</code> para <em>Authorization Code</em> + PKCE (S10, 2.6) — el flujo real que usará la SPA, desactivando <em>Direct access grants</em> (sección 4) y activando <strong>Require PKCE</strong>. El login deja de ser un formulario propio de BomERP: redirige a la pantalla de Keycloak, igual que viste en 8.1, pero capturado y completado por la SPA en vez de a mano.</li>
+<li><strong>S11</strong> reconfigura el cliente <code>bomerp-frontend</code> para <em>Authorization Code</em> + PKCE (S10, 2.6) — el flujo real que usará la SPA, desactivando <em>Direct access grants</em> (sección 4) y activando <strong>Require PKCE</strong>. El login deja de ser un formulario propio de BomERP: redirige a la pantalla de Keycloak, igual que viste en 6.1, pero capturado y completado por la SPA en vez de a mano.</li>
 <li><strong>Producción real</strong>: el motor de base de datos ya queda resuelto desde la sección 2 (<code>keycloak-db</code>, Postgres). Lo que falta es <code>start-dev</code> (sección 2) en sí — no es apto para producción, exige modo <code>start</code> y TLS, ninguno de los dos configurado aquí (ver la nota de la sección 2).</li>
 </ul>
+<h2 id="anexo-convertir-vendedor_id-de-number-a-varchar2-si-tu-rama-quedo-con-el-diseno-anterior">Anexo: Convertir <code>VENDEDOR_ID</code> de <code>NUMBER</code> a <code>VARCHAR2</code> (si tu rama quedó con el diseño anterior)<a class="headerlink" href="#anexo-convertir-vendedor_id-de-number-a-varchar2-si-tu-rama-quedo-con-el-diseno-anterior" title="Permanent link">&para;</a></h2>
+<p>No todas las ramas llegan a esta guía en el mismo estado. La rama congelada <code>s10-seguridad-jwt-roles</code> guardó <code>VENDEDOR_ID</code> como <code>NUMBER</code> (diseño previo a <a href="../../adr/ADR-005-seguridad-jwt-propio-listo-para-reemplazo/">ADR-005</a>, antes de decidir que <code>vendedorId</code> sería texto listo para un UUID) — no <code>VARCHAR2(36)</code>, que es lo que S10 (3.2) y esta guía dan por hecho. Este Anexo es condicional: solo lo necesitas si tu columna salió como <code>NUMBER</code>, y lo resuelves <strong>antes</strong> de 3.2/Parte A, no al final.</p>
+<p>Confirma el tipo real de la columna:</p>
+<div class="highlight"><pre><span></span><code><span class="sh">@'</span>
+<span class="sh">DESC VENTAS;</span>
+<span class="sh">'@</span> <span class="p">|</span> <span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="n">bomerp-oracle</span> <span class="n">bash</span> <span class="n">-c</span> <span class="s2">"sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1"</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>bomerp-oracle<span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">"sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1"</span><span class="w"> </span><span class="s">&lt;&lt;'EOF'</span>
+<span class="s">DESC VENTAS;</span>
+<span class="s">EOF</span>
+</code></pre></div>
+<p>Si <code>VENDEDOR_ID</code> sale como <code>NUMBER</code>, el <code>ALTER TABLE ... ADD</code> de 3.2 va a fallar porque la columna ya existe — conviértela en vez de agregarla. Oracle no deja cambiar el tipo de una columna con datos (<code>ORA-01439</code>), así que el camino seguro es: columna nueva, copiar convirtiendo a texto, borrar la vieja, renombrar:</p>
+<div class="highlight"><pre><span></span><code><span class="sh">@'</span>
+<span class="sh">ALTER TABLE VENTAS ADD VENDEDOR_ID_TMP VARCHAR2(36);</span>
+<span class="sh">UPDATE VENTAS SET VENDEDOR_ID_TMP = TO_CHAR(VENDEDOR_ID) WHERE VENDEDOR_ID IS NOT NULL;</span>
+<span class="sh">ALTER TABLE VENTAS DROP COLUMN VENDEDOR_ID;</span>
+<span class="sh">ALTER TABLE VENTAS RENAME COLUMN VENDEDOR_ID_TMP TO VENDEDOR_ID;</span>
+<span class="sh">'@</span> <span class="p">|</span> <span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="n">bomerp-oracle</span> <span class="n">bash</span> <span class="n">-c</span> <span class="s2">"sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1"</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>bomerp-oracle<span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">"sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1"</span><span class="w"> </span><span class="s">&lt;&lt;'EOF'</span>
+<span class="s">ALTER TABLE VENTAS ADD VENDEDOR_ID_TMP VARCHAR2(36);</span>
+<span class="s">UPDATE VENTAS SET VENDEDOR_ID_TMP = TO_CHAR(VENDEDOR_ID) WHERE VENDEDOR_ID IS NOT NULL;</span>
+<span class="s">ALTER TABLE VENTAS DROP COLUMN VENDEDOR_ID;</span>
+<span class="s">ALTER TABLE VENTAS RENAME COLUMN VENDEDOR_ID_TMP TO VENDEDOR_ID;</span>
+<span class="s">EOF</span>
+</code></pre></div>
+<p>Repite el <code>DESC VENTAS</code> de arriba: <code>VENDEDOR_ID</code> debe quedar como <code>VARCHAR2(36)</code>, sin <code>NOT NULL</code>. Los valores que ya tenía (el <code>id</code> numérico-como-texto de <code>usuarios</code>, ej. <code>"3"</code>) sobreviven la conversión — 7.5 los reemplaza por el UUID nuevo de Keycloak, y es justo la razón por la que <code>vendedorId</code> necesitaba quedar en texto desde el principio: sin esta conversión, ni siquiera se podría intentar filtrar las ventas por vendedor una vez que <code>sub</code> empiece a llegar como UUID en vez de número.</p>
 <h2 id="bibliografia">Bibliografía<a class="headerlink" href="#bibliografia" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Krebs, B. (2019, 24 de mayo). <em>First American Financial Corp. Leaked Hundreds of Millions of Title Insurance Records</em>. KrebsOnSecurity. https://krebsonsecurity.com/2019/05/first-american-financial-corp-leaked-hundreds-of-millions-of-title-insurance-records/ — mismo caso citado en S10 (1.6), relevante aquí porque un <code>vendedorId</code> tomado de un claim mal configurado reabre el mismo problema de fondo.</li>
