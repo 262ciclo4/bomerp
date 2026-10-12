@@ -388,6 +388,22 @@ ALTER TABLE VENTAS ADD VENDEDOR_ID VARCHAR2(36);
 EOF
 ```
 
+Confirma la columna con `DESC` (*describe*, propio de `sqlplus`):
+
+```powershell
+@'
+DESC VENTAS;
+'@ | docker exec -i bomerp-oracle bash -c "sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1"
+```
+
+```bash
+docker exec -i bomerp-oracle bash -c "sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1" <<'EOF'
+DESC VENTAS;
+EOF
+```
+
+Resultado esperado: `VENDEDOR_ID` listado con tipo `VARCHAR2(36)`, sin `NOT NULL` (a diferencia de `ID`/`FECHA`/`ESTADO`/`TOTAL`, que sí lo tienen).
+
 `VENDEDOR_ID` es `VARCHAR2(36)`, no un número: el valor que guarda es el claim `sub` del JWT tal cual (3.14) — hoy, en `seguridad`, `sub` es el `id` de `Usuario` convertido a texto (ej. `"3"`), pero el mismo campo queda listo para que, si el emisor cambia a un proveedor externo como Keycloak (2.6, ADR-005), `sub` sea un UUID (36 caracteres) sin tener que tocar el esquema otra vez. Se agrega **sin** `NOT NULL`: las ventas creadas en S4-S9 (antes de que existiera ningún usuario autenticado) quedan con esta columna en `NULL`, y eso está bien — no se reescribe el pasado. Toda venta creada **desde hoy en adelante** sí la trae, porque el propio servicio la completa (3.14). Ajusta la contraseña de `BOM_VENTAS` a la que tu equipo usó en S4, si fue distinta a este ejemplo.
 
 **Error frecuente**: arrancar el backend (3.12) antes de que `bomerp-seguridad-db` termine de iniciar. El `healthcheck` del servicio tarda unos segundos; si el backend intenta conectarse antes, falla con un error de conexión rechazada. Confirma con `docker ps` que `bomerp-seguridad-db` diga `healthy`, no solo `Up`, antes de levantar el backend.
@@ -1306,7 +1322,7 @@ for email in vendedor1@bomerp.com vendedor2@bomerp.com supervisor@bomerp.com adm
 done
 ```
 
-Resultado esperado: cuatro respuestas `201 Created` sin cuerpo (`AuthController.registro` devuelve `void`). También puedes hacerlo a mano, una por una, desde Swagger (`http://localhost:8080/swagger-ui.html`, `POST /api/v1/auth/registro`) si prefieres verlo en el navegador — el resultado en la base de datos es el mismo.
+Resultado esperado: cuatro respuestas `201 Created`, cada una con `{ "id": ..., "email": ... }` (`AuthController.registro` devuelve el usuario creado, 3.10). También puedes hacerlo a mano, una por una, desde Swagger (`http://localhost:8080/swagger-ui.html`, `POST /api/v1/auth/registro`) si prefieres verlo en el navegador — el resultado en la base de datos es el mismo.
 
 Los cuatro nacen `VENDEDOR` (3.9); promueve manualmente a los dos últimos, ahora en Postgres:
 
