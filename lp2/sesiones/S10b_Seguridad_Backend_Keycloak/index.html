@@ -3340,6 +3340,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="1. Qué cambia y qué no">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-arquitectura-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Arquitectura de la sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3492,6 +3509,17 @@
     <span class="md-ellipsis">
       
         7.3 Retirar seguridad-db
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74-limpiar-el-codigo-de-seguridad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 Limpiar el código de seguridad
       
     </span>
   </a>
@@ -3623,6 +3651,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="1. Qué cambia y qué no">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-arquitectura-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Arquitectura de la sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3781,6 +3826,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#74-limpiar-el-codigo-de-seguridad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 Limpiar el código de seguridad
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3861,7 +3917,17 @@
 <h2 id="0-que-es-esta-guia-y-que-no-es">0. Qué es esta guía y qué no es<a class="headerlink" href="#0-que-es-esta-guia-y-que-no-es" title="Permanent link">&para;</a></h2>
 <p>Esta guía <strong>no</strong> es una sesión del sílabo: ninguna fila de <code>silabo_lp2_2026_2.md</code> ni de <code>docs/lp2/index.md</code> la pide, no tiene metodología, caso de motivación, actividad autónoma ni rúbrica, y no se evalúa. Es la continuación directa de <a href="../S10_Seguridad_Backend_JWT_Roles/">S10_Seguridad_Backend_JWT_Roles.md</a> — la sesión real y evaluada —, que construyó el módulo <code>seguridad</code> deliberadamente temporal y "listo para reemplazo" (<a href="../../adr/ADR-005-seguridad-jwt-propio-listo-para-reemplazo/">ADR-005</a>, 2.6 de esa guía, Tabla 4). Esta guía documenta, paso a paso y verificado, el reemplazo que esa ADR dejó como dirección arquitectónica sin construir: <strong>desde descargar Keycloak hasta que <code>bomerp-backend</code> valide tokens suyos en vez de los propios</strong>.</p>
 <p>Úsala si tu equipo decide adoptar Keycloak en U3 o después — no antes, y no como parte de la evaluación de S10 o S11. La sesión S10 real queda exactamente como está; esta guía no le resta ni le agrega alcance.</p>
-<p><strong>Requisito:</strong> haber completado S10 (<code>seguridad</code> funcionando, con Postgres propio y <code>SecurityConfig</code> validando por <code>jwk-set-uri</code>) — esta guía parte de ese estado y lo reemplaza.</p>
+<p><strong>Requisito real:</strong> no necesitas tener <code>seguridad</code> construido ni corriendo — nunca coexiste con Keycloak, uno reemplaza al otro. Lo indispensable de S10 es la lógica de autorización que vive en <code>bomerp-backend</code> y no depende de quién emite el token:</p>
+<ul>
+<li><strong>3.2</strong> — la columna <code>VENDEDOR_ID VARCHAR2(36)</code> en <code>VENTAS</code> (el <code>ALTER TABLE</code>; la parte de Postgres/<code>seguridad</code> de ese mismo punto no aplica aquí).</li>
+<li><strong>3.3</strong> — solo 2 de las 4 dependencias de <code>pom.xml</code>: <code>spring-boot-starter-security</code> y <code>spring-boot-starter-security-oauth2-resource-server</code>. <strong>No</strong> agregues <code>spring-security-oauth2-jose</code> (firma JWT — la hace Keycloak, no <code>bomerp-backend</code>) ni el driver <code>postgresql</code> (era para la BD propia de <code>seguridad</code>).</li>
+<li><strong>3.11</strong> — solo el bloque de <code>OpenApiConfig</code> (el candado <em>Authorize</em> de Swagger). El <code>SecurityConfig</code> de ese mismo punto (con <code>PasswordEncoder</code>, <code>AuthenticationManager</code>, <code>jwk-set-uri</code>, y los <code>permitAll</code> de <code>/api/v1/auth/**</code>/<code>/.well-known/jwks.json</code>) <strong>no</strong> aplica tal cual — esos <em>beans</em> y rutas son específicos de <code>seguridad</code>, que nunca existe en tu camino; escribe <code>securityFilterChain</code> directo con <code>issuer-uri</code> (7.1) y sin esos dos <code>permitAll</code>, y agrégale las reglas de <code>catalogo</code>/<code>ventas</code> de 3.13/3.15.</li>
+<li><strong>3.13</strong> — las reglas de <code>catalogo</code> por rol en <code>SecurityConfig</code>.</li>
+<li><strong>3.14</strong> — <code>vendedorId</code> como <code>String</code> en <code>Venta</code>, leído de <code>jwt.getSubject()</code> en <code>VentaController.crear</code>.</li>
+<li><strong>3.15</strong> — las reglas de <code>ventas</code> por rol (<code>buscar</code>/<code>obtener</code>/<code>esVendedor</code>, <code>resumen</code>/<code>anular</code>).</li>
+</ul>
+<p>Si ya construiste <code>seguridad</code> completo (3.1-3.12, 3.16-3.17) y vas a reemplazarlo paso a paso, parte de ese estado: esta guía lo asume y lo retira en la sección 7 (incluida la migración de datos viejos de 5.2). Si en cambio vas a ir directo a Keycloak sin construir <code>seguridad</code> nunca, las secciones 5.2 y 7.3-7.4 no aplican — no hay <code>seguridad</code>/Postgres propio que migrar ni retirar — y saltas directo de los cuatro puntos de arriba a la sección 2.</p>
+<p>Las secciones 1 y 2 de S10 (teoría de JWT/RBAC) y 4-5 (actividad autónoma, cierre) son independientes de cuál camino tomes: se evalúan igual en ambos casos.</p>
 <h2 id="1-que-cambia-y-que-no">1. Qué cambia y qué no<a class="headerlink" href="#1-que-cambia-y-que-no" title="Permanent link">&para;</a></h2>
 <p><strong>Figura 1. Antes y después del reemplazo</strong></p>
 <pre class="mermaid"><code>flowchart TB
@@ -3884,6 +3950,36 @@
     end
 
     Antes --&gt; Despues</code></pre>
+<h3 id="11-arquitectura-de-la-sesion">1.1 Arquitectura de la sesión<a class="headerlink" href="#11-arquitectura-de-la-sesion" title="Permanent link">&para;</a></h3>
+<p><strong>Figura 2. Keycloak vive fuera de <code>bomerp-backend</code>, en su propio contenedor; <code>SecurityConfig</code> lo consume por configuración, no por código</strong></p>
+<pre class="mermaid"><code>flowchart TB
+    Cliente["Cliente&lt;br/&gt;PowerShell / bash / Swagger"]
+
+    subgraph KC["Keycloak (localhost:38080)&lt;br/&gt;contenedor aparte — NO es bomerp-backend"]
+        direction TB
+        KCEndpoint["realm bomerp&lt;br/&gt;POST /realms/bomerp/protocol/openid-connect/token"]
+    end
+
+    subgraph BE["bomerp-backend (un solo proceso Spring Boot)"]
+        direction TB
+        SC["SecurityConfig&lt;br/&gt;Resource Server&lt;br/&gt;valida firma + rol"]
+        Ventas["ventas"]
+        Catalogo["catalogo"]
+        SC --&gt;|"4b. rol autorizado&lt;br/&gt;vendedorId = sub"| Ventas
+        SC --&gt;|"4a. rol autorizado"| Catalogo
+    end
+
+    PG[("Postgres&lt;br/&gt;bomerp-keycloak-db&lt;br/&gt;usuarios, roles")]
+    ORA[("Oracle&lt;br/&gt;BOM_CATALOGO, BOM_VENTAS")]
+
+    Cliente --&gt;|"1. email + password"| KC
+    KC --&gt;|"2. access_token (JWT, RS256)&lt;br/&gt;sub, realm_access.roles"| Cliente
+    Cliente --&gt;|"3. Authorization: Bearer JWT"| SC
+    SC -.-&gt;|"issuer-uri&lt;br/&gt;(propiedad de configuración)"| KC
+    KC --&gt; PG
+    Ventas --&gt; ORA
+    Catalogo --&gt; ORA</code></pre>
+<p>La diferencia con la Figura 2 de S10 (2.1) no es solo el nombre de la caja: ahí <code>seguridad</code> vivía <strong>dentro</strong> del mismo proceso Spring Boot que <code>ventas</code>/<code>catalogo</code> (un recuadro más, mismo deploy, mismo JVM). Keycloak nunca entra a ese recuadro — es un contenedor aparte, con su propio ciclo de vida y su propio Postgres, y <code>bomerp-backend</code> solo lo conoce por una URL (<code>issuer-uri</code>). Eso es justo lo que vuelve el reemplazo una propiedad de configuración y no un cambio de código: <code>SecurityConfig</code> nunca importa nada de Keycloak, solo le pregunta por HTTP si una firma es válida.</p>
 <p>Confirmando lo que ya decía la Tabla 4 de S10 (2.6), ahora con el detalle que faltaba:</p>
 <p><strong>Tabla 1. Qué cambia exactamente en <code>bomerp-backend</code></strong></p>
 <table>
@@ -4109,7 +4205,7 @@ id | email                   id (UUID)                             | email
 <span class="w">  </span>-d<span class="w"> </span><span class="s2">"grant_type=password&amp;client_id=bomerp-frontend&amp;username=vendedor1@bomerp.com&amp;password=Bomerp2026!"</span>
 </code></pre></div>
 <p>Pega el <code>access_token</code> recibido en <a href="https://jwt.io">jwt.io</a> (inspección visual únicamente, 2.3 de S10) y confirma dos cosas: <code>realm_access.roles</code> trae <code>["VENDEDOR"]</code>; y <code>sub</code> es un UUID, no el <code>"3"</code> de antes — exactamente la diferencia que la sección 1 anticipó, y la razón por la que 5.2 migró las ventas viejas a ese nuevo valor.</p>
-<p><code>POST /realms/bomerp/protocol/openid-connect/token</code> es el endpoint estándar de token de Keycloak (OAuth 2.0/OpenID Connect, S10 2.4) — equivalente a <code>POST /api/v1/auth/login</code> de <code>seguridad</code>, pero ya no es un endpoint propio de BomERP.</p>
+<p><code>POST /realms/bomerp/protocol/openid-connect/token</code> es el endpoint estándar de token de Keycloak (OAuth 2.0/OpenID Connect, S10 2.6) — equivalente a <code>POST /api/v1/auth/login</code> de <code>seguridad</code>, pero ya no es un endpoint propio de BomERP.</p>
 <p><strong>Error frecuente</strong>: comparar el <code>expires_in</code> de este token con el de <code>seguridad</code> y asumir que algo está mal. Por defecto, el realm nuevo trae el <em>access token</em> del propio Keycloak (<em>Realm settings</em> → <em>Tokens</em> → <em>Access Token Lifespan</em>) en <strong>5 minutos</strong>, no en la hora que <code>jwt.expiracion-segundos</code> dejaba en S10 (3.8) — token expirado a mitad de una prueba no es un bug de la integración, solo un valor por defecto distinto. Ajusta ese campo en el realm si las pruebas de la sección 8 te quedan cortas de tiempo.</p>
 <h2 id="7-integrar-bomerp-backend-con-keycloak">7. Integrar <code>bomerp-backend</code> con Keycloak<a class="headerlink" href="#7-integrar-bomerp-backend-con-keycloak" title="Permanent link">&para;</a></h2>
 <p><strong>Producto del paso:</strong> <code>SecurityConfig</code> valida tokens de Keycloak; <code>catalogo</code> y <code>ventas</code> siguen funcionando sin que se les toque una línea.</p>
@@ -4144,10 +4240,55 @@ id | email                   id (UUID)                             | email
 docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>compose-dev.yml<span class="w"> </span>stop<span class="w"> </span>seguridad-db
 docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>compose-dev.yml<span class="w"> </span>rm<span class="w"> </span>-f<span class="w"> </span>seguridad-db
 </code></pre></div>
-<p>Quita también el bloque <code>seguridad-db:</code> completo de <code>compose-dev.yml</code> (el que agregó S10, 3.2) y la línea <code>seguridad-db-data:</code> de <code>volumes:</code> al final del archivo — ya ningún servicio la usa. Si quieres conservar los datos históricos antes de liberar el volumen (los <code>vendedorId</code> ya están a salvo en los atributos de usuario de Keycloak; esto es solo por si quieres consultar algo más adelante), identifica el volumen real y bórralo:</p>
+<p>Quita también el bloque <code>seguridad-db:</code> completo de <code>compose-dev.yml</code> (el que agregó S10, 3.2) y la línea <code>seguridad-db-data:</code> de <code>volumes:</code> al final del archivo — ya ningún servicio la usa. Si quieres conservar los datos históricos antes de liberar el volumen (los <code>vendedorId</code> migrados ya quedaron a salvo en Oracle, 5.2; esto es solo por si quieres consultar algo más del Postgres viejo), identifica el volumen real y bórralo:</p>
+<div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">volume</span> <span class="nb">ls </span><span class="p">|</span> <span class="nb">Select-String</span> <span class="n">seguridad</span>
+<span class="n">docker</span> <span class="n">volume</span> <span class="nb">rm </span><span class="p">&lt;</span><span class="n">nombre-exacto-que-aparezca</span><span class="p">&gt;</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code>docker<span class="w"> </span>volume<span class="w"> </span>ls<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>seguridad
 docker<span class="w"> </span>volume<span class="w"> </span>rm<span class="w"> </span>&lt;nombre-exacto-que-aparezca&gt;
 </code></pre></div>
+<p>El nombre real sigue el patrón <code>&lt;nombre-del-proyecto-compose&gt;_&lt;nombre-del-volumen&gt;</code> — por ejemplo, <code>bomerp-backend-dev_seguridad-db-data</code> (el prefijo <code>bomerp-backend-dev</code> viene de <code>name:</code> en <code>compose-dev.yml</code>, 1). Usa el que te devuelva tu propio <code>Select-String</code>/<code>grep</code>, no copies este literal.</p>
+<h3 id="74-limpiar-el-codigo-de-seguridad">7.4 Limpiar el código de <code>seguridad</code><a class="headerlink" href="#74-limpiar-el-codigo-de-seguridad" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> <code>bomerp-backend</code> sin ningún archivo que ya nadie invoca — no solo sin el contenedor.</p>
+<p>Son cuatro piezas, no solo la carpeta <code>seguridad</code> — dos se borran, una se queda, una se edita:</p>
+<ol>
+<li><strong>Borra la carpeta completa</strong> <code>lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/seguridad/</code> — de un solo golpe, con todo lo que tiene adentro (<code>AuthController</code>, <code>JwksController</code>, <code>JwtService</code>, <code>AuthService</code>/<code>AuthServiceImpl</code>, los DTO: <code>LoginRequest</code>/<code>LoginResponse</code>/<code>RegistroRequest</code>/<code>RegistroResponse</code>, las entidades <code>Usuario</code>/<code>Rol</code>, sus repositorios, <code>UsuarioDetailsService</code> y <code>SeguridadDataSourceConfig</code>). Nada de <code>catalogo</code>/<code>ventas</code> depende de este paquete:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nb">Remove-Item</span> <span class="n">-Recurse</span> <span class="n">-Force</span> <span class="s2">"lp2\bomerp-backend\src\main\java\pe\edu\upeu\bomerp\seguridad"</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>rm<span class="w"> </span>-rf<span class="w"> </span>lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/seguridad
+</code></pre></div>
+<ol>
+<li><strong>Borra también <code>JwtKeyConfig.java</code></strong> — vive en el paquete raíz (<code>pe.edu.upeu.bomerp</code>), <strong>no</strong> dentro de <code>seguridad/</code>, así que el paso 1 no lo toca solo. Nadie necesita generar un par RSA propio: Keycloak administra sus propias claves.</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nb">Remove-Item</span> <span class="n">-Force</span> <span class="s2">"lp2\bomerp-backend\src\main\java\pe\edu\upeu\bomerp\JwtKeyConfig.java"</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>rm<span class="w"> </span>lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/JwtKeyConfig.java
+</code></pre></div>
+<ol>
+<li><strong><code>SecurityConfig.java</code> (paquete raíz) NO se borra</strong> — ahí sigue el <code>securityFilterChain</code> real que protege <code>catalogo</code>/<code>ventas</code>, y el <code>JwtAuthenticationConverter</code> que lee <code>realm_access.roles</code> sin que le importe quién firmó el token (7.2). Lo único que queda huérfano ahí son los <em>beans</em> <code>passwordEncoder()</code> y <code>authenticationManager()</code> — ya nadie los inyecta sin <code>AuthServiceImpl</code>; puedes quitarlos o dejarlos, ninguna de las dos rompe nada.</li>
+<li><strong><code>pom.xml</code></strong> — quita estos dos bloques (los que agregó S10, 3.3):</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.springframework.security<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>spring-security-oauth2-jose<span class="nt">&lt;/artifactId&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.postgresql<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>postgresql<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;scope&gt;</span>runtime<span class="nt">&lt;/scope&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div>
+<p><code>spring-security-oauth2-jose</code> solo servía para <strong>firmar</strong> el JWT propio con <code>NimbusJwtEncoder</code>; Keycloak firma los suyos, <code>bomerp-backend</code> nunca firma nada. <code>org.postgresql:postgresql</code> queda huérfano porque nada más en <code>bomerp-backend</code> usa Postgres hoy (revisa primero que ningún otro módulo lo necesite antes de quitarlo). <strong>No</strong> quites <code>spring-boot-starter-security-oauth2-resource-server</code> — ese sigue validando tokens, ahora contra Keycloak.</p>
+<ol>
+<li><strong>(Opcional) Simplifica <code>OracleDataSourceConfig.java</code>.</strong> Esa clase existe desde 3.4 de S10 por una sola razón: desambiguar <strong>dos</strong> <code>DataSource</code> (<code>@Primary</code>/<code>@Qualifier</code>, S10 3.4 "Error frecuente"). Con <code>SeguridadDataSourceConfig</code> borrado (punto 1), vuelve a haber uno solo — exactamente la situación de antes de S10, cuando Spring Boot autoconfiguraba todo él solo a partir de <code>spring.datasource.*</code> (<code>application-dev.yml</code>, que ya tiene esas propiedades y no cambia). Puedes borrar el archivo completo:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nb">Remove-Item</span> <span class="n">-Force</span> <span class="s2">"lp2\bomerp-backend\src\main\java\pe\edu\upeu\bomerp\OracleDataSourceConfig.java"</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>rm<span class="w"> </span>lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/OracleDataSourceConfig.java
+</code></pre></div>
+<p>Spring Boot vuelve a armar <code>DataSource</code>/<code>EntityManagerFactory</code>/<code>TransactionManager</code> solo, y sigue encontrando los repositorios de <code>catalogo</code>/<code>ventas</code> sin <code>@EnableJpaRepositories</code> explícito, porque están en subpaquetes de <code>pe.edu.upeu.bomerp</code> (el paquete de <code>BomerpBackendApplication</code>) — el escaneo por defecto los cubre igual. <strong>No lo he probado contra tu proyecto real</strong> — recompila y prueba <code>catalogo</code>/<code>ventas</code> (8) después de borrarlo; si algo falla, lo más seguro es restaurar el archivo (<code>git checkout</code> sobre él) en vez de perseguir el error a mitad de la guía.</p>
+<p>Recompila (<code>.\mvnw.cmd spring-boot:run</code> desde cero) y repite una consulta protegida (8) para confirmar que nada se rompió al borrar.</p>
 <h2 id="8-probar-de-punta-a-punta">8. Probar de punta a punta<a class="headerlink" href="#8-probar-de-punta-a-punta" title="Permanent link">&para;</a></h2>
 <p><strong>Producto del paso:</strong> la misma matriz de accesos que S10 verificó (3.16, Tabla 6), ahora contra tokens de Keycloak — con <code>seguridad-db</code> ya retirado (7.3), esta prueba confirma que el reemplazo es real, no solo que Keycloak "también funciona" en paralelo.</p>
 <p>Reinicia <code>bomerp-backend</code> (lee la propiedad nueva de 7.1) y repite las pruebas de S10 (3.16), pero obteniendo cada token de Keycloak en vez de <code>/api/v1/auth/login</code>.</p>
@@ -4220,7 +4361,7 @@ curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>
 <ol>
 <li>Verás la pantalla de login del realm <strong><code>bomerp</code></strong> (no <code>master</code> — si te aparece pidiendo <code>admin</code>, revisa que la URL diga <code>/realms/bomerp/...</code>, no <code>/realms/master/...</code>). Entra con <code>vendedor1@bomerp.com</code> / <code>Bomerp2026!</code>.</li>
 </ol>
-<p><strong>Figura 2. Pantalla de login de Keycloak para el realm <code>bomerp</code></strong></p>
+<p><strong>Figura 3. Pantalla de login de Keycloak para el realm <code>bomerp</code></strong></p>
 <p><img alt="Pantalla de login hospedada por Keycloak para el realm bomerp, con el título BOMERP, campos de usuario (vendedor1@bomerp.com) y contraseña, y la URL localhost:38080/realms/bomerp/login-actions/authenticate" src="../img/s10b-8.1-login-keycloak-bomerp.png" /></p>
 <p>Nota la URL de la barra de direcciones: <code>localhost:38080/realms/bomerp/...</code> — confirma que el formulario lo sirve Keycloak, no <code>bomerp-backend</code> ni ninguna SPA propia (a diferencia del login de <code>seguridad</code>, S10 3.10, que era un formulario de BomERP).</p>
 <ol>
@@ -4251,12 +4392,28 @@ curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>
 <p>O forzar un login nuevo sin cerrar la sesión existente, agregando <code>&amp;prompt=login</code> a la URL del paso 1:</p>
 <div class="highlight"><pre><span></span><code>http://localhost:38080/realms/bomerp/protocol/openid-connect/auth?client_id=bomerp-frontend&amp;redirect_uri=http://localhost:4200/callback&amp;response_type=code&amp;scope=openid&amp;prompt=login
 </code></pre></div>
+<ol>
+<li>(Opcional) Probar el <em>refresh token</em>. Tanto el paso 4 de aquí (<em>Authorization Code</em>) como el token de la sección 6 (<em>Direct Access Grant</em>) ya incluyen un <code>refresh_token</code> en la respuesta, sin configurar nada extra en Keycloak — revísalo:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nv">$login2</span> <span class="p">|</span> <span class="nb">ConvertTo-Json</span>
+</code></pre></div>
+<p>Cámbialo por un <code>access_token</code> nuevo, sin volver a pedir usuario/contraseña — es justo lo que una SPA real hace sola, en segundo plano, poco antes de que el token actual expire:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$refreshed</span> <span class="p">=</span> <span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:38080/realms/bomerp/protocol/openid-connect/token"</span> <span class="p">`</span>
+  <span class="n">-ContentType</span> <span class="s2">"application/x-www-form-urlencoded"</span> <span class="p">`</span>
+  <span class="n">-Body</span> <span class="s2">"grant_type=refresh_token&amp;client_id=bomerp-frontend&amp;refresh_token=</span><span class="p">$(</span><span class="nv">$login2</span><span class="p">.</span><span class="n">refresh_token</span><span class="p">)</span><span class="s2">"</span>
+<span class="nv">$refreshed</span><span class="p">.</span><span class="n">access_token</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nv">refreshedAccessToken</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:38080/realms/bomerp/protocol/openid-connect/token<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/x-www-form-urlencoded"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s2">"grant_type=refresh_token&amp;client_id=bomerp-frontend&amp;refresh_token=</span><span class="nv">$refreshToken</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">'.access_token'</span><span class="k">)</span>
+</code></pre></div>
+<p><code>bomerp-backend</code> nunca ve ni usa el <code>refresh_token</code> — es un <em>Resource Server</em>, solo valida <code>access_token</code> en cada request. El refresco es trabajo exclusivo del cliente (la SPA en S11, vía <code>keycloak-js</code>/<code>angular-oauth2-oidc</code>), nunca del backend.</p>
 <h2 id="9-que-queda-pendiente">9. Qué queda pendiente<a class="headerlink" href="#9-que-queda-pendiente" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>S11</strong> reconfigura el cliente <code>bomerp-frontend</code> para <em>Authorization Code</em> + PKCE (S10, 2.6) — el flujo real que usará la SPA, desactivando <em>Direct access grants</em> (sección 4) y activando <strong>Require PKCE</strong>. El login deja de ser un formulario propio de BomERP: redirige a la pantalla de Keycloak, igual que viste en 8.1, pero capturado y completado por la SPA en vez de a mano.</li>
-<li><strong>Limpieza del paquete <code>seguridad</code></strong>: <code>AuthController</code>, <code>JwtService</code>, <code>JwksController</code>, <code>JwtKeyConfig</code>, <code>SecurityConfig</code> (las piezas de <code>seguridad</code>, no <code>OracleDataSourceConfig</code>), <code>SeguridadDataSourceConfig</code> y las entidades <code>Usuario</code>/<code>Rol</code> quedan sin ningún código que los invoque — pueden borrarse de <code>bomerp-backend</code> en un commit aparte, sin que eso afecte a <code>catalogo</code> ni a <code>ventas</code> (la discusión de por qué esto es una limpieza de archivos y no una migración se documentó en el chat de diseño de S10, no en una guía).</li>
+<li><strong>Limpieza del paquete <code>seguridad</code></strong>: ya se hizo en 7.4 — este punto queda aquí solo como referencia, no como pendiente.</li>
 <li><strong><code>compose-dev.yml</code></strong>: <code>seguridad-db</code> ya se retiró en 7.3 — este punto queda aquí solo como referencia, no como pendiente.</li>
-<li><strong><code>pom.xml</code></strong>: <code>spring-security-oauth2-jose</code> (firmaba el JWT propio) deja de hacer falta; <code>spring-boot-starter-security-oauth2-resource-server</code> <strong>sigue haciendo falta</strong> (sigue validando, ahora contra Keycloak); el driver <code>org.postgresql:postgresql</code> se retira solo si ningún otro módulo de BomERP usa Postgres.</li>
+<li><strong><code>pom.xml</code></strong>: ya se limpió en 7.4 — este punto queda aquí solo como referencia, no como pendiente.</li>
 <li><strong>Producción real</strong>: el motor de base de datos ya queda resuelto desde la sección 2 (<code>keycloak-db</code>, Postgres). Lo que falta es <code>start-dev</code> (sección 2) en sí — no es apto para producción, exige modo <code>start</code> y TLS, ninguno de los dos configurado aquí (ver la nota de la sección 2).</li>
 <li><strong><code>vendedorId</code> para usuarios nuevos: resuelto por el propio rediseño</strong>: con <code>vendedorId = sub</code> (texto, no número — S10, 3.2/3.14), un vendedor creado <strong>después</strong> de este reemplazo no necesita ningún paso manual — Keycloak le genera su UUID solo, al crearlo, y ese UUID es automáticamente su <code>vendedorId</code> desde la primera venta que registre. Esto era un problema real con el diseño anterior (un <code>vendedorId</code> numérico no tenía de dónde salir sin una tabla aparte); dejó de serlo en cuanto <code>vendedorId</code> se diseñó como texto desde S10.</li>
 </ul>
