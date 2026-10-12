@@ -63,11 +63,13 @@ Las secciones 1 y 2 de S10 (teoría de JWT/RBAC) y 4-5 (actividad autónoma, cie
 
 ```mermaid
 flowchart TB
-    subgraph Antes["Hoy (S10)"]
+    subgraph Antes["S10 (antes)"]
         direction TB
         ClienteA["Cliente"]
-        AuthA["seguridad<br/>emite el JWT"]
-        SCA["SecurityConfig<br/>jwk-set-uri → localhost:8080"]
+        subgraph BackendA["bomerp-backend"]
+            AuthA["seguridad<br/>emite el JWT"]
+            SCA["SecurityConfig<br/>jwk-set-uri → localhost:8080"]
+        end
         ClienteA --> AuthA
         SCA -.-> AuthA
     end
@@ -75,8 +77,12 @@ flowchart TB
     subgraph Despues["Después (esta guía)"]
         direction TB
         ClienteD["Cliente"]
-        KC["Keycloak<br/>realm bomerp<br/>emite el JWT"]
-        SCD["SecurityConfig<br/>issuer-uri → Keycloak"]
+        subgraph BackendD["bomerp-backend"]
+            SCD["SecurityConfig<br/>issuer-uri → Keycloak"]
+        end
+        subgraph KeycloakD["Keycloak"]
+            KC["realm bomerp<br/>emite el JWT"]
+        end
         ClienteD --> KC
         SCD -.-> KC
     end
@@ -97,7 +103,7 @@ flowchart TB
         KCEndpoint["realm bomerp<br/>POST /realms/bomerp/protocol/openid-connect/token"]
     end
 
-    subgraph BE["bomerp-backend (un solo proceso Spring Boot)"]
+    subgraph BE["bomerp-backend"]
         direction TB
         SC["SecurityConfig<br/>Resource Server<br/>valida firma + rol"]
         Ventas["ventas"]
