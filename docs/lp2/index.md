@@ -53,7 +53,7 @@ Artefacto de referencia para el Proyecto Integrador: [LP2 - Producto de Unidad 2
 | S8 | CRUD de tablas dependientes: selección de datos relacionados, listas desplegables, validación de dependencias y presentación de información relacionada. | SPA (`catalogo`) | CRUD dependiente integrado al backend. |
 | S9 | Formularios transaccionales con cabecera–detalle: detalle dinámico, cálculos, validaciones, confirmación de la operación, consultas y reportes. | SPA (`ventas`) | Flujo transaccional y consultas/reportes operativos desde la SPA. |
 | S10 | Seguridad backend: usuarios, hash de contraseñas, autenticación JWT, roles, permisos y protección de endpoints. | `seguridad` (nuevo) | Backend autenticado y autorizado por roles o permisos. |
-| S11 | Seguridad frontend: login, sesión, almacenamiento y expiración del token, guards, interceptores, menú por permisos, rutas protegidas y manejo de 401/403. | SPA (`seguridad`) | SPA integrada al backend seguro y con navegación protegida. |
+| S11 | Seguridad frontend: login, sesión, almacenamiento y expiración del token, guards, interceptores, menú por permisos, rutas protegidas y manejo de 401/403. | SPA (Keycloak) | SPA integrada al backend seguro y con navegación protegida. |
 | S12 | Integración de la SPA segura: autenticación, persistencia, consultas, navegación y control de acceso. | — | **Producto U2:** una SPA modular segura e integrada con la aplicación Spring Boot y los módulos funcionales de BomERP. |
 
 ### U3: Base Full-Stack modular de BomERP
