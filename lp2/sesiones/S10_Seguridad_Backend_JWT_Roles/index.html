@@ -4956,6 +4956,16 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <span class="s">ALTER TABLE VENTAS ADD VENDEDOR_ID VARCHAR2(36);</span>
 <span class="s">EOF</span>
 </code></pre></div>
+<p>Confirma la columna con <code>DESC</code> (<em>describe</em>, propio de <code>sqlplus</code>):</p>
+<div class="highlight"><pre><span></span><code><span class="sh">@'</span>
+<span class="sh">DESC VENTAS;</span>
+<span class="sh">'@</span> <span class="p">|</span> <span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="n">bomerp-oracle</span> <span class="n">bash</span> <span class="n">-c</span> <span class="s2">"sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1"</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>bomerp-oracle<span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">"sqlplus -s BOM_VENTAS/123456@localhost:1521/FREEPDB1"</span><span class="w"> </span><span class="s">&lt;&lt;'EOF'</span>
+<span class="s">DESC VENTAS;</span>
+<span class="s">EOF</span>
+</code></pre></div>
+<p>Resultado esperado: <code>VENDEDOR_ID</code> listado con tipo <code>VARCHAR2(36)</code>, sin <code>NOT NULL</code> (a diferencia de <code>ID</code>/<code>FECHA</code>/<code>ESTADO</code>/<code>TOTAL</code>, que sí lo tienen).</p>
 <p><code>VENDEDOR_ID</code> es <code>VARCHAR2(36)</code>, no un número: el valor que guarda es el claim <code>sub</code> del JWT tal cual (3.14) — hoy, en <code>seguridad</code>, <code>sub</code> es el <code>id</code> de <code>Usuario</code> convertido a texto (ej. <code>"3"</code>), pero el mismo campo queda listo para que, si el emisor cambia a un proveedor externo como Keycloak (2.6, ADR-005), <code>sub</code> sea un UUID (36 caracteres) sin tener que tocar el esquema otra vez. Se agrega <strong>sin</strong> <code>NOT NULL</code>: las ventas creadas en S4-S9 (antes de que existiera ningún usuario autenticado) quedan con esta columna en <code>NULL</code>, y eso está bien — no se reescribe el pasado. Toda venta creada <strong>desde hoy en adelante</strong> sí la trae, porque el propio servicio la completa (3.14). Ajusta la contraseña de <code>BOM_VENTAS</code> a la que tu equipo usó en S4, si fue distinta a este ejemplo.</p>
 <p><strong>Error frecuente</strong>: arrancar el backend (3.12) antes de que <code>bomerp-seguridad-db</code> termine de iniciar. El <code>healthcheck</code> del servicio tarda unos segundos; si el backend intenta conectarse antes, falla con un error de conexión rechazada. Confirma con <code>docker ps</code> que <code>bomerp-seguridad-db</code> diga <code>healthy</code>, no solo <code>Up</code>, antes de levantar el backend.</p>
 <h4 id="33-agregar-spring-security-el-driver-de-postgres-y-la-libreria-de-firma-jwt">3.3 Agregar Spring Security, el driver de Postgres y la librería de firma JWT<a class="headerlink" href="#33-agregar-spring-security-el-driver-de-postgres-y-la-libreria-de-firma-jwt" title="Permanent link">&para;</a></h4>
@@ -5737,7 +5747,7 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <span class="w">    </span>-d<span class="w"> </span><span class="s2">"{\"email\": \"</span><span class="nv">$email</span><span class="s2">\", \"password\": \"Bomerp2026!\"}"</span>
 <span class="k">done</span>
 </code></pre></div>
-<p>Resultado esperado: cuatro respuestas <code>201 Created</code> sin cuerpo (<code>AuthController.registro</code> devuelve <code>void</code>). También puedes hacerlo a mano, una por una, desde Swagger (<code>http://localhost:8080/swagger-ui.html</code>, <code>POST /api/v1/auth/registro</code>) si prefieres verlo en el navegador — el resultado en la base de datos es el mismo.</p>
+<p>Resultado esperado: cuatro respuestas <code>201 Created</code>, cada una con <code>{ "id": ..., "email": ... }</code> (<code>AuthController.registro</code> devuelve el usuario creado, 3.10). También puedes hacerlo a mano, una por una, desde Swagger (<code>http://localhost:8080/swagger-ui.html</code>, <code>POST /api/v1/auth/registro</code>) si prefieres verlo en el navegador — el resultado en la base de datos es el mismo.</p>
 <p>Los cuatro nacen <code>VENDEDOR</code> (3.9); promueve manualmente a los dos últimos, ahora en Postgres:</p>
 <p>PowerShell:</p>
 <div class="highlight"><pre><span></span><code><span class="sh">@'</span>
