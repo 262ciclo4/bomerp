@@ -76,6 +76,6 @@ public class VentaController {
     private boolean esVendedor(Jwt jwt) {
         Map<String, Object> realmAccess = jwt.getClaim("realm_access");
         Object roles = realmAccess == null ? null : realmAccess.get("roles");
-        return roles instanceof Collection<?> lista && lista.size() == 1 && lista.contains("VENDEDOR");
+        return roles instanceof Collection<?> lista && lista.contains("VENDEDOR");
     }
 }
