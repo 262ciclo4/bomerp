@@ -101,10 +101,11 @@ sequenceDiagram
     participant BE as bomerp-backend
 
     U->>SPA: abre una ruta protegida
-    SPA->>SPA: genera code_verifier y code_challenge (PKCE)
-    SPA->>KC: redirige a /auth con code_challenge
+    SPA->>SPA: genera code_verifier/code_challenge (PKCE) y state (anti-CSRF)
+    SPA->>KC: redirige a /auth con code_challenge y state
     U->>KC: ingresa email y contraseña
-    KC->>SPA: redirige a /auth/callback?code=...
+    KC->>SPA: redirige a /auth/callback?code=...&state=...
+    SPA->>SPA: verifica que state coincide con el guardado
     SPA->>KC: POST /token (code + code_verifier)
     KC-->>SPA: access_token, refresh_token, id_token
     SPA->>SPA: guarda la sesion en memoria
@@ -121,6 +122,8 @@ S10b (sección 4) creó el cliente `bomerp-frontend` con dos flujos activos a la
 La razón de fondo, con más detalle del que S10b necesitaba dar: *Direct access grants* exige que el cliente reciba el usuario y la contraseña directamente y los reenvíe — eso significa que **la SPA tendría que mostrar su propio formulario de login**, con la contraseña pasando por JavaScript que corre en el navegador del usuario, exactamente el mismo código que el caso de 1.6 demuestra que un atacante puede intervenir. *Authorization Code* evita esto por diseño: la contraseña se escribe **dentro del dominio de Keycloak** (`localhost:38080`), nunca dentro del dominio de BomERP (`localhost:4200`) — ni siquiera un script malicioso corriendo en `bomerp-frontend` podría leerla, porque nunca pasa por ahí.
 
 Pero *Authorization Code* por sí solo tiene un hueco: el código que Keycloak devuelve en la URL de retorno (`?code=...`) viaja por el navegador, y un atacante que lograra interceptar esa redirección (un proxy malicioso, una app con el mismo *custom URL scheme* en móvil, un historial de navegador compartido) podría robar ese código y cambiarlo por un token él mismo — **si el cliente no tuviera que demostrar nada más**. Ahí entra PKCE (*Proof Key for Code Exchange*, RFC 7636): antes de redirigir, la SPA genera un secreto aleatorio (`code_verifier`), lo transforma con SHA-256 en un `code_challenge`, y manda solo el `challenge` en la redirección inicial. Para cambiar el código por un token, hay que presentar el `code_verifier` original — algo que nunca viajó por la URL, y que un atacante que solo interceptó el código no tiene. RFC 7636 lo exige para cualquier cliente público (uno que, como una SPA, no puede guardar un secreto de cliente sin exponerlo); RFC 10017 (2026), específica para aplicaciones de navegador, lo confirma como obligatorio.
+
+PKCE protege el intercambio del código por un token — pero no protege contra un ataque distinto: CSRF (*Cross-Site Request Forgery*), donde un atacante induce al navegador de la víctima a completar un flujo de login que el atacante inició, no la víctima. El parámetro `state` (parte del estándar OAuth 2.0 desde su origen, no una adición de PKCE) resuelve esto: la SPA genera un valor aleatorio antes de redirigir, lo manda en la URL de autorización, y Keycloak lo devuelve intacto en la redirección de vuelta — si el valor que vuelve no coincide exactamente con el que la SPA generó (guardado en `sessionStorage`, igual que `code_verifier`, 2.3), la SPA rechaza el intercambio sin intentarlo. RFC 9700 (ya citada en S10, 2.6) exige validar `state` explícitamente; no hacerlo es uno de los errores de diseño más comunes en clientes OAuth 2.0 reales — 3.3 lo construye junto con PKCE, no por separado.
 
 **Tabla 2. Qué cambia entre el flujo de prueba de S10b y el flujo real de hoy**
 
@@ -283,9 +286,13 @@ export async function generarCodeChallenge(verifier: string): Promise<string> {
   const hash = await crypto.subtle.digest('SHA-256', datos);
   return base64UrlEncode(new Uint8Array(hash));
 }
+
+export function generarState(): string {
+  return base64UrlEncode(crypto.getRandomValues(new Uint8Array(16)));
+}
 ```
 
-`crypto.getRandomValues` (Web Crypto API, nativa del navegador, sin ninguna librería) genera los 32 bytes aleatorios del `code_verifier` — el mínimo de entropía que RFC 7636 exige para que no sea adivinable. `crypto.subtle.digest('SHA-256', ...)` es asíncrono porque el cálculo real ocurre fuera del hilo principal de JavaScript; por eso `generarCodeChallenge` devuelve una `Promise`, no un valor directo.
+`crypto.getRandomValues` (Web Crypto API, nativa del navegador, sin ninguna librería) genera los 32 bytes aleatorios del `code_verifier` — el mínimo de entropía que RFC 7636 exige para que no sea adivinable. `crypto.subtle.digest('SHA-256', ...)` es asíncrono porque el cálculo real ocurre fuera del hilo principal de JavaScript; por eso `generarCodeChallenge` devuelve una `Promise`, no un valor directo. `generarState` reusa el mismo `base64UrlEncode` para un propósito distinto (2.2): no se transforma con SHA-256 porque `state` no necesita demostrarse después — solo necesita ser impredecible y compararse tal cual al volver.
 
 ### 3.3 Construir `AuthService`: iniciar el login y guardar la sesión en memoria
 
@@ -296,7 +303,7 @@ export async function generarCodeChallenge(verifier: string): Promise<string> {
 ```typescript
 import { Injectable, computed, signal } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { generarCodeChallenge, generarCodeVerifier } from './pkce';
+import { generarCodeChallenge, generarCodeVerifier, generarState } from './pkce';
 import { decodeJwtPayload } from './jwt';
 
 interface SesionKeycloak {
@@ -314,6 +321,7 @@ interface TokenResponse {
 }
 
 const CLAVE_CODE_VERIFIER = 'bomerp_pkce_code_verifier';
+const CLAVE_STATE = 'bomerp_pkce_state';
 const CLAVE_DESTINO = 'bomerp_pkce_destino';
 
 @Injectable({ providedIn: 'root' })
@@ -349,8 +357,10 @@ export class AuthService {
 
   async iniciarLogin(destino = location.pathname): Promise<void> {
     const verifier = generarCodeVerifier();
+    const state = generarState();
     const challenge = await generarCodeChallenge(verifier);
     sessionStorage.setItem(CLAVE_CODE_VERIFIER, verifier);
+    sessionStorage.setItem(CLAVE_STATE, state);
     sessionStorage.setItem(CLAVE_DESTINO, destino);
 
     const parametros = new URLSearchParams({
@@ -358,6 +368,7 @@ export class AuthService {
       response_type: 'code',
       redirect_uri: environment.keycloak.redirectUri,
       scope: 'openid profile email',
+      state,
       code_challenge: challenge,
       code_challenge_method: 'S256',
     });
@@ -375,7 +386,7 @@ export class AuthService {
 }
 ```
 
-`sesion` es la única fuente de verdad, y vive en memoria (2.3) — nada de lo que `AuthService` guarda ahí sobrevive un *reload*. `autenticado`, `roles` y `usuario` son `computed`: se recalculan solos cada vez que `sesion` cambia, sin que ninguna otra parte de la SPA tenga que sincronizar nada a mano. `iniciarLogin` guarda el `code_verifier` y la ruta a la que el usuario quería ir (`destino`) en `sessionStorage` — la única excepción ya justificada en 2.3 — y redirige el navegador completo a Keycloak; `guardarSesion` queda privado por ahora, 3.4 es quien primero la usa.
+`sesion` es la única fuente de verdad, y vive en memoria (2.3) — nada de lo que `AuthService` guarda ahí sobrevive un *reload*. `autenticado`, `roles` y `usuario` son `computed`: se recalculan solos cada vez que `sesion` cambia, sin que ninguna otra parte de la SPA tenga que sincronizar nada a mano. `iniciarLogin` guarda el `code_verifier`, el `state` (2.2) y la ruta a la que el usuario quería ir (`destino`) en `sessionStorage` — la misma excepción acotada ya justificada en 2.3, ahora con tres valores en vez de uno, ninguno de los tres el token — y redirige el navegador completo a Keycloak; `guardarSesion` queda privado por ahora, 3.4 es quien primero la usa.
 
 ### 3.4 Construir la ruta de retorno (`/auth/callback`) y completar el intercambio
 
@@ -384,10 +395,12 @@ export class AuthService {
 Primero, completa `AuthService` con el método que hace el intercambio — agrégalo después de `iniciarLogin`:
 
 ```typescript
-  async completarLogin(code: string): Promise<void> {
+  async completarLogin(code: string, stateRecibido: string): Promise<void> {
+    const stateEsperado = sessionStorage.getItem(CLAVE_STATE);
     const verifier = sessionStorage.getItem(CLAVE_CODE_VERIFIER);
-    if (!verifier) {
-      throw new Error('code_verifier perdido: inicia el login de nuevo');
+    sessionStorage.removeItem(CLAVE_STATE);
+    if (!verifier || stateRecibido !== stateEsperado) {
+      throw new Error('state o code_verifier invalido: posible CSRF, inicia el login de nuevo');
     }
     const cuerpo = new URLSearchParams({
       grant_type: 'authorization_code',
@@ -415,7 +428,7 @@ Primero, completa `AuthService` con el método que hace el intercambio — agré
   }
 ```
 
-`completarLogin` usa `fetch`, no `HttpClient` — a propósito: este intercambio nunca debe pasar por el interceptor de 3.8 (que adjunta `Authorization` a las peticiones hacia `bomerp-backend`), y Keycloak no es `bomerp-backend`. `sessionStorage.removeItem(CLAVE_CODE_VERIFIER)` ocurre **antes** de revisar si la respuesta fue exitosa, a propósito: el `code_verifier` es de un solo uso — si el intercambio falla, la solución es reiniciar el login completo (`iniciarLogin`, con un `code_verifier` nuevo), nunca reintentar con el mismo.
+`completarLogin` revisa `state` **antes** de confiar en el `code_verifier` (2.2): si el valor que Keycloak devolvió no coincide con el que la SPA guardó antes de redirigir, lanza un error y nunca llega a intentar el intercambio — sin importar si el `code_verifier` guardado era correcto. Usa `fetch`, no `HttpClient` — a propósito: este intercambio nunca debe pasar por el interceptor de 3.8 (que adjunta `Authorization` a las peticiones hacia `bomerp-backend`), y Keycloak no es `bomerp-backend`. `sessionStorage.removeItem(CLAVE_CODE_VERIFIER)` ocurre **antes** de revisar si la respuesta fue exitosa, a propósito: el `code_verifier` es de un solo uso — si el intercambio falla, la solución es reiniciar el login completo (`iniciarLogin`, con un `code_verifier` nuevo), nunca reintentar con el mismo.
 
 **`lp2/bomerp-frontend/src/app/core/auth/auth-callback.ts`** (archivo nuevo):
 
@@ -435,15 +448,16 @@ export class AuthCallback {
     const auth = inject(AuthService);
 
     const codigo = route.snapshot.queryParamMap.get('code');
+    const state = route.snapshot.queryParamMap.get('state');
     const error = route.snapshot.queryParamMap.get('error');
 
-    if (error || !codigo) {
+    if (error || !codigo || !state) {
       router.navigateByUrl('/');
       return;
     }
 
     auth
-      .completarLogin(codigo)
+      .completarLogin(codigo, state)
       .then(() => router.navigateByUrl(auth.destinoPendiente()))
       .catch(() => router.navigateByUrl('/'));
   }
@@ -791,7 +805,7 @@ Tu propio proyecto, en S10 (4.1), construyó un `seguridad` propio con `/api/v1/
 Completa y evidencia estas tareas, sobre tu propio proyecto:
 
 1. Crea un realm propio en tu Keycloak (S10b, sección 3, mismos pasos) con los roles reales de tu dominio, un cliente público con *Standard flow* + PKEC obligatorio (S10b, sección 4; 3.1 de esta guía) y al menos dos usuarios con roles distintos (S10b, sección 5).
-2. Construye el flujo completo de login (`AuthService`, PKCE, la ruta de retorno) contra ese realm, con el token guardado en memoria — no en `localStorage` (2.3).
+2. Construye el flujo completo de login (`AuthService`, PKCE + `state`, la ruta de retorno) contra ese realm, con el token guardado en memoria — no en `localStorage` (2.3).
 3. Protege al menos una ruta de escritura con `rolGuard` y confirma que un usuario sin ese rol es redirigido, no solo bloqueado en silencio.
 4. Construye el interceptor: el token se adjunta automáticamente a cada petición de tu propio backend, y un `401` dispara un refresco antes de rendirse (2.6).
 5. Documenta la matriz de accesos de tu propio proyecto, con el mismo formato de la Tabla 6 (3.10).
