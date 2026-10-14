@@ -2602,6 +2602,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="sesiones/S11_Particionamiento_Escalabilidad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S11 - Particionamiento y escalabilidad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -3682,8 +3710,8 @@ auditada y resiliente.
 <tr>
 <td>S11</td>
 <td>Particionamiento y escalabilidad: Range, Hash, List, Composite Partition, estrategias para grandes volúmenes e impacto en el rendimiento.</td>
-<td>tablas de gran volumen</td>
-<td>Range, Hash, List, Composite Partition; estrategias para grandes volúmenes e impacto en rendimiento.</td>
+<td><code>VENTAS_HISTORICO</code></td>
+<td>Range, Hash, List, Composite Partition sobre una tabla de 100,000 filas; <code>partition pruning</code> verificado con <code>EXPLAIN PLAN</code> y roto deliberadamente con <code>TRUNC</code>; <code>DROP PARTITION</code> frente a <code>DELETE</code>, medido.</td>
 </tr>
 <tr>
 <td>S12</td>
