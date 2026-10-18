@@ -4427,7 +4427,7 @@
 <h3 id="26-patrones-de-integracion-capa-anticorrupcion-circuit-breaker-y-outbox">2.6 Patrones de integración: capa anticorrupción, <em>circuit breaker</em> y <em>outbox</em><a class="headerlink" href="#26-patrones-de-integracion-capa-anticorrupcion-circuit-breaker-y-outbox" title="Permanent link">&para;</a></h3>
 <p>Tres patrones, cada uno protegiendo un riesgo distinto de los dos tipos de frontera de 2.1:</p>
 <p><strong>Capa anticorrupción</strong> (<em>Anti-Corruption Layer</em>, Evans, 2003) traduce entre el modelo de un sistema externo y el modelo propio, para que el vocabulario y la estructura de datos del externo nunca se filtren al dominio. <code>Venta</code> nunca debe tener un campo que se llame igual que una etiqueta del XML UBL de SUNAT — existe una clase intermedia que traduce <code>VentaResponse</code> a ese XML, y nada más que esa clase conoce el formato de SUNAT.</p>
-<p><strong>Circuit Breaker</strong> (Fowler, 2014; 1.6) protege contra un sistema externo que falla o se vuelve lento: monitorea los fallos de una llamada protegida y, al superar un umbral, "abre" el circuito — las siguientes llamadas fallan de inmediato, sin intentar la llamada real, hasta que un temporizador permite una llamada de prueba para ver si el sistema externo se recuperó.</p>
+<p><strong>Circuit Breaker</strong> (Fowler, 2014; Nygard, 2018; 1.6) protege contra un sistema externo que falla o se vuelve lento: monitorea el resultado de una llamada protegida y, cuando la <strong>tasa de fallos</strong> (no un conteo simple de fallos seguidos) supera un umbral configurado, "abre" el circuito — las siguientes llamadas fallan de inmediato, sin intentar la llamada real, hasta que un temporizador permite un grupo limitado de llamadas de prueba para ver si el sistema externo se recuperó. Esa tasa se mide, concretamente, sobre una <strong>ventana deslizante</strong> de las últimas N llamadas (<em>sliding window</em>, SACAViX, 2026) — el mismo criterio, con los nombres reales de parámetro de Resilience4j, que aplica la Tabla 7.</p>
 <p><strong>Tabla 6. Los tres estados de un Circuit Breaker</strong></p>
 <table>
 <thead>
@@ -4439,22 +4439,23 @@
 </thead>
 <tbody>
 <tr>
-<td>Cerrado</td>
+<td><code>CLOSED</code> (cerrado)</td>
 <td>Las llamadas pasan normalmente a SUNAT.</td>
-<td>Si los fallos superan el umbral → Abierto.</td>
+<td>Si la tasa de fallos de la ventana supera el umbral → <code>OPEN</code>.</td>
 </tr>
 <tr>
-<td>Abierto</td>
+<td><code>OPEN</code> (abierto)</td>
 <td>Las llamadas fallan de inmediato, sin contactar a SUNAT.</td>
-<td>Después de un tiempo de espera → Semiabierto.</td>
+<td>Después de un tiempo de espera → <code>HALF_OPEN</code>.</td>
 </tr>
 <tr>
-<td>Semiabierto</td>
-<td>Se permite <strong>una</strong> llamada de prueba.</td>
-<td>Si tiene éxito → Cerrado; si falla → Abierto de nuevo.</td>
+<td><code>HALF_OPEN</code> (semiabierto)</td>
+<td>Se permite un número limitado de llamadas de prueba.</td>
+<td>Si su tasa de éxito alcanza el umbral → <code>CLOSED</code>; si no → <code>OPEN</code> de nuevo.</td>
 </tr>
 </tbody>
 </table>
+<p>El umbral que de verdad importa no es "cuántos fallos seguidos", sino la <strong>tasa de fallos sobre una ventana de las últimas N llamadas</strong> (una <em>sliding window</em>, 3.2) — con la configuración real de esta sesión (Tabla 7: ventana de 10, umbral de 50%), el circuito se abre con 5 fallos de las últimas 10 llamadas, sin que importe si llegaron seguidos o intercalados con alguna llamada exitosa.</p>
 <p><strong>Outbox</strong> (Richardson, 2018) resuelve un problema distinto: ¿cómo se garantiza que un evento se publique si, y solo si, el cambio que lo origina de verdad se guardó? Guardar la venta en la base de datos y publicar <code>VentaRegistrada</code> en un <em>broker</em> son dos operaciones separadas — si la primera tiene éxito y la segunda falla, el evento se pierde para siempre; si ocurre al revés, se publica un evento de una venta que nunca existió. <em>Outbox</em> resuelve esto guardando el evento en una tabla de la <strong>misma</strong> base de datos, dentro de la <strong>misma</strong> transacción que guarda la venta — un proceso aparte, después, se encarga de tomar esos eventos pendientes y publicarlos, reintentando si hace falta, sin arriesgar nunca la atomicidad entre "la venta existe" y "el evento quedó registrado para publicarse".</p>
 <p>Esto no es un patrón hipotético para BomERP: Spring Modulith (el framework ya elegido en ADR-002 de LP2) implementa exactamente este patrón con su propia tabla <code>event_publication</code> — hoy removida a propósito del <code>pom.xml</code> de LP2 porque ningún módulo publica eventos todavía (LP2, nota de arquitectura), reservada para cuando una sesión futura de ese curso adopte comunicación por eventos. El diseño de esta sesión es, literalmente, la especificación de esa sesión futura.</p>
 <h2 id="3-aplica-actividad-practica-guiada">3. Aplica: actividad práctica guiada<a class="headerlink" href="#3-aplica-actividad-practica-guiada" title="Permanent link">&para;</a></h2>
@@ -4515,23 +4516,43 @@
 </thead>
 <tbody>
 <tr>
-<td>Umbral de fallos</td>
-<td>5 fallos consecutivos</td>
-<td>Suficiente para distinguir una falla pasajera de un problema real de SUNAT, sin tardar demasiado en reaccionar.</td>
+<td>Tamaño de la ventana deslizante (<em>sliding window</em>, por cantidad de llamadas)</td>
+<td>10 llamadas</td>
+<td>Suficiente volumen para que un solo pico aislado no dispare el umbral, sin exigir un historial tan largo que tarde en reaccionar a un problema real.</td>
 </tr>
 <tr>
-<td>Tiempo en estado Abierto</td>
+<td>Umbral de tasa de fallos</td>
+<td>50%</td>
+<td>Si 5 de las últimas 10 llamadas a SUNAT fallan, el circuito se abre — una tasa, no un conteo de fallos seguidos: distingue un problema real de SUNAT de fallos aislados intercalados con llamadas exitosas.</td>
+</tr>
+<tr>
+<td>Tiempo en estado <code>OPEN</code></td>
 <td>30 segundos</td>
 <td>Tiempo razonable para que un problema transitorio de red se resuelva, sin bloquear al usuario por minutos.</td>
 </tr>
 <tr>
-<td><em>Fallback</em> (qué responder mientras el circuito está Abierto)</td>
+<td>Llamadas de prueba permitidas en <code>HALF_OPEN</code></td>
+<td>3</td>
+<td>Confirma la recuperación con más de una muestra, sin reabrir la ventana completa de 10 llamadas para decidir si SUNAT ya respondió.</td>
+</tr>
+<tr>
+<td><em>Fallback</em> (qué responder mientras el circuito está <code>OPEN</code>)</td>
 <td>Guardar la venta igual, marcando el comprobante como "pendiente de emisión", y reintentar más tarde (proceso aparte, fuera de la petición del usuario).</td>
 <td>La ley exige emitir el comprobante, pero no exige que la venta <strong>espere</strong> a SUNAT para completarse — emitir el comprobante y registrar la venta son responsabilidades distintas (2.4).</td>
 </tr>
 </tbody>
 </table>
 <p>El <em>fallback</em> es la decisión de diseño más importante de este paso: un <em>circuit breaker</em> sin un <em>fallback</em> pensado simplemente cambia un error lento por un error rápido — sigue siendo un error. El <em>fallback</em> elegido aquí convierte una falla externa (SUNAT caída) en una degradación controlada (la venta se completa, el comprobante queda pendiente) en vez de en una falla total (la venta no se puede registrar porque un sistema de terceros está lento).</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># application.yml — configuracion del circuit breaker "sunat", valores de la Tabla 7</span>
+<span class="nt">resilience4j</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">circuitbreaker</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">instances</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">sunat</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">sliding-window-size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">        </span><span class="nt">failure-rate-threshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span>
+<span class="w">        </span><span class="nt">wait-duration-in-open-state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30s</span>
+<span class="w">        </span><span class="nt">permitted-number-of-calls-in-half-open-state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="c1">// ComprobanteElectronicoServiceImpl.java — circuit breaker, pseudocodigo de diseño</span>
 <span class="nd">@CircuitBreaker</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"sunat"</span><span class="p">,</span><span class="w"> </span><span class="n">fallbackMethod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"emitirPendiente"</span><span class="p">)</span>
 <span class="kd">public</span><span class="w"> </span><span class="n">ComprobanteResultado</span><span class="w"> </span><span class="nf">emitir</span><span class="p">(</span><span class="n">VentaResponse</span><span class="w"> </span><span class="n">venta</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
@@ -4782,6 +4803,8 @@ Indica 2 fortalezas y 2 recomendaciones.
 <ol>
 <li>Netflix Technology Blog. (2012). <em>Fault Tolerance in a High Volume, Distributed System</em>. https://netflixtechblog.com/fault-tolerance-in-a-high-volume-distributed-system-91ab4faae74a</li>
 <li>Fowler, M. (2014). <em>CircuitBreaker</em>. martinfowler.com. https://martinfowler.com/bliki/CircuitBreaker.html</li>
+<li>Nygard, M. (2018). <em>Release It!: Design and Deploy Production-Ready Software</em> (2nd ed.). Pragmatic Bookshelf.</li>
+<li>SACAViX. (2026). <em>Circuit Breaker</em>. SACAViX System Design — Circuit Breaker. https://systemdesign.sacavix.com/patterns/circuit-breaker</li>
 <li>SUNAT. (2024). <em>Guía de elaboración de documentos XML - Factura electrónica UBL 2.1</em>. https://cpe.sunat.gob.pe/sites/default/files/inline-files/guia+xml+factura+version%202-1+1+0%20(2)_0%20(2).pdf</li>
 <li>Evans, E. (2003). <em>Domain-Driven Design: Tackling Complexity in the Heart of Software</em>. Addison-Wesley.</li>
 <li>Hohpe, G., &amp; Woolf, B. (2003). <em>Enterprise Integration Patterns: Designing, Building, and Deploying Messaging Solutions</em>. Addison-Wesley.</li>
