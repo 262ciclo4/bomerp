@@ -186,15 +186,17 @@ Tres patrones, cada uno protegiendo un riesgo distinto de los dos tipos de front
 
 **Capa anticorrupción** (*Anti-Corruption Layer*, Evans, 2003) traduce entre el modelo de un sistema externo y el modelo propio, para que el vocabulario y la estructura de datos del externo nunca se filtren al dominio. `Venta` nunca debe tener un campo que se llame igual que una etiqueta del XML UBL de SUNAT — existe una clase intermedia que traduce `VentaResponse` a ese XML, y nada más que esa clase conoce el formato de SUNAT.
 
-**Circuit Breaker** (Fowler, 2014; 1.6) protege contra un sistema externo que falla o se vuelve lento: monitorea los fallos de una llamada protegida y, al superar un umbral, "abre" el circuito — las siguientes llamadas fallan de inmediato, sin intentar la llamada real, hasta que un temporizador permite una llamada de prueba para ver si el sistema externo se recuperó.
+**Circuit Breaker** (Fowler, 2014; Nygard, 2018; 1.6) protege contra un sistema externo que falla o se vuelve lento: monitorea el resultado de una llamada protegida y, cuando la **tasa de fallos** (no un conteo simple de fallos seguidos) supera un umbral configurado, "abre" el circuito — las siguientes llamadas fallan de inmediato, sin intentar la llamada real, hasta que un temporizador permite un grupo limitado de llamadas de prueba para ver si el sistema externo se recuperó. Esa tasa se mide, concretamente, sobre una **ventana deslizante** de las últimas N llamadas (*sliding window*, SACAViX, 2026) — el mismo criterio, con los nombres reales de parámetro de Resilience4j, que aplica la Tabla 7.
 
 **Tabla 6. Los tres estados de un Circuit Breaker**
 
 | Estado | Comportamiento | Transición |
 |---|---|---|
-| Cerrado | Las llamadas pasan normalmente a SUNAT. | Si los fallos superan el umbral → Abierto. |
-| Abierto | Las llamadas fallan de inmediato, sin contactar a SUNAT. | Después de un tiempo de espera → Semiabierto. |
-| Semiabierto | Se permite **una** llamada de prueba. | Si tiene éxito → Cerrado; si falla → Abierto de nuevo. |
+| `CLOSED` (cerrado) | Las llamadas pasan normalmente a SUNAT. | Si la tasa de fallos de la ventana supera el umbral → `OPEN`. |
+| `OPEN` (abierto) | Las llamadas fallan de inmediato, sin contactar a SUNAT. | Después de un tiempo de espera → `HALF_OPEN`. |
+| `HALF_OPEN` (semiabierto) | Se permite un número limitado de llamadas de prueba. | Si su tasa de éxito alcanza el umbral → `CLOSED`; si no → `OPEN` de nuevo. |
+
+El umbral que de verdad importa no es "cuántos fallos seguidos", sino la **tasa de fallos sobre una ventana de las últimas N llamadas** (una *sliding window*, 3.2) — con la configuración real de esta sesión (Tabla 7: ventana de 10, umbral de 50%), el circuito se abre con 5 fallos de las últimas 10 llamadas, sin que importe si llegaron seguidos o intercalados con alguna llamada exitosa.
 
 **Outbox** (Richardson, 2018) resuelve un problema distinto: ¿cómo se garantiza que un evento se publique si, y solo si, el cambio que lo origina de verdad se guardó? Guardar la venta en la base de datos y publicar `VentaRegistrada` en un *broker* son dos operaciones separadas — si la primera tiene éxito y la segunda falla, el evento se pierde para siempre; si ocurre al revés, se publica un evento de una venta que nunca existió. *Outbox* resuelve esto guardando el evento en una tabla de la **misma** base de datos, dentro de la **misma** transacción que guarda la venta — un proceso aparte, después, se encarga de tomar esos eventos pendientes y publicarlos, reintentando si hace falta, sin arriesgar nunca la atomicidad entre "la venta existe" y "el evento quedó registrado para publicarse".
 
@@ -266,11 +268,25 @@ Dos traducciones, no una: `traducirAUBL` convierte el lenguaje de BomERP al de S
 
 | Parámetro | Valor propuesto | Justificación |
 |---|---|---|
-| Umbral de fallos | 5 fallos consecutivos | Suficiente para distinguir una falla pasajera de un problema real de SUNAT, sin tardar demasiado en reaccionar. |
-| Tiempo en estado Abierto | 30 segundos | Tiempo razonable para que un problema transitorio de red se resuelva, sin bloquear al usuario por minutos. |
-| *Fallback* (qué responder mientras el circuito está Abierto) | Guardar la venta igual, marcando el comprobante como "pendiente de emisión", y reintentar más tarde (proceso aparte, fuera de la petición del usuario). | La ley exige emitir el comprobante, pero no exige que la venta **espere** a SUNAT para completarse — emitir el comprobante y registrar la venta son responsabilidades distintas (2.4). |
+| Tamaño de la ventana deslizante (*sliding window*, por cantidad de llamadas) | 10 llamadas | Suficiente volumen para que un solo pico aislado no dispare el umbral, sin exigir un historial tan largo que tarde en reaccionar a un problema real. |
+| Umbral de tasa de fallos | 50% | Si 5 de las últimas 10 llamadas a SUNAT fallan, el circuito se abre — una tasa, no un conteo de fallos seguidos: distingue un problema real de SUNAT de fallos aislados intercalados con llamadas exitosas. |
+| Tiempo en estado `OPEN` | 30 segundos | Tiempo razonable para que un problema transitorio de red se resuelva, sin bloquear al usuario por minutos. |
+| Llamadas de prueba permitidas en `HALF_OPEN` | 3 | Confirma la recuperación con más de una muestra, sin reabrir la ventana completa de 10 llamadas para decidir si SUNAT ya respondió. |
+| *Fallback* (qué responder mientras el circuito está `OPEN`) | Guardar la venta igual, marcando el comprobante como "pendiente de emisión", y reintentar más tarde (proceso aparte, fuera de la petición del usuario). | La ley exige emitir el comprobante, pero no exige que la venta **espere** a SUNAT para completarse — emitir el comprobante y registrar la venta son responsabilidades distintas (2.4). |
 
 El *fallback* es la decisión de diseño más importante de este paso: un *circuit breaker* sin un *fallback* pensado simplemente cambia un error lento por un error rápido — sigue siendo un error. El *fallback* elegido aquí convierte una falla externa (SUNAT caída) en una degradación controlada (la venta se completa, el comprobante queda pendiente) en vez de en una falla total (la venta no se puede registrar porque un sistema de terceros está lento).
+
+```yaml
+# application.yml — configuracion del circuit breaker "sunat", valores de la Tabla 7
+resilience4j:
+  circuitbreaker:
+    instances:
+      sunat:
+        sliding-window-size: 10
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 30s
+        permitted-number-of-calls-in-half-open-state: 3
+```
 
 ```java
 // ComprobanteElectronicoServiceImpl.java — circuit breaker, pseudocodigo de diseño
@@ -493,7 +509,9 @@ Tiempo: 5 min.
 
 1. Netflix Technology Blog. (2012). *Fault Tolerance in a High Volume, Distributed System*. https://netflixtechblog.com/fault-tolerance-in-a-high-volume-distributed-system-91ab4faae74a
 2. Fowler, M. (2014). *CircuitBreaker*. martinfowler.com. https://martinfowler.com/bliki/CircuitBreaker.html
-3. SUNAT. (2024). *Guía de elaboración de documentos XML - Factura electrónica UBL 2.1*. https://cpe.sunat.gob.pe/sites/default/files/inline-files/guia+xml+factura+version%202-1+1+0%20(2)_0%20(2).pdf
-4. Evans, E. (2003). *Domain-Driven Design: Tackling Complexity in the Heart of Software*. Addison-Wesley.
-5. Hohpe, G., & Woolf, B. (2003). *Enterprise Integration Patterns: Designing, Building, and Deploying Messaging Solutions*. Addison-Wesley.
-6. Richardson, C. (2018). *Microservices Patterns: With examples in Java*. Manning Publications.
+3. Nygard, M. (2018). *Release It!: Design and Deploy Production-Ready Software* (2nd ed.). Pragmatic Bookshelf.
+4. SACAViX. (2026). *Circuit Breaker*. SACAViX System Design — Circuit Breaker. https://systemdesign.sacavix.com/patterns/circuit-breaker
+5. SUNAT. (2024). *Guía de elaboración de documentos XML - Factura electrónica UBL 2.1*. https://cpe.sunat.gob.pe/sites/default/files/inline-files/guia+xml+factura+version%202-1+1+0%20(2)_0%20(2).pdf
+6. Evans, E. (2003). *Domain-Driven Design: Tackling Complexity in the Heart of Software*. Addison-Wesley.
+7. Hohpe, G., & Woolf, B. (2003). *Enterprise Integration Patterns: Designing, Building, and Deploying Messaging Solutions*. Addison-Wesley.
+8. Richardson, C. (2018). *Microservices Patterns: With examples in Java*. Manning Publications.
