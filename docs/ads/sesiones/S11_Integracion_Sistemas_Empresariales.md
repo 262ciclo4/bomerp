@@ -10,7 +10,7 @@ Hasta S10, todas las fronteras que BomERP cruzó fueron internas: `ventas` llama
 
 Esto no es, como S6-S10, una sesión que se queda dentro de los límites que `lp2/bomerp-backend` ya construyó: por el alcance de ADS (Análisis y Diseño de Sistemas de Información) dentro del ciclo —ver la nota de 1.7—, esta sesión diseña infraestructura e integraciones que LP2 (Lenguaje de Programación II) todavía no tiene por qué implementar, y que puede que implemente recién en una sesión futura de ese curso. Diseñar antes de que exista el código es exactamente el mismo patrón ya usado con `Venta.anular()` (S7, S9, S10) — con una frontera distinta: ya no es intra-empresa, es la empresa completa hacia afuera.
 
-Esta sesión va, además, un paso más allá de lo que BomERP necesita hoy: diseña una **Saga coreografiada** (2.7, 3.5) para un proceso de negocio que cruza un tercer sistema externo (un Proveedor), con su paso de compensación cuando algo falla a mitad de camino. BomERP, como monolito modular que es hoy, no lo necesita todavía — pero el ciclo en el que se dicta esta sesión es, de los seis cursos que forman la cadena de BomERP (1.7), el **único** con el nivel de un curso de arquitectura y diseño de sistemas: cuando estos mismos estudiantes lleguen al curso de Sistemas Distribuidos, no van a tener un curso paralelo como ADS que les enseñe a diseñar este patrón con calma, en papel, antes de construirlo contra Kafka y microservicios reales. Este es, literalmente, el único momento del plan de estudios para hacerlo bien.
+Esta sesión va, además, un paso más allá de lo que BomERP necesita hoy: diseña una **Saga coreografiada** (2.7, 3.5) para el segundo flujo real de SUNAT —el Resumen Diario de Boletas, genuinamente asíncrono, por `ticket`—, con su paso de compensación cuando SUNAT rechaza el resumen. BomERP, como monolito modular que es hoy, no lo necesita todavía — pero el ciclo en el que se dicta esta sesión es, de los seis cursos que forman la cadena de BomERP (1.7), el **único** con el nivel de un curso de arquitectura y diseño de sistemas: cuando estos mismos estudiantes lleguen al curso de Sistemas Distribuidos, no van a tener un curso paralelo como ADS que les enseñe a diseñar este patrón con calma, en papel, antes de construirlo contra Kafka y microservicios reales. Este es, literalmente, el único momento del plan de estudios para hacerlo bien.
 
 El porqué de que una integración sin protección pueda tumbar un sistema entero, aunque el sistema remoto sea el que falla, se desarrolla en 1.6.
 
@@ -31,7 +31,7 @@ Al concluir la clase, estarás en condiciones de:
 
 ### 1.4 Producto de sesión
 
-Diseño de integración empresarial de `ventas`: contrato conceptual de la integración con SUNAT (comprobante de pago electrónico, formato UBL 2.1, *Universal Business Language*) con su capa anticorrupción, diseño del *circuit breaker* que protege esa llamada, evento de dominio `VentaRegistrada` con su publicación confiable (patrón *Outbox*, el mismo mecanismo que Spring Modulith ya reserva para una sesión futura de LP2), diseño de un consumidor de IA (inteligencia artificial) que se suscribe a ese evento para sugerir reposición de stock, la Saga coreografiada que convierte esa sugerencia en una orden de compra real contra un Sistema del Proveedor externo —con su paso de compensación cuando el proveedor rechaza la orden—, y una matriz de integración que documenta qué cruza cada frontera de la empresa, hacia dónde y con qué patrón protegido.
+Diseño de integración empresarial de `ventas`: contrato conceptual de la integración con SUNAT (comprobante de pago electrónico, formato UBL 2.1, *Universal Business Language*) con su capa anticorrupción, diseño del *circuit breaker* que protege esa llamada, evento de dominio `VentaRegistrada` con su publicación confiable (patrón *Outbox*, el mismo mecanismo que Spring Modulith ya reserva para una sesión futura de LP2), diseño de un consumidor de IA (inteligencia artificial) que se suscribe a ese evento para sugerir reposición de stock, la Saga coreografiada que coordina el envío asíncrono del Resumen Diario de Boletas a SUNAT —con su paso de compensación cuando SUNAT rechaza el resumen—, y una matriz de integración que documenta qué cruza cada frontera de la empresa, hacia dónde y con qué patrón protegido.
 
 ### 1.5 Metodología
 
@@ -40,7 +40,7 @@ Diseño de integración empresarial de `ventas`: contrato conceptual de la integ
 | Actividades a Realizar en el Periodo | Orientaciones generales (Orientaciones Metodológicas) | Material de estudio recomendado |
 |---|---|---|
 | Revisión previa individual | Repasar el catálogo completo de patrones GoF y GRASP de `ventas` (S10, Tabla 12) y el contrato REST ya existente del módulo (S8, Tabla 17). Trabajo individual, antes de clase. | S10 (2.7, Indirection/Protected Variations; 2.8, Dependency Injection). |
-| Clase presencial | Diseño guiado de la integración con SUNAT, su capa anticorrupción y su *circuit breaker*, del evento de dominio `VentaRegistrada` con publicación confiable, de un consumidor de IA, y de la Saga coreografiada que coordina la orden de compra con el Proveedor, con su compensación. Trabajo individual, siguiendo al docente paso a paso; consulta inmediata ante dudas sobre qué patrón corresponde a cada frontera. | Pasos 3.1 a 3.6 de esta guía. |
+| Clase presencial | Diseño guiado de la integración con SUNAT, su capa anticorrupción y su *circuit breaker*, del evento de dominio `VentaRegistrada` con publicación confiable, de un consumidor de IA, y de la Saga coreografiada que coordina el Resumen Diario de Boletas con SUNAT, con su compensación. Trabajo individual, siguiendo al docente paso a paso; consulta inmediata ante dudas sobre qué patrón corresponde a cada frontera. | Pasos 3.1 a 3.6 de esta guía. |
 | Evaluación formativa | Revisión en clase del diseño de la capa anticorrupción, de la Saga con su compensación, y de la matriz de integración completa. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4. | Indicaciones de entrega (4.3), rúbrica de evaluación (4.6). |
 
 ### 1.6 Motivación de la sesión
@@ -70,7 +70,7 @@ Ninguna de las integraciones de S10 (`ventas` llamando a `catalogo`) corre este 
 
 - Producto del curso: Diseño Técnico Profesional Documentado.
 - Producto de unidad: Catálogo UML con patrones de diseño e integración aplicados.
-- Avance del producto en esta sesión: diseño de integración empresarial completo — sistema externo obligatorio, eventos de dominio, consumidor de IA, Saga coreografiada con compensación contra un segundo sistema externo, y los patrones de integración que protegen cada frontera.
+- Avance del producto en esta sesión: diseño de integración empresarial completo — sistema externo obligatorio, eventos de dominio, consumidor de IA, Saga coreografiada con compensación sobre el flujo asíncrono de SUNAT, y los patrones de integración que protegen cada frontera.
 
 **Nota sobre el alcance de esta sesión.** ADS es, de los tres cursos del ciclo que comparten BomERP, el que ve el panorama completo de la empresa —infraestructura y sistemas externos—, no solo el backend (LP2) o la base de datos (BD2). Por eso esta sesión diseña una integración con SUNAT y un mecanismo de eventos que LP2 todavía no implementa: ese diseño es la referencia con la que LP2 va a trabajar cuando su propio sílabo llegue a esa funcionalidad, el mismo criterio ya aplicado con `Venta.anular()` desde S7.
 
@@ -133,6 +133,8 @@ Una **API externa** (*Application Programming Interface*) es un contrato que Bom
 
 Fuente: SUNAT. (2024). *Guía de elaboración de documentos XML - Factura electrónica UBL 2.1*. https://cpe.sunat.gob.pe/sites/default/files/inline-files/guia+xml+factura+version%202-1+1+0%20(2)_0%20(2).pdf
 
+SUNAT no integra todos sus comprobantes de la misma forma. La **Factura** sigue el camino que acabas de leer: se envía, SUNAT responde con la CDR en la misma llamada — el diseño de 3.1-3.2, protegido con *Circuit Breaker*. La **Boleta** (y sus notas de crédito/débito) sigue un segundo camino, igual de real: se acumula durante el día y se reporta después, por separado, en un **Resumen Diario** cuya respuesta llega aparte, no en la misma llamada — el diseño de 2.7 y 3.5, protegido con Saga. Dos integraciones reales con el mismo sistema, cada una con su propia forma de protegerse.
+
 **Tabla 2. Lo que BomERP controla frente a lo que SUNAT impone**
 
 | | BomERP controla | SUNAT impone |
@@ -183,7 +185,7 @@ Un servicio de IA (inteligencia artificial) se integra, desde el punto de vista 
 | ¿Síncrono o asíncrono? | Asíncrono — ninguna venta debe esperar a que la IA termine de sugerir nada. |
 | ¿Qué consume? | El evento `VentaRegistrada` (2.3), no una llamada directa a `ventas`. |
 | ¿Qué patrón lo protege? | El mismo *Outbox* (2.6) que protege a cualquier otro suscriptor del evento. |
-| ¿BomERP necesita saber cómo funciona el modelo? | No — es una caja negra desde la arquitectura; solo importa el contrato de entrada (el evento) y de salida (una sugerencia, consumida por la Saga de reposición, 2.7/3.5). |
+| ¿BomERP necesita saber cómo funciona el modelo? | No — es una caja negra desde la arquitectura; solo importa el contrato de entrada (el evento) y de salida (una sugerencia, consumida por otro caso de uso todavía fuera de alcance). |
 
 ### 2.6 Patrones de integración: capa anticorrupción, *circuit breaker* y *outbox*
 
@@ -237,13 +239,15 @@ La idea central: en vez de una sola transacción distribuida, la operación se p
 
 **¿Por qué una Saga, si `ventas` ni siquiera cruza ese límite hoy?** Porque, a diferencia de un sistema de microservicios real (cada servicio con su propia base de datos), BomERP es hoy un **monolito modular**: `ventas`, `catalogo` y los demás módulos viven en la misma JVM (1.6) y comparten la misma base de datos Oracle — ninguna transacción interna cruza un límite de red ni de base de datos, así que una transacción local normal (con `@Transactional`, S4) ya garantiza consistencia *instantánea* entre módulos, sin necesitar el costo de la consistencia *eventual* que Saga exige a cambio de escalar. La integración con SUNAT (3.1-3.2) tampoco la necesita: tiene un solo paso remoto, sin ningún paso posterior que dependa de su éxito para completarse — por eso se resuelve con *Circuit Breaker* + *fallback*, no con compensación.
 
-Pero el consumidor de IA de 2.5 sí abre esa puerta, en cuanto su sugerencia deja de ser solo una sugerencia y se convierte en una **acción real**: pedirle stock a un Proveedor externo. Ahí aparecen, de golpe, las dos condiciones que Saga exige — un segundo sistema, con su propia base de datos, fuera del control de BomERP; y una secuencia de pasos donde el segundo puede fallar (el proveedor rechaza la orden) después de que el primero ya se confirmó (BomERP ya registró la intención de compra). 3.5 diseña exactamente esa Saga — coreografiada, reusando la capa anticorrupción (3.1), el *circuit breaker* (3.2) y el *outbox* (3.3) que esta misma sesión ya construyó, ahora compuestos en un proceso de negocio completo. Es el mismo escenario, con microservicios reales en vez de un monolito modular, que DIST construye en su sesión dedicada a este patrón (`pagatu-orden-ms` y `pagatu-pago-ms`, coordinados por eventos de Kafka, con compensación real cuando un pago se rechaza).
+SUNAT abre esa puerta en su segundo flujo real: la **Boleta**. A diferencia de la Factura (un solo paso remoto, respuesta en la misma llamada), SUNAT no valida una Boleta al instante — exige acumularlas en un **Resumen Diario** y entregárselo por separado; la respuesta llega después, cuando SUNAT termina de procesarlo. Eso es, de hecho, lo que Saga necesita: una secuencia de pasos cuyo resultado final no se conoce de inmediato, y donde un resultado negativo (el Resumen rechazado) no se arregla reintentando la misma llamada — exige una acción de negocio distinta (corregir y armar un Resumen nuevo). 3.5 diseña esa Saga, reusando la capa anticorrupción (3.1) y el *circuit breaker* (3.2) construidos en esta misma sesión.
+
+Esta Saga tiene solo **dos** participantes —`ventas` y SUNAT—, no varios servicios internos coordinándose entre sí. Con dos participantes, la distinción orquestada/coreografiada de la Tabla 7 llega a su caso más simple: no hace falta un *Saga Orchestrator* aparte porque no hay nada que coordinar entre terceros — `ventas` reacciona, paso a paso, al estado que SUNAT le va devolviendo, sin que nadie lo orqueste desde afuera. El ejemplo con varios servicios reales, cada uno con su propia base de datos y su propio paso de compensación, es el que DIST construye en su sesión dedicada a este patrón (`pagatu-orden-ms` y `pagatu-pago-ms`, coordinados por eventos de Kafka, con compensación real cuando un pago se rechaza).
 
 ## 3. Aplica: actividad práctica guiada
 
 Tiempo: 100 min.
 
-**Actividad:** diseño de la integración empresarial completa de `ventas`: la llamada obligatoria a SUNAT protegida con capa anticorrupción y *circuit breaker*, el evento de dominio `VentaRegistrada` con publicación confiable, un consumidor de IA, la Saga coreografiada que coordina la orden de compra con un Proveedor externo, y la matriz que documenta las tres fronteras.
+**Actividad:** diseño de la integración empresarial completa de `ventas`: la llamada obligatoria a SUNAT protegida con capa anticorrupción y *circuit breaker*, el evento de dominio `VentaRegistrada` con publicación confiable, un consumidor de IA, la Saga coreografiada que coordina el Resumen Diario de Boletas con SUNAT, y la matriz que documenta todas las fronteras.
 
 **Propósito de la actividad:** aplicar los patrones de integración de 2.6 a un caso real y obligatorio (SUNAT) y a un caso de cardinalidad abierta (consumidores del evento), y componer esos mismos patrones en una Saga coreografiada (2.7) que coordina un proceso de negocio completo, con el mismo nivel de rigor que S8-S10 ya aplicaron a las fronteras internas.
 
@@ -255,7 +259,7 @@ Tiempo: 100 min.
 - **3.2** Proteger la llamada con un *Circuit Breaker*.
 - **3.3** Diseñar el evento de dominio `VentaRegistrada` y su publicación confiable.
 - **3.4** Diseñar el consumidor de IA.
-- **3.5** Diseñar la Saga coreografiada de reposición con el Proveedor.
+- **3.5** Diseñar la Saga coreografiada del Resumen Diario de Boletas.
 - **3.6** Armar la matriz de integración.
 
 ### 3.1 Diseñar la integración con SUNAT y su capa anticorrupción
@@ -439,100 +443,119 @@ void onVentaRegistrada(VentaRegistrada evento) {
 
 **Error frecuente**: hacer que `SugerenciaReposicionListener` llame de vuelta a `VentaService` para pedir más datos de la venta. El evento (3.3) ya debe llevar todo lo que un consumidor razonable necesita (`productoIds`, `total`, `fecha`) — si un consumidor necesita llamar de vuelta al publicador para completar su trabajo, el acoplamiento que 2.3 quiso evitar se reintrodujo por la puerta de atrás.
 
-### 3.5 Diseñar la Saga coreografiada de reposición con el Proveedor
+### 3.5 Diseñar la Saga coreografiada del Resumen Diario de Boletas
 
-**Producto del paso:** la Saga completa que convierte una sugerencia de reposición (3.4) en una orden de compra real contra un Sistema del Proveedor externo, con sus tres pasos y su compensación (2.7).
+**Producto del paso:** la Saga completa que coordina el envío asíncrono del Resumen Diario de Boletas a SUNAT, con sus tres pasos y su compensación (2.7).
 
-Hasta 3.4, el servicio de IA termina su trabajo generando una sugerencia (2.5, Tabla 5: "una sugerencia, consumida por otro caso de uso todavía fuera de alcance"). Ese "otro caso de uso" es el que se diseña aquí: un módulo nuevo, `compras`, que escucha la sugerencia y actúa — creando una orden de compra local y solicitándola a un Sistema del Proveedor real, un sistema tan ajeno a BomERP como lo es SUNAT (3.1), con la diferencia de que esta vez la respuesta no llega en la misma llamada, sino días después.
+3.1-3.2 diseñaron la emisión de un comprobante **síncrona**: BomERP envía, SUNAT responde con la CDR en la misma llamada — el flujo real para una **Factura**. Las **Boletas** (y sus notas de crédito/débito) siguen, por norma de SUNAT, un camino distinto: no se emiten una por una contra SUNAT — se acumulan durante el día, y al cierre se envían juntas en un **Resumen Diario**, como máximo hasta el séptimo día calendario siguiente (SUNAT, s.f.). Y esa llamada **no** devuelve la CDR de inmediato: SUNAT responde con un `ticket`, y hay que preguntarle después, repetidamente, si ya terminó de procesar el resumen — exactamente el escenario multi-paso y genuinamente asíncrono que 2.7 dijo que faltaba en esta sesión.
 
-**Tabla 9. Los pasos de la Saga de reposición, con su compensación**
+**Tabla 9. Los pasos de la Saga del Resumen Diario, con su compensación**
 
 | Paso | Módulo / sistema | Si falla | Compensación |
 |---|---|---|---|
-| 1. Crear la orden de compra local | `compras` (BomERP, transacción local) | No se publica nada — falla antes de confirmar cualquier cosa | No aplica — nada que compensar |
-| 2. Solicitar la compra al Proveedor | `compras` → Sistema del Proveedor (ACL de 3.1 + Circuit Breaker de 3.2) | El proveedor no responde a tiempo, o el circuito está `OPEN` | *Fallback* del Circuit Breaker (3.2): la orden queda `SOLICITADA`, reintento posterior — **no** es la compensación de la Saga, es la del propio *circuit breaker* |
-| 3. Confirmar o rechazar la orden, según la respuesta del proveedor | `compras`, al recibir la respuesta (días después, asíncrona) | El proveedor rechaza la orden (sin stock, precio ya no vigente) | `SOLICITADA → RECHAZADA`, y notificar al encargado de compras para reintentar con otro proveedor — la **compensación real** de esta Saga |
+| 1. Armar el Resumen Diario local, al cierre del día | `ventas` (BomERP, transacción local) | No se arma ningún resumen — las boletas quedan pendientes para el siguiente intento | No aplica — nada que compensar |
+| 2. Enviar el resumen a SUNAT (`SendSummary`) y recibir el `ticket` | `ventas` → SUNAT (ACL de 3.1 + Circuit Breaker de 3.2, reusados) | SUNAT no responde a tiempo, o el circuito está `OPEN` | *Fallback* del Circuit Breaker (3.2): el resumen queda `PENDIENTE_ENVIO`, reintento posterior — **no** es la compensación de la Saga, es la del propio *circuit breaker* |
+| 3. Consultar `GetStatus(ticket)` por *polling*, hasta la CDR final | `ventas`, periódicamente, hasta que SUNAT termine de procesar | La CDR llega **Rechazada**, con el motivo del rechazo (SUNAT, s.f.) | Corregir lo señalado y armar un **nuevo** Resumen con las boletas pendientes — el resumen rechazado queda archivado como evidencia, nunca se reenvía tal cual — la **compensación real** de esta Saga |
 
-La fila 2 deja algo importante explícito: el *fallback* del Circuit Breaker y la compensación de la Saga no son la misma cosa, aunque las dos reaccionen a una falla. El *fallback* reacciona a que la **llamada** no se pudo completar (red, timeout, circuito abierto) — la compensación reacciona a que el **paso de negocio sí se completó, y la respuesta fue un rechazo**. Confundirlos es el "Error frecuente" de más abajo.
+La fila 2 deja algo importante explícito: el *fallback* del Circuit Breaker y la compensación de la Saga no son la misma cosa, aunque las dos reaccionen a una falla. El *fallback* reacciona a que la **llamada** no se pudo completar (red, timeout, circuito abierto) — la compensación reacciona a que el **paso de negocio sí se completó, SUNAT sí procesó el resumen, y el resultado fue un rechazo**. Confundirlos es el "Error frecuente" de más abajo.
 
 **Figura 7. La Saga coreografiada, paso a paso, componiendo los patrones ya construidos**
 
 ```mermaid
 sequenceDiagram
-    participant IA as SugerenciaReposicionListener (3.4)
-    participant C as OrdenCompraServiceImpl (compras)
-    participant DB as Base de datos (orden_compra)
-    participant ACL as ProveedorGatewayServiceImpl (ACL, 3.1)
-    participant P as Sistema del Proveedor (externo)
+    participant V as VentaServiceImpl (cierre del dia)
+    participant DB as Base de datos (resumen_diario)
+    participant ACL as ComprobanteElectronicoServiceImpl (ACL, 3.1)
+    participant S as SUNAT
 
-    IA->>C: reposicionSugerida(productoId, cantidad)
-    C->>DB: INSERT OrdenCompra (SOLICITADA) + OrdenCompraSolicitada
-    Note over C,DB: misma transaccion -- Outbox (2.6/3.3)
+    V->>DB: armar ResumenDiario (boletas + notas del dia)
+    Note over V,DB: transaccion local
 
-    Note over C,ACL: proceso aparte, fuera de la peticion original
-    C->>ACL: solicitar(ordenCompra)
-    ACL->>P: enviarSolicitud(documentoProveedor) -- protegido con Circuit Breaker (3.2)
+    V->>ACL: enviarResumen(resumenDiario)
+    ACL->>S: SendSummary(resumenDiario.zip) -- protegido con Circuit Breaker (3.2)
+    S-->>ACL: ticket
 
-    Note over P: el proveedor confirma o rechaza dias despues, de forma asincrona
-    P-->>C: webhook: OrdenCompraConfirmada o OrdenCompraRechazada
+    loop polling periodico, hasta estado final
+        ACL->>S: GetStatus(ticket)
+        S-->>ACL: EN_PROCESO, o CDR final
+    end
 
-    alt confirmada
-        C->>DB: UPDATE OrdenCompra SET estado = CONFIRMADA
-    else rechazada (compensacion)
-        C->>DB: UPDATE OrdenCompra SET estado = RECHAZADA
-        C->>C: notificar al encargado de compras (reintentar con otro proveedor)
+    alt CDR Aceptada
+        ACL->>DB: UPDATE ResumenDiario SET estado = ACEPTADO
+    else CDR Rechazada (compensacion)
+        ACL->>DB: UPDATE ResumenDiario SET estado = RECHAZADO, motivo
+        V->>V: corregir lo senalado, armar nuevo ResumenDiario
     end
 ```
 
-Nada de este diagrama inventa infraestructura nueva: `ProveedorGatewayServiceImpl` es la misma capa anticorrupción de 3.1, aplicada a un segundo sistema externo; la llamada a `enviarSolicitud` se protege exactamente igual que `enviarASunat` (3.2); y el paso 1 persiste su evento con el mismo mecanismo *Outbox* de 3.3. Lo único genuinamente nuevo es la **coreografía**: ningún componente conoce el flujo completo — `compras` reacciona a la sugerencia de la IA sin saber que existe un paso 3 pendiente, y reacciona a la respuesta del proveedor sin que nadie se lo haya "orquestado" — exactamente la definición de 2.7.
+Nada de este diagrama inventa infraestructura nueva: la misma `ComprobanteElectronicoServiceImpl` de 3.1 traduce también el Resumen Diario (sigue siendo UBL, solo que empaquetado distinto); `SendSummary` se protege exactamente con el mismo *circuit breaker* de 3.2. Lo único genuinamente nuevo es el `loop` de `GetStatus` — SUNAT, a diferencia de la Factura síncrona, nunca "empuja" la respuesta: hay que preguntarle, y la respuesta puede tardar — y la **coreografía**: nadie orquesta el ciclo completo desde afuera, cada paso reacciona al resultado del anterior.
 
 ```java
-// OrdenCompraServiceImpl.java — Saga coreografiada, pseudocodigo de diseño
-@ApplicationModuleListener
-void onReposicionSugerida(ReposicionSugerida sugerencia) {
-    OrdenCompra orden = new OrdenCompra(sugerencia.productoId(), sugerencia.cantidad(), estado: SOLICITADA);
-    ordenCompraRepository.guardar(orden);
-    publicarEvento(new OrdenCompraSolicitada(orden.id(), sugerencia.productoId(), sugerencia.cantidad()));
-    // misma transaccion -- Outbox (2.6/3.3), igual que VentaRegistrada
-}
+// VentaServiceImpl.java -- Saga coreografiada, pseudocodigo de diseño
 
-@ApplicationModuleListener
-void onOrdenCompraSolicitada(OrdenCompraSolicitada evento) {
-    proveedorGateway.solicitar(evento);  // ACL (3.1) + Circuit Breaker (3.2)
-}
-
-// Webhook entrante del Proveedor -- no es un evento interno de Spring Modulith,
-// es la frontera externa que cierra el paso 3 de la Tabla 9
-@PostMapping("/webhooks/proveedor")
-void onRespuestaProveedor(RespuestaProveedorRequest respuesta) {
-    OrdenCompra orden = ordenCompraRepository.buscar(respuesta.ordenCompraId());
-    if (respuesta.confirmada()) {
-        orden.confirmar();          // SOLICITADA -> CONFIRMADA
-    } else {
-        orden.rechazar();           // SOLICITADA -> RECHAZADA -- COMPENSACION (Tabla 9, paso 3)
-        notificarEncargadoCompras(orden);
-    }
-    ordenCompraRepository.guardar(orden);
+// Paso 1: cierre del dia, transaccion local -- dentro de ventas, igual que crear() (3.3)
+public void cerrarDia() {
+    List<Boleta> boletasDelDia = boletaRepository.buscarPendientesDeResumen(LocalDate.now());
+    ResumenDiario resumen = new ResumenDiario(boletasDelDia, estado: ARMADO);
+    resumenDiarioRepository.guardar(resumen);
 }
 ```
 
-**Error frecuente**: implementar la compensación del paso 3 dentro del `fallbackMethod` del `@CircuitBreaker` de 3.2, como si fueran la misma protección. El *fallback* de 3.2 solo se dispara cuando la llamada `enviarSolicitud` **no se pudo completar** (red, timeout, circuito abierto) — un rechazo real del proveedor (`OrdenCompraRechazada`) es una respuesta de negocio perfectamente válida, que sí llegó, y que por eso nunca pasa por el `fallbackMethod`: pasa por `onRespuestaProveedor`, el *listener* diseñado específicamente para recibir esa respuesta y ejecutar la compensación de la Tabla 9.
+```java
+// ComprobanteElectronicoServiceImpl.java -- misma capa anticorrupcion de 3.1, pasos 2-3
+
+// Paso 2: enviar el resumen, protegido con el mismo Circuit Breaker de 3.2
+@CircuitBreaker(name = "sunat", fallbackMethod = "resumenPendiente")
+public void enviarResumen(ResumenDiario resumen) {
+    String ticket = enviarASunatResumen(resumen);  // traduce a UBL, misma ACL de 3.1
+    resumen.marcarEnviado(ticket);
+    resumenDiarioRepository.guardar(resumen);
+}
+
+public void resumenPendiente(ResumenDiario resumen, Exception causa) {
+    resumen.marcarPendienteEnvio();  // fallback del Circuit Breaker (Tabla 9, paso 2) -- no es la Saga
+    resumenDiarioRepository.guardar(resumen);
+}
+
+// Paso 3: polling periodico -- SUNAT nunca empuja la respuesta, hay que preguntarle
+@Scheduled(fixedDelay = 300_000)
+public void consultarResumenesPendientes() {
+    for (ResumenDiario resumen : resumenDiarioRepository.buscarEnviados()) {
+        RespuestaSunat cdr = consultarEstadoSunat(resumen.ticket());  // GetStatus
+        switch (cdr.estado()) {
+            case EN_PROCESO -> { }  // nada que hacer todavia, se vuelve a consultar despues
+            case ACEPTADA -> resumen.confirmar();
+            case RECHAZADA -> {
+                resumen.rechazar(cdr.motivo());  // COMPENSACION (Tabla 9, paso 3)
+                boletaService.marcarParaNuevoResumen(resumen.boletas());
+            }
+        }
+        resumenDiarioRepository.guardar(resumen);
+    }
+}
+```
+
+**Error frecuente**: implementar la compensación del paso 3 dentro del `fallbackMethod` del `@CircuitBreaker` de 3.2, como si fueran la misma protección. El *fallback* solo se dispara cuando `SendSummary` **no se pudo completar** (red, timeout, circuito abierto) — una CDR **Rechazada** es una respuesta de negocio perfectamente válida, que SUNAT sí entregó, y que por eso nunca pasa por el `fallbackMethod`: pasa por `consultarResumenesPendientes`, el método diseñado específicamente para leer esa respuesta y ejecutar la compensación de la Tabla 9.
+
+**Lo que existe en producción, en vez de construirlo a mano.** El `@Scheduled` que hace *polling* a mano, el seguimiento manual de `ARMADO`/`ENVIADO`/`ACEPTADO`/`RECHAZADO` — es exactamente lo que un proyecto de microservicios real no escribe desde cero: [Axon Framework](https://www.axoniq.io/axon-framework) (Java, AxonIQ, código abierto) empaqueta Saga junto con CQRS (*Command Query Responsibility Segregation*) y *Event Sourcing* como un solo *toolkit* — una clase anotada `@Saga` escucha eventos y puede emitir comandos, con todo su ciclo de vida (crear la instancia, asociarla a un `ResumenDiario` concreto, terminarla cuando llega la CDR final) gestionado por el framework, sin el *polling* manual que el pseudocódigo de arriba sí tiene que hacer. Es el mismo criterio que LP2 ya aplicó al reemplazar su propio JWT por Keycloak (LP2, S10 → S10b): esta sesión diseña la Saga a mano, a propósito, para entender la mecánica —los tres pasos, la compensación, la diferencia frente al *fallback*— antes de delegarla a una herramienta que la resuelve por dentro.
 
 ### 3.6 Armar la matriz de integración
 
-**Producto del paso:** documentación completa de las tres fronteras — qué cruza, hacia dónde, protegido por qué patrón.
+**Producto del paso:** documentación completa de todas las fronteras — qué cruza, hacia dónde, protegido por qué patrón.
+
+La Figura 2 (2.1) resume los dos tipos de frontera de esta sesión: síncrona-obligatoria y asíncrona-de-cardinalidad-abierta. SUNAT participa en ambos tipos a la vez: la Factura es la síncrona-obligatoria (3.1-3.2); el Resumen Diario de Boletas combina los dos dentro de una sola integración — la solicitud (`SendSummary`) es síncrona y se protege igual que la Factura (ACL + Circuit Breaker), y la respuesta final (`GetStatus`) es asíncrona y se coordina con Saga (3.5). La matriz de abajo documenta integraciones concretas, no tipos — por eso SUNAT ocupa dos filas.
 
 **Tabla 10. Matriz de integración empresarial de `ventas`**
 
 | Qué cruza la frontera | Dirección | Tipo | Patrón que la protege |
 |---|---|---|---|
-| Comprobante de pago electrónico (UBL 2.1) | BomERP → SUNAT | Síncrona, obligatoria | Capa anticorrupción (3.1) + Circuit Breaker (3.2) |
+| Factura electrónica (UBL 2.1) | BomERP → SUNAT | Síncrona, obligatoria | Capa anticorrupción (3.1) + Circuit Breaker (3.2) |
+| Resumen Diario de Boletas | BomERP → SUNAT | Síncrona (`SendSummary`) + asíncrona (`GetStatus`, *ticket*) | Capa anticorrupción (3.1) + Circuit Breaker (3.2) + Saga coreografiada con compensación (3.5) |
 | `VentaRegistrada` | BomERP → consumidores internos (cardinalidad abierta) | Asíncrona | Outbox (3.3) |
-| Sugerencia de reposición | Servicio de IA → `compras` (interno) | Asíncrona | Outbox (3.3) — mismo mecanismo que `VentaRegistrada` |
-| Orden de compra | `compras` → Sistema del Proveedor (externo) | Síncrona (la solicitud) + asíncrona (la respuesta) | Capa anticorrupción (3.1) + Circuit Breaker (3.2) + Saga coreografiada con compensación (3.5) |
+| Sugerencia de reposición | Servicio de IA → (consumo futuro, fuera de alcance) | Asíncrona | No corresponde a esta sesión — `ventas` no participa de este lado de la integración |
 | `ProductoService` (S8-S10, referencia) | `ventas` → `catalogo` | Síncrona, interna | Protected Variations (S10) — no capa anticorrupción, porque ambos lados son del mismo dominio BomERP |
 
-La fila del Proveedor es la más cargada de la tabla, y es deliberado: muestra que los patrones no son alternativas entre las que se elige una — se **componen**. La misma capa anticorrupción y el mismo *circuit breaker* que protegen la llamada a SUNAT protegen la llamada al Proveedor; lo que agrega la Saga es la coordinación de **varios** pasos y su compensación, un problema que ni ACL ni *Circuit Breaker* resuelven por sí solos. La última fila sigue siendo la única sin capa anticorrupción, por la misma razón de siempre: `catalogo` habla el mismo lenguaje ubicuo que `ventas` (S6), no un formato ajeno.
+La segunda fila es la más cargada de la tabla, y es deliberado: muestra que los patrones no son alternativas entre las que se elige una — se **componen**, incluso contra el **mismo** sistema externo. La misma capa anticorrupción y el mismo *circuit breaker* que protegen la Factura protegen el envío del Resumen; lo que agrega la Saga es la coordinación de **varios** pasos y su compensación, un problema que ni ACL ni *Circuit Breaker* resuelven por sí solos. La última fila sigue siendo la única sin capa anticorrupción, por la misma razón de siempre: `catalogo` habla el mismo lenguaje ubicuo que `ventas` (S6), no un formato ajeno.
 
 **Evidencia de aprendizaje:**
 
@@ -540,7 +563,7 @@ La fila del Proveedor es la más cargada de la tabla, y es deliberado: muestra q
 - Configuración justificada del *Circuit Breaker*, con su *fallback* explícito.
 - Evento de dominio `VentaRegistrada` diseñado, con su publicación confiable (*Outbox*, vía Spring Modulith).
 - Consumidor de IA diseñado, suscrito al evento sin acoplarse de vuelta al publicador.
-- Saga coreografiada de reposición diseñada, con sus tres pasos y su compensación, distinguida con claridad del *fallback* del Circuit Breaker.
+- Saga coreografiada del Resumen Diario de Boletas diseñada, con sus tres pasos y su compensación, distinguida con claridad del *fallback* del Circuit Breaker.
 - Matriz de integración completa, con el patrón correcto para cada frontera (y la justificación de por qué una frontera interna no necesita capa anticorrupción).
 
 ## 4. Crea: actividad autónoma
@@ -672,7 +695,7 @@ Indica 2 fortalezas y 2 recomendaciones.
 
 Tiempo: 5 min.
 
-**Resumen breve:** hoy BomERP cruzó, por primera vez, su propia frontera hacia el exterior: una integración obligatoria con SUNAT, aislada del dominio por una capa anticorrupción y protegida de fallas remotas por un *Circuit Breaker* con un *fallback* que tiene sentido de negocio real; y una integración de cardinalidad abierta —el evento `VentaRegistrada`, publicado de forma confiable con el mismo patrón *Outbox* que Spring Modulith ya reserva para una sesión futura de LP2— que permite agregar consumidores (como el servicio de IA de reposición) sin que `ventas` tenga que cambiar. Esa sugerencia de IA se llevó, además, un paso más allá de lo que BomERP necesita hoy: una Saga coreografiada completa, coordinando una orden de compra con un segundo sistema externo (el Proveedor) y compensando con criterio cuando ese sistema rechaza la orden — la pieza de diseño que esta sesión enseña a propósito antes de que el curso de Distribuidas la exija sin red de seguridad. La matriz final dejó claro que no toda frontera necesita el mismo patrón, ni los mismos patrones se usan solos: la interna (`catalogo`) se protege distinto que las externas, y la del Proveedor combina tres patrones ya construidos en uno solo.
+**Resumen breve:** hoy BomERP cruzó, por primera vez, su propia frontera hacia el exterior: una integración obligatoria con SUNAT, aislada del dominio por una capa anticorrupción y protegida de fallas remotas por un *Circuit Breaker* con un *fallback* que tiene sentido de negocio real; y una integración de cardinalidad abierta —el evento `VentaRegistrada`, publicado de forma confiable con el mismo patrón *Outbox* que Spring Modulith ya reserva para una sesión futura de LP2— que permite agregar consumidores (como el servicio de IA de reposición) sin que `ventas` tenga que cambiar. El mismo SUNAT se llevó, además, un paso más allá de lo que BomERP necesita hoy: una Saga coreografiada completa, coordinando el envío asíncrono del Resumen Diario de Boletas —por `ticket`, sin respuesta inmediata— y compensando con criterio cuando SUNAT lo rechaza — la pieza de diseño que esta sesión enseña a propósito antes de que el curso de Distribuidas la exija sin red de seguridad. La matriz final dejó claro que no toda frontera necesita el mismo patrón, ni los mismos patrones se usan solos: la interna (`catalogo`) se protege distinto que las externas, y el Resumen Diario combina tres patrones ya construidos contra el mismo SUNAT.
 
 **Dinámica participativa:** en una ronda rápida, cada estudiante comparte en una frase qué sistema externo real eligió para su propio proyecto, y qué pasaría si se cayera.
 
@@ -687,7 +710,9 @@ Tiempo: 5 min.
 3. Nygard, M. (2018). *Release It!: Design and Deploy Production-Ready Software* (2nd ed.). Pragmatic Bookshelf.
 4. SACAViX. (2026). *Circuit Breaker*. SACAViX System Design — Circuit Breaker. https://systemdesign.sacavix.com/patterns/circuit-breaker
 5. SUNAT. (2024). *Guía de elaboración de documentos XML - Factura electrónica UBL 2.1*. https://cpe.sunat.gob.pe/sites/default/files/inline-files/guia+xml+factura+version%202-1+1+0%20(2)_0%20(2).pdf
-6. Evans, E. (2003). *Domain-Driven Design: Tackling Complexity in the Heart of Software*. Addison-Wesley.
-7. Hohpe, G., & Woolf, B. (2003). *Enterprise Integration Patterns: Designing, Building, and Deploying Messaging Solutions*. Addison-Wesley.
-8. Richardson, C. (2018). *Microservices Patterns: With examples in Java*. Manning Publications.
-9. Garcia-Molina, H., & Salem, K. (1987). *Sagas*. ACM SIGMOD Record, 16(3), 249-259. https://doi.org/10.1145/38713.38742
+6. SUNAT. (s.f.). *Resumen Diario - Boleta de Venta Electrónica*. https://orientacion.sunat.gob.pe/04-resumen-diario-boleta-de-venta-electronica
+7. Evans, E. (2003). *Domain-Driven Design: Tackling Complexity in the Heart of Software*. Addison-Wesley.
+8. Hohpe, G., & Woolf, B. (2003). *Enterprise Integration Patterns: Designing, Building, and Deploying Messaging Solutions*. Addison-Wesley.
+9. Richardson, C. (2018). *Microservices Patterns: With examples in Java*. Manning Publications.
+10. Garcia-Molina, H., & Salem, K. (1987). *Sagas*. ACM SIGMOD Record, 16(3), 249-259. https://doi.org/10.1145/38713.38742
+11. AxonIQ. (2026). *Axon Framework - DDD, CQRS and Event Sourcing, all in one*. https://www.axoniq.io/axon-framework
