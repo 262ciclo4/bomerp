@@ -47,7 +47,7 @@ El 21 de agosto de 2018, el grupo conocido como Magecart modificó un archivo re
 
 Fuente: Security Affairs. (2018, 11 de septiembre). *MageCart crime gang is behind the British Airways data breach*. https://securityaffairs.com/76108/data-breach/british-airways-hack-details.html
 
-El punto no es que una SPA (*Single Page Application*) sea más insegura que un sitio tradicional — es que **cualquier** JavaScript que corre en el navegador de un usuario, sea el que escribiste tú o el que un atacante logró inyectar, tiene acceso a exactamente lo mismo: el DOM (*Document Object Model*), las peticiones HTTP salientes, y —si decidiste ponerlo ahí— `localStorage` y `sessionStorage` completos. Esas 22 líneas no necesitaron ningún privilegio especial: corrían en el mismo origen que el sitio real, con el mismo acceso que cualquier script legítimo. Si BomERP guardara el `accessToken` de un `VENDEDOR` en `localStorage` y un script de terceros (una librería de analítica comprometida, un `CDN` intervenido, cualquier dependencia de `npm` con una versión maliciosa) se ejecutara en esa misma página, ese script leería el token exactamente igual que lo hace el código propio de BomERP — sin necesitar robar ninguna contraseña. 2.3 desarrolla, con esta pregunta ya planteada, dónde conviene guardar un token y por qué.
+El punto no es que una SPA (*Single Page Application*) sea más insegura que un sitio tradicional — es que **cualquier** JavaScript que corre en el navegador de un usuario, sea el que escribiste tú o el que un atacante logró inyectar, tiene acceso a exactamente lo mismo: el DOM (*Document Object Model*), las peticiones HTTP salientes, y —si decidiste ponerlo ahí— `localStorage` y `sessionStorage` completos. Esas 22 líneas no necesitaron ningún privilegio especial: corrían en el mismo origen que el sitio real, con el mismo acceso que cualquier script legítimo. Si BomERP guardara el `accessToken` de un `VENDEDOR` en `localStorage` y un script de terceros (una librería de analítica comprometida, un `CDN` (*Content Delivery Network*) intervenido, cualquier dependencia de `npm` con una versión maliciosa) se ejecutara en esa misma página, ese script leería el token exactamente igual que lo hace el código propio de BomERP — sin necesitar robar ninguna contraseña. 2.3 desarrolla, con esta pregunta ya planteada, dónde conviene guardar un token y por qué.
 
 **Preguntas de análisis**
 
@@ -117,6 +117,8 @@ Ningún paso de este diagrama pasa por un servidor propio de BomERP: la pantalla
 
 ### 2.2 *Authorization Code* + PKCE: por qué una SPA no puede usar lo que S10b usó para probar
 
+*Authorization Code* es el flujo de OAuth 2.0 diseñado para que un cliente —una SPA, una app móvil, cualquier aplicación que un usuario real opera— obtenga un token sin manejar jamás su contraseña directamente: la autenticación ocurre en el dominio del propio proveedor de identidad, nunca en el del cliente. PKCE es la extensión de ese flujo que lo hace seguro para un cliente que, como una SPA, no puede guardar ningún secreto propio — más abajo se desarrolla por qué hace falta incluso con *Authorization Code* ya en uso.
+
 S10b (sección 4) creó el cliente `bomerp-frontend` con dos flujos activos a la vez: *Standard flow* (el que usa esta sesión) y *Direct access grants* (el que S10b usó para probar rápido, con `curl`, sin construir ningún frontend todavía). Esa misma sección ya lo advirtió: *Direct access grants* es el mismo flujo que RFC 9700 — ya citada en S10, 2.6 — desaconseja explícitamente (*"MUST NOT be used"*) para clientes públicos. 3.1 retira ese flujo del cliente; esta sesión nunca lo vuelve a usar.
 
 La razón de fondo, con más detalle del que S10b necesitaba dar: *Direct access grants* exige que el cliente reciba el usuario y la contraseña directamente y los reenvíe — eso significa que **la SPA tendría que mostrar su propio formulario de login**, con la contraseña pasando por JavaScript que corre en el navegador del usuario, exactamente el mismo código que el caso de 1.6 demuestra que un atacante puede intervenir. *Authorization Code* evita esto por diseño: la contraseña se escribe **dentro del dominio de Keycloak** (`localhost:38080`), nunca dentro del dominio de BomERP (`localhost:4200`) — ni siquiera un script malicioso corriendo en `bomerp-frontend` podría leerla, porque nunca pasa por ahí.
@@ -136,6 +138,8 @@ PKCE protege el intercambio del código por un token — pero no protege contra 
 
 ### 2.3 Dónde vive el token: la decisión de almacenamiento
 
+Un token de sesión, una vez emitido, tiene que vivir en algún lugar del navegador entre una petición y la siguiente — la elección de dónde no es un detalle de implementación menor: cada opción disponible en JavaScript expone el token a un riesgo distinto si un script ajeno llega a ejecutarse en la misma página.
+
 El caso de 1.6 ya adelantó la pregunta: si cualquier script que corre en la página tiene el mismo acceso que el código propio de BomERP, ¿qué tan expuesto queda un token según dónde se guarde? RFC 10017 (sección 8, verificada contra el texto real de la especificación) compara las opciones sin recomendar una sola para todos los casos — describe, en cambio, qué tan expuesto queda el token en cada una:
 
 **Tabla 3. Dónde guardar un token en el navegador, según RFC 10017 (sección 8)**
@@ -154,6 +158,8 @@ Ninguna opción accesible desde JavaScript elimina el riesgo por completo — RF
 **El costo honesto de esta decisión**: guardar el token en memoria significa que un `F5` (recargar la página) pierde la sesión — la SPA vuelve a pedir login. Un *Backend-for-Frontend* (RFC 10017, 6.1) resolvería esto sin exponer el token al navegador en absoluto, igual que una renovación silenciosa contra Keycloak (un `iframe` oculto con `prompt=none`); ninguna de las dos se construye en esta sesión — queda documentado como el mismo tipo de límite honesto que BD2 S10 documentó para AWR (*Automatic Workload Repository*) en Oracle Database Free: no es que esta guía no sepa que existe una opción mejor, es que esa opción es alcance de otra sesión (o de un curso de arquitecturas distribuidas).
 
 ### 2.4 Expiración de 5 minutos: por qué hace falta refrescar, no solo esperar un error
+
+Un token de acceso de vida corta reduce el daño si llega a robarse, pero por sí solo interrumpiría cualquier sesión de trabajo que dure más que ese tiempo — el mecanismo que resuelve esa tensión, sin alargar la vida del token expuesto, es el *refresh token*: un segundo token, de vida más larga, que sirve únicamente para pedir uno nuevo sin que el usuario vuelva a autenticarse.
 
 S10b (sección 6) ya documentó que el *Access Token Lifespan* por defecto de un realm nuevo de Keycloak es **5 minutos** — mucho más corto que lo que `seguridad` dejaba en S10 (3.8, una hora). Una sesión de trabajo real en BomERP dura más que eso: sin ningún mecanismo de renovación, un `VENDEDOR` registrando una venta a los 6 minutos de haber iniciado sesión recibiría un `401` en medio de su trabajo, sin ninguna explicación.
 
