@@ -10,6 +10,8 @@ Hasta S10, todas las fronteras que BomERP cruzó fueron internas: `ventas` llama
 
 Esto no es, como S6-S10, una sesión que se queda dentro de los límites que `lp2/bomerp-backend` ya construyó: por el alcance de ADS (Análisis y Diseño de Sistemas de Información) dentro del ciclo —ver la nota de 1.7—, esta sesión diseña infraestructura e integraciones que LP2 (Lenguaje de Programación II) todavía no tiene por qué implementar, y que puede que implemente recién en una sesión futura de ese curso. Diseñar antes de que exista el código es exactamente el mismo patrón ya usado con `Venta.anular()` (S7, S9, S10) — con una frontera distinta: ya no es intra-empresa, es la empresa completa hacia afuera.
 
+Esta sesión va, además, un paso más allá de lo que BomERP necesita hoy: diseña una **Saga coreografiada** (2.7, 3.5) para un proceso de negocio que cruza un tercer sistema externo (un Proveedor), con su paso de compensación cuando algo falla a mitad de camino. BomERP, como monolito modular que es hoy, no lo necesita todavía — pero el ciclo en el que se dicta esta sesión es, de los seis cursos que forman la cadena de BomERP (1.7), el **único** con el nivel de un curso de arquitectura y diseño de sistemas: cuando estos mismos estudiantes lleguen al curso de Sistemas Distribuidos, no van a tener un curso paralelo como ADS que les enseñe a diseñar este patrón con calma, en papel, antes de construirlo contra Kafka y microservicios reales. Este es, literalmente, el único momento del plan de estudios para hacerlo bien.
+
 El porqué de que una integración sin protección pueda tumbar un sistema entero, aunque el sistema remoto sea el que falla, se desarrolla en 1.6.
 
 ### 1.2 Índice
@@ -19,17 +21,17 @@ El porqué de que una integración sin protección pueda tumbar un sistema enter
 3. Integración entre servicios y mensajería asíncrona.
 4. Servicios de inteligencia artificial.
 5. Patrones de integración: capa anticorrupción, *circuit breaker* y *outbox*.
-6. Patrón relacionado: consistencia distribuida con Saga (fuera del alcance de esta sesión).
+6. Consistencia distribuida con Saga: por qué va más allá de lo que BomERP necesita hoy.
 
 ### 1.3 Propósito de aprendizaje
 
 Al concluir la clase, estarás en condiciones de:
 
-- **Diseñar** la integración de tu proyecto con al menos un sistema externo obligatorio y con consumidores internos desconocidos de antemano, **protegiendo** cada frontera con el patrón de integración correspondiente (capa anticorrupción, *circuit breaker*, *outbox*), y **documentar** qué cruza cada frontera y con qué garantía.
+- **Diseñar** la integración de tu proyecto con al menos un sistema externo obligatorio y con consumidores internos desconocidos de antemano, **protegiendo** cada frontera con el patrón de integración correspondiente (capa anticorrupción, *circuit breaker*, *outbox*), **coordinar** un proceso de negocio de varios pasos entre sistemas independientes con una Saga coreografiada, **diseñar** su paso de compensación cuando uno de esos pasos falla, y **documentar** qué cruza cada frontera y con qué garantía.
 
 ### 1.4 Producto de sesión
 
-Diseño de integración empresarial de `ventas`: contrato conceptual de la integración con SUNAT (comprobante de pago electrónico, formato UBL 2.1, *Universal Business Language*) con su capa anticorrupción, diseño del *circuit breaker* que protege esa llamada, evento de dominio `VentaRegistrada` con su publicación confiable (patrón *Outbox*, el mismo mecanismo que Spring Modulith ya reserva para una sesión futura de LP2), diseño de un consumidor de IA (inteligencia artificial) que se suscribe a ese evento para sugerir reposición de stock, y una matriz de integración que documenta qué cruza cada frontera de la empresa, hacia dónde y con qué patrón protegido.
+Diseño de integración empresarial de `ventas`: contrato conceptual de la integración con SUNAT (comprobante de pago electrónico, formato UBL 2.1, *Universal Business Language*) con su capa anticorrupción, diseño del *circuit breaker* que protege esa llamada, evento de dominio `VentaRegistrada` con su publicación confiable (patrón *Outbox*, el mismo mecanismo que Spring Modulith ya reserva para una sesión futura de LP2), diseño de un consumidor de IA (inteligencia artificial) que se suscribe a ese evento para sugerir reposición de stock, la Saga coreografiada que convierte esa sugerencia en una orden de compra real contra un Sistema del Proveedor externo —con su paso de compensación cuando el proveedor rechaza la orden—, y una matriz de integración que documenta qué cruza cada frontera de la empresa, hacia dónde y con qué patrón protegido.
 
 ### 1.5 Metodología
 
@@ -38,8 +40,8 @@ Diseño de integración empresarial de `ventas`: contrato conceptual de la integ
 | Actividades a Realizar en el Periodo | Orientaciones generales (Orientaciones Metodológicas) | Material de estudio recomendado |
 |---|---|---|
 | Revisión previa individual | Repasar el catálogo completo de patrones GoF y GRASP de `ventas` (S10, Tabla 12) y el contrato REST ya existente del módulo (S8, Tabla 17). Trabajo individual, antes de clase. | S10 (2.7, Indirection/Protected Variations; 2.8, Dependency Injection). |
-| Clase presencial | Diseño guiado de la integración con SUNAT, su capa anticorrupción y su *circuit breaker*, del evento de dominio `VentaRegistrada` con publicación confiable, y de un consumidor de IA. Trabajo individual, siguiendo al docente paso a paso; consulta inmediata ante dudas sobre qué patrón corresponde a cada frontera. | Pasos 3.1 a 3.5 de esta guía. |
-| Evaluación formativa | Revisión en clase del diseño de la capa anticorrupción y de la matriz de integración completa. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4. | Indicaciones de entrega (4.3), rúbrica de evaluación (4.6). |
+| Clase presencial | Diseño guiado de la integración con SUNAT, su capa anticorrupción y su *circuit breaker*, del evento de dominio `VentaRegistrada` con publicación confiable, de un consumidor de IA, y de la Saga coreografiada que coordina la orden de compra con el Proveedor, con su compensación. Trabajo individual, siguiendo al docente paso a paso; consulta inmediata ante dudas sobre qué patrón corresponde a cada frontera. | Pasos 3.1 a 3.6 de esta guía. |
+| Evaluación formativa | Revisión en clase del diseño de la capa anticorrupción, de la Saga con su compensación, y de la matriz de integración completa. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4. | Indicaciones de entrega (4.3), rúbrica de evaluación (4.6). |
 
 ### 1.6 Motivación de la sesión
 
@@ -68,9 +70,11 @@ Ninguna de las integraciones de S10 (`ventas` llamando a `catalogo`) corre este 
 
 - Producto del curso: Diseño Técnico Profesional Documentado.
 - Producto de unidad: Catálogo UML con patrones de diseño e integración aplicados.
-- Avance del producto en esta sesión: diseño de integración empresarial completo — sistema externo obligatorio, eventos de dominio, consumidor de IA y los patrones de integración que protegen cada frontera.
+- Avance del producto en esta sesión: diseño de integración empresarial completo — sistema externo obligatorio, eventos de dominio, consumidor de IA, Saga coreografiada con compensación contra un segundo sistema externo, y los patrones de integración que protegen cada frontera.
 
 **Nota sobre el alcance de esta sesión.** ADS es, de los tres cursos del ciclo que comparten BomERP, el que ve el panorama completo de la empresa —infraestructura y sistemas externos—, no solo el backend (LP2) o la base de datos (BD2). Por eso esta sesión diseña una integración con SUNAT y un mecanismo de eventos que LP2 todavía no implementa: ese diseño es la referencia con la que LP2 va a trabajar cuando su propio sílabo llegue a esa funcionalidad, el mismo criterio ya aplicado con `Venta.anular()` desde S7.
+
+**Por qué esta sesión diseña también una Saga, más allá de lo que BomERP necesita hoy.** La malla curricular no vuelve a ofrecer un curso de arquitectura y diseño de sistemas junto al curso de Sistemas Distribuidos — a diferencia de este ciclo, donde ADS, BD2 y LP2 avanzan en paralelo sobre el mismo proyecto, el curso de Distribuidas se dicta más adelante, solo. Diseñar una Saga coreografiada aquí, con calma y en papel, es la única oportunidad del plan de estudios para aprender el patrón con el rigor de un curso de diseño antes de tener que construirlo bajo la presión de un proyecto real con Kafka y microservicios — exactamente el mismo razonamiento que ya justifica diseñar la integración con SUNAT antes de que LP2 la implemente.
 
 **Figura 1. Roadmap del producto de la unidad**
 
@@ -179,7 +183,7 @@ Un servicio de IA (inteligencia artificial) se integra, desde el punto de vista 
 | ¿Síncrono o asíncrono? | Asíncrono — ninguna venta debe esperar a que la IA termine de sugerir nada. |
 | ¿Qué consume? | El evento `VentaRegistrada` (2.3), no una llamada directa a `ventas`. |
 | ¿Qué patrón lo protege? | El mismo *Outbox* (2.6) que protege a cualquier otro suscriptor del evento. |
-| ¿BomERP necesita saber cómo funciona el modelo? | No — es una caja negra desde la arquitectura; solo importa el contrato de entrada (el evento) y de salida (una sugerencia, consumida por otro caso de uso todavía fuera de alcance). |
+| ¿BomERP necesita saber cómo funciona el modelo? | No — es una caja negra desde la arquitectura; solo importa el contrato de entrada (el evento) y de salida (una sugerencia, consumida por la Saga de reposición, 2.7/3.5). |
 
 ### 2.6 Patrones de integración: capa anticorrupción, *circuit breaker* y *outbox*
 
@@ -217,9 +221,9 @@ flowchart LR
 
 Esto no es un patrón hipotético para BomERP: Spring Modulith (el framework ya elegido en ADR-002 de LP2) implementa exactamente este patrón con su propia tabla `event_publication` — hoy removida a propósito del `pom.xml` de LP2 porque ningún módulo publica eventos todavía (LP2, nota de arquitectura), reservada para cuando una sesión futura de ese curso adopte comunicación por eventos. El diseño de esta sesión es, literalmente, la especificación de esa sesión futura.
 
-### 2.7 Patrón relacionado: consistencia distribuida con Saga (fuera del alcance de esta sesión)
+### 2.7 Consistencia distribuida con Saga
 
-*Circuit Breaker* (2.6) y *Saga* suelen aparecer juntos en cualquier catálogo de patrones de microservicios, pero no resuelven el mismo problema — conviene distinguirlos antes de ver por qué Saga, hoy, no aplica a BomERP. *Circuit Breaker* protege **una llamada síncrona puntual** (2.1 de la frontera con SUNAT) de un sistema remoto que falla o se vuelve lento. **Saga** (Richardson, 2018, cap. 4; Garcia-Molina & Salem, 1987) resuelve un problema distinto: cómo mantener la consistencia de un **proceso de negocio de varios pasos**, cuando esos pasos viven en servicios independientes, cada uno con su propia base de datos — exactamente el escenario en el que una transacción distribuida clásica (*two-phase commit*) no escala, porque bloquear la base de un servicio mientras se espera la respuesta de otro acopla en tiempo real a dos sistemas que deberían poder fallar y escalar por separado.
+*Circuit Breaker* (2.6) y *Saga* suelen aparecer juntos en cualquier catálogo de patrones de microservicios, pero no resuelven el mismo problema — conviene distinguirlos antes de diseñar la Saga de 3.5. *Circuit Breaker* protege **una llamada síncrona puntual** (2.1 de la frontera con SUNAT) de un sistema remoto que falla o se vuelve lento. **Saga** (Richardson, 2018, cap. 4; Garcia-Molina & Salem, 1987) resuelve un problema distinto: cómo mantener la consistencia de un **proceso de negocio de varios pasos**, cuando esos pasos viven en servicios independientes, cada uno con su propia base de datos — exactamente el escenario en el que una transacción distribuida clásica (*two-phase commit*) no escala, porque bloquear la base de un servicio mientras se espera la respuesta de otro acopla en tiempo real a dos sistemas que deberían poder fallar y escalar por separado.
 
 La idea central: en vez de una sola transacción distribuida, la operación se parte en una secuencia de **transacciones locales**, una por servicio — y cada paso que pueda fallar define su propia **transacción de compensación**, una acción que deshace el efecto de negocio ya confirmado (nunca una reversión de base de datos ajena, porque ningún servicio tiene acceso directo a la base de otro). El sistema queda, mientras tanto, **temporalmente inconsistente** — Saga garantiza consistencia *eventual*, no instantánea.
 
@@ -231,15 +235,17 @@ La idea central: en vez de una sola transacción distribuida, la operación se p
 | Ventaja | Más fácil de entender, probar y depurar: el flujo vive en un solo lugar. | Elimina el punto único de coordinación. |
 | Costo | Acopla a todos los participantes al orquestador. | El flujo de negocio queda implícito, repartido entre los *listeners* de cada servicio. |
 
-**¿Por qué esta sesión no construye una Saga sobre `ventas`?** Porque, a diferencia de un sistema de microservicios real (cada servicio con su propia base de datos), BomERP es hoy un **monolito modular**: `ventas`, `catalogo` y los demás módulos viven en la misma JVM (1.6) y comparten la misma base de datos Oracle — ninguna transacción cruza un límite de red ni de base de datos entre módulos internos, así que una transacción local normal (con `@Transactional`, S4) ya garantiza consistencia *instantánea*, sin necesitar el costo de la consistencia *eventual* que Saga exige a cambio de escalar. La integración de hoy que **sí** cruza ese límite —SUNAT— tiene un solo paso remoto, sin ningún paso posterior que dependa de su éxito para completarse (3.2 ya resuelve esa frontera con *Circuit Breaker* + *fallback*, no con compensación). Saga se vuelve necesaria el día que un proceso de negocio de BomERP necesite coordinar **varios** sistemas separados en secuencia, cada uno con su propia base de datos — el mismo escenario, con microservicios reales, que DIST construye en su sesión dedicada a este patrón (`pagatu-orden-ms` y `pagatu-pago-ms`, coordinados por eventos de Kafka, con compensación real cuando un pago se rechaza).
+**¿Por qué una Saga, si `ventas` ni siquiera cruza ese límite hoy?** Porque, a diferencia de un sistema de microservicios real (cada servicio con su propia base de datos), BomERP es hoy un **monolito modular**: `ventas`, `catalogo` y los demás módulos viven en la misma JVM (1.6) y comparten la misma base de datos Oracle — ninguna transacción interna cruza un límite de red ni de base de datos, así que una transacción local normal (con `@Transactional`, S4) ya garantiza consistencia *instantánea* entre módulos, sin necesitar el costo de la consistencia *eventual* que Saga exige a cambio de escalar. La integración con SUNAT (3.1-3.2) tampoco la necesita: tiene un solo paso remoto, sin ningún paso posterior que dependa de su éxito para completarse — por eso se resuelve con *Circuit Breaker* + *fallback*, no con compensación.
+
+Pero el consumidor de IA de 2.5 sí abre esa puerta, en cuanto su sugerencia deja de ser solo una sugerencia y se convierte en una **acción real**: pedirle stock a un Proveedor externo. Ahí aparecen, de golpe, las dos condiciones que Saga exige — un segundo sistema, con su propia base de datos, fuera del control de BomERP; y una secuencia de pasos donde el segundo puede fallar (el proveedor rechaza la orden) después de que el primero ya se confirmó (BomERP ya registró la intención de compra). 3.5 diseña exactamente esa Saga — coreografiada, reusando la capa anticorrupción (3.1), el *circuit breaker* (3.2) y el *outbox* (3.3) que esta misma sesión ya construyó, ahora compuestos en un proceso de negocio completo. Es el mismo escenario, con microservicios reales en vez de un monolito modular, que DIST construye en su sesión dedicada a este patrón (`pagatu-orden-ms` y `pagatu-pago-ms`, coordinados por eventos de Kafka, con compensación real cuando un pago se rechaza).
 
 ## 3. Aplica: actividad práctica guiada
 
 Tiempo: 100 min.
 
-**Actividad:** diseño de la integración empresarial completa de `ventas`: la llamada obligatoria a SUNAT protegida con capa anticorrupción y *circuit breaker*, el evento de dominio `VentaRegistrada` con publicación confiable, un consumidor de IA, y la matriz que documenta ambas fronteras.
+**Actividad:** diseño de la integración empresarial completa de `ventas`: la llamada obligatoria a SUNAT protegida con capa anticorrupción y *circuit breaker*, el evento de dominio `VentaRegistrada` con publicación confiable, un consumidor de IA, la Saga coreografiada que coordina la orden de compra con un Proveedor externo, y la matriz que documenta las tres fronteras.
 
-**Propósito de la actividad:** aplicar los patrones de integración de 2.6 a un caso real y obligatorio (SUNAT) y a un caso de cardinalidad abierta (consumidores del evento), con el mismo nivel de rigor que S8-S10 ya aplicaron a las fronteras internas.
+**Propósito de la actividad:** aplicar los patrones de integración de 2.6 a un caso real y obligatorio (SUNAT) y a un caso de cardinalidad abierta (consumidores del evento), y componer esos mismos patrones en una Saga coreografiada (2.7) que coordina un proceso de negocio completo, con el mismo nivel de rigor que S8-S10 ya aplicaron a las fronteras internas.
 
 **Orientaciones metodológicas:** en el laboratorio, el docente diseña la integración de `ventas` paso a paso frente a la clase; los estudiantes repiten cada paso sobre al menos un sistema externo real de su propio proyecto (ver sección 4).
 
@@ -249,7 +255,8 @@ Tiempo: 100 min.
 - **3.2** Proteger la llamada con un *Circuit Breaker*.
 - **3.3** Diseñar el evento de dominio `VentaRegistrada` y su publicación confiable.
 - **3.4** Diseñar el consumidor de IA.
-- **3.5** Armar la matriz de integración.
+- **3.5** Diseñar la Saga coreografiada de reposición con el Proveedor.
+- **3.6** Armar la matriz de integración.
 
 ### 3.1 Diseñar la integración con SUNAT y su capa anticorrupción
 
@@ -432,20 +439,100 @@ void onVentaRegistrada(VentaRegistrada evento) {
 
 **Error frecuente**: hacer que `SugerenciaReposicionListener` llame de vuelta a `VentaService` para pedir más datos de la venta. El evento (3.3) ya debe llevar todo lo que un consumidor razonable necesita (`productoIds`, `total`, `fecha`) — si un consumidor necesita llamar de vuelta al publicador para completar su trabajo, el acoplamiento que 2.3 quiso evitar se reintrodujo por la puerta de atrás.
 
-### 3.5 Armar la matriz de integración
+### 3.5 Diseñar la Saga coreografiada de reposición con el Proveedor
 
-**Producto del paso:** documentación completa de ambas fronteras — qué cruza, hacia dónde, protegido por qué patrón.
+**Producto del paso:** la Saga completa que convierte una sugerencia de reposición (3.4) en una orden de compra real contra un Sistema del Proveedor externo, con sus tres pasos y su compensación (2.7).
 
-**Tabla 9. Matriz de integración empresarial de `ventas`**
+Hasta 3.4, el servicio de IA termina su trabajo generando una sugerencia (2.5, Tabla 5: "una sugerencia, consumida por otro caso de uso todavía fuera de alcance"). Ese "otro caso de uso" es el que se diseña aquí: un módulo nuevo, `compras`, que escucha la sugerencia y actúa — creando una orden de compra local y solicitándola a un Sistema del Proveedor real, un sistema tan ajeno a BomERP como lo es SUNAT (3.1), con la diferencia de que esta vez la respuesta no llega en la misma llamada, sino días después.
+
+**Tabla 9. Los pasos de la Saga de reposición, con su compensación**
+
+| Paso | Módulo / sistema | Si falla | Compensación |
+|---|---|---|---|
+| 1. Crear la orden de compra local | `compras` (BomERP, transacción local) | No se publica nada — falla antes de confirmar cualquier cosa | No aplica — nada que compensar |
+| 2. Solicitar la compra al Proveedor | `compras` → Sistema del Proveedor (ACL de 3.1 + Circuit Breaker de 3.2) | El proveedor no responde a tiempo, o el circuito está `OPEN` | *Fallback* del Circuit Breaker (3.2): la orden queda `SOLICITADA`, reintento posterior — **no** es la compensación de la Saga, es la del propio *circuit breaker* |
+| 3. Confirmar o rechazar la orden, según la respuesta del proveedor | `compras`, al recibir la respuesta (días después, asíncrona) | El proveedor rechaza la orden (sin stock, precio ya no vigente) | `SOLICITADA → RECHAZADA`, y notificar al encargado de compras para reintentar con otro proveedor — la **compensación real** de esta Saga |
+
+La fila 2 deja algo importante explícito: el *fallback* del Circuit Breaker y la compensación de la Saga no son la misma cosa, aunque las dos reaccionen a una falla. El *fallback* reacciona a que la **llamada** no se pudo completar (red, timeout, circuito abierto) — la compensación reacciona a que el **paso de negocio sí se completó, y la respuesta fue un rechazo**. Confundirlos es el "Error frecuente" de más abajo.
+
+**Figura 7. La Saga coreografiada, paso a paso, componiendo los patrones ya construidos**
+
+```mermaid
+sequenceDiagram
+    participant IA as SugerenciaReposicionListener (3.4)
+    participant C as OrdenCompraServiceImpl (compras)
+    participant DB as Base de datos (orden_compra)
+    participant ACL as ProveedorGatewayServiceImpl (ACL, 3.1)
+    participant P as Sistema del Proveedor (externo)
+
+    IA->>C: reposicionSugerida(productoId, cantidad)
+    C->>DB: INSERT OrdenCompra (SOLICITADA) + OrdenCompraSolicitada
+    Note over C,DB: misma transaccion -- Outbox (2.6/3.3)
+
+    Note over C,ACL: proceso aparte, fuera de la peticion original
+    C->>ACL: solicitar(ordenCompra)
+    ACL->>P: enviarSolicitud(documentoProveedor) -- protegido con Circuit Breaker (3.2)
+
+    Note over P: el proveedor confirma o rechaza dias despues, de forma asincrona
+    P-->>C: webhook: OrdenCompraConfirmada o OrdenCompraRechazada
+
+    alt confirmada
+        C->>DB: UPDATE OrdenCompra SET estado = CONFIRMADA
+    else rechazada (compensacion)
+        C->>DB: UPDATE OrdenCompra SET estado = RECHAZADA
+        C->>C: notificar al encargado de compras (reintentar con otro proveedor)
+    end
+```
+
+Nada de este diagrama inventa infraestructura nueva: `ProveedorGatewayServiceImpl` es la misma capa anticorrupción de 3.1, aplicada a un segundo sistema externo; la llamada a `enviarSolicitud` se protege exactamente igual que `enviarASunat` (3.2); y el paso 1 persiste su evento con el mismo mecanismo *Outbox* de 3.3. Lo único genuinamente nuevo es la **coreografía**: ningún componente conoce el flujo completo — `compras` reacciona a la sugerencia de la IA sin saber que existe un paso 3 pendiente, y reacciona a la respuesta del proveedor sin que nadie se lo haya "orquestado" — exactamente la definición de 2.7.
+
+```java
+// OrdenCompraServiceImpl.java — Saga coreografiada, pseudocodigo de diseño
+@ApplicationModuleListener
+void onReposicionSugerida(ReposicionSugerida sugerencia) {
+    OrdenCompra orden = new OrdenCompra(sugerencia.productoId(), sugerencia.cantidad(), estado: SOLICITADA);
+    ordenCompraRepository.guardar(orden);
+    publicarEvento(new OrdenCompraSolicitada(orden.id(), sugerencia.productoId(), sugerencia.cantidad()));
+    // misma transaccion -- Outbox (2.6/3.3), igual que VentaRegistrada
+}
+
+@ApplicationModuleListener
+void onOrdenCompraSolicitada(OrdenCompraSolicitada evento) {
+    proveedorGateway.solicitar(evento);  // ACL (3.1) + Circuit Breaker (3.2)
+}
+
+// Webhook entrante del Proveedor -- no es un evento interno de Spring Modulith,
+// es la frontera externa que cierra el paso 3 de la Tabla 9
+@PostMapping("/webhooks/proveedor")
+void onRespuestaProveedor(RespuestaProveedorRequest respuesta) {
+    OrdenCompra orden = ordenCompraRepository.buscar(respuesta.ordenCompraId());
+    if (respuesta.confirmada()) {
+        orden.confirmar();          // SOLICITADA -> CONFIRMADA
+    } else {
+        orden.rechazar();           // SOLICITADA -> RECHAZADA -- COMPENSACION (Tabla 9, paso 3)
+        notificarEncargadoCompras(orden);
+    }
+    ordenCompraRepository.guardar(orden);
+}
+```
+
+**Error frecuente**: implementar la compensación del paso 3 dentro del `fallbackMethod` del `@CircuitBreaker` de 3.2, como si fueran la misma protección. El *fallback* de 3.2 solo se dispara cuando la llamada `enviarSolicitud` **no se pudo completar** (red, timeout, circuito abierto) — un rechazo real del proveedor (`OrdenCompraRechazada`) es una respuesta de negocio perfectamente válida, que sí llegó, y que por eso nunca pasa por el `fallbackMethod`: pasa por `onRespuestaProveedor`, el *listener* diseñado específicamente para recibir esa respuesta y ejecutar la compensación de la Tabla 9.
+
+### 3.6 Armar la matriz de integración
+
+**Producto del paso:** documentación completa de las tres fronteras — qué cruza, hacia dónde, protegido por qué patrón.
+
+**Tabla 10. Matriz de integración empresarial de `ventas`**
 
 | Qué cruza la frontera | Dirección | Tipo | Patrón que la protege |
 |---|---|---|---|
 | Comprobante de pago electrónico (UBL 2.1) | BomERP → SUNAT | Síncrona, obligatoria | Capa anticorrupción (3.1) + Circuit Breaker (3.2) |
 | `VentaRegistrada` | BomERP → consumidores internos (cardinalidad abierta) | Asíncrona | Outbox (3.3) |
-| Sugerencia de reposición | Servicio de IA → (consumo futuro, fuera de alcance) | Asíncrona | No corresponde a esta sesión — `ventas` no participa de este lado de la integración |
+| Sugerencia de reposición | Servicio de IA → `compras` (interno) | Asíncrona | Outbox (3.3) — mismo mecanismo que `VentaRegistrada` |
+| Orden de compra | `compras` → Sistema del Proveedor (externo) | Síncrona (la solicitud) + asíncrona (la respuesta) | Capa anticorrupción (3.1) + Circuit Breaker (3.2) + Saga coreografiada con compensación (3.5) |
 | `ProductoService` (S8-S10, referencia) | `ventas` → `catalogo` | Síncrona, interna | Protected Variations (S10) — no capa anticorrupción, porque ambos lados son del mismo dominio BomERP |
 
-La última fila es deliberada: no toda integración necesita una capa anticorrupción — solo la que cruza hacia un modelo **ajeno** al de BomERP (SUNAT). `catalogo` habla el mismo lenguaje ubicuo que `ventas` (S6); traducir entre ellos sería trabajo innecesario, por eso S10 resolvió esa frontera con Protected Variations, no con Anti-Corruption Layer.
+La fila del Proveedor es la más cargada de la tabla, y es deliberado: muestra que los patrones no son alternativas entre las que se elige una — se **componen**. La misma capa anticorrupción y el mismo *circuit breaker* que protegen la llamada a SUNAT protegen la llamada al Proveedor; lo que agrega la Saga es la coordinación de **varios** pasos y su compensación, un problema que ni ACL ni *Circuit Breaker* resuelven por sí solos. La última fila sigue siendo la única sin capa anticorrupción, por la misma razón de siempre: `catalogo` habla el mismo lenguaje ubicuo que `ventas` (S6), no un formato ajeno.
 
 **Evidencia de aprendizaje:**
 
@@ -453,6 +540,7 @@ La última fila es deliberada: no toda integración necesita una capa anticorrup
 - Configuración justificada del *Circuit Breaker*, con su *fallback* explícito.
 - Evento de dominio `VentaRegistrada` diseñado, con su publicación confiable (*Outbox*, vía Spring Modulith).
 - Consumidor de IA diseñado, suscrito al evento sin acoplarse de vuelta al publicador.
+- Saga coreografiada de reposición diseñada, con sus tres pasos y su compensación, distinguida con claridad del *fallback* del Circuit Breaker.
 - Matriz de integración completa, con el patrón correcto para cada frontera (y la justificación de por qué una frontera interna no necesita capa anticorrupción).
 
 ## 4. Crea: actividad autónoma
@@ -469,7 +557,8 @@ Completa y evidencia estas tareas:
 2. Diseñar el *Circuit Breaker* de esa integración, con su umbral, su tiempo de espera y, sobre todo, un *fallback* justificado — qué hace tu sistema mientras el externo no responde.
 3. Diseñar al menos un evento de dominio propio, con los datos que lleva, y explicar por qué se publica como evento y no como llamada directa (criterio de 2.3-2.4).
 4. Diseñar un consumidor de ese evento (de IA, o de cualquier otro tipo) que no necesite llamar de vuelta al publicador para completar su trabajo.
-5. Armar tu propia matriz de integración, como la Tabla 9, incluyendo al menos una frontera interna (para justificar por qué no necesita capa anticorrupción) y una externa.
+5. Diseñar una Saga coreografiada para un proceso de negocio de tu propio proyecto que involucre al menos un paso remoto que pueda fallar, con la tabla de sus pasos y su compensación (como la Tabla 9) — distinguiendo explícitamente la compensación de la Saga del *fallback* de tu *Circuit Breaker*.
+6. Armar tu propia matriz de integración, como la Tabla 10, incluyendo al menos una frontera interna (para justificar por qué no necesita capa anticorrupción) y una externa.
 
 ### 4.2 Propósito
 
@@ -497,7 +586,7 @@ Cada captura de pantalla del informe debe mostrar, sin recortar, el reloj del si
 
 **Evidencia técnica**
 
-Incluye capturas o extractos con una breve explicación debajo de cada uno, organizados en los mismos 4 bloques de la rúbrica (4.6):
+Incluye capturas o extractos con una breve explicación debajo de cada uno, organizados en los mismos 5 bloques de la rúbrica (4.6):
 
 1. *Integración con sistema externo y capa anticorrupción*
     - El sistema externo real elegido, su contrato conceptual y la clase anticorrupción que lo aísla del dominio.
@@ -505,7 +594,9 @@ Incluye capturas o extractos con una breve explicación debajo de cada uno, orga
     - Configuración (umbral, tiempo de espera) y *fallback* justificado.
 3. *Evento de dominio y consumidor*
     - El evento diseñado, con su justificación de por qué es asíncrono, y el consumidor que lo escucha.
-4. *Matriz de integración*
+4. *Saga coreografiada y compensación*
+    - La tabla de pasos con su compensación, y la explicación de por qué esa compensación no es el *fallback* del *Circuit Breaker*.
+5. *Matriz de integración*
     - Matriz completa, con al menos una frontera interna y una externa, cada una con su patrón correcto.
 
 **Error o hallazgo**
@@ -530,6 +621,7 @@ Netflix (1.6).
 - El *Circuit Breaker* tiene umbral, tiempo de espera y un *fallback* con sentido de negocio, no genérico.
 - El evento de dominio está justificado como asíncrono (criterio de 2.3-2.4), no como una llamada directa disfrazada.
 - El consumidor del evento no llama de vuelta al publicador para completar su trabajo.
+- La Saga tiene al menos un paso remoto que puede fallar, con su compensación explícita y distinguida del *fallback* del *Circuit Breaker*.
 - La matriz de integración incluye al menos una frontera interna y una externa, cada una con el patrón correspondiente justificado.
 - Cada captura de la evidencia técnica muestra el reloj del sistema y el usuario/perfil visible, sin recortar.
 - Las fechas y horas de las capturas son coherentes con el historial de commits de su repositorio en GitHub.
@@ -544,18 +636,22 @@ Netflix (1.6).
 4. ¿Por qué tu evento de dominio se publica en vez de llamarse directamente? ¿Qué perderías si lo volvieras síncrono?
 5. ¿Qué pasaría si dos consumidores distintos de tu evento necesitaran información que el evento no lleva?
 6. ¿Por qué `VentaRegistrada` se publica dentro de la misma transacción que guarda la venta, y no después?
-7. Relaciona el caso de Netflix (1.6) con qué pasaría en tu propio sistema si el sistema externo elegido respondiera lento en vez de caerse de inmediato.
+7. ¿Qué diferencia de fondo hay entre el *fallback* de tu *Circuit Breaker* y la compensación de tu Saga, si los dos reaccionan a que "algo salió mal"?
+8. ¿Por qué tu Saga es coreografiada y no orquestada (o viceversa)? ¿Qué tendrías que cambiar si el número de pasos de tu proceso de negocio creciera a seis o siete?
+9. Si tu sistema fuera, como BomERP hoy, un monolito con una sola base de datos, ¿seguirías necesitando una Saga para ese mismo proceso de negocio? ¿Por qué sí o por qué no?
+10. Relaciona el caso de Netflix (1.6) con qué pasaría en tu propio sistema si el sistema externo elegido respondiera lento en vez de caerse de inmediato.
 
 ### 4.6 Rúbrica de evaluación
 
-**Tabla 10. Rúbrica de evaluación**
+**Tabla 11. Rúbrica de evaluación**
 
 | Criterio | Peso (%) | A (20 pts) | B (15 pts) | C (10 pts) | D (5 pts) | Nivel obtenido |
 |---|---:|---|---|---|---|---:|
-| 1. Integración con sistemas externos y capa anticorrupción* | 25 | Sistema externo real, con capa anticorrupción completa que aísla el dominio de su formato. | Integración real, con la capa anticorrupción incompleta (algún dato externo se filtra). | Sistema externo inventado o sin ninguna traducción de formato. | No presenta integración con sistema externo. | |
-| 2. Circuit Breaker* | 25 | Umbral, tiempo de espera y *fallback* con sentido de negocio real, justificado. | Configuración completa, con el *fallback* genérico o poco justificado. | Circuit Breaker mencionado sin configuración concreta. | No presenta diseño de Circuit Breaker. | |
-| 3. Evento de dominio y consumidor* | 25 | Evento bien justificado como asíncrono, consumidor que no llama de vuelta al publicador. | Evento correcto, con algún acoplamiento menor hacia el publicador. | Evento que en realidad debería ser una llamada síncrona, mal justificado. | No presenta evento ni consumidor. | |
-| 4. Matriz de integración* | 25 | Matriz completa, con al menos una frontera interna y una externa, cada patrón correctamente justificado. | Matriz completa, con alguna justificación superficial. | Matriz incompleta o con el patrón equivocado para alguna frontera. | No presenta matriz de integración. | |
+| 1. Integración con sistemas externos y capa anticorrupción* | 20 | Sistema externo real, con capa anticorrupción completa que aísla el dominio de su formato. | Integración real, con la capa anticorrupción incompleta (algún dato externo se filtra). | Sistema externo inventado o sin ninguna traducción de formato. | No presenta integración con sistema externo. | |
+| 2. Circuit Breaker* | 20 | Umbral, tiempo de espera y *fallback* con sentido de negocio real, justificado. | Configuración completa, con el *fallback* genérico o poco justificado. | Circuit Breaker mencionado sin configuración concreta. | No presenta diseño de Circuit Breaker. | |
+| 3. Evento de dominio y consumidor* | 20 | Evento bien justificado como asíncrono, consumidor que no llama de vuelta al publicador. | Evento correcto, con algún acoplamiento menor hacia el publicador. | Evento que en realidad debería ser una llamada síncrona, mal justificado. | No presenta evento ni consumidor. | |
+| 4. Saga coreografiada y compensación* | 20 | Pasos y compensación bien diseñados, claramente distinguidos del *fallback* de un *Circuit Breaker*. | Saga completa, con la distinción frente al *fallback* poco clara. | Saga incompleta, o sin un paso de compensación real. | No presenta diseño de Saga. | |
+| 5. Matriz de integración* | 20 | Matriz completa, con al menos una frontera interna y una externa, cada patrón correctamente justificado. | Matriz completa, con alguna justificación superficial. | Matriz incompleta o con el patrón equivocado para alguna frontera. | No presenta matriz de integración. | |
 
 \* Agregado manual.
 
@@ -576,11 +672,11 @@ Indica 2 fortalezas y 2 recomendaciones.
 
 Tiempo: 5 min.
 
-**Resumen breve:** hoy BomERP cruzó, por primera vez, su propia frontera hacia el exterior: una integración obligatoria con SUNAT, aislada del dominio por una capa anticorrupción y protegida de fallas remotas por un *Circuit Breaker* con un *fallback* que tiene sentido de negocio real; y una integración de cardinalidad abierta —el evento `VentaRegistrada`, publicado de forma confiable con el mismo patrón *Outbox* que Spring Modulith ya reserva para una sesión futura de LP2— que permite agregar consumidores (como el servicio de IA de reposición) sin que `ventas` tenga que cambiar. La matriz final dejó claro que no toda frontera necesita el mismo patrón: la interna (`catalogo`) se protege distinto que la externa (SUNAT), porque el riesgo real es distinto.
+**Resumen breve:** hoy BomERP cruzó, por primera vez, su propia frontera hacia el exterior: una integración obligatoria con SUNAT, aislada del dominio por una capa anticorrupción y protegida de fallas remotas por un *Circuit Breaker* con un *fallback* que tiene sentido de negocio real; y una integración de cardinalidad abierta —el evento `VentaRegistrada`, publicado de forma confiable con el mismo patrón *Outbox* que Spring Modulith ya reserva para una sesión futura de LP2— que permite agregar consumidores (como el servicio de IA de reposición) sin que `ventas` tenga que cambiar. Esa sugerencia de IA se llevó, además, un paso más allá de lo que BomERP necesita hoy: una Saga coreografiada completa, coordinando una orden de compra con un segundo sistema externo (el Proveedor) y compensando con criterio cuando ese sistema rechaza la orden — la pieza de diseño que esta sesión enseña a propósito antes de que el curso de Distribuidas la exija sin red de seguridad. La matriz final dejó claro que no toda frontera necesita el mismo patrón, ni los mismos patrones se usan solos: la interna (`catalogo`) se protege distinto que las externas, y la del Proveedor combina tres patrones ya construidos en uno solo.
 
 **Dinámica participativa:** en una ronda rápida, cada estudiante comparte en una frase qué sistema externo real eligió para su propio proyecto, y qué pasaría si se cayera.
 
-**Metacognición:** ¿qué te costó más entender hoy: por qué una integración interna no necesita capa anticorrupción, o cómo diseñar un *fallback* que de verdad tenga sentido de negocio y no sea solo "mostrar un error"?
+**Metacognición:** ¿qué te costó más entender hoy: por qué una integración interna no necesita capa anticorrupción, cómo diseñar un *fallback* que de verdad tenga sentido de negocio, o la diferencia entre ese *fallback* y la compensación de una Saga?
 
 **Proyección:** S12 integra todo el diseño dinámico de la unidad —diagramas, patrones e integraciones— en el Catálogo UML completo que se presenta y sustenta como producto de la Unidad II.
 
