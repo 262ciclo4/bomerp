@@ -19,6 +19,7 @@ El porqué de que una integración sin protección pueda tumbar un sistema enter
 3. Integración entre servicios y mensajería asíncrona.
 4. Servicios de inteligencia artificial.
 5. Patrones de integración: capa anticorrupción, *circuit breaker* y *outbox*.
+6. Patrón relacionado: consistencia distribuida con Saga (fuera del alcance de esta sesión).
 
 ### 1.3 Propósito de aprendizaje
 
@@ -186,7 +187,7 @@ Tres patrones, cada uno protegiendo un riesgo distinto de los dos tipos de front
 
 **Capa anticorrupción** (*Anti-Corruption Layer*, Evans, 2003) traduce entre el modelo de un sistema externo y el modelo propio, para que el vocabulario y la estructura de datos del externo nunca se filtren al dominio. `Venta` nunca debe tener un campo que se llame igual que una etiqueta del XML UBL de SUNAT — existe una clase intermedia que traduce `VentaResponse` a ese XML, y nada más que esa clase conoce el formato de SUNAT.
 
-**Circuit Breaker** (Fowler, 2014; Nygard, 2018; 1.6) protege contra un sistema externo que falla o se vuelve lento: monitorea el resultado de una llamada protegida y, cuando la **tasa de fallos** (no un conteo simple de fallos seguidos) supera un umbral configurado, "abre" el circuito — las siguientes llamadas fallan de inmediato, sin intentar la llamada real, hasta que un temporizador permite un grupo limitado de llamadas de prueba para ver si el sistema externo se recuperó. Esa tasa se mide, concretamente, sobre una **ventana deslizante** de las últimas N llamadas (*sliding window*, SACAViX, 2026) — el mismo criterio, con los nombres reales de parámetro de Resilience4j, que aplica la Tabla 7.
+**Circuit Breaker** (Fowler, 2014; Nygard, 2018; 1.6) protege contra un sistema externo que falla o se vuelve lento: monitorea el resultado de una llamada protegida y, cuando la **tasa de fallos** (no un conteo simple de fallos seguidos) supera un umbral configurado, "abre" el circuito — las siguientes llamadas fallan de inmediato, sin intentar la llamada real, hasta que un temporizador permite un grupo limitado de llamadas de prueba para ver si el sistema externo se recuperó. Esa tasa se mide, concretamente, sobre una **ventana deslizante** de las últimas N llamadas (*sliding window*, SACAViX, 2026) — el mismo criterio, con los nombres reales de parámetro de Resilience4j, que aplica la Tabla 8.
 
 **Tabla 6. Los tres estados de un Circuit Breaker**
 
@@ -196,7 +197,7 @@ Tres patrones, cada uno protegiendo un riesgo distinto de los dos tipos de front
 | `OPEN` (abierto) | Las llamadas fallan de inmediato, sin contactar a SUNAT. | Después de un tiempo de espera → `HALF_OPEN`. |
 | `HALF_OPEN` (semiabierto) | Se permite un número limitado de llamadas de prueba. | Si su tasa de éxito alcanza el umbral → `CLOSED`; si no → `OPEN` de nuevo. |
 
-El umbral que de verdad importa no es "cuántos fallos seguidos", sino la **tasa de fallos sobre una ventana de las últimas N llamadas** (una *sliding window*, 3.2) — con la configuración real de esta sesión (Tabla 7: ventana de 10, umbral de 50%), el circuito se abre con 5 fallos de las últimas 10 llamadas, sin que importe si llegaron seguidos o intercalados con alguna llamada exitosa.
+El umbral que de verdad importa no es "cuántos fallos seguidos", sino la **tasa de fallos sobre una ventana de las últimas N llamadas** (una *sliding window*, 3.2) — con la configuración real de esta sesión (Tabla 8: ventana de 10, umbral de 50%), el circuito se abre con 5 fallos de las últimas 10 llamadas, sin que importe si llegaron seguidos o intercalados con alguna llamada exitosa.
 
 **Figura 3. Ciclo de estados de un Circuit Breaker**
 
@@ -215,6 +216,22 @@ flowchart LR
 **Outbox** (Richardson, 2018) resuelve un problema distinto: ¿cómo se garantiza que un evento se publique si, y solo si, el cambio que lo origina de verdad se guardó? Guardar la venta en la base de datos y publicar `VentaRegistrada` en un *broker* son dos operaciones separadas — si la primera tiene éxito y la segunda falla, el evento se pierde para siempre; si ocurre al revés, se publica un evento de una venta que nunca existió. *Outbox* resuelve esto guardando el evento en una tabla de la **misma** base de datos, dentro de la **misma** transacción que guarda la venta — un proceso aparte, después, se encarga de tomar esos eventos pendientes y publicarlos, reintentando si hace falta, sin arriesgar nunca la atomicidad entre "la venta existe" y "el evento quedó registrado para publicarse".
 
 Esto no es un patrón hipotético para BomERP: Spring Modulith (el framework ya elegido en ADR-002 de LP2) implementa exactamente este patrón con su propia tabla `event_publication` — hoy removida a propósito del `pom.xml` de LP2 porque ningún módulo publica eventos todavía (LP2, nota de arquitectura), reservada para cuando una sesión futura de ese curso adopte comunicación por eventos. El diseño de esta sesión es, literalmente, la especificación de esa sesión futura.
+
+### 2.7 Patrón relacionado: consistencia distribuida con Saga (fuera del alcance de esta sesión)
+
+*Circuit Breaker* (2.6) y *Saga* suelen aparecer juntos en cualquier catálogo de patrones de microservicios, pero no resuelven el mismo problema — conviene distinguirlos antes de ver por qué Saga, hoy, no aplica a BomERP. *Circuit Breaker* protege **una llamada síncrona puntual** (2.1 de la frontera con SUNAT) de un sistema remoto que falla o se vuelve lento. **Saga** (Richardson, 2018, cap. 4; Garcia-Molina & Salem, 1987) resuelve un problema distinto: cómo mantener la consistencia de un **proceso de negocio de varios pasos**, cuando esos pasos viven en servicios independientes, cada uno con su propia base de datos — exactamente el escenario en el que una transacción distribuida clásica (*two-phase commit*) no escala, porque bloquear la base de un servicio mientras se espera la respuesta de otro acopla en tiempo real a dos sistemas que deberían poder fallar y escalar por separado.
+
+La idea central: en vez de una sola transacción distribuida, la operación se parte en una secuencia de **transacciones locales**, una por servicio — y cada paso que pueda fallar define su propia **transacción de compensación**, una acción que deshace el efecto de negocio ya confirmado (nunca una reversión de base de datos ajena, porque ningún servicio tiene acceso directo a la base de otro). El sistema queda, mientras tanto, **temporalmente inconsistente** — Saga garantiza consistencia *eventual*, no instantánea.
+
+**Tabla 7. Dos formas de coordinar una Saga**
+
+| | Orquestada | Coreografiada |
+|---|---|---|
+| ¿Quién conoce el flujo completo? | Un *Saga Orchestrator* central, que envía comandos y decide el siguiente paso. | Nadie — cada servicio reacciona al evento que le corresponde y publica el suyo. |
+| Ventaja | Más fácil de entender, probar y depurar: el flujo vive en un solo lugar. | Elimina el punto único de coordinación. |
+| Costo | Acopla a todos los participantes al orquestador. | El flujo de negocio queda implícito, repartido entre los *listeners* de cada servicio. |
+
+**¿Por qué esta sesión no construye una Saga sobre `ventas`?** Porque, a diferencia de un sistema de microservicios real (cada servicio con su propia base de datos), BomERP es hoy un **monolito modular**: `ventas`, `catalogo` y los demás módulos viven en la misma JVM (1.6) y comparten la misma base de datos Oracle — ninguna transacción cruza un límite de red ni de base de datos entre módulos internos, así que una transacción local normal (con `@Transactional`, S4) ya garantiza consistencia *instantánea*, sin necesitar el costo de la consistencia *eventual* que Saga exige a cambio de escalar. La integración de hoy que **sí** cruza ese límite —SUNAT— tiene un solo paso remoto, sin ningún paso posterior que dependa de su éxito para completarse (3.2 ya resuelve esa frontera con *Circuit Breaker* + *fallback*, no con compensación). Saga se vuelve necesaria el día que un proceso de negocio de BomERP necesite coordinar **varios** sistemas separados en secuencia, cada uno con su propia base de datos — el mismo escenario, con microservicios reales, que DIST construye en su sesión dedicada a este patrón (`pagatu-orden-ms` y `pagatu-pago-ms`, coordinados por eventos de Kafka, con compensación real cuando un pago se rechaza).
 
 ## 3. Aplica: actividad práctica guiada
 
@@ -299,7 +316,7 @@ Ninguno de los dos pasos de traducción (`traducirAUBL`, `traducirAComprobanteRe
 
 **Producto del paso:** el diseño del *circuit breaker* que envuelve `enviarASunat`, con su umbral y su `fallback`.
 
-**Tabla 7. Configuración del *Circuit Breaker* de la integración con SUNAT**
+**Tabla 8. Configuración del *Circuit Breaker* de la integración con SUNAT**
 
 | Parámetro | Valor propuesto | Justificación |
 |---|---|---|
@@ -312,7 +329,7 @@ Ninguno de los dos pasos de traducción (`traducirAUBL`, `traducirAComprobanteRe
 El *fallback* es la decisión de diseño más importante de este paso: un *circuit breaker* sin un *fallback* pensado simplemente cambia un error lento por un error rápido — sigue siendo un error. El *fallback* elegido aquí convierte una falla externa (SUNAT caída) en una degradación controlada (la venta se completa, el comprobante queda pendiente) en vez de en una falla total (la venta no se puede registrar porque un sistema de terceros está lento).
 
 ```yaml
-# application.yml — configuracion del circuit breaker "sunat", valores de la Tabla 7
+# application.yml — configuracion del circuit breaker "sunat", valores de la Tabla 8
 resilience4j:
   circuitbreaker:
     instances:
@@ -337,11 +354,11 @@ public ComprobanteResultado emitir(VentaResponse venta) {
 // lanza timeout/error de red -- nunca si el problema es una regla de negocio
 public ComprobanteResultado emitirPendiente(VentaResponse venta, Exception causa) {
     return new ComprobanteResultado(numeroComprobante: null, estadoSunat: "PENDIENTE_EMISION");
-    // un proceso aparte, fuera de esta peticion, reintenta mas tarde (Tabla 7)
+    // un proceso aparte, fuera de esta peticion, reintenta mas tarde (Tabla 8)
 }
 ```
 
-La anotación envuelve exactamente la llamada que 3.1 ya aisló en `enviarASunat` — ninguna otra línea de `ComprobanteElectronicoServiceImpl` necesita saber que existe un *circuit breaker*: ni `traducirAUBL` ni `firmar` corren contra la red, así que ninguna de las dos necesita protegerse. El `fallbackMethod` solo se dispara por la causa que la Tabla 7 ya previó (SUNAT lenta, caída o sin responder) — un rechazo de SUNAT por un dato mal formado (un error de negocio, no de disponibilidad) no debe entrar nunca a `emitirPendiente`: reintentar un comprobante mal formado no lo arregla, solo repite el mismo error.
+La anotación envuelve exactamente la llamada que 3.1 ya aisló en `enviarASunat` — ninguna otra línea de `ComprobanteElectronicoServiceImpl` necesita saber que existe un *circuit breaker*: ni `traducirAUBL` ni `firmar` corren contra la red, así que ninguna de las dos necesita protegerse. El `fallbackMethod` solo se dispara por la causa que la Tabla 8 ya previó (SUNAT lenta, caída o sin responder) — un rechazo de SUNAT por un dato mal formado (un error de negocio, no de disponibilidad) no debe entrar nunca a `emitirPendiente`: reintentar un comprobante mal formado no lo arregla, solo repite el mismo error.
 
 ### 3.3 Diseñar el evento de dominio `VentaRegistrada` y su publicación confiable
 
@@ -419,7 +436,7 @@ void onVentaRegistrada(VentaRegistrada evento) {
 
 **Producto del paso:** documentación completa de ambas fronteras — qué cruza, hacia dónde, protegido por qué patrón.
 
-**Tabla 8. Matriz de integración empresarial de `ventas`**
+**Tabla 9. Matriz de integración empresarial de `ventas`**
 
 | Qué cruza la frontera | Dirección | Tipo | Patrón que la protege |
 |---|---|---|---|
@@ -452,7 +469,7 @@ Completa y evidencia estas tareas:
 2. Diseñar el *Circuit Breaker* de esa integración, con su umbral, su tiempo de espera y, sobre todo, un *fallback* justificado — qué hace tu sistema mientras el externo no responde.
 3. Diseñar al menos un evento de dominio propio, con los datos que lleva, y explicar por qué se publica como evento y no como llamada directa (criterio de 2.3-2.4).
 4. Diseñar un consumidor de ese evento (de IA, o de cualquier otro tipo) que no necesite llamar de vuelta al publicador para completar su trabajo.
-5. Armar tu propia matriz de integración, como la Tabla 8, incluyendo al menos una frontera interna (para justificar por qué no necesita capa anticorrupción) y una externa.
+5. Armar tu propia matriz de integración, como la Tabla 9, incluyendo al menos una frontera interna (para justificar por qué no necesita capa anticorrupción) y una externa.
 
 ### 4.2 Propósito
 
@@ -531,7 +548,7 @@ Netflix (1.6).
 
 ### 4.6 Rúbrica de evaluación
 
-**Tabla 9. Rúbrica de evaluación**
+**Tabla 10. Rúbrica de evaluación**
 
 | Criterio | Peso (%) | A (20 pts) | B (15 pts) | C (10 pts) | D (5 pts) | Nivel obtenido |
 |---|---:|---|---|---|---|---:|
@@ -577,3 +594,4 @@ Tiempo: 5 min.
 6. Evans, E. (2003). *Domain-Driven Design: Tackling Complexity in the Heart of Software*. Addison-Wesley.
 7. Hohpe, G., & Woolf, B. (2003). *Enterprise Integration Patterns: Designing, Building, and Deploying Messaging Solutions*. Addison-Wesley.
 8. Richardson, C. (2018). *Microservices Patterns: With examples in Java*. Manning Publications.
+9. Garcia-Molina, H., & Salem, K. (1987). *Sagas*. ACM SIGMOD Record, 16(3), 249-259. https://doi.org/10.1145/38713.38742
