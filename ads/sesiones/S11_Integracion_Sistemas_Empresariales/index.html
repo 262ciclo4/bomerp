@@ -4583,11 +4583,11 @@
 <span class="kd">public</span><span class="w"> </span><span class="n">ComprobanteResultado</span><span class="w"> </span><span class="nf">emitir</span><span class="p">(</span><span class="n">VentaResponse</span><span class="w"> </span><span class="n">venta</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">DocumentoUBL</span><span class="w"> </span><span class="n">documento</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">traducirAUBL</span><span class="p">(</span><span class="n">venta</span><span class="p">);</span>
 <span class="w">    </span><span class="n">DocumentoUBL</span><span class="w"> </span><span class="n">firmado</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">firmar</span><span class="p">(</span><span class="n">documento</span><span class="p">);</span>
-<span class="w">    </span><span class="n">RespuestaSunat</span><span class="w"> </span><span class="n">respuesta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">enviarASunat</span><span class="p">(</span><span class="n">firmado</span><span class="p">);</span><span class="w">  </span><span class="c1">// la llamada protegida (Tabla 6)</span>
+<span class="w">    </span><span class="n">RespuestaSunat</span><span class="w"> </span><span class="n">respuesta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">enviarASunat</span><span class="p">(</span><span class="n">firmado</span><span class="p">);</span><span class="w">  </span><span class="c1">// la llamada protegida (Figura 3)</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">traducirAComprobanteResultado</span><span class="p">(</span><span class="n">respuesta</span><span class="p">);</span>
 <span class="p">}</span>
 
-<span class="c1">// Se ejecuta si el circuito esta Abierto (Tabla 6), o si enviarASunat</span>
+<span class="c1">// Se ejecuta si el circuito esta OPEN (Tabla 6/Figura 3), o si enviarASunat</span>
 <span class="c1">// lanza timeout/error de red -- nunca si el problema es una regla de negocio</span>
 <span class="kd">public</span><span class="w"> </span><span class="n">ComprobanteResultado</span><span class="w"> </span><span class="nf">emitirPendiente</span><span class="p">(</span><span class="n">VentaResponse</span><span class="w"> </span><span class="n">venta</span><span class="p">,</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="n">causa</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ComprobanteResultado</span><span class="p">(</span><span class="n">numeroComprobante</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="n">estadoSunat</span><span class="p">:</span><span class="w"> </span><span class="s">"PENDIENTE_EMISION"</span><span class="p">);</span>
@@ -4770,6 +4770,7 @@ Netflix (1.6).
 <ol>
 <li>¿Por qué tu integración con el sistema externo necesita una capa anticorrupción, y tu integración interna (si la tienes) no?</li>
 <li>¿Qué le pasaría a tu sistema si tu <em>Circuit Breaker</em> no tuviera ningún <em>fallback</em>, solo un error genérico?</li>
+<li>¿Por qué el umbral de un <em>Circuit Breaker</em> real se mide como una tasa de fallos sobre una ventana de llamadas, y no como un conteo de fallos seguidos? ¿Qué problema evita esa diferencia?</li>
 <li>¿Por qué tu evento de dominio se publica en vez de llamarse directamente? ¿Qué perderías si lo volvieras síncrono?</li>
 <li>¿Qué pasaría si dos consumidores distintos de tu evento necesitaran información que el evento no lleva?</li>
 <li>¿Por qué <code>VentaRegistrada</code> se publica dentro de la misma transacción que guarda la venta, y no después?</li>
