@@ -198,6 +198,20 @@ Tres patrones, cada uno protegiendo un riesgo distinto de los dos tipos de front
 
 El umbral que de verdad importa no es "cuántos fallos seguidos", sino la **tasa de fallos sobre una ventana de las últimas N llamadas** (una *sliding window*, 3.2) — con la configuración real de esta sesión (Tabla 7: ventana de 10, umbral de 50%), el circuito se abre con 5 fallos de las últimas 10 llamadas, sin que importe si llegaron seguidos o intercalados con alguna llamada exitosa.
 
+**Figura 3. Ciclo de estados de un Circuit Breaker**
+
+```mermaid
+flowchart LR
+    Closed["CLOSED<br/>las llamadas pasan normal"]
+    Open["OPEN<br/>corta el circuito,<br/>ejecuta el fallback"]
+    HalfOpen["HALF_OPEN<br/>prueba con llamadas limitadas"]
+
+    Closed -->|"tasa de fallos<br/>supera el umbral"| Open
+    Open -->|"pasa el tiempo<br/>de espera"| HalfOpen
+    HalfOpen -->|"llamadas de prueba<br/>alcanzan el umbral de exito"| Closed
+    HalfOpen -->|"llamadas de prueba<br/>vuelven a fallar"| Open
+```
+
 **Outbox** (Richardson, 2018) resuelve un problema distinto: ¿cómo se garantiza que un evento se publique si, y solo si, el cambio que lo origina de verdad se guardó? Guardar la venta en la base de datos y publicar `VentaRegistrada` en un *broker* son dos operaciones separadas — si la primera tiene éxito y la segunda falla, el evento se pierde para siempre; si ocurre al revés, se publica un evento de una venta que nunca existió. *Outbox* resuelve esto guardando el evento en una tabla de la **misma** base de datos, dentro de la **misma** transacción que guarda la venta — un proceso aparte, después, se encarga de tomar esos eventos pendientes y publicarlos, reintentando si hace falta, sin arriesgar nunca la atomicidad entre "la venta existe" y "el evento quedó registrado para publicarse".
 
 Esto no es un patrón hipotético para BomERP: Spring Modulith (el framework ya elegido en ADR-002 de LP2) implementa exactamente este patrón con su propia tabla `event_publication` — hoy removida a propósito del `pom.xml` de LP2 porque ningún módulo publica eventos todavía (LP2, nota de arquitectura), reservada para cuando una sesión futura de ese curso adopte comunicación por eventos. El diseño de esta sesión es, literalmente, la especificación de esa sesión futura.
@@ -224,7 +238,7 @@ Tiempo: 100 min.
 
 **Producto del paso:** el contrato conceptual de la integración, con la clase anticorrupción que aísla a `ventas` del formato de SUNAT.
 
-**Figura 3. Capa anticorrupción entre `ventas` y SUNAT**
+**Figura 4. Capa anticorrupción entre `ventas` y SUNAT**
 
 ```mermaid
 classDiagram
@@ -257,6 +271,27 @@ classDiagram
 ```
 
 Dos traducciones, no una: `traducirAUBL` convierte el lenguaje de BomERP al de SUNAT (antes de salir), y el resultado de SUNAT (el CDR, *Comprobante de Recepción*, con su propio formato) se traduce de vuelta a `ComprobanteResultado` — un DTO (*Data Transfer Object*, S8) propio del dominio de BomERP, con solo lo que `ventas` necesita (`numeroComprobante`, `estadoSunat`). Ni `VentaServiceImpl` ni `Venta` importan jamás una clase con el nombre de un campo UBL.
+
+La Figura 4 muestra la **estructura** (qué clases existen y de qué dependen); la Figura 5 muestra el **orden real** en el que esas piezas se ejecutan en una sola llamada — las dos traducciones del párrafo anterior, vistas como pasos concretos:
+
+**Figura 5. Secuencia de una emisión, con las dos traducciones de la capa anticorrupción**
+
+```mermaid
+sequenceDiagram
+    participant V as VentaServiceImpl
+    participant ACL as ComprobanteElectronicoServiceImpl
+    participant S as SUNAT
+
+    V->>ACL: emitir(ventaResponse)
+    ACL->>ACL: traducirAUBL(ventaResponse)
+    ACL->>ACL: firmar(documentoUBL)
+    ACL->>S: enviarASunat(documentoFirmado)
+    S-->>ACL: RespuestaSunat (CDR)
+    ACL->>ACL: traducirAComprobanteResultado(respuesta)
+    ACL-->>V: ComprobanteResultado
+```
+
+Ninguno de los dos pasos de traducción (`traducirAUBL`, `traducirAComprobanteResultado`) es visible para `VentaServiceImpl` — desde su punto de vista, solo existe `emitir(venta)` y una respuesta ya en su propio idioma. `enviarASunat` (paso 4) es, exactamente, la llamada que 3.2 protege con el *circuit breaker*: todo lo que pasa antes y después de esa flecha corre siempre, sin importar si SUNAT responde o no.
 
 **Error frecuente**: devolver el CDR de SUNAT directamente como respuesta de `VentaServiceImpl`, "para no tener que mapear dos veces". Si el formato de SUNAT cambia (una nueva versión de UBL, por ejemplo), ese cambio se propagaría directo hasta el dominio de `ventas` — exactamente lo que la capa anticorrupción existe para evitar.
 
@@ -334,6 +369,32 @@ crear(request):
 ```
 
 El evento se publica **dentro** del mismo método transaccional que guarda la venta — ninguna línea nueva de coordinación manual hace falta, porque Spring Modulith ya implementa el patrón *Outbox* (2.6) a nivel de framework: si la transacción se revierte (por ejemplo, RN2 de S8 falla a mitad del bucle), el evento tampoco se publica, porque ambas escrituras viven en la misma unidad atómica.
+
+El pseudocódigo de arriba deja implícito algo que conviene ver explícito: *Outbox* tiene **dos tiempos distintos**, no uno — la escritura es síncrona (ocurre dentro de la petición del usuario), la publicación es asíncrona (ocurre después, sin que el usuario la espere):
+
+**Figura 6. Las dos fases de *Outbox*: escritura síncrona, publicación asíncrona**
+
+```mermaid
+sequenceDiagram
+    actor U as Usuario
+    participant VS as VentaServiceImpl
+    participant DB as Base de datos (ventas + event_publication)
+    participant SM as Spring Modulith (publicador asincrono)
+    participant IA as SugerenciaReposicionListener
+
+    U->>VS: POST /ventas (crear)
+    VS->>DB: INSERT venta + INSERT VentaRegistrada
+    Note over VS,DB: misma transaccion — si una falla, ninguna se guarda
+    DB-->>VS: commit exitoso
+    VS-->>U: 201, ComprobanteResultado
+
+    Note over SM: fuera de la peticion del usuario, en segundo plano
+    SM->>DB: lee eventos pendientes de event_publication
+    SM->>IA: publica VentaRegistrada
+    IA->>IA: onVentaRegistrada(evento) — 3.4
+```
+
+El usuario ya recibió su respuesta (`201`) **antes** de que `SugerenciaReposicionListener` siquiera se entere de que la venta existió — exactamente la garantía de 2.4 (asíncrono: quien publica no espera a quien consume). Si `SugerenciaReposicionListener` tardara, fallara, o ni siquiera existiera todavía, la venta ya está guardada y confirmada: nada de eso puede revertir lo que ya ocurrió en el primer bloque (síncrono) de este diagrama.
 
 ### 3.4 Diseñar el consumidor de IA
 
