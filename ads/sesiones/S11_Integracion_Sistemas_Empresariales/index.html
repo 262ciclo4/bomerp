@@ -2168,10 +2168,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#35-disenar-la-saga-coreografiada-de-reposicion-con-el-proveedor" class="md-nav__link">
+  <a href="#35-disenar-la-saga-coreografiada-del-resumen-diario-de-boletas" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.5 Diseñar la Saga coreografiada de reposición con el Proveedor
+        3.5 Diseñar la Saga coreografiada del Resumen Diario de Boletas
       
     </span>
   </a>
@@ -4072,10 +4072,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#35-disenar-la-saga-coreografiada-de-reposicion-con-el-proveedor" class="md-nav__link">
+  <a href="#35-disenar-la-saga-coreografiada-del-resumen-diario-de-boletas" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.5 Diseñar la Saga coreografiada de reposición con el Proveedor
+        3.5 Diseñar la Saga coreografiada del Resumen Diario de Boletas
       
     </span>
   </a>
@@ -4246,7 +4246,7 @@
 <h3 id="11-presentacion-de-la-sesion">1.1 Presentación de la sesión<a class="headerlink" href="#11-presentacion-de-la-sesion" title="Permanent link">&para;</a></h3>
 <p>Hasta S10, todas las fronteras que BomERP cruzó fueron internas: <code>ventas</code> llamando a <code>catalogo</code>, siempre dentro del mismo backend, protegida por <code>@NamedInterface</code> y Dependency Injection. Esta sesión cruza la frontera que de verdad importa para un ERP (<em>Enterprise Resource Planning</em>) real: la que separa a BomERP del resto del mundo. Una venta registrada en Perú no termina en la base de datos — por ley, tiene que convertirse en un comprobante de pago electrónico y enviarse a SUNAT (<em>Superintendencia Nacional de Aduanas y de Administración Tributaria</em>); otros sistemas de la empresa (reposición de inventario, análisis de demanda) necesitan enterarse de que esa venta ocurrió, sin que <code>ventas</code> tenga que conocerlos a todos uno por uno. Esta sesión diseña esas dos fronteras — hacia un sistema externo obligatorio y hacia consumidores internos desconocidos de antemano — con los patrones que las protegen de romperse cuando el otro lado falla o cambia.</p>
 <p>Esto no es, como S6-S10, una sesión que se queda dentro de los límites que <code>lp2/bomerp-backend</code> ya construyó: por el alcance de ADS (Análisis y Diseño de Sistemas de Información) dentro del ciclo —ver la nota de 1.7—, esta sesión diseña infraestructura e integraciones que LP2 (Lenguaje de Programación II) todavía no tiene por qué implementar, y que puede que implemente recién en una sesión futura de ese curso. Diseñar antes de que exista el código es exactamente el mismo patrón ya usado con <code>Venta.anular()</code> (S7, S9, S10) — con una frontera distinta: ya no es intra-empresa, es la empresa completa hacia afuera.</p>
-<p>Esta sesión va, además, un paso más allá de lo que BomERP necesita hoy: diseña una <strong>Saga coreografiada</strong> (2.7, 3.5) para un proceso de negocio que cruza un tercer sistema externo (un Proveedor), con su paso de compensación cuando algo falla a mitad de camino. BomERP, como monolito modular que es hoy, no lo necesita todavía — pero el ciclo en el que se dicta esta sesión es, de los seis cursos que forman la cadena de BomERP (1.7), el <strong>único</strong> con el nivel de un curso de arquitectura y diseño de sistemas: cuando estos mismos estudiantes lleguen al curso de Sistemas Distribuidos, no van a tener un curso paralelo como ADS que les enseñe a diseñar este patrón con calma, en papel, antes de construirlo contra Kafka y microservicios reales. Este es, literalmente, el único momento del plan de estudios para hacerlo bien.</p>
+<p>Esta sesión va, además, un paso más allá de lo que BomERP necesita hoy: diseña una <strong>Saga coreografiada</strong> (2.7, 3.5) para el segundo flujo real de SUNAT —el Resumen Diario de Boletas, genuinamente asíncrono, por <code>ticket</code>—, con su paso de compensación cuando SUNAT rechaza el resumen. BomERP, como monolito modular que es hoy, no lo necesita todavía — pero el ciclo en el que se dicta esta sesión es, de los seis cursos que forman la cadena de BomERP (1.7), el <strong>único</strong> con el nivel de un curso de arquitectura y diseño de sistemas: cuando estos mismos estudiantes lleguen al curso de Sistemas Distribuidos, no van a tener un curso paralelo como ADS que les enseñe a diseñar este patrón con calma, en papel, antes de construirlo contra Kafka y microservicios reales. Este es, literalmente, el único momento del plan de estudios para hacerlo bien.</p>
 <p>El porqué de que una integración sin protección pueda tumbar un sistema entero, aunque el sistema remoto sea el que falla, se desarrolla en 1.6.</p>
 <h3 id="12-indice">1.2 Índice<a class="headerlink" href="#12-indice" title="Permanent link">&para;</a></h3>
 <ol>
@@ -4263,7 +4263,7 @@
 <li><strong>Diseñar</strong> la integración de tu proyecto con al menos un sistema externo obligatorio y con consumidores internos desconocidos de antemano, <strong>protegiendo</strong> cada frontera con el patrón de integración correspondiente (capa anticorrupción, <em>circuit breaker</em>, <em>outbox</em>), <strong>coordinar</strong> un proceso de negocio de varios pasos entre sistemas independientes con una Saga coreografiada, <strong>diseñar</strong> su paso de compensación cuando uno de esos pasos falla, y <strong>documentar</strong> qué cruza cada frontera y con qué garantía.</li>
 </ul>
 <h3 id="14-producto-de-sesion">1.4 Producto de sesión<a class="headerlink" href="#14-producto-de-sesion" title="Permanent link">&para;</a></h3>
-<p>Diseño de integración empresarial de <code>ventas</code>: contrato conceptual de la integración con SUNAT (comprobante de pago electrónico, formato UBL 2.1, <em>Universal Business Language</em>) con su capa anticorrupción, diseño del <em>circuit breaker</em> que protege esa llamada, evento de dominio <code>VentaRegistrada</code> con su publicación confiable (patrón <em>Outbox</em>, el mismo mecanismo que Spring Modulith ya reserva para una sesión futura de LP2), diseño de un consumidor de IA (inteligencia artificial) que se suscribe a ese evento para sugerir reposición de stock, la Saga coreografiada que convierte esa sugerencia en una orden de compra real contra un Sistema del Proveedor externo —con su paso de compensación cuando el proveedor rechaza la orden—, y una matriz de integración que documenta qué cruza cada frontera de la empresa, hacia dónde y con qué patrón protegido.</p>
+<p>Diseño de integración empresarial de <code>ventas</code>: contrato conceptual de la integración con SUNAT (comprobante de pago electrónico, formato UBL 2.1, <em>Universal Business Language</em>) con su capa anticorrupción, diseño del <em>circuit breaker</em> que protege esa llamada, evento de dominio <code>VentaRegistrada</code> con su publicación confiable (patrón <em>Outbox</em>, el mismo mecanismo que Spring Modulith ya reserva para una sesión futura de LP2), diseño de un consumidor de IA (inteligencia artificial) que se suscribe a ese evento para sugerir reposición de stock, la Saga coreografiada que coordina el envío asíncrono del Resumen Diario de Boletas a SUNAT —con su paso de compensación cuando SUNAT rechaza el resumen—, y una matriz de integración que documenta qué cruza cada frontera de la empresa, hacia dónde y con qué patrón protegido.</p>
 <h3 id="15-metodologia">1.5 Metodología<a class="headerlink" href="#15-metodologia" title="Permanent link">&para;</a></h3>
 <p><strong>Tabla 1. Metodología de la sesión</strong></p>
 <table>
@@ -4282,7 +4282,7 @@
 </tr>
 <tr>
 <td>Clase presencial</td>
-<td>Diseño guiado de la integración con SUNAT, su capa anticorrupción y su <em>circuit breaker</em>, del evento de dominio <code>VentaRegistrada</code> con publicación confiable, de un consumidor de IA, y de la Saga coreografiada que coordina la orden de compra con el Proveedor, con su compensación. Trabajo individual, siguiendo al docente paso a paso; consulta inmediata ante dudas sobre qué patrón corresponde a cada frontera.</td>
+<td>Diseño guiado de la integración con SUNAT, su capa anticorrupción y su <em>circuit breaker</em>, del evento de dominio <code>VentaRegistrada</code> con publicación confiable, de un consumidor de IA, y de la Saga coreografiada que coordina el Resumen Diario de Boletas con SUNAT, con su compensación. Trabajo individual, siguiendo al docente paso a paso; consulta inmediata ante dudas sobre qué patrón corresponde a cada frontera.</td>
 <td>Pasos 3.1 a 3.6 de esta guía.</td>
 </tr>
 <tr>
@@ -4312,7 +4312,7 @@
 <ul>
 <li>Producto del curso: Diseño Técnico Profesional Documentado.</li>
 <li>Producto de unidad: Catálogo UML con patrones de diseño e integración aplicados.</li>
-<li>Avance del producto en esta sesión: diseño de integración empresarial completo — sistema externo obligatorio, eventos de dominio, consumidor de IA, Saga coreografiada con compensación contra un segundo sistema externo, y los patrones de integración que protegen cada frontera.</li>
+<li>Avance del producto en esta sesión: diseño de integración empresarial completo — sistema externo obligatorio, eventos de dominio, consumidor de IA, Saga coreografiada con compensación sobre el flujo asíncrono de SUNAT, y los patrones de integración que protegen cada frontera.</li>
 </ul>
 <p><strong>Nota sobre el alcance de esta sesión.</strong> ADS es, de los tres cursos del ciclo que comparten BomERP, el que ve el panorama completo de la empresa —infraestructura y sistemas externos—, no solo el backend (LP2) o la base de datos (BD2). Por eso esta sesión diseña una integración con SUNAT y un mecanismo de eventos que LP2 todavía no implementa: ese diseño es la referencia con la que LP2 va a trabajar cuando su propio sílabo llegue a esa funcionalidad, el mismo criterio ya aplicado con <code>Venta.anular()</code> desde S7.</p>
 <p><strong>Por qué esta sesión diseña también una Saga, más allá de lo que BomERP necesita hoy.</strong> La malla curricular no vuelve a ofrecer un curso de arquitectura y diseño de sistemas junto al curso de Sistemas Distribuidos — a diferencia de este ciclo, donde ADS, BD2 y LP2 avanzan en paralelo sobre el mismo proyecto, el curso de Distribuidas se dicta más adelante, solo. Diseñar una Saga coreografiada aquí, con calma y en papel, es la única oportunidad del plan de estudios para aprender el patrón con el rigor de un curso de diseño antes de tener que construirlo bajo la presión de un proyecto real con Kafka y microservicios — exactamente el mismo razonamiento que ya justifica diseñar la integración con SUNAT antes de que LP2 la implemente.</p>
@@ -4358,6 +4358,7 @@
 <h3 id="22-apis-externas-y-servicios-de-terceros">2.2 APIs externas y servicios de terceros<a class="headerlink" href="#22-apis-externas-y-servicios-de-terceros" title="Permanent link">&para;</a></h3>
 <p>Una <strong>API externa</strong> (<em>Application Programming Interface</em>) es un contrato que BomERP no controla: su forma, sus reglas de negocio y su disponibilidad las define otra organización, y cambian según el calendario de esa organización, no el de BomERP. La integración con SUNAT es el ejemplo real y obligatorio para cualquier ERP peruano: todo comprobante de pago electrónico se emite como un archivo XML bajo el estándar UBL 2.1 (<em>Universal Business Language</em>), firmado digitalmente (X.509 v3) y enviado a SUNAT (directo o a través de un OSE, <em>Operador de Servicios Electrónicos</em>), que responde con un CDR (<em>Comprobante de Recepción</em>) confirmando o rechazando el comprobante.</p>
 <p>Fuente: SUNAT. (2024). <em>Guía de elaboración de documentos XML - Factura electrónica UBL 2.1</em>. https://cpe.sunat.gob.pe/sites/default/files/inline-files/guia+xml+factura+version%202-1+1+0%20(2)_0%20(2).pdf</p>
+<p>SUNAT no integra todos sus comprobantes de la misma forma. La <strong>Factura</strong> sigue el camino que acabas de leer: se envía, SUNAT responde con la CDR en la misma llamada — el diseño de 3.1-3.2, protegido con <em>Circuit Breaker</em>. La <strong>Boleta</strong> (y sus notas de crédito/débito) sigue un segundo camino, igual de real: se acumula durante el día y se reporta después, por separado, en un <strong>Resumen Diario</strong> cuya respuesta llega aparte, no en la misma llamada — el diseño de 2.7 y 3.5, protegido con Saga. Dos integraciones reales con el mismo sistema, cada una con su propia forma de protegerse.</p>
 <p><strong>Tabla 2. Lo que BomERP controla frente a lo que SUNAT impone</strong></p>
 <table>
 <thead>
@@ -4467,7 +4468,7 @@
 </tr>
 <tr>
 <td>¿BomERP necesita saber cómo funciona el modelo?</td>
-<td>No — es una caja negra desde la arquitectura; solo importa el contrato de entrada (el evento) y de salida (una sugerencia, consumida por la Saga de reposición, 2.7/3.5).</td>
+<td>No — es una caja negra desde la arquitectura; solo importa el contrato de entrada (el evento) y de salida (una sugerencia, consumida por otro caso de uso todavía fuera de alcance).</td>
 </tr>
 </tbody>
 </table>
@@ -4546,10 +4547,11 @@
 </tbody>
 </table>
 <p><strong>¿Por qué una Saga, si <code>ventas</code> ni siquiera cruza ese límite hoy?</strong> Porque, a diferencia de un sistema de microservicios real (cada servicio con su propia base de datos), BomERP es hoy un <strong>monolito modular</strong>: <code>ventas</code>, <code>catalogo</code> y los demás módulos viven en la misma JVM (1.6) y comparten la misma base de datos Oracle — ninguna transacción interna cruza un límite de red ni de base de datos, así que una transacción local normal (con <code>@Transactional</code>, S4) ya garantiza consistencia <em>instantánea</em> entre módulos, sin necesitar el costo de la consistencia <em>eventual</em> que Saga exige a cambio de escalar. La integración con SUNAT (3.1-3.2) tampoco la necesita: tiene un solo paso remoto, sin ningún paso posterior que dependa de su éxito para completarse — por eso se resuelve con <em>Circuit Breaker</em> + <em>fallback</em>, no con compensación.</p>
-<p>Pero el consumidor de IA de 2.5 sí abre esa puerta, en cuanto su sugerencia deja de ser solo una sugerencia y se convierte en una <strong>acción real</strong>: pedirle stock a un Proveedor externo. Ahí aparecen, de golpe, las dos condiciones que Saga exige — un segundo sistema, con su propia base de datos, fuera del control de BomERP; y una secuencia de pasos donde el segundo puede fallar (el proveedor rechaza la orden) después de que el primero ya se confirmó (BomERP ya registró la intención de compra). 3.5 diseña exactamente esa Saga — coreografiada, reusando la capa anticorrupción (3.1), el <em>circuit breaker</em> (3.2) y el <em>outbox</em> (3.3) que esta misma sesión ya construyó, ahora compuestos en un proceso de negocio completo. Es el mismo escenario, con microservicios reales en vez de un monolito modular, que DIST construye en su sesión dedicada a este patrón (<code>pagatu-orden-ms</code> y <code>pagatu-pago-ms</code>, coordinados por eventos de Kafka, con compensación real cuando un pago se rechaza).</p>
+<p>SUNAT abre esa puerta en su segundo flujo real: la <strong>Boleta</strong>. A diferencia de la Factura (un solo paso remoto, respuesta en la misma llamada), SUNAT no valida una Boleta al instante — exige acumularlas en un <strong>Resumen Diario</strong> y entregárselo por separado; la respuesta llega después, cuando SUNAT termina de procesarlo. Eso es, de hecho, lo que Saga necesita: una secuencia de pasos cuyo resultado final no se conoce de inmediato, y donde un resultado negativo (el Resumen rechazado) no se arregla reintentando la misma llamada — exige una acción de negocio distinta (corregir y armar un Resumen nuevo). 3.5 diseña esa Saga, reusando la capa anticorrupción (3.1) y el <em>circuit breaker</em> (3.2) construidos en esta misma sesión.</p>
+<p>Esta Saga tiene solo <strong>dos</strong> participantes —<code>ventas</code> y SUNAT—, no varios servicios internos coordinándose entre sí. Con dos participantes, la distinción orquestada/coreografiada de la Tabla 7 llega a su caso más simple: no hace falta un <em>Saga Orchestrator</em> aparte porque no hay nada que coordinar entre terceros — <code>ventas</code> reacciona, paso a paso, al estado que SUNAT le va devolviendo, sin que nadie lo orqueste desde afuera. El ejemplo con varios servicios reales, cada uno con su propia base de datos y su propio paso de compensación, es el que DIST construye en su sesión dedicada a este patrón (<code>pagatu-orden-ms</code> y <code>pagatu-pago-ms</code>, coordinados por eventos de Kafka, con compensación real cuando un pago se rechaza).</p>
 <h2 id="3-aplica-actividad-practica-guiada">3. Aplica: actividad práctica guiada<a class="headerlink" href="#3-aplica-actividad-practica-guiada" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 100 min.</p>
-<p><strong>Actividad:</strong> diseño de la integración empresarial completa de <code>ventas</code>: la llamada obligatoria a SUNAT protegida con capa anticorrupción y <em>circuit breaker</em>, el evento de dominio <code>VentaRegistrada</code> con publicación confiable, un consumidor de IA, la Saga coreografiada que coordina la orden de compra con un Proveedor externo, y la matriz que documenta las tres fronteras.</p>
+<p><strong>Actividad:</strong> diseño de la integración empresarial completa de <code>ventas</code>: la llamada obligatoria a SUNAT protegida con capa anticorrupción y <em>circuit breaker</em>, el evento de dominio <code>VentaRegistrada</code> con publicación confiable, un consumidor de IA, la Saga coreografiada que coordina el Resumen Diario de Boletas con SUNAT, y la matriz que documenta todas las fronteras.</p>
 <p><strong>Propósito de la actividad:</strong> aplicar los patrones de integración de 2.6 a un caso real y obligatorio (SUNAT) y a un caso de cardinalidad abierta (consumidores del evento), y componer esos mismos patrones en una Saga coreografiada (2.7) que coordina un proceso de negocio completo, con el mismo nivel de rigor que S8-S10 ya aplicaron a las fronteras internas.</p>
 <p><strong>Orientaciones metodológicas:</strong> en el laboratorio, el docente diseña la integración de <code>ventas</code> paso a paso frente a la clase; los estudiantes repiten cada paso sobre al menos un sistema externo real de su propio proyecto (ver sección 4).</p>
 <p><strong>Actividades para realizar:</strong></p>
@@ -4558,7 +4560,7 @@
 <li><strong>3.2</strong> Proteger la llamada con un <em>Circuit Breaker</em>.</li>
 <li><strong>3.3</strong> Diseñar el evento de dominio <code>VentaRegistrada</code> y su publicación confiable.</li>
 <li><strong>3.4</strong> Diseñar el consumidor de IA.</li>
-<li><strong>3.5</strong> Diseñar la Saga coreografiada de reposición con el Proveedor.</li>
+<li><strong>3.5</strong> Diseñar la Saga coreografiada del Resumen Diario de Boletas.</li>
 <li><strong>3.6</strong> Armar la matriz de integración.</li>
 </ul>
 <h3 id="31-disenar-la-integracion-con-sunat-y-su-capa-anticorrupcion">3.1 Diseñar la integración con SUNAT y su capa anticorrupción<a class="headerlink" href="#31-disenar-la-integracion-con-sunat-y-su-capa-anticorrupcion" title="Permanent link">&para;</a></h3>
@@ -4728,10 +4730,10 @@ crear(request):
 </code></pre></div>
 <p><code>@ApplicationModuleListener</code> (Spring Modulith) es la anotación que conecta un método con un evento publicado por otro módulo, sin que el módulo publicador (<code>ventas</code>) importe ni conozca el módulo que escucha — la misma garantía de 2.3 (publicación/suscripción), ahora expresada en el framework real que el proyecto ya eligió.</p>
 <p><strong>Error frecuente</strong>: hacer que <code>SugerenciaReposicionListener</code> llame de vuelta a <code>VentaService</code> para pedir más datos de la venta. El evento (3.3) ya debe llevar todo lo que un consumidor razonable necesita (<code>productoIds</code>, <code>total</code>, <code>fecha</code>) — si un consumidor necesita llamar de vuelta al publicador para completar su trabajo, el acoplamiento que 2.3 quiso evitar se reintrodujo por la puerta de atrás.</p>
-<h3 id="35-disenar-la-saga-coreografiada-de-reposicion-con-el-proveedor">3.5 Diseñar la Saga coreografiada de reposición con el Proveedor<a class="headerlink" href="#35-disenar-la-saga-coreografiada-de-reposicion-con-el-proveedor" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> la Saga completa que convierte una sugerencia de reposición (3.4) en una orden de compra real contra un Sistema del Proveedor externo, con sus tres pasos y su compensación (2.7).</p>
-<p>Hasta 3.4, el servicio de IA termina su trabajo generando una sugerencia (2.5, Tabla 5: "una sugerencia, consumida por otro caso de uso todavía fuera de alcance"). Ese "otro caso de uso" es el que se diseña aquí: un módulo nuevo, <code>compras</code>, que escucha la sugerencia y actúa — creando una orden de compra local y solicitándola a un Sistema del Proveedor real, un sistema tan ajeno a BomERP como lo es SUNAT (3.1), con la diferencia de que esta vez la respuesta no llega en la misma llamada, sino días después.</p>
-<p><strong>Tabla 9. Los pasos de la Saga de reposición, con su compensación</strong></p>
+<h3 id="35-disenar-la-saga-coreografiada-del-resumen-diario-de-boletas">3.5 Diseñar la Saga coreografiada del Resumen Diario de Boletas<a class="headerlink" href="#35-disenar-la-saga-coreografiada-del-resumen-diario-de-boletas" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> la Saga completa que coordina el envío asíncrono del Resumen Diario de Boletas a SUNAT, con sus tres pasos y su compensación (2.7).</p>
+<p>3.1-3.2 diseñaron la emisión de un comprobante <strong>síncrona</strong>: BomERP envía, SUNAT responde con la CDR en la misma llamada — el flujo real para una <strong>Factura</strong>. Las <strong>Boletas</strong> (y sus notas de crédito/débito) siguen, por norma de SUNAT, un camino distinto: no se emiten una por una contra SUNAT — se acumulan durante el día, y al cierre se envían juntas en un <strong>Resumen Diario</strong>, como máximo hasta el séptimo día calendario siguiente (SUNAT, s.f.). Y esa llamada <strong>no</strong> devuelve la CDR de inmediato: SUNAT responde con un <code>ticket</code>, y hay que preguntarle después, repetidamente, si ya terminó de procesar el resumen — exactamente el escenario multi-paso y genuinamente asíncrono que 2.7 dijo que faltaba en esta sesión.</p>
+<p><strong>Tabla 9. Los pasos de la Saga del Resumen Diario, con su compensación</strong></p>
 <table>
 <thead>
 <tr>
@@ -4743,83 +4745,98 @@ crear(request):
 </thead>
 <tbody>
 <tr>
-<td>1. Crear la orden de compra local</td>
-<td><code>compras</code> (BomERP, transacción local)</td>
-<td>No se publica nada — falla antes de confirmar cualquier cosa</td>
+<td>1. Armar el Resumen Diario local, al cierre del día</td>
+<td><code>ventas</code> (BomERP, transacción local)</td>
+<td>No se arma ningún resumen — las boletas quedan pendientes para el siguiente intento</td>
 <td>No aplica — nada que compensar</td>
 </tr>
 <tr>
-<td>2. Solicitar la compra al Proveedor</td>
-<td><code>compras</code> → Sistema del Proveedor (ACL de 3.1 + Circuit Breaker de 3.2)</td>
-<td>El proveedor no responde a tiempo, o el circuito está <code>OPEN</code></td>
-<td><em>Fallback</em> del Circuit Breaker (3.2): la orden queda <code>SOLICITADA</code>, reintento posterior — <strong>no</strong> es la compensación de la Saga, es la del propio <em>circuit breaker</em></td>
+<td>2. Enviar el resumen a SUNAT (<code>SendSummary</code>) y recibir el <code>ticket</code></td>
+<td><code>ventas</code> → SUNAT (ACL de 3.1 + Circuit Breaker de 3.2, reusados)</td>
+<td>SUNAT no responde a tiempo, o el circuito está <code>OPEN</code></td>
+<td><em>Fallback</em> del Circuit Breaker (3.2): el resumen queda <code>PENDIENTE_ENVIO</code>, reintento posterior — <strong>no</strong> es la compensación de la Saga, es la del propio <em>circuit breaker</em></td>
 </tr>
 <tr>
-<td>3. Confirmar o rechazar la orden, según la respuesta del proveedor</td>
-<td><code>compras</code>, al recibir la respuesta (días después, asíncrona)</td>
-<td>El proveedor rechaza la orden (sin stock, precio ya no vigente)</td>
-<td><code>SOLICITADA → RECHAZADA</code>, y notificar al encargado de compras para reintentar con otro proveedor — la <strong>compensación real</strong> de esta Saga</td>
+<td>3. Consultar <code>GetStatus(ticket)</code> por <em>polling</em>, hasta la CDR final</td>
+<td><code>ventas</code>, periódicamente, hasta que SUNAT termine de procesar</td>
+<td>La CDR llega <strong>Rechazada</strong>, con el motivo del rechazo (SUNAT, s.f.)</td>
+<td>Corregir lo señalado y armar un <strong>nuevo</strong> Resumen con las boletas pendientes — el resumen rechazado queda archivado como evidencia, nunca se reenvía tal cual — la <strong>compensación real</strong> de esta Saga</td>
 </tr>
 </tbody>
 </table>
-<p>La fila 2 deja algo importante explícito: el <em>fallback</em> del Circuit Breaker y la compensación de la Saga no son la misma cosa, aunque las dos reaccionen a una falla. El <em>fallback</em> reacciona a que la <strong>llamada</strong> no se pudo completar (red, timeout, circuito abierto) — la compensación reacciona a que el <strong>paso de negocio sí se completó, y la respuesta fue un rechazo</strong>. Confundirlos es el "Error frecuente" de más abajo.</p>
+<p>La fila 2 deja algo importante explícito: el <em>fallback</em> del Circuit Breaker y la compensación de la Saga no son la misma cosa, aunque las dos reaccionen a una falla. El <em>fallback</em> reacciona a que la <strong>llamada</strong> no se pudo completar (red, timeout, circuito abierto) — la compensación reacciona a que el <strong>paso de negocio sí se completó, SUNAT sí procesó el resumen, y el resultado fue un rechazo</strong>. Confundirlos es el "Error frecuente" de más abajo.</p>
 <p><strong>Figura 7. La Saga coreografiada, paso a paso, componiendo los patrones ya construidos</strong></p>
 <pre class="mermaid"><code>sequenceDiagram
-    participant IA as SugerenciaReposicionListener (3.4)
-    participant C as OrdenCompraServiceImpl (compras)
-    participant DB as Base de datos (orden_compra)
-    participant ACL as ProveedorGatewayServiceImpl (ACL, 3.1)
-    participant P as Sistema del Proveedor (externo)
+    participant V as VentaServiceImpl (cierre del dia)
+    participant DB as Base de datos (resumen_diario)
+    participant ACL as ComprobanteElectronicoServiceImpl (ACL, 3.1)
+    participant S as SUNAT
 
-    IA-&gt;&gt;C: reposicionSugerida(productoId, cantidad)
-    C-&gt;&gt;DB: INSERT OrdenCompra (SOLICITADA) + OrdenCompraSolicitada
-    Note over C,DB: misma transaccion -- Outbox (2.6/3.3)
+    V-&gt;&gt;DB: armar ResumenDiario (boletas + notas del dia)
+    Note over V,DB: transaccion local
 
-    Note over C,ACL: proceso aparte, fuera de la peticion original
-    C-&gt;&gt;ACL: solicitar(ordenCompra)
-    ACL-&gt;&gt;P: enviarSolicitud(documentoProveedor) -- protegido con Circuit Breaker (3.2)
+    V-&gt;&gt;ACL: enviarResumen(resumenDiario)
+    ACL-&gt;&gt;S: SendSummary(resumenDiario.zip) -- protegido con Circuit Breaker (3.2)
+    S--&gt;&gt;ACL: ticket
 
-    Note over P: el proveedor confirma o rechaza dias despues, de forma asincrona
-    P--&gt;&gt;C: webhook: OrdenCompraConfirmada o OrdenCompraRechazada
+    loop polling periodico, hasta estado final
+        ACL-&gt;&gt;S: GetStatus(ticket)
+        S--&gt;&gt;ACL: EN_PROCESO, o CDR final
+    end
 
-    alt confirmada
-        C-&gt;&gt;DB: UPDATE OrdenCompra SET estado = CONFIRMADA
-    else rechazada (compensacion)
-        C-&gt;&gt;DB: UPDATE OrdenCompra SET estado = RECHAZADA
-        C-&gt;&gt;C: notificar al encargado de compras (reintentar con otro proveedor)
+    alt CDR Aceptada
+        ACL-&gt;&gt;DB: UPDATE ResumenDiario SET estado = ACEPTADO
+    else CDR Rechazada (compensacion)
+        ACL-&gt;&gt;DB: UPDATE ResumenDiario SET estado = RECHAZADO, motivo
+        V-&gt;&gt;V: corregir lo senalado, armar nuevo ResumenDiario
     end</code></pre>
-<p>Nada de este diagrama inventa infraestructura nueva: <code>ProveedorGatewayServiceImpl</code> es la misma capa anticorrupción de 3.1, aplicada a un segundo sistema externo; la llamada a <code>enviarSolicitud</code> se protege exactamente igual que <code>enviarASunat</code> (3.2); y el paso 1 persiste su evento con el mismo mecanismo <em>Outbox</em> de 3.3. Lo único genuinamente nuevo es la <strong>coreografía</strong>: ningún componente conoce el flujo completo — <code>compras</code> reacciona a la sugerencia de la IA sin saber que existe un paso 3 pendiente, y reacciona a la respuesta del proveedor sin que nadie se lo haya "orquestado" — exactamente la definición de 2.7.</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// OrdenCompraServiceImpl.java — Saga coreografiada, pseudocodigo de diseño</span>
-<span class="nd">@ApplicationModuleListener</span>
-<span class="kt">void</span><span class="w"> </span><span class="nf">onReposicionSugerida</span><span class="p">(</span><span class="n">ReposicionSugerida</span><span class="w"> </span><span class="n">sugerencia</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">OrdenCompra</span><span class="w"> </span><span class="n">orden</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">OrdenCompra</span><span class="p">(</span><span class="n">sugerencia</span><span class="p">.</span><span class="na">productoId</span><span class="p">(),</span><span class="w"> </span><span class="n">sugerencia</span><span class="p">.</span><span class="na">cantidad</span><span class="p">(),</span><span class="w"> </span><span class="n">estado</span><span class="p">:</span><span class="w"> </span><span class="n">SOLICITADA</span><span class="p">);</span>
-<span class="w">    </span><span class="n">ordenCompraRepository</span><span class="p">.</span><span class="na">guardar</span><span class="p">(</span><span class="n">orden</span><span class="p">);</span>
-<span class="w">    </span><span class="n">publicarEvento</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">OrdenCompraSolicitada</span><span class="p">(</span><span class="n">orden</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span><span class="w"> </span><span class="n">sugerencia</span><span class="p">.</span><span class="na">productoId</span><span class="p">(),</span><span class="w"> </span><span class="n">sugerencia</span><span class="p">.</span><span class="na">cantidad</span><span class="p">()));</span>
-<span class="w">    </span><span class="c1">// misma transaccion -- Outbox (2.6/3.3), igual que VentaRegistrada</span>
-<span class="p">}</span>
+<p>Nada de este diagrama inventa infraestructura nueva: la misma <code>ComprobanteElectronicoServiceImpl</code> de 3.1 traduce también el Resumen Diario (sigue siendo UBL, solo que empaquetado distinto); <code>SendSummary</code> se protege exactamente con el mismo <em>circuit breaker</em> de 3.2. Lo único genuinamente nuevo es el <code>loop</code> de <code>GetStatus</code> — SUNAT, a diferencia de la Factura síncrona, nunca "empuja" la respuesta: hay que preguntarle, y la respuesta puede tardar — y la <strong>coreografía</strong>: nadie orquesta el ciclo completo desde afuera, cada paso reacciona al resultado del anterior.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// VentaServiceImpl.java -- Saga coreografiada, pseudocodigo de diseño</span>
 
-<span class="nd">@ApplicationModuleListener</span>
-<span class="kt">void</span><span class="w"> </span><span class="nf">onOrdenCompraSolicitada</span><span class="p">(</span><span class="n">OrdenCompraSolicitada</span><span class="w"> </span><span class="n">evento</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">proveedorGateway</span><span class="p">.</span><span class="na">solicitar</span><span class="p">(</span><span class="n">evento</span><span class="p">);</span><span class="w">  </span><span class="c1">// ACL (3.1) + Circuit Breaker (3.2)</span>
-<span class="p">}</span>
-
-<span class="c1">// Webhook entrante del Proveedor -- no es un evento interno de Spring Modulith,</span>
-<span class="c1">// es la frontera externa que cierra el paso 3 de la Tabla 9</span>
-<span class="nd">@PostMapping</span><span class="p">(</span><span class="s">"/webhooks/proveedor"</span><span class="p">)</span>
-<span class="kt">void</span><span class="w"> </span><span class="nf">onRespuestaProveedor</span><span class="p">(</span><span class="n">RespuestaProveedorRequest</span><span class="w"> </span><span class="n">respuesta</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">OrdenCompra</span><span class="w"> </span><span class="n">orden</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ordenCompraRepository</span><span class="p">.</span><span class="na">buscar</span><span class="p">(</span><span class="n">respuesta</span><span class="p">.</span><span class="na">ordenCompraId</span><span class="p">());</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">respuesta</span><span class="p">.</span><span class="na">confirmada</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">orden</span><span class="p">.</span><span class="na">confirmar</span><span class="p">();</span><span class="w">          </span><span class="c1">// SOLICITADA -&gt; CONFIRMADA</span>
-<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">orden</span><span class="p">.</span><span class="na">rechazar</span><span class="p">();</span><span class="w">           </span><span class="c1">// SOLICITADA -&gt; RECHAZADA -- COMPENSACION (Tabla 9, paso 3)</span>
-<span class="w">        </span><span class="n">notificarEncargadoCompras</span><span class="p">(</span><span class="n">orden</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="n">ordenCompraRepository</span><span class="p">.</span><span class="na">guardar</span><span class="p">(</span><span class="n">orden</span><span class="p">);</span>
+<span class="c1">// Paso 1: cierre del dia, transaccion local -- dentro de ventas, igual que crear() (3.3)</span>
+<span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">cerrarDia</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Boleta</span><span class="o">&gt;</span><span class="w"> </span><span class="n">boletasDelDia</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">boletaRepository</span><span class="p">.</span><span class="na">buscarPendientesDeResumen</span><span class="p">(</span><span class="n">LocalDate</span><span class="p">.</span><span class="na">now</span><span class="p">());</span>
+<span class="w">    </span><span class="n">ResumenDiario</span><span class="w"> </span><span class="n">resumen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ResumenDiario</span><span class="p">(</span><span class="n">boletasDelDia</span><span class="p">,</span><span class="w"> </span><span class="n">estado</span><span class="p">:</span><span class="w"> </span><span class="n">ARMADO</span><span class="p">);</span>
+<span class="w">    </span><span class="n">resumenDiarioRepository</span><span class="p">.</span><span class="na">guardar</span><span class="p">(</span><span class="n">resumen</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
-<p><strong>Error frecuente</strong>: implementar la compensación del paso 3 dentro del <code>fallbackMethod</code> del <code>@CircuitBreaker</code> de 3.2, como si fueran la misma protección. El <em>fallback</em> de 3.2 solo se dispara cuando la llamada <code>enviarSolicitud</code> <strong>no se pudo completar</strong> (red, timeout, circuito abierto) — un rechazo real del proveedor (<code>OrdenCompraRechazada</code>) es una respuesta de negocio perfectamente válida, que sí llegó, y que por eso nunca pasa por el <code>fallbackMethod</code>: pasa por <code>onRespuestaProveedor</code>, el <em>listener</em> diseñado específicamente para recibir esa respuesta y ejecutar la compensación de la Tabla 9.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// ComprobanteElectronicoServiceImpl.java -- misma capa anticorrupcion de 3.1, pasos 2-3</span>
+
+<span class="c1">// Paso 2: enviar el resumen, protegido con el mismo Circuit Breaker de 3.2</span>
+<span class="nd">@CircuitBreaker</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"sunat"</span><span class="p">,</span><span class="w"> </span><span class="n">fallbackMethod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"resumenPendiente"</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">enviarResumen</span><span class="p">(</span><span class="n">ResumenDiario</span><span class="w"> </span><span class="n">resumen</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">ticket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">enviarASunatResumen</span><span class="p">(</span><span class="n">resumen</span><span class="p">);</span><span class="w">  </span><span class="c1">// traduce a UBL, misma ACL de 3.1</span>
+<span class="w">    </span><span class="n">resumen</span><span class="p">.</span><span class="na">marcarEnviado</span><span class="p">(</span><span class="n">ticket</span><span class="p">);</span>
+<span class="w">    </span><span class="n">resumenDiarioRepository</span><span class="p">.</span><span class="na">guardar</span><span class="p">(</span><span class="n">resumen</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">resumenPendiente</span><span class="p">(</span><span class="n">ResumenDiario</span><span class="w"> </span><span class="n">resumen</span><span class="p">,</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="n">causa</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">resumen</span><span class="p">.</span><span class="na">marcarPendienteEnvio</span><span class="p">();</span><span class="w">  </span><span class="c1">// fallback del Circuit Breaker (Tabla 9, paso 2) -- no es la Saga</span>
+<span class="w">    </span><span class="n">resumenDiarioRepository</span><span class="p">.</span><span class="na">guardar</span><span class="p">(</span><span class="n">resumen</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// Paso 3: polling periodico -- SUNAT nunca empuja la respuesta, hay que preguntarle</span>
+<span class="nd">@Scheduled</span><span class="p">(</span><span class="n">fixedDelay</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">300_000</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">consultarResumenesPendientes</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">ResumenDiario</span><span class="w"> </span><span class="n">resumen</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">resumenDiarioRepository</span><span class="p">.</span><span class="na">buscarEnviados</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">RespuestaSunat</span><span class="w"> </span><span class="n">cdr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">consultarEstadoSunat</span><span class="p">(</span><span class="n">resumen</span><span class="p">.</span><span class="na">ticket</span><span class="p">());</span><span class="w">  </span><span class="c1">// GetStatus</span>
+<span class="w">        </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">cdr</span><span class="p">.</span><span class="na">estado</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="n">EN_PROCESO</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">}</span><span class="w">  </span><span class="c1">// nada que hacer todavia, se vuelve a consultar despues</span>
+<span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="n">ACEPTADA</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">resumen</span><span class="p">.</span><span class="na">confirmar</span><span class="p">();</span>
+<span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="n">RECHAZADA</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">resumen</span><span class="p">.</span><span class="na">rechazar</span><span class="p">(</span><span class="n">cdr</span><span class="p">.</span><span class="na">motivo</span><span class="p">());</span><span class="w">  </span><span class="c1">// COMPENSACION (Tabla 9, paso 3)</span>
+<span class="w">                </span><span class="n">boletaService</span><span class="p">.</span><span class="na">marcarParaNuevoResumen</span><span class="p">(</span><span class="n">resumen</span><span class="p">.</span><span class="na">boletas</span><span class="p">());</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">resumenDiarioRepository</span><span class="p">.</span><span class="na">guardar</span><span class="p">(</span><span class="n">resumen</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Error frecuente</strong>: implementar la compensación del paso 3 dentro del <code>fallbackMethod</code> del <code>@CircuitBreaker</code> de 3.2, como si fueran la misma protección. El <em>fallback</em> solo se dispara cuando <code>SendSummary</code> <strong>no se pudo completar</strong> (red, timeout, circuito abierto) — una CDR <strong>Rechazada</strong> es una respuesta de negocio perfectamente válida, que SUNAT sí entregó, y que por eso nunca pasa por el <code>fallbackMethod</code>: pasa por <code>consultarResumenesPendientes</code>, el método diseñado específicamente para leer esa respuesta y ejecutar la compensación de la Tabla 9.</p>
+<p><strong>Lo que existe en producción, en vez de construirlo a mano.</strong> El <code>@Scheduled</code> que hace <em>polling</em> a mano, el seguimiento manual de <code>ARMADO</code>/<code>ENVIADO</code>/<code>ACEPTADO</code>/<code>RECHAZADO</code> — es exactamente lo que un proyecto de microservicios real no escribe desde cero: <a href="https://www.axoniq.io/axon-framework">Axon Framework</a> (Java, AxonIQ, código abierto) empaqueta Saga junto con CQRS (<em>Command Query Responsibility Segregation</em>) y <em>Event Sourcing</em> como un solo <em>toolkit</em> — una clase anotada <code>@Saga</code> escucha eventos y puede emitir comandos, con todo su ciclo de vida (crear la instancia, asociarla a un <code>ResumenDiario</code> concreto, terminarla cuando llega la CDR final) gestionado por el framework, sin el <em>polling</em> manual que el pseudocódigo de arriba sí tiene que hacer. Es el mismo criterio que LP2 ya aplicó al reemplazar su propio JWT por Keycloak (LP2, S10 → S10b): esta sesión diseña la Saga a mano, a propósito, para entender la mecánica —los tres pasos, la compensación, la diferencia frente al <em>fallback</em>— antes de delegarla a una herramienta que la resuelve por dentro.</p>
 <h3 id="36-armar-la-matriz-de-integracion">3.6 Armar la matriz de integración<a class="headerlink" href="#36-armar-la-matriz-de-integracion" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> documentación completa de las tres fronteras — qué cruza, hacia dónde, protegido por qué patrón.</p>
+<p><strong>Producto del paso:</strong> documentación completa de todas las fronteras — qué cruza, hacia dónde, protegido por qué patrón.</p>
+<p>La Figura 2 (2.1) resume los dos tipos de frontera de esta sesión: síncrona-obligatoria y asíncrona-de-cardinalidad-abierta. SUNAT participa en ambos tipos a la vez: la Factura es la síncrona-obligatoria (3.1-3.2); el Resumen Diario de Boletas combina los dos dentro de una sola integración — la solicitud (<code>SendSummary</code>) es síncrona y se protege igual que la Factura (ACL + Circuit Breaker), y la respuesta final (<code>GetStatus</code>) es asíncrona y se coordina con Saga (3.5). La matriz de abajo documenta integraciones concretas, no tipos — por eso SUNAT ocupa dos filas.</p>
 <p><strong>Tabla 10. Matriz de integración empresarial de <code>ventas</code></strong></p>
 <table>
 <thead>
@@ -4832,10 +4849,16 @@ crear(request):
 </thead>
 <tbody>
 <tr>
-<td>Comprobante de pago electrónico (UBL 2.1)</td>
+<td>Factura electrónica (UBL 2.1)</td>
 <td>BomERP → SUNAT</td>
 <td>Síncrona, obligatoria</td>
 <td>Capa anticorrupción (3.1) + Circuit Breaker (3.2)</td>
+</tr>
+<tr>
+<td>Resumen Diario de Boletas</td>
+<td>BomERP → SUNAT</td>
+<td>Síncrona (<code>SendSummary</code>) + asíncrona (<code>GetStatus</code>, <em>ticket</em>)</td>
+<td>Capa anticorrupción (3.1) + Circuit Breaker (3.2) + Saga coreografiada con compensación (3.5)</td>
 </tr>
 <tr>
 <td><code>VentaRegistrada</code></td>
@@ -4845,15 +4868,9 @@ crear(request):
 </tr>
 <tr>
 <td>Sugerencia de reposición</td>
-<td>Servicio de IA → <code>compras</code> (interno)</td>
+<td>Servicio de IA → (consumo futuro, fuera de alcance)</td>
 <td>Asíncrona</td>
-<td>Outbox (3.3) — mismo mecanismo que <code>VentaRegistrada</code></td>
-</tr>
-<tr>
-<td>Orden de compra</td>
-<td><code>compras</code> → Sistema del Proveedor (externo)</td>
-<td>Síncrona (la solicitud) + asíncrona (la respuesta)</td>
-<td>Capa anticorrupción (3.1) + Circuit Breaker (3.2) + Saga coreografiada con compensación (3.5)</td>
+<td>No corresponde a esta sesión — <code>ventas</code> no participa de este lado de la integración</td>
 </tr>
 <tr>
 <td><code>ProductoService</code> (S8-S10, referencia)</td>
@@ -4863,14 +4880,14 @@ crear(request):
 </tr>
 </tbody>
 </table>
-<p>La fila del Proveedor es la más cargada de la tabla, y es deliberado: muestra que los patrones no son alternativas entre las que se elige una — se <strong>componen</strong>. La misma capa anticorrupción y el mismo <em>circuit breaker</em> que protegen la llamada a SUNAT protegen la llamada al Proveedor; lo que agrega la Saga es la coordinación de <strong>varios</strong> pasos y su compensación, un problema que ni ACL ni <em>Circuit Breaker</em> resuelven por sí solos. La última fila sigue siendo la única sin capa anticorrupción, por la misma razón de siempre: <code>catalogo</code> habla el mismo lenguaje ubicuo que <code>ventas</code> (S6), no un formato ajeno.</p>
+<p>La segunda fila es la más cargada de la tabla, y es deliberado: muestra que los patrones no son alternativas entre las que se elige una — se <strong>componen</strong>, incluso contra el <strong>mismo</strong> sistema externo. La misma capa anticorrupción y el mismo <em>circuit breaker</em> que protegen la Factura protegen el envío del Resumen; lo que agrega la Saga es la coordinación de <strong>varios</strong> pasos y su compensación, un problema que ni ACL ni <em>Circuit Breaker</em> resuelven por sí solos. La última fila sigue siendo la única sin capa anticorrupción, por la misma razón de siempre: <code>catalogo</code> habla el mismo lenguaje ubicuo que <code>ventas</code> (S6), no un formato ajeno.</p>
 <p><strong>Evidencia de aprendizaje:</strong></p>
 <ul>
 <li>Diseño conceptual de la integración con SUNAT, con su capa anticorrupción documentada.</li>
 <li>Configuración justificada del <em>Circuit Breaker</em>, con su <em>fallback</em> explícito.</li>
 <li>Evento de dominio <code>VentaRegistrada</code> diseñado, con su publicación confiable (<em>Outbox</em>, vía Spring Modulith).</li>
 <li>Consumidor de IA diseñado, suscrito al evento sin acoplarse de vuelta al publicador.</li>
-<li>Saga coreografiada de reposición diseñada, con sus tres pasos y su compensación, distinguida con claridad del <em>fallback</em> del Circuit Breaker.</li>
+<li>Saga coreografiada del Resumen Diario de Boletas diseñada, con sus tres pasos y su compensación, distinguida con claridad del <em>fallback</em> del Circuit Breaker.</li>
 <li>Matriz de integración completa, con el patrón correcto para cada frontera (y la justificación de por qué una frontera interna no necesita capa anticorrupción).</li>
 </ul>
 <h2 id="4-crea-actividad-autonoma">4. Crea: actividad autónoma<a class="headerlink" href="#4-crea-actividad-autonoma" title="Permanent link">&para;</a></h2>
@@ -5036,7 +5053,7 @@ Indica 2 fortalezas y 2 recomendaciones.
 </code></pre></div>
 <h2 id="5-cierre">5. Cierre<a class="headerlink" href="#5-cierre" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 5 min.</p>
-<p><strong>Resumen breve:</strong> hoy BomERP cruzó, por primera vez, su propia frontera hacia el exterior: una integración obligatoria con SUNAT, aislada del dominio por una capa anticorrupción y protegida de fallas remotas por un <em>Circuit Breaker</em> con un <em>fallback</em> que tiene sentido de negocio real; y una integración de cardinalidad abierta —el evento <code>VentaRegistrada</code>, publicado de forma confiable con el mismo patrón <em>Outbox</em> que Spring Modulith ya reserva para una sesión futura de LP2— que permite agregar consumidores (como el servicio de IA de reposición) sin que <code>ventas</code> tenga que cambiar. Esa sugerencia de IA se llevó, además, un paso más allá de lo que BomERP necesita hoy: una Saga coreografiada completa, coordinando una orden de compra con un segundo sistema externo (el Proveedor) y compensando con criterio cuando ese sistema rechaza la orden — la pieza de diseño que esta sesión enseña a propósito antes de que el curso de Distribuidas la exija sin red de seguridad. La matriz final dejó claro que no toda frontera necesita el mismo patrón, ni los mismos patrones se usan solos: la interna (<code>catalogo</code>) se protege distinto que las externas, y la del Proveedor combina tres patrones ya construidos en uno solo.</p>
+<p><strong>Resumen breve:</strong> hoy BomERP cruzó, por primera vez, su propia frontera hacia el exterior: una integración obligatoria con SUNAT, aislada del dominio por una capa anticorrupción y protegida de fallas remotas por un <em>Circuit Breaker</em> con un <em>fallback</em> que tiene sentido de negocio real; y una integración de cardinalidad abierta —el evento <code>VentaRegistrada</code>, publicado de forma confiable con el mismo patrón <em>Outbox</em> que Spring Modulith ya reserva para una sesión futura de LP2— que permite agregar consumidores (como el servicio de IA de reposición) sin que <code>ventas</code> tenga que cambiar. El mismo SUNAT se llevó, además, un paso más allá de lo que BomERP necesita hoy: una Saga coreografiada completa, coordinando el envío asíncrono del Resumen Diario de Boletas —por <code>ticket</code>, sin respuesta inmediata— y compensando con criterio cuando SUNAT lo rechaza — la pieza de diseño que esta sesión enseña a propósito antes de que el curso de Distribuidas la exija sin red de seguridad. La matriz final dejó claro que no toda frontera necesita el mismo patrón, ni los mismos patrones se usan solos: la interna (<code>catalogo</code>) se protege distinto que las externas, y el Resumen Diario combina tres patrones ya construidos contra el mismo SUNAT.</p>
 <p><strong>Dinámica participativa:</strong> en una ronda rápida, cada estudiante comparte en una frase qué sistema externo real eligió para su propio proyecto, y qué pasaría si se cayera.</p>
 <p><strong>Metacognición:</strong> ¿qué te costó más entender hoy: por qué una integración interna no necesita capa anticorrupción, cómo diseñar un <em>fallback</em> que de verdad tenga sentido de negocio, o la diferencia entre ese <em>fallback</em> y la compensación de una Saga?</p>
 <p><strong>Proyección:</strong> S12 integra todo el diseño dinámico de la unidad —diagramas, patrones e integraciones— en el Catálogo UML completo que se presenta y sustenta como producto de la Unidad II.</p>
@@ -5047,10 +5064,12 @@ Indica 2 fortalezas y 2 recomendaciones.
 <li>Nygard, M. (2018). <em>Release It!: Design and Deploy Production-Ready Software</em> (2nd ed.). Pragmatic Bookshelf.</li>
 <li>SACAViX. (2026). <em>Circuit Breaker</em>. SACAViX System Design — Circuit Breaker. https://systemdesign.sacavix.com/patterns/circuit-breaker</li>
 <li>SUNAT. (2024). <em>Guía de elaboración de documentos XML - Factura electrónica UBL 2.1</em>. https://cpe.sunat.gob.pe/sites/default/files/inline-files/guia+xml+factura+version%202-1+1+0%20(2)_0%20(2).pdf</li>
+<li>SUNAT. (s.f.). <em>Resumen Diario - Boleta de Venta Electrónica</em>. https://orientacion.sunat.gob.pe/04-resumen-diario-boleta-de-venta-electronica</li>
 <li>Evans, E. (2003). <em>Domain-Driven Design: Tackling Complexity in the Heart of Software</em>. Addison-Wesley.</li>
 <li>Hohpe, G., &amp; Woolf, B. (2003). <em>Enterprise Integration Patterns: Designing, Building, and Deploying Messaging Solutions</em>. Addison-Wesley.</li>
 <li>Richardson, C. (2018). <em>Microservices Patterns: With examples in Java</em>. Manning Publications.</li>
 <li>Garcia-Molina, H., &amp; Salem, K. (1987). <em>Sagas</em>. ACM SIGMOD Record, 16(3), 249-259. https://doi.org/10.1145/38713.38742</li>
+<li>AxonIQ. (2026). <em>Axon Framework - DDD, CQRS and Event Sourcing, all in one</em>. https://www.axoniq.io/axon-framework</li>
 </ol>
 
 
