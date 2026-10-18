@@ -329,11 +329,11 @@ resilience4j:
 public ComprobanteResultado emitir(VentaResponse venta) {
     DocumentoUBL documento = traducirAUBL(venta);
     DocumentoUBL firmado = firmar(documento);
-    RespuestaSunat respuesta = enviarASunat(firmado);  // la llamada protegida (Tabla 6)
+    RespuestaSunat respuesta = enviarASunat(firmado);  // la llamada protegida (Figura 3)
     return traducirAComprobanteResultado(respuesta);
 }
 
-// Se ejecuta si el circuito esta Abierto (Tabla 6), o si enviarASunat
+// Se ejecuta si el circuito esta OPEN (Tabla 6/Figura 3), o si enviarASunat
 // lanza timeout/error de red -- nunca si el problema es una regla de negocio
 public ComprobanteResultado emitirPendiente(VentaResponse venta, Exception causa) {
     return new ComprobanteResultado(numeroComprobante: null, estadoSunat: "PENDIENTE_EMISION");
@@ -523,10 +523,11 @@ Netflix (1.6).
 
 1. ¿Por qué tu integración con el sistema externo necesita una capa anticorrupción, y tu integración interna (si la tienes) no?
 2. ¿Qué le pasaría a tu sistema si tu *Circuit Breaker* no tuviera ningún *fallback*, solo un error genérico?
-3. ¿Por qué tu evento de dominio se publica en vez de llamarse directamente? ¿Qué perderías si lo volvieras síncrono?
-4. ¿Qué pasaría si dos consumidores distintos de tu evento necesitaran información que el evento no lleva?
-5. ¿Por qué `VentaRegistrada` se publica dentro de la misma transacción que guarda la venta, y no después?
-6. Relaciona el caso de Netflix (1.6) con qué pasaría en tu propio sistema si el sistema externo elegido respondiera lento en vez de caerse de inmediato.
+3. ¿Por qué el umbral de un *Circuit Breaker* real se mide como una tasa de fallos sobre una ventana de llamadas, y no como un conteo de fallos seguidos? ¿Qué problema evita esa diferencia?
+4. ¿Por qué tu evento de dominio se publica en vez de llamarse directamente? ¿Qué perderías si lo volvieras síncrono?
+5. ¿Qué pasaría si dos consumidores distintos de tu evento necesitaran información que el evento no lleva?
+6. ¿Por qué `VentaRegistrada` se publica dentro de la misma transacción que guarda la venta, y no después?
+7. Relaciona el caso de Netflix (1.6) con qué pasaría en tu propio sistema si el sistema externo elegido respondiera lento en vez de caerse de inmediato.
 
 ### 4.6 Rúbrica de evaluación
 
