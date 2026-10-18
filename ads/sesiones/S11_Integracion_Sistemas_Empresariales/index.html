@@ -4456,6 +4456,16 @@
 </tbody>
 </table>
 <p>El umbral que de verdad importa no es "cuántos fallos seguidos", sino la <strong>tasa de fallos sobre una ventana de las últimas N llamadas</strong> (una <em>sliding window</em>, 3.2) — con la configuración real de esta sesión (Tabla 7: ventana de 10, umbral de 50%), el circuito se abre con 5 fallos de las últimas 10 llamadas, sin que importe si llegaron seguidos o intercalados con alguna llamada exitosa.</p>
+<p><strong>Figura 3. Ciclo de estados de un Circuit Breaker</strong></p>
+<pre class="mermaid"><code>flowchart LR
+    Closed["CLOSED&lt;br/&gt;las llamadas pasan normal"]
+    Open["OPEN&lt;br/&gt;corta el circuito,&lt;br/&gt;ejecuta el fallback"]
+    HalfOpen["HALF_OPEN&lt;br/&gt;prueba con llamadas limitadas"]
+
+    Closed --&gt;|"tasa de fallos&lt;br/&gt;supera el umbral"| Open
+    Open --&gt;|"pasa el tiempo&lt;br/&gt;de espera"| HalfOpen
+    HalfOpen --&gt;|"llamadas de prueba&lt;br/&gt;alcanzan el umbral de exito"| Closed
+    HalfOpen --&gt;|"llamadas de prueba&lt;br/&gt;vuelven a fallar"| Open</code></pre>
 <p><strong>Outbox</strong> (Richardson, 2018) resuelve un problema distinto: ¿cómo se garantiza que un evento se publique si, y solo si, el cambio que lo origina de verdad se guardó? Guardar la venta en la base de datos y publicar <code>VentaRegistrada</code> en un <em>broker</em> son dos operaciones separadas — si la primera tiene éxito y la segunda falla, el evento se pierde para siempre; si ocurre al revés, se publica un evento de una venta que nunca existió. <em>Outbox</em> resuelve esto guardando el evento en una tabla de la <strong>misma</strong> base de datos, dentro de la <strong>misma</strong> transacción que guarda la venta — un proceso aparte, después, se encarga de tomar esos eventos pendientes y publicarlos, reintentando si hace falta, sin arriesgar nunca la atomicidad entre "la venta existe" y "el evento quedó registrado para publicarse".</p>
 <p>Esto no es un patrón hipotético para BomERP: Spring Modulith (el framework ya elegido en ADR-002 de LP2) implementa exactamente este patrón con su propia tabla <code>event_publication</code> — hoy removida a propósito del <code>pom.xml</code> de LP2 porque ningún módulo publica eventos todavía (LP2, nota de arquitectura), reservada para cuando una sesión futura de ese curso adopte comunicación por eventos. El diseño de esta sesión es, literalmente, la especificación de esa sesión futura.</p>
 <h2 id="3-aplica-actividad-practica-guiada">3. Aplica: actividad práctica guiada<a class="headerlink" href="#3-aplica-actividad-practica-guiada" title="Permanent link">&para;</a></h2>
@@ -4473,7 +4483,7 @@
 </ul>
 <h3 id="31-disenar-la-integracion-con-sunat-y-su-capa-anticorrupcion">3.1 Diseñar la integración con SUNAT y su capa anticorrupción<a class="headerlink" href="#31-disenar-la-integracion-con-sunat-y-su-capa-anticorrupcion" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> el contrato conceptual de la integración, con la clase anticorrupción que aísla a <code>ventas</code> del formato de SUNAT.</p>
-<p><strong>Figura 3. Capa anticorrupción entre <code>ventas</code> y SUNAT</strong></p>
+<p><strong>Figura 4. Capa anticorrupción entre <code>ventas</code> y SUNAT</strong></p>
 <pre class="mermaid"><code>classDiagram
     class VentaServiceImpl {
         &lt;&lt;Service, modulo ventas&gt;&gt;
@@ -4502,6 +4512,21 @@
     ComprobanteElectronicoServiceImpl --&gt; DocumentoUBL : traduce
     ComprobanteElectronicoServiceImpl --&gt; ComprobanteResultado : traduce de vuelta</code></pre>
 <p>Dos traducciones, no una: <code>traducirAUBL</code> convierte el lenguaje de BomERP al de SUNAT (antes de salir), y el resultado de SUNAT (el CDR, <em>Comprobante de Recepción</em>, con su propio formato) se traduce de vuelta a <code>ComprobanteResultado</code> — un DTO (<em>Data Transfer Object</em>, S8) propio del dominio de BomERP, con solo lo que <code>ventas</code> necesita (<code>numeroComprobante</code>, <code>estadoSunat</code>). Ni <code>VentaServiceImpl</code> ni <code>Venta</code> importan jamás una clase con el nombre de un campo UBL.</p>
+<p>La Figura 4 muestra la <strong>estructura</strong> (qué clases existen y de qué dependen); la Figura 5 muestra el <strong>orden real</strong> en el que esas piezas se ejecutan en una sola llamada — las dos traducciones del párrafo anterior, vistas como pasos concretos:</p>
+<p><strong>Figura 5. Secuencia de una emisión, con las dos traducciones de la capa anticorrupción</strong></p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant V as VentaServiceImpl
+    participant ACL as ComprobanteElectronicoServiceImpl
+    participant S as SUNAT
+
+    V-&gt;&gt;ACL: emitir(ventaResponse)
+    ACL-&gt;&gt;ACL: traducirAUBL(ventaResponse)
+    ACL-&gt;&gt;ACL: firmar(documentoUBL)
+    ACL-&gt;&gt;S: enviarASunat(documentoFirmado)
+    S--&gt;&gt;ACL: RespuestaSunat (CDR)
+    ACL-&gt;&gt;ACL: traducirAComprobanteResultado(respuesta)
+    ACL--&gt;&gt;V: ComprobanteResultado</code></pre>
+<p>Ninguno de los dos pasos de traducción (<code>traducirAUBL</code>, <code>traducirAComprobanteResultado</code>) es visible para <code>VentaServiceImpl</code> — desde su punto de vista, solo existe <code>emitir(venta)</code> y una respuesta ya en su propio idioma. <code>enviarASunat</code> (paso 4) es, exactamente, la llamada que 3.2 protege con el <em>circuit breaker</em>: todo lo que pasa antes y después de esa flecha corre siempre, sin importar si SUNAT responde o no.</p>
 <p><strong>Error frecuente</strong>: devolver el CDR de SUNAT directamente como respuesta de <code>VentaServiceImpl</code>, "para no tener que mapear dos veces". Si el formato de SUNAT cambia (una nueva versión de UBL, por ejemplo), ese cambio se propagaría directo hasta el dominio de <code>ventas</code> — exactamente lo que la capa anticorrupción existe para evitar.</p>
 <h3 id="32-proteger-la-llamada-con-un-circuit-breaker">3.2 Proteger la llamada con un <em>Circuit Breaker</em><a class="headerlink" href="#32-proteger-la-llamada-con-un-circuit-breaker" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> el diseño del <em>circuit breaker</em> que envuelve <code>enviarASunat</code>, con su umbral y su <code>fallback</code>.</p>
@@ -4590,6 +4615,26 @@ crear(request):
     devolver ventaMapper.toResponse(ventaGuardada)
 </code></pre></div>
 <p>El evento se publica <strong>dentro</strong> del mismo método transaccional que guarda la venta — ninguna línea nueva de coordinación manual hace falta, porque Spring Modulith ya implementa el patrón <em>Outbox</em> (2.6) a nivel de framework: si la transacción se revierte (por ejemplo, RN2 de S8 falla a mitad del bucle), el evento tampoco se publica, porque ambas escrituras viven en la misma unidad atómica.</p>
+<p>El pseudocódigo de arriba deja implícito algo que conviene ver explícito: <em>Outbox</em> tiene <strong>dos tiempos distintos</strong>, no uno — la escritura es síncrona (ocurre dentro de la petición del usuario), la publicación es asíncrona (ocurre después, sin que el usuario la espere):</p>
+<p><strong>Figura 6. Las dos fases de <em>Outbox</em>: escritura síncrona, publicación asíncrona</strong></p>
+<pre class="mermaid"><code>sequenceDiagram
+    actor U as Usuario
+    participant VS as VentaServiceImpl
+    participant DB as Base de datos (ventas + event_publication)
+    participant SM as Spring Modulith (publicador asincrono)
+    participant IA as SugerenciaReposicionListener
+
+    U-&gt;&gt;VS: POST /ventas (crear)
+    VS-&gt;&gt;DB: INSERT venta + INSERT VentaRegistrada
+    Note over VS,DB: misma transaccion — si una falla, ninguna se guarda
+    DB--&gt;&gt;VS: commit exitoso
+    VS--&gt;&gt;U: 201, ComprobanteResultado
+
+    Note over SM: fuera de la peticion del usuario, en segundo plano
+    SM-&gt;&gt;DB: lee eventos pendientes de event_publication
+    SM-&gt;&gt;IA: publica VentaRegistrada
+    IA-&gt;&gt;IA: onVentaRegistrada(evento) — 3.4</code></pre>
+<p>El usuario ya recibió su respuesta (<code>201</code>) <strong>antes</strong> de que <code>SugerenciaReposicionListener</code> siquiera se entere de que la venta existió — exactamente la garantía de 2.4 (asíncrono: quien publica no espera a quien consume). Si <code>SugerenciaReposicionListener</code> tardara, fallara, o ni siquiera existiera todavía, la venta ya está guardada y confirmada: nada de eso puede revertir lo que ya ocurrió en el primer bloque (síncrono) de este diagrama.</p>
 <h3 id="34-disenar-el-consumidor-de-ia">3.4 Diseñar el consumidor de IA<a class="headerlink" href="#34-disenar-el-consumidor-de-ia" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> el contrato del consumidor que se suscribe a <code>VentaRegistrada</code> sin que <code>ventas</code> lo conozca.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// SugerenciaReposicionListener.java — modulo nuevo, previsto, pseudocodigo</span>
