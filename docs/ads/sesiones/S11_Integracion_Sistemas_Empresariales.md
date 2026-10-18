@@ -272,6 +272,26 @@ Dos traducciones, no una: `traducirAUBL` convierte el lenguaje de BomERP al de S
 
 El *fallback* es la decisión de diseño más importante de este paso: un *circuit breaker* sin un *fallback* pensado simplemente cambia un error lento por un error rápido — sigue siendo un error. El *fallback* elegido aquí convierte una falla externa (SUNAT caída) en una degradación controlada (la venta se completa, el comprobante queda pendiente) en vez de en una falla total (la venta no se puede registrar porque un sistema de terceros está lento).
 
+```java
+// ComprobanteElectronicoServiceImpl.java — circuit breaker, pseudocodigo de diseño
+@CircuitBreaker(name = "sunat", fallbackMethod = "emitirPendiente")
+public ComprobanteResultado emitir(VentaResponse venta) {
+    DocumentoUBL documento = traducirAUBL(venta);
+    DocumentoUBL firmado = firmar(documento);
+    RespuestaSunat respuesta = enviarASunat(firmado);  // la llamada protegida (Tabla 6)
+    return traducirAComprobanteResultado(respuesta);
+}
+
+// Se ejecuta si el circuito esta Abierto (Tabla 6), o si enviarASunat
+// lanza timeout/error de red -- nunca si el problema es una regla de negocio
+public ComprobanteResultado emitirPendiente(VentaResponse venta, Exception causa) {
+    return new ComprobanteResultado(numeroComprobante: null, estadoSunat: "PENDIENTE_EMISION");
+    // un proceso aparte, fuera de esta peticion, reintenta mas tarde (Tabla 7)
+}
+```
+
+La anotación envuelve exactamente la llamada que 3.1 ya aisló en `enviarASunat` — ninguna otra línea de `ComprobanteElectronicoServiceImpl` necesita saber que existe un *circuit breaker*: ni `traducirAUBL` ni `firmar` corren contra la red, así que ninguna de las dos necesita protegerse. El `fallbackMethod` solo se dispara por la causa que la Tabla 7 ya previó (SUNAT lenta, caída o sin responder) — un rechazo de SUNAT por un dato mal formado (un error de negocio, no de disponibilidad) no debe entrar nunca a `emitirPendiente`: reintentar un comprobante mal formado no lo arregla, solo repite el mismo error.
+
 ### 3.3 Diseñar el evento de dominio `VentaRegistrada` y su publicación confiable
 
 **Producto del paso:** la forma del evento y el mecanismo que garantiza que, si la venta se guardó, el evento también quedó registrado para publicarse (2.6, *Outbox*).
