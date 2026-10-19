@@ -72,15 +72,6 @@ export class AuthService {
     location.href = `${environment.keycloak.issuer}/protocol/openid-connect/auth?${parametros}`;
   }
 
-  private guardarSesion(datos: TokenResponse): void {
-    this.sesion.set({
-      accessToken: datos.access_token,
-      refreshToken: datos.refresh_token,
-      idToken: datos.id_token,
-      expiraEn: Date.now() + datos.expires_in * 1000,
-    });
-  }
-
   async completarLogin(code: string, stateRecibido: string): Promise<void> {
     const stateEsperado = sessionStorage.getItem(CLAVE_STATE);
     const verifier = sessionStorage.getItem(CLAVE_CODE_VERIFIER);
@@ -113,5 +104,44 @@ export class AuthService {
     return destino;
   }
 
-}
+  async refrescar(): Promise<boolean> {
+    const refreshToken = this.sesion()?.refreshToken;
+    if (!refreshToken) return false;
 
+    const cuerpo = new URLSearchParams({
+      grant_type: 'refresh_token',
+      client_id: environment.keycloak.clientId,
+      refresh_token: refreshToken,
+    });
+    const respuesta = await fetch(`${environment.keycloak.issuer}/protocol/openid-connect/token`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: cuerpo,
+    });
+    if (!respuesta.ok) {
+      this.sesion.set(null);
+      return false;
+    }
+    this.guardarSesion(await respuesta.json());
+    return true;
+  }
+
+  cerrarSesion(): void {
+    const idToken = this.sesion()?.idToken;
+    this.sesion.set(null);
+    const parametros = new URLSearchParams({
+      post_logout_redirect_uri: environment.keycloak.postLogoutRedirectUri,
+      ...(idToken ? { id_token_hint: idToken } : {}),
+    });
+    location.href = `${environment.keycloak.issuer}/protocol/openid-connect/logout?${parametros}`;
+  }
+
+  private guardarSesion(datos: TokenResponse): void {
+    this.sesion.set({
+      accessToken: datos.access_token,
+      refreshToken: datos.refresh_token,
+      idToken: datos.id_token,
+      expiraEn: Date.now() + datos.expires_in * 1000,
+    });
+  }
+}

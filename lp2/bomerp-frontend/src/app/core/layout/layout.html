@@ -3,16 +3,18 @@
     <img src="favicon.ico" alt="" height="30" />
     <span>BomERP</span>
   </a>
-  <span class="user">Usuario</span>
+  <span class="user">{{ auth.usuario()?.nombre }}</span>
+  <button type="button" (click)="auth.cerrarSesion()">Cerrar sesión</button>
 </mat-toolbar>
 
 <div class="body">
   <nav class="sidebar" aria-label="Menú principal">
     <a routerLink="/catalogo/categorias" routerLinkActive="active">Categorías</a>
     <a routerLink="/catalogo/productos" routerLinkActive="active">Productos</a>
-    <a routerLink="/ventas/nueva" routerLinkActive="active">Nueva venta</a>   
-          <a routerLink="/ventas/reporte" routerLinkActive="active">Reporte de ventas</a>
- 
+    @if (auth.tieneRol('VENDEDOR', 'SUPERVISOR')) {
+      <a routerLink="/ventas/nueva" routerLinkActive="active">Nueva venta</a>
+    }
+    <a routerLink="/ventas/reporte" routerLinkActive="active">Reporte de ventas</a>
   </nav>
 
   <main class="content">

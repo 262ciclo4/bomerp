@@ -965,7 +965,11 @@ export class Layout {
 
 "Categorías" y "Productos" quedan sin condición — la Tabla 5 ya estableció que su **lectura** es para cualquier autenticado; es el formulario de creación/edición el que `rolGuard('ADMIN')` (3.7) ya protege a nivel de ruta, no el enlace del menú.
 
-Por último, el botón "Anular" del reporte — **`lp2/bomerp-frontend/src/app/features/ventas/venta/venta-reporte.ts`**, inyecta `AuthService` y expónlo a la plantilla:
+Por último, el botón "Anular" del reporte — **`lp2/bomerp-frontend/src/app/features/ventas/venta/venta-reporte.ts`**, importa `AuthService` (`inject` ya está importado, S9) e inyéctalo:
+
+```typescript
+import { AuthService } from '../../../core/auth/auth-service';
+```
 
 ```typescript
 protected readonly auth = inject(AuthService);
