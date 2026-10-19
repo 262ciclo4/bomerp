@@ -234,8 +234,8 @@ Tiempo: 110 min.
 - **3.1** Reconfigurar el cliente de Keycloak para el flujo real.
 - **3.1b** Corregir CORS en `bomerp-backend` (pendiente desde S10).
 - **3.2** Configurar el entorno y construir el generador de PKCE.
-- **3.3** Construir `AuthService`: iniciar el login y guardar la sesión en memoria.
-- **3.4** Construir la ruta de retorno (`/auth/callback`) y completar el intercambio.
+- **3.3** Construir `AuthService` completo: login, callback, refresco y cierre de sesión.
+- **3.4** Construir la ruta de retorno (`/auth/callback`).
 - **3.5** Decodificar el token: claims, roles y expiración.
 - **3.6** Construir el *guard* de autenticación.
 - **3.7** Construir el *guard* de rol y proteger las rutas de escritura.
@@ -481,9 +481,9 @@ export function generarState(): string {
 
 `crypto.getRandomValues` (Web Crypto API, nativa del navegador, sin ninguna librería) genera los 32 bytes aleatorios del `code_verifier` — el mínimo de entropía que RFC 7636 exige para que no sea adivinable. `crypto.subtle.digest('SHA-256', ...)` es asíncrono porque el cálculo real ocurre fuera del hilo principal de JavaScript; por eso `generarCodeChallenge` devuelve una `Promise`, no un valor directo. `generarState` reusa el mismo `base64UrlEncode` para un propósito distinto (2.2): no se transforma con SHA-256 porque `state` no necesita demostrarse después — solo necesita ser impredecible y compararse tal cual al volver.
 
-### 3.3 Construir `AuthService`: iniciar el login y guardar la sesión en memoria
+### 3.3 Construir `AuthService` completo: login, callback, refresco y cierre de sesión
 
-**Producto del paso:** el servicio central de autenticación, con la sesión completa viviendo en un `signal` privado (2.3) y el método que arranca el flujo de login.
+**Producto del paso:** el servicio central de autenticación completo, con la sesión viviendo en un `signal` privado (2.3) y los cinco métodos que la sesión necesita — `iniciarLogin`, `completarLogin`, `refrescar`, `cerrarSesion` y `destinoPendiente` —, en un solo archivo, construido de una sola vez. A diferencia de parchear la misma clase en pasos sueltos más adelante, todo `AuthService` queda listo aquí; 3.4, 3.8 y 3.9 solo lo **consumen**, no lo modifican.
 
 **`lp2/bomerp-frontend/src/app/core/auth/auth-service.ts`** (archivo nuevo):
 
@@ -562,26 +562,6 @@ export class AuthService {
     location.href = `${environment.keycloak.issuer}/protocol/openid-connect/auth?${parametros}`;
   }
 
-  private guardarSesion(datos: TokenResponse): void {
-    this.sesion.set({
-      accessToken: datos.access_token,
-      refreshToken: datos.refresh_token,
-      idToken: datos.id_token,
-      expiraEn: Date.now() + datos.expires_in * 1000,
-    });
-  }
-}
-```
-
-`sesion` es la única fuente de verdad, y vive en memoria (2.3) — nada de lo que `AuthService` guarda ahí sobrevive un *reload*. `autenticado`, `roles` y `usuario` son `computed`: se recalculan solos cada vez que `sesion` cambia, sin que ninguna otra parte de la SPA tenga que sincronizar nada a mano. `iniciarLogin` guarda el `code_verifier`, el `state` (2.2) y la ruta a la que el usuario quería ir (`destino`) en `sessionStorage` — la misma excepción acotada ya justificada en 2.3, ahora con tres valores en vez de uno, ninguno de los tres el token — y redirige el navegador completo a Keycloak; `guardarSesion` queda privado por ahora, 3.4 es quien primero la usa.
-
-### 3.4 Construir la ruta de retorno (`/auth/callback`) y completar el intercambio
-
-**Producto del paso:** el componente que recibe la redirección de Keycloak, cambia el código por un token, y manda al usuario de vuelta exactamente a donde quería ir.
-
-Primero, completa `AuthService` con el método que hace el intercambio — agrégalo después de `iniciarLogin`:
-
-```typescript
   async completarLogin(code: string, stateRecibido: string): Promise<void> {
     const stateEsperado = sessionStorage.getItem(CLAVE_STATE);
     const verifier = sessionStorage.getItem(CLAVE_CODE_VERIFIER);
@@ -613,9 +593,59 @@ Primero, completa `AuthService` con el método que hace el intercambio — agré
     sessionStorage.removeItem(CLAVE_DESTINO);
     return destino;
   }
+
+  async refrescar(): Promise<boolean> {
+    const refreshToken = this.sesion()?.refreshToken;
+    if (!refreshToken) return false;
+
+    const cuerpo = new URLSearchParams({
+      grant_type: 'refresh_token',
+      client_id: environment.keycloak.clientId,
+      refresh_token: refreshToken,
+    });
+    const respuesta = await fetch(`${environment.keycloak.issuer}/protocol/openid-connect/token`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: cuerpo,
+    });
+    if (!respuesta.ok) {
+      this.sesion.set(null);
+      return false;
+    }
+    this.guardarSesion(await respuesta.json());
+    return true;
+  }
+
+  cerrarSesion(): void {
+    const idToken = this.sesion()?.idToken;
+    this.sesion.set(null);
+    const parametros = new URLSearchParams({
+      post_logout_redirect_uri: environment.keycloak.postLogoutRedirectUri,
+      ...(idToken ? { id_token_hint: idToken } : {}),
+    });
+    location.href = `${environment.keycloak.issuer}/protocol/openid-connect/logout?${parametros}`;
+  }
+
+  private guardarSesion(datos: TokenResponse): void {
+    this.sesion.set({
+      accessToken: datos.access_token,
+      refreshToken: datos.refresh_token,
+      idToken: datos.id_token,
+      expiraEn: Date.now() + datos.expires_in * 1000,
+    });
+  }
+}
 ```
 
-`completarLogin` revisa `state` **antes** de confiar en el `code_verifier` (2.2): si el valor que Keycloak devolvió no coincide con el que la SPA guardó antes de redirigir, lanza un error y nunca llega a intentar el intercambio — sin importar si el `code_verifier` guardado era correcto. Usa `fetch`, no `HttpClient` — a propósito: este intercambio nunca debe pasar por el interceptor de 3.8 (que adjunta `Authorization` a las peticiones hacia `bomerp-backend`), y Keycloak no es `bomerp-backend`. `sessionStorage.removeItem(CLAVE_CODE_VERIFIER)` ocurre **antes** de revisar si la respuesta fue exitosa, a propósito: el `code_verifier` es de un solo uso — si el intercambio falla, la solución es reiniciar el login completo (`iniciarLogin`, con un `code_verifier` nuevo), nunca reintentar con el mismo.
+`sesion` es la única fuente de verdad, y vive en memoria (2.3) — nada de lo que `AuthService` guarda ahí sobrevive un *reload*. `autenticado`, `roles` y `usuario` son `computed`: se recalculan solos cada vez que `sesion` cambia, sin que ninguna otra parte de la SPA tenga que sincronizar nada a mano. `iniciarLogin` guarda el `code_verifier`, el `state` (2.2) y la ruta a la que el usuario quería ir (`destino`) en `sessionStorage` — la misma excepción acotada ya justificada en 2.3, ahora con tres valores en vez de uno, ninguno de los tres el token — y redirige el navegador completo a Keycloak.
+
+`completarLogin` revisa `state` **antes** de confiar en el `code_verifier` (2.2): si el valor que Keycloak devolvió no coincide con el que la SPA guardó antes de redirigir, lanza un error y nunca llega a intentar el intercambio — sin importar si el `code_verifier` guardado era correcto. Usa `fetch`, no `HttpClient` — a propósito: este intercambio nunca debe pasar por `authInterceptor` (3.8, que adjunta `Authorization` a las peticiones hacia `bomerp-backend`), y Keycloak no es `bomerp-backend`; tampoco hay, todavía, ningún `accessToken` que adjuntarle. `sessionStorage.removeItem(CLAVE_CODE_VERIFIER)` ocurre **antes** de revisar si la respuesta fue exitosa, a propósito: el `code_verifier` es de un solo uso — si el intercambio falla, la solución es reiniciar el login completo (`iniciarLogin`, con un `code_verifier` nuevo), nunca reintentar con el mismo.
+
+`refrescar` reusa `guardarSesion` igual que `completarLogin` — misma forma de respuesta (`TokenResponse`), mismo destino (`sesion`) —, y si el `refresh_token` ya venció o Keycloak lo rechaza, limpia la sesión en vez de dejar un estado a medias; 3.8 es quien decide, desde el interceptor, cuándo llamarlo. `cerrarSesion` limpia la sesión en memoria **antes** de redirigir — si la redirección a Keycloak fallara por cualquier razón de red, la SPA igual queda sin sesión activa del lado del cliente. `id_token_hint` (el `idToken` que Keycloak entregó junto al `accessToken`, 2.1) es lo que le confirma a Keycloak *cuál* sesión cerrar — el *RP-Initiated Logout* (*Relying Party*, el nombre que OpenID Connect le da al cliente en este flujo) de OpenID Connect lo usa para no depender solo de la cookie de sesión del navegador. `guardarSesion` queda privado: nadie fuera de `AuthService` necesita construir un `SesionKeycloak` a mano.
+
+### 3.4 Construir la ruta de retorno (`/auth/callback`)
+
+**Producto del paso:** el componente que recibe la redirección de Keycloak y la conecta con `completarLogin`/`destinoPendiente` (ya construidos en 3.3) — nada nuevo en `AuthService`, solo quien lo consume por primera vez.
 
 **`lp2/bomerp-frontend/src/app/core/auth/auth-callback.ts`** (archivo nuevo):
 
@@ -651,14 +681,7 @@ export class AuthCallback {
 }
 ```
 
-**`lp2/bomerp-frontend/src/app/app.routes.ts`** — agrega la ruta, **fuera** del grupo que cuelga de `Layout` (no necesita sidebar ni header, y tampoco debe pasar por `authGuard`, 3.6 — es, precisamente, la ruta que completa el login):
-
-```typescript
-{
-  path: 'auth/callback',
-  loadComponent: () => import('./core/auth/auth-callback').then((m) => m.AuthCallback),
-},
-```
+`app.routes.ts` todavía no se toca: 3.6 y 3.7 agregan, cada uno, una pieza más (`authGuard`, `rolGuard`), y las tres (`auth/callback` incluida) se registran **juntas, en un solo bloque completo**, al final de 3.7 — no en ediciones parciales repartidas en cada paso.
 
 ### 3.5 Decodificar el token: claims, roles y expiración
 
@@ -719,18 +742,7 @@ export const authGuard: CanActivateFn = async (_route, state) => {
 
 `authGuard` es `async` porque `iniciarLogin` lo es (3.3, por el `await` a `generarCodeChallenge`) — el `return false` final casi nunca llega a importarle a nadie: para cuando se ejecuta, `location.href` ya empezó a navegar el navegador entero fuera de la SPA, hacia Keycloak.
 
-**`lp2/bomerp-frontend/src/app/app.routes.ts`** — agrégalo a la ruta de `Layout` (protege todo lo que cuelga de ella):
-
-```typescript
-{
-  path: '',
-  loadComponent: () => import('./core/layout/layout').then((m) => m.Layout),
-  canActivate: [authGuard],
-  children: [
-    // ... las rutas que ya existen, sin cambios
-  ],
-},
-```
+`app.routes.ts` tampoco se toca todavía — 3.7 cierra con el bloque completo, `authGuard` incluido.
 
 ### 3.7 Construir el *guard* de rol y proteger las rutas de escritura
 
@@ -757,63 +769,105 @@ export function rolGuard(...rolesPermitidos: string[]): CanActivateFn {
 
 A diferencia de `authGuard`, `rolGuard` es una **fábrica** de *guards* (devuelve una función, no es una función en sí misma) — necesita saber, por cada ruta, qué roles exigir, y ese dato cambia según la ruta. `router.parseUrl(...)` es la forma correcta de redirigir desde un *guard* funcional: el *router* lo interpreta como "no actives esta ruta, activa esta otra en su lugar", sin el salto en dos pasos de llamar a `router.navigate()` y devolver `false` por separado.
 
-**`lp2/bomerp-frontend/src/app/app.routes.ts`** — agrega `canActivate: [rolGuard(...)]` a las rutas de escritura (déjalas dentro de los hijos de `Layout`, que ya tienen `authGuard` heredado):
+**`lp2/bomerp-frontend/src/app/core/sin-permiso/sin-permiso.ts`** (archivo nuevo) — componente mínimo, sin lógica, al que `rolGuard` redirige cuando el rol no alcanza:
 
 ```typescript
-{
-  path: 'catalogo/categorias/nueva',
-  loadComponent: () =>
-    import('./features/catalogo/categoria/categoria-form').then((m) => m.CategoriaForm),
-  canActivate: [rolGuard('ADMIN')],
-},
-{
-  path: 'catalogo/categorias/:id/editar',
-  loadComponent: () =>
-    import('./features/catalogo/categoria/categoria-form').then((m) => m.CategoriaForm),
-  canActivate: [rolGuard('ADMIN')],
-},
-// el mismo canActivate en catalogo/productos/nuevo y catalogo/productos/:id/editar
-{
-  path: 'ventas/nueva',
-  loadComponent: () =>
-    import('./features/ventas/venta/venta-form').then((m) => m.VentaForm),
-  canActivate: [rolGuard('VENDEDOR', 'SUPERVISOR')],
-},
+import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
+
+@Component({
+  selector: 'app-sin-permiso',
+  imports: [RouterLink],
+  template: `
+    <p>No tienes permiso para acceder a esa pantalla.</p>
+    <a routerLink="/">Volver al inicio</a>
+  `,
+})
+export class SinPermiso {}
 ```
 
-Agrega también una ruta simple para `/sin-permiso` (un componente mínimo, sin lógica — un mensaje y un enlace de vuelta al inicio) y actualízala en el `path: 'sin-permiso'` del mismo archivo de rutas.
+Con `AuthService`, `authGuard`, `rolGuard`, `AuthCallback` y `SinPermiso` ya construidos, recién ahora se registra todo junto, **en un solo bloque completo** — no en ediciones parciales repartidas en 3.4/3.6/3.7 como antes. Reemplaza **`lp2/bomerp-frontend/src/app/app.routes.ts`** por completo:
 
-**Error frecuente**: aplicar `rolGuard` a `ventas/reporte` por error, copiando el mismo patrón de `ventas/nueva`. La Tabla 5 (2.7) ya lo aclara: el reporte es visible para los tres roles (filtrado por dueño del lado del servidor, RN8) — solo el botón "Anular" **dentro** de esa pantalla exige rol, y eso se resuelve en la plantilla (3.9), no en la ruta.
+```typescript
+import { Routes } from '@angular/router';
+import { authGuard } from './core/guards/auth-guard';
+import { rolGuard } from './core/guards/rol-guard';
+
+export const routes: Routes = [
+  {
+    path: 'auth/callback',
+    loadComponent: () => import('./core/auth/auth-callback').then((m) => m.AuthCallback),
+  },
+  {
+    path: '',
+    loadComponent: () => import('./core/layout/layout').then((m) => m.Layout),
+    canActivate: [authGuard],
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./core/inicio/inicio').then((m) => m.Inicio),
+      },
+      {
+        path: 'catalogo/categorias',
+        loadComponent: () =>
+          import('./features/catalogo/categoria/categoria-list').then((m) => m.CategoriaList),
+      },
+      {
+        path: 'catalogo/categorias/nueva',
+        loadComponent: () =>
+          import('./features/catalogo/categoria/categoria-form').then((m) => m.CategoriaForm),
+        canActivate: [rolGuard('ADMIN')],
+      },
+      {
+        path: 'catalogo/categorias/:id/editar',
+        loadComponent: () =>
+          import('./features/catalogo/categoria/categoria-form').then((m) => m.CategoriaForm),
+        canActivate: [rolGuard('ADMIN')],
+      },
+      {
+        path: 'catalogo/productos',
+        loadComponent: () =>
+          import('./features/catalogo/producto/producto-list').then((m) => m.ProductoList),
+      },
+      {
+        path: 'catalogo/productos/nuevo',
+        loadComponent: () =>
+          import('./features/catalogo/producto/producto-form').then((m) => m.ProductoForm),
+        canActivate: [rolGuard('ADMIN')],
+      },
+      {
+        path: 'catalogo/productos/:id/editar',
+        loadComponent: () =>
+          import('./features/catalogo/producto/producto-form').then((m) => m.ProductoForm),
+        canActivate: [rolGuard('ADMIN')],
+      },
+      {
+        path: 'ventas/nueva',
+        loadComponent: () =>
+          import('./features/ventas/venta/venta-form').then((m) => m.VentaForm),
+        canActivate: [rolGuard('VENDEDOR', 'SUPERVISOR')],
+      },
+      {
+        path: 'ventas/reporte',
+        loadComponent: () =>
+          import('./features/ventas/venta/venta-reporte').then((m) => m.VentaReporteComponent),
+      },
+      {
+        path: 'sin-permiso',
+        loadComponent: () => import('./core/sin-permiso/sin-permiso').then((m) => m.SinPermiso),
+      },
+    ],
+  },
+];
+```
+
+`auth/callback` queda **fuera** del grupo que cuelga de `Layout`: no necesita sidebar ni header, y tampoco debe pasar por `authGuard` — es, precisamente, la ruta que completa el login, antes de que exista ninguna sesión. `canActivate: [authGuard]` en la propia ruta de `Layout` protege todo lo que cuelga de ella, `Inicio` incluido (2.5: en BomERP, a diferencia de un catálogo público, nadie navega ninguna pantalla sin sesión). `rolGuard(...)` se agrega solo a las rutas de escritura, nunca a `catalogo/categorias`, `catalogo/productos` ni `ventas/reporte` — la Tabla 5 (2.7) ya estableció que esas tres son de lectura para cualquier autenticado (el reporte, filtrado por dueño del lado del servidor, RN8); solo el botón "Anular" **dentro** de esa pantalla exige rol, y eso se resuelve en la plantilla (3.9), no en la ruta.
+
+**Error frecuente**: aplicar `rolGuard` a `ventas/reporte` por error, copiando el mismo patrón de `ventas/nueva`.
 
 ### 3.8 Construir el interceptor: token automático y refresco en `401`
 
-**Producto del paso:** `authInterceptor`, adjuntando el token a cada petición hacia `bomerp-backend` y resolviendo un `401` con un solo refresco antes de rendirse (2.6, Figura 3).
-
-Primero, completa `AuthService` con el método de refresco — agrégalo después de `completarLogin`:
-
-```typescript
-  async refrescar(): Promise<boolean> {
-    const refreshToken = this.sesion()?.refreshToken;
-    if (!refreshToken) return false;
-
-    const cuerpo = new URLSearchParams({
-      grant_type: 'refresh_token',
-      client_id: environment.keycloak.clientId,
-      refresh_token: refreshToken,
-    });
-    const respuesta = await fetch(`${environment.keycloak.issuer}/protocol/openid-connect/token`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: cuerpo,
-    });
-    if (!respuesta.ok) {
-      this.sesion.set(null);
-      return false;
-    }
-    this.guardarSesion(await respuesta.json());
-    return true;
-  }
-```
+**Producto del paso:** `authInterceptor`, adjuntando el token a cada petición hacia `bomerp-backend` y llamando a `refrescar` (ya construido en 3.3) para resolver un `401` con un solo intento antes de rendirse (2.6, Figura 3).
 
 **`lp2/bomerp-frontend/src/app/core/interceptors/auth-interceptor.ts`** (archivo nuevo):
 
@@ -860,23 +914,7 @@ provideHttpClient(withInterceptors([authInterceptor, traceIdInterceptor])),
 
 ### 3.9 Menú dinámico, usuario real, botón "Anular" protegido y cierre de sesión
 
-**Producto del paso:** `layout.html` mostrando el nombre real del usuario y el menú de la Tabla 5 (2.7), y el botón "Anular" del reporte visible solo para `SUPERVISOR`/`ADMIN`.
-
-Primero, agrega el cierre de sesión a `AuthService` — agrégalo al final de la clase:
-
-```typescript
-  cerrarSesion(): void {
-    const idToken = this.sesion()?.idToken;
-    this.sesion.set(null);
-    const parametros = new URLSearchParams({
-      post_logout_redirect_uri: environment.keycloak.postLogoutRedirectUri,
-      ...(idToken ? { id_token_hint: idToken } : {}),
-    });
-    location.href = `${environment.keycloak.issuer}/protocol/openid-connect/logout?${parametros}`;
-  }
-```
-
-`cerrarSesion` limpia la sesión en memoria **antes** de redirigir — si la redirección a Keycloak fallara por cualquier razón de red, la SPA igual queda sin sesión activa del lado del cliente. `id_token_hint` (el `idToken` que Keycloak entregó junto al `accessToken`, 2.1) es lo que le confirma a Keycloak *cuál* sesión cerrar — el *RP-Initiated Logout* (*Relying Party*, el nombre que OpenID Connect le da al cliente en este flujo) de OpenID Connect lo usa para no depender solo de la cookie de sesión del navegador.
+**Producto del paso:** `layout.html` mostrando el nombre real del usuario y el menú de la Tabla 5 (2.7), con el botón "Cerrar sesión" llamando a `cerrarSesion` (ya construido en 3.3), y el botón "Anular" del reporte visible solo para `SUPERVISOR`/`ADMIN`.
 
 **`lp2/bomerp-frontend/src/app/core/layout/layout.ts`** — inyecta `AuthService`:
 
@@ -943,7 +981,7 @@ protected readonly auth = inject(AuthService);
 
 ### 3.10 Probar la matriz de accesos completa
 
-**Producto del paso:** verificación real, con los cuatro usuarios de S10b, de que cada pieza construida en 3.1-3.9 funciona junta.
+**Producto del paso:** verificación real, con los cuatro usuarios de S10b, de que cada pieza construida en 3.1-3.1b y 3.2-3.9 funciona junta.
 
 Con `bomerp-oracle`, `bomerp-keycloak` y `bomerp-backend` corriendo, levanta la SPA:
 
