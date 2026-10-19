@@ -4814,22 +4814,38 @@
 <span class="nb">echo</span><span class="w"> </span><span class="s2">"code_verifier:  </span><span class="nv">$CODE_VERIFIER</span><span class="s2">"</span>
 <span class="nb">echo</span><span class="w"> </span><span class="s2">"code_challenge: </span><span class="nv">$CODE_CHALLENGE</span><span class="s2">"</span>
 </code></pre></div>
-<p>Arma la URL con el <code>code_challenge</code> ya calculado y ábrela:</p>
-<div class="highlight"><pre><span></span><code>http://localhost:38080/realms/bomerp/protocol/openid-connect/auth?client_id=bomerp-frontend&amp;redirect_uri=http://localhost:4200/auth/callback&amp;response_type=code&amp;scope=openid&amp;code_challenge=&lt;pega aquí code_challenge&gt;&amp;code_challenge_method=S256
+<p>Arma la URL con <code>$codeChallenge</code>/<code>$CODE_CHALLENGE</code> y ábrela en el navegador — sin copiar ningún valor a mano:</p>
+<div class="highlight"><pre><span></span><code><span class="s2">"http://localhost:38080/realms/bomerp/protocol/openid-connect/auth?client_id=bomerp-frontend&amp;response_type=code&amp;redirect_uri=http://localhost:4200/auth/callback&amp;scope=openid&amp;code_challenge=$codeChallenge&amp;code_challenge_method=S256"</span>
 </code></pre></div>
-<p>Entra con <code>vendedor1@bomerp.com</code> / <code>Bomerp2026!</code> (o reutiliza la sesión si Keycloak no pide login de nuevo — es SSO, no un error). El navegador intenta redirigir a <code>http://localhost:4200/auth/callback?code=...</code>: como la SPA todavía no existe (llega recién en 3.4), la pestaña muestra error de conexión — eso es esperado. Copia el <code>code</code> de la barra de direcciones antes de que expire.</p>
-<p>Intercambia el código por un token, esta vez incluyendo <code>code_verifier</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="nv">$code</span> <span class="p">=</span> <span class="s2">"&lt;pega aquí el code&gt;"</span>
-<span class="nv">$login</span> <span class="p">=</span> <span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:38080/realms/bomerp/protocol/openid-connect/token"</span> <span class="p">`</span>
-  <span class="n">-ContentType</span> <span class="s2">"application/x-www-form-urlencoded"</span> <span class="p">`</span>
-  <span class="n">-Body</span> <span class="s2">"grant_type=authorization_code&amp;client_id=bomerp-frontend&amp;redirect_uri=http://localhost:4200/auth/callback&amp;code=$code&amp;code_verifier=$codeVerifier"</span>
-<span class="nv">$login</span><span class="p">.</span><span class="n">access_token</span>
+<div class="highlight"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span><span class="s2">"http://localhost:38080/realms/bomerp/protocol/openid-connect/auth?client_id=bomerp-frontend&amp;response_type=code&amp;redirect_uri=http://localhost:4200/auth/callback&amp;scope=openid&amp;code_challenge=</span><span class="nv">$CODE_CHALLENGE</span><span class="s2">&amp;code_challenge_method=S256"</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:38080/realms/bomerp/protocol/openid-connect/token<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/x-www-form-urlencoded"</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s2">"grant_type=authorization_code&amp;client_id=bomerp-frontend&amp;redirect_uri=http://localhost:4200/auth/callback&amp;code=&lt;pega aquí el code&gt;&amp;code_verifier=</span><span class="nv">$CODE_VERIFIER</span><span class="s2">"</span>
+<p>Copia la URL completa que imprime (ya con el <code>code_challenge</code> real, no un <em>placeholder</em>) y pégala en el navegador. Entra con <code>vendedor1@bomerp.com</code> / <code>Bomerp2026!</code> (o reutiliza la sesión si Keycloak no pide login de nuevo — es SSO, no un error). El navegador intenta redirigir a <code>http://localhost:4200/auth/callback?code=...</code>: como la SPA todavía no existe (llega recién en 3.4), la pestaña muestra error de conexión — eso es esperado. Copia el <code>code</code> de la barra de direcciones antes de que expire.</p>
+<p>Intercambia el código por un token — <code>$codeVerifier</code>/<code>$CODE_VERIFIER</code> siguen en la misma sesión de terminal del paso anterior, así que no hace falta volver a copiarlos a mano; solo pega el <code>code</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$code</span> <span class="p">=</span> <span class="s2">"&lt;code copiado del navegador&gt;"</span>
+
+<span class="nv">$body</span> <span class="p">=</span> <span class="p">@{</span>
+  <span class="n">grant_type</span>    <span class="p">=</span> <span class="s2">"authorization_code"</span>
+  <span class="n">client_id</span>     <span class="p">=</span> <span class="s2">"bomerp-frontend"</span>
+  <span class="n">redirect_uri</span>  <span class="p">=</span> <span class="s2">"http://localhost:4200/auth/callback"</span>
+  <span class="n">code</span>          <span class="p">=</span> <span class="nv">$code</span>
+  <span class="n">code_verifier</span> <span class="p">=</span> <span class="nv">$codeVerifier</span>
+<span class="p">}</span>
+<span class="nv">$login</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:38080/realms/bomerp/protocol/openid-connect/token"</span> <span class="n">-Body</span> <span class="nv">$body</span><span class="p">).</span><span class="n">access_token</span>
+<span class="nv">$login</span>
 </code></pre></div>
-<p>Pega el <code>access_token</code> en <a href="https://jwt.io">jwt.io</a> y confirma lo mismo que S10b 6 ya había verificado con el atajo: <code>realm_access.roles</code> trae <code>["VENDEDOR"]</code> y <code>sub</code> es un UUID — la diferencia es que esta vez llegó por el flujo que la SPA va a usar de verdad, con PKCE exigido en cada paso.</p>
+<div class="highlight"><pre><span></span><code><span class="nv">CODE</span><span class="o">=</span><span class="s2">"&lt;code copiado del navegador&gt;"</span>
+
+<span class="nv">login</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:38080/realms/bomerp/protocol/openid-connect/token<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="nv">grant_type</span><span class="o">=</span>authorization_code<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="nv">client_id</span><span class="o">=</span>bomerp-frontend<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="nv">redirect_uri</span><span class="o">=</span>http://localhost:4200/auth/callback<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="nv">code</span><span class="o">=</span><span class="s2">"</span><span class="nv">$CODE</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="nv">code_verifier</span><span class="o">=</span><span class="s2">"</span><span class="nv">$CODE_VERIFIER</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">'.access_token'</span><span class="k">)</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$login</span><span class="s2">"</span>
+</code></pre></div>
+<p>Pega el <code>access_token</code> (<code>$login</code>) en <a href="https://jwt.io">jwt.io</a> y confirma lo mismo que S10b 6 ya había verificado con el atajo: <code>realm_access.roles</code> trae <code>["VENDEDOR"]</code> y <code>sub</code> es un UUID — la diferencia es que esta vez llegó por el flujo que la SPA va a usar de verdad, con PKCE exigido en cada paso.</p>
 <p><strong>Error frecuente</strong>: pegar un <code>code</code> vencido o ya usado una vez (<code>invalid_grant</code>) — un <code>code</code> de <em>Authorization Code</em> se consume en el primer intercambio y expira en segundos; si falla, repite desde el paso 3 con una URL nueva, nunca reintentes el mismo <code>code</code>.</p>
 <h3 id="32-configurar-el-entorno-y-construir-el-generador-de-pkce">3.2 Configurar el entorno y construir el generador de PKCE<a class="headerlink" href="#32-configurar-el-entorno-y-construir-el-generador-de-pkce" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> la configuración de Keycloak disponible como <code>environment</code>, y las dos funciones que generan el <code>code_verifier</code> y el <code>code_challenge</code> (RFC 7636).</p>
