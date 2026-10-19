@@ -3680,6 +3680,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#31b-corregir-cors-en-bomerp-backend-pendiente-desde-s10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1b Corregir CORS en bomerp-backend (pendiente desde S10)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#32-configurar-el-entorno-y-construir-el-generador-de-pkce" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4229,6 +4240,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#31b-corregir-cors-en-bomerp-backend-pendiente-desde-s10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1b Corregir CORS en bomerp-backend (pendiente desde S10)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#32-configurar-el-entorno-y-construir-el-generador-de-pkce" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4515,7 +4537,7 @@
 <tr>
 <td>Clase presencial</td>
 <td>Reconfiguración guiada del cliente de Keycloak, construcción del flujo PKCE completo, los <em>guards</em>, el interceptor, el menú por rol y el cierre de sesión — todo sobre <code>bomerp-frontend</code> real. Trabajo individual en la propia laptop, siguiendo al docente paso a paso.</td>
-<td>Contenedores <code>bomerp-oracle</code>, <code>bomerp-keycloak</code>, <code>bomerp-backend</code> corriendo; Pasos 3.1 a 3.10 de esta guía.</td>
+<td>Contenedores <code>bomerp-oracle</code>, <code>bomerp-keycloak</code>, <code>bomerp-backend</code> corriendo; Pasos 3.1-3.1b a 3.10 de esta guía.</td>
 </tr>
 <tr>
 <td>Evaluación formativa</td>
@@ -4756,6 +4778,7 @@
 <p><strong>Actividades para realizar:</strong></p>
 <ul>
 <li><strong>3.1</strong> Reconfigurar el cliente de Keycloak para el flujo real.</li>
+<li><strong>3.1b</strong> Corregir CORS en <code>bomerp-backend</code> (pendiente desde S10).</li>
 <li><strong>3.2</strong> Configurar el entorno y construir el generador de PKCE.</li>
 <li><strong>3.3</strong> Construir <code>AuthService</code>: iniciar el login y guardar la sesión en memoria.</li>
 <li><strong>3.4</strong> Construir la ruta de retorno (<code>/auth/callback</code>) y completar el intercambio.</li>
@@ -4847,6 +4870,69 @@
 </code></pre></div>
 <p>Pega el <code>access_token</code> (<code>$login</code>) en <a href="https://jwt.io">jwt.io</a> y confirma lo mismo que S10b 6 ya había verificado con el atajo: <code>realm_access.roles</code> trae <code>["VENDEDOR"]</code> y <code>sub</code> es un UUID — la diferencia es que esta vez llegó por el flujo que la SPA va a usar de verdad, con PKCE exigido en cada paso.</p>
 <p><strong>Error frecuente</strong>: pegar un <code>code</code> vencido o ya usado una vez (<code>invalid_grant</code>) — un <code>code</code> de <em>Authorization Code</em> se consume en el primer intercambio y expira en segundos; si falla, repite desde el paso 3 con una URL nueva, nunca reintentes el mismo <code>code</code>.</p>
+<h3 id="31b-corregir-cors-en-bomerp-backend-pendiente-desde-s10">3.1b Corregir CORS en <code>bomerp-backend</code> (pendiente desde S10)<a class="headerlink" href="#31b-corregir-cors-en-bomerp-backend-pendiente-desde-s10" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> <code>bomerp-backend</code> respondiendo bien al <em>preflight</em> CORS del navegador. La rama <code>s10b-seguridad-keycloak</code> que clonaste en "Punto de partida común" todavía trae el bug sin corregir — hasta este paso, cualquier <code>fetch</code>/<code>HttpClient</code> de una SPA real contra este backend falla en la consola con "blocked by CORS policy", sin importar qué tan bien esté construida.</p>
+<p>Desde S10 (3.11), <code>SecurityConfig</code> empezó a exigir autenticación real (<code>anyRequest().authenticated()</code>), pero <code>CorsConfig</code> (S5, 3.7) se quedó en su versión basada en <code>WebMvcConfigurer</code> — un mecanismo de Spring MVC que nunca llega a ejecutarse si Spring Security ya rechazó la petición antes. El <em>preflight</em> <code>OPTIONS</code> que manda el navegador nunca lleva <code>Authorization</code>, así que Security lo rechaza con <code>401</code> <strong>antes</strong> de que <code>CorsConfig</code> pueda agregar las cabeceras CORS — el navegador lo reporta como bloqueo de CORS, aunque la causa real es de autorización. Corrígelo ahora, antes de construir nada de Angular: así 3.2-3.10 arrancan contra un backend que responde bien, y el <code>401</code>/<code>403</code>/<code>200</code> que vas a ver en cada prueba refleja el estado real de autenticación/autorización, no un bloqueo de CORS disfrazado.</p>
+<p><strong><code>lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/CorsConfig.java</code></strong> (reemplaza la versión de S5 — mueve la configuración de CORS de Spring MVC a un <em>bean</em> que Spring Security sí puede usar):</p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">pe.edu.upeu.bomerp</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.beans.factory.annotation.Value</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.context.annotation.Bean</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.context.annotation.Configuration</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.cors.CorsConfiguration</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.cors.CorsConfigurationSource</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.cors.UrlBasedCorsConfigurationSource</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Arrays</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+
+<span class="nd">@Configuration</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">CorsConfig</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@Value</span><span class="p">(</span><span class="s">"${bomerp.cors.allowed-origins}"</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">allowedOrigins</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Bean</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">CorsConfigurationSource</span><span class="w"> </span><span class="nf">corsConfigurationSource</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">CorsConfiguration</span><span class="w"> </span><span class="n">configuracion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">CorsConfiguration</span><span class="p">();</span>
+<span class="w">        </span><span class="n">configuracion</span><span class="p">.</span><span class="na">setAllowedOrigins</span><span class="p">(</span><span class="n">Arrays</span><span class="p">.</span><span class="na">stream</span><span class="p">(</span><span class="n">allowedOrigins</span><span class="p">.</span><span class="na">split</span><span class="p">(</span><span class="s">","</span><span class="p">))</span>
+<span class="w">                </span><span class="p">.</span><span class="na">map</span><span class="p">(</span><span class="n">String</span><span class="p">::</span><span class="n">trim</span><span class="p">)</span>
+<span class="w">                </span><span class="p">.</span><span class="na">toList</span><span class="p">());</span>
+<span class="w">        </span><span class="n">configuracion</span><span class="p">.</span><span class="na">setAllowedMethods</span><span class="p">(</span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">"GET"</span><span class="p">,</span><span class="w"> </span><span class="s">"POST"</span><span class="p">,</span><span class="w"> </span><span class="s">"PUT"</span><span class="p">,</span><span class="w"> </span><span class="s">"PATCH"</span><span class="p">,</span><span class="w"> </span><span class="s">"DELETE"</span><span class="p">));</span>
+<span class="w">        </span><span class="n">configuracion</span><span class="p">.</span><span class="na">setAllowedHeaders</span><span class="p">(</span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">"*"</span><span class="p">));</span>
+
+<span class="w">        </span><span class="n">UrlBasedCorsConfigurationSource</span><span class="w"> </span><span class="n">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">UrlBasedCorsConfigurationSource</span><span class="p">();</span>
+<span class="w">        </span><span class="n">source</span><span class="p">.</span><span class="na">registerCorsConfiguration</span><span class="p">(</span><span class="s">"/api/**"</span><span class="p">,</span><span class="w"> </span><span class="n">configuracion</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">source</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong><code>lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/SecurityConfig.java</code></strong> — en <code>securityFilterChain</code>, agrega <code>.cors(cors -&gt; {})</code> como primera línea de la cadena (toma el <em>bean</em> de arriba automáticamente), y aprovecha para quitar las dos reglas que ya quedaron huérfanas desde que <code>seguridad</code> se retiró (S10b, 7.2) — ningún controlador sirve <code>/api/v1/auth/**</code> ni <code>/.well-known/jwks.json</code> en este backend:</p>
+<div class="highlight"><pre><span></span><code><span class="n">http</span>
+<span class="w">        </span><span class="p">.</span><span class="na">cors</span><span class="p">(</span><span class="n">cors</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{})</span>
+<span class="w">        </span><span class="p">.</span><span class="na">csrf</span><span class="p">(</span><span class="n">csrf</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">csrf</span><span class="p">.</span><span class="na">disable</span><span class="p">())</span>
+<span class="w">        </span><span class="p">.</span><span class="na">sessionManagement</span><span class="p">(</span><span class="n">session</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">session</span><span class="p">.</span><span class="na">sessionCreationPolicy</span><span class="p">(</span><span class="n">SessionCreationPolicy</span><span class="p">.</span><span class="na">STATELESS</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="na">authorizeHttpRequests</span><span class="p">(</span><span class="n">auth</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">auth</span>
+<span class="w">                </span><span class="p">.</span><span class="na">requestMatchers</span><span class="p">(</span><span class="s">"/actuator/**"</span><span class="p">,</span><span class="w"> </span><span class="s">"/swagger-ui.html"</span><span class="p">,</span><span class="w"> </span><span class="s">"/swagger-ui/**"</span><span class="p">,</span><span class="w"> </span><span class="s">"/v3/api-docs/**"</span><span class="p">).</span><span class="na">permitAll</span><span class="p">()</span>
+
+<span class="w">                </span><span class="p">.</span><span class="na">requestMatchers</span><span class="p">(</span><span class="n">HttpMethod</span><span class="p">.</span><span class="na">GET</span><span class="p">,</span><span class="w"> </span><span class="s">"/api/v1/productos/**"</span><span class="p">,</span><span class="w"> </span><span class="s">"/api/v1/categorias/**"</span><span class="p">).</span><span class="na">authenticated</span><span class="p">()</span>
+<span class="w">                </span><span class="p">.</span><span class="na">requestMatchers</span><span class="p">(</span><span class="n">HttpMethod</span><span class="p">.</span><span class="na">POST</span><span class="p">,</span><span class="w"> </span><span class="s">"/api/v1/productos/**"</span><span class="p">,</span><span class="w"> </span><span class="s">"/api/v1/categorias/**"</span><span class="p">).</span><span class="na">hasRole</span><span class="p">(</span><span class="s">"ADMIN"</span><span class="p">)</span>
+<span class="w">                </span><span class="p">.</span><span class="na">requestMatchers</span><span class="p">(</span><span class="n">HttpMethod</span><span class="p">.</span><span class="na">PUT</span><span class="p">,</span><span class="w"> </span><span class="s">"/api/v1/productos/**"</span><span class="p">,</span><span class="w"> </span><span class="s">"/api/v1/categorias/**"</span><span class="p">).</span><span class="na">hasRole</span><span class="p">(</span><span class="s">"ADMIN"</span><span class="p">)</span>
+<span class="w">                </span><span class="p">.</span><span class="na">requestMatchers</span><span class="p">(</span><span class="n">HttpMethod</span><span class="p">.</span><span class="na">DELETE</span><span class="p">,</span><span class="w"> </span><span class="s">"/api/v1/productos/**"</span><span class="p">,</span><span class="w"> </span><span class="s">"/api/v1/categorias/**"</span><span class="p">).</span><span class="na">hasRole</span><span class="p">(</span><span class="s">"ADMIN"</span><span class="p">)</span>
+
+<span class="w">                </span><span class="p">.</span><span class="na">requestMatchers</span><span class="p">(</span><span class="n">HttpMethod</span><span class="p">.</span><span class="na">POST</span><span class="p">,</span><span class="w"> </span><span class="s">"/api/v1/ventas"</span><span class="p">).</span><span class="na">hasAnyRole</span><span class="p">(</span><span class="s">"VENDEDOR"</span><span class="p">,</span><span class="w"> </span><span class="s">"SUPERVISOR"</span><span class="p">)</span>
+<span class="w">                </span><span class="p">.</span><span class="na">requestMatchers</span><span class="p">(</span><span class="n">HttpMethod</span><span class="p">.</span><span class="na">GET</span><span class="p">,</span><span class="w"> </span><span class="s">"/api/v1/ventas/resumen"</span><span class="p">).</span><span class="na">hasAnyRole</span><span class="p">(</span><span class="s">"SUPERVISOR"</span><span class="p">,</span><span class="w"> </span><span class="s">"ADMIN"</span><span class="p">)</span>
+<span class="w">                </span><span class="p">.</span><span class="na">requestMatchers</span><span class="p">(</span><span class="n">HttpMethod</span><span class="p">.</span><span class="na">PATCH</span><span class="p">,</span><span class="w"> </span><span class="s">"/api/v1/ventas/*/anular"</span><span class="p">).</span><span class="na">hasAnyRole</span><span class="p">(</span><span class="s">"SUPERVISOR"</span><span class="p">,</span><span class="w"> </span><span class="s">"ADMIN"</span><span class="p">)</span>
+<span class="w">                </span><span class="p">.</span><span class="na">requestMatchers</span><span class="p">(</span><span class="s">"/api/v1/ventas/**"</span><span class="p">).</span><span class="na">hasAnyRole</span><span class="p">(</span><span class="s">"VENDEDOR"</span><span class="p">,</span><span class="w"> </span><span class="s">"SUPERVISOR"</span><span class="p">,</span><span class="w"> </span><span class="s">"ADMIN"</span><span class="p">)</span>
+
+<span class="w">                </span><span class="p">.</span><span class="na">anyRequest</span><span class="p">().</span><span class="na">authenticated</span><span class="p">()</span>
+<span class="w">        </span><span class="p">)</span>
+<span class="w">        </span><span class="p">.</span><span class="na">oauth2ResourceServer</span><span class="p">(</span><span class="n">oauth2</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">oauth2</span>
+<span class="w">                </span><span class="p">.</span><span class="na">jwt</span><span class="p">(</span><span class="n">jwt</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">jwt</span><span class="p">.</span><span class="na">jwtAuthenticationConverter</span><span class="p">(</span><span class="n">jwtAuthenticationConverter</span><span class="p">)));</span>
+</code></pre></div>
+<p>Si tu rama todavía trae <code>.requestMatchers("/api/v1/auth/**").permitAll()</code> o <code>.requestMatchers("/.well-known/jwks.json").permitAll()</code> (restos de antes de S10b 7.2), bórralas junto con este cambio — ninguna de las dos protege nada real desde que Keycloak reemplazó a <code>seguridad</code>.</p>
+<p>Reinicia <code>bomerp-backend</code> (<code>.\mvnw.cmd spring-boot:run</code> — DevTools no recarga este tipo de cambio solo) y confirma: una petición sin token (<code>Invoke-RestMethod http://localhost:8080/api/v1/categorias</code> o abrir la URL directo en el navegador) debe seguir devolviendo <code>401</code>, pero ahora <strong>sin</strong> error de CORS si la pruebas desde <code>bomerp-frontend</code> (aunque el frontend recién exista desde 3.2) — la diferencia que importa es que <code>401</code> es la respuesta real del backend, no un bloqueo del navegador antes de llegar a él.</p>
+<p><strong>Error frecuente</strong>: confundir este <code>401</code> con que "algo sigue mal". Es exactamente lo esperado hasta 3.8: la SPA todavía no adjunta ningún <code>Authorization</code> header (eso lo construye el interceptor), así que Security rechaza la petición por falta de token — correcto, y distinto del bloqueo de CORS que acabas de corregir.</p>
 <h3 id="32-configurar-el-entorno-y-construir-el-generador-de-pkce">3.2 Configurar el entorno y construir el generador de PKCE<a class="headerlink" href="#32-configurar-el-entorno-y-construir-el-generador-de-pkce" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> la configuración de Keycloak disponible como <code>environment</code>, y las dos funciones que generan el <code>code_verifier</code> y el <code>code_challenge</code> (RFC 7636).</p>
 <p><strong><code>lp2/bomerp-frontend/src/environments/environment.ts</code></strong> — agrega la configuración de Keycloak, junto a la que ya existe:</p>
