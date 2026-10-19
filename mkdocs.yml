@@ -119,3 +119,4 @@ nav:
           - S9 - Formularios transaccionales cabecera-detalle: lp2/sesiones/S09_Formularios_Transaccionales_Cabecera_Detalle.md
           - S10 - Seguridad backend JWT y roles: lp2/sesiones/S10_Seguridad_Backend_JWT_Roles.md
           - S10 (referencia) - Reemplazo de seguridad por Keycloak: lp2/sesiones/S10b_Seguridad_Backend_Keycloak.md
+          - S11 - Seguridad frontend con Keycloak: lp2/sesiones/S11_Seguridad_Frontend_Keycloak.md
