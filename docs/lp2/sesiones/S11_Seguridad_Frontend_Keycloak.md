@@ -242,6 +242,14 @@ Tiempo: 110 min.
 - **3.9** Menú dinámico, usuario real, botón "Anular" protegido y cierre de sesión.
 - **3.10** Probar la matriz de accesos completa.
 
+**Punto de partida común:** todo el equipo debe comenzar exactamente desde donde quedó S10b, no desde su propio avance individual. Clona la rama `s10b-seguridad-keycloak` (el snapshot de cierre de S10b — Keycloak ya reemplazó a `seguridad`, con `bomerp-backend` validando sus tokens):
+
+```bash
+git clone --branch s10b-seguridad-keycloak https://github.com/262ciclo4/bomerp.git
+```
+
+Confirma que `bomerp-oracle`, `bomerp-keycloak` y `bomerp-backend` siguen corriendo, y que una petición con un token de Keycloak (el mismo procedimiento de S10b, 7.4) sigue devolviendo `200` contra `http://localhost:8080/api/v1/productos` — si algo de esto falla, el problema es de S10b, no de esta sesión.
+
 ### 3.1 Reconfigurar el cliente de Keycloak para el flujo real
 
 **Producto del paso:** el cliente `bomerp-frontend` listo para el flujo real — sin el atajo de prueba de S10b.

@@ -2,7 +2,7 @@
 
 ## Estado
 
-Aprobada.
+Aprobada, **parcialmente superada**. Esta ADR documenta correctamente la decisión y el diseño de S10 (JWT propio, "listo para reemplazo"). Lo que ya no refleja la realidad es el supuesto de que ese reemplazo quedaría "fuera de alcance... sin agendarse en ninguna sesión concreta": una decisión posterior adelantó la migración a Keycloak dentro de la propia Unidad 2, documentada en [S10b](../sesiones/S10b_Seguridad_Backend_Keycloak.md) (ejecución obligatoria, no opcional) y asumida como prerrequisito por [S11](../sesiones/S11_Seguridad_Frontend_Keycloak.md). Pendiente: una ADR nueva que formalice esa decisión — esta queda como registro histórico de por qué S10 se diseñó así en primer lugar.
 
 ## Contexto
 
