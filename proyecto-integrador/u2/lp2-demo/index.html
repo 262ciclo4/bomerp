@@ -3839,6 +3839,7 @@
 <pre class="mermaid"><code>flowchart LR
     SPA[Una SPA&lt;br/&gt;core · shared · features]
     KC[Keycloak&lt;br/&gt;realm bomerp]
+    KCDB[(Postgres&lt;br/&gt;bomerp_keycloak)]
     API[Un Spring Boot único&lt;br/&gt;bomerp-backend]
     MOD[Paquetes de módulo, Spring Modulith&lt;br/&gt;catalogo · ventas]
     DB[(Oracle&lt;br/&gt;esquemas funcionales)]
@@ -3846,6 +3847,7 @@
     SPA --&gt;|Authorization Code + PKCE| KC
     SPA --&gt;|HTTP + Bearer token| API
     API --&gt;|valida contra Keycloak&lt;br/&gt;issuer-uri| KC
+    KC --&gt; KCDB
     API --&gt; MOD
     MOD --&gt; DB</code></pre>
 <h2 id="6-rubrica-de-evaluacion">6. Rúbrica de Evaluación<a class="headerlink" href="#6-rubrica-de-evaluacion" title="Permanent link">&para;</a></h2>
