@@ -2,6 +2,7 @@ import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { VentaService } from './venta-service';
 import { VentaResponse } from './venta.model';
+import { AuthService } from '../../../core/auth/auth-service';
 
 @Component({
   selector: 'app-venta-reporte',
@@ -25,6 +26,8 @@ export class VentaReporteComponent implements OnInit {
   protected readonly ticketPromedio = computed(() =>
     this.totalVentas() === 0 ? 0 : this.montoTotal() / this.totalVentas(),
   );
+  
+  protected readonly auth = inject(AuthService);
 
   ngOnInit(): void {
     this.cargar();
