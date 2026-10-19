@@ -178,7 +178,7 @@ Esta sesión construye dos *guards*, con una distinción que repite, ahora en el
 | `authGuard` | ¿Hay una sesión activa, con un token que todavía no venció? | Inicia el flujo de login (2.1) — la persona ni siquiera se identificó todavía. |
 | `rolGuard(...roles)` | Con sesión activa, ¿el usuario tiene alguno de los roles que esta ruta exige? | Redirige a una pantalla de acceso denegado — no tiene sentido pedirle que inicie sesión de nuevo: ya lo hizo, el problema es otro. |
 
-`authGuard` protege la ruta raíz de la SPA (todo lo que cuelga de `Layout`, S7) — nadie navega ninguna pantalla de BomERP sin sesión. `rolGuard` se agrega, además, a las rutas específicas que ya exigen un rol en el backend (3.13, 3.15 de S10): crear o editar un producto/categoría, registrar una venta nueva.
+`authGuard` **no** se aplica a la propia ruta de `Layout` (S7): `Inicio` (`''`) queda pública — cualquiera que abra `http://localhost:4200` ve el *layout* con un botón "Iniciar sesión" visible, sin que se le exija sesión de entrada (3.9). El *guard* se agrega, en cambio, a cada ruta que sí exige sesión: `catalogo/categorias`, `catalogo/productos`, `ventas/nueva`, `ventas/reporte`. `rolGuard` se agrega, además, a las rutas específicas que ya exigen un rol en el backend (3.13, 3.15 de S10): crear o editar un producto/categoría, registrar una venta nueva — siempre **después** de `authGuard` en el mismo arreglo (3.7): sin sesión, `tieneRol(...)` simplemente da `false` y rebotaría a `/sin-permiso` en silencio, en vez de ofrecer el login.
 
 ### 2.6 Interceptor: adjuntar el token, refrescar en `401`, denegar en `403`
 
@@ -721,7 +721,7 @@ Es la misma operación que hiciste a mano en S10 (3.8) y en S10b (sección 6) al
 
 ### 3.6 Construir el *guard* de autenticación
 
-**Producto del paso:** `authGuard`, protegiendo toda la navegación que cuelga de `Layout`.
+**Producto del paso:** `authGuard`, listo para aplicarse a cada ruta que exige sesión activa (2.5) — no a `Layout` en sí: `Inicio` queda público.
 
 **`lp2/bomerp-frontend/src/app/core/guards/auth-guard.ts`** (archivo nuevo):
 
@@ -801,7 +801,6 @@ export const routes: Routes = [
   {
     path: '',
     loadComponent: () => import('./core/layout/layout').then((m) => m.Layout),
-    canActivate: [authGuard],
     children: [
       {
         path: '',
@@ -809,46 +808,49 @@ export const routes: Routes = [
       },
       {
         path: 'catalogo/categorias',
+        canActivate: [authGuard],
         loadComponent: () =>
           import('./features/catalogo/categoria/categoria-list').then((m) => m.CategoriaList),
       },
       {
         path: 'catalogo/categorias/nueva',
+        canActivate: [authGuard, rolGuard('ADMIN')],
         loadComponent: () =>
           import('./features/catalogo/categoria/categoria-form').then((m) => m.CategoriaForm),
-        canActivate: [rolGuard('ADMIN')],
       },
       {
         path: 'catalogo/categorias/:id/editar',
+        canActivate: [authGuard, rolGuard('ADMIN')],
         loadComponent: () =>
           import('./features/catalogo/categoria/categoria-form').then((m) => m.CategoriaForm),
-        canActivate: [rolGuard('ADMIN')],
       },
       {
         path: 'catalogo/productos',
+        canActivate: [authGuard],
         loadComponent: () =>
           import('./features/catalogo/producto/producto-list').then((m) => m.ProductoList),
       },
       {
         path: 'catalogo/productos/nuevo',
+        canActivate: [authGuard, rolGuard('ADMIN')],
         loadComponent: () =>
           import('./features/catalogo/producto/producto-form').then((m) => m.ProductoForm),
-        canActivate: [rolGuard('ADMIN')],
       },
       {
         path: 'catalogo/productos/:id/editar',
+        canActivate: [authGuard, rolGuard('ADMIN')],
         loadComponent: () =>
           import('./features/catalogo/producto/producto-form').then((m) => m.ProductoForm),
-        canActivate: [rolGuard('ADMIN')],
       },
       {
         path: 'ventas/nueva',
+        canActivate: [authGuard, rolGuard('VENDEDOR', 'SUPERVISOR')],
         loadComponent: () =>
           import('./features/ventas/venta/venta-form').then((m) => m.VentaForm),
-        canActivate: [rolGuard('VENDEDOR', 'SUPERVISOR')],
       },
       {
         path: 'ventas/reporte',
+        canActivate: [authGuard],
         loadComponent: () =>
           import('./features/ventas/venta/venta-reporte').then((m) => m.VentaReporteComponent),
       },
@@ -861,7 +863,7 @@ export const routes: Routes = [
 ];
 ```
 
-`auth/callback` queda **fuera** del grupo que cuelga de `Layout`: no necesita sidebar ni header, y tampoco debe pasar por `authGuard` — es, precisamente, la ruta que completa el login, antes de que exista ninguna sesión. `canActivate: [authGuard]` en la propia ruta de `Layout` protege todo lo que cuelga de ella, `Inicio` incluido (2.5: en BomERP, a diferencia de un catálogo público, nadie navega ninguna pantalla sin sesión). `rolGuard(...)` se agrega solo a las rutas de escritura, nunca a `catalogo/categorias`, `catalogo/productos` ni `ventas/reporte` — la Tabla 5 (2.7) ya estableció que esas tres son de lectura para cualquier autenticado (el reporte, filtrado por dueño del lado del servidor, RN8); solo el botón "Anular" **dentro** de esa pantalla exige rol, y eso se resuelve en la plantilla (3.9), no en la ruta.
+`auth/callback` queda **fuera** del grupo que cuelga de `Layout`: no necesita sidebar ni header, y tampoco debe pasar por `authGuard` — es, precisamente, la ruta que completa el login, antes de que exista ninguna sesión. `Layout` en sí **no** lleva `canActivate`: `Inicio` (`''`) queda pública — se ve el *layout* completo, con un botón "Iniciar sesión" en vez del nombre de usuario (3.9), sin redirigir a nadie todavía. `authGuard` se agrega a cada ruta hija que sí exige sesión (`catalogo/categorias`, `catalogo/productos`, `ventas/nueva`, `ventas/reporte`); `rolGuard(...)` se agrega, además, **después** de `authGuard` en el mismo arreglo, solo en las rutas de escritura — nunca en `catalogo/categorias`, `catalogo/productos` ni `ventas/reporte`, que la Tabla 5 (2.7) ya estableció como de lectura para cualquier autenticado (el reporte, filtrado por dueño del lado del servidor, RN8); solo el botón "Anular" **dentro** de esa pantalla exige rol, y eso se resuelve en la plantilla (3.9), no en la ruta. El orden importa: sin `authGuard` primero, `rolGuard` evaluaría `tieneRol(...)` sin sesión, que simplemente da `false` y rebotaría a `/sin-permiso` en silencio, en vez de ofrecer el login.
 
 **Error frecuente**: aplicar `rolGuard` a `ventas/reporte` por error, copiando el mismo patrón de `ventas/nueva`.
 
@@ -914,7 +916,7 @@ provideHttpClient(withInterceptors([authInterceptor, traceIdInterceptor])),
 
 ### 3.9 Menú dinámico, usuario real, botón "Anular" protegido y cierre de sesión
 
-**Producto del paso:** `layout.html` mostrando el nombre real del usuario y el menú de la Tabla 5 (2.7), con el botón "Cerrar sesión" llamando a `cerrarSesion` (ya construido en 3.3), y el botón "Anular" del reporte visible solo para `SUPERVISOR`/`ADMIN`.
+**Producto del paso:** `layout.html` mostrando, sin exigir sesión para verlo (2.5), el botón "Iniciar sesión" cuando no hay sesión activa o el nombre real del usuario y "Cerrar sesión" cuando sí la hay, el menú de la Tabla 5 (2.7) visible solo con sesión, y el botón "Anular" del reporte visible solo para `SUPERVISOR`/`ADMIN`.
 
 **`lp2/bomerp-frontend/src/app/core/layout/layout.ts`** — inyecta `AuthService`:
 
@@ -943,19 +945,25 @@ export class Layout {
     <img src="favicon.ico" alt="" height="30" />
     <span>BomERP</span>
   </a>
-  <span class="user">{{ auth.usuario()?.nombre }}</span>
-  <button type="button" (click)="auth.cerrarSesion()">Cerrar sesión</button>
+  @if (auth.autenticado()) {
+    <span class="user">{{ auth.usuario()?.nombre }}</span>
+    <button type="button" (click)="auth.cerrarSesion()">Cerrar sesión</button>
+  } @else {
+    <button type="button" (click)="auth.iniciarLogin()">Iniciar sesión</button>
+  }
 </mat-toolbar>
 
 <div class="body">
-  <nav class="sidebar" aria-label="Menú principal">
-    <a routerLink="/catalogo/categorias" routerLinkActive="active">Categorías</a>
-    <a routerLink="/catalogo/productos" routerLinkActive="active">Productos</a>
-    @if (auth.tieneRol('VENDEDOR', 'SUPERVISOR')) {
-      <a routerLink="/ventas/nueva" routerLinkActive="active">Nueva venta</a>
-    }
-    <a routerLink="/ventas/reporte" routerLinkActive="active">Reporte de ventas</a>
-  </nav>
+  @if (auth.autenticado()) {
+    <nav class="sidebar" aria-label="Menú principal">
+      <a routerLink="/catalogo/categorias" routerLinkActive="active">Categorías</a>
+      <a routerLink="/catalogo/productos" routerLinkActive="active">Productos</a>
+      @if (auth.tieneRol('VENDEDOR', 'SUPERVISOR')) {
+        <a routerLink="/ventas/nueva" routerLinkActive="active">Nueva venta</a>
+      }
+      <a routerLink="/ventas/reporte" routerLinkActive="active">Reporte de ventas</a>
+    </nav>
+  }
 
   <main class="content">
     <router-outlet />
@@ -963,7 +971,7 @@ export class Layout {
 </div>
 ```
 
-"Categorías" y "Productos" quedan sin condición — la Tabla 5 ya estableció que su **lectura** es para cualquier autenticado; es el formulario de creación/edición el que `rolGuard('ADMIN')` (3.7) ya protege a nivel de ruta, no el enlace del menú.
+El sidebar entero queda condicionado a `auth.autenticado()`: sin sesión, `Inicio` se ve sola, sin ningún enlace que de todos modos redirigiría a Keycloak al tocarlo. "Categorías" y "Productos", dentro del `@if`, quedan sin condición de rol — la Tabla 5 ya estableció que su **lectura** es para cualquier autenticado; es el formulario de creación/edición el que `rolGuard('ADMIN')` (3.7) ya protege a nivel de ruta, no el enlace del menú. `auth.iniciarLogin()` en el botón del *header* no necesita `await`: es la misma redirección completa del navegador que ya dispara `authGuard` (3.6), no hay nada que esperar después de `location.href`.
 
 Por último, el botón "Anular" del reporte — **`lp2/bomerp-frontend/src/app/features/ventas/venta/venta-reporte.ts`**, importa `AuthService` (`inject` ya está importado, S9) e inyéctalo:
 
@@ -994,13 +1002,14 @@ cd lp2/bomerp-frontend
 npm start
 ```
 
-Abre `http://localhost:4200` sin sesión activa (una ventana nueva de incógnito, o borra las cookies de `localhost:38080`). Prueba, con cada uno de los cuatro usuarios de S10b — `vendedor1@bomerp.com`, `supervisor@bomerp.com`, `admin@bomerp.com`, y un segundo `vendedor2@bomerp.com` para RN8, los cuatro con la contraseña `Bomerp2026!`:
+Abre `http://localhost:4200` sin sesión activa (una ventana nueva de incógnito, o borra las cookies de `localhost:38080`) — ya no redirige solo: `Inicio` se ve con el botón "Iniciar sesión" (3.9). Haz clic ahí para disparar el login. Prueba, con cada uno de los cuatro usuarios de S10b — `vendedor1@bomerp.com`, `supervisor@bomerp.com`, `admin@bomerp.com`, y un segundo `vendedor2@bomerp.com` para RN8, los cuatro con la contraseña `Bomerp2026!`:
 
 **Tabla 6. Matriz de accesos de la SPA, verificada con los cuatro usuarios de S10b**
 
 | Caso | `VENDEDOR` | `SUPERVISOR` | `ADMIN` |
 |---|---|---|---|
-| Al abrir `/` sin sesión | Redirige a Keycloak | Redirige a Keycloak | Redirige a Keycloak |
+| Al abrir `/` sin sesión | Muestra `Inicio`, con botón "Iniciar sesión" — sin redirigir todavía | Igual | Igual |
+| Entrar a `/catalogo/categorias` escribiendo la URL a mano, sin sesión | Redirige a Keycloak | Redirige a Keycloak | Redirige a Keycloak |
 | "Nueva venta" en el sidebar | Visible | Visible | **No visible** |
 | Entrar a `/ventas/nueva` escribiendo la URL a mano | Permitido | Permitido | Redirige a `/sin-permiso` |
 | "Nueva categoría" / "Editar" en Categorías | No visible (ruta protegida igual) | No visible | Visible |

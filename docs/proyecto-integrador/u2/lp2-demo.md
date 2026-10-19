@@ -76,6 +76,7 @@ No se crean una SPA para ventas y otra para compras. Los módulos funcionales co
 flowchart LR
     SPA[Una SPA<br/>core · shared · features]
     KC[Keycloak<br/>realm bomerp]
+    KCDB[(Postgres<br/>bomerp_keycloak)]
     API[Un Spring Boot único<br/>bomerp-backend]
     MOD[Paquetes de módulo, Spring Modulith<br/>catalogo · ventas]
     DB[(Oracle<br/>esquemas funcionales)]
@@ -83,6 +84,7 @@ flowchart LR
     SPA -->|Authorization Code + PKCE| KC
     SPA -->|HTTP + Bearer token| API
     API -->|valida contra Keycloak<br/>issuer-uri| KC
+    KC --> KCDB
     API --> MOD
     MOD --> DB
 ```

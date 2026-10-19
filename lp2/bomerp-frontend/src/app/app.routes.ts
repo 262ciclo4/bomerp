@@ -10,7 +10,6 @@ export const routes: Routes = [
   {
     path: '',
     loadComponent: () => import('./core/layout/layout').then((m) => m.Layout),
-    canActivate: [authGuard],
     children: [
       {
         path: '',
@@ -18,46 +17,49 @@ export const routes: Routes = [
       },
       {
         path: 'catalogo/categorias',
+        canActivate: [authGuard],
         loadComponent: () =>
           import('./features/catalogo/categoria/categoria-list').then((m) => m.CategoriaList),
       },
       {
         path: 'catalogo/categorias/nueva',
+        canActivate: [authGuard, rolGuard('ADMIN')],
         loadComponent: () =>
           import('./features/catalogo/categoria/categoria-form').then((m) => m.CategoriaForm),
-        canActivate: [rolGuard('ADMIN')],
       },
       {
         path: 'catalogo/categorias/:id/editar',
+        canActivate: [authGuard, rolGuard('ADMIN')],
         loadComponent: () =>
           import('./features/catalogo/categoria/categoria-form').then((m) => m.CategoriaForm),
-        canActivate: [rolGuard('ADMIN')],
       },
       {
         path: 'catalogo/productos',
+        canActivate: [authGuard],
         loadComponent: () =>
           import('./features/catalogo/producto/producto-list').then((m) => m.ProductoList),
       },
       {
         path: 'catalogo/productos/nuevo',
+        canActivate: [authGuard, rolGuard('ADMIN')],
         loadComponent: () =>
           import('./features/catalogo/producto/producto-form').then((m) => m.ProductoForm),
-        canActivate: [rolGuard('ADMIN')],
       },
       {
         path: 'catalogo/productos/:id/editar',
+        canActivate: [authGuard, rolGuard('ADMIN')],
         loadComponent: () =>
           import('./features/catalogo/producto/producto-form').then((m) => m.ProductoForm),
-        canActivate: [rolGuard('ADMIN')],
       },
       {
         path: 'ventas/nueva',
+        canActivate: [authGuard, rolGuard('VENDEDOR', 'SUPERVISOR')],
         loadComponent: () =>
           import('./features/ventas/venta/venta-form').then((m) => m.VentaForm),
-        canActivate: [rolGuard('VENDEDOR', 'SUPERVISOR')],
       },
       {
         path: 'ventas/reporte',
+        canActivate: [authGuard],
         loadComponent: () =>
           import('./features/ventas/venta/venta-reporte').then((m) => m.VentaReporteComponent),
       },
