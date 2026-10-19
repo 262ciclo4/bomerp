@@ -3660,6 +3660,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="3.1 Reconfigurar el cliente de Keycloak para el flujo real">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#verificar-el-cambio-confirmar-que-direct-access-grants-ya-esta-desactivada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verificar el cambio: confirmar que Direct access grants ya está desactivada
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -4191,6 +4208,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="3.1 Reconfigurar el cliente de Keycloak para el flujo real">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#verificar-el-cambio-confirmar-que-direct-access-grants-ya-esta-desactivada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verificar el cambio: confirmar que Direct access grants ya está desactivada
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -4746,6 +4780,57 @@
 <li>Guardar.</li>
 </ol>
 <p><strong>Error frecuente</strong>: desactivar <em>Direct access grants</em> y olvidar activar <em>Require PKCE</em>. El flujo seguiría funcionando si la SPA ya envía PKCE correctamente (3.2-3.4), pero sin esta casilla, Keycloak no lo <strong>exige</strong> — un cliente mal configurado (el tuyo en una futura sesión, o cualquier otro que se registre con el mismo <em>Client ID</em> en otro ambiente) podría saltarse la protección sin que nada lo impida. 3.1 cierra el mismo hueco en el servidor que 3.2-3.4 cierran en el cliente.</p>
+<h4 id="verificar-el-cambio-confirmar-que-direct-access-grants-ya-esta-desactivada">Verificar el cambio: confirmar que <em>Direct access grants</em> ya está desactivada<a class="headerlink" href="#verificar-el-cambio-confirmar-que-direct-access-grants-ya-esta-desactivada" title="Permanent link">&para;</a></h4>
+<p><strong>Producto del paso:</strong> confirmación, con PowerShell y el navegador, de que el cliente rechaza el atajo de prueba que usó S10b y de que el flujo real (<em>Authorization Code</em> + PKCE) entrega un token válido — antes de escribir una sola línea de Angular (3.2 en adelante).</p>
+<p><strong>1. Confirmar que el atajo de S10b ya no funciona.</strong> Repite el mismo <code>password grant</code> que S10b usó en su sección 6, con el cliente ya reconfigurado:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:38080/realms/bomerp/protocol/openid-connect/token"</span> <span class="p">`</span>
+  <span class="n">-ContentType</span> <span class="s2">"application/x-www-form-urlencoded"</span> <span class="p">`</span>
+  <span class="n">-Body</span> <span class="s2">"grant_type=password&amp;client_id=bomerp-frontend&amp;username=vendedor1&amp;password=Bomerp2026!"</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:38080/realms/bomerp/protocol/openid-connect/token<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/x-www-form-urlencoded"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s2">"grant_type=password&amp;client_id=bomerp-frontend&amp;username=vendedor1&amp;password=Bomerp2026!"</span>
+</code></pre></div>
+<p>Ahora responde <code>400</code> con <code>"error": "unauthorized_client"</code> (en S10b, este mismo comando devolvía un token) — es la prueba directa de que desactivar <em>Direct access grants</em> sí tuvo efecto, y no solo una casilla marcada sin guardar.</p>
+<p><strong>2. Confirmar que Keycloak también exige PKCE.</strong> Arma a mano la URL de autorización, igual que S10b 6.1, pero esta vez <strong>sin</strong> <code>code_challenge</code>:</p>
+<div class="highlight"><pre><span></span><code>http://localhost:38080/realms/bomerp/protocol/openid-connect/auth?client_id=bomerp-frontend&amp;redirect_uri=http://localhost:4200/auth/callback&amp;response_type=code&amp;scope=openid
+</code></pre></div>
+<p>Ábrela en el navegador y entra con <code>vendedor1@bomerp.com</code> / <code>Bomerp2026!</code>. Keycloak redirige con un error (<code>invalid_request</code>, falta <code>code_challenge</code>) en vez de devolver un <code>code</code> — si hubieras saltado el paso 3 de este apartado (<em>Require PKCE</em>), este mismo intento habría funcionado y nadie lo habría notado hasta mucho después.</p>
+<p><strong>3. El flujo real completo, con PKCE.</strong> Calcula <code>code_verifier</code> y <code>code_challenge</code> (SHA-256, base64url) — es el mismo cálculo que 3.2 programa dentro de la SPA; aquí lo haces una vez a mano para comprobar que Keycloak responde como se espera:</p>
+<div class="highlight"><pre><span></span><code><span class="k">function</span> <span class="nb">Get-Pkce</span><span class="p">(</span><span class="no">[string]</span><span class="nv">$verifier</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$hash</span> <span class="p">=</span> <span class="no">[System.Security.Cryptography.SHA256]</span><span class="p">::</span><span class="n">Create</span><span class="p">().</span><span class="n">ComputeHash</span><span class="p">(</span><span class="no">[System.Text.Encoding]</span><span class="p">::</span><span class="n">ASCII</span><span class="p">.</span><span class="n">GetBytes</span><span class="p">(</span><span class="nv">$verifier</span><span class="p">))</span>
+    <span class="no">[Convert]</span><span class="p">::</span><span class="n">ToBase64String</span><span class="p">(</span><span class="nv">$hash</span><span class="p">).</span><span class="n">TrimEnd</span><span class="p">(</span><span class="s1">'='</span><span class="p">).</span><span class="n">Replace</span><span class="p">(</span><span class="s1">'+'</span><span class="p">,</span><span class="s1">'-'</span><span class="p">).</span><span class="n">Replace</span><span class="p">(</span><span class="s1">'/'</span><span class="p">,</span><span class="s1">'_'</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="nv">$bytes</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">byte</span><span class="p">[]</span> <span class="n">48</span>
+<span class="no">[System.Security.Cryptography.RandomNumberGenerator]</span><span class="p">::</span><span class="n">Create</span><span class="p">().</span><span class="n">GetBytes</span><span class="p">(</span><span class="nv">$bytes</span><span class="p">)</span>
+<span class="nv">$codeVerifier</span> <span class="p">=</span> <span class="no">[Convert]</span><span class="p">::</span><span class="n">ToBase64String</span><span class="p">(</span><span class="nv">$bytes</span><span class="p">).</span><span class="n">TrimEnd</span><span class="p">(</span><span class="s1">'='</span><span class="p">).</span><span class="n">Replace</span><span class="p">(</span><span class="s1">'+'</span><span class="p">,</span><span class="s1">'-'</span><span class="p">).</span><span class="n">Replace</span><span class="p">(</span><span class="s1">'/'</span><span class="p">,</span><span class="s1">'_'</span><span class="p">)</span>
+<span class="nv">$codeChallenge</span> <span class="p">=</span> <span class="nb">Get-Pkce</span> <span class="nv">$codeVerifier</span>
+<span class="s2">"code_verifier:  $codeVerifier"</span>
+<span class="s2">"code_challenge: $codeChallenge"</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>pkce<span class="o">()</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nb">printf</span><span class="w"> </span><span class="s1">'%s'</span><span class="w"> </span><span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>dgst<span class="w"> </span>-sha256<span class="w"> </span>-binary<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>base64<span class="w"> </span>-A<span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span><span class="s1">'+/'</span><span class="w"> </span><span class="s1">'-_'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span>-d<span class="w"> </span><span class="s1">'='</span><span class="p">;</span><span class="w"> </span>echo<span class="p">;</span><span class="w"> </span><span class="o">}</span>
+<span class="nv">CODE_VERIFIER</span><span class="o">=</span><span class="k">$(</span>openssl<span class="w"> </span>rand<span class="w"> </span>-base64<span class="w"> </span><span class="m">48</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span>-d<span class="w"> </span><span class="s1">'=+/\n'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-c1-64<span class="k">)</span>
+<span class="nv">CODE_CHALLENGE</span><span class="o">=</span><span class="k">$(</span>pkce<span class="w"> </span><span class="s2">"</span><span class="nv">$CODE_VERIFIER</span><span class="s2">"</span><span class="k">)</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"code_verifier:  </span><span class="nv">$CODE_VERIFIER</span><span class="s2">"</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"code_challenge: </span><span class="nv">$CODE_CHALLENGE</span><span class="s2">"</span>
+</code></pre></div>
+<p>Arma la URL con el <code>code_challenge</code> ya calculado y ábrela:</p>
+<div class="highlight"><pre><span></span><code>http://localhost:38080/realms/bomerp/protocol/openid-connect/auth?client_id=bomerp-frontend&amp;redirect_uri=http://localhost:4200/auth/callback&amp;response_type=code&amp;scope=openid&amp;code_challenge=&lt;pega aquí code_challenge&gt;&amp;code_challenge_method=S256
+</code></pre></div>
+<p>Entra con <code>vendedor1@bomerp.com</code> / <code>Bomerp2026!</code> (o reutiliza la sesión si Keycloak no pide login de nuevo — es SSO, no un error). El navegador intenta redirigir a <code>http://localhost:4200/auth/callback?code=...</code>: como la SPA todavía no existe (llega recién en 3.4), la pestaña muestra error de conexión — eso es esperado. Copia el <code>code</code> de la barra de direcciones antes de que expire.</p>
+<p>Intercambia el código por un token, esta vez incluyendo <code>code_verifier</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$code</span> <span class="p">=</span> <span class="s2">"&lt;pega aquí el code&gt;"</span>
+<span class="nv">$login</span> <span class="p">=</span> <span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-Uri</span> <span class="s2">"http://localhost:38080/realms/bomerp/protocol/openid-connect/token"</span> <span class="p">`</span>
+  <span class="n">-ContentType</span> <span class="s2">"application/x-www-form-urlencoded"</span> <span class="p">`</span>
+  <span class="n">-Body</span> <span class="s2">"grant_type=authorization_code&amp;client_id=bomerp-frontend&amp;redirect_uri=http://localhost:4200/auth/callback&amp;code=$code&amp;code_verifier=$codeVerifier"</span>
+<span class="nv">$login</span><span class="p">.</span><span class="n">access_token</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:38080/realms/bomerp/protocol/openid-connect/token<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/x-www-form-urlencoded"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s2">"grant_type=authorization_code&amp;client_id=bomerp-frontend&amp;redirect_uri=http://localhost:4200/auth/callback&amp;code=&lt;pega aquí el code&gt;&amp;code_verifier=</span><span class="nv">$CODE_VERIFIER</span><span class="s2">"</span>
+</code></pre></div>
+<p>Pega el <code>access_token</code> en <a href="https://jwt.io">jwt.io</a> y confirma lo mismo que S10b 6 ya había verificado con el atajo: <code>realm_access.roles</code> trae <code>["VENDEDOR"]</code> y <code>sub</code> es un UUID — la diferencia es que esta vez llegó por el flujo que la SPA va a usar de verdad, con PKCE exigido en cada paso.</p>
+<p><strong>Error frecuente</strong>: pegar un <code>code</code> vencido o ya usado una vez (<code>invalid_grant</code>) — un <code>code</code> de <em>Authorization Code</em> se consume en el primer intercambio y expira en segundos; si falla, repite desde el paso 3 con una URL nueva, nunca reintentes el mismo <code>code</code>.</p>
 <h3 id="32-configurar-el-entorno-y-construir-el-generador-de-pkce">3.2 Configurar el entorno y construir el generador de PKCE<a class="headerlink" href="#32-configurar-el-entorno-y-construir-el-generador-de-pkce" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> la configuración de Keycloak disponible como <code>environment</code>, y las dos funciones que generan el <code>code_verifier</code> y el <code>code_challenge</code> (RFC 7636).</p>
 <p><strong><code>lp2/bomerp-frontend/src/environments/environment.ts</code></strong> — agrega la configuración de Keycloak, junto a la que ya existe:</p>
