@@ -994,7 +994,7 @@ cd lp2/bomerp-frontend
 npm start
 ```
 
-Abre `http://localhost:4200` sin sesión activa (una ventana nueva de incógnito, o borra las cookies de `localhost:38080`). Prueba, con cada uno de los cuatro usuarios de S10b (`vendedor1@bomerp.com`, `supervisor@bomerp.com`, `admin@bomerp.com`, y un segundo `vendedor2@bomerp.com` para RN8):
+Abre `http://localhost:4200` sin sesión activa (una ventana nueva de incógnito, o borra las cookies de `localhost:38080`). Prueba, con cada uno de los cuatro usuarios de S10b — `vendedor1@bomerp.com`, `supervisor@bomerp.com`, `admin@bomerp.com`, y un segundo `vendedor2@bomerp.com` para RN8, los cuatro con la contraseña `Bomerp2026!`:
 
 **Tabla 6. Matriz de accesos de la SPA, verificada con los cuatro usuarios de S10b**
 
