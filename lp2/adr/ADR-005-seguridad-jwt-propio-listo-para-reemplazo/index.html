@@ -27,7 +27,7 @@
     
     
   
-    <title>BOM ERP - ADR-005 - Seguridad JWT propia, lista para reemplazo en U3</title>
+    <title>BOM ERP - ADR-005 - Seguridad JWT propia, reemplazada por Keycloak en S10b</title>
   
 
     
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              ADR-005 - Seguridad JWT propia, lista para reemplazo en U3
+              ADR-005 - Seguridad JWT propia, reemplazada por Keycloak en S10b
             
           </span>
         </div>
@@ -2512,6 +2512,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S12_Evaluacion_Unidad_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S12 - Evaluación de la Unidad II
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2911,7 +2939,7 @@
   <span class="md-ellipsis">
     
   
-    ADR-005 - Seguridad JWT propia, lista para reemplazo en U3
+    ADR-005 - Seguridad JWT propia, reemplazada por Keycloak en S10b
   
 
     
@@ -2929,7 +2957,7 @@
   <span class="md-ellipsis">
     
   
-    ADR-005 - Seguridad JWT propia, lista para reemplazo en U3
+    ADR-005 - Seguridad JWT propia, reemplazada por Keycloak en S10b
   
 
     
@@ -3428,7 +3456,7 @@
   <span class="md-ellipsis">
     
   
-    S10 (referencia) - Reemplazo de seguridad por Keycloak
+    S10b - Reemplazo de seguridad por Keycloak
   
 
     
@@ -3457,6 +3485,34 @@
     
   
     S11 - Seguridad frontend con Keycloak
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sesiones/S12_Evaluacion_Unidad_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S12 - Evaluación de la Unidad II
   
 
     
@@ -3588,7 +3644,7 @@
 
 <h1 id="adr-005-s10-construye-jwt-propio-no-keycloak-con-arquitectura-lista-para-reemplazo-en-u3">ADR-005 - S10 construye JWT propio (no Keycloak), con arquitectura lista para reemplazo en U3<a class="headerlink" href="#adr-005-s10-construye-jwt-propio-no-keycloak-con-arquitectura-lista-para-reemplazo-en-u3" title="Permanent link">&para;</a></h1>
 <h2 id="estado">Estado<a class="headerlink" href="#estado" title="Permanent link">&para;</a></h2>
-<p>Aprobada.</p>
+<p>Aprobada, <strong>parcialmente superada</strong>. Esta ADR documenta correctamente la decisión y el diseño de S10 (JWT propio, "listo para reemplazo"). Lo que ya no refleja la realidad es el supuesto de que ese reemplazo quedaría "fuera de alcance... sin agendarse en ninguna sesión concreta": una decisión posterior adelantó la migración a Keycloak dentro de la propia Unidad 2, documentada en <a href="../../sesiones/S10b_Seguridad_Backend_Keycloak/">S10b</a> (ejecución obligatoria, no opcional) y asumida como prerrequisito por <a href="../../sesiones/S11_Seguridad_Frontend_Keycloak/">S11</a>. Pendiente: una ADR nueva que formalice esa decisión — esta queda como registro histórico de por qué S10 se diseñó así en primer lugar.</p>
 <h2 id="contexto">Contexto<a class="headerlink" href="#contexto" title="Permanent link">&para;</a></h2>
 <p>El sílabo de LP2 pide para S10, explícitamente: "Seguridad backend: usuarios,
 hash de contraseñas, autenticación JWT, roles, permisos y protección de

@@ -16,6 +16,8 @@
         <link rel="prev" href="../S10b_Seguridad_Backend_Keycloak/">
       
       
+        <link rel="next" href="../S12_Evaluacion_Unidad_2/">
+      
       
         
       
@@ -2510,6 +2512,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S12_Evaluacion_Unidad_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S12 - Evaluación de la Unidad II
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2898,7 +2928,7 @@
   <span class="md-ellipsis">
     
   
-    ADR-005 - Seguridad JWT propia, lista para reemplazo en U3
+    ADR-005 - Seguridad JWT propia, reemplazada por Keycloak en S10b
   
 
     
@@ -3324,7 +3354,7 @@
   <span class="md-ellipsis">
     
   
-    S10 (referencia) - Reemplazo de seguridad por Keycloak
+    S10b - Reemplazo de seguridad por Keycloak
   
 
     
@@ -3862,6 +3892,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S12_Evaluacion_Unidad_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S12 - Evaluación de la Unidad II
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -4674,6 +4732,10 @@
 <li><strong>3.9</strong> Menú dinámico, usuario real, botón "Anular" protegido y cierre de sesión.</li>
 <li><strong>3.10</strong> Probar la matriz de accesos completa.</li>
 </ul>
+<p><strong>Punto de partida común:</strong> todo el equipo debe comenzar exactamente desde donde quedó S10b, no desde su propio avance individual. Clona la rama <code>s10b-seguridad-keycloak</code> (el snapshot de cierre de S10b — Keycloak ya reemplazó a <code>seguridad</code>, con <code>bomerp-backend</code> validando sus tokens):</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>--branch<span class="w"> </span>s10b-seguridad-keycloak<span class="w"> </span>https://github.com/262ciclo4/bomerp.git
+</code></pre></div>
+<p>Confirma que <code>bomerp-oracle</code>, <code>bomerp-keycloak</code> y <code>bomerp-backend</code> siguen corriendo, y que una petición con un token de Keycloak (el mismo procedimiento de S10b, 7.4) sigue devolviendo <code>200</code> contra <code>http://localhost:8080/api/v1/productos</code> — si algo de esto falla, el problema es de S10b, no de esta sesión.</p>
 <h3 id="31-reconfigurar-el-cliente-de-keycloak-para-el-flujo-real">3.1 Reconfigurar el cliente de Keycloak para el flujo real<a class="headerlink" href="#31-reconfigurar-el-cliente-de-keycloak-para-el-flujo-real" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> el cliente <code>bomerp-frontend</code> listo para el flujo real — sin el atajo de prueba de S10b.</p>
 <p>En la consola de administración de Keycloak (<code>http://localhost:38080</code>, realm <code>bomerp</code>) → <strong>Clients</strong> → <code>bomerp-frontend</code> → pestaña <strong>Capability config</strong>:</p>

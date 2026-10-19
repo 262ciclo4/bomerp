@@ -27,7 +27,7 @@
     
     
   
-    <title>BOM ERP - S10 (referencia) - Reemplazo de seguridad por Keycloak</title>
+    <title>BOM ERP - S10b - Reemplazo de seguridad por Keycloak</title>
   
 
     
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              S10 (referencia) - Reemplazo de seguridad por Keycloak
+              S10b - Reemplazo de seguridad por Keycloak
             
           </span>
         </div>
@@ -2512,6 +2512,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S12_Evaluacion_Unidad_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S12 - Evaluación de la Unidad II
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2900,7 +2928,7 @@
   <span class="md-ellipsis">
     
   
-    ADR-005 - Seguridad JWT propia, lista para reemplazo en U3
+    ADR-005 - Seguridad JWT propia, reemplazada por Keycloak en S10b
   
 
     
@@ -3335,7 +3363,7 @@
   <span class="md-ellipsis">
     
   
-    S10 (referencia) - Reemplazo de seguridad por Keycloak
+    S10b - Reemplazo de seguridad por Keycloak
   
 
     
@@ -3353,7 +3381,7 @@
   <span class="md-ellipsis">
     
   
-    S10 (referencia) - Reemplazo de seguridad por Keycloak
+    S10b - Reemplazo de seguridad por Keycloak
   
 
     
@@ -3729,6 +3757,34 @@
     
   
     S11 - Seguridad frontend con Keycloak
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S12_Evaluacion_Unidad_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S12 - Evaluación de la Unidad II
   
 
     
@@ -4133,8 +4189,8 @@
 <h1 id="s10-reemplazo-del-modulo-seguridad-por-keycloak-guia-de-referencia">S10 - Reemplazo del módulo <code>seguridad</code> por Keycloak (guía de referencia)<a class="headerlink" href="#s10-reemplazo-del-modulo-seguridad-por-keycloak-guia-de-referencia" title="Permanent link">&para;</a></h1>
 <p><em>Por: Angel Sullon Macalupu @asullom - 2026</em></p>
 <h2 id="0-que-es-esta-guia-y-que-no-es">0. Qué es esta guía y qué no es<a class="headerlink" href="#0-que-es-esta-guia-y-que-no-es" title="Permanent link">&para;</a></h2>
-<p>Esta guía <strong>no</strong> es una sesión del sílabo: ninguna fila de <code>silabo_lp2_2026_2.md</code> ni de <code>docs/lp2/index.md</code> la pide, no tiene metodología, caso de motivación, actividad autónoma ni rúbrica, y no se evalúa. Es la continuación directa de <a href="../S10_Seguridad_Backend_JWT_Roles/">S10_Seguridad_Backend_JWT_Roles.md</a> — la sesión real y evaluada —, que construyó el módulo <code>seguridad</code> deliberadamente temporal y "listo para reemplazo" (<a href="../../adr/ADR-005-seguridad-jwt-propio-listo-para-reemplazo/">ADR-005</a>, 2.6 de esa guía, Tabla 4). Esta guía documenta, paso a paso y verificado, el reemplazo que esa ADR dejó como dirección arquitectónica sin construir: <strong>desde descargar Keycloak hasta que <code>bomerp-backend</code> valide tokens suyos en vez de los propios</strong>.</p>
-<p>Úsala si tu equipo decide adoptar Keycloak en U3 o después — no antes, y no como parte de la evaluación de S10 o S11. La sesión S10 real queda exactamente como está; esta guía no le resta ni le agrega alcance.</p>
+<p>Esta guía no corresponde a ninguna fila propia de <code>silabo_lp2_2026_2.md</code> ni de <code>docs/lp2/index.md</code>, y por eso no tiene su propia metodología, caso de motivación ni rúbrica independiente — pero <strong>sí es de ejecución obligatoria</strong>: es el puente real entre <a href="../S10_Seguridad_Backend_JWT_Roles/">S10_Seguridad_Backend_JWT_Roles.md</a> (que construyó el módulo <code>seguridad</code> deliberadamente temporal y "listo para reemplazo", <a href="../../adr/ADR-005-seguridad-jwt-propio-listo-para-reemplazo/">ADR-005</a>, 2.6 de esa guía, Tabla 4) y <a href="../S11_Seguridad_Frontend_Keycloak/">S11</a>, que ya asume a Keycloak como el proveedor real, sin <code>seguridad</code>. La decisión de ejecutar este reemplazo ahora —no en U3, como anticipaba ADR-005— es posterior a esa ADR; <strong>ADR-005 quedó desactualizada y debería revisarse para reflejar esta decisión</strong>, pero mientras tanto esta guía documenta, paso a paso y verificado, lo que de verdad corre hoy: <strong>desde descargar Keycloak hasta que <code>bomerp-backend</code> valide tokens suyos en vez de los propios</strong>.</p>
+<p>Complétala <strong>completa, incluida la sección 7</strong>, antes de empezar S11 — S11 la exige como prerrequisito explícito. El <code>seguridad</code> de JWT propio que S10 construyó queda como el primer paso pedagógico de este reemplazo (entender la mecánica a mano antes de delegarla), no como lo que corre en la evaluación de S11.</p>
 <p>La guía está dividida en tres partes, en el orden en que de verdad hace falta tocar cada pieza:</p>
 <ul>
 <li><strong>Parte A</strong> (secciones 2-6) construye y prueba Keycloak solo — realm, cliente, usuarios, un token real inspeccionado, y hasta el flujo completo de login con redirect (6.1). <strong>Nada de esto toca <code>bomerp-backend</code></strong> — ni un archivo, ni un reinicio.</li>
