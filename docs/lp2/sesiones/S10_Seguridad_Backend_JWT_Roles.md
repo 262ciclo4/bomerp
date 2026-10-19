@@ -1260,6 +1260,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
                                                      JwtAuthenticationConverter jwtAuthenticationConverter) throws Exception {
         http
+                .cors(cors -> {})
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
@@ -1276,6 +1277,51 @@ public class SecurityConfig {
 ```
 
 `SessionCreationPolicy.STATELESS` le indica a Spring Security que no cree ninguna sesión HTTP (2.3). `/api/v1/auth/**`, `/.well-known/jwks.json` y Swagger quedan abiertos — nadie tiene JWT antes de hacer login, y la clave pública es pública por definición —; **todo lo demás** exige, como mínimo, un token válido (`anyRequest().authenticated()`). Las reglas por rol específicas de `catalogo` y `ventas` llegan en 3.13 y 3.15, agregadas **antes** de esta línea final (Spring Security aplica la primera regla que coincide).
+
+**`.cors(cors -> {})` reemplaza, no complementa, a `CorsConfig` (S5, 3.7).** Hasta 3.5 (`anyRequest().permitAll()`), el navegador nunca notaba el problema porque nada bloqueaba el *preflight*; desde esta versión, `anyRequest().authenticated()` sí lo hace: el filtro de Spring Security rechaza con `401` cualquier petición sin `Authorization` —y el *preflight* `OPTIONS` del navegador **nunca** lleva ese encabezado— **antes** de que el `CorsRegistry` de `WebMvcConfigurer` (S5) llegue a agregar las cabeceras CORS, porque ese mecanismo es de Spring MVC y Spring Security corre primero en la cadena de filtros. El síntoma es confuso a propósito: Postman/`Invoke-RestMethod` nunca manda *preflight* (2.6), así que todas las pruebas de esta sesión y de S10b siguen pasando; el error solo aparece con un navegador real, que es justo cuando no se vuelve a tocar `SecurityConfig` hasta S11.
+
+La solución es que la configuración de CORS viva donde Security sí la puede usar: un *bean* `CorsConfigurationSource`, no un `WebMvcConfigurer`. Reemplaza `CorsConfig.java` (S5, 3.7) por esta versión:
+
+**`lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/CorsConfig.java`** (reemplaza la versión de S5):
+
+```java
+package pe.edu.upeu.bomerp;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.List;
+
+@Configuration
+public class CorsConfig {
+
+    @Value("${bomerp.cors.allowed-origins}")
+    private String allowedOrigins;
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuracion = new CorsConfiguration();
+        configuracion.setAllowedOrigins(Arrays.stream(allowedOrigins.split(","))
+                .map(String::trim)
+                .toList());
+        configuracion.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE"));
+        configuracion.setAllowedHeaders(List.of("*"));
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/api/**", configuracion);
+        return source;
+    }
+}
+```
+
+Misma propiedad (`bomerp.cors.allowed-origins`), mismos orígenes, mismas reglas — solo cambia el mecanismo: `UrlBasedCorsConfigurationSource` expone la configuración como *bean*, y `.cors(cors -> {})` (arriba) hace que Spring Security lo tome automáticamente y responda el *preflight* **antes** de que `anyRequest().authenticated()` llegue a evaluarlo, sin necesidad de agregar `/api/**` a ningún `permitAll()`.
+
+**Error frecuente**: ver "bloqueado por política CORS" en la consola del navegador y revisar `allowed-origins` buscando el error, cuando el origen ya estaba correcto desde S5. Si la petición nunca llegó a mostrarse en el *Network tab* con un `401` antes del bloqueo de CORS, es la señal: no es un problema de orígenes, es Security rechazando el *preflight* antes de que CORS responda. Confirma con `Invoke-RestMethod`/Postman (sin *preflight*, 2.6): si esos sí funcionan y solo el navegador falla, es este bug, no la propiedad.
 
 `SecurityFilterChain` protege los endpoints, pero Swagger UI todavía no tiene cómo mandar un `Authorization: Bearer ...` en cada "Try it out" — eso no es cosa de `SecurityConfig`, sino de la documentación OpenAPI. Agrega el esquema de seguridad en `OpenApiConfig` (el mismo archivo de S1, ahora con el candado):
 

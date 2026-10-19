@@ -479,6 +479,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
                                                      JwtAuthenticationConverter jwtAuthenticationConverter) throws Exception {
         http
+                .cors(cors -> {})
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
@@ -501,6 +502,8 @@ public class SecurityConfig {
 ```
 
 Compara esta versión con la de S10 (3.11): no hay `PasswordEncoder` ni `AuthenticationManager` (nadie hace login contra una base local), y no hay `permitAll` para `/api/v1/auth/**` ni `/.well-known/jwks.json` — ninguno de los dos existe en este camino, no hay nada que dejar abierto ahí. Las reglas por rol de `catalogo` (S10, 3.13) y `ventas` (S10, 3.15) ya están ahí, **antes** de `.anyRequest().authenticated()`, exactamente como en S10 — copiadas tal cual, sin que el cambio de emisor les toque una línea. Con esto, Parte B ya protege de verdad por rol, no solo exige un token válido: Parte C (RN8) prueba precisamente esa distinción con tokens de Keycloak.
+
+El `.cors(cors -> {})` es el mismo de S10 (3.11) — si fuiste directo a Keycloak y nunca pasaste por esa sección, también necesitas `CorsConfig.java` en su versión de *bean* (`CorsConfigurationSource`, no `WebMvcConfigurer`): sin ella, `.cors(cors -> {})` no tiene qué registrar y el *preflight* del navegador sigue bloqueado igual. Copia la versión de S10 (3.11) tal cual, antes de levantar `bomerp-frontend` contra este backend.
 
 **`lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/OpenApiConfig.java`** (archivo nuevo — el candado de Swagger, mismo patrón que `pagatu-orden-ms` en DIST S07):
 

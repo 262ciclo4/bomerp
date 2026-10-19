@@ -314,31 +314,49 @@ echo "code_verifier:  $CODE_VERIFIER"
 echo "code_challenge: $CODE_CHALLENGE"
 ```
 
-Arma la URL con el `code_challenge` ya calculado y ábrela:
-
-```text
-http://localhost:38080/realms/bomerp/protocol/openid-connect/auth?client_id=bomerp-frontend&redirect_uri=http://localhost:4200/auth/callback&response_type=code&scope=openid&code_challenge=<pega aquí code_challenge>&code_challenge_method=S256
-```
-
-Entra con `vendedor1@bomerp.com` / `Bomerp2026!` (o reutiliza la sesión si Keycloak no pide login de nuevo — es SSO, no un error). El navegador intenta redirigir a `http://localhost:4200/auth/callback?code=...`: como la SPA todavía no existe (llega recién en 3.4), la pestaña muestra error de conexión — eso es esperado. Copia el `code` de la barra de direcciones antes de que expire.
-
-Intercambia el código por un token, esta vez incluyendo `code_verifier`:
+Arma la URL con `$codeChallenge`/`$CODE_CHALLENGE` y ábrela en el navegador — sin copiar ningún valor a mano:
 
 ```powershell
-$code = "<pega aquí el code>"
-$login = Invoke-RestMethod -Method Post -Uri "http://localhost:38080/realms/bomerp/protocol/openid-connect/token" `
-  -ContentType "application/x-www-form-urlencoded" `
-  -Body "grant_type=authorization_code&client_id=bomerp-frontend&redirect_uri=http://localhost:4200/auth/callback&code=$code&code_verifier=$codeVerifier"
-$login.access_token
+"http://localhost:38080/realms/bomerp/protocol/openid-connect/auth?client_id=bomerp-frontend&response_type=code&redirect_uri=http://localhost:4200/auth/callback&scope=openid&code_challenge=$codeChallenge&code_challenge_method=S256"
 ```
 
 ```bash
-curl -X POST http://localhost:38080/realms/bomerp/protocol/openid-connect/token \
-  -H "Content-Type: application/x-www-form-urlencoded" \
-  -d "grant_type=authorization_code&client_id=bomerp-frontend&redirect_uri=http://localhost:4200/auth/callback&code=<pega aquí el code>&code_verifier=$CODE_VERIFIER"
+echo "http://localhost:38080/realms/bomerp/protocol/openid-connect/auth?client_id=bomerp-frontend&response_type=code&redirect_uri=http://localhost:4200/auth/callback&scope=openid&code_challenge=$CODE_CHALLENGE&code_challenge_method=S256"
 ```
 
-Pega el `access_token` en [jwt.io](https://jwt.io) y confirma lo mismo que S10b 6 ya había verificado con el atajo: `realm_access.roles` trae `["VENDEDOR"]` y `sub` es un UUID — la diferencia es que esta vez llegó por el flujo que la SPA va a usar de verdad, con PKCE exigido en cada paso.
+Copia la URL completa que imprime (ya con el `code_challenge` real, no un *placeholder*) y pégala en el navegador. Entra con `vendedor1@bomerp.com` / `Bomerp2026!` (o reutiliza la sesión si Keycloak no pide login de nuevo — es SSO, no un error). El navegador intenta redirigir a `http://localhost:4200/auth/callback?code=...`: como la SPA todavía no existe (llega recién en 3.4), la pestaña muestra error de conexión — eso es esperado. Copia el `code` de la barra de direcciones antes de que expire.
+
+Intercambia el código por un token — `$codeVerifier`/`$CODE_VERIFIER` siguen en la misma sesión de terminal del paso anterior, así que no hace falta volver a copiarlos a mano; solo pega el `code`:
+
+```powershell
+$code = "<code copiado del navegador>"
+
+$body = @{
+  grant_type    = "authorization_code"
+  client_id     = "bomerp-frontend"
+  redirect_uri  = "http://localhost:4200/auth/callback"
+  code          = $code
+  code_verifier = $codeVerifier
+}
+$login = (Invoke-RestMethod -Method Post -Uri "http://localhost:38080/realms/bomerp/protocol/openid-connect/token" -Body $body).access_token
+$login
+```
+
+```bash
+CODE="<code copiado del navegador>"
+
+login=$(curl -s -X POST http://localhost:38080/realms/bomerp/protocol/openid-connect/token \
+  -d grant_type=authorization_code \
+  -d client_id=bomerp-frontend \
+  -d redirect_uri=http://localhost:4200/auth/callback \
+  -d code="$CODE" \
+  -d code_verifier="$CODE_VERIFIER" \
+  | jq -r '.access_token')
+
+echo "$login"
+```
+
+Pega el `access_token` (`$login`) en [jwt.io](https://jwt.io) y confirma lo mismo que S10b 6 ya había verificado con el atajo: `realm_access.roles` trae `["VENDEDOR"]` y `sub` es un UUID — la diferencia es que esta vez llegó por el flujo que la SPA va a usar de verdad, con PKCE exigido en cada paso.
 
 **Error frecuente**: pegar un `code` vencido o ya usado una vez (`invalid_grant`) — un `code` de *Authorization Code* se consume en el primer intercambio y expira en segundos; si falla, repite desde el paso 3 con una URL nueva, nunca reintentes el mismo `code`.
 
