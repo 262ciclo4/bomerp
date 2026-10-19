@@ -20,10 +20,11 @@ interface TokenResponse {
 const CLAVE_CODE_VERIFIER = 'bomerp_pkce_code_verifier';
 const CLAVE_STATE = 'bomerp_pkce_state';
 const CLAVE_DESTINO = 'bomerp_pkce_destino';
+const CLAVE_SESION = 'bomerp_sesion';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly sesion = signal<SesionKeycloak | null>(null);
+  private readonly sesion = signal<SesionKeycloak | null>(this.restaurarSesion());
 
   readonly autenticado = computed(() => {
     const actual = this.sesion();
@@ -120,6 +121,7 @@ export class AuthService {
     });
     if (!respuesta.ok) {
       this.sesion.set(null);
+      sessionStorage.removeItem(CLAVE_SESION);
       return false;
     }
     this.guardarSesion(await respuesta.json());
@@ -129,6 +131,7 @@ export class AuthService {
   cerrarSesion(): void {
     const idToken = this.sesion()?.idToken;
     this.sesion.set(null);
+    sessionStorage.removeItem(CLAVE_SESION);
     const parametros = new URLSearchParams({
       post_logout_redirect_uri: environment.keycloak.postLogoutRedirectUri,
       ...(idToken ? { id_token_hint: idToken } : {}),
@@ -137,11 +140,28 @@ export class AuthService {
   }
 
   private guardarSesion(datos: TokenResponse): void {
-    this.sesion.set({
+    const sesion: SesionKeycloak = {
       accessToken: datos.access_token,
       refreshToken: datos.refresh_token,
       idToken: datos.id_token,
       expiraEn: Date.now() + datos.expires_in * 1000,
-    });
+    };
+    this.sesion.set(sesion);
+    sessionStorage.setItem(CLAVE_SESION, JSON.stringify(sesion));
+  }
+
+  private restaurarSesion(): SesionKeycloak | null {
+    const guardada = sessionStorage.getItem(CLAVE_SESION);
+    if (!guardada) return null;
+    try {
+      const sesion = JSON.parse(guardada) as SesionKeycloak;
+      if (sesion.expiraEn > Date.now()) {
+        return sesion;
+      }
+    } catch {
+      // JSON invalido: se descarta igual que una sesion vencida
+    }
+    sessionStorage.removeItem(CLAVE_SESION);
+    return null;
   }
 }

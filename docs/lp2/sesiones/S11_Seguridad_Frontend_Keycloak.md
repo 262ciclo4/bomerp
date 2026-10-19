@@ -27,7 +27,7 @@ Al concluir la clase, estarás en condiciones de:
 
 ### 1.4 Producto de sesión
 
-`bomerp-frontend` iniciando sesión contra el realm `bomerp` de Keycloak con *Authorization Code* + PKCE (sin contraseñas pasando nunca por código propio de BomERP), el token guardado en memoria —nunca en `localStorage`— con el `code_verifier` de PKCE como única excepción temporal en `sessionStorage`, un *guard* de autenticación y uno de rol protegiendo las rutas de escritura, un interceptor que adjunta el token a cada petición HTTP y refresca la sesión una sola vez ante un `401` antes de forzar un nuevo login, el menú lateral y el botón "Anular" del reporte de ventas mostrándose solo a quien el backend ya autoriza de verdad, el nombre real del usuario autenticado reemplazando el `"Usuario"` fijo de hoy, y cierre de sesión real contra Keycloak (*RP-Initiated Logout*, *Relying Party*).
+`bomerp-frontend` iniciando sesión contra el realm `bomerp` de Keycloak con *Authorization Code* + PKCE (sin contraseñas pasando nunca por código propio de BomERP), el token viviendo en memoria con una copia espejo en `sessionStorage` —nunca en `localStorage`— para sobrevivir un `F5` sin perder la sesión, un *guard* de autenticación y uno de rol protegiendo las rutas de escritura, un interceptor que adjunta el token a cada petición HTTP y refresca la sesión una sola vez ante un `401` antes de forzar un nuevo login, el menú lateral y el botón "Anular" del reporte de ventas mostrándose solo a quien el backend ya autoriza de verdad, el nombre real del usuario autenticado reemplazando el `"Usuario"` fijo de hoy, y cierre de sesión real contra Keycloak (*RP-Initiated Logout*, *Relying Party*).
 
 ### 1.5 Metodología
 
@@ -153,9 +153,9 @@ El caso de 1.6 ya adelantó la pregunta: si cualquier script que corre en la pá
 
 Ninguna opción accesible desde JavaScript elimina el riesgo por completo — RFC 10017 lo dice explícitamente: *"none of these options can fully mitigate token exfiltration when the attacker can execute malicious code in the application's execution environment"*. La decisión real es cuánta ventana de exposición aceptar.
 
-**Decisión de esta sesión: el `accessToken` y el `refreshToken` viven en memoria** (un campo privado de `AuthService`, nunca en `localStorage` ni `sessionStorage`) — la opción de menor exposición que no exige un *Backend-for-Frontend*. La única excepción, deliberada y acotada: el `code_verifier` de PKCE (2.2) sí se guarda un instante en `sessionStorage`, porque la redirección completa a Keycloak **recarga la página** — el JavaScript de la SPA, con todo lo que tenía en memoria, desaparece y se reconstruye desde cero al volver. Ese valor no es el token: por sí solo, sin el código de un solo uso que Keycloak emitió para esa sesión de login específica, no sirve para nada — y se borra inmediatamente después de usarse una vez (3.4).
+**Decisión de esta sesión: el `accessToken` y el `refreshToken` viven en memoria, con una copia espejo en `sessionStorage`** (un campo privado de `AuthService`, sincronizado en cada cambio: se escribe en `guardarSesion`, se borra en `cerrarSesion` y cuando `refrescar` falla, y se restaura una sola vez al construir el servicio) — la sesión sigue sin tocar `localStorage` nunca: esa opción persiste entre pestañas y después de cerrar el navegador, una ventana de exposición mayor que esta sesión acepta. El `code_verifier` de PKCE (2.2) ya usaba `sessionStorage` por la misma razón de fondo: la redirección completa a Keycloak **recarga la página** — el JavaScript de la SPA, con todo lo que tenía en memoria, desaparece y se reconstruye desde cero al volver. Ese valor en sí no es el token: por sí solo, sin el código de un solo uso que Keycloak emitió para esa sesión de login específica, no sirve para nada — y se borra inmediatamente después de usarse una vez (3.4).
 
-**El costo honesto de esta decisión**: guardar el token en memoria significa que un `F5` (recargar la página) pierde la sesión — la SPA vuelve a pedir login. Un *Backend-for-Frontend* (RFC 10017, 6.1) resolvería esto sin exponer el token al navegador en absoluto, igual que una renovación silenciosa contra Keycloak (un `iframe` oculto con `prompt=none`); ninguna de las dos se construye en esta sesión — queda documentado como el mismo tipo de límite honesto que BD2 S10 documentó para AWR (*Automatic Workload Repository*) en Oracle Database Free: no es que esta guía no sepa que existe una opción mejor, es que esa opción es alcance de otra sesión (o de un curso de arquitecturas distribuidas).
+**El costo honesto de esta decisión**: `sessionStorage` sigue siendo legible por cualquier script que corra en el mismo origen (Tabla 3) — un ataque XSS real seguiría pudiendo leer el token igual que si solo viviera en memoria durante esa misma pestaña; ningún almacenamiento accesible desde JavaScript cierra ese hueco (RFC 10017, ya citado arriba). Lo que esta copia espejo gana es sobrevivir un `F5` sin perder la sesión — el costo que **sí** queda documentado es que esa ventana de exposición ahora dura mientras la pestaña esté abierta, no solo mientras el script de la SPA siga ejecutándose en memoria. Un *Backend-for-Frontend* (RFC 10017, 6.1) resolvería esto sin exponer el token al navegador en absoluto, igual que una renovación silenciosa contra Keycloak (un `iframe` oculto con `prompt=none`); ninguna de las dos se construye en esta sesión — queda documentado como el mismo tipo de límite honesto que BD2 S10 documentó para AWR (*Automatic Workload Repository*) en Oracle Database Free: no es que esta guía no sepa que existe una opción mejor, es que esa opción es alcance de otra sesión (o de un curso de arquitecturas distribuidas).
 
 ### 2.4 Expiración de 5 minutos: por qué hace falta refrescar, no solo esperar un error
 
@@ -483,7 +483,7 @@ export function generarState(): string {
 
 ### 3.3 Construir `AuthService` completo: login, callback, refresco y cierre de sesión
 
-**Producto del paso:** el servicio central de autenticación completo, con la sesión viviendo en un `signal` privado (2.3) y los cinco métodos que la sesión necesita — `iniciarLogin`, `completarLogin`, `refrescar`, `cerrarSesion` y `destinoPendiente` —, en un solo archivo, construido de una sola vez. A diferencia de parchear la misma clase en pasos sueltos más adelante, todo `AuthService` queda listo aquí; 3.4, 3.8 y 3.9 solo lo **consumen**, no lo modifican.
+**Producto del paso:** el servicio central de autenticación completo, con la sesión viviendo en un `signal` privado (2.3) —restaurada una sola vez desde `sessionStorage` al construirse, para sobrevivir un `F5`— y los cinco métodos públicos que la sesión necesita — `iniciarLogin`, `completarLogin`, `refrescar`, `cerrarSesion` y `destinoPendiente` —, en un solo archivo, construido de una sola vez. A diferencia de parchear la misma clase en pasos sueltos más adelante, todo `AuthService` queda listo aquí; 3.4, 3.8 y 3.9 solo lo **consumen**, no lo modifican.
 
 **`lp2/bomerp-frontend/src/app/core/auth/auth-service.ts`** (archivo nuevo):
 
@@ -510,10 +510,11 @@ interface TokenResponse {
 const CLAVE_CODE_VERIFIER = 'bomerp_pkce_code_verifier';
 const CLAVE_STATE = 'bomerp_pkce_state';
 const CLAVE_DESTINO = 'bomerp_pkce_destino';
+const CLAVE_SESION = 'bomerp_sesion';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly sesion = signal<SesionKeycloak | null>(null);
+  private readonly sesion = signal<SesionKeycloak | null>(this.restaurarSesion());
 
   readonly autenticado = computed(() => {
     const actual = this.sesion();
@@ -610,6 +611,7 @@ export class AuthService {
     });
     if (!respuesta.ok) {
       this.sesion.set(null);
+      sessionStorage.removeItem(CLAVE_SESION);
       return false;
     }
     this.guardarSesion(await respuesta.json());
@@ -619,6 +621,7 @@ export class AuthService {
   cerrarSesion(): void {
     const idToken = this.sesion()?.idToken;
     this.sesion.set(null);
+    sessionStorage.removeItem(CLAVE_SESION);
     const parametros = new URLSearchParams({
       post_logout_redirect_uri: environment.keycloak.postLogoutRedirectUri,
       ...(idToken ? { id_token_hint: idToken } : {}),
@@ -627,21 +630,38 @@ export class AuthService {
   }
 
   private guardarSesion(datos: TokenResponse): void {
-    this.sesion.set({
+    const sesion: SesionKeycloak = {
       accessToken: datos.access_token,
       refreshToken: datos.refresh_token,
       idToken: datos.id_token,
       expiraEn: Date.now() + datos.expires_in * 1000,
-    });
+    };
+    this.sesion.set(sesion);
+    sessionStorage.setItem(CLAVE_SESION, JSON.stringify(sesion));
+  }
+
+  private restaurarSesion(): SesionKeycloak | null {
+    const guardada = sessionStorage.getItem(CLAVE_SESION);
+    if (!guardada) return null;
+    try {
+      const sesion = JSON.parse(guardada) as SesionKeycloak;
+      if (sesion.expiraEn > Date.now()) {
+        return sesion;
+      }
+    } catch {
+      // JSON invalido: se descarta igual que una sesion vencida
+    }
+    sessionStorage.removeItem(CLAVE_SESION);
+    return null;
   }
 }
 ```
 
-`sesion` es la única fuente de verdad, y vive en memoria (2.3) — nada de lo que `AuthService` guarda ahí sobrevive un *reload*. `autenticado`, `roles` y `usuario` son `computed`: se recalculan solos cada vez que `sesion` cambia, sin que ninguna otra parte de la SPA tenga que sincronizar nada a mano. `iniciarLogin` guarda el `code_verifier`, el `state` (2.2) y la ruta a la que el usuario quería ir (`destino`) en `sessionStorage` — la misma excepción acotada ya justificada en 2.3, ahora con tres valores en vez de uno, ninguno de los tres el token — y redirige el navegador completo a Keycloak.
+`sesion` vive en memoria, con `guardarSesion`/`restaurarSesion` manteniendo una copia espejo en `sessionStorage` (2.3) — `autenticado`, `roles` y `usuario` son `computed`: se recalculan solos cada vez que `sesion` cambia, sin que ninguna otra parte de la SPA tenga que sincronizar nada a mano. `iniciarLogin` guarda el `code_verifier`, el `state` (2.2) y la ruta a la que el usuario quería ir (`destino`) en `sessionStorage` — la misma excepción ya justificada en 2.3 — y redirige el navegador completo a Keycloak.
 
 `completarLogin` revisa `state` **antes** de confiar en el `code_verifier` (2.2): si el valor que Keycloak devolvió no coincide con el que la SPA guardó antes de redirigir, lanza un error y nunca llega a intentar el intercambio — sin importar si el `code_verifier` guardado era correcto. Usa `fetch`, no `HttpClient` — a propósito: este intercambio nunca debe pasar por `authInterceptor` (3.8, que adjunta `Authorization` a las peticiones hacia `bomerp-backend`), y Keycloak no es `bomerp-backend`; tampoco hay, todavía, ningún `accessToken` que adjuntarle. `sessionStorage.removeItem(CLAVE_CODE_VERIFIER)` ocurre **antes** de revisar si la respuesta fue exitosa, a propósito: el `code_verifier` es de un solo uso — si el intercambio falla, la solución es reiniciar el login completo (`iniciarLogin`, con un `code_verifier` nuevo), nunca reintentar con el mismo.
 
-`refrescar` reusa `guardarSesion` igual que `completarLogin` — misma forma de respuesta (`TokenResponse`), mismo destino (`sesion`) —, y si el `refresh_token` ya venció o Keycloak lo rechaza, limpia la sesión en vez de dejar un estado a medias; 3.8 es quien decide, desde el interceptor, cuándo llamarlo. `cerrarSesion` limpia la sesión en memoria **antes** de redirigir — si la redirección a Keycloak fallara por cualquier razón de red, la SPA igual queda sin sesión activa del lado del cliente. `id_token_hint` (el `idToken` que Keycloak entregó junto al `accessToken`, 2.1) es lo que le confirma a Keycloak *cuál* sesión cerrar — el *RP-Initiated Logout* (*Relying Party*, el nombre que OpenID Connect le da al cliente en este flujo) de OpenID Connect lo usa para no depender solo de la cookie de sesión del navegador. `guardarSesion` queda privado: nadie fuera de `AuthService` necesita construir un `SesionKeycloak` a mano.
+`refrescar` reusa `guardarSesion` igual que `completarLogin` — misma forma de respuesta (`TokenResponse`), mismo destino (`sesion` y `sessionStorage`) —, y si el `refresh_token` ya venció o Keycloak lo rechaza, limpia ambos en vez de dejar un estado a medias; 3.8 es quien decide, desde el interceptor, cuándo llamarlo. `cerrarSesion` limpia la sesión en memoria y en `sessionStorage` **antes** de redirigir — si la redirección a Keycloak fallara por cualquier razón de red, la SPA igual queda sin sesión activa del lado del cliente. `id_token_hint` (el `idToken` que Keycloak entregó junto al `accessToken`, 2.1) es lo que le confirma a Keycloak *cuál* sesión cerrar — el *RP-Initiated Logout* (*Relying Party*, el nombre que OpenID Connect le da al cliente en este flujo) de OpenID Connect lo usa para no depender solo de la cookie de sesión del navegador. `guardarSesion` y `restaurarSesion` quedan privados: nadie fuera de `AuthService` necesita construir o leer un `SesionKeycloak` a mano. `restaurarSesion` se ejecuta una sola vez, al construir el *signal* `sesion` — si la copia guardada ya venció, la descarta en vez de dejar que `autenticado` la acepte por error; un `JSON.parse` que falla (alguien editó `sessionStorage` a mano, por ejemplo) se trata igual que una sesión vencida, nunca como un error que rompa el arranque de la SPA.
 
 ### 3.4 Construir la ruta de retorno (`/auth/callback`)
 
@@ -1015,6 +1035,7 @@ Abre `http://localhost:4200` sin sesión activa (una ventana nueva de incógnito
 | "Nueva categoría" / "Editar" en Categorías | No visible (ruta protegida igual) | No visible | Visible |
 | Botón "Anular" en el reporte | No visible | Visible | Visible |
 | Esperar a que el token expire (5 min, o reduce *Access Token Lifespan* temporalmente) y hacer cualquier acción | Refresca sola, sin pedir login de nuevo | Igual | Igual |
+| Recargar la página (`F5`) con sesión activa | Mantiene la sesión — nombre de usuario y menú siguen visibles, sin pedir login de nuevo | Igual | Igual |
 | "Cerrar sesión" | Vuelve a la pantalla de login de Keycloak | Igual | Igual |
 
 Verifica también el refresco forzado: con la pestaña de desarrollador abierta (*Network*), espera a que pase el *Access Token Lifespan* del realm y dispara cualquier petición (por ejemplo, recarga el listado de categorías) — debe aparecer una llamada a `/protocol/openid-connect/token` con `grant_type=refresh_token` **antes** de que la petición original se reintente con éxito, sin que la pantalla muestre ningún error al usuario.
@@ -1158,7 +1179,7 @@ Indica 2 fortalezas y 2 recomendaciones.
 
 Tiempo: 5 min.
 
-**Resumen breve:** hoy `bomerp-frontend` dejó de ser una SPA sin identidad — inicia sesión contra Keycloak con *Authorization Code* + PKCE, sin manejar jamás una contraseña en código propio, con el token viviendo en memoria (nunca en `localStorage`) según el criterio que el caso de British Airways (1.6) y RFC 10017 (2.3) ya justificaron. Dos *guards* funcionales protegen rutas por autenticación y por rol, un interceptor adjunta el token a cada petición y refresca la sesión una sola vez ante un `401` antes de rendirse, y el menú —junto con el botón "Anular" que hoy mismo quedó corregido— refleja exactamente las mismas reglas que `SecurityConfig` ya impone en el backend desde S10.
+**Resumen breve:** hoy `bomerp-frontend` dejó de ser una SPA sin identidad — inicia sesión contra Keycloak con *Authorization Code* + PKCE, sin manejar jamás una contraseña en código propio, con el token viviendo en memoria y una copia espejo en `sessionStorage` (nunca en `localStorage`), para sobrevivir un `F5` sin perder la sesión, según el criterio que el caso de British Airways (1.6) y RFC 10017 (2.3) ya justificaron. Dos *guards* funcionales protegen rutas por autenticación y por rol, un interceptor adjunta el token a cada petición y refresca la sesión una sola vez ante un `401` antes de rendirse, y el menú —junto con el botón "Anular" que hoy mismo quedó corregido— refleja exactamente las mismas reglas que `SecurityConfig` ya impone en el backend desde S10.
 
 **Dinámica participativa:** en una ronda rápida, cada estudiante comparte en una frase qué decisión de almacenamiento de token eligió para su propio proyecto (memoria, `sessionStorage`, u otra) y por qué.
 
