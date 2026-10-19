@@ -263,6 +263,85 @@ En la consola de administración de Keycloak (`http://localhost:38080`, realm `b
 
 **Error frecuente**: desactivar *Direct access grants* y olvidar activar *Require PKCE*. El flujo seguiría funcionando si la SPA ya envía PKCE correctamente (3.2-3.4), pero sin esta casilla, Keycloak no lo **exige** — un cliente mal configurado (el tuyo en una futura sesión, o cualquier otro que se registre con el mismo *Client ID* en otro ambiente) podría saltarse la protección sin que nada lo impida. 3.1 cierra el mismo hueco en el servidor que 3.2-3.4 cierran en el cliente.
 
+#### Verificar el cambio: confirmar que *Direct access grants* ya está desactivada
+
+**Producto del paso:** confirmación, con PowerShell y el navegador, de que el cliente rechaza el atajo de prueba que usó S10b y de que el flujo real (*Authorization Code* + PKCE) entrega un token válido — antes de escribir una sola línea de Angular (3.2 en adelante).
+
+**1. Confirmar que el atajo de S10b ya no funciona.** Repite el mismo `password grant` que S10b usó en su sección 6, con el cliente ya reconfigurado:
+
+```powershell
+Invoke-RestMethod -Method Post -Uri "http://localhost:38080/realms/bomerp/protocol/openid-connect/token" `
+  -ContentType "application/x-www-form-urlencoded" `
+  -Body "grant_type=password&client_id=bomerp-frontend&username=vendedor1&password=Bomerp2026!"
+```
+
+```bash
+curl -X POST http://localhost:38080/realms/bomerp/protocol/openid-connect/token \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=password&client_id=bomerp-frontend&username=vendedor1&password=Bomerp2026!"
+```
+
+Ahora responde `400` con `"error": "unauthorized_client"` (en S10b, este mismo comando devolvía un token) — es la prueba directa de que desactivar *Direct access grants* sí tuvo efecto, y no solo una casilla marcada sin guardar.
+
+**2. Confirmar que Keycloak también exige PKCE.** Arma a mano la URL de autorización, igual que S10b 6.1, pero esta vez **sin** `code_challenge`:
+
+```text
+http://localhost:38080/realms/bomerp/protocol/openid-connect/auth?client_id=bomerp-frontend&redirect_uri=http://localhost:4200/auth/callback&response_type=code&scope=openid
+```
+
+Ábrela en el navegador y entra con `vendedor1@bomerp.com` / `Bomerp2026!`. Keycloak redirige con un error (`invalid_request`, falta `code_challenge`) en vez de devolver un `code` — si hubieras saltado el paso 3 de este apartado (*Require PKCE*), este mismo intento habría funcionado y nadie lo habría notado hasta mucho después.
+
+**3. El flujo real completo, con PKCE.** Calcula `code_verifier` y `code_challenge` (SHA-256, base64url) — es el mismo cálculo que 3.2 programa dentro de la SPA; aquí lo haces una vez a mano para comprobar que Keycloak responde como se espera:
+
+```powershell
+function Get-Pkce([string]$verifier) {
+    $hash = [System.Security.Cryptography.SHA256]::Create().ComputeHash([System.Text.Encoding]::ASCII.GetBytes($verifier))
+    [Convert]::ToBase64String($hash).TrimEnd('=').Replace('+','-').Replace('/','_')
+}
+$bytes = New-Object byte[] 48
+[System.Security.Cryptography.RandomNumberGenerator]::Create().GetBytes($bytes)
+$codeVerifier = [Convert]::ToBase64String($bytes).TrimEnd('=').Replace('+','-').Replace('/','_')
+$codeChallenge = Get-Pkce $codeVerifier
+"code_verifier:  $codeVerifier"
+"code_challenge: $codeChallenge"
+```
+
+```bash
+pkce() { printf '%s' "$1" | openssl dgst -sha256 -binary | openssl base64 -A | tr '+/' '-_' | tr -d '='; echo; }
+CODE_VERIFIER=$(openssl rand -base64 48 | tr -d '=+/\n' | cut -c1-64)
+CODE_CHALLENGE=$(pkce "$CODE_VERIFIER")
+echo "code_verifier:  $CODE_VERIFIER"
+echo "code_challenge: $CODE_CHALLENGE"
+```
+
+Arma la URL con el `code_challenge` ya calculado y ábrela:
+
+```text
+http://localhost:38080/realms/bomerp/protocol/openid-connect/auth?client_id=bomerp-frontend&redirect_uri=http://localhost:4200/auth/callback&response_type=code&scope=openid&code_challenge=<pega aquí code_challenge>&code_challenge_method=S256
+```
+
+Entra con `vendedor1@bomerp.com` / `Bomerp2026!` (o reutiliza la sesión si Keycloak no pide login de nuevo — es SSO, no un error). El navegador intenta redirigir a `http://localhost:4200/auth/callback?code=...`: como la SPA todavía no existe (llega recién en 3.4), la pestaña muestra error de conexión — eso es esperado. Copia el `code` de la barra de direcciones antes de que expire.
+
+Intercambia el código por un token, esta vez incluyendo `code_verifier`:
+
+```powershell
+$code = "<pega aquí el code>"
+$login = Invoke-RestMethod -Method Post -Uri "http://localhost:38080/realms/bomerp/protocol/openid-connect/token" `
+  -ContentType "application/x-www-form-urlencoded" `
+  -Body "grant_type=authorization_code&client_id=bomerp-frontend&redirect_uri=http://localhost:4200/auth/callback&code=$code&code_verifier=$codeVerifier"
+$login.access_token
+```
+
+```bash
+curl -X POST http://localhost:38080/realms/bomerp/protocol/openid-connect/token \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=authorization_code&client_id=bomerp-frontend&redirect_uri=http://localhost:4200/auth/callback&code=<pega aquí el code>&code_verifier=$CODE_VERIFIER"
+```
+
+Pega el `access_token` en [jwt.io](https://jwt.io) y confirma lo mismo que S10b 6 ya había verificado con el atajo: `realm_access.roles` trae `["VENDEDOR"]` y `sub` es un UUID — la diferencia es que esta vez llegó por el flujo que la SPA va a usar de verdad, con PKCE exigido en cada paso.
+
+**Error frecuente**: pegar un `code` vencido o ya usado una vez (`invalid_grant`) — un `code` de *Authorization Code* se consume en el primer intercambio y expira en segundos; si falla, repite desde el paso 3 con una URL nueva, nunca reintentes el mismo `code`.
+
 ### 3.2 Configurar el entorno y construir el generador de PKCE
 
 **Producto del paso:** la configuración de Keycloak disponible como `environment`, y las dos funciones que generan el `code_verifier` y el `code_challenge` (RFC 7636).

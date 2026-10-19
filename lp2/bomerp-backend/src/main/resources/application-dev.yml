@@ -29,12 +29,6 @@ spring:
       enabled: true
 
 bomerp:
-  datasource:
-    seguridad:
-      url: jdbc:postgresql://localhost:5431/bomerp_seguridad
-      username: bomerp_seguridad
-      password: 123456
-      driver-class-name: org.postgresql.Driver
   cors:
     allowed-origins: http://localhost:4200,http://localhost:5173,http://localhost:5174
 
