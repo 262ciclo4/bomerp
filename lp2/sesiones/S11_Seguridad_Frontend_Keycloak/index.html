@@ -3702,10 +3702,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#33-construir-authservice-iniciar-el-login-y-guardar-la-sesion-en-memoria" class="md-nav__link">
+  <a href="#33-construir-authservice-completo-login-callback-refresco-y-cierre-de-sesion" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.3 Construir AuthService: iniciar el login y guardar la sesión en memoria
+        3.3 Construir AuthService completo: login, callback, refresco y cierre de sesión
       
     </span>
   </a>
@@ -3713,10 +3713,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#34-construir-la-ruta-de-retorno-authcallback-y-completar-el-intercambio" class="md-nav__link">
+  <a href="#34-construir-la-ruta-de-retorno-authcallback" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.4 Construir la ruta de retorno (/auth/callback) y completar el intercambio
+        3.4 Construir la ruta de retorno (/auth/callback)
       
     </span>
   </a>
@@ -4262,10 +4262,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#33-construir-authservice-iniciar-el-login-y-guardar-la-sesion-en-memoria" class="md-nav__link">
+  <a href="#33-construir-authservice-completo-login-callback-refresco-y-cierre-de-sesion" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.3 Construir AuthService: iniciar el login y guardar la sesión en memoria
+        3.3 Construir AuthService completo: login, callback, refresco y cierre de sesión
       
     </span>
   </a>
@@ -4273,10 +4273,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#34-construir-la-ruta-de-retorno-authcallback-y-completar-el-intercambio" class="md-nav__link">
+  <a href="#34-construir-la-ruta-de-retorno-authcallback" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.4 Construir la ruta de retorno (/auth/callback) y completar el intercambio
+        3.4 Construir la ruta de retorno (/auth/callback)
       
     </span>
   </a>
@@ -4780,8 +4780,8 @@
 <li><strong>3.1</strong> Reconfigurar el cliente de Keycloak para el flujo real.</li>
 <li><strong>3.1b</strong> Corregir CORS en <code>bomerp-backend</code> (pendiente desde S10).</li>
 <li><strong>3.2</strong> Configurar el entorno y construir el generador de PKCE.</li>
-<li><strong>3.3</strong> Construir <code>AuthService</code>: iniciar el login y guardar la sesión en memoria.</li>
-<li><strong>3.4</strong> Construir la ruta de retorno (<code>/auth/callback</code>) y completar el intercambio.</li>
+<li><strong>3.3</strong> Construir <code>AuthService</code> completo: login, callback, refresco y cierre de sesión.</li>
+<li><strong>3.4</strong> Construir la ruta de retorno (<code>/auth/callback</code>).</li>
 <li><strong>3.5</strong> Decodificar el token: claims, roles y expiración.</li>
 <li><strong>3.6</strong> Construir el <em>guard</em> de autenticación.</li>
 <li><strong>3.7</strong> Construir el <em>guard</em> de rol y proteger las rutas de escritura.</li>
@@ -4969,8 +4969,8 @@
 <span class="p">}</span>
 </code></pre></div>
 <p><code>crypto.getRandomValues</code> (Web Crypto API, nativa del navegador, sin ninguna librería) genera los 32 bytes aleatorios del <code>code_verifier</code> — el mínimo de entropía que RFC 7636 exige para que no sea adivinable. <code>crypto.subtle.digest('SHA-256', ...)</code> es asíncrono porque el cálculo real ocurre fuera del hilo principal de JavaScript; por eso <code>generarCodeChallenge</code> devuelve una <code>Promise</code>, no un valor directo. <code>generarState</code> reusa el mismo <code>base64UrlEncode</code> para un propósito distinto (2.2): no se transforma con SHA-256 porque <code>state</code> no necesita demostrarse después — solo necesita ser impredecible y compararse tal cual al volver.</p>
-<h3 id="33-construir-authservice-iniciar-el-login-y-guardar-la-sesion-en-memoria">3.3 Construir <code>AuthService</code>: iniciar el login y guardar la sesión en memoria<a class="headerlink" href="#33-construir-authservice-iniciar-el-login-y-guardar-la-sesion-en-memoria" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> el servicio central de autenticación, con la sesión completa viviendo en un <code>signal</code> privado (2.3) y el método que arranca el flujo de login.</p>
+<h3 id="33-construir-authservice-completo-login-callback-refresco-y-cierre-de-sesion">3.3 Construir <code>AuthService</code> completo: login, callback, refresco y cierre de sesión<a class="headerlink" href="#33-construir-authservice-completo-login-callback-refresco-y-cierre-de-sesion" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> el servicio central de autenticación completo, con la sesión viviendo en un <code>signal</code> privado (2.3) y los cinco métodos que la sesión necesita — <code>iniciarLogin</code>, <code>completarLogin</code>, <code>refrescar</code>, <code>cerrarSesion</code> y <code>destinoPendiente</code> —, en un solo archivo, construido de una sola vez. A diferencia de parchear la misma clase en pasos sueltos más adelante, todo <code>AuthService</code> queda listo aquí; 3.4, 3.8 y 3.9 solo lo <strong>consumen</strong>, no lo modifican.</p>
 <p><strong><code>lp2/bomerp-frontend/src/app/core/auth/auth-service.ts</code></strong> (archivo nuevo):</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Injectable</span><span class="p">,</span><span class="w"> </span><span class="nx">computed</span><span class="p">,</span><span class="w"> </span><span class="nx">signal</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/core'</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">environment</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'../../../environments/environment'</span><span class="p">;</span>
@@ -5046,21 +5046,7 @@
 <span class="w">    </span><span class="nx">location</span><span class="p">.</span><span class="nx">href</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`</span><span class="si">${</span><span class="nx">environment</span><span class="p">.</span><span class="nx">keycloak</span><span class="p">.</span><span class="nx">issuer</span><span class="si">}</span><span class="sb">/protocol/openid-connect/auth?</span><span class="si">${</span><span class="nx">parametros</span><span class="si">}</span><span class="sb">`</span><span class="p">;</span>
 <span class="w">  </span><span class="p">}</span>
 
-<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="nx">guardarSesion</span><span class="p">(</span><span class="nx">datos</span><span class="o">:</span><span class="w"> </span><span class="kt">TokenResponse</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">sesion</span><span class="p">.</span><span class="nx">set</span><span class="p">({</span>
-<span class="w">      </span><span class="nx">accessToken</span><span class="o">:</span><span class="w"> </span><span class="kt">datos.access_token</span><span class="p">,</span>
-<span class="w">      </span><span class="nx">refreshToken</span><span class="o">:</span><span class="w"> </span><span class="kt">datos.refresh_token</span><span class="p">,</span>
-<span class="w">      </span><span class="nx">idToken</span><span class="o">:</span><span class="w"> </span><span class="kt">datos.id_token</span><span class="p">,</span>
-<span class="w">      </span><span class="nx">expiraEn</span><span class="o">:</span><span class="w"> </span><span class="kt">Date.now</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">datos</span><span class="p">.</span><span class="nx">expires_in</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">1000</span><span class="p">,</span>
-<span class="w">    </span><span class="p">});</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-<p><code>sesion</code> es la única fuente de verdad, y vive en memoria (2.3) — nada de lo que <code>AuthService</code> guarda ahí sobrevive un <em>reload</em>. <code>autenticado</code>, <code>roles</code> y <code>usuario</code> son <code>computed</code>: se recalculan solos cada vez que <code>sesion</code> cambia, sin que ninguna otra parte de la SPA tenga que sincronizar nada a mano. <code>iniciarLogin</code> guarda el <code>code_verifier</code>, el <code>state</code> (2.2) y la ruta a la que el usuario quería ir (<code>destino</code>) en <code>sessionStorage</code> — la misma excepción acotada ya justificada en 2.3, ahora con tres valores en vez de uno, ninguno de los tres el token — y redirige el navegador completo a Keycloak; <code>guardarSesion</code> queda privado por ahora, 3.4 es quien primero la usa.</p>
-<h3 id="34-construir-la-ruta-de-retorno-authcallback-y-completar-el-intercambio">3.4 Construir la ruta de retorno (<code>/auth/callback</code>) y completar el intercambio<a class="headerlink" href="#34-construir-la-ruta-de-retorno-authcallback-y-completar-el-intercambio" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> el componente que recibe la redirección de Keycloak, cambia el código por un token, y manda al usuario de vuelta exactamente a donde quería ir.</p>
-<p>Primero, completa <code>AuthService</code> con el método que hace el intercambio — agrégalo después de <code>iniciarLogin</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">completarLogin</span><span class="p">(</span><span class="nx">code</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">stateRecibido</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="ow">void</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">completarLogin</span><span class="p">(</span><span class="nx">code</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">stateRecibido</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="ow">void</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">stateEsperado</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">sessionStorage</span><span class="p">.</span><span class="nx">getItem</span><span class="p">(</span><span class="nx">CLAVE_STATE</span><span class="p">);</span>
 <span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">verifier</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">sessionStorage</span><span class="p">.</span><span class="nx">getItem</span><span class="p">(</span><span class="nx">CLAVE_CODE_VERIFIER</span><span class="p">);</span>
 <span class="w">    </span><span class="nx">sessionStorage</span><span class="p">.</span><span class="nx">removeItem</span><span class="p">(</span><span class="nx">CLAVE_STATE</span><span class="p">);</span>
@@ -5091,8 +5077,54 @@
 <span class="w">    </span><span class="nx">sessionStorage</span><span class="p">.</span><span class="nx">removeItem</span><span class="p">(</span><span class="nx">CLAVE_DESTINO</span><span class="p">);</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">destino</span><span class="p">;</span>
 <span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">refrescar</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="kt">boolean</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">refreshToken</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">sesion</span><span class="p">()</span><span class="o">?</span><span class="p">.</span><span class="nx">refreshToken</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">refreshToken</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">cuerpo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">URLSearchParams</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">grant_type</span><span class="o">:</span><span class="w"> </span><span class="s1">'refresh_token'</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">client_id</span><span class="o">:</span><span class="w"> </span><span class="kt">environment.keycloak.clientId</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">refresh_token</span><span class="o">:</span><span class="w"> </span><span class="kt">refreshToken</span><span class="p">,</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">respuesta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="sb">`</span><span class="si">${</span><span class="nx">environment</span><span class="p">.</span><span class="nx">keycloak</span><span class="p">.</span><span class="nx">issuer</span><span class="si">}</span><span class="sb">/protocol/openid-connect/token`</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="s1">'POST'</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">headers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s1">'Content-Type'</span><span class="o">:</span><span class="w"> </span><span class="s1">'application/x-www-form-urlencoded'</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="nx">body</span><span class="o">:</span><span class="w"> </span><span class="kt">cuerpo</span><span class="p">,</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">respuesta</span><span class="p">.</span><span class="nx">ok</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">sesion</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">guardarSesion</span><span class="p">(</span><span class="k">await</span><span class="w"> </span><span class="nx">respuesta</span><span class="p">.</span><span class="nx">json</span><span class="p">());</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nx">cerrarSesion</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">idToken</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">sesion</span><span class="p">()</span><span class="o">?</span><span class="p">.</span><span class="nx">idToken</span><span class="p">;</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">sesion</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">parametros</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">URLSearchParams</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">post_logout_redirect_uri</span><span class="o">:</span><span class="w"> </span><span class="kt">environment.keycloak.postLogoutRedirectUri</span><span class="p">,</span>
+<span class="w">      </span><span class="p">...(</span><span class="nx">idToken</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id_token_hint</span><span class="o">:</span><span class="w"> </span><span class="kt">idToken</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">{}),</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">    </span><span class="nx">location</span><span class="p">.</span><span class="nx">href</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`</span><span class="si">${</span><span class="nx">environment</span><span class="p">.</span><span class="nx">keycloak</span><span class="p">.</span><span class="nx">issuer</span><span class="si">}</span><span class="sb">/protocol/openid-connect/logout?</span><span class="si">${</span><span class="nx">parametros</span><span class="si">}</span><span class="sb">`</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="nx">guardarSesion</span><span class="p">(</span><span class="nx">datos</span><span class="o">:</span><span class="w"> </span><span class="kt">TokenResponse</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">sesion</span><span class="p">.</span><span class="nx">set</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">accessToken</span><span class="o">:</span><span class="w"> </span><span class="kt">datos.access_token</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">refreshToken</span><span class="o">:</span><span class="w"> </span><span class="kt">datos.refresh_token</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">idToken</span><span class="o">:</span><span class="w"> </span><span class="kt">datos.id_token</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">expiraEn</span><span class="o">:</span><span class="w"> </span><span class="kt">Date.now</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">datos</span><span class="p">.</span><span class="nx">expires_in</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">1000</span><span class="p">,</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
 </code></pre></div>
-<p><code>completarLogin</code> revisa <code>state</code> <strong>antes</strong> de confiar en el <code>code_verifier</code> (2.2): si el valor que Keycloak devolvió no coincide con el que la SPA guardó antes de redirigir, lanza un error y nunca llega a intentar el intercambio — sin importar si el <code>code_verifier</code> guardado era correcto. Usa <code>fetch</code>, no <code>HttpClient</code> — a propósito: este intercambio nunca debe pasar por el interceptor de 3.8 (que adjunta <code>Authorization</code> a las peticiones hacia <code>bomerp-backend</code>), y Keycloak no es <code>bomerp-backend</code>. <code>sessionStorage.removeItem(CLAVE_CODE_VERIFIER)</code> ocurre <strong>antes</strong> de revisar si la respuesta fue exitosa, a propósito: el <code>code_verifier</code> es de un solo uso — si el intercambio falla, la solución es reiniciar el login completo (<code>iniciarLogin</code>, con un <code>code_verifier</code> nuevo), nunca reintentar con el mismo.</p>
+<p><code>sesion</code> es la única fuente de verdad, y vive en memoria (2.3) — nada de lo que <code>AuthService</code> guarda ahí sobrevive un <em>reload</em>. <code>autenticado</code>, <code>roles</code> y <code>usuario</code> son <code>computed</code>: se recalculan solos cada vez que <code>sesion</code> cambia, sin que ninguna otra parte de la SPA tenga que sincronizar nada a mano. <code>iniciarLogin</code> guarda el <code>code_verifier</code>, el <code>state</code> (2.2) y la ruta a la que el usuario quería ir (<code>destino</code>) en <code>sessionStorage</code> — la misma excepción acotada ya justificada en 2.3, ahora con tres valores en vez de uno, ninguno de los tres el token — y redirige el navegador completo a Keycloak.</p>
+<p><code>completarLogin</code> revisa <code>state</code> <strong>antes</strong> de confiar en el <code>code_verifier</code> (2.2): si el valor que Keycloak devolvió no coincide con el que la SPA guardó antes de redirigir, lanza un error y nunca llega a intentar el intercambio — sin importar si el <code>code_verifier</code> guardado era correcto. Usa <code>fetch</code>, no <code>HttpClient</code> — a propósito: este intercambio nunca debe pasar por <code>authInterceptor</code> (3.8, que adjunta <code>Authorization</code> a las peticiones hacia <code>bomerp-backend</code>), y Keycloak no es <code>bomerp-backend</code>; tampoco hay, todavía, ningún <code>accessToken</code> que adjuntarle. <code>sessionStorage.removeItem(CLAVE_CODE_VERIFIER)</code> ocurre <strong>antes</strong> de revisar si la respuesta fue exitosa, a propósito: el <code>code_verifier</code> es de un solo uso — si el intercambio falla, la solución es reiniciar el login completo (<code>iniciarLogin</code>, con un <code>code_verifier</code> nuevo), nunca reintentar con el mismo.</p>
+<p><code>refrescar</code> reusa <code>guardarSesion</code> igual que <code>completarLogin</code> — misma forma de respuesta (<code>TokenResponse</code>), mismo destino (<code>sesion</code>) —, y si el <code>refresh_token</code> ya venció o Keycloak lo rechaza, limpia la sesión en vez de dejar un estado a medias; 3.8 es quien decide, desde el interceptor, cuándo llamarlo. <code>cerrarSesion</code> limpia la sesión en memoria <strong>antes</strong> de redirigir — si la redirección a Keycloak fallara por cualquier razón de red, la SPA igual queda sin sesión activa del lado del cliente. <code>id_token_hint</code> (el <code>idToken</code> que Keycloak entregó junto al <code>accessToken</code>, 2.1) es lo que le confirma a Keycloak <em>cuál</em> sesión cerrar — el <em>RP-Initiated Logout</em> (<em>Relying Party</em>, el nombre que OpenID Connect le da al cliente en este flujo) de OpenID Connect lo usa para no depender solo de la cookie de sesión del navegador. <code>guardarSesion</code> queda privado: nadie fuera de <code>AuthService</code> necesita construir un <code>SesionKeycloak</code> a mano.</p>
+<h3 id="34-construir-la-ruta-de-retorno-authcallback">3.4 Construir la ruta de retorno (<code>/auth/callback</code>)<a class="headerlink" href="#34-construir-la-ruta-de-retorno-authcallback" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> el componente que recibe la redirección de Keycloak y la conecta con <code>completarLogin</code>/<code>destinoPendiente</code> (ya construidos en 3.3) — nada nuevo en <code>AuthService</code>, solo quien lo consume por primera vez.</p>
 <p><strong><code>lp2/bomerp-frontend/src/app/core/auth/auth-callback.ts</code></strong> (archivo nuevo):</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Component</span><span class="p">,</span><span class="w"> </span><span class="nx">inject</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/core'</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">ActivatedRoute</span><span class="p">,</span><span class="w"> </span><span class="nx">Router</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/router'</span><span class="p">;</span>
@@ -5124,12 +5156,7 @@
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<p><strong><code>lp2/bomerp-frontend/src/app/app.routes.ts</code></strong> — agrega la ruta, <strong>fuera</strong> del grupo que cuelga de <code>Layout</code> (no necesita sidebar ni header, y tampoco debe pasar por <code>authGuard</code>, 3.6 — es, precisamente, la ruta que completa el login):</p>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'auth/callback'</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">loadComponent</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">import</span><span class="p">(</span><span class="s1">'./core/auth/auth-callback'</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">m</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">m</span><span class="p">.</span><span class="nx">AuthCallback</span><span class="p">),</span>
-<span class="p">},</span>
-</code></pre></div>
+<p><code>app.routes.ts</code> todavía no se toca: 3.6 y 3.7 agregan, cada uno, una pieza más (<code>authGuard</code>, <code>rolGuard</code>), y las tres (<code>auth/callback</code> incluida) se registran <strong>juntas, en un solo bloque completo</strong>, al final de 3.7 — no en ediciones parciales repartidas en cada paso.</p>
 <h3 id="35-decodificar-el-token-claims-roles-y-expiracion">3.5 Decodificar el token: claims, roles y expiración<a class="headerlink" href="#35-decodificar-el-token-claims-roles-y-expiracion" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> la función que lee el contenido de un JWT sin verificar su firma — la SPA nunca valida un token (eso lo hace <code>bomerp-backend</code>, S10, 3.11/7.1), solo lee los <em>claims</em> que ya confió en Keycloak para decidir qué mostrar.</p>
 <p><strong><code>lp2/bomerp-frontend/src/app/core/auth/jwt.ts</code></strong> (archivo nuevo):</p>
@@ -5177,16 +5204,7 @@
 <span class="p">};</span>
 </code></pre></div>
 <p><code>authGuard</code> es <code>async</code> porque <code>iniciarLogin</code> lo es (3.3, por el <code>await</code> a <code>generarCodeChallenge</code>) — el <code>return false</code> final casi nunca llega a importarle a nadie: para cuando se ejecuta, <code>location.href</code> ya empezó a navegar el navegador entero fuera de la SPA, hacia Keycloak.</p>
-<p><strong><code>lp2/bomerp-frontend/src/app/app.routes.ts</code></strong> — agrégalo a la ruta de <code>Layout</code> (protege todo lo que cuelga de ella):</p>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">''</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">loadComponent</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">import</span><span class="p">(</span><span class="s1">'./core/layout/layout'</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">m</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">m</span><span class="p">.</span><span class="nx">Layout</span><span class="p">),</span>
-<span class="w">  </span><span class="nx">canActivate</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">authGuard</span><span class="p">],</span>
-<span class="w">  </span><span class="nx">children</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="c1">// ... las rutas que ya existen, sin cambios</span>
-<span class="w">  </span><span class="p">],</span>
-<span class="p">},</span>
-</code></pre></div>
+<p><code>app.routes.ts</code> tampoco se toca todavía — 3.7 cierra con el bloque completo, <code>authGuard</code> incluido.</p>
 <h3 id="37-construir-el-guard-de-rol-y-proteger-las-rutas-de-escritura">3.7 Construir el <em>guard</em> de rol y proteger las rutas de escritura<a class="headerlink" href="#37-construir-el-guard-de-rol-y-proteger-las-rutas-de-escritura" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> <code>rolGuard</code>, agregado a las rutas que la Tabla 5 (2.7) marca como restringidas por rol.</p>
 <p><strong><code>lp2/bomerp-frontend/src/app/core/guards/rol-guard.ts</code></strong> (archivo nuevo):</p>
@@ -5206,54 +5224,96 @@
 <span class="p">}</span>
 </code></pre></div>
 <p>A diferencia de <code>authGuard</code>, <code>rolGuard</code> es una <strong>fábrica</strong> de <em>guards</em> (devuelve una función, no es una función en sí misma) — necesita saber, por cada ruta, qué roles exigir, y ese dato cambia según la ruta. <code>router.parseUrl(...)</code> es la forma correcta de redirigir desde un <em>guard</em> funcional: el <em>router</em> lo interpreta como "no actives esta ruta, activa esta otra en su lugar", sin el salto en dos pasos de llamar a <code>router.navigate()</code> y devolver <code>false</code> por separado.</p>
-<p><strong><code>lp2/bomerp-frontend/src/app/app.routes.ts</code></strong> — agrega <code>canActivate: [rolGuard(...)]</code> a las rutas de escritura (déjalas dentro de los hijos de <code>Layout</code>, que ya tienen <code>authGuard</code> heredado):</p>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'catalogo/categorias/nueva'</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">loadComponent</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span>
-<span class="w">    </span><span class="k">import</span><span class="p">(</span><span class="s1">'./features/catalogo/categoria/categoria-form'</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">m</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">m</span><span class="p">.</span><span class="nx">CategoriaForm</span><span class="p">),</span>
-<span class="w">  </span><span class="nx">canActivate</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">rolGuard</span><span class="p">(</span><span class="s1">'ADMIN'</span><span class="p">)],</span>
-<span class="p">},</span>
-<span class="p">{</span>
-<span class="w">  </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'catalogo/categorias/:id/editar'</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">loadComponent</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span>
-<span class="w">    </span><span class="k">import</span><span class="p">(</span><span class="s1">'./features/catalogo/categoria/categoria-form'</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">m</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">m</span><span class="p">.</span><span class="nx">CategoriaForm</span><span class="p">),</span>
-<span class="w">  </span><span class="nx">canActivate</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">rolGuard</span><span class="p">(</span><span class="s1">'ADMIN'</span><span class="p">)],</span>
-<span class="p">},</span>
-<span class="c1">// el mismo canActivate en catalogo/productos/nuevo y catalogo/productos/:id/editar</span>
-<span class="p">{</span>
-<span class="w">  </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'ventas/nueva'</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">loadComponent</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span>
-<span class="w">    </span><span class="k">import</span><span class="p">(</span><span class="s1">'./features/ventas/venta/venta-form'</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">m</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">m</span><span class="p">.</span><span class="nx">VentaForm</span><span class="p">),</span>
-<span class="w">  </span><span class="nx">canActivate</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">rolGuard</span><span class="p">(</span><span class="s1">'VENDEDOR'</span><span class="p">,</span><span class="w"> </span><span class="s1">'SUPERVISOR'</span><span class="p">)],</span>
-<span class="p">},</span>
-</code></pre></div>
-<p>Agrega también una ruta simple para <code>/sin-permiso</code> (un componente mínimo, sin lógica — un mensaje y un enlace de vuelta al inicio) y actualízala en el <code>path: 'sin-permiso'</code> del mismo archivo de rutas.</p>
-<p><strong>Error frecuente</strong>: aplicar <code>rolGuard</code> a <code>ventas/reporte</code> por error, copiando el mismo patrón de <code>ventas/nueva</code>. La Tabla 5 (2.7) ya lo aclara: el reporte es visible para los tres roles (filtrado por dueño del lado del servidor, RN8) — solo el botón "Anular" <strong>dentro</strong> de esa pantalla exige rol, y eso se resuelve en la plantilla (3.9), no en la ruta.</p>
-<h3 id="38-construir-el-interceptor-token-automatico-y-refresco-en-401">3.8 Construir el interceptor: token automático y refresco en <code>401</code><a class="headerlink" href="#38-construir-el-interceptor-token-automatico-y-refresco-en-401" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> <code>authInterceptor</code>, adjuntando el token a cada petición hacia <code>bomerp-backend</code> y resolviendo un <code>401</code> con un solo refresco antes de rendirse (2.6, Figura 3).</p>
-<p>Primero, completa <code>AuthService</code> con el método de refresco — agrégalo después de <code>completarLogin</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">refrescar</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="kt">boolean</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">refreshToken</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">sesion</span><span class="p">()</span><span class="o">?</span><span class="p">.</span><span class="nx">refreshToken</span><span class="p">;</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">refreshToken</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<p><strong><code>lp2/bomerp-frontend/src/app/core/sin-permiso/sin-permiso.ts</code></strong> (archivo nuevo) — componente mínimo, sin lógica, al que <code>rolGuard</code> redirige cuando el rol no alcanza:</p>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Component</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/core'</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">RouterLink</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/router'</span><span class="p">;</span>
 
-<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">cuerpo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">URLSearchParams</span><span class="p">({</span>
-<span class="w">      </span><span class="nx">grant_type</span><span class="o">:</span><span class="w"> </span><span class="s1">'refresh_token'</span><span class="p">,</span>
-<span class="w">      </span><span class="nx">client_id</span><span class="o">:</span><span class="w"> </span><span class="kt">environment.keycloak.clientId</span><span class="p">,</span>
-<span class="w">      </span><span class="nx">refresh_token</span><span class="o">:</span><span class="w"> </span><span class="kt">refreshToken</span><span class="p">,</span>
-<span class="w">    </span><span class="p">});</span>
-<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">respuesta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="sb">`</span><span class="si">${</span><span class="nx">environment</span><span class="p">.</span><span class="nx">keycloak</span><span class="p">.</span><span class="nx">issuer</span><span class="si">}</span><span class="sb">/protocol/openid-connect/token`</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="s1">'POST'</span><span class="p">,</span>
-<span class="w">      </span><span class="nx">headers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s1">'Content-Type'</span><span class="o">:</span><span class="w"> </span><span class="s1">'application/x-www-form-urlencoded'</span><span class="w"> </span><span class="p">},</span>
-<span class="w">      </span><span class="nx">body</span><span class="o">:</span><span class="w"> </span><span class="kt">cuerpo</span><span class="p">,</span>
-<span class="w">    </span><span class="p">});</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">respuesta</span><span class="p">.</span><span class="nx">ok</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">sesion</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">guardarSesion</span><span class="p">(</span><span class="k">await</span><span class="w"> </span><span class="nx">respuesta</span><span class="p">.</span><span class="nx">json</span><span class="p">());</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
-<span class="w">  </span><span class="p">}</span>
+<span class="kd">@Component</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">selector</span><span class="o">:</span><span class="w"> </span><span class="s1">'app-sin-permiso'</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">imports</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">RouterLink</span><span class="p">],</span>
+<span class="w">  </span><span class="nx">template</span><span class="o">:</span><span class="w"> </span><span class="sb">`</span>
+<span class="sb">    &lt;p&gt;No tienes permiso para acceder a esa pantalla.&lt;/p&gt;</span>
+<span class="sb">    &lt;a routerLink="/"&gt;Volver al inicio&lt;/a&gt;</span>
+<span class="sb">  `</span><span class="p">,</span>
+<span class="p">})</span>
+<span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">SinPermiso</span><span class="w"> </span><span class="p">{}</span>
 </code></pre></div>
+<p>Con <code>AuthService</code>, <code>authGuard</code>, <code>rolGuard</code>, <code>AuthCallback</code> y <code>SinPermiso</code> ya construidos, recién ahora se registra todo junto, <strong>en un solo bloque completo</strong> — no en ediciones parciales repartidas en 3.4/3.6/3.7 como antes. Reemplaza <strong><code>lp2/bomerp-frontend/src/app/app.routes.ts</code></strong> por completo:</p>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Routes</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/router'</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">authGuard</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'./core/guards/auth-guard'</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">rolGuard</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'./core/guards/rol-guard'</span><span class="p">;</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">routes</span><span class="o">:</span><span class="w"> </span><span class="kt">Routes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'auth/callback'</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">loadComponent</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">import</span><span class="p">(</span><span class="s1">'./core/auth/auth-callback'</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">m</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">m</span><span class="p">.</span><span class="nx">AuthCallback</span><span class="p">),</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">''</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">loadComponent</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">import</span><span class="p">(</span><span class="s1">'./core/layout/layout'</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">m</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">m</span><span class="p">.</span><span class="nx">Layout</span><span class="p">),</span>
+<span class="w">    </span><span class="nx">canActivate</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">authGuard</span><span class="p">],</span>
+<span class="w">    </span><span class="nx">children</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">''</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">loadComponent</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">import</span><span class="p">(</span><span class="s1">'./core/inicio/inicio'</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">m</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">m</span><span class="p">.</span><span class="nx">Inicio</span><span class="p">),</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'catalogo/categorias'</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">loadComponent</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span>
+<span class="w">          </span><span class="k">import</span><span class="p">(</span><span class="s1">'./features/catalogo/categoria/categoria-list'</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">m</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">m</span><span class="p">.</span><span class="nx">CategoriaList</span><span class="p">),</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'catalogo/categorias/nueva'</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">loadComponent</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span>
+<span class="w">          </span><span class="k">import</span><span class="p">(</span><span class="s1">'./features/catalogo/categoria/categoria-form'</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">m</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">m</span><span class="p">.</span><span class="nx">CategoriaForm</span><span class="p">),</span>
+<span class="w">        </span><span class="nx">canActivate</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">rolGuard</span><span class="p">(</span><span class="s1">'ADMIN'</span><span class="p">)],</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'catalogo/categorias/:id/editar'</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">loadComponent</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span>
+<span class="w">          </span><span class="k">import</span><span class="p">(</span><span class="s1">'./features/catalogo/categoria/categoria-form'</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">m</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">m</span><span class="p">.</span><span class="nx">CategoriaForm</span><span class="p">),</span>
+<span class="w">        </span><span class="nx">canActivate</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">rolGuard</span><span class="p">(</span><span class="s1">'ADMIN'</span><span class="p">)],</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'catalogo/productos'</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">loadComponent</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span>
+<span class="w">          </span><span class="k">import</span><span class="p">(</span><span class="s1">'./features/catalogo/producto/producto-list'</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">m</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">m</span><span class="p">.</span><span class="nx">ProductoList</span><span class="p">),</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'catalogo/productos/nuevo'</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">loadComponent</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span>
+<span class="w">          </span><span class="k">import</span><span class="p">(</span><span class="s1">'./features/catalogo/producto/producto-form'</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">m</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">m</span><span class="p">.</span><span class="nx">ProductoForm</span><span class="p">),</span>
+<span class="w">        </span><span class="nx">canActivate</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">rolGuard</span><span class="p">(</span><span class="s1">'ADMIN'</span><span class="p">)],</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'catalogo/productos/:id/editar'</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">loadComponent</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span>
+<span class="w">          </span><span class="k">import</span><span class="p">(</span><span class="s1">'./features/catalogo/producto/producto-form'</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">m</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">m</span><span class="p">.</span><span class="nx">ProductoForm</span><span class="p">),</span>
+<span class="w">        </span><span class="nx">canActivate</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">rolGuard</span><span class="p">(</span><span class="s1">'ADMIN'</span><span class="p">)],</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'ventas/nueva'</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">loadComponent</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span>
+<span class="w">          </span><span class="k">import</span><span class="p">(</span><span class="s1">'./features/ventas/venta/venta-form'</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">m</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">m</span><span class="p">.</span><span class="nx">VentaForm</span><span class="p">),</span>
+<span class="w">        </span><span class="nx">canActivate</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">rolGuard</span><span class="p">(</span><span class="s1">'VENDEDOR'</span><span class="p">,</span><span class="w"> </span><span class="s1">'SUPERVISOR'</span><span class="p">)],</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'ventas/reporte'</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">loadComponent</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span>
+<span class="w">          </span><span class="k">import</span><span class="p">(</span><span class="s1">'./features/ventas/venta/venta-reporte'</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">m</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">m</span><span class="p">.</span><span class="nx">VentaReporteComponent</span><span class="p">),</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'sin-permiso'</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">loadComponent</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">import</span><span class="p">(</span><span class="s1">'./core/sin-permiso/sin-permiso'</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">m</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">m</span><span class="p">.</span><span class="nx">SinPermiso</span><span class="p">),</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="p">];</span>
+</code></pre></div>
+<p><code>auth/callback</code> queda <strong>fuera</strong> del grupo que cuelga de <code>Layout</code>: no necesita sidebar ni header, y tampoco debe pasar por <code>authGuard</code> — es, precisamente, la ruta que completa el login, antes de que exista ninguna sesión. <code>canActivate: [authGuard]</code> en la propia ruta de <code>Layout</code> protege todo lo que cuelga de ella, <code>Inicio</code> incluido (2.5: en BomERP, a diferencia de un catálogo público, nadie navega ninguna pantalla sin sesión). <code>rolGuard(...)</code> se agrega solo a las rutas de escritura, nunca a <code>catalogo/categorias</code>, <code>catalogo/productos</code> ni <code>ventas/reporte</code> — la Tabla 5 (2.7) ya estableció que esas tres son de lectura para cualquier autenticado (el reporte, filtrado por dueño del lado del servidor, RN8); solo el botón "Anular" <strong>dentro</strong> de esa pantalla exige rol, y eso se resuelve en la plantilla (3.9), no en la ruta.</p>
+<p><strong>Error frecuente</strong>: aplicar <code>rolGuard</code> a <code>ventas/reporte</code> por error, copiando el mismo patrón de <code>ventas/nueva</code>.</p>
+<h3 id="38-construir-el-interceptor-token-automatico-y-refresco-en-401">3.8 Construir el interceptor: token automático y refresco en <code>401</code><a class="headerlink" href="#38-construir-el-interceptor-token-automatico-y-refresco-en-401" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> <code>authInterceptor</code>, adjuntando el token a cada petición hacia <code>bomerp-backend</code> y llamando a <code>refrescar</code> (ya construido en 3.3) para resolver un <code>401</code> con un solo intento antes de rendirse (2.6, Figura 3).</p>
 <p><strong><code>lp2/bomerp-frontend/src/app/core/interceptors/auth-interceptor.ts</code></strong> (archivo nuevo):</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">inject</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/core'</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">HttpErrorResponse</span><span class="p">,</span><span class="w"> </span><span class="nx">HttpInterceptorFn</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/common/http'</span><span class="p">;</span>
@@ -5290,19 +5350,7 @@
 </code></pre></div>
 <p><strong>Error frecuente</strong>: invertir el orden y poner <code>traceIdInterceptor</code> antes que <code>authInterceptor</code>. No rompe nada funcionalmente (los dos agregan encabezados distintos, sin pisarse), pero si alguna vez agregas un interceptor que dependa de que la petición ya tenga <code>Authorization</code>, el orden sí importa — los interceptores de la lista se ejecutan en el orden en que aparecen, cada uno envolviendo al siguiente.</p>
 <h3 id="39-menu-dinamico-usuario-real-boton-anular-protegido-y-cierre-de-sesion">3.9 Menú dinámico, usuario real, botón "Anular" protegido y cierre de sesión<a class="headerlink" href="#39-menu-dinamico-usuario-real-boton-anular-protegido-y-cierre-de-sesion" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> <code>layout.html</code> mostrando el nombre real del usuario y el menú de la Tabla 5 (2.7), y el botón "Anular" del reporte visible solo para <code>SUPERVISOR</code>/<code>ADMIN</code>.</p>
-<p>Primero, agrega el cierre de sesión a <code>AuthService</code> — agrégalo al final de la clase:</p>
-<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="nx">cerrarSesion</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">idToken</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">sesion</span><span class="p">()</span><span class="o">?</span><span class="p">.</span><span class="nx">idToken</span><span class="p">;</span>
-<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">sesion</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
-<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">parametros</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">URLSearchParams</span><span class="p">({</span>
-<span class="w">      </span><span class="nx">post_logout_redirect_uri</span><span class="o">:</span><span class="w"> </span><span class="kt">environment.keycloak.postLogoutRedirectUri</span><span class="p">,</span>
-<span class="w">      </span><span class="p">...(</span><span class="nx">idToken</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id_token_hint</span><span class="o">:</span><span class="w"> </span><span class="kt">idToken</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">{}),</span>
-<span class="w">    </span><span class="p">});</span>
-<span class="w">    </span><span class="nx">location</span><span class="p">.</span><span class="nx">href</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`</span><span class="si">${</span><span class="nx">environment</span><span class="p">.</span><span class="nx">keycloak</span><span class="p">.</span><span class="nx">issuer</span><span class="si">}</span><span class="sb">/protocol/openid-connect/logout?</span><span class="si">${</span><span class="nx">parametros</span><span class="si">}</span><span class="sb">`</span><span class="p">;</span>
-<span class="w">  </span><span class="p">}</span>
-</code></pre></div>
-<p><code>cerrarSesion</code> limpia la sesión en memoria <strong>antes</strong> de redirigir — si la redirección a Keycloak fallara por cualquier razón de red, la SPA igual queda sin sesión activa del lado del cliente. <code>id_token_hint</code> (el <code>idToken</code> que Keycloak entregó junto al <code>accessToken</code>, 2.1) es lo que le confirma a Keycloak <em>cuál</em> sesión cerrar — el <em>RP-Initiated Logout</em> (<em>Relying Party</em>, el nombre que OpenID Connect le da al cliente en este flujo) de OpenID Connect lo usa para no depender solo de la cookie de sesión del navegador.</p>
+<p><strong>Producto del paso:</strong> <code>layout.html</code> mostrando el nombre real del usuario y el menú de la Tabla 5 (2.7), con el botón "Cerrar sesión" llamando a <code>cerrarSesion</code> (ya construido en 3.3), y el botón "Anular" del reporte visible solo para <code>SUPERVISOR</code>/<code>ADMIN</code>.</p>
 <p><strong><code>lp2/bomerp-frontend/src/app/core/layout/layout.ts</code></strong> — inyecta <code>AuthService</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Component</span><span class="p">,</span><span class="w"> </span><span class="nx">inject</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/core'</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">RouterOutlet</span><span class="p">,</span><span class="w"> </span><span class="nx">RouterLink</span><span class="p">,</span><span class="w"> </span><span class="nx">RouterLinkActive</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/router'</span><span class="p">;</span>
@@ -5354,7 +5402,7 @@
 }
 </code></pre></div>
 <h3 id="310-probar-la-matriz-de-accesos-completa">3.10 Probar la matriz de accesos completa<a class="headerlink" href="#310-probar-la-matriz-de-accesos-completa" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> verificación real, con los cuatro usuarios de S10b, de que cada pieza construida en 3.1-3.9 funciona junta.</p>
+<p><strong>Producto del paso:</strong> verificación real, con los cuatro usuarios de S10b, de que cada pieza construida en 3.1-3.1b y 3.2-3.9 funciona junta.</p>
 <p>Con <code>bomerp-oracle</code>, <code>bomerp-keycloak</code> y <code>bomerp-backend</code> corriendo, levanta la SPA:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>lp2/bomerp-frontend
 npm<span class="w"> </span>start
