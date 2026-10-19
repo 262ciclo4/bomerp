@@ -5393,7 +5393,9 @@
 <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
 </code></pre></div>
 <p>"Categorías" y "Productos" quedan sin condición — la Tabla 5 ya estableció que su <strong>lectura</strong> es para cualquier autenticado; es el formulario de creación/edición el que <code>rolGuard('ADMIN')</code> (3.7) ya protege a nivel de ruta, no el enlace del menú.</p>
-<p>Por último, el botón "Anular" del reporte — <strong><code>lp2/bomerp-frontend/src/app/features/ventas/venta/venta-reporte.ts</code></strong>, inyecta <code>AuthService</code> y expónlo a la plantilla:</p>
+<p>Por último, el botón "Anular" del reporte — <strong><code>lp2/bomerp-frontend/src/app/features/ventas/venta/venta-reporte.ts</code></strong>, importa <code>AuthService</code> (<code>inject</code> ya está importado, S9) e inyéctalo:</p>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">AuthService</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'../../../core/auth/auth-service'</span><span class="p">;</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="k">protected</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="nx">auth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">inject</span><span class="p">(</span><span class="nx">AuthService</span><span class="p">);</span>
 </code></pre></div>
 <p><strong><code>venta-reporte.html</code></strong>, línea del botón "Anular":</p>
