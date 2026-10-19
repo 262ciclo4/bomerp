@@ -36,7 +36,7 @@ Al concluir la clase, estarás en condiciones de:
 | Actividades a Realizar en el Periodo | Orientaciones generales (Orientaciones Metodológicas) | Material de estudio recomendado |
 |---|---|---|
 | Revisión previa individual | Repasar S10 (2.6, Tabla 4) y S10b completa — en particular la sección 4 (el cliente `bomerp-frontend` ya creado en Keycloak) y la sección 9 (el pendiente que esta sesión resuelve). Confirmar que `bomerp-backend` y Keycloak siguen corriendo. Trabajo individual, antes de clase. | S10 (2.6), S10b (secciones 2-7 y 9). |
-| Clase presencial | Reconfiguración guiada del cliente de Keycloak, construcción del flujo PKCE completo, los *guards*, el interceptor, el menú por rol y el cierre de sesión — todo sobre `bomerp-frontend` real. Trabajo individual en la propia laptop, siguiendo al docente paso a paso. | Contenedores `bomerp-oracle`, `bomerp-keycloak`, `bomerp-backend` corriendo; Pasos 3.1 a 3.10 de esta guía. |
+| Clase presencial | Reconfiguración guiada del cliente de Keycloak, construcción del flujo PKCE completo, los *guards*, el interceptor, el menú por rol y el cierre de sesión — todo sobre `bomerp-frontend` real. Trabajo individual en la propia laptop, siguiendo al docente paso a paso. | Contenedores `bomerp-oracle`, `bomerp-keycloak`, `bomerp-backend` corriendo; Pasos 3.1-3.1b a 3.10 de esta guía. |
 | Evaluación formativa | Revisión en clase de la matriz de accesos de la SPA: login con cada rol, un menú distinto por rol, y un `401`/`403` provocado y manejado correctamente. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4. | Indicaciones de entrega (4.3), rúbrica de evaluación (4.6). |
 
 ### 1.6 Motivación de la sesión
@@ -232,6 +232,7 @@ Tiempo: 110 min.
 **Actividades para realizar:**
 
 - **3.1** Reconfigurar el cliente de Keycloak para el flujo real.
+- **3.1b** Corregir CORS en `bomerp-backend` (pendiente desde S10).
 - **3.2** Configurar el entorno y construir el generador de PKCE.
 - **3.3** Construir `AuthService`: iniciar el login y guardar la sesión en memoria.
 - **3.4** Construir la ruta de retorno (`/auth/callback`) y completar el intercambio.
@@ -359,6 +360,81 @@ echo "$login"
 Pega el `access_token` (`$login`) en [jwt.io](https://jwt.io) y confirma lo mismo que S10b 6 ya había verificado con el atajo: `realm_access.roles` trae `["VENDEDOR"]` y `sub` es un UUID — la diferencia es que esta vez llegó por el flujo que la SPA va a usar de verdad, con PKCE exigido en cada paso.
 
 **Error frecuente**: pegar un `code` vencido o ya usado una vez (`invalid_grant`) — un `code` de *Authorization Code* se consume en el primer intercambio y expira en segundos; si falla, repite desde el paso 3 con una URL nueva, nunca reintentes el mismo `code`.
+
+### 3.1b Corregir CORS en `bomerp-backend` (pendiente desde S10)
+
+**Producto del paso:** `bomerp-backend` respondiendo bien al *preflight* CORS del navegador. La rama `s10b-seguridad-keycloak` que clonaste en "Punto de partida común" todavía trae el bug sin corregir — hasta este paso, cualquier `fetch`/`HttpClient` de una SPA real contra este backend falla en la consola con "blocked by CORS policy", sin importar qué tan bien esté construida.
+
+Desde S10 (3.11), `SecurityConfig` empezó a exigir autenticación real (`anyRequest().authenticated()`), pero `CorsConfig` (S5, 3.7) se quedó en su versión basada en `WebMvcConfigurer` — un mecanismo de Spring MVC que nunca llega a ejecutarse si Spring Security ya rechazó la petición antes. El *preflight* `OPTIONS` que manda el navegador nunca lleva `Authorization`, así que Security lo rechaza con `401` **antes** de que `CorsConfig` pueda agregar las cabeceras CORS — el navegador lo reporta como bloqueo de CORS, aunque la causa real es de autorización. Corrígelo ahora, antes de construir nada de Angular: así 3.2-3.10 arrancan contra un backend que responde bien, y el `401`/`403`/`200` que vas a ver en cada prueba refleja el estado real de autenticación/autorización, no un bloqueo de CORS disfrazado.
+
+**`lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/CorsConfig.java`** (reemplaza la versión de S5 — mueve la configuración de CORS de Spring MVC a un *bean* que Spring Security sí puede usar):
+
+```java
+package pe.edu.upeu.bomerp;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.List;
+
+@Configuration
+public class CorsConfig {
+
+    @Value("${bomerp.cors.allowed-origins}")
+    private String allowedOrigins;
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuracion = new CorsConfiguration();
+        configuracion.setAllowedOrigins(Arrays.stream(allowedOrigins.split(","))
+                .map(String::trim)
+                .toList());
+        configuracion.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE"));
+        configuracion.setAllowedHeaders(List.of("*"));
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/api/**", configuracion);
+        return source;
+    }
+}
+```
+
+**`lp2/bomerp-backend/src/main/java/pe/edu/upeu/bomerp/SecurityConfig.java`** — en `securityFilterChain`, agrega `.cors(cors -> {})` como primera línea de la cadena (toma el *bean* de arriba automáticamente), y aprovecha para quitar las dos reglas que ya quedaron huérfanas desde que `seguridad` se retiró (S10b, 7.2) — ningún controlador sirve `/api/v1/auth/**` ni `/.well-known/jwks.json` en este backend:
+
+```java
+http
+        .cors(cors -> {})
+        .csrf(csrf -> csrf.disable())
+        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/actuator/**", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+
+                .requestMatchers(HttpMethod.GET, "/api/v1/productos/**", "/api/v1/categorias/**").authenticated()
+                .requestMatchers(HttpMethod.POST, "/api/v1/productos/**", "/api/v1/categorias/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/v1/productos/**", "/api/v1/categorias/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/productos/**", "/api/v1/categorias/**").hasRole("ADMIN")
+
+                .requestMatchers(HttpMethod.POST, "/api/v1/ventas").hasAnyRole("VENDEDOR", "SUPERVISOR")
+                .requestMatchers(HttpMethod.GET, "/api/v1/ventas/resumen").hasAnyRole("SUPERVISOR", "ADMIN")
+                .requestMatchers(HttpMethod.PATCH, "/api/v1/ventas/*/anular").hasAnyRole("SUPERVISOR", "ADMIN")
+                .requestMatchers("/api/v1/ventas/**").hasAnyRole("VENDEDOR", "SUPERVISOR", "ADMIN")
+
+                .anyRequest().authenticated()
+        )
+        .oauth2ResourceServer(oauth2 -> oauth2
+                .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter)));
+```
+
+Si tu rama todavía trae `.requestMatchers("/api/v1/auth/**").permitAll()` o `.requestMatchers("/.well-known/jwks.json").permitAll()` (restos de antes de S10b 7.2), bórralas junto con este cambio — ninguna de las dos protege nada real desde que Keycloak reemplazó a `seguridad`.
+
+Reinicia `bomerp-backend` (`.\mvnw.cmd spring-boot:run` — DevTools no recarga este tipo de cambio solo) y confirma: una petición sin token (`Invoke-RestMethod http://localhost:8080/api/v1/categorias` o abrir la URL directo en el navegador) debe seguir devolviendo `401`, pero ahora **sin** error de CORS si la pruebas desde `bomerp-frontend` (aunque el frontend recién exista desde 3.2) — la diferencia que importa es que `401` es la respuesta real del backend, no un bloqueo del navegador antes de llegar a él.
+
+**Error frecuente**: confundir este `401` con que "algo sigue mal". Es exactamente lo esperado hasta 3.8: la SPA todavía no adjunta ningún `Authorization` header (eso lo construye el interceptor), así que Security rechaza la petición por falta de token — correcto, y distinto del bloqueo de CORS que acabas de corregir.
 
 ### 3.2 Configurar el entorno y construir el generador de PKCE
 
