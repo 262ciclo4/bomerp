@@ -64,13 +64,15 @@ Preguntas de referencia (el docente puede formular equivalentes):
 
 ## 4. Sustentación de la SPA segura
 
-**Tabla 3. Distribución de tiempo por integrante**
+**Tabla 3. Distribución de tiempo de la sustentación**
 
-| Momento | Tiempo | Propósito |
-|---|---:|---|
-| Presentación técnica | 8 min | Explicar la SPA (`lp2-demo.md`), las decisiones tomadas y su justificación. |
-| Demo técnica | 5 min | Ejecutar el CRUD dependiente, el formulario cabecera-detalle, el login real contra Keycloak y un caso de `403` provocado a propósito. |
-| Preguntas individuales | 5 min | Verificar dominio y aporte propio, con base en la Tabla 2. |
+| Momento | Tiempo | Quién | Propósito |
+|---|---:|---|---|
+| Alcance del proyecto (diapositiva) | 2-3 min | Grupal | Presentar el alcance de `lp2-demo.md` y su relación con el Proyecto Integrador. |
+| Arquitectura (diapositiva) | 2-3 min | Grupal | Presentar la organización funcional de la SPA y las decisiones principales. |
+| Asignación de tareas (diapositiva) | 2-3 min | Grupal | Quién construyó qué parte: CRUD independiente, dependiente, formulario cabecera-detalle o seguridad. |
+| Demo y sustentación | 3 min por integrante | Individual | Cada integrante ejecuta en vivo y sustenta la parte que construyó. |
+| Preguntas | 3 min por integrante | Individual | Verificar dominio y aporte propio, con base en la Tabla 2. |
 
 **Tabla 4. Entregables obligatorios**
 
