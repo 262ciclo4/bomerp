@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
     
     
   
@@ -29,10 +29,10 @@
   
 
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -3728,7 +3728,7 @@
 </tr>
 <tr>
 <td>S11</td>
-<td>Login real de tu SPA contra Keycloak (<em>Authorization Code</em> + PKCE), token en memoria, <em>guards</em>, interceptor con refresco en <code>401</code>, menú por rol y cierre de sesión real.</td>
+<td>Login real de tu SPA contra Keycloak (<em>Authorization Code</em> + PKCE), token en memoria con copia espejo en <code>sessionStorage</code> (sobrevive un <code>F5</code>), <em>guards</em>, interceptor con refresco en <code>401</code>, menú por rol y cierre de sesión real.</td>
 <td>3. Evidencias (Login, Guard, Interceptor, Control de acceso)</td>
 </tr>
 <tr>
@@ -3754,32 +3754,33 @@
 <tr>
 <td>S7</td>
 <td>Creación y arquitectura de la SPA</td>
-<td>Organización <code>core</code>/<code>shared</code>/<code>features</code>, por qué la navegación vive en una ruta padre con <code>router-outlet</code>, el interceptor <code>X-Trace-ID</code>, y la diferencia entre un componente de <em>layout</em> y uno de funcionalidad.</td>
+<td>Creación del proyecto frontend, organización <code>core</code>/<code>shared</code>/<code>features</code>, por qué la navegación vive en una ruta padre con <code>router-outlet</code>, el servicio HTTP hacia el backend, el interceptor <code>X-Trace-ID</code>, el CRUD completo de una tabla independiente, y la diferencia entre un componente de <em>layout</em> y uno de funcionalidad.</td>
 </tr>
 <tr>
 <td>S8</td>
 <td>CRUD de tablas dependientes</td>
-<td>Carga de datos relacionados para una lista desplegable, validación de la dependencia antes de enviar, y por qué separar la lista del formulario (<code>CategoriaList</code>/<code>CategoriaForm</code>) en vez de un formulario escondido en la tabla.</td>
+<td>Carga de datos relacionados para una lista desplegable, <em>autocomplete</em> para elegir entre muchas opciones, validación de la dependencia antes de enviar, presentación de información relacionada, y por qué separar la lista del formulario (<code>CategoriaList</code>/<code>CategoriaForm</code>) en vez de un formulario escondido en la tabla.</td>
 </tr>
 <tr>
 <td>S9</td>
 <td>Formularios transaccionales con cabecera-detalle</td>
-<td><code>FormArray</code> de líneas, cálculo en vivo de subtotales y total, validación de que exista al menos una línea, y manejo específico de errores reales del backend (no un mensaje genérico).</td>
+<td><code>FormArray</code> de líneas, cálculo en vivo de subtotales y total, validación de que exista al menos una línea, confirmación antes de una operación irreversible, consultas y reportes agregados, y manejo específico de errores reales del backend (no un mensaje genérico).</td>
 </tr>
 <tr>
 <td>S10 / S10b</td>
 <td>Seguridad backend y su reemplazo por Keycloak</td>
-<td>Por qué <code>seguridad</code> se diseñó "listo para reemplazo" desde el inicio (claims estándar, clave pública publicada, validación por configuración), qué cambia y qué no cambia en <code>catalogo</code>/<code>ventas</code> al migrar a Keycloak, y por qué <code>vendedorId</code> pasa de <code>Long</code> a <code>String</code> (<code>sub</code>).</td>
+<td>Usuarios con contraseñas <em>hash</em> y datos semilla, autenticación <em>stateless</em> con JWT, autorización basada en roles (RBAC), observabilidad y diagnóstico de <code>401</code>/<code>403</code>, por qué <code>seguridad</code> se diseñó "listo para reemplazo" desde el inicio (claims estándar, clave pública publicada, validación por configuración), qué cambia y qué no cambia en <code>catalogo</code>/<code>ventas</code> al migrar a Keycloak, y por qué <code>vendedorId</code> pasa de <code>Long</code> a <code>String</code> (<code>sub</code>).</td>
 </tr>
 <tr>
 <td>S11</td>
 <td>Seguridad frontend con Keycloak</td>
-<td><em>Authorization Code</em> + PKCE y por qué una SPA no puede usar <em>Direct access grants</em>, dónde vive el token (y por qué en memoria, no en <code>localStorage</code>), la diferencia entre un <code>401</code> (refrescar) y un <code>403</code> (denegar sin reintentar), y por qué el menú por rol no reemplaza la autorización real del backend.</td>
+<td><em>Authorization Code</em> + PKCE y por qué una SPA no puede usar <em>Direct access grants</em>, dónde vive el token (memoria con copia espejo en <code>sessionStorage</code>, nunca en <code>localStorage</code>), por qué el token expira en 5 minutos y hace falta refrescar, los <em>guards</em> de autenticación y de rol, la diferencia entre un <code>401</code> (refrescar) y un <code>403</code> (denegar sin reintentar), y por qué el menú por rol no reemplaza la autorización real del backend.</td>
 </tr>
 </tbody>
 </table>
 <p>Preguntas de referencia (el docente puede formular equivalentes):</p>
 <ol>
+<li>¿Por qué el <em>layout</em> (menú, sidebar, encabezado) vive en un componente propio con su propio <code>router-outlet</code>, en vez de repetirse en cada pantalla?</li>
 <li>¿Por qué <code>ProductoForm</code> carga sus categorías desde <code>CategoriaService</code> en vez de tener la lista escrita a mano en el componente?</li>
 <li>En tu formulario cabecera-detalle, ¿qué validación impide enviar una venta sin ninguna línea?</li>
 <li>¿Por qué <code>vendedorId</code> se lee del claim <code>sub</code> del token ya verificado, y nunca de un campo que el cliente podría enviar en el <code>request</code>?</li>
@@ -3848,7 +3849,7 @@
 <li>Presentar la organización funcional de la SPA y su navegación modular.</li>
 <li>Ejecutar en vivo el CRUD dependiente, con la validación de la dependencia provocada a propósito.</li>
 <li>Ejecutar el formulario cabecera-detalle: un caso de éxito y un caso de error real del backend (producto inexistente o stock insuficiente).</li>
-<li>Mostrar el login real contra Keycloak y el token guardado en memoria (nunca en <code>localStorage</code>).</li>
+<li>Mostrar el login real contra Keycloak y el token guardado en memoria con copia espejo en <code>sessionStorage</code> (nunca en <code>localStorage</code>); recargar la página (<code>F5</code>) y mostrar que la sesión sobrevive.</li>
 <li>Provocar un <code>401</code> (esperar la expiración) y mostrar el refresco automático; provocar un <code>403</code> con un rol insuficiente y mostrar que no reintenta.</li>
 <li>Mostrar el menú y una acción protegida (ej. "Anular") visibles solo para el rol correcto.</li>
 <li>Cerrar con la tabla de integración esperada de <code>lp2-demo.md</code>, explicando al menos una fila con evidencia en vivo desde el backend y la base de BD2.</li>
@@ -3859,7 +3860,7 @@
 <li>El CRUD dependiente valida la relación antes de enviar, con al menos un caso inválido probado.</li>
 <li>El formulario cabecera-detalle calcula en vivo y maneja al menos un error real del backend.</li>
 <li>El login es real contra Keycloak (<em>Authorization Code</em> + PKCE), sin ningún formulario propio de login.</li>
-<li>El token vive en memoria, nunca en <code>localStorage</code>; el refresco ante <code>401</code> y la denegación ante <code>403</code> están verificados en vivo.</li>
+<li>El token vive en memoria con copia espejo en <code>sessionStorage</code> (nunca en <code>localStorage</code>), sobreviviendo un <code>F5</code>; el refresco ante <code>401</code> y la denegación ante <code>403</code> están verificados en vivo.</li>
 <li>El menú y al menos una acción protegida reflejan exactamente las reglas de autorización reales del backend.</li>
 <li>Cada integrante responde individualmente al menos una pregunta de la Tabla 2.</li>
 </ul>
@@ -3924,10 +3925,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.top", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.top", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.c21346df.min.js"></script>
       
     
   </body>
