@@ -43,7 +43,7 @@ Cubre los seis temas dictados antes de esta sesión. El docente puede tomarla es
 
 | Sesión | Tema | Qué puede evaluar el docente |
 |---|---|---|
-| S6 | Descubrimiento y modelado del dominio | Panorama holístico del negocio, clasificación de subdominios (*Core*, *Supporting*, *Generic*), entidades y reglas de negocio por módulo, la prueba de tres partes para confirmar límites entre módulos, lenguaje ubicuo y agregado como límite de consistencia. |
+| S6 | Descubrimiento y modelado del dominio | Panorama holístico del negocio, clasificación de subdominios (*Core*, *Supporting*, *Generic*), entidades y reglas de negocio por módulo, casos de uso relevantes, objetos de valor, la prueba de tres partes para confirmar límites entre módulos, lenguaje ubicuo y agregado como límite de consistencia. |
 | S7 | Diseño de clases del dominio | Entidades persistentes y atributos, operaciones de clase, relaciones y multiplicidades, diferencia real entre agregación y composición, herencia, y restricciones del modelo que no se expresan solo en el diagrama. |
 | S8 | Diseño de clases avanzado y transformación objeto-relacional | De clase de dominio a clase de diseño, clases de diseño por capas, DTO/*Mapper*/contrato REST, transformación objeto-relacional (clases, tablas, claves), cómo se mapean asociaciones, herencia y objetos de valor a tablas, y trazabilidad dominio-clases-base de datos. |
 | S9 | Diagramas dinámicos UML | Criterio verificable para decidir cuándo hace falta un diagrama dinámico adicional (y cuándo no), diagrama de secuencia, diagrama de actividades, ciclo de vida de objetos (diagrama de estados, cuándo es opcional), interacción entre componentes a nivel C3, y diagrama de comunicación como vista alternativa de la misma colaboración. |

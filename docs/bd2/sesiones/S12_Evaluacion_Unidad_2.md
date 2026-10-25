@@ -43,9 +43,9 @@ Cubre los cinco temas dictados antes de esta sesión. El docente puede tomarla e
 | Sesión | Tema | Qué puede evaluar el docente |
 |---|---|---|
 | S7 | Arquitectura Oracle e instancia | SGA, PGA, procesos *background*, `ORACLE_HOME`/`ORACLE_SID`, administración desde Oracle Linux, y por qué una conexión `SYSDBA` no es lo mismo que una conexión de aplicación. |
-| S8 | Gestión de usuarios, roles y privilegios | Privilegios de sistema frente a privilegios de objeto, el principio de mínimo privilegio, y por qué `BOMERP_APP` no debería tener más privilegios de los que el backend realmente usa. |
+| S8 | Gestión de usuarios, roles y privilegios | Creación de usuarios de base de datos, roles, privilegios de sistema frente a privilegios de objeto, el principio de mínimo privilegio, consulta de privilegios con el diccionario de datos, y por qué `BOMERP_APP` no debería tener más privilegios de los que el backend realmente usa. |
 | S9 | Administración del almacenamiento y seguridad | Tablespaces, segmentos, extents, datafiles, redo logs, undo, `archivelog`, la diferencia entre auditoría de sentencias y de acceso (Unified Auditing), y qué muestra Enterprise Manager Express que el diccionario de datos solo no muestra. |
-| S10 | Optimización del rendimiento | Cost Based Optimizer, `EXPLAIN PLAN`, `DBMS_STATS`, qué es AWR y por qué su disponibilidad depende de la licencia (Oracle Database Free frente a Enterprise Edition), y cuándo un índice compuesto se justifica frente a varios índices simples. |
+| S10 | Optimización del rendimiento | Cost Based Optimizer, `EXPLAIN PLAN`, `DBMS_STATS`, verificación del uso real de los índices existentes, qué es AWR y por qué su disponibilidad depende de la licencia (Oracle Database Free frente a Enterprise Edition), las vistas dinámicas `V$` como alternativa sin licencia, y cuándo un índice compuesto se justifica frente a varios índices simples. |
 | S11 | Particionamiento y escalabilidad | `Range`, `Hash`, `List` y `Composite Partitioning`, qué significa *partition pruning*, por qué envolver la clave de partición en una función lo desactiva sin ningún error de Oracle, y por qué `DROP PARTITION` puede ser mucho más rápido que un `DELETE` equivalente. |
 
 Preguntas de referencia (el docente puede formular equivalentes):

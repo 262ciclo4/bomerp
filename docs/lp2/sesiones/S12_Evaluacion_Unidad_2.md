@@ -32,7 +32,7 @@ Este producto no se construye en S12: se ensambla con lo que cada sesión anteri
 | S9 | Formulario cabecera-detalle real (líneas dinámicas, cálculos en vivo, validación), y una vista de consulta/reporte con filtros. | 3. Evidencias (Formulario cabecera-detalle, Consultas y reportes) |
 | S10 | Módulo `seguridad` con JWT propio, roles y endpoints protegidos — el primer paso pedagógico, antes del reemplazo real. | Referencia histórica (nota al inicio de `lp2-demo.md`) |
 | S10b | Reemplazo real de `seguridad` por Keycloak: `bomerp-backend` validando tokens del realm propio, sin JWT hecho a mano. | 1. Organización funcional (`core/auth`) y 5. Integración esperada |
-| S11 | Login real de tu SPA contra Keycloak (*Authorization Code* + PKCE), token en memoria, *guards*, interceptor con refresco en `401`, menú por rol y cierre de sesión real. | 3. Evidencias (Login, Guard, Interceptor, Control de acceso) |
+| S11 | Login real de tu SPA contra Keycloak (*Authorization Code* + PKCE), token en memoria con copia espejo en `sessionStorage` (sobrevive un `F5`), *guards*, interceptor con refresco en `401`, menú por rol y cierre de sesión real. | 3. Evidencias (Login, Guard, Interceptor, Control de acceso) |
 | S12 (esta sesión) | Ensamblas todo lo anterior en una SPA única y segura, y lo sustentas. | El producto completo + sección 4 de esta guía |
 
 Lo que sustentas en S12 es **tu SPA**: los módulos que tú construiste, con los datos y reglas de tu propio dominio, autenticados contra tu propio realm de Keycloak — no el de BomERP. `lp2-demo.md` muestra cómo se ve esa SPA terminada usando el ejemplo del docente; tu entregable real tiene la misma estructura, con el contenido que tú construiste en S7-S11.
@@ -45,21 +45,22 @@ Cubre los cinco temas dictados antes de esta sesión. El docente puede tomarla e
 
 | Sesión | Tema | Qué puede evaluar el docente |
 |---|---|---|
-| S7 | Creación y arquitectura de la SPA | Organización `core`/`shared`/`features`, por qué la navegación vive en una ruta padre con `router-outlet`, el interceptor `X-Trace-ID`, y la diferencia entre un componente de *layout* y uno de funcionalidad. |
-| S8 | CRUD de tablas dependientes | Carga de datos relacionados para una lista desplegable, validación de la dependencia antes de enviar, y por qué separar la lista del formulario (`CategoriaList`/`CategoriaForm`) en vez de un formulario escondido en la tabla. |
-| S9 | Formularios transaccionales con cabecera-detalle | `FormArray` de líneas, cálculo en vivo de subtotales y total, validación de que exista al menos una línea, y manejo específico de errores reales del backend (no un mensaje genérico). |
-| S10 / S10b | Seguridad backend y su reemplazo por Keycloak | Por qué `seguridad` se diseñó "listo para reemplazo" desde el inicio (claims estándar, clave pública publicada, validación por configuración), qué cambia y qué no cambia en `catalogo`/`ventas` al migrar a Keycloak, y por qué `vendedorId` pasa de `Long` a `String` (`sub`). |
-| S11 | Seguridad frontend con Keycloak | *Authorization Code* + PKCE y por qué una SPA no puede usar *Direct access grants*, dónde vive el token (y por qué en memoria, no en `localStorage`), la diferencia entre un `401` (refrescar) y un `403` (denegar sin reintentar), y por qué el menú por rol no reemplaza la autorización real del backend. |
+| S7 | Creación y arquitectura de la SPA | Creación del proyecto frontend, organización `core`/`shared`/`features`, por qué la navegación vive en una ruta padre con `router-outlet`, el servicio HTTP hacia el backend, el interceptor `X-Trace-ID`, el CRUD completo de una tabla independiente, y la diferencia entre un componente de *layout* y uno de funcionalidad. |
+| S8 | CRUD de tablas dependientes | Carga de datos relacionados para una lista desplegable, *autocomplete* para elegir entre muchas opciones, validación de la dependencia antes de enviar, presentación de información relacionada, y por qué separar la lista del formulario (`CategoriaList`/`CategoriaForm`) en vez de un formulario escondido en la tabla. |
+| S9 | Formularios transaccionales con cabecera-detalle | `FormArray` de líneas, cálculo en vivo de subtotales y total, validación de que exista al menos una línea, confirmación antes de una operación irreversible, consultas y reportes agregados, y manejo específico de errores reales del backend (no un mensaje genérico). |
+| S10 / S10b | Seguridad backend y su reemplazo por Keycloak | Usuarios con contraseñas *hash* y datos semilla, autenticación *stateless* con JWT, autorización basada en roles (RBAC), observabilidad y diagnóstico de `401`/`403`, por qué `seguridad` se diseñó "listo para reemplazo" desde el inicio (claims estándar, clave pública publicada, validación por configuración), qué cambia y qué no cambia en `catalogo`/`ventas` al migrar a Keycloak, y por qué `vendedorId` pasa de `Long` a `String` (`sub`). |
+| S11 | Seguridad frontend con Keycloak | *Authorization Code* + PKCE y por qué una SPA no puede usar *Direct access grants*, dónde vive el token (memoria con copia espejo en `sessionStorage`, nunca en `localStorage`), por qué el token expira en 5 minutos y hace falta refrescar, los *guards* de autenticación y de rol, la diferencia entre un `401` (refrescar) y un `403` (denegar sin reintentar), y por qué el menú por rol no reemplaza la autorización real del backend. |
 
 Preguntas de referencia (el docente puede formular equivalentes):
 
-1. ¿Por qué `ProductoForm` carga sus categorías desde `CategoriaService` en vez de tener la lista escrita a mano en el componente?
-2. En tu formulario cabecera-detalle, ¿qué validación impide enviar una venta sin ninguna línea?
-3. ¿Por qué `vendedorId` se lee del claim `sub` del token ya verificado, y nunca de un campo que el cliente podría enviar en el `request`?
-4. ¿Qué tendría que cambiar en `catalogo` o `ventas` si tu backend reemplazara Keycloak por otro proveedor de identidad? ¿Por qué esa lista es tan corta?
-5. ¿Por qué el `code_verifier` de PKCE se guarda en `sessionStorage`, si el resto de la sesión vive en memoria?
-6. ¿Qué pierde tu aplicación al elegir memoria en vez de `localStorage` para el token, y por qué esa pérdida es aceptable?
-7. Si tu interceptor reintentara una petición en un bucle sin límite cada vez que recibiera un `401`, ¿qué problema real esconderías?
+1. ¿Por qué el *layout* (menú, sidebar, encabezado) vive en un componente propio con su propio `router-outlet`, en vez de repetirse en cada pantalla?
+2. ¿Por qué `ProductoForm` carga sus categorías desde `CategoriaService` en vez de tener la lista escrita a mano en el componente?
+3. En tu formulario cabecera-detalle, ¿qué validación impide enviar una venta sin ninguna línea?
+4. ¿Por qué `vendedorId` se lee del claim `sub` del token ya verificado, y nunca de un campo que el cliente podría enviar en el `request`?
+5. ¿Qué tendría que cambiar en `catalogo` o `ventas` si tu backend reemplazara Keycloak por otro proveedor de identidad? ¿Por qué esa lista es tan corta?
+6. ¿Por qué el `code_verifier` de PKCE se guarda en `sessionStorage`, si el resto de la sesión vive en memoria?
+7. ¿Qué pierde tu aplicación al elegir memoria en vez de `localStorage` para el token, y por qué esa pérdida es aceptable?
+8. Si tu interceptor reintentara una petición en un bucle sin límite cada vez que recibiera un `401`, ¿qué problema real esconderías?
 
 ## 4. Sustentación de la SPA segura
 
@@ -84,7 +85,7 @@ Secuencia sugerida de presentación (referencias a secciones de `lp2-demo.md`):
 1. Presentar la organización funcional de la SPA y su navegación modular.
 2. Ejecutar en vivo el CRUD dependiente, con la validación de la dependencia provocada a propósito.
 3. Ejecutar el formulario cabecera-detalle: un caso de éxito y un caso de error real del backend (producto inexistente o stock insuficiente).
-4. Mostrar el login real contra Keycloak y el token guardado en memoria (nunca en `localStorage`).
+4. Mostrar el login real contra Keycloak y el token guardado en memoria con copia espejo en `sessionStorage` (nunca en `localStorage`); recargar la página (`F5`) y mostrar que la sesión sobrevive.
 5. Provocar un `401` (esperar la expiración) y mostrar el refresco automático; provocar un `403` con un rol insuficiente y mostrar que no reintenta.
 6. Mostrar el menú y una acción protegida (ej. "Anular") visibles solo para el rol correcto.
 7. Cerrar con la tabla de integración esperada de `lp2-demo.md`, explicando al menos una fila con evidencia en vivo desde el backend y la base de BD2.
@@ -95,7 +96,7 @@ Criterios mínimos de aceptación:
 - El CRUD dependiente valida la relación antes de enviar, con al menos un caso inválido probado.
 - El formulario cabecera-detalle calcula en vivo y maneja al menos un error real del backend.
 - El login es real contra Keycloak (*Authorization Code* + PKCE), sin ningún formulario propio de login.
-- El token vive en memoria, nunca en `localStorage`; el refresco ante `401` y la denegación ante `403` están verificados en vivo.
+- El token vive en memoria con copia espejo en `sessionStorage` (nunca en `localStorage`), sobreviviendo un `F5`; el refresco ante `401` y la denegación ante `403` están verificados en vivo.
 - El menú y al menos una acción protegida reflejan exactamente las reglas de autorización reales del backend.
 - Cada integrante responde individualmente al menos una pregunta de la Tabla 2.
 
