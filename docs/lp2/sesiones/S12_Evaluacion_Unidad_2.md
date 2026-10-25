@@ -68,10 +68,10 @@ Preguntas de referencia (el docente puede formular equivalentes):
 
 | Momento | Tiempo | Quién | Propósito |
 |---|---:|---|---|
-| Alcance del proyecto (diapositiva) | 2-3 min | Grupal | Presentar el alcance de `lp2-demo.md` y su relación con el Proyecto Integrador. |
-| Arquitectura (diapositiva) | 2-3 min | Grupal | Presentar la organización funcional de la SPA y las decisiones principales. |
-| Asignación de tareas (diapositiva) | 2-3 min | Grupal | Quién construyó qué parte: CRUD independiente, dependiente, formulario cabecera-detalle o seguridad. |
-| Demo y sustentación | 3 min por integrante | Individual | Cada integrante ejecuta en vivo y sustenta la parte que construyó. |
+| Alcance del proyecto (diapositiva) | 2-3 min | Grupal | **Una sola vez para los tres cursos** (si ADS, BD2 y LP2 se sustentan juntos) — qué hace el sistema, para quién, y su relación con el Proyecto Integrador. No se repite en ADS/BD2. |
+| Arquitectura (diapositiva) | 2-3 min | Grupal | Organización de la SPA (`core`/`shared`/`features`, Keycloak) y el diagrama de integración SPA → backend → Oracle, sobre el propio dominio del equipo. |
+| Asignación de tareas (diapositiva) | 2-3 min | Grupal | Asignación por módulo: cada integrante presenta al menos un módulo transaccional propio (cabecera-detalle, con una relación muchos a muchos resuelta por la propia tabla de detalle) que construyó. |
+| Demo y sustentación | 3 min por integrante | Individual | Cada integrante ejecuta en vivo y sustenta su propio módulo transaccional: CRUD, cálculos, validaciones. |
 | Preguntas | 3 min por integrante | Individual | Verificar dominio y aporte propio, con base en la Tabla 2. |
 
 **Tabla 4. Entregables obligatorios**

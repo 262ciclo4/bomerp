@@ -112,7 +112,7 @@ El criterio 6 se evalúa con los mismos 6 subaspectos de la sustentación integr
 
 | Subaspecto | Qué observa en Unidad 2 |
 |---|---|
-| 1. Aporte individual | Cada integrante demuestra lo que construyó de su propia SPA segura. |
+| 1. Aporte individual | Cada integrante demuestra al menos un módulo transaccional propio (cabecera-detalle, con una relación muchos a muchos resuelta por la propia tabla de detalle) que construyó. |
 | 2. Comunicación y orden | Claridad, estructura, tiempo y lenguaje técnico durante la presentación. |
 | 3. Presentación personal y actitud | Puntualidad, vestimenta limpia y adecuada, higiene, cabello ordenado, actitud profesional, respeto, honestidad y coherencia con los valores y principios cristianos de la institución. |
 | 4. Repositorio y estándares | Topics académicos configurados desde S2, organización, commits y reproducibilidad de la SPA. |

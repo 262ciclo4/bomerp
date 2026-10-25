@@ -66,10 +66,10 @@ Preguntas de referencia (el docente puede formular equivalentes):
 
 | Momento | Tiempo | Quién | Propósito |
 |---|---:|---|---|
-| Alcance del proyecto (diapositiva) | 2-3 min | Grupal | Presentar el alcance de `ads-producto.md` y su relación con el Proyecto Integrador. |
-| Arquitectura (diapositiva) | 2-3 min | Grupal | Presentar el diagrama de clases de referencia y las decisiones de diseño principales. |
-| Asignación de tareas (diapositiva) | 2-3 min | Grupal | Quién modeló qué parte del dominio, las clases, los patrones y la integración. |
-| Demo y sustentación | 3 min por integrante | Individual | Cada integrante presenta y sustenta la parte del catálogo UML que construyó, con base en la Tabla 1. |
+| Alcance del proyecto (diapositiva) | 2-3 min | Grupal | **Una sola vez para los tres cursos** (si ADS, BD2 y LP2 se sustentan juntos) — qué hace el sistema, para quién, y su relación con el Proyecto Integrador. No se repite en BD2/LP2. |
+| Arquitectura (diapositiva) | 2-3 min | Grupal | El diagrama de clases de dominio de referencia (entidades, agregación, composición, herencia) sobre el propio dominio del equipo, con al menos un patrón GoF/GRASP señalado directamente sobre el diagrama. |
+| Asignación de tareas (diapositiva) | 2-3 min | Grupal | Quién modeló qué fase completa: dominio (S6), clases (S7), diseño por capas/transformación objeto-relacional (S8), diagramas dinámicos (S9), patrones (S10) o integración (S11) — cada integrante dueño de al menos una fase o un módulo. |
+| Demo y sustentación | 3 min por integrante | Individual | Cada integrante presenta y sustenta la fase o el módulo que construyó, con base en la Tabla 1. |
 | Preguntas | 3 min por integrante | Individual | Verificar dominio y aporte propio, con base en la Tabla 2 y las decisiones de `ads-producto.md`. |
 
 **Tabla 4. Entregables obligatorios**

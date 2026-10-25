@@ -64,10 +64,10 @@ Preguntas de referencia (el docente puede formular equivalentes):
 
 | Momento | Tiempo | Quién | Propósito |
 |---|---:|---|---|
-| Alcance del proyecto (diapositiva) | 2-3 min | Grupal | Presentar el alcance de `bd2-producto.md` y su relación con el Proyecto Integrador. |
-| Arquitectura (diapositiva) | 2-3 min | Grupal | Presentar los componentes de la instancia administrada y las decisiones principales. |
-| Asignación de tareas (diapositiva) | 2-3 min | Grupal | Quién administró qué objeto Oracle: seguridad, almacenamiento, rendimiento o particionamiento. |
-| Demo y sustentación | 3 min por integrante | Individual | Cada integrante ejecuta en vivo y sustenta la parte que construyó: matriz de accesos, auditoría, `EXPLAIN PLAN` o *pruning*. |
+| Alcance del proyecto (diapositiva) | 2-3 min | Grupal | **Una sola vez para los tres cursos** (si ADS, BD2 y LP2 se sustentan juntos) — qué hace el sistema, para quién, y su relación con el Proyecto Integrador. No se repite en ADS/LP2. |
+| Arquitectura (diapositiva) | 2-3 min | Grupal | Componentes reales de la instancia propia (SGA/PGA, tablespaces, el usuario de aplicación recortado) — diagrama simple: Oracle Linux → instancia → tablespaces/usuarios/roles → particiones, si aplica. |
+| Asignación de tareas (diapositiva) | 2-3 min | Grupal | Asignación por objeto real: cada integrante dueño de al menos un objeto Oracle verificable en vivo (un rol, una política de auditoría, un índice justificado, o una partición). |
+| Demo y sustentación | 3 min por integrante | Individual | Cada integrante ejecuta en vivo y sustenta el objeto que administró: matriz de accesos, auditoría, `EXPLAIN PLAN` o *pruning*. |
 | Preguntas | 3 min por integrante | Individual | Verificar dominio y aporte propio, con base en la Tabla 2. |
 
 **Tabla 4. Entregables obligatorios**

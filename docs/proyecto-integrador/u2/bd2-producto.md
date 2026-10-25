@@ -66,7 +66,7 @@ El criterio 6 se evalúa con los mismos 6 subaspectos de la sustentación integr
 
 | Subaspecto | Qué observa en Unidad 2 |
 |---|---|
-| 1. Aporte individual | Cada integrante demuestra lo que administró y optimizó de su propia base de datos. |
+| 1. Aporte individual | Cada integrante demuestra al menos un objeto Oracle real que administró (un rol, una política de auditoría, un índice justificado, o una partición). |
 | 2. Comunicación y orden | Claridad, estructura, tiempo y lenguaje técnico durante la presentación. |
 | 3. Presentación personal y actitud | Puntualidad, vestimenta limpia y adecuada, higiene, cabello ordenado, actitud profesional, respeto, honestidad y coherencia con los valores y principios cristianos de la institución. |
 | 4. Repositorio y estándares | Organización, commits y reproducibilidad de los scripts Oracle de administración desde S7. |

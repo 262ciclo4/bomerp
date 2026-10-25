@@ -121,7 +121,7 @@ El criterio 6 se evalúa con los mismos 6 subaspectos de la sustentación integr
 
 | Subaspecto | Qué observa en Unidad 2 |
 |---|---|
-| 1. Aporte individual | Cada integrante demuestra su propio aporte al diseño detallado y de integración. |
+| 1. Aporte individual | Cada integrante demuestra su propio aporte: una fase completa del diseño (dominio, clases, diseño por capas/transformación, diagramas dinámicos, patrones o integración) que modeló. |
 | 2. Comunicación y orden | Claridad, estructura, tiempo y lenguaje técnico durante la presentación. |
 | 3. Presentación personal y actitud | Puntualidad, vestimenta limpia y adecuada, higiene, cabello ordenado, actitud profesional, respeto, honestidad y coherencia con los valores y principios cristianos de la institución. |
 | 4. Repositorio y estándares | Organización, commits y reproducibilidad de la documentación de diseño detallado desde S6. |
