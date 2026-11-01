@@ -1,0 +1,4462 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Entorno integrado de desarrollo academico para construir modulos ERP con ADS, BD2 y LP2.">
+      
+      
+        <meta name="author" content="UPeU">
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+  
+    <title>BOM ERP - S14 - Decisiones Arquitectónicas y Trazabilidad</title>
+  
+
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#s14-decisiones-arquitectonicas-y-trazabilidad" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../../.." title="BOM ERP" class="md-header__button md-logo" aria-label="BOM ERP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            BOM ERP
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              S14 - Decisiones Arquitectónicas y Trazabilidad
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/262ciclo4/bomerp" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    262ciclo4/bomerp
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Pestañas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Inicio
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../proyecto-integrador/" class="md-tabs__link">
+          
+  
+  
+  Guía del Proyecto Integrador
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../" class="md-tabs__link">
+          
+  
+  
+  ADS
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../bd2/" class="md-tabs__link">
+          
+  
+  
+  BD2
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../lp2/" class="md-tabs__link">
+          
+  
+  
+  LP2
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="BOM ERP" class="md-nav__button md-logo" aria-label="BOM ERP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    BOM ERP
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/262ciclo4/bomerp" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    262ciclo4/bomerp
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guía del Proyecto Integrador
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guía del Proyecto Integrador
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Alineamiento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/brief/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brief técnico (plantilla)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Diseño técnico, motor transaccional y backend inicial
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    1. Diseño técnico, motor transaccional y backend inicial
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/lp2-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Demo U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/ads-matriz-competencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Matriz de competencias
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/lp2-matriz-competencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Matriz de competencias
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/bd2-matriz-competencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Matriz de competencias
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Modelado UML, administración Oracle y SPA segura
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    2. Modelado UML, administración Oracle y SPA segura
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/lp2-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Demo U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Diseño consolidado, operación Oracle y Full-Stack integrado
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    3. Diseño consolidado, operación Oracle y Full-Stack integrado
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/lp2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/checklist-final/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Checklist final
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/guia-sustentacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guía de sustentación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anexos - SPA en otros frameworks
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Anexos - SPA en otros frameworks
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/anexos/S07_Creacion_Arquitectura_SPA_Vue/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S07 con Vue
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/anexos/S07_Creacion_Arquitectura_SPA_React/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S07 con React
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ADS
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../silabo_ads_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../silabo_ads_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Arquitectura y Diseño Estructural
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Arquitectura y Diseño Estructural
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S01_Fundamentos_Arquitectura_Software/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - Fundamentos de arquitectura de software
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S02_Modelo_C4_Vistas_Arquitectonicas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - Modelo C4 y vistas arquitectónicas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S03_Diseno_Estructural_Principios_SOLID/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S3 - Diseño estructural y principios SOLID
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S04_Arquitecturas_Modernas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S4 - Arquitecturas modernas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S05_Evaluacion_Unidad_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S5 - Evaluación de la Unidad I
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    II. Diseño Dinámico, Modelado UML y Patrones
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    II. Diseño Dinámico, Modelado UML y Patrones
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S06_Descubrimiento_Modelado_Dominio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S6 - Descubrimiento y modelado del dominio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S07_Diseno_Clases_Dominio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S7 - Diseño de clases del dominio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S08_Diseno_Clases_Avanzado_Transformacion_Objeto_Relacional/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S8 - Diseño de clases avanzado y transformación objeto-relacional
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S09_Diagramas_Dinamicos_UML/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S9 - Diagramas dinámicos UML
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S10_Patrones_Diseno_GoF_GRASP/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S10 - Patrones de diseño GoF y GRASP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S11_Integracion_Sistemas_Empresariales/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S11 - Integración y sistemas empresariales
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S12_Evaluacion_Unidad_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S12 - Evaluación de la Unidad II
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    BD2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/silabo_bd2_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/silabo_bd2_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Programación y optimización (Oracle XE)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Programación y optimización (Oracle XE)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - PL/SQL aplicado al negocio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S02_Triggers_DML_Auditoria/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - Triggers DML y auditoría
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S03_Excepciones_Robustez/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S3 - Manejo de excepciones y robustez
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S04_Optimizacion_Consultas_SQL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S4 - Optimización de consultas SQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S05_Indices_Optimizacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S5 - Índices para optimización
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S06_Evaluacion_Unidad_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S6 - Evaluación de la Unidad I
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    II. Administración, almacenamiento, seguridad y optimización
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    II. Administración, almacenamiento, seguridad y optimización
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S07_Arquitectura_Oracle_Instancia/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S7 - Arquitectura Oracle e instancia
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S08_Usuarios_Roles_Privilegios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S8 - Gestión de usuarios, roles y privilegios
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S09_Almacenamiento_Seguridad_Auditoria/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S9 - Administración del almacenamiento y seguridad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S10_Optimizacion_Rendimiento/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S10 - Optimización del rendimiento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S11_Particionamiento_Escalabilidad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S11 - Particionamiento y escalabilidad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S12_Evaluacion_Unidad_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S12 - Evaluación de la Unidad II
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    LP2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/silabo_lp2_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/silabo_lp2_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Decisiones de arquitectura
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Decisiones de arquitectura
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/adr/ADR-001-arquitectura-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-001 - Arquitectura del backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/adr/ADR-002-spring-modulith/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-002 - Spring Modulith
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/adr/ADR-003-spring-boot-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-003 - Versión exacta de Spring Boot 4.0.7
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/adr/ADR-004-jwt-diferido/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-004 - JWT diferido a S10
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/adr/ADR-005-seguridad-jwt-propio-listo-para-reemplazo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-005 - Seguridad JWT propia, reemplazada por Keycloak en S10b
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Base backend REST modular de BomERP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Base backend REST modular de BomERP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S01_Arquitectura_Backend_REST_Profesional/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - Arquitectura backend REST profesional
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S02_CRUD_REST_Completo_Producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - CRUD REST completo de Producto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S03_Objetos_Relacionados_Categoria_Producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S3 - Objetos relacionados Categoria-Producto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S04_Operacion_Cabecera_Detalle_Venta_DetalleVenta/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S4 - Operación cabecera-detalle Venta-DetalleVenta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S05_Consultas_Empresariales_Reportes_CORS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S5 - Consultas empresariales, reportes REST y CORS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S06_Evaluacion_Unidad_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S6 - Evaluación de la Unidad I
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    II. SPA modular segura para BomERP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    II. SPA modular segura para BomERP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S07_Creacion_Arquitectura_SPA/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S7 - Creación y arquitectura de la SPA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S08_CRUD_Tablas_Dependientes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S8 - CRUD de tablas dependientes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S09_Formularios_Transaccionales_Cabecera_Detalle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S9 - Formularios transaccionales cabecera-detalle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S10_Seguridad_Backend_JWT_Roles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S10 - Seguridad backend JWT y roles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S10b_Seguridad_Backend_Keycloak/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S10b - Reemplazo de seguridad por Keycloak
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S11_Seguridad_Frontend_Keycloak/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S11 - Seguridad frontend con Keycloak
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S12_Evaluacion_Unidad_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S12 - Evaluación de la Unidad II
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-introduccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Introducción
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Introducción">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-presentacion-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Presentación de la sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-indice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Índice
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-proposito-de-aprendizaje" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Propósito de aprendizaje
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-producto-de-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Producto de sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-metodologia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Metodología
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16-motivacion-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6 Motivación de la sesión
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.6 Motivación de la sesión">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#161-caso-el-vuelo-501-de-ariane-5-1996" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6.1 Caso: el vuelo 501 de Ariane 5 (1996)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#17-ubicacion-en-el-curso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.7 Ubicación en el curso
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-explica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Explica
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Explica">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-arquitectura-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Arquitectura de la sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-que-es-un-adr-y-su-estructura-real" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Qué es un ADR y su estructura real
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-formalizar-adr-008-la-decision-pendiente-de-calculartotal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Formalizar ADR-008: la decisión pendiente de calcularTotal()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-justificar-atributos-de-calidad-con-evidencia-real" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Justificar atributos de calidad con evidencia real
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-trazabilidad-de-un-requerimiento-real-a-su-evidencia-verificable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Trazabilidad: de un requerimiento real a su evidencia verificable
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-la-matriz-de-trazabilidad-completa-del-dossier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 La matriz de trazabilidad completa del dossier
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-aplica-actividad-practica-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Aplica: actividad práctica guiada
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Aplica: actividad práctica guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-reunir-los-hallazgos-de-s13-como-insumo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Reunir los hallazgos de S13 como insumo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-redactar-el-adr-008-completo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Redactar el ADR-008 completo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-justificar-cada-atributo-de-calidad-de-la-tabla-2-s1-con-evidencia-real" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Justificar cada atributo de calidad de la Tabla 2 (S1) con evidencia real
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-trazar-un-requerimiento-real-de-punta-a-punta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Trazar un requerimiento real de punta a punta
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-completar-la-matriz-de-trazabilidad-final" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Completar la matriz de trazabilidad final
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-actualizar-el-dossier-con-el-adr-y-la-matriz" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Actualizar el dossier con el ADR y la matriz
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-crea-actividad-autonoma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Crea: actividad autónoma
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Crea: actividad autónoma">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-actividad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Actividad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-proposito" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Propósito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-indicaciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Indicaciones
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.3 Indicaciones">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#431-estructura-del-informe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3.1 Estructura del informe
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-criterios-minimos-de-aceptacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Criterios mínimos de aceptación
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-preguntas-de-defensa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Preguntas de defensa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-rubrica-de-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 Rúbrica de evaluación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-cierre" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Cierre
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bibliografia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bibliografía
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="s14-decisiones-arquitectonicas-y-trazabilidad">S14 - Decisiones Arquitectónicas y Trazabilidad<a class="headerlink" href="#s14-decisiones-arquitectonicas-y-trazabilidad" title="Permanent link">&para;</a></h1>
+<h2 id="1-introduccion">1. Introducción<a class="headerlink" href="#1-introduccion" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 20 min.</p>
+<h3 id="11-presentacion-de-la-sesion">1.1 Presentación de la sesión<a class="headerlink" href="#11-presentacion-de-la-sesion" title="Permanent link">&para;</a></h3>
+<p>S13 auditó la consistencia entre Unidad 1 y Unidad 2 de BomERP y encontró dos hallazgos reales. Uno se resolvió en el momento (<code>clientes</code> agregado como módulo futuro a la Vista C3). El otro —<code>Venta.calcularTotal()</code> documentado como operación de la entidad en S7, pero calculado dentro del servicio según S8— quedó deliberadamente sin resolver, con un destino explícito: "se formaliza como ADR-008 en S14". Esta sesión cumple esa promesa: convierte un hallazgo de auditoría en una decisión arquitectónica registrada, con su contexto, sus alternativas y sus consecuencias — exactamente el paso que Nygard (S13, 1.6) dijo que la mayoría de equipos nunca da.</p>
+<p>Esta sesión cierra, además, algo que viene pendiente desde la primera clase del curso: S1 (3.3) priorizó atributos de calidad como <strong>insumo</strong> de diseño, sin calificarlos todavía — el criterio 3 del producto de esta unidad ("Justifica atributos de calidad y decisiones técnicas") es, literalmente, la primera vez que esa tabla de S1 se evalúa con evidencia real, no solo se declara. Y cierra con la pieza que sostiene todo el dossier: la matriz de trazabilidad completa, desde un requerimiento real (una regla de negocio, S8) hasta su evidencia verificable en BD2 y LP2.</p>
+<h3 id="12-indice">1.2 Índice<a class="headerlink" href="#12-indice" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Qué es un ADR (<em>Architecture Decision Record</em>) y su estructura real.</li>
+<li>Formalizar ADR-008: la decisión pendiente de <code>calcularTotal()</code>.</li>
+<li>Justificar atributos de calidad con evidencia real.</li>
+<li>Trazabilidad: de un requerimiento real a su evidencia verificable.</li>
+<li>La matriz de trazabilidad completa del dossier.</li>
+</ol>
+<h3 id="13-proposito-de-aprendizaje">1.3 Propósito de aprendizaje<a class="headerlink" href="#13-proposito-de-aprendizaje" title="Permanent link">&para;</a></h3>
+<p>Al concluir la clase, estarás en condiciones de: <strong>redactar</strong> un ADR completo (contexto, decisión, alternativas consideradas, consecuencias) a partir de un hallazgo real de inconsistencia, <strong>justificar</strong> con evidencia verificable —no solo declarar— los atributos de calidad definidos desde S1, y <strong>trazar</strong> un requerimiento real hasta su evidencia en arquitectura, base de datos y backend, consolidando todo en la matriz de trazabilidad final del dossier.</p>
+<h3 id="14-producto-de-sesion">1.4 Producto de sesión<a class="headerlink" href="#14-producto-de-sesion" title="Permanent link">&para;</a></h3>
+<p>ADR-008 formalizado (la decisión de <code>calcularTotal()</code> que S13 dejó pendiente), la tabla de atributos de calidad de S1 justificada con evidencia real de las 13 sesiones anteriores, y la matriz de trazabilidad completa del dossier —requerimiento, arquitectura, base de datos, diseño y prueba— con al menos un requerimiento real trazado de punta a punta.</p>
+<h3 id="15-metodologia">1.5 Metodología<a class="headerlink" href="#15-metodologia" title="Permanent link">&para;</a></h3>
+<p><strong>Tabla 1. Metodología de la sesión</strong></p>
+<table>
+<thead>
+<tr>
+<th>Actividades a Realizar en el Periodo</th>
+<th>Orientaciones generales (Orientaciones Metodológicas)</th>
+<th>Material de estudio recomendado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Revisión previa individual</td>
+<td>Releer el hallazgo 2 de la Tabla 7 de S13 (<code>calcularTotal()</code>) y la tabla de atributos de calidad de S1 (Tabla 2), sin redactar nada todavía. Trabajo individual, antes de clase.</td>
+<td>S1 (2.4, 3.3), S13 (2.4, 3.3, 3.5).</td>
+</tr>
+<tr>
+<td>Clase presencial</td>
+<td>Redacción guiada del ADR-008 completo, justificación de cada atributo de calidad con evidencia real, trazado de un requerimiento real hasta su evidencia, y armado de la matriz de trazabilidad final. Trabajo individual, siguiendo al docente paso a paso.</td>
+<td>Pasos 3.1 a 3.6 de esta guía.</td>
+</tr>
+<tr>
+<td>Evaluación formativa</td>
+<td>Revisión en clase del ADR-008, de la justificación de atributos de calidad, y de la matriz de trazabilidad completa. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4.</td>
+<td>Indicaciones de entrega (4.3), rúbrica de evaluación (4.6).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="16-motivacion-de-la-sesion">1.6 Motivación de la sesión<a class="headerlink" href="#16-motivacion-de-la-sesion" title="Permanent link">&para;</a></h3>
+<h4 id="161-caso-el-vuelo-501-de-ariane-5-1996">1.6.1 Caso: el vuelo 501 de Ariane 5 (1996)<a class="headerlink" href="#161-caso-el-vuelo-501-de-ariane-5-1996" title="Permanent link">&para;</a></h4>
+<p>El 4 de junio de 1996, el cohete Ariane 5 se autodestruyó 37 segundos después del despegue, en su vuelo inaugural. La causa, documentada en el informe oficial de investigación (Lions, 1996): el software de referencia inercial (SRI) reutilizó, sin volver a validar, código del Ariane 4 — incluida una variable (<em>Horizontal Bias</em>) que los programadores del Ariane 4 habían decidido, a propósito, <strong>no</strong> proteger contra <em>overflow</em>, porque en la trayectoria de ese cohete su valor nunca podía crecer lo suficiente para desbordar. Esa decisión nunca quedó registrada como una asunción que alguien debía revisar si el contexto cambiaba — solo quedó como código que funcionaba.</p>
+<p>Fuente: Lions, J. L. (1996). <em>Ariane 5 Flight 501 Failure: Report by the Inquiry Board</em>. European Space Agency.</p>
+<p>El Ariane 5 tenía una trayectoria inicial distinta, con mayor velocidad horizontal — exactamente la condición que hacía crecer esa variable fuera del rango protegido. El valor se desbordó, el SRI lanzó una excepción, y los dos módulos redundantes (que corrían el mismo código, con la misma asunción) fallaron <strong>al mismo tiempo</strong> — el diseño redundante no protegió nada, porque el error no era aleatorio: era sistemático. El informe lo resume así: no fue una falla de hardware ni un error aleatorio — fue una decisión de diseño válida en un contexto, nunca revalidada cuando el contexto cambió.</p>
+<p>Esa es, en miniatura, la razón de ser de un ADR: no basta con que una decisión haya sido correcta cuando se tomó — tiene que quedar registrada con su contexto, para que alguien pueda revisarla cuando el contexto cambie. <code>calcularTotal()</code> (2.3) es una versión de bajo riesgo del mismo problema: una decisión de diseño (S7) que el código (S8) contradijo en silencio, sin que nadie lo registrara hasta la auditoría de S13.</p>
+<p><strong>Preguntas de análisis</strong></p>
+<p><strong>Activación de conocimientos previos</strong></p>
+<ol>
+<li>Antes de leer la causa técnica, ¿por qué reutilizar código que "ya funcionaba" en otro contexto puede ser más peligroso que escribir código nuevo?</li>
+</ol>
+<p><strong>Comprensión del caso</strong></p>
+<ol>
+<li>Según el informe, ¿por qué los dos módulos redundantes del SRI fallaron exactamente al mismo tiempo, en vez de que uno cubriera el fallo del otro?</li>
+<li>¿Qué habría cambiado si la decisión de no proteger esa variable hubiera quedado registrada, con el contexto que la hacía válida, en vez de solo vivir como código?</li>
+<li>En tu propio proyecto, ¿qué decisión de diseño tomaste en una sesión anterior que nunca volviste a revisar cuando el proyecto creció?</li>
+</ol>
+<h3 id="17-ubicacion-en-el-curso">1.7 Ubicación en el curso<a class="headerlink" href="#17-ubicacion-en-el-curso" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Producto del curso: Diseño Técnico Profesional Documentado.</li>
+<li>Producto de unidad: Diseño Técnico Profesional Documentado (Unidad III).</li>
+<li>Avance del producto en esta sesión: ADR-008 formalizado, atributos de calidad justificados con evidencia real, y matriz de trazabilidad completa — listo para la sustentación final de S15.</li>
+</ul>
+<p><strong>Figura 1. Roadmap del producto de la unidad</strong></p>
+<pre class="mermaid"><code>flowchart TB
+    S13["`**S13:** Integración del diseño técnico`"]
+    S14["`**S14:** Decisiones arquitectónicas y trazabilidad`"]
+    S15["`**S15:** Evaluación de la Unidad III`"]
+    S16["`**S16:** Continuación de la evaluación`"]
+
+    S13 --&gt; S14 --&gt; S15 --&gt; S16
+
+    classDef today fill:#ffe08a,stroke:#9a6b00,stroke-width:2px,color:#111;
+    class S14 today;</code></pre>
+<h2 id="2-explica">2. Explica<a class="headerlink" href="#2-explica" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 40 min.</p>
+<h3 id="21-arquitectura-de-la-sesion">2.1 Arquitectura de la sesión<a class="headerlink" href="#21-arquitectura-de-la-sesion" title="Permanent link">&para;</a></h3>
+<p><strong>Figura 2. De un hallazgo de auditoría a una decisión registrada</strong></p>
+<pre class="mermaid"><code>flowchart TB
+    H["Hallazgo de S13:&lt;br/&gt;calcularTotal() inconsistente"]
+    ADR["ADR-008&lt;br/&gt;(2.2-2.3, 3.2)"]
+    CAL["Atributos de calidad&lt;br/&gt;justificados (2.4, 3.3)"]
+    TRA["Trazabilidad de un&lt;br/&gt;requerimiento real (2.5, 3.4)"]
+    MAT[("Matriz de trazabilidad&lt;br/&gt;final (2.6, 3.5)")]
+
+    H --&gt; ADR --&gt; MAT
+    CAL --&gt; MAT
+    TRA --&gt; MAT</code></pre>
+<p>Lectura del diagrama: las tres piezas (ADR, atributos de calidad, trazabilidad de un requerimiento) no son pasos de una sola cadena — son tres evidencias distintas que convergen en el mismo destino, la matriz final. Cada apartado siguiente desarrolla una pieza, en el mismo orden del Índice (1.2).</p>
+<h3 id="22-que-es-un-adr-y-su-estructura-real">2.2 Qué es un ADR y su estructura real<a class="headerlink" href="#22-que-es-un-adr-y-su-estructura-real" title="Permanent link">&para;</a></h3>
+<p>Un <strong>ADR</strong> (<em>Architecture Decision Record</em>) registra una decisión arquitectónica significativa, con el contexto que la motivó, para que alguien —el mismo equipo meses después, o un equipo nuevo— pueda entender por qué el sistema es como es, sin tener que reconstruir la conversación original (Nygard, 2011, ya citado en S13). No registra cualquier decisión: solo las que cambian la estructura o las propiedades del sistema de forma duradera.</p>
+<p><strong>Tabla 2. Las cuatro partes de un ADR</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parte</th>
+<th>Qué responde</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Contexto</td>
+<td>¿Qué situación real obligó a decidir algo?</td>
+</tr>
+<tr>
+<td>Decisión</td>
+<td>¿Qué se decidió, en una frase clara y verificable?</td>
+</tr>
+<tr>
+<td>Alternativas consideradas</td>
+<td>¿Qué otras opciones se evaluaron, y por qué se descartaron?</td>
+</tr>
+<tr>
+<td>Consecuencias</td>
+<td>¿Qué cambia —para bien o para mal— a partir de esta decisión?</td>
+</tr>
+</tbody>
+</table>
+<p>Es el mismo formato que los ADR reales de LP2 (<code>docs/lp2/adr/</code>, ya citados desde S8) — esta sesión no inventa una plantilla nueva, aplica la que el proyecto ya usa.</p>
+<h3 id="23-formalizar-adr-008-la-decision-pendiente-de-calculartotal">2.3 Formalizar ADR-008: la decisión pendiente de <code>calcularTotal()</code><a class="headerlink" href="#23-formalizar-adr-008-la-decision-pendiente-de-calculartotal" title="Permanent link">&para;</a></h3>
+<p>El hallazgo de S13 (Tabla 7, fila 2) resumido: S7 documenta <code>calcularTotal()</code> como operación de <code>Venta</code>; S8, documentando el código real de LP2, registra que el total se calcula dentro de <code>VentaServiceImpl.crear</code>. Ninguna sesión posterior volvió a mencionarlo — es exactamente el síntoma de Nygard (S13, 1.6): una decisión real, nunca consolidada donde alguien la vería.</p>
+<p>Resolver esto no es "elegir un lado al azar" — es aplicar el mismo criterio que S10 (GRASP, Information Expert) ya estableció: la responsabilidad de calcular algo debe asignarse a la clase que tiene los datos necesarios para hacerlo, sin depender de nada externo. <code>Venta</code> ya tiene su lista de <code>detalles</code>, cada uno con su <code>subtotal</code> (S7-S8) — no necesita ningún dato que no sea suyo para sumarlos. 3.2 redacta el ADR completo con este criterio.</p>
+<h3 id="24-justificar-atributos-de-calidad-con-evidencia-real">2.4 Justificar atributos de calidad con evidencia real<a class="headerlink" href="#24-justificar-atributos-de-calidad-con-evidencia-real" title="Permanent link">&para;</a></h3>
+<p>S1 (3.3) priorizó atributos de calidad como <strong>insumo</strong> de diseño — una tabla de decisiones iniciales, sin calificar todavía (ver <code>u1/ads-producto.md</code>, Tabla 2). "Justificar" un atributo de calidad no es repetir la decisión inicial: es mostrar <strong>evidencia verificable, construida después</strong>, de que el sistema de verdad la cumple.</p>
+<p><strong>Tabla 3. Declarar frente a justificar</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Declarar (S1)</th>
+<th>Justificar (esta sesión)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Qué dice</td>
+<td>"Mantenibilidad: paquetes de módulo cohesionados."</td>
+<td>"<code>ModularityTests</code> pasa en verde, verificado contra el código real de hoy."</td>
+</tr>
+<tr>
+<td>Cuándo se puede hacer</td>
+<td>Antes de construir nada — es una intención.</td>
+<td>Después de tener evidencia real que confirme (o contradiga) la intención.</td>
+</tr>
+<tr>
+<td>Qué pasa si no hay evidencia</td>
+<td>La intención queda sin verificar — puede ser falsa y nadie lo notaría.</td>
+<td>El atributo no se justifica; se reporta como pendiente, no como cumplido.</td>
+</tr>
+</tbody>
+</table>
+<p>3.3 recorre la Tabla 2 completa de S1 y reemplaza cada "decisión inicial" por evidencia real de las 13 sesiones ya construidas.</p>
+<h3 id="25-trazabilidad-de-un-requerimiento-real-a-su-evidencia-verificable">2.5 Trazabilidad: de un requerimiento real a su evidencia verificable<a class="headerlink" href="#25-trazabilidad-de-un-requerimiento-real-a-su-evidencia-verificable" title="Permanent link">&para;</a></h3>
+<p><strong>Trazabilidad</strong> es la capacidad de seguir una línea continua desde un requerimiento real (una regla de negocio, S8) hasta la evidencia concreta que demuestra que se cumple — pasando por la decisión arquitectónica, el objeto de base de datos, y el código del backend (CE021, Nivel 2, ya citado desde S1). Una matriz sin esa línea completa es una lista de buenas intenciones, no trazabilidad.</p>
+<p><strong>Tabla 4. Un requerimiento real trazado de punta a punta (ejemplo RN2)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Eslabón</th>
+<th>Contenido real</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Requerimiento (S8)</td>
+<td>RN2: "Debe haber stock suficiente para cada <code>cantidad</code>."</td>
+</tr>
+<tr>
+<td>Arquitectura (S8, S10)</td>
+<td><code>ProductoService.descontarStock</code>, llamada síncrona protegida por Information Expert/Protected Variations.</td>
+</tr>
+<tr>
+<td>Base de datos (BD2)</td>
+<td>Columna <code>STOCK</code> de <code>PRODUCTOS</code>, con la regla verificada contra datos reales.</td>
+</tr>
+<tr>
+<td>Backend (LP2)</td>
+<td><code>StockInsuficienteException</code> → <code>409</code>.</td>
+</tr>
+<tr>
+<td>Prueba (S8)</td>
+<td>"Dado un producto con stock 2, cuando se vende cantidad 3, entonces responde <code>409</code> y el stock sigue en 2."</td>
+</tr>
+</tbody>
+</table>
+<p>Ningún eslabón de esta cadena es nuevo — cada uno ya existe en una sesión anterior. Lo que esta sesión agrega es la línea que los conecta explícitamente, en un solo lugar.</p>
+<h3 id="26-la-matriz-de-trazabilidad-completa-del-dossier">2.6 La matriz de trazabilidad completa del dossier<a class="headerlink" href="#26-la-matriz-de-trazabilidad-completa-del-dossier" title="Permanent link">&para;</a></h3>
+<p>La matriz final de <code>u3/ads-producto.md</code> ya existe desde que se publicó esa plantilla, pero le falta la columna que el sílabo de esta sesión pide de forma explícita: el requerimiento real del que parte cada fila, no solo la decisión, la base de datos y el backend. 3.5 agrega esa columna.</p>
+<h2 id="3-aplica-actividad-practica-guiada">3. Aplica: actividad práctica guiada<a class="headerlink" href="#3-aplica-actividad-practica-guiada" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 100 min.</p>
+<p><strong>Actividad:</strong> formalizar el ADR-008 pendiente de S13, justificar con evidencia real la tabla de atributos de calidad de S1, trazar un requerimiento real de punta a punta, y completar la matriz de trazabilidad final con la columna de requerimiento.</p>
+<p><strong>Propósito de la actividad:</strong> convertir un hallazgo de auditoría en una decisión registrada, una intención declarada en una evidencia verificada, y una matriz incompleta en una trazabilidad real de punta a punta — sobre el caso real de BomERP.</p>
+<p><strong>Orientaciones metodológicas:</strong> el docente redacta el ADR-008 en vivo frente a la clase; los estudiantes repiten cada paso sobre al menos una decisión pendiente real de su propio proyecto (sección 4).</p>
+<p><strong>Actividades para realizar:</strong></p>
+<ul>
+<li><strong>3.1</strong> Reunir los hallazgos de S13 como insumo.</li>
+<li><strong>3.2</strong> Redactar el ADR-008 completo.</li>
+<li><strong>3.3</strong> Justificar cada atributo de calidad de la Tabla 2 (S1) con evidencia real.</li>
+<li><strong>3.4</strong> Trazar un requerimiento real de punta a punta.</li>
+<li><strong>3.5</strong> Completar la matriz de trazabilidad final.</li>
+<li><strong>3.6</strong> Actualizar el dossier con el ADR y la matriz.</li>
+</ul>
+<h3 id="31-reunir-los-hallazgos-de-s13-como-insumo">3.1 Reunir los hallazgos de S13 como insumo<a class="headerlink" href="#31-reunir-los-hallazgos-de-s13-como-insumo" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> confirmación de que el hallazgo 2 de la Tabla 7 de S13 (<code>calcularTotal()</code>) es el insumo directo del ADR de esta sesión — no se redacta un ADR desde cero sin un hallazgo real que lo motive.</p>
+<h3 id="32-redactar-el-adr-008-completo">3.2 Redactar el ADR-008 completo<a class="headerlink" href="#32-redactar-el-adr-008-completo" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> el ADR-008, con sus cuatro partes (2.2), formalizando la decisión de 2.3.</p>
+<div class="highlight"><pre><span></span><code><span class="gh"># ADR-008 - Responsabilidad de calcularTotal(): entidad Venta, no el servicio</span>
+
+<span class="gu">## Estado</span>
+Aprobada. Pendiente de aplicar en el código de LP2 (deuda técnica registrada).
+
+<span class="gu">## Contexto</span>
+S13 (auditoría de consistencia, Unidad 3) encontró que el diagrama de clases de S7
+documenta <span class="sb">`calcularTotal()`</span> como operación propia de <span class="sb">`Venta`</span>, pero S8 (RN1-RN6,
+postcondición de <span class="sb">`crear`</span>) documenta que, en el código real de LP2, el total se
+calcula dentro de <span class="sb">`VentaServiceImpl.crear`</span>. Ninguna sesión posterior (S9, S10)
+volvió a mencionar esta discrepancia -- quedó registrada una sola vez, sin que
+nadie la convirtiera en una decisión formal.
+
+<span class="gu">## Decisión</span>
+<span class="sb">`Venta.calcularTotal()`</span> es la responsabilidad correcta, según Information Expert
+(S10): la entidad ya tiene todo lo que necesita (su lista de <span class="sb">`detalles`</span>, cada uno
+con <span class="sb">`subtotal`</span> ya calculado) sin depender de ningún dato externo al agregado.
+La implementación actual de LP2 (el cálculo en el servicio) queda registrada como
+deuda técnica, no como una alternativa de diseño válida.
+
+<span class="gu">## Alternativas consideradas</span>
+| Alternativa | Por qué se descarta |
+|---|---|
+| Dejar el cálculo en el servicio y actualizar el diagrama de S7 para que coincida | Reintroduce el Anemic Domain Model que S7 (2.8) explícitamente decidió evitar. |
+| No decidir nada, dejar la inconsistencia documentada sin resolver | Es el síntoma exacto que Nygard (S13, 1.6) describe: una decisión sin registro formal se pierde. |
+
+<span class="gu">## Consecuencias</span>
+<span class="k">-</span><span class="w"> </span>LP2 tiene un refactor pendiente documentado: mover la suma de
+  <span class="sb">`VentaServiceImpl.crear`</span> a <span class="sb">`Venta.calcularTotal()`</span>, y que el servicio solo
+  invoque ese método.
+<span class="k">-</span><span class="w"> </span>Ninguna prueba existente debería romperse -- el resultado (<span class="sb">`total`</span> persistido)
+  es el mismo, solo cambia quién lo calcula.
+<span class="k">-</span><span class="w"> </span>Mientras el refactor no se aplique, el diagrama de clases de S7 sigue siendo
+  la referencia de diseño correcta -- el código, no el diagrama, está en deuda.
+</code></pre></div>
+<p><strong>Error frecuente</strong>: redactar la "Decisión" de un ADR como una descripción vaga ("se mejorará el diseño de <code>Venta</code>"), sin una regla verificable. Una decisión de ADR debe poder confirmarse o refutarse contra el código real, igual que cualquier otro criterio de esta rúbrica.</p>
+<h3 id="33-justificar-cada-atributo-de-calidad-de-la-tabla-2-s1-con-evidencia-real">3.3 Justificar cada atributo de calidad de la Tabla 2 (S1) con evidencia real<a class="headerlink" href="#33-justificar-cada-atributo-de-calidad-de-la-tabla-2-s1-con-evidencia-real" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> la Tabla 2 de <code>u1/ads-producto.md</code>, con cada "decisión inicial" acompañada de evidencia real de hoy.</p>
+<p><strong>Tabla 5. Atributos de calidad: de decisión inicial a justificación final</strong></p>
+<table>
+<thead>
+<tr>
+<th>Atributo</th>
+<th>Decisión inicial (S1)</th>
+<th>Evidencia real (hoy)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Seguridad futura</td>
+<td>Autenticación y autorización para U2.</td>
+<td>Keycloak integrado (LP2 S10b-S11): JWT con <code>realm_access.roles</code>, decodificado por la SPA; Gateway valida el rol antes de reenviar.</td>
+</tr>
+<tr>
+<td>Mantenibilidad</td>
+<td>Ejecutable único, paquetes de módulo cohesionados.</td>
+<td><code>ModularityTests</code> en verde (ADR-002), verificado contra el código real.</td>
+</tr>
+<tr>
+<td>Integridad</td>
+<td>Reglas transaccionales en servicio y Oracle.</td>
+<td>RN1-RN10 (S8) + <code>TRG_PRODUCTO_AUDITORIA</code> (BD2 S2).</td>
+</tr>
+<tr>
+<td>Rendimiento</td>
+<td>Índices y consultas optimizadas por fecha.</td>
+<td><code>IX_VENTAS_FECHA</code> (BD2 S5), selectividad medida con criterio, no por intuición (BD2 S10).</td>
+</tr>
+<tr>
+<td>Auditabilidad</td>
+<td>Trigger de auditoría de cambios de precio/stock.</td>
+<td><code>TRG_PRODUCTO_AUDITORIA</code> disparado en vivo (BD2 S2) + Unified Auditing (BD2 S9).</td>
+</tr>
+<tr>
+<td>Escalabilidad inicial</td>
+<td>API <em>stateless</em> preparada para SPA.</td>
+<td>JWT sin sesión de servidor (LP2 S10b); <code>VENTAS_HISTORICO</code> particionado como preparación para volumen (BD2 S11).</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Error frecuente</strong>: justificar un atributo con una evidencia que en realidad corresponde a otro — por ejemplo, usar el particionamiento de BD2 (pensado para volumen) como evidencia de "Seguridad". Cada fila debe conectar con una evidencia que de verdad responde a esa propiedad del sistema, no a cualquier trabajo reciente.</p>
+<h3 id="34-trazar-un-requerimiento-real-de-punta-a-punta">3.4 Trazar un requerimiento real de punta a punta<a class="headerlink" href="#34-trazar-un-requerimiento-real-de-punta-a-punta" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> la Tabla 4 (2.5) completada con un segundo requerimiento real, distinto de RN2, elegido por el estudiante.</p>
+<p>Para tu propio proyecto: elige un requerimiento real de tu módulo transaccional (<code>brief.md</code>, sección 3), y completa los cinco eslabones de la Tabla 4 —requerimiento, arquitectura, base de datos, backend, prueba— sin saltarte ninguno. Si algún eslabón todavía no existe en tu proyecto, regístralo como pendiente, no lo inventes.</p>
+<h3 id="35-completar-la-matriz-de-trazabilidad-final">3.5 Completar la matriz de trazabilidad final<a class="headerlink" href="#35-completar-la-matriz-de-trazabilidad-final" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> la matriz final de <code>u3/ads-producto.md</code>, con la columna de requerimiento agregada.</p>
+<p><strong>Tabla 6. Matriz final de trazabilidad, con requerimiento (actualización de <code>u3/ads-producto.md</code>)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Requerimiento</th>
+<th>Decisión ADS</th>
+<th>Evidencia BD2</th>
+<th>Evidencia LP2</th>
+<th>Prueba o sustentación</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN8 (filtra por <code>vendedorId</code> si es <code>VENDEDOR</code>)</td>
+<td>API REST <em>stateless</em> con JWT</td>
+<td>Usuario/rol de aplicación</td>
+<td>Backend y SPA protegidos</td>
+<td>Login, <em>guard</em> e interceptor.</td>
+</tr>
+<tr>
+<td>Precondición de <code>anular()</code>: <code>{estado = 'REGISTRADA'}</code> (S7, 2.7)</td>
+<td>Auditabilidad de ventas</td>
+<td>Trigger o auditoría Oracle</td>
+<td>Registro/anulación de venta</td>
+<td>Evidencia de evento auditado.</td>
+</tr>
+<tr>
+<td>RN10 (<code>ordenarPor</code> de lista cerrada)</td>
+<td>Rendimiento en consultas</td>
+<td>Índice, estadísticas o AWR</td>
+<td>Filtros y consultas API</td>
+<td>Comparación de plan o tiempo.</td>
+</tr>
+<tr>
+<td>RN1 (<code>404</code> si el producto no existe o no está activo)</td>
+<td>Service + Repository</td>
+<td>Paquetes/tablas Oracle</td>
+<td>Servicios y repositorios</td>
+<td>Demo de flujo transaccional.</td>
+</tr>
+<tr>
+<td>Requisito no funcional: listar grandes volúmenes sin degradar</td>
+<td>Paginación de alto volumen</td>
+<td>Índices y consulta estable</td>
+<td>Metadatos, filtros y ordenamiento</td>
+<td>Prueba con volumen justificable.</td>
+</tr>
+<tr>
+<td>Requisito no funcional: diagnosticar un error en producción</td>
+<td>Observabilidad</td>
+<td>Sesiones, bloqueos y monitoreo Oracle</td>
+<td>Logs, salud y monitoreo básico</td>
+<td>Diagnóstico de una operación y un error.</td>
+</tr>
+<tr>
+<td>RN2 (stock suficiente, <code>409</code>)</td>
+<td>Integración <em>full-stack</em></td>
+<td>Dato persistido y auditado</td>
+<td>Flujo SPA → API → Oracle</td>
+<td>Prueba end-to-end y regresión.</td>
+</tr>
+</tbody>
+</table>
+<p>Esta tabla reemplaza, con una columna más, a la del mismo nombre en <code>u3/ads-producto.md</code> — no se publica como una tabla aparte.</p>
+<h3 id="36-actualizar-el-dossier-con-el-adr-y-la-matriz">3.6 Actualizar el dossier con el ADR y la matriz<a class="headerlink" href="#36-actualizar-el-dossier-con-el-adr-y-la-matriz" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> <code>u3/ads-producto.md</code> con el ADR-008 agregado a su tabla de ADR y la matriz de trazabilidad reemplazada por la de 3.5.</p>
+<p><strong>Evidencia de aprendizaje:</strong></p>
+<ul>
+<li>ADR-008 completo, con sus cuatro partes, verificable contra el código real de LP2.</li>
+<li>Tabla de atributos de calidad de S1 justificada con evidencia real de las 13 sesiones anteriores.</li>
+<li>Un requerimiento real (distinto de RN2) trazado de punta a punta, sobre el proyecto propio.</li>
+<li>Matriz de trazabilidad final, con la columna de requerimiento agregada.</li>
+</ul>
+<h2 id="4-crea-actividad-autonoma">4. Crea: actividad autónoma<a class="headerlink" href="#4-crea-actividad-autonoma" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 2h fuera del aula.</p>
+<h3 id="41-actividad">4.1 Actividad<a class="headerlink" href="#41-actividad" title="Permanent link">&para;</a></h3>
+<p>Decisiones arquitectónicas y trazabilidad del proyecto propio del equipo, documentadas en evidencia individual.</p>
+<p>Completa y evidencia estas tareas:</p>
+<ol>
+<li>Identificar al menos una decisión de diseño de tu propio proyecto que una sesión posterior contradijo en silencio (como <code>calcularTotal()</code>), y formalizarla como un ADR completo (contexto, decisión, alternativas, consecuencias).</li>
+<li>Justificar con evidencia real al menos cuatro atributos de calidad de tu propio proyecto (los que definiste en S1), reemplazando cada decisión inicial por evidencia construida después.</li>
+<li>Trazar al menos dos requerimientos reales de tu propio proyecto de punta a punta (requerimiento → arquitectura → base de datos → backend → prueba), con todos los eslabones completos o registrados explícitamente como pendientes.</li>
+<li>Armar tu propia matriz de trazabilidad final, con la columna de requerimiento.</li>
+</ol>
+<h3 id="42-proposito">4.2 Propósito<a class="headerlink" href="#42-proposito" title="Permanent link">&para;</a></h3>
+<p>Que cada estudiante demuestre, de forma individual y fuera del aula, que puede convertir un hallazgo de inconsistencia en una decisión arquitectónica formal, justificar atributos de calidad con evidencia real, y trazar requerimientos reales de punta a punta, sin el acompañamiento del docente.</p>
+<h3 id="43-indicaciones">4.3 Indicaciones<a class="headerlink" href="#43-indicaciones" title="Permanent link">&para;</a></h3>
+<p>Entrega un PDF con el siguiente nombre:</p>
+<div class="highlight"><pre><span></span><code>S14_ADS_Equipo##_ApellidoNombre.pdf
+</code></pre></div>
+<p>Cada captura de pantalla del informe debe mostrar, sin recortar, el reloj del sistema (fecha y hora) y tu usuario o foto de perfil (Windows, VS Code o navegador) visibles en pantalla — es lo que permite verificar que la evidencia es tuya y que corresponde al momento real de tu trabajo.</p>
+<h4 id="431-estructura-del-informe">4.3.1 Estructura del informe<a class="headerlink" href="#431-estructura-del-informe" title="Permanent link">&para;</a></h4>
+<p><strong>Datos del estudiante</strong></p>
+<ul>
+<li>Nombre:</li>
+<li>Equipo:</li>
+<li>Sesión: S14 - Decisiones Arquitectónicas y Trazabilidad</li>
+<li>Rol o aporte realizado:</li>
+<li>Link de GitHub:</li>
+</ul>
+<p><strong>Evidencia técnica</strong></p>
+<p>Incluye capturas o extractos con una breve explicación debajo de cada uno, organizados en los mismos 4 bloques de la rúbrica (4.6):</p>
+<ol>
+<li><em>ADR formalizado</em><ul>
+<li>El ADR completo, con sus cuatro partes, a partir de un hallazgo real de tu propio proyecto.</li>
+</ul>
+</li>
+<li><em>Atributos de calidad justificados</em><ul>
+<li>Al menos cuatro atributos, con su decisión inicial y su evidencia real.</li>
+</ul>
+</li>
+<li><em>Requerimientos trazados de punta a punta</em><ul>
+<li>Al menos dos requerimientos, con los cinco eslabones completos o pendientes registrados explícitamente.</li>
+</ul>
+</li>
+<li><em>Matriz de trazabilidad final</em><ul>
+<li>Tu propia matriz, con la columna de requerimiento.</li>
+</ul>
+</li>
+</ol>
+<p><strong>Error o hallazgo</strong></p>
+<p>Describe una inconsistencia real que encontraste entre una decisión de diseño y el código actual de tu propio proyecto, distinta de la ya resuelta en S13.</p>
+<p><strong>Reflexión técnica breve</strong></p>
+<p>Responde en 5 a 8 líneas:</p>
+<div class="highlight"><pre><span></span><code>¿Qué decisión de tu propio proyecto nunca registraste formalmente, y
+qué hubiera pasado si el contexto que la hacía válida cambiara sin que
+nadie lo notara? Relaciona tu respuesta con el caso del Ariane 5 (1.6).
+</code></pre></div>
+<h3 id="44-criterios-minimos-de-aceptacion">4.4 Criterios mínimos de aceptación<a class="headerlink" href="#44-criterios-minimos-de-aceptacion" title="Permanent link">&para;</a></h3>
+<ul>
+<li>El archivo respeta el nombre solicitado.</li>
+<li>El ADR tiene sus cuatro partes completas, a partir de un hallazgo real, con una decisión verificable contra el código.</li>
+<li>Al menos cuatro atributos de calidad están justificados con evidencia real, no solo con la decisión inicial repetida.</li>
+<li>Al menos dos requerimientos reales están trazados de punta a punta, con los eslabones completos o pendientes registrados explícitamente.</li>
+<li>La matriz de trazabilidad final incluye la columna de requerimiento, coherente con el resto de columnas.</li>
+<li>Cada captura de la evidencia técnica muestra el reloj del sistema y el usuario/perfil visible, sin recortar.</li>
+<li>Las fechas y horas de las capturas son coherentes con el historial de commits de su repositorio en GitHub.</li>
+<li>Incluye un error o hallazgo técnico diagnosticado.</li>
+<li>Incluye la reflexión técnica breve solicitada.</li>
+</ul>
+<h3 id="45-preguntas-de-defensa">4.5 Preguntas de defensa<a class="headerlink" href="#45-preguntas-de-defensa" title="Permanent link">&para;</a></h3>
+<ol>
+<li>¿Por qué un ADR necesita una "Decisión" verificable contra el código, y no solo una intención bien redactada?</li>
+<li>¿Por qué <code>Venta.calcularTotal()</code> es la responsabilidad correcta según Information Expert, y no una preferencia estética?</li>
+<li>¿Qué diferencia hay entre declarar un atributo de calidad y justificarlo con evidencia? Da un ejemplo propio de cada uno.</li>
+<li>En tu requerimiento trazado, ¿qué eslabón fue el más difícil de completar, y por qué?</li>
+<li>Relaciona el caso del Ariane 5 (1.6) con tu propia decisión no registrada: ¿qué contexto tendría que cambiar para que esa decisión dejara de ser válida?</li>
+<li>¿Por qué la matriz de trazabilidad necesita la columna de requerimiento, y no basta con decisión-BD-backend-prueba?</li>
+<li>Si encontraras hoy una segunda inconsistencia real en tu propio proyecto, ¿la resolverías en el código o la registrarías como ADR primero? ¿Por qué?</li>
+</ol>
+<h3 id="46-rubrica-de-evaluacion">4.6 Rúbrica de evaluación<a class="headerlink" href="#46-rubrica-de-evaluacion" title="Permanent link">&para;</a></h3>
+<p><strong>Tabla 7. Rúbrica de evaluación</strong></p>
+<table>
+<thead>
+<tr>
+<th>Criterio</th>
+<th style="text-align: right;">Peso (%)</th>
+<th>A (20 pts)</th>
+<th>B (15 pts)</th>
+<th>C (10 pts)</th>
+<th>D (5 pts)</th>
+<th style="text-align: right;">Nivel obtenido</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. ADR formalizado*</td>
+<td style="text-align: right;">25</td>
+<td>ADR completo (4 partes), a partir de un hallazgo real, con decisión verificable contra el código.</td>
+<td>ADR completo, con la decisión poco verificable o el hallazgo genérico.</td>
+<td>ADR incompleto (falta alguna de las 4 partes).</td>
+<td>No presenta ADR.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>2. Atributos de calidad justificados*</td>
+<td style="text-align: right;">25</td>
+<td>Al menos 4 atributos, cada uno con evidencia real distinta y correctamente asignada.</td>
+<td>Al menos 4 atributos, con alguna evidencia mal asignada o repetida.</td>
+<td>Menos de 4 atributos, o evidencia genérica sin conexión real.</td>
+<td>No presenta justificación de atributos de calidad.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>3. Requerimientos trazados de punta a punta*</td>
+<td style="text-align: right;">25</td>
+<td>Al menos 2 requerimientos, con los 5 eslabones completos o pendientes registrados explícitamente.</td>
+<td>Al menos 2 requerimientos, con algún eslabón faltante sin registrar.</td>
+<td>Solo 1 requerimiento trazado completo.</td>
+<td>No presenta trazabilidad de ningún requerimiento.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>4. Matriz de trazabilidad final*</td>
+<td style="text-align: right;">25</td>
+<td>Matriz completa, con la columna de requerimiento coherente con el resto.</td>
+<td>Matriz completa, con la columna de requerimiento parcialmente coherente.</td>
+<td>Matriz incompleta o sin la columna de requerimiento.</td>
+<td>No presenta matriz de trazabilidad.</td>
+<td style="text-align: right;"></td>
+</tr>
+</tbody>
+</table>
+<p>* Agregado manual.</p>
+<p>Nota final = suma de (<code>Peso</code> / 100 × <code>Puntos del nivel obtenido</code>) = ____ / 20.</p>
+<p>Para usar la rúbrica con IA (inteligencia artificial), solicita:</p>
+<div class="highlight"><pre><span></span><code>Evalúa el PDF usando la rúbrica de la sesión.
+Para cada criterio selecciona el nivel obtenido usando la escala A=20, B=15, C=10, D=5 puntos.
+Justifica brevemente cada nivel asignado.
+Verifica que cada captura muestre reloj del sistema y usuario/perfil visible, y que las fechas sean coherentes con el historial de commits de GitHub. Si falta esta evidencia o hay inconsistencias, indícalo explícitamente antes de calificar.
+Calcula la nota final con la fórmula: suma de (Peso/100 × Puntos del nivel obtenido), directamente sobre 20.
+Indica 2 fortalezas y 2 recomendaciones.
+</code></pre></div>
+<h2 id="5-cierre">5. Cierre<a class="headerlink" href="#5-cierre" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 5 min.</p>
+<p><strong>Resumen breve:</strong> hoy el hallazgo que S13 dejó deliberadamente pendiente se convirtió en una decisión real: ADR-008 confirma que <code>Venta.calcularTotal()</code> es la responsabilidad correcta según Information Expert, y registra el cálculo actual del servicio como deuda técnica explícita, no como una alternativa válida. La tabla de atributos de calidad de S1 —una intención declarada desde la primera clase— por fin tiene evidencia real detrás de cada fila. Y la matriz de trazabilidad del dossier ganó la columna que le faltaba: el requerimiento real del que parte cada decisión, cerrando la cadena completa que el sílabo exige desde el requerimiento hasta la prueba. El caso del Ariane 5 (1.6) deja la lección que atraviesa toda la sesión: una decisión válida en su momento, nunca registrada, es una falla esperando el cambio de contexto que la exponga.</p>
+<p><strong>Dinámica participativa:</strong> en una ronda rápida, cada estudiante comparte en una frase qué decisión de su propio proyecto formalizó hoy como ADR, y qué la motivó.</p>
+<p><strong>Metacognición:</strong> ¿qué te costó más: encontrar una decisión real no registrada en tu propio proyecto, o conseguir evidencia real (no solo repetir la intención) para justificar un atributo de calidad?</p>
+<p><strong>Proyección:</strong> S15 integra todo el Diseño Técnico Profesional Documentado —arquitectura, dominio, UML, patrones, integraciones, ADRs y trazabilidad— en la sustentación final del curso.</p>
+<h2 id="bibliografia">Bibliografía<a class="headerlink" href="#bibliografia" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Nygard, M. (2011). <em>Documenting Architecture Decisions</em>. Cognitect Blog. https://www.cognitect.com/blog/2011/11/15/documenting-architecture-decisions</li>
+<li>Lions, J. L. (1996). <em>Ariane 5 Flight 501 Failure: Report by the Inquiry Board</em>. European Space Agency. https://esamultimedia.esa.int/docs/esa-x-1819eng.pdf</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Angel Sullon @asullom - UPeU 2026
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.top", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+    
+  </body>
+</html>

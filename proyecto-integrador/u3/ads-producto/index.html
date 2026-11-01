@@ -1091,10 +1091,43 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#atributos-de-calidad-justificacion-final-s14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Atributos de calidad: justificación final (S14)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#adr-final-de-referencia" class="md-nav__link">
     <span class="md-ellipsis">
       
         ADR final de referencia
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rubrica-de-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rúbrica de Evaluación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#trazabilidad-y-procedencia-de-la-rubrica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trazabilidad y procedencia de la rúbrica
       
     </span>
   </a>
@@ -3601,10 +3634,43 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#atributos-de-calidad-justificacion-final-s14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Atributos de calidad: justificación final (S14)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#adr-final-de-referencia" class="md-nav__link">
     <span class="md-ellipsis">
       
         ADR final de referencia
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rubrica-de-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rúbrica de Evaluación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#trazabilidad-y-procedencia-de-la-rubrica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trazabilidad y procedencia de la rúbrica
       
     </span>
   </a>
@@ -3682,9 +3748,11 @@
 </tbody>
 </table>
 <h2 id="matriz-final-de-trazabilidad">Matriz final de trazabilidad<a class="headerlink" href="#matriz-final-de-trazabilidad" title="Permanent link">&para;</a></h2>
+<p>La columna "Requerimiento" se agregó en S14 (3.5) — el sílabo de esta sesión exige trazabilidad "entre requerimientos, arquitectura y diseño", no solo entre decisión, base de datos y backend.</p>
 <table>
 <thead>
 <tr>
+<th>Requerimiento</th>
 <th>Decisión o modelo ADS</th>
 <th>Evidencia BD2</th>
 <th>Evidencia LP2</th>
@@ -3693,46 +3761,96 @@
 </thead>
 <tbody>
 <tr>
+<td>RN8 (filtra por <code>vendedorId</code> si es <code>VENDEDOR</code>, S8)</td>
 <td>API REST stateless con JWT</td>
 <td>Usuario/rol de aplicación</td>
 <td>Backend y SPA protegidos</td>
 <td>Login, guard e interceptor.</td>
 </tr>
 <tr>
+<td>Precondición de <code>anular()</code>: <code>{estado = 'REGISTRADA'}</code> (S7, 2.7)</td>
 <td>Auditabilidad de ventas</td>
 <td>Trigger o auditoría Oracle</td>
 <td>Registro/anulación de venta</td>
 <td>Evidencia de evento auditado.</td>
 </tr>
 <tr>
+<td>RN10 (<code>ordenarPor</code> de lista cerrada, S8)</td>
 <td>Rendimiento en consultas</td>
 <td>Índice, estadísticas o AWR</td>
 <td>Filtros y consultas API</td>
 <td>Comparación de plan o tiempo.</td>
 </tr>
 <tr>
+<td>RN1 (<code>404</code> si el producto no existe o no está activo, S8)</td>
 <td>Service + Repository</td>
 <td>Paquetes/tablas Oracle</td>
 <td>Servicios y repositorios</td>
 <td>Demo de flujo transaccional.</td>
 </tr>
 <tr>
+<td>Requisito no funcional: listar grandes volúmenes sin degradar</td>
 <td>Paginación de alto volumen</td>
 <td>Índices y consulta estable</td>
 <td>Metadatos, filtros y ordenamiento</td>
 <td>Prueba con volumen justificable.</td>
 </tr>
 <tr>
+<td>Requisito no funcional: diagnosticar un error en producción</td>
 <td>Observabilidad</td>
 <td>Sesiones, bloqueos y monitoreo Oracle</td>
 <td>Logs, salud y monitoreo básico</td>
 <td>Diagnóstico de una operación y un error.</td>
 </tr>
 <tr>
+<td>RN2 (stock suficiente, <code>409</code>, S8)</td>
 <td>Integración full-stack</td>
 <td>Dato persistido y auditado</td>
 <td>Flujo SPA -&gt; API -&gt; Oracle</td>
 <td>Prueba end-to-end y regresión.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="atributos-de-calidad-justificacion-final-s14">Atributos de calidad: justificación final (S14)<a class="headerlink" href="#atributos-de-calidad-justificacion-final-s14" title="Permanent link">&para;</a></h2>
+<p>La Sección 2 del <a href="../../u1/ads-producto/#2-atributos-de-calidad">Producto U1</a> priorizó estos atributos como decisión inicial, sin evidencia todavía. S14 (3.3) los justifica con evidencia real de las 13 sesiones siguientes — el criterio 3 de esta unidad ("Justifica atributos de calidad y decisiones técnicas") se califica aquí, no antes.</p>
+<table>
+<thead>
+<tr>
+<th>Atributo</th>
+<th>Decisión inicial (U1)</th>
+<th>Evidencia real (S14)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Seguridad futura</td>
+<td>Autenticación y autorización para U2.</td>
+<td>Keycloak integrado (LP2 S10b-S11): JWT con <code>realm_access.roles</code>, Gateway valida el rol antes de reenviar.</td>
+</tr>
+<tr>
+<td>Mantenibilidad</td>
+<td>Ejecutable único, paquetes de módulo cohesionados.</td>
+<td><code>ModularityTests</code> en verde (ADR-002), verificado contra el código real.</td>
+</tr>
+<tr>
+<td>Integridad</td>
+<td>Reglas transaccionales en servicio y Oracle.</td>
+<td>RN1-RN10 (S8) + <code>TRG_PRODUCTO_AUDITORIA</code> (BD2 S2).</td>
+</tr>
+<tr>
+<td>Rendimiento</td>
+<td>Índices y consultas optimizadas por fecha.</td>
+<td><code>IX_VENTAS_FECHA</code> (BD2 S5), selectividad medida (BD2 S10).</td>
+</tr>
+<tr>
+<td>Auditabilidad</td>
+<td>Trigger de auditoría de cambios de precio/stock.</td>
+<td><code>TRG_PRODUCTO_AUDITORIA</code> disparado en vivo (BD2 S2) + Unified Auditing (BD2 S9).</td>
+</tr>
+<tr>
+<td>Escalabilidad inicial</td>
+<td>API stateless preparada para SPA.</td>
+<td>JWT sin sesión de servidor (LP2 S10b); <code>VENTAS_HISTORICO</code> particionado (BD2 S11).</td>
 </tr>
 </tbody>
 </table>
@@ -3790,8 +3908,139 @@
 <td>Formalizada en S13</td>
 <td>Evidencia de caché o decisión documentada de no usarlo.</td>
 </tr>
+<tr>
+<td>ADR-008</td>
+<td><code>Venta.calcularTotal()</code> es responsabilidad de la entidad (Information Expert), no del servicio — el cálculo actual en <code>VentaServiceImpl.crear</code> queda como deuda técnica.</td>
+<td>Formalizada en S14 (ADS)</td>
+<td>Hallazgo real de auditoría (S13, Tabla 7); refactor pendiente registrado para LP2.</td>
+</tr>
 </tbody>
 </table>
+<h2 id="rubrica-de-evaluacion">Rúbrica de Evaluación<a class="headerlink" href="#rubrica-de-evaluacion" title="Permanent link">&para;</a></h2>
+<p><strong>Tabla 1. Rúbrica de evaluación de la Unidad 3</strong></p>
+<table>
+<thead>
+<tr>
+<th>Criterio</th>
+<th style="text-align: right;">Peso</th>
+<th>CE / Nivel</th>
+<th>A (20 pts)</th>
+<th>B (15 pts)</th>
+<th>C (10 pts)</th>
+<th>D (5 pts)</th>
+<th style="text-align: right;">Calificación obtenida</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Consolida arquitectura, dominio, UML, patrones e integraciones</td>
+<td style="text-align: right;">16%</td>
+<td>CE021-N2 (cierre)</td>
+<td>Auditoría de consistencia real entre U1 y U2 (S13), con hallazgos registrados y resueltos o diferidos explícitamente.</td>
+<td>Consolidación presente, con algún hallazgo real sin resolución explícita.</td>
+<td>Consolidación superficial, sin auditoría real entre unidades.</td>
+<td>No presenta consolidación verificable.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>2. Registra decisiones arquitectónicas mediante ADRs</td>
+<td style="text-align: right;">16%</td>
+<td>CE021-N2 (cierre)</td>
+<td>Al menos un ADR nuevo (4 partes completas) a partir de un hallazgo real, verificable contra el código.</td>
+<td>ADR completo, con la decisión poco verificable.</td>
+<td>ADR incompleto o sin hallazgo real que lo motive.</td>
+<td>No presenta ADR nuevo en esta unidad.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>3. Justifica atributos de calidad y decisiones técnicas</td>
+<td style="text-align: right;">16%</td>
+<td>CE024-N1 (cierre)</td>
+<td>Al menos 4 atributos de la Tabla de S1 justificados con evidencia real, correctamente asignada.</td>
+<td>Al menos 4 atributos, con alguna evidencia mal asignada.</td>
+<td>Menos de 4 atributos, o evidencia genérica.</td>
+<td>No presenta justificación de atributos de calidad.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>4. Mantiene trazabilidad entre requerimientos, arquitectura, base de datos y diseño</td>
+<td style="text-align: right;">16%</td>
+<td>CE021-N2 (cierre)</td>
+<td>Al menos 2 requerimientos reales trazados de punta a punta, con los 5 eslabones completos o pendientes registrados.</td>
+<td>Al menos 2 requerimientos, con algún eslabón faltante sin registrar.</td>
+<td>Solo 1 requerimiento trazado completo.</td>
+<td>No presenta trazabilidad de ningún requerimiento.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>5. Presenta un dossier técnico profesional listo para BD2 y LP2</td>
+<td style="text-align: right;">16%</td>
+<td>CE021-N2 (cierre)</td>
+<td>Dossier completo y coherente (arquitectura, dominio, UML, patrones, ADR, trazabilidad), verificable en vivo.</td>
+<td>Dossier completo, con alguna sección incompleta.</td>
+<td>Dossier incompleto o con secciones no verificables.</td>
+<td>No presenta dossier técnico.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>6. Sustentación</td>
+<td style="text-align: right;">20%</td>
+<td>CG</td>
+<td>Sustenta con claridad y profesionalismo su aporte individual, respondiendo con precisión las preguntas del jurado.</td>
+<td>Sustenta con solvencia, con detalles menores en claridad, orden o precisión.</td>
+<td>Sustenta con dificultad; claridad, orden o precisión insuficientes.</td>
+<td>No sustenta adecuadamente ni demuestra su aporte individual.</td>
+<td style="text-align: right;"></td>
+</tr>
+</tbody>
+</table>
+<p>Nota final = suma de (<code>Peso</code> × <code>Puntos de la calificación obtenida</code>) / 100 × 20.</p>
+<p><code>CE021-N2 (cierre)</code> = cierre del Nivel 2 de CE021 (Ingeniería de Requerimientos): la arquitectura (U1) y el diseño detallado (U2) ya certificaron trazabilidad real acotada a su propio corte de unidad (<a href="../../u1/ads-producto/#9-rubrica-de-evaluacion">Producto U1</a>, <a href="../../u2/ads-producto/#4-rubrica-de-evaluacion">Producto U2</a>); esta unidad cierra el nivel con la consolidación entre unidades (criterio 1), los ADR formales (criterio 2), la trazabilidad completa hasta el requerimiento (criterio 4) y el dossier final (criterio 5). <code>CE024-N1 (cierre)</code> = cierre del Nivel 1 de CE024 (Calidad de Software): los atributos de calidad se usaron como insumo de diseño desde S1, sin calificarse — el criterio 3 de esta unidad es la primera vez que se califican con evidencia real. <code>CG</code> = Competencia General del sílabo de ADS. No es CE021 ni CE024 en los criterios 1-5: ya son la evidencia técnica, incluida su verificación en vivo; el criterio 6 verifica aporte individual y comunicación.</p>
+<p><strong>Tabla 2. Subaspectos de la sustentación (Unidad 3)</strong></p>
+<p>El criterio 6 se evalúa con los mismos 6 subaspectos de la sustentación integral del Proyecto Integrador (<a href="../guia-sustentacion/#subaspectos-de-la-sustentacion-integral">Guía de Sustentación Final</a>) — la misma exigencia de Unidad 1 y Unidad 2, ahora en la sustentación final del curso.</p>
+<table>
+<thead>
+<tr>
+<th>Subaspecto</th>
+<th>Qué observa en Unidad 3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Aporte individual</td>
+<td>Cada integrante demuestra al menos un ADR, una justificación de atributo de calidad, o un requerimiento trazado que formalizó.</td>
+</tr>
+<tr>
+<td>2. Comunicación y orden</td>
+<td>Claridad, estructura, tiempo y lenguaje técnico durante la presentación.</td>
+</tr>
+<tr>
+<td>3. Presentación personal y actitud</td>
+<td>Puntualidad, vestimenta limpia y adecuada, higiene, cabello ordenado, actitud profesional, respeto, honestidad y coherencia con los valores y principios cristianos de la institución.</td>
+</tr>
+<tr>
+<td>4. Repositorio y estándares</td>
+<td>Organización, commits y reproducibilidad de los ADR y la matriz de trazabilidad desde S13.</td>
+</tr>
+<tr>
+<td>5. MkDocs o equivalente</td>
+<td>Documentación de Unidad 3 publicada, navegable y alineada con <code>ads-producto.md</code>.</td>
+</tr>
+<tr>
+<td>6. Pitch/demo ejecutiva</td>
+<td>El dossier técnico profesional completo, con apoyo visual (.pptx, Canva o equivalente) — no reemplaza la demo técnica de S15, la precede.</td>
+</tr>
+</tbody>
+</table>
+<p>Para usar la rúbrica con IA, solicita:</p>
+<div class="highlight"><pre><span></span><code>Evalúa la sustentación y el producto (ads-producto.md o la sección 2 de la guía S15) usando la rúbrica de esta sección.
+Para cada criterio selecciona la calificación obtenida: A=20, B=15, C=10, D=5.
+Justifica brevemente cada nivel con evidencia concreta (ADR, atributos de calidad, trazabilidad, dossier).
+Calcula la nota final con la fórmula: suma de (Peso × Puntos de la calificación obtenida) / 100 × 20.
+Indica 2 fortalezas y 2 recomendaciones.
+</code></pre></div>
+<h2 id="trazabilidad-y-procedencia-de-la-rubrica">Trazabilidad y procedencia de la rúbrica<a class="headerlink" href="#trazabilidad-y-procedencia-de-la-rubrica" title="Permanent link">&para;</a></h2>
+<p>Los primeros cinco criterios son cita literal de los "Criterios de evaluación del producto" de la Unidad 3 en el sílabo de ADS; el sexto (Sustentación) corresponde a la sustentación exigida por el mismo sílabo (sesión 15, actividad 2).</p>
 <h2 id="cierre-ads">Cierre ADS<a class="headerlink" href="#cierre-ads" title="Permanent link">&para;</a></h2>
 <p>El diseño final se considera completo cuando otra persona puede entender la arquitectura, ubicar componentes, relacionar decisiones con evidencias y explicar por qué la solución técnica es coherente con el producto implementado.</p>
 

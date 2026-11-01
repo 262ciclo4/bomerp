@@ -3464,10 +3464,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#escenario-sugerido" class="md-nav__link">
+  <a href="#escenario-real-ejecutado" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Escenario sugerido
+        Escenario real ejecutado
       
     </span>
   </a>
@@ -3475,10 +3475,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#recovery-basico-de-referencia" class="md-nav__link">
+  <a href="#comandos-reales" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Recovery básico de referencia
+        Comandos reales
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validacion-posterior-resultado-real" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validación posterior (resultado real)
       
     </span>
   </a>
@@ -3517,20 +3528,38 @@
 
 
 <h1 id="escenario-de-recovery-evidencia-u3">Escenario de Recovery - Evidencia U3<a class="headerlink" href="#escenario-de-recovery-evidencia-u3" title="Permanent link">&para;</a></h1>
+<p><strong>Ejemplo BomERP, verificado en vivo contra <code>bomerp-oracle</code> (S13).</strong> Cada equipo reemplaza este escenario por uno real de su propio proyecto.</p>
 <h2 id="objetivo">Objetivo<a class="headerlink" href="#objetivo" title="Permanent link">&para;</a></h2>
-<p>Demostrar que el equipo conoce el procedimiento básico para recuperar la base ante una falla controlada.</p>
-<h2 id="escenario-sugerido">Escenario sugerido<a class="headerlink" href="#escenario-sugerido" title="Permanent link">&para;</a></h2>
+<p>Demostrar que el equipo puede recuperar la base ante un incidente real, exactamente hasta el punto correcto en el tiempo (<em>Point-In-Time Recovery</em>, PITR) — no solo restaurar al último backup disponible.</p>
+<h2 id="escenario-real-ejecutado">Escenario real ejecutado<a class="headerlink" href="#escenario-real-ejecutado" title="Permanent link">&para;</a></h2>
 <ol>
-<li>Registrar datos de prueba desde la aplicación.</li>
-<li>Ejecutar backup.</li>
-<li>Simular pérdida o alteración controlada de datos en ambiente académico.</li>
-<li>Ejecutar recuperación.</li>
-<li>Validar que la aplicación puede consultar nuevamente los datos esperados.</li>
+<li>Backup completo (L0) y datos reales de <code>BOM_VENTAS.VENTAS</code> ya existentes (504 filas).</li>
+<li><code>INSERT</code> real número 505 (<code>TOTAL=199.90</code>, <code>02:25:43</code>) — el cambio que <strong>debe sobrevivir</strong>.</li>
+<li>Backup incremental (L1), que captura ese cambio.</li>
+<li><code>INSERT</code> real número 506 (<code>TOTAL=350.00</code>, <code>02:27:01</code>) — el <strong>incidente simulado</strong>, que debe descartarse.</li>
+<li><code>SHUTDOWN IMMEDIATE</code> + <code>STARTUP MOUNT</code>.</li>
+<li>PITR con <code>SET UNTIL TIME</code> apuntando a <code>02:26:50</code> — entre los dos <code>INSERT</code>.</li>
+<li><code>ALTER DATABASE OPEN RESETLOGS</code>.</li>
 </ol>
-<h2 id="recovery-basico-de-referencia">Recovery básico de referencia<a class="headerlink" href="#recovery-basico-de-referencia" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="n">RMAN</span><span class="o">&gt;</span><span class="w"> </span><span class="k">CONNECT</span><span class="w"> </span><span class="n">TARGET</span><span class="w"> </span><span class="o">/</span>
-<span class="n">RMAN</span><span class="o">&gt;</span><span class="w"> </span><span class="n">RESTORE</span><span class="w"> </span><span class="k">DATABASE</span><span class="p">;</span>
-<span class="n">RMAN</span><span class="o">&gt;</span><span class="w"> </span><span class="n">RECOVER</span><span class="w"> </span><span class="k">DATABASE</span><span class="p">;</span>
+<h2 id="comandos-reales">Comandos reales<a class="headerlink" href="#comandos-reales" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="n">SHUTDOWN</span><span class="w"> </span><span class="k">IMMEDIATE</span><span class="p">;</span>
+<span class="n">STARTUP</span><span class="w"> </span><span class="n">MOUNT</span><span class="p">;</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>RUN {
+  SET UNTIL TIME "TO_DATE('2026-11-01 02:26:50','YYYY-MM-DD HH24:MI:SS')";
+  RESTORE DATABASE;
+  RECOVER DATABASE;
+}
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">ALTER</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="k">OPEN</span><span class="w"> </span><span class="n">RESETLOGS</span><span class="p">;</span>
+</code></pre></div>
+<h2 id="validacion-posterior-resultado-real">Validación posterior (resultado real)<a class="headerlink" href="#validacion-posterior-resultado-real" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">VENTAS</span><span class="p">;</span>
+<span class="c1">-- 505 (no 506)</span>
+
+<span class="k">SELECT</span><span class="w"> </span><span class="n">ID</span><span class="p">,</span><span class="w"> </span><span class="n">TOTAL</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">VENTAS</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">TOTAL</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="mi">199</span><span class="p">.</span><span class="mi">90</span><span class="p">,</span><span class="w"> </span><span class="mi">350</span><span class="p">.</span><span class="mi">00</span><span class="p">);</span>
+<span class="c1">-- Solo aparece la fila de 199.90 (ID 2262) -- la de 350.00 nunca existió, desde el punto de vista</span>
+<span class="c1">-- de la base ya recuperada.</span>
 </code></pre></div>
 <h2 id="evidencia-requerida">Evidencia requerida<a class="headerlink" href="#evidencia-requerida" title="Permanent link">&para;</a></h2>
 <table>
@@ -3538,31 +3567,38 @@
 <tr>
 <th>Evidencia</th>
 <th>Descripción</th>
+<th>Resultado real BomERP</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Estado antes de la falla</td>
 <td>Consulta o captura.</td>
+<td>504 filas en <code>BOM_VENTAS.VENTAS</code>.</td>
 </tr>
 <tr>
 <td>Falla simulada</td>
 <td>Descripción controlada del escenario.</td>
+<td>Dos <code>INSERT</code> reales, el segundo es el "incidente" a descartar.</td>
 </tr>
 <tr>
 <td>Comando de recuperación</td>
 <td>Restore/recover o alternativa usada.</td>
+<td><code>RESTORE DATABASE</code> + <code>RECOVER DATABASE</code> con <code>SET UNTIL TIME</code>, seguido de <code>OPEN RESETLOGS</code>.</td>
 </tr>
 <tr>
 <td>Validación posterior</td>
 <td>Consulta y prueba desde la aplicación.</td>
+<td>505 filas; el cambio de <code>02:25:43</code> sobrevivió, el de <code>02:27:01</code> no.</td>
 </tr>
 <tr>
 <td>Lección aprendida</td>
 <td>Riesgo y mejora identificada.</td>
+<td>El punto elegido para <code>SET UNTIL TIME</code> debe estar siempre después del último respaldo útil — nunca antes.</td>
 </tr>
 </tbody>
 </table>
+<p>Ver la guía completa de la sesión: <a href="../../../../bd2/sesiones/S13_Backup_Recovery_RMAN/"><code>S13_Backup_Recovery_RMAN.md</code></a>.</p>
 
 
 

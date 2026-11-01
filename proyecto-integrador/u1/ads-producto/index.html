@@ -3904,6 +3904,7 @@
         INV[inventario&lt;br/&gt;sin sesión asignada aún]
         COM[compras&lt;br/&gt;delimitado, no obligatorio]
         SEG[seguridad&lt;br/&gt;S10, ya en U2]
+        CLI[clientes&lt;br/&gt;sin sesión asignada aún]
     end
 
     APP --&gt; CAT
@@ -3913,7 +3914,7 @@
     VEN --&gt; SVEN
 
     APP -. se agregan cuando su sesión les da contenido .-&gt; FUT</code></pre>
-<p>Al cierre de U1 (S6) solo existen <code>catalogo</code> y <code>ventas</code> como paquetes reales — <code>inventario</code>, <code>compras</code> y <code>seguridad</code> se dibujan como módulos futuros para no adelantar alcance de sesiones que todavía no llegaron (mismo criterio que <a href="../../../lp2/adr/ADR-001-arquitectura-backend/">ADR-001</a>).</p>
+<p>Al cierre de U1 (S6) solo existen <code>catalogo</code> y <code>ventas</code> como paquetes reales — <code>inventario</code>, <code>compras</code>, <code>seguridad</code> y <code>clientes</code> se dibujan como módulos futuros para no adelantar alcance de sesiones que todavía no llegaron (mismo criterio que <a href="../../../lp2/adr/ADR-001-arquitectura-backend/">ADR-001</a>). <code>clientes</code> se agregó aquí recién en S13, al auditar esta vista contra el modelo de dominio de U2: <code>Cliente</code> (con herencia <code>ClientePersonaNatural</code>/<code>ClienteEmpresa</code>) ya existe desde S6-S7 sin que esta vista lo hubiera declarado, ni siquiera como módulo futuro — la misma inconsistencia que S13 (2.3) documenta y resuelve.</p>
 <p>Reglas de la vista:</p>
 <ul>
 <li>Un solo proyecto Maven (<code>bomerp-backend</code>), sin reactor multi-módulo; <code>BomErpApplication</code> es su única clase de arranque y genera el único artefacto ejecutable.</li>

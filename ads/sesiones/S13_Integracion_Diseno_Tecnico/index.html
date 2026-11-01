@@ -1,0 +1,4527 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Entorno integrado de desarrollo academico para construir modulos ERP con ADS, BD2 y LP2.">
+      
+      
+        <meta name="author" content="UPeU">
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+  
+    <title>BOM ERP - S13 - Integración del Diseño Técnico</title>
+  
+
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#s13-integracion-del-diseno-tecnico" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../../.." title="BOM ERP" class="md-header__button md-logo" aria-label="BOM ERP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            BOM ERP
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              S13 - Integración del Diseño Técnico
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/262ciclo4/bomerp" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    262ciclo4/bomerp
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Pestañas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Inicio
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../proyecto-integrador/" class="md-tabs__link">
+          
+  
+  
+  Guía del Proyecto Integrador
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../" class="md-tabs__link">
+          
+  
+  
+  ADS
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../bd2/" class="md-tabs__link">
+          
+  
+  
+  BD2
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../lp2/" class="md-tabs__link">
+          
+  
+  
+  LP2
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="BOM ERP" class="md-nav__button md-logo" aria-label="BOM ERP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    BOM ERP
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/262ciclo4/bomerp" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    262ciclo4/bomerp
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guía del Proyecto Integrador
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guía del Proyecto Integrador
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Alineamiento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/brief/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brief técnico (plantilla)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Diseño técnico, motor transaccional y backend inicial
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    1. Diseño técnico, motor transaccional y backend inicial
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/lp2-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Demo U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/ads-matriz-competencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Matriz de competencias
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/lp2-matriz-competencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Matriz de competencias
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/bd2-matriz-competencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Matriz de competencias
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Modelado UML, administración Oracle y SPA segura
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    2. Modelado UML, administración Oracle y SPA segura
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/lp2-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Demo U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Diseño consolidado, operación Oracle y Full-Stack integrado
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    3. Diseño consolidado, operación Oracle y Full-Stack integrado
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/lp2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/checklist-final/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Checklist final
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/guia-sustentacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guía de sustentación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anexos - SPA en otros frameworks
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Anexos - SPA en otros frameworks
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/anexos/S07_Creacion_Arquitectura_SPA_Vue/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S07 con Vue
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/anexos/S07_Creacion_Arquitectura_SPA_React/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S07 con React
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ADS
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../silabo_ads_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../silabo_ads_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Arquitectura y Diseño Estructural
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Arquitectura y Diseño Estructural
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S01_Fundamentos_Arquitectura_Software/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - Fundamentos de arquitectura de software
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S02_Modelo_C4_Vistas_Arquitectonicas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - Modelo C4 y vistas arquitectónicas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S03_Diseno_Estructural_Principios_SOLID/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S3 - Diseño estructural y principios SOLID
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S04_Arquitecturas_Modernas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S4 - Arquitecturas modernas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S05_Evaluacion_Unidad_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S5 - Evaluación de la Unidad I
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    II. Diseño Dinámico, Modelado UML y Patrones
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    II. Diseño Dinámico, Modelado UML y Patrones
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S06_Descubrimiento_Modelado_Dominio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S6 - Descubrimiento y modelado del dominio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S07_Diseno_Clases_Dominio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S7 - Diseño de clases del dominio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S08_Diseno_Clases_Avanzado_Transformacion_Objeto_Relacional/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S8 - Diseño de clases avanzado y transformación objeto-relacional
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S09_Diagramas_Dinamicos_UML/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S9 - Diagramas dinámicos UML
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S10_Patrones_Diseno_GoF_GRASP/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S10 - Patrones de diseño GoF y GRASP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S11_Integracion_Sistemas_Empresariales/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S11 - Integración y sistemas empresariales
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S12_Evaluacion_Unidad_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S12 - Evaluación de la Unidad II
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    BD2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/silabo_bd2_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/silabo_bd2_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Programación y optimización (Oracle XE)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Programación y optimización (Oracle XE)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - PL/SQL aplicado al negocio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S02_Triggers_DML_Auditoria/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - Triggers DML y auditoría
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S03_Excepciones_Robustez/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S3 - Manejo de excepciones y robustez
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S04_Optimizacion_Consultas_SQL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S4 - Optimización de consultas SQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S05_Indices_Optimizacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S5 - Índices para optimización
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S06_Evaluacion_Unidad_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S6 - Evaluación de la Unidad I
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    II. Administración, almacenamiento, seguridad y optimización
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    II. Administración, almacenamiento, seguridad y optimización
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S07_Arquitectura_Oracle_Instancia/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S7 - Arquitectura Oracle e instancia
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S08_Usuarios_Roles_Privilegios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S8 - Gestión de usuarios, roles y privilegios
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S09_Almacenamiento_Seguridad_Auditoria/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S9 - Administración del almacenamiento y seguridad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S10_Optimizacion_Rendimiento/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S10 - Optimización del rendimiento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S11_Particionamiento_Escalabilidad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S11 - Particionamiento y escalabilidad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S12_Evaluacion_Unidad_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S12 - Evaluación de la Unidad II
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    LP2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/silabo_lp2_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/silabo_lp2_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Decisiones de arquitectura
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Decisiones de arquitectura
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/adr/ADR-001-arquitectura-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-001 - Arquitectura del backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/adr/ADR-002-spring-modulith/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-002 - Spring Modulith
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/adr/ADR-003-spring-boot-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-003 - Versión exacta de Spring Boot 4.0.7
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/adr/ADR-004-jwt-diferido/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-004 - JWT diferido a S10
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/adr/ADR-005-seguridad-jwt-propio-listo-para-reemplazo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-005 - Seguridad JWT propia, reemplazada por Keycloak en S10b
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Base backend REST modular de BomERP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Base backend REST modular de BomERP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S01_Arquitectura_Backend_REST_Profesional/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - Arquitectura backend REST profesional
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S02_CRUD_REST_Completo_Producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - CRUD REST completo de Producto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S03_Objetos_Relacionados_Categoria_Producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S3 - Objetos relacionados Categoria-Producto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S04_Operacion_Cabecera_Detalle_Venta_DetalleVenta/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S4 - Operación cabecera-detalle Venta-DetalleVenta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S05_Consultas_Empresariales_Reportes_CORS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S5 - Consultas empresariales, reportes REST y CORS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S06_Evaluacion_Unidad_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S6 - Evaluación de la Unidad I
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    II. SPA modular segura para BomERP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    II. SPA modular segura para BomERP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S07_Creacion_Arquitectura_SPA/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S7 - Creación y arquitectura de la SPA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S08_CRUD_Tablas_Dependientes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S8 - CRUD de tablas dependientes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S09_Formularios_Transaccionales_Cabecera_Detalle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S9 - Formularios transaccionales cabecera-detalle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S10_Seguridad_Backend_JWT_Roles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S10 - Seguridad backend JWT y roles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S10b_Seguridad_Backend_Keycloak/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S10b - Reemplazo de seguridad por Keycloak
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S11_Seguridad_Frontend_Keycloak/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S11 - Seguridad frontend con Keycloak
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S12_Evaluacion_Unidad_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S12 - Evaluación de la Unidad II
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-introduccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Introducción
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Introducción">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-presentacion-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Presentación de la sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-indice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Índice
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-proposito-de-aprendizaje" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Propósito de aprendizaje
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-producto-de-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Producto de sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-metodologia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Metodología
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16-motivacion-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6 Motivación de la sesión
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.6 Motivación de la sesión">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#161-caso-por-que-michael-nygard-invento-el-adr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6.1 Caso: por qué Michael Nygard inventó el ADR
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#17-ubicacion-en-el-curso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.7 Ubicación en el curso
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-explica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Explica
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Explica">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-arquitectura-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Arquitectura de la sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-que-es-un-dossier-tecnico-consolidado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Qué es un dossier técnico consolidado
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-consistencia-entre-la-arquitectura-y-el-modelo-de-dominio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Consistencia entre la arquitectura y el modelo de dominio
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-consistencia-entre-el-modelo-de-dominio-y-el-catalogo-umlpatrones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Consistencia entre el modelo de dominio y el catálogo UML/patrones
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-consistencia-entre-los-patrones-aplicados-y-el-diseno-de-integracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Consistencia entre los patrones aplicados y el diseño de integración
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-auditoria-de-nombres-y-responsabilidades-a-traves-de-las-sesiones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Auditoría de nombres y responsabilidades a través de las sesiones
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#27-estructura-del-dossier-consolidado-de-la-unidad-iii" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7 Estructura del dossier consolidado de la Unidad III
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-aplica-actividad-practica-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Aplica: actividad práctica guiada
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Aplica: actividad práctica guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-reunir-los-insumos-los-productos-ya-consolidados-de-u1-y-u2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Reunir los insumos: los productos ya consolidados de U1 y U2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-auditar-consistencia-entre-arquitectura-y-dominio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Auditar consistencia entre arquitectura y dominio
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-auditar-consistencia-entre-dominio-y-catalogo-umlpatrones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Auditar consistencia entre dominio y catálogo UML/patrones
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-auditar-consistencia-entre-patrones-e-integracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Auditar consistencia entre patrones e integración
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-registrar-los-hallazgos-de-la-auditoria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Registrar los hallazgos de la auditoría
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-armar-el-dossier-consolidado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Armar el dossier consolidado
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-crea-actividad-autonoma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Crea: actividad autónoma
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Crea: actividad autónoma">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-actividad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Actividad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-proposito" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Propósito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-indicaciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Indicaciones
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.3 Indicaciones">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#431-estructura-del-informe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3.1 Estructura del informe
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-criterios-minimos-de-aceptacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Criterios mínimos de aceptación
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-preguntas-de-defensa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Preguntas de defensa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-rubrica-de-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 Rúbrica de evaluación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-cierre" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Cierre
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bibliografia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bibliografía
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="s13-integracion-del-diseno-tecnico">S13 - Integración del Diseño Técnico<a class="headerlink" href="#s13-integracion-del-diseno-tecnico" title="Permanent link">&para;</a></h1>
+<h2 id="1-introduccion">1. Introducción<a class="headerlink" href="#1-introduccion" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 20 min.</p>
+<h3 id="11-presentacion-de-la-sesion">1.1 Presentación de la sesión<a class="headerlink" href="#11-presentacion-de-la-sesion" title="Permanent link">&para;</a></h3>
+<p>S12 cerró la Unidad II con el Catálogo UML completo: dominio (S6-S7), diseño por capas y transformación objeto-relacional (S8), diagramas dinámicos (S9), patrones GoF/GRASP (S10) e integración empresarial (S11). Cada uno de esos artefactos se construyó y se evaluó por separado, en una sesión distinta, a veces con semanas de distancia entre una y otra. Nadie, hasta hoy, ha verificado que todos sigan contando la misma historia sobre BomERP.</p>
+<p>Esta sesión abre la Unidad III (Proyecto de Diseño Técnico Profesional) con ese trabajo exacto: reunir el producto ya consolidado de Unidad 1 (<code>u1/ads-producto.md</code>: arquitectura, SOLID, estilo elegido) y el de Unidad 2 (<code>u2/ads-producto.md</code>: dominio, UML, patrones, integración) y auditar que lo que uno afirma siga siendo cierto frente a lo que el otro afirma — antes de registrar una sola decisión arquitectónica formal (ADR) o trazar una sola fila de la matriz final, que es trabajo de S14. No es una sesión de contenido nuevo: es la primera vez que todo el diseño técnico de BomERP se mira como un solo sistema, no como once entregas sueltas.</p>
+<p>La auditoría de hoy no es un ejercicio hipotético: al revisar los propios artefactos de BomERP para preparar esta guía, aparecieron dos inconsistencias reales entre sesiones — una ya autodetectada por el propio S8, otra que ninguna sesión anterior había señalado todavía. Ambas se desarrollan en 2.4 y 2.3, y se resuelven en 3.2-3.5.</p>
+<h3 id="12-indice">1.2 Índice<a class="headerlink" href="#12-indice" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Qué es un dossier técnico consolidado, y en qué se diferencia de concatenar once archivos.</li>
+<li>Consistencia entre la arquitectura (U1) y el modelo de dominio (U2).</li>
+<li>Consistencia entre el modelo de dominio y el catálogo UML/patrones.</li>
+<li>Consistencia entre los patrones aplicados y el diseño de integración.</li>
+<li>Auditoría de nombres y responsabilidades a través de las sesiones.</li>
+<li>Estructura del dossier consolidado de la Unidad III.</li>
+</ol>
+<h3 id="13-proposito-de-aprendizaje">1.3 Propósito de aprendizaje<a class="headerlink" href="#13-proposito-de-aprendizaje" title="Permanent link">&para;</a></h3>
+<p>Al concluir la clase, estarás en condiciones de: <strong>auditar</strong> los artefactos ya consolidados de tus propias Unidades 1 y 2, <strong>detectar</strong> inconsistencias reales de nombres, atributos o responsabilidades entre ellos, <strong>registrar</strong> cada hallazgo con su resolución propuesta, y <strong>consolidar</strong> el resultado en un dossier único, listo para recibir las decisiones arquitectónicas formales (ADR) y la trazabilidad completa de S14.</p>
+<h3 id="14-producto-de-sesion">1.4 Producto de sesión<a class="headerlink" href="#14-producto-de-sesion" title="Permanent link">&para;</a></h3>
+<p>Dossier consolidado de la Unidad III: arquitectura, modelo de dominio, catálogo UML y patrones de integración de BomERP, auditados por consistencia entre sí, con una tabla de hallazgos que registra cada inconsistencia real encontrada (incluida al menos una ya existente entre S7 y S8) y su resolución propuesta.</p>
+<h3 id="15-metodologia">1.5 Metodología<a class="headerlink" href="#15-metodologia" title="Permanent link">&para;</a></h3>
+<p><strong>Tabla 1. Metodología de la sesión</strong></p>
+<table>
+<thead>
+<tr>
+<th>Actividades a Realizar en el Periodo</th>
+<th>Orientaciones generales (Orientaciones Metodológicas)</th>
+<th>Material de estudio recomendado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Revisión previa individual</td>
+<td>Releer el producto consolidado de Unidad 1 y de Unidad 2 propios, sin corregir nada todavía — solo identificar qué partes de uno mencionan algo que el otro también menciona. Trabajo individual, antes de clase.</td>
+<td><code>u1/ads-producto.md</code>, <code>u2/ads-producto.md</code> (o los equivalentes del proyecto propio).</td>
+</tr>
+<tr>
+<td>Clase presencial</td>
+<td>Auditoría guiada de consistencia arquitectura-dominio, dominio-UML y patrones-integración sobre el caso real de BomERP, registro de hallazgos y armado del dossier consolidado. Trabajo individual, siguiendo al docente paso a paso.</td>
+<td>Pasos 3.1 a 3.6 de esta guía.</td>
+</tr>
+<tr>
+<td>Evaluación formativa</td>
+<td>Revisión en clase de la tabla de hallazgos y del dossier consolidado. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4.</td>
+<td>Indicaciones de entrega (4.3), rúbrica de evaluación (4.6).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="16-motivacion-de-la-sesion">1.6 Motivación de la sesión<a class="headerlink" href="#16-motivacion-de-la-sesion" title="Permanent link">&para;</a></h3>
+<h4 id="161-caso-por-que-michael-nygard-invento-el-adr">1.6.1 Caso: por qué Michael Nygard inventó el ADR<a class="headerlink" href="#161-caso-por-que-michael-nygard-invento-el-adr" title="Permanent link">&para;</a></h4>
+<p>En 2011, Michael Nygard, consultor de arquitectura de software, publicó un problema que había visto repetirse en proyectos grandes: las decisiones arquitectónicas importantes de un sistema —por qué se eligió tal estructura, por qué un módulo se diseñó de tal forma— sí se tomaban, pero no quedaban en ningún lugar consolidado. Vivían repartidas entre wikis desactualizados, comentarios de código aislados, la memoria de quien decidió, o ningún lugar en absoluto. El síntoma que describe: un equipo, meses después, no podía reconstruir por qué el sistema era como era — y terminaba repitiendo debates ya resueltos, o tomando una decisión nueva que contradecía una anterior sin saberlo, porque nadie tenía a la vista las dos decisiones juntas.</p>
+<p>Fuente: Nygard, M. (2011). <em>Documenting Architecture Decisions</em>. Cognitect Blog. https://www.cognitect.com/blog/2011/11/15/documenting-architecture-decisions</p>
+<p>Nygard resolvió ese problema específico con el ADR (<em>Architecture Decision Record</em>, formalizado la próxima sesión, S14). Pero su diagnóstico empieza un paso antes, el paso de hoy: antes de poder registrar una decisión de forma consolidada, hay que tener un solo lugar donde el estado actual del diseño —no solo las decisiones sobre él— sea consistente consigo mismo. BomERP, después de once sesiones escritas por separado, corre exactamente ese riesgo, y no es hipotético: 2.3 y 2.4 muestran dos casos reales donde ya ocurrió.</p>
+<p><strong>Preguntas de análisis</strong></p>
+<p><strong>Activación de conocimientos previos</strong></p>
+<ol>
+<li>Antes de leer la causa técnica, ¿por qué un sistema documentado en once archivos separados, escritos en semanas distintas, corre más riesgo de contradecirse a sí mismo que uno documentado en un solo lugar desde el principio?</li>
+</ol>
+<p><strong>Comprensión del caso</strong></p>
+<ol>
+<li>Según Nygard, ¿qué pierde un equipo que no tiene sus decisiones consolidadas, aunque cada decisión individual haya sido correcta en su momento?</li>
+<li>En tu propio proyecto, ¿qué artefacto de una sesión anterior (dominio, UML, patrones) no has vuelto a revisar desde que lo entregaste? ¿Qué pasaría si lo compararas hoy contra el más reciente que construiste?</li>
+</ol>
+<h3 id="17-ubicacion-en-el-curso">1.7 Ubicación en el curso<a class="headerlink" href="#17-ubicacion-en-el-curso" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Producto del curso: Diseño Técnico Profesional Documentado.</li>
+<li>Producto de unidad: Diseño Técnico Profesional Documentado (Unidad III completa; esta es su primera sesión).</li>
+<li>Avance del producto en esta sesión: arquitectura, modelo de dominio, catálogo UML y diseño de integración auditados por consistencia entre sí y consolidados en un solo dossier, con sus hallazgos registrados — insumo directo para los ADR formales y la matriz de trazabilidad completa de S14.</li>
+</ul>
+<p><strong>Figura 1. Roadmap del producto de la unidad</strong></p>
+<pre class="mermaid"><code>flowchart TB
+    S13["`**S13:** Integración del diseño técnico`"]
+    S14["`**S14:** Decisiones arquitectónicas y trazabilidad`"]
+    S15["`**S15:** Evaluación de la Unidad III`"]
+    S16["`**S16:** Continuación de la evaluación`"]
+
+    S13 --&gt; S14 --&gt; S15 --&gt; S16
+
+    classDef today fill:#ffe08a,stroke:#9a6b00,stroke-width:2px,color:#111;
+    class S13 today;</code></pre>
+<h2 id="2-explica">2. Explica<a class="headerlink" href="#2-explica" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 40 min.</p>
+<h3 id="21-arquitectura-de-la-sesion">2.1 Arquitectura de la sesión<a class="headerlink" href="#21-arquitectura-de-la-sesion" title="Permanent link">&para;</a></h3>
+<p><strong>Figura 2. De once artefactos sueltos a un dossier auditado</strong></p>
+<pre class="mermaid"><code>flowchart TB
+    subgraph U1["Unidad 1 (S1-S5)"]
+        ARQ["Arquitectura: C1-C3,&lt;br/&gt;SOLID, estilo elegido"]
+    end
+
+    subgraph U2["Unidad 2 (S6-S11)"]
+        DOM["Modelo de dominio&lt;br/&gt;(S6-S7)"]
+        CAP["Diseño por capas&lt;br/&gt;y transformación OR (S8)"]
+        UML["Diagramas dinámicos&lt;br/&gt;(S9)"]
+        PAT["Patrones GoF/GRASP&lt;br/&gt;(S10)"]
+        INT["Diseño de integración&lt;br/&gt;(S11)"]
+    end
+
+    AUD{{"Auditoría de consistencia&lt;br/&gt;2.3 - 2.6"}}
+    DOC[("Dossier consolidado U3&lt;br/&gt;(2.7)")]
+
+    ARQ --&gt; AUD
+    DOM --&gt; AUD
+    CAP --&gt; AUD
+    UML --&gt; AUD
+    PAT --&gt; AUD
+    INT --&gt; AUD
+    AUD --&gt; DOC</code></pre>
+<p>Lectura del diagrama: la auditoría no vuelve a escribir cada artefacto desde cero — toma lo que <code>u1/ads-producto.md</code> y <code>u2/ads-producto.md</code> ya consolidaron por unidad, y verifica los cruces entre ambos que ninguna sesión anterior tuvo la oportunidad de revisar, porque cada una miraba solo su propio corte. Cada apartado siguiente desarrolla un cruce distinto, en el mismo orden del Índice (1.2).</p>
+<h3 id="22-que-es-un-dossier-tecnico-consolidado">2.2 Qué es un dossier técnico consolidado<a class="headerlink" href="#22-que-es-un-dossier-tecnico-consolidado" title="Permanent link">&para;</a></h3>
+<p><strong>Consolidar</strong> no es lo mismo que <strong>concatenar</strong>. Concatenar es unir varios documentos en uno solo, uno detrás del otro, en el orden en que se escribieron. Consolidar es verificar que cada parte siga siendo cierta frente a las demás antes de unirlas — y, cuando no lo es, decidir explícitamente cuál de las dos versiones queda y por qué.</p>
+<p><strong>Tabla 2. Concatenar frente a consolidar</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Concatenar</th>
+<th>Consolidar (esta sesión)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Qué hace</td>
+<td>Une los artefactos en un solo documento, en orden.</td>
+<td>Verifica cada artefacto contra los demás antes de unirlos.</td>
+</tr>
+<tr>
+<td>Qué detecta</td>
+<td>Nada — un nombre, atributo o responsabilidad que cambió de sesión a sesión pasa sin que nadie lo note.</td>
+<td>Exactamente ese tipo de cambio silencioso (2.3-2.6).</td>
+</tr>
+<tr>
+<td>Resultado</td>
+<td>Un documento largo, no necesariamente coherente.</td>
+<td>Un documento donde cada parte puede verificarse contra las demás.</td>
+</tr>
+</tbody>
+</table>
+<p>BomERP ya tiene dos documentos consolidados <strong>por unidad</strong>: <code>u1/ads-producto.md</code> (arquitectura) y <code>u2/ads-producto.md</code> (dominio, UML, patrones, integración) — cada uno ya reunió varias sesiones sin contradecirse hacia adentro (o eso hay que confirmar, no asumir). Lo que falta, y es el trabajo de hoy, es consolidar <strong>entre</strong> unidades: verificar que lo que U1 afirma sobre la arquitectura sigue siendo cierto frente a lo que U2 construyó encima.</p>
+<h3 id="23-consistencia-entre-la-arquitectura-y-el-modelo-de-dominio">2.3 Consistencia entre la arquitectura y el modelo de dominio<a class="headerlink" href="#23-consistencia-entre-la-arquitectura-y-el-modelo-de-dominio" title="Permanent link">&para;</a></h3>
+<p>Una vista de componentes (C3, ADS S2) declara qué módulos existen en el sistema. Un modelo de dominio (S6-S7) declara qué entidades y reglas de negocio existen. Ambos describen el mismo sistema desde dos ángulos distintos — y por eso <strong>todo módulo que el dominio necesite debe poder ubicarse en la vista de componentes</strong>, aunque sea como módulo futuro, igual que ya se hace con <code>inventario</code> o <code>compras</code>.</p>
+<p><strong>Tabla 3. Auditoría real: módulos declarados en cada artefacto de BomERP</strong></p>
+<table>
+<thead>
+<tr>
+<th>Módulo o entidad</th>
+<th>¿Aparece en la Vista C3 de U1?</th>
+<th>¿Aparece en el modelo de dominio de U2?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>catalogo</code></td>
+<td>Sí (real)</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>ventas</code></td>
+<td>Sí (real)</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>inventario</code></td>
+<td>Sí (futuro, sin sesión asignada)</td>
+<td>No modelado aún</td>
+</tr>
+<tr>
+<td><code>compras</code></td>
+<td>Sí (futuro, delimitado)</td>
+<td>No modelado aún</td>
+</tr>
+<tr>
+<td><code>seguridad</code></td>
+<td>Sí (futuro, S10)</td>
+<td>No aplica — no es dominio de negocio</td>
+</tr>
+<tr>
+<td><code>clientes</code> (<code>Cliente</code>, con herencia <code>ClientePersonaNatural</code>/<code>ClienteEmpresa</code>)</td>
+<td><strong>No aparece, ni real ni futuro</strong></td>
+<td>Sí (S6-S7)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Hallazgo real:</strong> <code>Cliente</code> es el único caso donde el dominio modela algo que la Vista C3 de U1 nunca declaró — ni como módulo real, ni como módulo futuro (a diferencia de <code>inventario</code>/<code>compras</code>, que sí están previstos ahí). Esto no es necesariamente un error de diseño: tiene dos resoluciones válidas, pero el dossier debe elegir una de forma explícita, no dejarla implícita:</p>
+<ul>
+<li>(a) agregar <code>clientes</code> a la Vista C3 como módulo futuro, con el mismo criterio que <code>inventario</code>/<code>compras</code>; o</li>
+<li>(b) documentar que <code>Cliente</code> vive dentro de <code>ventas</code> por ahora, porque todavía no justifica un módulo propio — el mismo criterio que ya evita crear carpetas vacías en LP2 (ADR-001: un módulo se agrega recién cuando una sesión concreta le da contenido).</li>
+</ul>
+<p>3.2 aplica este mismo criterio y deja la decisión registrada.</p>
+<h3 id="24-consistencia-entre-el-modelo-de-dominio-y-el-catalogo-umlpatrones">2.4 Consistencia entre el modelo de dominio y el catálogo UML/patrones<a class="headerlink" href="#24-consistencia-entre-el-modelo-de-dominio-y-el-catalogo-umlpatrones" title="Permanent link">&para;</a></h3>
+<p>Una operación que un diagrama de clases del dominio (S7) asigna a una entidad sigue siendo responsabilidad de esa entidad en todas las sesiones posteriores que la usan — a menos que una decisión explícita la mueva, y esa decisión quede registrada donde cualquiera pueda encontrarla, no solo en la sesión que la movió.</p>
+<p><strong>Hallazgo real, ya autodetectado:</strong> el diagrama de clases de S7 lista <code>calcularTotal()</code> como operación propia de <code>Venta</code>:</p>
+<div class="highlight"><pre><span></span><code>class Venta {
+    ...
+    +calcularTotal()
+    +anular()
+}
+</code></pre></div>
+<p>Pero S8, al diseñar el servicio de aplicación por capas, documenta algo distinto sobre el mismo método:</p>
+<blockquote>
+<p>"<code>Venta.calcularTotal()</code> aparece como operación en el diagrama de S7 y hoy, en LP2, el total se calcula dentro de <code>VentaServiceImpl.crear</code>: es un refactor pendiente que la matriz de 3.8 deja registrado, no un error del diseño." (S8, 3.8)</p>
+</blockquote>
+<p>El propio S8 ya detectó la inconsistencia y la registró como "refactor pendiente" — pero ese registro vive dentro de una tabla de una sola sesión, sin que ninguna sesión posterior (S9 dinámico, S10 patrones) vuelva a mencionarlo. Es exactamente el síntoma de Nygard (1.6): una decisión real, tomada, documentada en algún lugar — pero no consolidada en el lugar donde alguien que revise el diseño completo la vería. 3.3 la registra en la tabla de hallazgos de esta sesión, con destino explícito: formalizarla como ADR en S14, no resolverla en código desde ADS.</p>
+<h3 id="25-consistencia-entre-los-patrones-aplicados-y-el-diseno-de-integracion">2.5 Consistencia entre los patrones aplicados y el diseño de integración<a class="headerlink" href="#25-consistencia-entre-los-patrones-aplicados-y-el-diseno-de-integracion" title="Permanent link">&para;</a></h3>
+<p>Un evento de dominio (S11) que lleva datos de una entidad debe llevar exactamente los datos que esa entidad tiene, según el diagrama de clases que la definió (S7) y el diseño por capas que la persistió (S8) — nunca un campo que la entidad no tiene, ni omitir uno que un consumidor necesitaría.</p>
+<p><strong>Verificación real:</strong> el evento <code>VentaRegistrada</code> (S11, 3.3) se define así:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">record</span> <span class="nc">VentaRegistrada</span><span class="p">(</span>
+<span class="w">    </span><span class="n">Long</span><span class="w"> </span><span class="n">ventaId</span><span class="p">,</span>
+<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;</span><span class="w"> </span><span class="n">productoIds</span><span class="p">,</span>
+<span class="w">    </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">total</span><span class="p">,</span>
+<span class="w">    </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">fecha</span>
+<span class="p">)</span><span class="w"> </span><span class="p">{}</span>
+</code></pre></div>
+<p>Contra los atributos reales de <code>Venta</code> (<code>id</code>, <code>total: BigDecimal</code> persistido, <code>fecha</code>, S7-S8) y de <code>DetalleVenta</code> (que referencia <code>productoId</code>, S8): los cuatro campos del evento corresponden exactamente a atributos que esas dos entidades ya tienen — ninguno inventado, ninguno faltante. A diferencia de 2.3 y 2.4, esta verificación <strong>no encontró</strong> una inconsistencia: se registra igual en la tabla de hallazgos (3.5), porque confirmar que algo sigue siendo consistente es tan parte de la auditoría como encontrar que no lo es.</p>
+<h3 id="26-auditoria-de-nombres-y-responsabilidades-a-traves-de-las-sesiones">2.6 Auditoría de nombres y responsabilidades a través de las sesiones<a class="headerlink" href="#26-auditoria-de-nombres-y-responsabilidades-a-traves-de-las-sesiones" title="Permanent link">&para;</a></h3>
+<p>La técnica detrás de 2.3-2.5, generalizada: para cualquier entidad o módulo que aparezca en más de una sesión, se construye una fila por elemento y una columna por sesión, y se verifica que lo que cada columna dice sea compatible con las demás. Un campo en blanco no es un error — significa que esa sesión no tenía por qué mencionar ese elemento todavía. Una fila con una celda que contradice a otra sí lo es.</p>
+<p><strong>Tabla 4. Plantilla de auditoría de nombres (aplicada a <code>Venta</code> en 3.3)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Elemento</th>
+<th>S6 (dominio)</th>
+<th>S7 (clases)</th>
+<th>S8 (capas/OR)</th>
+<th>S9 (dinámico)</th>
+<th>S10 (patrones)</th>
+<th>S11 (integración)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>anular()</code></td>
+<td>regla de negocio</td>
+<td>operación de <code>Venta</code></td>
+<td>confirma que sigue en la entidad</td>
+<td>diagrama de secuencia de anulación</td>
+<td>Information Expert</td>
+<td>no participa</td>
+</tr>
+<tr>
+<td><code>calcularTotal()</code></td>
+<td>—</td>
+<td>operación de <code>Venta</code></td>
+<td><strong>documentado en el servicio, no en la entidad</strong></td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>total</code></td>
+<td>regla de negocio</td>
+<td>atributo <code>Dinero total</code></td>
+<td>persistido <code>BigDecimal total</code></td>
+<td>usado en el flujo de registro</td>
+<td>referenciado</td>
+<td>campo del evento</td>
+</tr>
+</tbody>
+</table>
+<p>La fila de <code>calcularTotal()</code> es la que 3.3 registra como hallazgo; las otras dos filas son el mismo método aplicado a un resultado consistente, no un ejercicio distinto.</p>
+<h3 id="27-estructura-del-dossier-consolidado-de-la-unidad-iii">2.7 Estructura del dossier consolidado de la Unidad III<a class="headerlink" href="#27-estructura-del-dossier-consolidado-de-la-unidad-iii" title="Permanent link">&para;</a></h3>
+<p>El producto final de ADS (<code>u3/ads-producto.md</code>) ya define los componentes que debe tener el dossier completo. Esta sesión entrega los primeros cuatro; los dos últimos son trabajo de S14, no de hoy:</p>
+<p><strong>Tabla 5. Qué se consolida en esta sesión frente a lo que queda para S14</strong></p>
+<table>
+<thead>
+<tr>
+<th>Componente del dossier</th>
+<th>¿Se consolida en S13?</th>
+<th>Dónde</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Arquitectura final (C4 actualizado)</td>
+<td>Sí — verificada contra el dominio (2.3)</td>
+<td><code>u3/ads-producto.md</code>, sección "Componentes finales"</td>
+</tr>
+<tr>
+<td>Modelo de dominio</td>
+<td>Sí — verificado contra el catálogo UML (2.4)</td>
+<td>idem</td>
+</tr>
+<tr>
+<td>Catálogo UML</td>
+<td>Sí — verificado contra patrones e integración (2.5)</td>
+<td>idem</td>
+</tr>
+<tr>
+<td>Patrones e integración</td>
+<td>Sí</td>
+<td>idem</td>
+</tr>
+<tr>
+<td>ADRs</td>
+<td>No — se formalizan en S14 (incluido el hallazgo de 2.4, como ADR-008)</td>
+<td>S14</td>
+</tr>
+<tr>
+<td>Trazabilidad completa</td>
+<td>No — se completa en S14</td>
+<td>S14</td>
+</tr>
+</tbody>
+</table>
+<h2 id="3-aplica-actividad-practica-guiada">3. Aplica: actividad práctica guiada<a class="headerlink" href="#3-aplica-actividad-practica-guiada" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 100 min.</p>
+<p><strong>Actividad:</strong> auditar la consistencia entre el producto consolidado de Unidad 1 y el de Unidad 2 de BomERP, registrar los hallazgos reales (incluido el ya existente entre S7 y S8), y armar con eso el dossier consolidado de la Unidad III.</p>
+<p><strong>Propósito de la actividad:</strong> aplicar la auditoría de consistencia de 2.3-2.6 sobre el caso real de BomERP —con sus dos hallazgos genuinos— antes de repetir el mismo método sobre el proyecto propio en la sección 4.</p>
+<p><strong>Orientaciones metodológicas:</strong> el docente conduce la auditoría en vivo contra los archivos ya publicados <code>u1/ads-producto.md</code> y <code>u2/ads-producto.md</code>; los estudiantes repiten cada paso sobre los artefactos consolidados de su propio proyecto (sección 4).</p>
+<p><strong>Actividades para realizar:</strong></p>
+<ul>
+<li><strong>3.1</strong> Reunir los insumos: los productos ya consolidados de U1 y U2.</li>
+<li><strong>3.2</strong> Auditar consistencia entre arquitectura y dominio.</li>
+<li><strong>3.3</strong> Auditar consistencia entre dominio y catálogo UML/patrones.</li>
+<li><strong>3.4</strong> Auditar consistencia entre patrones e integración.</li>
+<li><strong>3.5</strong> Registrar los hallazgos de la auditoría.</li>
+<li><strong>3.6</strong> Armar el dossier consolidado.</li>
+</ul>
+<h3 id="31-reunir-los-insumos-los-productos-ya-consolidados-de-u1-y-u2">3.1 Reunir los insumos: los productos ya consolidados de U1 y U2<a class="headerlink" href="#31-reunir-los-insumos-los-productos-ya-consolidados-de-u1-y-u2" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> confirmación de que el dossier de U3 no se escribe desde las once sesiones sueltas, sino a partir de lo que U1 y U2 ya consolidaron.</p>
+<p><strong>Tabla 6. Insumos del dossier consolidado U3</strong></p>
+<table>
+<thead>
+<tr>
+<th>Insumo</th>
+<th>Qué consolida</th>
+<th>Dónde vive</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Producto U1</td>
+<td>Arquitectura (C1-C3), SOLID, estilo elegido, ADR iniciales</td>
+<td><code>u1/ads-producto.md</code></td>
+</tr>
+<tr>
+<td>Producto U2</td>
+<td>Modelo de dominio, catálogo UML, patrones, diseño de integración</td>
+<td><code>u2/ads-producto.md</code></td>
+</tr>
+<tr>
+<td>Esta sesión (S13)</td>
+<td>Auditoría de consistencia entre ambos, más la estructura del dossier U3</td>
+<td><code>u3/ads-producto.md</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Error frecuente</strong>: volver a copiar el contenido de cada sesión (S1 a S11) dentro del dossier de U3, "para que esté todo junto". Eso es concatenar (2.2), no consolidar — y además duplica cualquier error que ya existiera en U1 o U2 en un tercer lugar más.</p>
+<h3 id="32-auditar-consistencia-entre-arquitectura-y-dominio">3.2 Auditar consistencia entre arquitectura y dominio<a class="headerlink" href="#32-auditar-consistencia-entre-arquitectura-y-dominio" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> la Tabla 3 (2.3) completada contra los artefactos reales, con la decisión tomada sobre el hallazgo de <code>clientes</code>.</p>
+<p>Para tu propio proyecto: lista los módulos de tu Vista C3 (ADS S2) en una columna, y las entidades/módulos de tu modelo de dominio (S6-S7) en otra. Cualquier entidad del dominio que no puedas ubicar en ninguna fila de la Vista C3 —ni como módulo real, ni como módulo futuro— es un hallazgo, igual que <code>clientes</code> en BomERP.</p>
+<p>Para BomERP, la decisión que esta sesión deja registrada es la opción (a) de 2.3: <code>clientes</code> se agrega a la Vista C3 de <code>u1/ads-producto.md</code> como módulo futuro, con el mismo criterio que <code>inventario</code>/<code>compras</code> — sin sesión asignada aún, porque ninguna sesión de LP2 lo ha implementado todavía.</p>
+<h3 id="33-auditar-consistencia-entre-dominio-y-catalogo-umlpatrones">3.3 Auditar consistencia entre dominio y catálogo UML/patrones<a class="headerlink" href="#33-auditar-consistencia-entre-dominio-y-catalogo-umlpatrones" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> el hallazgo de <code>calcularTotal()</code> (2.4) formalmente registrado como pendiente de ADR, no resuelto en código desde ADS.</p>
+<p>Para tu propio proyecto: toma cada operación que tu diagrama de clases (S7) asignó a una entidad, y verifica que las sesiones posteriores que la mencionan (diseño por capas S8, diagramas dinámicos S9, patrones S10) sigan de acuerdo en quién es responsable de ejecutarla. Un método que "se mudó" de la entidad a un servicio sin que ninguna sesión lo registre explícitamente es un hallazgo.</p>
+<p><strong>Error frecuente</strong>: "corregir" el diagrama de S7 borrando <code>calcularTotal()</code> para que coincida con S8, sin dejar ningún rastro de que existió esa decisión. El objetivo de esta auditoría no es borrar la inconsistencia en silencio — es registrarla (3.5) para que S14 la convierta en una decisión arquitectónica explícita, con su justificación.</p>
+<h3 id="34-auditar-consistencia-entre-patrones-e-integracion">3.4 Auditar consistencia entre patrones e integración<a class="headerlink" href="#34-auditar-consistencia-entre-patrones-e-integracion" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> la verificación de 2.5 confirmada: los campos de <code>VentaRegistrada</code> corresponden exactamente a atributos reales de <code>Venta</code>/<code>DetalleVenta</code>.</p>
+<p>Para tu propio proyecto: toma cada evento de dominio que diseñaste en S11, y confirma que cada campo que lleva corresponde a un atributo real de la entidad que lo origina, según tu propio diagrama de clases (S7) y tu diseño por capas (S8) — ni un campo inventado, ni uno que un consumidor razonable necesitaría y no está.</p>
+<h3 id="35-registrar-los-hallazgos-de-la-auditoria">3.5 Registrar los hallazgos de la auditoría<a class="headerlink" href="#35-registrar-los-hallazgos-de-la-auditoria" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> la tabla de hallazgos completa de BomERP, con los tres resultados de 3.2-3.4 (dos inconsistencias, una verificación confirmada).</p>
+<p><strong>Tabla 7. Hallazgos de la auditoría de consistencia (BomERP)</strong></p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Dónde se auditó</th>
+<th>Hallazgo</th>
+<th>Estado</th>
+<th>Resolución propuesta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Arquitectura (U1) vs dominio (U2)</td>
+<td><code>clientes</code> modelado en el dominio (S6-S7), ausente de la Vista C3 (U1), ni siquiera como módulo futuro</td>
+<td>Inconsistencia real</td>
+<td>Agregar <code>clientes</code> a la Vista C3 como módulo futuro, igual que <code>inventario</code>/<code>compras</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Dominio (S7) vs diseño por capas (S8)</td>
+<td><code>Venta.calcularTotal()</code> documentado como operación de la entidad en S7, calculado en <code>VentaServiceImpl.crear</code> según S8</td>
+<td>Inconsistencia ya autodetectada por S8</td>
+<td>Se formaliza como ADR-008 en S14 — no se resuelve en código desde ADS</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Patrones (S10) vs integración (S11)</td>
+<td>Campos de <code>VentaRegistrada</code> frente a los atributos reales de <code>Venta</code>/<code>DetalleVenta</code></td>
+<td>Consistente</td>
+<td>Ninguna — queda documentado como verificado</td>
+</tr>
+</tbody>
+</table>
+<p>Una tabla de hallazgos sin ninguna fila "Consistente" es sospechosa: significa que la auditoría solo buscó errores, no los verificó de verdad. La fila 3 existe precisamente para mostrar que confirmar también es un resultado válido de auditar.</p>
+<h3 id="36-armar-el-dossier-consolidado">3.6 Armar el dossier consolidado<a class="headerlink" href="#36-armar-el-dossier-consolidado" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> <code>u3/ads-producto.md</code> con sus componentes finales (Tabla 5, 2.7) y la Tabla 7 de hallazgos incorporada como evidencia de que la consolidación fue real, no solo declarada.</p>
+<p>El dossier de esta sesión no repite el contenido completo de <code>u1/ads-producto.md</code> ni de <code>u2/ads-producto.md</code> — los referencia como ya consolidados, y agrega únicamente lo que esta sesión produjo: la verificación de que ambos siguen de acuerdo entre sí, y la tabla de hallazgos con sus resoluciones. S14 construye encima de este dossier, no al revés.</p>
+<p><strong>Evidencia de aprendizaje:</strong></p>
+<ul>
+<li>Tabla de módulos (Tabla 3) completada, con la decisión registrada sobre <code>clientes</code>.</li>
+<li>Hallazgo de <code>calcularTotal()</code> documentado con su destino explícito (ADR-008 en S14).</li>
+<li>Verificación de <code>VentaRegistrada</code> contra los atributos reales de <code>Venta</code>/<code>DetalleVenta</code>.</li>
+<li>Tabla de hallazgos (Tabla 7) completa, con al menos una inconsistencia real y al menos una verificación confirmada.</li>
+<li>Dossier consolidado de Unidad III con sus cuatro componentes de esta sesión (arquitectura, dominio, UML, patrones/integración).</li>
+</ul>
+<h2 id="4-crea-actividad-autonoma">4. Crea: actividad autónoma<a class="headerlink" href="#4-crea-actividad-autonoma" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 2h fuera del aula.</p>
+<h3 id="41-actividad">4.1 Actividad<a class="headerlink" href="#41-actividad" title="Permanent link">&para;</a></h3>
+<p>Auditoría de consistencia y consolidación del diseño técnico propio del equipo, documentada en evidencia individual.</p>
+<p>Completa y evidencia estas tareas:</p>
+<ol>
+<li>Auditar la consistencia entre tu Vista C3 (arquitectura, U1) y tu modelo de dominio (U2): toda entidad del dominio debe poder ubicarse en algún módulo de la Vista C3, real o futuro. Registra cualquier caso que no cumpla esto, como el de <code>clientes</code> en BomERP.</li>
+<li>Auditar la consistencia entre tu diagrama de clases (S7) y las sesiones que lo usan después (S8 diseño por capas, S9 dinámico, S10 patrones): toda operación asignada a una entidad debe seguir siendo responsabilidad de esa entidad, a menos que una decisión explícita la haya movido.</li>
+<li>Auditar la consistencia entre al menos un evento de dominio (S11) y los atributos reales de la entidad que lo origina (S7-S8): cada campo del evento debe corresponder a un atributo real.</li>
+<li>Registrar los resultados de las tres auditorías anteriores en una tabla de hallazgos (como la Tabla 7), incluyendo al menos un resultado "Consistente" y, si corresponde, al menos una inconsistencia real con su resolución propuesta.</li>
+<li>Armar tu propio dossier consolidado de Unidad III con los cuatro componentes de esta sesión (arquitectura, dominio, UML, patrones/integración), referenciando tus productos de U1 y U2 ya consolidados, sin volver a copiar su contenido completo.</li>
+</ol>
+<h3 id="42-proposito">4.2 Propósito<a class="headerlink" href="#42-proposito" title="Permanent link">&para;</a></h3>
+<p>Que cada estudiante demuestre, de forma individual y fuera del aula, que puede auditar la consistencia de su propio diseño técnico entre unidades y consolidar el resultado en un solo dossier, sin el acompañamiento del docente.</p>
+<h3 id="43-indicaciones">4.3 Indicaciones<a class="headerlink" href="#43-indicaciones" title="Permanent link">&para;</a></h3>
+<p>Entrega un PDF con el siguiente nombre:</p>
+<div class="highlight"><pre><span></span><code>S13_ADS_Equipo##_ApellidoNombre.pdf
+</code></pre></div>
+<p>Cada captura de pantalla del informe debe mostrar, sin recortar, el reloj del sistema (fecha y hora) y tu usuario o foto de perfil (Windows, VS Code o navegador) visibles en pantalla — es lo que permite verificar que la evidencia es tuya y que corresponde al momento real de tu trabajo.</p>
+<h4 id="431-estructura-del-informe">4.3.1 Estructura del informe<a class="headerlink" href="#431-estructura-del-informe" title="Permanent link">&para;</a></h4>
+<p><strong>Datos del estudiante</strong></p>
+<ul>
+<li>Nombre:</li>
+<li>Equipo:</li>
+<li>Sesión: S13 - Integración del Diseño Técnico</li>
+<li>Rol o aporte realizado:</li>
+<li>Link de GitHub:</li>
+</ul>
+<p><strong>Evidencia técnica</strong></p>
+<p>Incluye capturas o extractos con una breve explicación debajo de cada uno, organizados en los mismos 5 bloques de la rúbrica (4.6):</p>
+<ol>
+<li><em>Consistencia arquitectura-dominio</em><ul>
+<li>La tabla de módulos de tu propio proyecto, con cualquier caso sin resolver y su decisión.</li>
+</ul>
+</li>
+<li><em>Consistencia dominio-UML/patrones</em><ul>
+<li>La operación auditada, y si sigue siendo consistente entre S7 y las sesiones posteriores que la usan.</li>
+</ul>
+</li>
+<li><em>Consistencia patrones-integración</em><ul>
+<li>El evento de dominio auditado, contra los atributos reales de su entidad de origen.</li>
+</ul>
+</li>
+<li><em>Tabla de hallazgos</em><ul>
+<li>La tabla completa, con al menos un resultado "Consistente" y, si corresponde, al menos una inconsistencia real.</li>
+</ul>
+</li>
+<li><em>Dossier consolidado</em><ul>
+<li>Los cuatro componentes de esta sesión, referenciando (no copiando) tus productos de U1 y U2.</li>
+</ul>
+</li>
+</ol>
+<p><strong>Error o hallazgo</strong></p>
+<p>Describe una inconsistencia real que encontraste al auditar tu propio diseño (un nombre, un atributo o una responsabilidad que cambió de sesión a sesión sin que lo notaras), o explica por qué, tras auditar a fondo, no encontraste ninguna.</p>
+<p><strong>Reflexión técnica breve</strong></p>
+<p>Responde en 5 a 8 líneas:</p>
+<div class="highlight"><pre><span></span><code>¿Qué parte de tu propio diseño técnico no habías vuelto a revisar
+desde que la entregaste por primera vez? Relaciona tu respuesta
+con el caso de Nygard (1.6): ¿qué hubiera pasado si nunca la
+hubieras vuelto a auditar?
+</code></pre></div>
+<h3 id="44-criterios-minimos-de-aceptacion">4.4 Criterios mínimos de aceptación<a class="headerlink" href="#44-criterios-minimos-de-aceptacion" title="Permanent link">&para;</a></h3>
+<ul>
+<li>El archivo respeta el nombre solicitado.</li>
+<li>La auditoría arquitectura-dominio cubre todas las entidades del modelo de dominio frente a la Vista C3.</li>
+<li>La auditoría dominio-UML/patrones identifica al menos una operación y confirma (o corrige) su consistencia entre S7 y las sesiones posteriores.</li>
+<li>La auditoría patrones-integración verifica al menos un evento de dominio contra los atributos reales de su entidad de origen.</li>
+<li>La tabla de hallazgos incluye al menos un resultado "Consistente", no solo inconsistencias.</li>
+<li>El dossier consolidado referencia los productos de U1 y U2 sin copiar su contenido completo.</li>
+<li>Cada captura de la evidencia técnica muestra el reloj del sistema y el usuario/perfil visible, sin recortar.</li>
+<li>Las fechas y horas de las capturas son coherentes con el historial de commits de su repositorio en GitHub.</li>
+<li>Incluye un error o hallazgo técnico diagnosticado (o la justificación de por qué no se encontró ninguno).</li>
+<li>Incluye la reflexión técnica breve solicitada.</li>
+</ul>
+<h3 id="45-preguntas-de-defensa">4.5 Preguntas de defensa<a class="headerlink" href="#45-preguntas-de-defensa" title="Permanent link">&para;</a></h3>
+<ol>
+<li>¿Por qué una entidad de tu modelo de dominio que no aparece en ninguna parte de tu Vista C3 es un hallazgo, y no simplemente un detalle menor?</li>
+<li>Si una operación "se mudó" de tu entidad a un servicio entre dos sesiones, ¿qué se pierde si esa mudanza no queda registrada en ningún lugar?</li>
+<li>¿Por qué confirmar que algo sigue siendo consistente cuenta como un resultado válido de una auditoría, y no solo encontrar errores?</li>
+<li>Relaciona el caso de Nygard (1.6) con tu propia experiencia: ¿qué decisión de tu proyecto hubieras olvidado por qué se tomó, si no la hubieras vuelto a revisar hoy?</li>
+<li>¿Por qué el dossier consolidado de esta sesión referencia tus productos de U1 y U2 en vez de copiar su contenido completo?</li>
+<li>Si tu auditoría no encontró ninguna inconsistencia real, ¿cómo demuestras que de verdad la hiciste, y no que simplemente no la hiciste a fondo?</li>
+<li>¿Qué diferencia hay entre resolver una inconsistencia en el código (como podría hacerlo LP2) y resolverla en el diseño (lo que hace ADS en esta sesión)?</li>
+<li>¿Por qué el hallazgo de <code>calcularTotal()</code> en BomERP no se corrige borrando la operación del diagrama de S7, sino registrándolo para convertirlo en una decisión formal en S14?</li>
+</ol>
+<h3 id="46-rubrica-de-evaluacion">4.6 Rúbrica de evaluación<a class="headerlink" href="#46-rubrica-de-evaluacion" title="Permanent link">&para;</a></h3>
+<p><strong>Tabla 8. Rúbrica de evaluación</strong></p>
+<table>
+<thead>
+<tr>
+<th>Criterio</th>
+<th style="text-align: right;">Peso (%)</th>
+<th>A (20 pts)</th>
+<th>B (15 pts)</th>
+<th>C (10 pts)</th>
+<th>D (5 pts)</th>
+<th style="text-align: right;">Nivel obtenido</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Consistencia arquitectura-dominio*</td>
+<td style="text-align: right;">20</td>
+<td>Todas las entidades del dominio ubicadas en la Vista C3 (real o futuro); cualquier caso sin resolver tiene una decisión explícita.</td>
+<td>Auditoría completa, con algún caso sin decisión explícita.</td>
+<td>Auditoría parcial, revisa solo algunos módulos.</td>
+<td>No presenta esta auditoría.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>2. Consistencia dominio-UML/patrones*</td>
+<td style="text-align: right;">20</td>
+<td>Al menos una operación auditada a través de todas las sesiones que la usan, con su consistencia confirmada o corregida y registrada.</td>
+<td>Auditoría presente, con alguna sesión posterior no revisada.</td>
+<td>Auditoría superficial, sin verificar sesiones posteriores reales.</td>
+<td>No presenta esta auditoría.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>3. Consistencia patrones-integración*</td>
+<td style="text-align: right;">20</td>
+<td>Evento de dominio verificado campo por campo contra los atributos reales de su entidad de origen.</td>
+<td>Verificación presente, con algún campo no confirmado.</td>
+<td>Verificación superficial o sin comparar contra atributos reales.</td>
+<td>No presenta esta verificación.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>4. Tabla de hallazgos*</td>
+<td style="text-align: right;">20</td>
+<td>Tabla completa, con al menos un resultado "Consistente" y, si corresponde, inconsistencias reales con resolución propuesta.</td>
+<td>Tabla completa, con resoluciones poco justificadas.</td>
+<td>Tabla incompleta o solo con inconsistencias, sin ninguna verificación confirmada.</td>
+<td>No presenta tabla de hallazgos.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>5. Dossier consolidado*</td>
+<td style="text-align: right;">20</td>
+<td>Los cuatro componentes de la sesión, coherentes entre sí, referenciando U1/U2 sin copiar su contenido completo.</td>
+<td>Dossier completo, con alguna referencia innecesariamente duplicada.</td>
+<td>Dossier incompleto o que copia el contenido de U1/U2 en vez de referenciarlo.</td>
+<td>No presenta dossier consolidado.</td>
+<td style="text-align: right;"></td>
+</tr>
+</tbody>
+</table>
+<p>* Agregado manual.</p>
+<p>Nota final = suma de (<code>Peso</code> / 100 × <code>Puntos del nivel obtenido</code>) = ____ / 20.</p>
+<p>Para usar la rúbrica con IA (inteligencia artificial), solicita:</p>
+<div class="highlight"><pre><span></span><code>Evalúa el PDF usando la rúbrica de la sesión.
+Para cada criterio selecciona el nivel obtenido usando la escala A=20, B=15, C=10, D=5 puntos.
+Justifica brevemente cada nivel asignado.
+Verifica que cada captura muestre reloj del sistema y usuario/perfil visible, y que las fechas sean coherentes con el historial de commits de GitHub. Si falta esta evidencia o hay inconsistencias, indícalo explícitamente antes de calificar.
+Calcula la nota final con la fórmula: suma de (Peso/100 × Puntos del nivel obtenido), directamente sobre 20.
+Indica 2 fortalezas y 2 recomendaciones.
+</code></pre></div>
+<h2 id="5-cierre">5. Cierre<a class="headerlink" href="#5-cierre" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 5 min.</p>
+<p><strong>Resumen breve:</strong> hoy BomERP se miró por primera vez como un solo sistema, no como once entregas sueltas. La auditoría encontró dos inconsistencias reales —<code>clientes</code> ausente de la Vista C3 pese a existir en el dominio, y <code>calcularTotal()</code> documentado en la entidad pero calculado en el servicio desde S8— y confirmó que una tercera relación, el evento <code>VentaRegistrada</code> frente a los atributos reales de <code>Venta</code>/<code>DetalleVenta</code>, sigue siendo consistente. Ninguna de las dos inconsistencias se resolvió en código: quedaron registradas, con su resolución propuesta, en el dossier consolidado de la Unidad III — listas para que S14 las convierta en decisiones arquitectónicas formales (ADR), exactamente el paso que Nygard (1.6) identificó que la mayoría de equipos nunca da.</p>
+<p><strong>Dinámica participativa:</strong> en una ronda rápida, cada estudiante comparte en una frase qué inconsistencia (real o confirmada como consistente) encontró al auditar su propio proyecto.</p>
+<p><strong>Metacognición:</strong> ¿qué te costó más: encontrar una inconsistencia real entre tus propios artefactos, o confiar en que una verificación que no encontró ningún error también es un resultado válido?</p>
+<p><strong>Proyección:</strong> S14 toma los hallazgos de hoy —empezando por <code>calcularTotal()</code>— y los convierte en ADR formales, además de construir la matriz de trazabilidad completa entre requerimientos, arquitectura, base de datos y diseño.</p>
+<h2 id="bibliografia">Bibliografía<a class="headerlink" href="#bibliografia" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Nygard, M. (2011). <em>Documenting Architecture Decisions</em>. Cognitect Blog. https://www.cognitect.com/blog/2011/11/15/documenting-architecture-decisions</li>
+<li>Brown, S. (2024). <em>The C4 model for visualising software architecture</em>. https://c4model.com/</li>
+<li>Evans, E. (2003). <em>Domain-Driven Design: Tackling Complexity in the Heart of Software</em>. Addison-Wesley.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Angel Sullon @asullom - UPeU 2026
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.top", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+    
+  </body>
+</html>

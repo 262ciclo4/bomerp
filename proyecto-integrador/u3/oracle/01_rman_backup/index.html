@@ -3464,10 +3464,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#backup-completo" class="md-nav__link">
+  <a href="#activar-archivelog-condicion-previa-s13-32" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Backup completo
+        Activar ARCHIVELOG (condición previa, S13 3.2)
       
     </span>
   </a>
@@ -3475,10 +3475,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#backup-incremental-nivel-0" class="md-nav__link">
+  <a href="#backup-completo-level-0" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Backup incremental nivel 0
+        Backup completo (Level 0)
       
     </span>
   </a>
@@ -3486,10 +3486,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#backup-incremental-nivel-1" class="md-nav__link">
+  <a href="#backup-incremental-level-1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Backup incremental nivel 1
+        Backup incremental (Level 1)
       
     </span>
   </a>
@@ -3528,49 +3528,64 @@
 
 
 <h1 id="rman-backup-evidencia-u3">RMAN Backup - Evidencia U3<a class="headerlink" href="#rman-backup-evidencia-u3" title="Permanent link">&para;</a></h1>
+<p><strong>Ejemplo BomERP, verificado en vivo contra <code>bomerp-oracle</code> (S13).</strong> Cada equipo reemplaza estos resultados por los de su propia instancia.</p>
 <h2 id="objetivo">Objetivo<a class="headerlink" href="#objetivo" title="Permanent link">&para;</a></h2>
-<p>Demostrar que la base Oracle del proyecto puede respaldarse como parte de la continuidad del negocio.</p>
-<h2 id="backup-completo">Backup completo<a class="headerlink" href="#backup-completo" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="n">RMAN</span><span class="o">&gt;</span><span class="w"> </span><span class="k">CONNECT</span><span class="w"> </span><span class="n">TARGET</span><span class="w"> </span><span class="o">/</span>
-<span class="n">RMAN</span><span class="o">&gt;</span><span class="w"> </span><span class="n">BACKUP</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">PLUS</span><span class="w"> </span><span class="n">ARCHIVELOG</span><span class="p">;</span>
+<p>Demostrar que la base Oracle del proyecto puede respaldarse como parte de la continuidad del negocio, con <code>ARCHIVELOG</code> activo y una estrategia completo + incremental real.</p>
+<h2 id="activar-archivelog-condicion-previa-s13-32">Activar <code>ARCHIVELOG</code> (condición previa, S13 3.2)<a class="headerlink" href="#activar-archivelog-condicion-previa-s13-32" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="k">ALTER</span><span class="w"> </span><span class="k">SYSTEM</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">db_recovery_file_dest_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="k">G</span><span class="w"> </span><span class="k">SCOPE</span><span class="o">=</span><span class="k">BOTH</span><span class="p">;</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="k">SYSTEM</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">db_recovery_file_dest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'/opt/oracle/oradata/FRA'</span><span class="w"> </span><span class="k">SCOPE</span><span class="o">=</span><span class="k">BOTH</span><span class="p">;</span>
+<span class="n">SHUTDOWN</span><span class="w"> </span><span class="k">IMMEDIATE</span><span class="p">;</span>
+<span class="n">STARTUP</span><span class="w"> </span><span class="n">MOUNT</span><span class="p">;</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">ARCHIVELOG</span><span class="p">;</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="k">OPEN</span><span class="p">;</span>
 </code></pre></div>
-<h2 id="backup-incremental-nivel-0">Backup incremental nivel 0<a class="headerlink" href="#backup-incremental-nivel-0" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="n">RMAN</span><span class="o">&gt;</span><span class="w"> </span><span class="n">BACKUP</span><span class="w"> </span><span class="n">INCREMENTAL</span><span class="w"> </span><span class="k">LEVEL</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">PLUS</span><span class="w"> </span><span class="n">ARCHIVELOG</span><span class="p">;</span>
+<h2 id="backup-completo-level-0">Backup completo (<em>Level 0</em>)<a class="headerlink" href="#backup-completo-level-0" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="n">RMAN</span><span class="o">&gt;</span><span class="w"> </span><span class="n">CONFIGURE</span><span class="w"> </span><span class="n">CONTROLFILE</span><span class="w"> </span><span class="n">AUTOBACKUP</span><span class="w"> </span><span class="k">ON</span><span class="p">;</span>
+<span class="n">RMAN</span><span class="o">&gt;</span><span class="w"> </span><span class="n">BACKUP</span><span class="w"> </span><span class="n">INCREMENTAL</span><span class="w"> </span><span class="k">LEVEL</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">PLUS</span><span class="w"> </span><span class="n">ARCHIVELOG</span><span class="p">;</span>
 </code></pre></div>
-<h2 id="backup-incremental-nivel-1">Backup incremental nivel 1<a class="headerlink" href="#backup-incremental-nivel-1" title="Permanent link">&para;</a></h2>
+<p>Resultado real (resumido): 6 piezas de respaldo (<code>archivelog</code> + <code>Level 0</code> del CDB raíz, de <code>FREEPDB1</code> y de <code>pdbseed</code> + <code>archivelog</code> final + <em>controlfile autobackup</em>), confirmadas con <code>LIST BACKUP SUMMARY</code>.</p>
+<h2 id="backup-incremental-level-1">Backup incremental (<em>Level 1</em>)<a class="headerlink" href="#backup-incremental-level-1" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="n">RMAN</span><span class="o">&gt;</span><span class="w"> </span><span class="n">BACKUP</span><span class="w"> </span><span class="n">INCREMENTAL</span><span class="w"> </span><span class="k">LEVEL</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">PLUS</span><span class="w"> </span><span class="n">ARCHIVELOG</span><span class="p">;</span>
 </code></pre></div>
+<p>Resultado real: los datafiles de <code>pdbseed</code> (que no cambiaron) se omitieron por completo (<code>skipping datafile ... because it has not changed</code> — <code>channel ORA_DISK_1: backup cancelled because all files were skipped</code>); los de <code>FREEPDB1</code> sí se respaldaron, porque un <code>INSERT</code> real sobre <code>BOM_VENTAS.VENTAS</code> sí los modificó.</p>
 <h2 id="evidencia-requerida">Evidencia requerida<a class="headerlink" href="#evidencia-requerida" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Evidencia</th>
 <th>Descripción</th>
+<th>Resultado real BomERP</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Fecha y hora</td>
 <td>Momento de ejecución.</td>
+<td>01-NOV-2026, ~02:22-02:26 UTC.</td>
 </tr>
 <tr>
 <td>Comando ejecutado</td>
 <td>Backup completo o incremental.</td>
+<td><code>BACKUP INCREMENTAL LEVEL 0/1 DATABASE PLUS ARCHIVELOG</code>.</td>
 </tr>
 <tr>
 <td>Log o captura</td>
 <td>Resultado exitoso o error documentado.</td>
+<td>Éxito en ambos; <code>LIST BACKUP SUMMARY</code> con 11 piezas acumuladas.</td>
 </tr>
 <tr>
 <td>Ubicación del backup</td>
 <td>Ruta o catálogo usado.</td>
+<td><code>/opt/oracle/oradata/FRA</code> — dentro del volumen persistente (<code>oracle-data</code>), nunca fuera de él.</td>
 </tr>
 <tr>
 <td>Responsable</td>
 <td>Integrante que ejecutó y explicó el proceso.</td>
+<td>(completar por equipo)</td>
 </tr>
 </tbody>
 </table>
+<p>Ver la guía completa de la sesión: <a href="../../../../bd2/sesiones/S13_Backup_Recovery_RMAN/"><code>S13_Backup_Recovery_RMAN.md</code></a>.</p>
 
 
 

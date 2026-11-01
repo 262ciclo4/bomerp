@@ -1,0 +1,4631 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Entorno integrado de desarrollo academico para construir modulos ERP con ADS, BD2 y LP2.">
+      
+      
+        <meta name="author" content="UPeU">
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+  
+    <title>BOM ERP - S14 - Integración y Estabilización</title>
+  
+
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#s14-integracion-y-estabilizacion" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../../.." title="BOM ERP" class="md-header__button md-logo" aria-label="BOM ERP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            BOM ERP
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              S14 - Integración y Estabilización
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/262ciclo4/bomerp" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    262ciclo4/bomerp
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Pestañas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Inicio
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../proyecto-integrador/" class="md-tabs__link">
+          
+  
+  
+  Guía del Proyecto Integrador
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../ads/" class="md-tabs__link">
+          
+  
+  
+  ADS
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../bd2/" class="md-tabs__link">
+          
+  
+  
+  BD2
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../" class="md-tabs__link">
+          
+  
+  
+  LP2
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="BOM ERP" class="md-nav__button md-logo" aria-label="BOM ERP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    BOM ERP
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/262ciclo4/bomerp" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    262ciclo4/bomerp
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guía del Proyecto Integrador
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guía del Proyecto Integrador
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Alineamiento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/brief/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brief técnico (plantilla)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Diseño técnico, motor transaccional y backend inicial
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    1. Diseño técnico, motor transaccional y backend inicial
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/lp2-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Demo U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/ads-matriz-competencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Matriz de competencias
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/lp2-matriz-competencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Matriz de competencias
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/bd2-matriz-competencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Matriz de competencias
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Modelado UML, administración Oracle y SPA segura
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    2. Modelado UML, administración Oracle y SPA segura
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/lp2-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Demo U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Diseño consolidado, operación Oracle y Full-Stack integrado
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    3. Diseño consolidado, operación Oracle y Full-Stack integrado
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/lp2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/checklist-final/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Checklist final
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/guia-sustentacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guía de sustentación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anexos - SPA en otros frameworks
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Anexos - SPA en otros frameworks
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/anexos/S07_Creacion_Arquitectura_SPA_Vue/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S07 con Vue
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/anexos/S07_Creacion_Arquitectura_SPA_React/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S07 con React
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ADS
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/silabo_ads_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/silabo_ads_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Arquitectura y Diseño Estructural
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Arquitectura y Diseño Estructural
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S01_Fundamentos_Arquitectura_Software/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - Fundamentos de arquitectura de software
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S02_Modelo_C4_Vistas_Arquitectonicas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - Modelo C4 y vistas arquitectónicas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S03_Diseno_Estructural_Principios_SOLID/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S3 - Diseño estructural y principios SOLID
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S04_Arquitecturas_Modernas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S4 - Arquitecturas modernas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S05_Evaluacion_Unidad_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S5 - Evaluación de la Unidad I
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    II. Diseño Dinámico, Modelado UML y Patrones
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    II. Diseño Dinámico, Modelado UML y Patrones
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S06_Descubrimiento_Modelado_Dominio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S6 - Descubrimiento y modelado del dominio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S07_Diseno_Clases_Dominio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S7 - Diseño de clases del dominio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S08_Diseno_Clases_Avanzado_Transformacion_Objeto_Relacional/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S8 - Diseño de clases avanzado y transformación objeto-relacional
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S09_Diagramas_Dinamicos_UML/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S9 - Diagramas dinámicos UML
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S10_Patrones_Diseno_GoF_GRASP/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S10 - Patrones de diseño GoF y GRASP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S11_Integracion_Sistemas_Empresariales/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S11 - Integración y sistemas empresariales
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S12_Evaluacion_Unidad_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S12 - Evaluación de la Unidad II
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    BD2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/silabo_bd2_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/silabo_bd2_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Programación y optimización (Oracle XE)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Programación y optimización (Oracle XE)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - PL/SQL aplicado al negocio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S02_Triggers_DML_Auditoria/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - Triggers DML y auditoría
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S03_Excepciones_Robustez/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S3 - Manejo de excepciones y robustez
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S04_Optimizacion_Consultas_SQL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S4 - Optimización de consultas SQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S05_Indices_Optimizacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S5 - Índices para optimización
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S06_Evaluacion_Unidad_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S6 - Evaluación de la Unidad I
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    II. Administración, almacenamiento, seguridad y optimización
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    II. Administración, almacenamiento, seguridad y optimización
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S07_Arquitectura_Oracle_Instancia/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S7 - Arquitectura Oracle e instancia
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S08_Usuarios_Roles_Privilegios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S8 - Gestión de usuarios, roles y privilegios
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S09_Almacenamiento_Seguridad_Auditoria/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S9 - Administración del almacenamiento y seguridad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S10_Optimizacion_Rendimiento/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S10 - Optimización del rendimiento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S11_Particionamiento_Escalabilidad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S11 - Particionamiento y escalabilidad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S12_Evaluacion_Unidad_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S12 - Evaluación de la Unidad II
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    LP2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../silabo_lp2_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../silabo_lp2_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Decisiones de arquitectura
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Decisiones de arquitectura
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/ADR-001-arquitectura-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-001 - Arquitectura del backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/ADR-002-spring-modulith/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-002 - Spring Modulith
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/ADR-003-spring-boot-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-003 - Versión exacta de Spring Boot 4.0.7
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/ADR-004-jwt-diferido/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-004 - JWT diferido a S10
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/ADR-005-seguridad-jwt-propio-listo-para-reemplazo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-005 - Seguridad JWT propia, reemplazada por Keycloak en S10b
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Base backend REST modular de BomERP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Base backend REST modular de BomERP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S01_Arquitectura_Backend_REST_Profesional/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - Arquitectura backend REST profesional
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S02_CRUD_REST_Completo_Producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - CRUD REST completo de Producto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S03_Objetos_Relacionados_Categoria_Producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S3 - Objetos relacionados Categoria-Producto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S04_Operacion_Cabecera_Detalle_Venta_DetalleVenta/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S4 - Operación cabecera-detalle Venta-DetalleVenta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S05_Consultas_Empresariales_Reportes_CORS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S5 - Consultas empresariales, reportes REST y CORS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S06_Evaluacion_Unidad_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S6 - Evaluación de la Unidad I
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    II. SPA modular segura para BomERP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    II. SPA modular segura para BomERP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S07_Creacion_Arquitectura_SPA/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S7 - Creación y arquitectura de la SPA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S08_CRUD_Tablas_Dependientes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S8 - CRUD de tablas dependientes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S09_Formularios_Transaccionales_Cabecera_Detalle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S9 - Formularios transaccionales cabecera-detalle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S10_Seguridad_Backend_JWT_Roles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S10 - Seguridad backend JWT y roles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S10b_Seguridad_Backend_Keycloak/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S10b - Reemplazo de seguridad por Keycloak
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S11_Seguridad_Frontend_Keycloak/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S11 - Seguridad frontend con Keycloak
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S12_Evaluacion_Unidad_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S12 - Evaluación de la Unidad II
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-introduccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Introducción
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Introducción">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-presentacion-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Presentación de la sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-indice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Índice
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-proposito-de-aprendizaje" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Propósito de aprendizaje
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-producto-de-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Producto de sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-metodologia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Metodología
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16-motivacion-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6 Motivación de la sesión
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.6 Motivación de la sesión">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#161-caso-knight-capital-45-minutos-y-440-millones-de-dolares-2012" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6.1 Caso: Knight Capital, 45 minutos y 440 millones de dólares (2012)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#17-ubicacion-en-el-curso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.7 Ubicación en el curso
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-explica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Explica
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Explica">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-arquitectura-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Arquitectura de la sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-por-que-un-listado-sin-paginar-no-escala-aunque-hoy-funcione" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Por qué un listado sin paginar no escala, aunque hoy "funcione"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-el-agregado-del-servidor-frente-al-calculo-en-el-cliente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 El agregado del servidor frente al cálculo en el cliente
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-integracion-funcional-verificar-el-sistema-completo-no-modulo-por-modulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Integración funcional: verificar el sistema completo, no módulo por módulo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-auditoria-quien-hizo-que-cuando-sobre-que-entidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Auditoría: quién hizo qué, cuándo, sobre qué entidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-pruebas-end-to-end-reales-frente-a-pruebas-de-un-controlador-con-mocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Pruebas end-to-end reales frente a pruebas de un controlador con mocks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#27-estabilizacion-bitacora-de-hallazgos-correccion-y-prueba-de-no-regresion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7 Estabilización: bitácora de hallazgos, corrección y prueba de no regresión
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-aplica-actividad-practica-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Aplica: actividad práctica guiada
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Aplica: actividad práctica guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-diagnosticar-el-hallazgo-real-confirmar-que-la-spa-nunca-usa-resumen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Diagnosticar el hallazgo real: confirmar que la SPA nunca usa /resumen
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-paginar-el-repositorio-y-el-servicio-de-ventas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Paginar el repositorio y el servicio de ventas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-paginar-el-controlador-de-ventas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Paginar el controlador de ventas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-reconectar-la-spa-paginar-la-tabla-usar-el-agregado-real-para-los-totales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Reconectar la SPA: paginar la tabla, usar el agregado real para los totales
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-verificar-la-integracion-funcional-de-punta-a-punta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Verificar la integración funcional de punta a punta
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-construir-la-auditoria-de-acciones-criticas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Construir la auditoría de acciones críticas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37-escribir-y-ejecutar-una-prueba-end-to-end-real" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 Escribir y ejecutar una prueba end-to-end real
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#38-registrar-y-cerrar-en-la-bitacora-de-estabilizacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 Registrar y cerrar en la bitácora de estabilización
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-crea-actividad-autonoma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Crea: actividad autónoma
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Crea: actividad autónoma">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-actividad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Actividad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-proposito" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Propósito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-indicaciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Indicaciones
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.3 Indicaciones">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#431-estructura-del-informe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3.1 Estructura del informe
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-criterios-minimos-de-aceptacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Criterios mínimos de aceptación
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-preguntas-de-defensa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Preguntas de defensa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-rubrica-de-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 Rúbrica de evaluación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-cierre" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Cierre
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bibliografia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bibliografía
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="s14-integracion-y-estabilizacion">S14 - Integración y Estabilización<a class="headerlink" href="#s14-integracion-y-estabilizacion" title="Permanent link">&para;</a></h1>
+<p><em>Por: Angel Sullon Macalupu @asullom - 2026</em></p>
+<h2 id="1-introduccion">1. Introducción<a class="headerlink" href="#1-introduccion" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 20 min.</p>
+<h3 id="11-presentacion-de-la-sesion">1.1 Presentación de la sesión<a class="headerlink" href="#11-presentacion-de-la-sesion" title="Permanent link">&para;</a></h3>
+<p>S13 optimizó el <em>build</em> y preparó la configuración de producción. Pero nadie verificó todavía si el sistema completo —backend, SPA, Keycloak, Oracle— sigue funcionando junto, de punta a punta, igual de bien que cada pieza por separado. Esta sesión responde exactamente eso, y lo hace con un hallazgo real, no inventado para la ocasión.</p>
+<p><code>VentaServiceImpl.reporte()</code> existe desde S9: calcula el total, el conteo y el ticket promedio con una consulta agregada real en Oracle (<code>VentaAgregado</code>, <code>SUM</code>/<code>COUNT</code> en SQL, no en Java). Pero <code>VentaReporteComponent</code> (la SPA) nunca lo llama — llama a <code>buscar()</code> (la lista completa, sin agregar) y recalcula los mismos tres números <strong>en el navegador</strong>, con <code>.reduce()</code>, sobre el arreglo completo. Con los pocos datos de una clase, ambos caminos dan el mismo resultado, así que nadie lo notó. Pero el día que esa lista tenga miles de filas, el camino correcto (el agregado de Oracle) seguirá respondiendo igual de rápido — y el camino que la SPA realmente usa hoy va a tener que descargar, en cada carga de pantalla, cada fila que exista para sumar tres números.</p>
+<p>Esta sesión corrige eso: pagina el listado, conecta la SPA al agregado que ya existe, verifica el flujo completo de punta a punta, agrega la auditoría que todavía no existe, y estabiliza el sistema con una prueba real, no con un mock.</p>
+<h3 id="12-indice">1.2 Índice<a class="headerlink" href="#12-indice" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Por qué un listado sin paginar no escala, aunque hoy "funcione".</li>
+<li>El agregado del servidor frente al cálculo en el cliente.</li>
+<li>Integración funcional: verificar el sistema completo, no módulo por módulo.</li>
+<li>Auditoría: quién hizo qué, cuándo, sobre qué entidad.</li>
+<li>Pruebas end-to-end reales frente a pruebas de un controlador con mocks.</li>
+<li>Estabilización: bitácora de hallazgos, corrección y prueba de no regresión.</li>
+</ol>
+<h3 id="13-proposito-de-aprendizaje">1.3 Propósito de aprendizaje<a class="headerlink" href="#13-proposito-de-aprendizaje" title="Permanent link">&para;</a></h3>
+<p>Al concluir la clase, estarás en condiciones de: <strong>paginar</strong> un listado de alto volumen sin romper sus totales agregados, <strong>verificar</strong> la integración funcional completa de tu propio proyecto de punta a punta, <strong>construir</strong> un registro de auditoría real sobre al menos una acción crítica, <strong>escribir</strong> una prueba end-to-end real contra la base de datos real (no contra mocks), y <strong>estabilizar</strong> el sistema registrando cada hallazgo en una bitácora con su corrección y su prueba de no regresión.</p>
+<h3 id="14-producto-de-sesion">1.4 Producto de sesión<a class="headerlink" href="#14-producto-de-sesion" title="Permanent link">&para;</a></h3>
+<p><code>GET /api/v1/ventas</code> paginado (<code>Page&lt;VentaResponse&gt;</code>), la SPA usando el agregado real de <code>/resumen</code> para sus totales en vez de recalcularlos en el navegador, el flujo completo verificado de punta a punta (login → crear venta → consultar → anular), un registro de auditoría real sobre <code>crear</code>/<code>anular</code>, una prueba end-to-end ejecutada contra la base real, y la bitácora de estabilización con al menos un hallazgo corregido.</p>
+<h3 id="15-metodologia">1.5 Metodología<a class="headerlink" href="#15-metodologia" title="Permanent link">&para;</a></h3>
+<p><strong>Tabla 1. Metodología de la sesión</strong></p>
+<table>
+<thead>
+<tr>
+<th>Actividades a Realizar en el Periodo</th>
+<th>Orientaciones generales (Orientaciones Metodológicas)</th>
+<th>Material de estudio recomendado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Revisión previa individual</td>
+<td>Releer <code>VentaReporteComponent</code> (frontend) y <code>VentaServiceImpl.reporte()</code> (backend, S9) por separado, sin corregir nada todavía — solo confirmar si uno llama al otro. Trabajo individual, antes de clase.</td>
+<td>S9 (3.5-3.6), <code>venta-reporte.ts</code>, <code>VentaServiceImpl.java</code>.</td>
+</tr>
+<tr>
+<td>Clase presencial</td>
+<td>Diagnóstico guiado del hallazgo real, paginación del listado, reconexión de la SPA al agregado del servidor, verificación de integración funcional completa, construcción de auditoría real, y escritura de una prueba end-to-end. Trabajo individual en la propia laptop, siguiendo al docente paso a paso.</td>
+<td><code>bomerp-oracle</code> y Keycloak corriendo (S1, S10b), pasos 3.1 a 3.8 de esta guía.</td>
+</tr>
+<tr>
+<td>Evaluación formativa</td>
+<td>Revisión en clase del hallazgo diagnosticado, la paginación funcionando, la prueba end-to-end pasando, y la bitácora de estabilización. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4.</td>
+<td>Indicaciones de entrega (4.3), rúbrica de evaluación (4.6).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="16-motivacion-de-la-sesion">1.6 Motivación de la sesión<a class="headerlink" href="#16-motivacion-de-la-sesion" title="Permanent link">&para;</a></h3>
+<h4 id="161-caso-knight-capital-45-minutos-y-440-millones-de-dolares-2012">1.6.1 Caso: Knight Capital, 45 minutos y 440 millones de dólares (2012)<a class="headerlink" href="#161-caso-knight-capital-45-minutos-y-440-millones-de-dolares-2012" title="Permanent link">&para;</a></h4>
+<p>El 1 de agosto de 2012, un técnico de Knight Capital debía desplegar código nuevo (del <em>Retail Liquidity Program</em>, RLP) en ocho servidores idénticos que enrutaban órdenes de bolsa automáticamente. Copió el código nuevo en siete. El octavo servidor se quedó con el código viejo — incluida una función retirada años antes, "Power Peg", que nunca se borró del todo.</p>
+<p>Fuente: U.S. Securities and Exchange Commission. (2013). <em>In the Matter of Knight Capital Americas LLC</em>. Release No. 34-70694.</p>
+<p>El código nuevo reutilizó, sin saberlo, una bandera que antes activaba "Power Peg". Cuando una orden con esa bandera llegó al octavo servidor —el que nunca recibió la actualización—, activó la función retirada, que empezó a ejecutar órdenes en bloque, una tras otra, sin parar: el código que debía marcar cada orden como "completada" había cambiado después de retirar Power Peg, así que el servidor nunca se enteró de que ya había terminado, y seguía mandando más. En 45 minutos, generó cerca de 4 millones de operaciones por 397 millones de acciones en 154 papeles distintos, movió artificialmente el precio de 148 empresas, y le costó a Knight Capital 440 millones de dólares — la compañía perdió el 75% de su valor en dos días y tuvo que ser rescatada.</p>
+<p>Nadie probó el sistema completo, los ocho servidores juntos, antes de dejarlo en producción — cada servidor, visto por separado, "tenía el código correcto" (siete lo tenían) o "tenía el código anterior, que ya funcionaba antes" (el octavo). El problema solo existía en la combinación de los dos, en producción real, con tráfico real. <code>VentaReporteComponent</code> (1.1) es una versión de bajo riesgo exactamente del mismo patrón: cada pieza, vista sola, "funciona" — el agregado del servidor es correcto, y el cálculo del cliente también da un número correcto hoy. El problema solo aparece cuando se mira el sistema completo, bajo carga real.</p>
+<p><strong>Preguntas de análisis</strong></p>
+<p><strong>Activación de conocimientos previos</strong></p>
+<ol>
+<li>Antes de leer la causa técnica, ¿por qué un sistema donde "cada pieza funciona por separado" puede fallar igual cuando se junta todo?</li>
+</ol>
+<p><strong>Comprensión del caso</strong></p>
+<ol>
+<li>Según el caso, ¿por qué el código retirado ("Power Peg") seguía siendo peligroso si ya nadie lo usaba a propósito?</li>
+<li>¿Qué hubiera revelado una prueba que ejecutara el flujo completo contra los ocho servidores juntos, que una prueba servidor por servidor no podía revelar?</li>
+<li>En tu propio proyecto, ¿qué parte del sistema nunca has probado end-to-end, con todas sus piezas reales conectadas al mismo tiempo?</li>
+</ol>
+<h3 id="17-ubicacion-en-el-curso">1.7 Ubicación en el curso<a class="headerlink" href="#17-ubicacion-en-el-curso" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Producto del curso: Aplicación Full-Stack empresarial integrada, optimizada, monitoreada, estabilizada y preparada para producción.</li>
+<li>Producto de unidad: el mismo producto (Unidad III).</li>
+<li>Avance del producto en esta sesión: listado paginado sin romper sus agregados, integración funcional verificada de punta a punta, auditoría real, prueba end-to-end ejecutada, y bitácora de estabilización con al menos un hallazgo corregido.</li>
+</ul>
+<p><strong>Figura 1. Roadmap del producto de la unidad</strong></p>
+<pre class="mermaid"><code>flowchart TB
+    S13["`**S13:** Optimización y preparación para producción`"]
+    S14["`**S14:** Integración y estabilización`"]
+    S15["`**S15:** Evaluación de la Unidad III`"]
+    S16["`**S16:** Continuación de la evaluación`"]
+
+    S13 --&gt; S14 --&gt; S15 --&gt; S16
+
+    classDef today fill:#ffe08a,stroke:#9a6b00,stroke-width:2px,color:#111;
+    class S14 today;</code></pre>
+<h2 id="2-explica">2. Explica<a class="headerlink" href="#2-explica" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 40 min.</p>
+<h3 id="21-arquitectura-de-la-sesion">2.1 Arquitectura de la sesión<a class="headerlink" href="#21-arquitectura-de-la-sesion" title="Permanent link">&para;</a></h3>
+<p><strong>Figura 2. El camino que la SPA usa hoy, frente al que debería usar</strong></p>
+<pre class="mermaid"><code>flowchart TB
+    SPA["VentaReporteComponent"]
+    BUSCAR["GET /api/v1/ventas&lt;br/&gt;(lista completa, sin paginar)"]
+    REDUCE["ventas().reduce(...)&lt;br/&gt;total/promedio en el navegador"]
+    RESUMEN["GET /api/v1/ventas/resumen&lt;br/&gt;(ya existe desde S9)"]
+    AGREGADO[("VentaAgregado&lt;br/&gt;SUM/COUNT reales en Oracle")]
+
+    SPA --&gt;|"camino real usado hoy"| BUSCAR --&gt; REDUCE
+    SPA -.-&gt;|"camino correcto, nunca conectado"| RESUMEN --&gt; AGREGADO</code></pre>
+<p>Lectura del diagrama: el camino correcto ya existe, construido desde S9 — nadie lo borró ni lo rompió, simplemente nunca se conectó. Cada apartado siguiente desarrolla una pieza de la corrección, en el mismo orden del Índice (1.2).</p>
+<h3 id="22-por-que-un-listado-sin-paginar-no-escala-aunque-hoy-funcione">2.2 Por qué un listado sin paginar no escala, aunque hoy "funcione"<a class="headerlink" href="#22-por-que-un-listado-sin-paginar-no-escala-aunque-hoy-funcione" title="Permanent link">&para;</a></h3>
+<p>Un <em>endpoint</em> que devuelve <code>List&lt;T&gt;</code> completa trae <strong>todas</strong> las filas que cumplen el filtro, sin límite — con 50 ventas de clase, es instantáneo; con 50,000 ventas reales, es una respuesta de varios segundos (o un error de memoria) por una sola carga de pantalla. <strong>Paginación</strong> (<em>pagination</em>) es el patrón que pide, y devuelve, un subconjunto acotado (una "página") más la información necesaria para pedir la siguiente — nunca el total completo de una sola vez (Spring Data, 2024).</p>
+<p><strong>Tabla 2. <code>List&lt;T&gt;</code> frente a <code>Page&lt;T&gt;</code></strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><code>List&lt;VentaResponse&gt;</code> (hoy)</th>
+<th><code>Page&lt;VentaResponse&gt;</code> (esta sesión)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Qué trae</td>
+<td>Todas las filas que cumplen el filtro.</td>
+<td>Solo la página pedida (ej. 20 filas), más el total de páginas disponibles.</td>
+</tr>
+<tr>
+<td>Costo con 50 filas</td>
+<td>Insignificante.</td>
+<td>Insignificante.</td>
+</tr>
+<tr>
+<td>Costo con 50,000 filas</td>
+<td>Una respuesta lenta, o un error, cada vez que se carga la pantalla.</td>
+<td>El mismo costo que con 50 filas — solo cambia qué página se pide.</td>
+</tr>
+<tr>
+<td>Quién decide cuántas filas trae</td>
+<td>Nadie — trae todas.</td>
+<td>El cliente, con <code>page</code>/<code>size</code> en la petición.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="23-el-agregado-del-servidor-frente-al-calculo-en-el-cliente">2.3 El agregado del servidor frente al cálculo en el cliente<a class="headerlink" href="#23-el-agregado-del-servidor-frente-al-calculo-en-el-cliente" title="Permanent link">&para;</a></h3>
+<p>Paginar un listado, sin más, rompe cualquier total calculado sobre ese listado en el cliente: si la pantalla solo tiene la página 2 de 50 cargada, <code>ventas().reduce(...)</code> (1.1) solo puede sumar esa página, no el total real. La solución no es "sumar más páginas en el cliente" — es separar las dos responsabilidades: el <strong>total agregado</strong> se calcula una sola vez, en el servidor, con una consulta que nunca trae las filas completas (<code>VentaAgregado</code>, ya existente); el <strong>listado paginado</strong> solo sirve para mostrar filas, nunca para calcular nada agregado.</p>
+<p><strong>Tabla 3. Dos responsabilidades, dos consultas distintas</strong></p>
+<table>
+<thead>
+<tr>
+<th>Responsabilidad</th>
+<th>Quién la resuelve</th>
+<th>Costo al crecer el volumen</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"¿Cuánto es el total, el conteo, el promedio?"</td>
+<td>El servidor, con una consulta <code>SUM</code>/<code>COUNT</code> (<code>VentaAgregado</code>, S9) — nunca viaja una sola fila de detalle.</td>
+<td>Constante — el costo no depende de cuántas filas haya, solo de que el índice de fecha (BD2, S5) siga ayudando al filtro.</td>
+</tr>
+<tr>
+<td>"¿Qué filas muestro en esta página?"</td>
+<td>El servidor, con una consulta paginada (esta sesión) — trae solo las filas de la página pedida.</td>
+<td>Constante por página — nunca crece con el volumen total.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Error frecuente</strong>: paginar el listado y dejar que el cliente siga calculando el total sumando solo las filas que tiene cargadas en memoria. El resultado sería un total visiblemente incorrecto —la suma de una sola página, no del filtro completo— sin que ningún error lo señale.</p>
+<h3 id="24-integracion-funcional-verificar-el-sistema-completo-no-modulo-por-modulo">2.4 Integración funcional: verificar el sistema completo, no módulo por módulo<a class="headerlink" href="#24-integracion-funcional-verificar-el-sistema-completo-no-modulo-por-modulo" title="Permanent link">&para;</a></h3>
+<p>Cada módulo de BomERP (<code>catalogo</code>, <code>ventas</code>, <code>seguridad</code>) ya se probó por separado, sesión por sesión. <strong>Integración funcional</strong> es verificar que, juntos, en una sola corrida real —login real, token real, petición real, persistencia real—, el sistema completo sigue haciendo lo que cada pieza por separado prometía. El caso de Knight Capital (1.6) es la versión real, a escala de producción financiera, de lo que pasa cuando esa verificación nunca ocurre.</p>
+<h3 id="25-auditoria-quien-hizo-que-cuando-sobre-que-entidad">2.5 Auditoría: quién hizo qué, cuándo, sobre qué entidad<a class="headerlink" href="#25-auditoria-quien-hizo-que-cuando-sobre-que-entidad" title="Permanent link">&para;</a></h3>
+<p><strong>Auditoría</strong> (<em>audit trail</em>) registra, para cada acción crítica del sistema, quién la ejecutó, cuándo, sobre qué entidad, y qué cambió — no para depurar un error (eso ya lo hace el <em>logging</em> de S13), sino para poder responder después "¿quién anuló esta venta, y cuándo" con una fuente verificable, no con una suposición. BD2 ya construyó auditoría a nivel de base de datos (<code>TRG_PRODUCTO_AUDITORIA</code>, Unified Auditing, S2/S9) — esta sesión construye la auditoría del lado del backend, sobre acciones de negocio (<code>crear</code>, <code>anular</code>), no sobre cambios de columna.</p>
+<p><strong>Tabla 4. Auditoría de BD2 frente a la de esta sesión</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Auditoría de BD2 (S2, S9)</th>
+<th>Auditoría de esta sesión (LP2)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Qué registra</td>
+<td>Cambios de columna en una tabla (<code>PRODUCTOS.PRECIO</code>, <code>PRODUCTOS.STOCK</code>).</td>
+<td>Una acción de negocio completa (<code>crear</code> una venta, <code>anular</code> una venta).</td>
+</tr>
+<tr>
+<td>Quién la dispara</td>
+<td>Oracle, automáticamente, al ejecutar el <code>UPDATE</code>.</td>
+<td>El propio backend, explícitamente, después de completar la acción.</td>
+</tr>
+<tr>
+<td>Qué actor registra</td>
+<td>El usuario de base de datos que ejecutó el <code>UPDATE</code> (casi siempre <code>BOMERP_APP</code>, el mismo para toda la aplicación).</td>
+<td>El <code>sub</code> real del JWT de Keycloak — la persona autenticada que de verdad ejecutó la acción.</td>
+</tr>
+</tbody>
+</table>
+<p>Las dos son complementarias, no una reemplaza a la otra: BD2 sabe que una columna cambió; esta sesión sabe qué persona, desde la aplicación, pidió ese cambio.</p>
+<h3 id="26-pruebas-end-to-end-reales-frente-a-pruebas-de-un-controlador-con-mocks">2.6 Pruebas end-to-end reales frente a pruebas de un controlador con mocks<a class="headerlink" href="#26-pruebas-end-to-end-reales-frente-a-pruebas-de-un-controlador-con-mocks" title="Permanent link">&para;</a></h3>
+<p><code>ProductoControllerTest</code> (ya existente desde S2-S3) usa <code>@WebMvcTest</code> con <code>@MockitoBean</code> — prueba el controlador <strong>aislado</strong>, con el servicio reemplazado por un doble que responde lo que el test le ordena. Es una prueba válida y necesaria, pero prueba una pieza, no el sistema. Una prueba <strong>end-to-end</strong> real levanta el contexto completo de Spring (<code>@SpringBootTest</code>) y ejecuta la petición contra la base de datos real — si algo entre el controlador y Oracle está roto, un test con mocks nunca lo detecta, porque nunca llega a tocar esa pieza.</p>
+<p><strong>Tabla 5. Prueba de controlador (mock) frente a prueba end-to-end</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><code>@WebMvcTest</code> + mock (ya existente)</th>
+<th><code>@SpringBootTest</code> end-to-end (esta sesión)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Qué levanta</td>
+<td>Solo la capa web (controlador, serialización).</td>
+<td>Todo el contexto de Spring: controlador, servicio, repositorio, Oracle real.</td>
+</tr>
+<tr>
+<td>Qué detecta</td>
+<td>Errores de validación, de serialización, de códigos de estado HTTP.</td>
+<td>Errores de integración real: una consulta mal escrita, una transacción que no hace lo que promete, un dato que no se persiste como se espera.</td>
+</tr>
+<tr>
+<td>Qué NO detecta</td>
+<td>Nada de lo anterior si el problema está en el repositorio o en Oracle.</td>
+<td>— (es, por diseño, la prueba que sí llega hasta ahí).</td>
+</tr>
+<tr>
+<td>Costo de ejecución</td>
+<td>Milisegundos.</td>
+<td>Segundos — levanta el contexto completo.</td>
+</tr>
+</tbody>
+</table>
+<p>Ninguna reemplaza a la otra: los tests con mocks siguen corriendo en cada <code>mvnw test</code>; el end-to-end de esta sesión se agrega, no se sustituye.</p>
+<h3 id="27-estabilizacion-bitacora-de-hallazgos-correccion-y-prueba-de-no-regresion">2.7 Estabilización: bitácora de hallazgos, corrección y prueba de no regresión<a class="headerlink" href="#27-estabilizacion-bitacora-de-hallazgos-correccion-y-prueba-de-no-regresion" title="Permanent link">&para;</a></h3>
+<p><strong>Estabilizar</strong> no es "corregir errores hasta que no quede ninguno" — es un proceso con evidencia: cada hallazgo real se registra, se corrige, y se verifica con una prueba que confirme que no vuelve a ocurrir (<em>regression test</em>). <code>u3/lp2-producto.md</code> ya tiene una bitácora de estabilización de referencia (plantilla del docente) — 3.8 agrega una fila real, con el hallazgo de esta misma sesión.</p>
+<h2 id="3-aplica-actividad-practica-guiada">3. Aplica: actividad práctica guiada<a class="headerlink" href="#3-aplica-actividad-practica-guiada" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 100 min.</p>
+<p><strong>Actividad:</strong> paginar el listado de ventas sin romper sus agregados, verificar la integración funcional completa, construir auditoría real sobre <code>crear</code>/<code>anular</code>, escribir una prueba end-to-end, y cerrar con la bitácora de estabilización.</p>
+<p><strong>Propósito de la actividad:</strong> corregir, con evidencia real, el hallazgo de 1.1 —el agregado correcto del servidor nunca conectado— y aplicar el mismo criterio de verificación de punta a punta sobre el resto del sistema.</p>
+<p><strong>Orientaciones metodológicas:</strong> el docente diagnostica y corrige el hallazgo real en vivo, frente a la clase; los estudiantes repiten cada paso sobre su propio proyecto (sección 4), donde el hallazgo concreto puede ser distinto, pero el método de diagnóstico es el mismo.</p>
+<p><strong>Punto de partida común:</strong> todo el equipo debe comenzar exactamente desde donde quedó S13, no desde su propio avance individual. Clona la rama <code>s13-optimizacion-preparacion-produccion</code> (el snapshot de cierre de S13):</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>--branch<span class="w"> </span>s13-optimizacion-preparacion-produccion<span class="w"> </span>https://github.com/262ciclo4/bomerp.git
+</code></pre></div>
+<p><strong>Actividades para realizar:</strong></p>
+<ul>
+<li><strong>3.1</strong> Diagnosticar el hallazgo real: confirmar que la SPA nunca usa <code>/resumen</code>.</li>
+<li><strong>3.2</strong> Paginar el repositorio y el servicio de ventas.</li>
+<li><strong>3.3</strong> Paginar el controlador de ventas.</li>
+<li><strong>3.4</strong> Reconectar la SPA: paginar la tabla, usar el agregado real para los totales.</li>
+<li><strong>3.5</strong> Verificar la integración funcional de punta a punta.</li>
+<li><strong>3.6</strong> Construir la auditoría de acciones críticas.</li>
+<li><strong>3.7</strong> Escribir y ejecutar una prueba end-to-end real.</li>
+<li><strong>3.8</strong> Registrar y cerrar en la bitácora de estabilización.</li>
+</ul>
+<h3 id="31-diagnosticar-el-hallazgo-real-confirmar-que-la-spa-nunca-usa-resumen">3.1 Diagnosticar el hallazgo real: confirmar que la SPA nunca usa <code>/resumen</code><a class="headerlink" href="#31-diagnosticar-el-hallazgo-real-confirmar-que-la-spa-nunca-usa-resumen" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> confirmación, leyendo el código real, de que <code>VentaReporteComponent</code> llama a <code>buscar()</code> y calcula sus totales con <code>.reduce()</code>, mientras <code>VentaService</code> (frontend) no tiene ningún método que llame a <code>GET /api/v1/ventas/resumen</code>.</p>
+<p>Revisa <code>venta-reporte.ts</code> (<code>totalVentas</code>, <code>montoTotal</code>, <code>ticketPromedio</code>, calculados con <code>computed()</code> sobre <code>this.ventas()</code>) y <code>venta-service.ts</code> (sin ningún método <code>reporte()</code> o <code>resumen()</code>). El <em>endpoint</em> <code>GET /api/v1/ventas/resumen</code> existe en <code>VentaController</code> desde S9 — solo nunca se llamó desde la SPA.</p>
+<p><strong>Error frecuente</strong>: asumir que, porque el <em>endpoint</em> existe en el backend, "la integración ya está hecha". Un <em>endpoint</em> que nadie llama no integra nada — integrar es que el dato fluya de punta a punta, no que exista en ambos lados por separado.</p>
+<h3 id="32-paginar-el-repositorio-y-el-servicio-de-ventas">3.2 Paginar el repositorio y el servicio de ventas<a class="headerlink" href="#32-paginar-el-repositorio-y-el-servicio-de-ventas" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> <code>VentaRepository.buscar</code> y <code>VentaServiceImpl.buscar</code> aceptando un <code>Pageable</code> y devolviendo un <code>Page&lt;Venta&gt;</code>/<code>Page&lt;VentaResponse&gt;</code>, en vez de una lista completa.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// VentaRepository.java -- firma nueva, misma consulta JPQL de siempre</span>
+<span class="nd">@EntityGraph</span><span class="p">(</span><span class="n">attributePaths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"detalles"</span><span class="p">)</span>
+<span class="nd">@Query</span><span class="p">(</span><span class="s">"""</span>
+<span class="s">    SELECT v FROM Venta v</span>
+<span class="s">    WHERE (:estado IS NULL OR v.estado = :estado)</span>
+<span class="s">      AND (:desde IS NULL OR v.fecha &gt;= :desde)</span>
+<span class="s">      AND (:hasta IS NULL OR v.fecha &lt;= :hasta)</span>
+<span class="s">      AND (:vendedorId IS NULL OR v.vendedorId = :vendedorId)</span>
+<span class="s">    """</span><span class="p">)</span>
+<span class="n">Page</span><span class="o">&lt;</span><span class="n">Venta</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">buscar</span><span class="p">(</span><span class="nd">@Param</span><span class="p">(</span><span class="s">"estado"</span><span class="p">)</span><span class="w"> </span><span class="n">EstadoVenta</span><span class="w"> </span><span class="n">estado</span><span class="p">,</span>
+<span class="w">                    </span><span class="nd">@Param</span><span class="p">(</span><span class="s">"desde"</span><span class="p">)</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">desde</span><span class="p">,</span>
+<span class="w">                    </span><span class="nd">@Param</span><span class="p">(</span><span class="s">"hasta"</span><span class="p">)</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">hasta</span><span class="p">,</span>
+<span class="w">                    </span><span class="nd">@Param</span><span class="p">(</span><span class="s">"vendedorId"</span><span class="p">)</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">vendedorId</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">Pageable</span><span class="w"> </span><span class="n">pageable</span><span class="p">);</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">// VentaServiceImpl.java -- el Sort ya viene dentro del Pageable, no se pasa aparte</span>
+<span class="nd">@Override</span>
+<span class="nd">@Transactional</span><span class="p">(</span><span class="n">readOnly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="n">Page</span><span class="o">&lt;</span><span class="n">VentaResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">buscar</span><span class="p">(</span><span class="n">EstadoVenta</span><span class="w"> </span><span class="n">estado</span><span class="p">,</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">desde</span><span class="p">,</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">hasta</span><span class="p">,</span>
+<span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">vendedorId</span><span class="p">,</span><span class="w"> </span><span class="n">Pageable</span><span class="w"> </span><span class="n">pageable</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ventaRepository</span><span class="p">.</span><span class="na">buscar</span><span class="p">(</span><span class="n">estado</span><span class="p">,</span><span class="w"> </span><span class="n">desde</span><span class="p">,</span><span class="w"> </span><span class="n">hasta</span><span class="p">,</span><span class="w"> </span><span class="n">vendedorId</span><span class="p">,</span><span class="w"> </span><span class="n">pageable</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">map</span><span class="p">(</span><span class="n">ventaMapper</span><span class="p">::</span><span class="n">toResponse</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>Page&lt;Venta&gt;.map(...)</code> convierte cada <code>Venta</code> a <code>VentaResponse</code> sin perder los metadatos de paginación (página actual, total de páginas, total de elementos) — no hace falta reconstruir el <code>Page</code> a mano.</p>
+<h3 id="33-paginar-el-controlador-de-ventas">3.3 Paginar el controlador de ventas<a class="headerlink" href="#33-paginar-el-controlador-de-ventas" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> <code>GET /api/v1/ventas</code> aceptando <code>page</code>/<code>size</code>/<code>sort</code> como parámetros estándar de Spring, con un tamaño de página por defecto razonable.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// VentaController.java</span>
+<span class="nd">@Operation</span><span class="p">(</span><span class="n">summary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Consulta ventas con filtros, ordenamiento y paginación"</span><span class="p">)</span>
+<span class="nd">@GetMapping</span>
+<span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Page</span><span class="o">&lt;</span><span class="n">VentaResponse</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="nf">buscar</span><span class="p">(</span>
+<span class="w">        </span><span class="nd">@RequestParam</span><span class="p">(</span><span class="n">required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span><span class="w"> </span><span class="n">EstadoVenta</span><span class="w"> </span><span class="n">estado</span><span class="p">,</span>
+<span class="w">        </span><span class="nd">@RequestParam</span><span class="p">(</span><span class="n">required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span><span class="w"> </span><span class="nd">@DateTimeFormat</span><span class="p">(</span><span class="n">iso</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DateTimeFormat</span><span class="p">.</span><span class="na">ISO</span><span class="p">.</span><span class="na">DATE_TIME</span><span class="p">)</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">desde</span><span class="p">,</span>
+<span class="w">        </span><span class="nd">@RequestParam</span><span class="p">(</span><span class="n">required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span><span class="w"> </span><span class="nd">@DateTimeFormat</span><span class="p">(</span><span class="n">iso</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DateTimeFormat</span><span class="p">.</span><span class="na">ISO</span><span class="p">.</span><span class="na">DATE_TIME</span><span class="p">)</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">hasta</span><span class="p">,</span>
+<span class="w">        </span><span class="nd">@PageableDefault</span><span class="p">(</span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w"> </span><span class="n">sort</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"fecha"</span><span class="p">,</span><span class="w"> </span><span class="n">direction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Sort</span><span class="p">.</span><span class="na">Direction</span><span class="p">.</span><span class="na">DESC</span><span class="p">)</span><span class="w"> </span><span class="n">Pageable</span><span class="w"> </span><span class="n">pageable</span><span class="p">,</span>
+<span class="w">        </span><span class="nd">@AuthenticationPrincipal</span><span class="w"> </span><span class="n">Jwt</span><span class="w"> </span><span class="n">jwt</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">vendedorId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">esVendedor</span><span class="p">(</span><span class="n">jwt</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">jwt</span><span class="p">.</span><span class="na">getSubject</span><span class="p">()</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">ok</span><span class="p">(</span><span class="n">ventaService</span><span class="p">.</span><span class="na">buscar</span><span class="p">(</span><span class="n">estado</span><span class="p">,</span><span class="w"> </span><span class="n">desde</span><span class="p">,</span><span class="w"> </span><span class="n">hasta</span><span class="p">,</span><span class="w"> </span><span class="n">vendedorId</span><span class="p">,</span><span class="w"> </span><span class="n">pageable</span><span class="p">));</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>ordenarPor</code>/<code>direccion</code> (los parámetros manuales de antes) se reemplazan por <code>sort</code> — el parámetro estándar de Spring Data (<code>?sort=total,desc</code>), que ya sabe validar que la columna pedida exista, algo que la versión manual no verificaba.</p>
+<p><strong>Error frecuente</strong>: cambiar la firma del método sin actualizar <code>VentaService</code> (la interfaz) — el proyecto no compila hasta que la interfaz y la implementación coincidan.</p>
+<h3 id="34-reconectar-la-spa-paginar-la-tabla-usar-el-agregado-real-para-los-totales">3.4 Reconectar la SPA: paginar la tabla, usar el agregado real para los totales<a class="headerlink" href="#34-reconectar-la-spa-paginar-la-tabla-usar-el-agregado-real-para-los-totales" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> <code>VentaReporteComponent</code> usando <code>/resumen</code> para sus tres números, y una tabla paginada con <code>mat-paginator</code> para las filas.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// venta-service.ts -- método nuevo, llama al endpoint que ya existe desde S9</span>
+<span class="nx">reporte</span><span class="p">(</span><span class="nx">estado?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">desde?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">hasta?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nx">Observable</span><span class="o">&lt;</span><span class="nx">VentaReporte</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">let</span><span class="w"> </span><span class="nx">params</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">HttpParams</span><span class="p">();</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">estado</span><span class="p">)</span><span class="w"> </span><span class="nx">params</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">params</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'estado'</span><span class="p">,</span><span class="w"> </span><span class="nx">estado</span><span class="p">);</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">desde</span><span class="p">)</span><span class="w"> </span><span class="nx">params</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">params</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'desde'</span><span class="p">,</span><span class="w"> </span><span class="nx">desde</span><span class="p">);</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">hasta</span><span class="p">)</span><span class="w"> </span><span class="nx">params</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">params</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'hasta'</span><span class="p">,</span><span class="w"> </span><span class="nx">hasta</span><span class="p">);</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">http</span><span class="p">.</span><span class="nx">get</span><span class="o">&lt;</span><span class="nx">VentaReporte</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">api</span><span class="p">.</span><span class="nx">buildUrl</span><span class="p">(</span><span class="sb">`</span><span class="si">${</span><span class="k">this</span><span class="p">.</span><span class="nx">resource</span><span class="si">}</span><span class="sb">/resumen`</span><span class="p">),</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">params</span><span class="w"> </span><span class="p">});</span>
+<span class="p">}</span>
+
+<span class="nx">buscarPaginado</span><span class="p">(</span>
+<span class="w">  </span><span class="nx">estado?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">desde?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">hasta?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">page</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="nx">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">20</span><span class="p">,</span><span class="w"> </span><span class="nx">sort</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'fecha,desc'</span><span class="p">,</span>
+<span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nx">Observable</span><span class="o">&lt;</span><span class="nx">PageResponse</span><span class="o">&lt;</span><span class="nx">VentaResponse</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">let</span><span class="w"> </span><span class="nx">params</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">HttpParams</span><span class="p">().</span><span class="nx">set</span><span class="p">(</span><span class="s1">'page'</span><span class="p">,</span><span class="w"> </span><span class="nx">page</span><span class="p">).</span><span class="nx">set</span><span class="p">(</span><span class="s1">'size'</span><span class="p">,</span><span class="w"> </span><span class="nx">size</span><span class="p">).</span><span class="nx">set</span><span class="p">(</span><span class="s1">'sort'</span><span class="p">,</span><span class="w"> </span><span class="nx">sort</span><span class="p">);</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">estado</span><span class="p">)</span><span class="w"> </span><span class="nx">params</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">params</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'estado'</span><span class="p">,</span><span class="w"> </span><span class="nx">estado</span><span class="p">);</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">desde</span><span class="p">)</span><span class="w"> </span><span class="nx">params</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">params</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'desde'</span><span class="p">,</span><span class="w"> </span><span class="nx">desde</span><span class="p">);</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">hasta</span><span class="p">)</span><span class="w"> </span><span class="nx">params</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">params</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'hasta'</span><span class="p">,</span><span class="w"> </span><span class="nx">hasta</span><span class="p">);</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">http</span><span class="p">.</span><span class="nx">get</span><span class="o">&lt;</span><span class="nx">PageResponse</span><span class="o">&lt;</span><span class="nx">VentaResponse</span><span class="o">&gt;&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">api</span><span class="p">.</span><span class="nx">buildUrl</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">resource</span><span class="p">),</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">params</span><span class="w"> </span><span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">// venta-reporte.ts -- los totales ya no se calculan con reduce(); vienen del agregado real</span>
+<span class="nx">cargar</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">this</span><span class="p">.</span><span class="nx">loading</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">desde</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">desdeFiltro</span><span class="p">()</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="sb">`</span><span class="si">${</span><span class="k">this</span><span class="p">.</span><span class="nx">desdeFiltro</span><span class="p">()</span><span class="si">}</span><span class="sb">T00:00:00`</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kc">undefined</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">hasta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">hastaFiltro</span><span class="p">()</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="sb">`</span><span class="si">${</span><span class="k">this</span><span class="p">.</span><span class="nx">hastaFiltro</span><span class="p">()</span><span class="si">}</span><span class="sb">T23:59:59`</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kc">undefined</span><span class="p">;</span>
+
+<span class="w">  </span><span class="k">this</span><span class="p">.</span><span class="nx">ventaService</span><span class="p">.</span><span class="nx">reporte</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">estadoFiltro</span><span class="p">()</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="kc">undefined</span><span class="p">,</span><span class="w"> </span><span class="nx">desde</span><span class="p">,</span><span class="w"> </span><span class="nx">hasta</span><span class="p">)</span>
+<span class="w">      </span><span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="nx">r</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">agregado</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">r</span><span class="p">.</span><span class="nx">agregado</span><span class="p">));</span><span class="w"> </span><span class="c1">// totalVentas, montoTotal, ticketPromedio reales</span>
+
+<span class="w">  </span><span class="k">this</span><span class="p">.</span><span class="nx">ventaService</span><span class="p">.</span><span class="nx">buscarPaginado</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">estadoFiltro</span><span class="p">()</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="kc">undefined</span><span class="p">,</span><span class="w"> </span><span class="nx">desde</span><span class="p">,</span><span class="w"> </span><span class="nx">hasta</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">pageIndex</span><span class="p">(),</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">pageSize</span><span class="p">())</span>
+<span class="w">      </span><span class="p">.</span><span class="nx">subscribe</span><span class="p">({</span>
+<span class="w">        </span><span class="nx">next</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">page</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">filas</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">page</span><span class="p">.</span><span class="nx">content</span><span class="p">);</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">totalFilas</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">page</span><span class="p">.</span><span class="nx">totalElements</span><span class="p">);</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'No se pudo cargar el reporte de ventas.'</span><span class="p">),</span>
+<span class="w">        </span><span class="nx">complete</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">loading</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="kc">false</span><span class="p">),</span>
+<span class="w">      </span><span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>totalVentas</code>, <code>montoTotal</code> y <code>ticketPromedio</code> dejan de ser <code>computed()</code> sobre <code>this.ventas()</code> — ahora son el <code>agregado</code> que llega directo de <code>/resumen</code>, correcto sin importar cuántas páginas tenga el listado.</p>
+<h3 id="35-verificar-la-integracion-funcional-de-punta-a-punta">3.5 Verificar la integración funcional de punta a punta<a class="headerlink" href="#35-verificar-la-integracion-funcional-de-punta-a-punta" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> una corrida manual real, con el sistema completo levantado, confirmando que cada módulo sigue funcionando junto — el mismo criterio del caso de Knight Capital (1.6), aplicado al proyecto propio.</p>
+<p><strong>Tabla 6. Checklist de integración funcional</strong></p>
+<table>
+<thead>
+<tr>
+<th>Paso</th>
+<th>Qué verificar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Login real</td>
+<td>Autenticación contra Keycloak completa, token recibido.</td>
+</tr>
+<tr>
+<td>2. Crear una venta</td>
+<td><code>catalogo</code> (stock descontado) y <code>ventas</code> (venta registrada) responden juntos, en la misma transacción.</td>
+</tr>
+<tr>
+<td>3. Consultar el listado paginado</td>
+<td>La página 1 responde rápido, el total de páginas es coherente con el filtro aplicado.</td>
+</tr>
+<tr>
+<td>4. Consultar el reporte</td>
+<td><code>montoTotal</code>/<code>ticketPromedio</code> coinciden con una suma manual de las filas reales (verificación cruzada, no solo "se ve bien").</td>
+</tr>
+<tr>
+<td>5. Anular la venta</td>
+<td>El stock se restaura en <code>catalogo</code>, visible desde una consulta nueva.</td>
+</tr>
+<tr>
+<td>6. Cerrar sesión y repetir sin token</td>
+<td>Cada paso anterior debe rechazarse con <code>401</code>, no ejecutarse a medias.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="36-construir-la-auditoria-de-acciones-criticas">3.6 Construir la auditoría de acciones críticas<a class="headerlink" href="#36-construir-la-auditoria-de-acciones-criticas" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> un registro real, persistido en Oracle, de quién ejecutó <code>crear</code> o <code>anular</code>, cuándo, y sobre qué venta.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// RegistroAuditoria.java -- entidad nueva, modulo ventas</span>
+<span class="nd">@Entity</span>
+<span class="nd">@Table</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"AUDITORIA"</span><span class="p">)</span>
+<span class="nd">@Getter</span><span class="w"> </span><span class="nd">@Setter</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">RegistroAuditoria</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nd">@Id</span><span class="w"> </span><span class="nd">@GeneratedValue</span><span class="p">(</span><span class="n">strategy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GenerationType</span><span class="p">.</span><span class="na">IDENTITY</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">actor</span><span class="p">;</span><span class="w">      </span><span class="c1">// sub del JWT -- quien ejecuto la accion</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">accion</span><span class="p">;</span><span class="w">     </span><span class="c1">// "CREAR", "ANULAR"</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">entidad</span><span class="p">;</span><span class="w">    </span><span class="c1">// "VENTA"</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Long</span><span class="w"> </span><span class="n">entidadId</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">fecha</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">detalle</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">// AuditoriaService.java</span>
+<span class="nd">@Service</span>
+<span class="nd">@RequiredArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">AuditoriaService</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">RegistroAuditoriaRepository</span><span class="w"> </span><span class="n">repository</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">registrar</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">actor</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">accion</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">entidad</span><span class="p">,</span><span class="w"> </span><span class="n">Long</span><span class="w"> </span><span class="n">entidadId</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">detalle</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">RegistroAuditoria</span><span class="w"> </span><span class="n">registro</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">RegistroAuditoria</span><span class="p">();</span>
+<span class="w">        </span><span class="n">registro</span><span class="p">.</span><span class="na">setActor</span><span class="p">(</span><span class="n">actor</span><span class="p">);</span>
+<span class="w">        </span><span class="n">registro</span><span class="p">.</span><span class="na">setAccion</span><span class="p">(</span><span class="n">accion</span><span class="p">);</span>
+<span class="w">        </span><span class="n">registro</span><span class="p">.</span><span class="na">setEntidad</span><span class="p">(</span><span class="n">entidad</span><span class="p">);</span>
+<span class="w">        </span><span class="n">registro</span><span class="p">.</span><span class="na">setEntidadId</span><span class="p">(</span><span class="n">entidadId</span><span class="p">);</span>
+<span class="w">        </span><span class="n">registro</span><span class="p">.</span><span class="na">setFecha</span><span class="p">(</span><span class="n">LocalDateTime</span><span class="p">.</span><span class="na">now</span><span class="p">());</span>
+<span class="w">        </span><span class="n">registro</span><span class="p">.</span><span class="na">setDetalle</span><span class="p">(</span><span class="n">detalle</span><span class="p">);</span>
+<span class="w">        </span><span class="n">repository</span><span class="p">.</span><span class="na">save</span><span class="p">(</span><span class="n">registro</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">// VentaServiceImpl.java -- se agrega justo despues de persistir, dentro de la misma transaccion</span>
+<span class="n">Venta</span><span class="w"> </span><span class="n">guardada</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ventaRepository</span><span class="p">.</span><span class="na">save</span><span class="p">(</span><span class="n">venta</span><span class="p">);</span>
+<span class="n">auditoriaService</span><span class="p">.</span><span class="na">registrar</span><span class="p">(</span><span class="n">vendedorId</span><span class="p">,</span><span class="w"> </span><span class="s">"CREAR"</span><span class="p">,</span><span class="w"> </span><span class="s">"VENTA"</span><span class="p">,</span><span class="w"> </span><span class="n">guardada</span><span class="p">.</span><span class="na">getId</span><span class="p">(),</span><span class="w"> </span><span class="s">"total="</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">total</span><span class="p">);</span>
+<span class="k">return</span><span class="w"> </span><span class="n">ventaMapper</span><span class="p">.</span><span class="na">toResponse</span><span class="p">(</span><span class="n">guardada</span><span class="p">);</span>
+</code></pre></div>
+<p><code>anular(Long id)</code> necesita recibir ahora el <code>vendedorId</code> (hoy no lo recibe) para poder registrar quién anuló — un cambio de firma que se propaga al controlador, igual que en 3.3.</p>
+<p><strong>Error frecuente</strong>: registrar la auditoría <strong>antes</strong> de que la operación principal se confirme. Si <code>auditoriaService.registrar(...)</code> corre antes de <code>ventaRepository.save(...)</code> y la venta falla después, quedaría un registro de auditoría de algo que nunca ocurrió.</p>
+<h3 id="37-escribir-y-ejecutar-una-prueba-end-to-end-real">3.7 Escribir y ejecutar una prueba end-to-end real<a class="headerlink" href="#37-escribir-y-ejecutar-una-prueba-end-to-end-real" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> una prueba que levanta el contexto completo de Spring y ejecuta, contra la base real, el flujo crear → consultar.</p>
+<p>Agrega la dependencia de prueba al <code>pom.xml</code> (alcance <code>test</code>, no afecta el <code>.jar</code> de producción):</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.springframework.security<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>spring-security-test<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">// VentaEndToEndTest.java</span>
+<span class="kn">import static</span><span class="w"> </span><span class="nn">org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt</span><span class="p">;</span>
+
+<span class="nd">@SpringBootTest</span><span class="p">(</span><span class="n">webEnvironment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SpringBootTest</span><span class="p">.</span><span class="na">WebEnvironment</span><span class="p">.</span><span class="na">RANDOM_PORT</span><span class="p">)</span>
+<span class="nd">@AutoConfigureMockMvc</span>
+<span class="kd">class</span> <span class="nc">VentaEndToEndTest</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@Autowired</span><span class="w"> </span><span class="kd">private</span><span class="w"> </span><span class="n">MockMvc</span><span class="w"> </span><span class="n">mockMvc</span><span class="p">;</span>
+<span class="w">    </span><span class="nd">@Autowired</span><span class="w"> </span><span class="kd">private</span><span class="w"> </span><span class="n">ObjectMapper</span><span class="w"> </span><span class="n">objectMapper</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Test</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">flujoCompleto_crearVentaYConsultarla</span><span class="p">()</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">VentaRequest</span><span class="w"> </span><span class="n">request</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">VentaRequest</span><span class="p">();</span>
+<span class="w">        </span><span class="n">request</span><span class="p">.</span><span class="na">setDetalles</span><span class="p">(</span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">DetalleVentaRequest</span><span class="p">(</span><span class="mi">1L</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)));</span><span class="w"> </span><span class="c1">// producto id real, ya sembrado</span>
+
+<span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">json</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mockMvc</span><span class="p">.</span><span class="na">perform</span><span class="p">(</span><span class="n">post</span><span class="p">(</span><span class="s">"/api/v1/ventas"</span><span class="p">)</span>
+<span class="w">                        </span><span class="p">.</span><span class="na">with</span><span class="p">(</span><span class="n">jwt</span><span class="p">().</span><span class="na">jwt</span><span class="p">(</span><span class="n">j</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">j</span><span class="p">.</span><span class="na">claim</span><span class="p">(</span><span class="s">"sub"</span><span class="p">,</span><span class="w"> </span><span class="s">"vendedor-e2e"</span><span class="p">)</span>
+<span class="w">                                </span><span class="p">.</span><span class="na">claim</span><span class="p">(</span><span class="s">"realm_access"</span><span class="p">,</span><span class="w"> </span><span class="n">Map</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">"roles"</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">"VENDEDOR"</span><span class="p">)))))</span>
+<span class="w">                        </span><span class="p">.</span><span class="na">contentType</span><span class="p">(</span><span class="n">MediaType</span><span class="p">.</span><span class="na">APPLICATION_JSON</span><span class="p">)</span>
+<span class="w">                        </span><span class="p">.</span><span class="na">content</span><span class="p">(</span><span class="n">objectMapper</span><span class="p">.</span><span class="na">writeValueAsString</span><span class="p">(</span><span class="n">request</span><span class="p">)))</span>
+<span class="w">                </span><span class="p">.</span><span class="na">andExpect</span><span class="p">(</span><span class="n">status</span><span class="p">().</span><span class="na">isCreated</span><span class="p">())</span>
+<span class="w">                </span><span class="p">.</span><span class="na">andReturn</span><span class="p">().</span><span class="na">getResponse</span><span class="p">().</span><span class="na">getContentAsString</span><span class="p">();</span>
+
+<span class="w">        </span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">objectMapper</span><span class="p">.</span><span class="na">readTree</span><span class="p">(</span><span class="n">json</span><span class="p">).</span><span class="na">get</span><span class="p">(</span><span class="s">"id"</span><span class="p">).</span><span class="na">asLong</span><span class="p">();</span>
+
+<span class="w">        </span><span class="n">mockMvc</span><span class="p">.</span><span class="na">perform</span><span class="p">(</span><span class="n">get</span><span class="p">(</span><span class="s">"/api/v1/ventas/"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">id</span><span class="p">)</span>
+<span class="w">                        </span><span class="p">.</span><span class="na">with</span><span class="p">(</span><span class="n">jwt</span><span class="p">().</span><span class="na">jwt</span><span class="p">(</span><span class="n">j</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">j</span><span class="p">.</span><span class="na">claim</span><span class="p">(</span><span class="s">"sub"</span><span class="p">,</span><span class="w"> </span><span class="s">"vendedor-e2e"</span><span class="p">)</span>
+<span class="w">                                </span><span class="p">.</span><span class="na">claim</span><span class="p">(</span><span class="s">"realm_access"</span><span class="p">,</span><span class="w"> </span><span class="n">Map</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">"roles"</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">"VENDEDOR"</span><span class="p">))))))</span>
+<span class="w">                </span><span class="p">.</span><span class="na">andExpect</span><span class="p">(</span><span class="n">status</span><span class="p">().</span><span class="na">isOk</span><span class="p">())</span>
+<span class="w">                </span><span class="p">.</span><span class="na">andExpect</span><span class="p">(</span><span class="n">jsonPath</span><span class="p">(</span><span class="s">"$.id"</span><span class="p">).</span><span class="na">value</span><span class="p">(</span><span class="n">id</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>.with(jwt()...)</code> simula un JWT ya validado, con los claims reales que <code>esVendedor(jwt)</code> y <code>vendedorId</code> necesitan — no hace falta un login real contra Keycloak para que la prueba sea end-to-end: lo que la hace end-to-end es que el controlador, el servicio, el repositorio y Oracle corren de verdad, sin ningún mock entre ellos.</p>
+<div class="highlight"><pre><span></span><code><span class="p">.\</span><span class="n">mvnw</span><span class="p">.</span><span class="n">cmd</span> <span class="n">test</span> <span class="n">-Dtest</span><span class="p">=</span><span class="n">VentaEndToEndTest</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>./mvnw<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-Dtest<span class="o">=</span>VentaEndToEndTest
+</code></pre></div>
+<p><strong>Error frecuente</strong>: dejar que la prueba end-to-end dependa de datos que otra prueba (o una ejecución anterior) pudo haber modificado — por ejemplo, un <code>productoId</code> fijo cuyo stock ya se agotó en una corrida previa. Verifica el estado real antes de asumirlo, o crea el producto que necesitas dentro de la misma prueba.</p>
+<h3 id="38-registrar-y-cerrar-en-la-bitacora-de-estabilizacion">3.8 Registrar y cerrar en la bitácora de estabilización<a class="headerlink" href="#38-registrar-y-cerrar-en-la-bitacora-de-estabilizacion" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> la bitácora de <code>u3/lp2-producto.md</code> con una fila real, correspondiente al hallazgo de esta sesión.</p>
+<p><strong>Tabla 7. Bitácora de estabilización (fila real de esta sesión)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Hallazgo</th>
+<th>Corrección</th>
+<th>Evidencia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>VentaReporteComponent</code> recalculaba sus totales en el navegador, sobre la lista completa sin paginar, en vez de usar el agregado real de <code>/resumen</code> (existente desde S9, nunca conectado).</td>
+<td>Se paginó el listado (3.2-3.3) y se conectó la SPA al agregado real del servidor (3.4), separando ambas responsabilidades.</td>
+<td><code>VentaEndToEndTest</code> (3.7) en verde; verificación manual de que <code>montoTotal</code> coincide entre <code>/resumen</code> y una suma manual de las filas reales.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Evidencia de aprendizaje:</strong></p>
+<ul>
+<li>Hallazgo real diagnosticado (3.1), con el código exacto que lo prueba.</li>
+<li><code>GET /api/v1/ventas</code> paginado, con <code>Page&lt;VentaResponse&gt;</code> real.</li>
+<li>SPA reconectada: totales desde <code>/resumen</code>, tabla paginada con <code>mat-paginator</code>.</li>
+<li>Checklist de integración funcional (Tabla 6) completo.</li>
+<li>Auditoría real sobre <code>crear</code>/<code>anular</code>, verificada contra la tabla <code>AUDITORIA</code>.</li>
+<li><code>VentaEndToEndTest</code> ejecutado y en verde contra la base real.</li>
+<li>Bitácora de estabilización con la fila de esta sesión.</li>
+</ul>
+<h2 id="4-crea-actividad-autonoma">4. Crea: actividad autónoma<a class="headerlink" href="#4-crea-actividad-autonoma" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 2h fuera del aula.</p>
+<h3 id="41-actividad">4.1 Actividad<a class="headerlink" href="#41-actividad" title="Permanent link">&para;</a></h3>
+<p>Integración y estabilización del proyecto propio del equipo, documentada en evidencia individual.</p>
+<p>Completa y evidencia estas tareas:</p>
+<ol>
+<li>Diagnosticar, leyendo tu propio código, si existe algún agregado del servidor que tu propia SPA nunca conectó (como el hallazgo de 1.1) — si no encuentras ninguno, documenta explícitamente por qué tu proyecto no tiene ese riesgo.</li>
+<li>Paginar al menos un listado de alto volumen de tu propio módulo transaccional, separando el total agregado (servidor) del listado paginado (filas).</li>
+<li>Ejecutar el checklist de integración funcional (Tabla 6) sobre tu propio proyecto, con tu propio flujo transaccional.</li>
+<li>Construir auditoría real sobre al menos dos acciones críticas de tu propio módulo (crear y anular, o su equivalente).</li>
+<li>Escribir y ejecutar al menos una prueba end-to-end real, contra tu base de datos real, sin mocks en la cadena backend-base de datos.</li>
+<li>Registrar al menos un hallazgo real en tu propia bitácora de estabilización, con su corrección y su evidencia.</li>
+</ol>
+<h3 id="42-proposito">4.2 Propósito<a class="headerlink" href="#42-proposito" title="Permanent link">&para;</a></h3>
+<p>Que cada estudiante demuestre, de forma individual y fuera del aula, que puede diagnosticar un problema real de integración, paginar sin romper agregados, construir auditoría real, y verificar su sistema con una prueba end-to-end, sin el acompañamiento del docente.</p>
+<h3 id="43-indicaciones">4.3 Indicaciones<a class="headerlink" href="#43-indicaciones" title="Permanent link">&para;</a></h3>
+<p>Entrega un PDF con el siguiente nombre:</p>
+<div class="highlight"><pre><span></span><code>S14_LP2_Equipo##_ApellidoNombre.pdf
+</code></pre></div>
+<p>Cada captura de pantalla del informe debe mostrar, sin recortar, el reloj del sistema (fecha y hora) y tu usuario o foto de perfil (Windows, VS Code o navegador) visibles en pantalla.</p>
+<h4 id="431-estructura-del-informe">4.3.1 Estructura del informe<a class="headerlink" href="#431-estructura-del-informe" title="Permanent link">&para;</a></h4>
+<p><strong>Datos del estudiante</strong></p>
+<ul>
+<li>Nombre:</li>
+<li>Equipo:</li>
+<li>Sesión: S14 - Integración y Estabilización</li>
+<li>Rol o aporte realizado:</li>
+<li>Link de GitHub:</li>
+</ul>
+<p><strong>Evidencia técnica</strong></p>
+<p>Incluye capturas con una breve explicación debajo de cada una, organizadas en los mismos 5 bloques de la rúbrica (4.6):</p>
+<ol>
+<li><em>Listado paginado con agregado correcto</em><ul>
+<li>El listado paginado real, y el agregado del servidor coincidiendo con una suma manual de verificación.</li>
+</ul>
+</li>
+<li><em>Integración funcional completa</em><ul>
+<li>El checklist (Tabla 6) de tu propio proyecto, con cada paso verificado en vivo.</li>
+</ul>
+</li>
+<li><em>Auditoría real</em><ul>
+<li>Al menos dos registros de auditoría reales, con actor, acción, entidad y fecha.</li>
+</ul>
+</li>
+<li><em>Prueba end-to-end</em><ul>
+<li>La prueba ejecutándose en verde, con su salida real de <code>mvnw test</code>.</li>
+</ul>
+</li>
+<li><em>Bitácora de estabilización</em><ul>
+<li>Al menos un hallazgo real, con su corrección y su evidencia.</li>
+</ul>
+</li>
+</ol>
+<p><strong>Error o hallazgo</strong></p>
+<p>Describe el hallazgo real que diagnosticaste (o la justificación de por qué no encontraste ninguno), distinto al ya corregido en la sesión guiada.</p>
+<p><strong>Reflexión técnica breve</strong></p>
+<p>Responde en 5 a 8 líneas:</p>
+<div class="highlight"><pre><span></span><code>Relaciona el caso de Knight Capital (1.6) con el hallazgo real que
+encontraste (o no encontraste) en tu propio proyecto: ¿qué parte de
+tu sistema nunca habías probado con todas sus piezas reales juntas,
+y qué pasaría si esa parte fallara en producción sin que nadie la
+hubiera probado así antes?
+</code></pre></div>
+<h3 id="44-criterios-minimos-de-aceptacion">4.4 Criterios mínimos de aceptación<a class="headerlink" href="#44-criterios-minimos-de-aceptacion" title="Permanent link">&para;</a></h3>
+<ul>
+<li>El archivo respeta el nombre solicitado.</li>
+<li>El listado paginado funciona, y su agregado coincide con una verificación manual, no solo "se ve bien".</li>
+<li>El checklist de integración funcional está completo, con cada paso verificado en vivo.</li>
+<li>La auditoría registra al menos dos acciones reales, con actor real (no un valor fijo).</li>
+<li>La prueba end-to-end se ejecuta contra la base de datos real y pasa en verde.</li>
+<li>La bitácora de estabilización tiene al menos un hallazgo real, con corrección y evidencia.</li>
+<li>Cada captura de la evidencia técnica muestra el reloj del sistema y el usuario/perfil visible, sin recortar.</li>
+<li>Las fechas y horas de las capturas son coherentes con el historial de commits de su repositorio en GitHub.</li>
+<li>Incluye un error o hallazgo técnico diagnosticado.</li>
+<li>Incluye la reflexión técnica breve solicitada.</li>
+</ul>
+<h3 id="45-preguntas-de-defensa">4.5 Preguntas de defensa<a class="headerlink" href="#45-preguntas-de-defensa" title="Permanent link">&para;</a></h3>
+<ol>
+<li>¿Por qué paginar un listado, sin más, puede romper un total que antes era correcto? ¿Cómo se evita eso?</li>
+<li>¿Qué detecta una prueba end-to-end real que una prueba de controlador con mocks (como <code>ProductoControllerTest</code>) nunca podría detectar?</li>
+<li>En tu propio hallazgo de integración, ¿qué pieza "funcionaba bien por separado" pero fallaba (o podía fallar) al juntarse con el resto?</li>
+<li>¿Por qué la auditoría se registra después de confirmar la operación principal, y nunca antes?</li>
+<li>Relaciona el caso de Knight Capital (1.6) con tu propio checklist de integración funcional: ¿qué paso de tu checklist, si se hubiera omitido, podría causar un problema parecido en escala menor?</li>
+<li>¿Por qué <code>.with(jwt()...)</code> en una prueba de Spring Security Test no necesita un login real contra Keycloak para que la prueba siga siendo "end-to-end"?</li>
+<li>Si tu bitácora de estabilización no tuviera ningún hallazgo real, ¿cómo demostrarías que de verdad buscaste uno, y no que simplemente no buscaste a fondo?</li>
+</ol>
+<h3 id="46-rubrica-de-evaluacion">4.6 Rúbrica de evaluación<a class="headerlink" href="#46-rubrica-de-evaluacion" title="Permanent link">&para;</a></h3>
+<p><strong>Tabla 8. Rúbrica de evaluación</strong></p>
+<table>
+<thead>
+<tr>
+<th>Criterio</th>
+<th style="text-align: right;">Peso (%)</th>
+<th>A (20 pts)</th>
+<th>B (15 pts)</th>
+<th>C (10 pts)</th>
+<th>D (5 pts)</th>
+<th style="text-align: right;">Nivel obtenido</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Listado paginado con agregado correcto*</td>
+<td style="text-align: right;">20</td>
+<td>Paginado real, con el agregado del servidor verificado contra una suma manual.</td>
+<td>Paginado real, con el agregado presente pero sin verificación cruzada.</td>
+<td>Paginado parcial o con el agregado roto por la paginación.</td>
+<td>No presenta listado paginado.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>2. Integración funcional completa*</td>
+<td style="text-align: right;">20</td>
+<td>Checklist completo (Tabla 6), cada paso verificado en vivo con evidencia.</td>
+<td>Checklist completo, con algún paso verificado solo superficialmente.</td>
+<td>Checklist incompleto.</td>
+<td>No presenta verificación de integración funcional.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>3. Auditoría real*</td>
+<td style="text-align: right;">20</td>
+<td>Al menos 2 acciones auditadas, con actor real, verificadas contra la tabla de auditoría.</td>
+<td>Auditoría presente, con algún campo (actor o fecha) genérico.</td>
+<td>Auditoría mencionada sin registros reales verificables.</td>
+<td>No presenta auditoría.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>4. Prueba end-to-end*</td>
+<td style="text-align: right;">20</td>
+<td>Prueba ejecutada en verde contra la base real, sin mocks entre controlador y base de datos.</td>
+<td>Prueba ejecutada, con algún mock innecesario en la cadena.</td>
+<td>Prueba escrita pero no ejecutada, o fallando.</td>
+<td>No presenta prueba end-to-end.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>5. Bitácora de estabilización*</td>
+<td style="text-align: right;">20</td>
+<td>Al menos un hallazgo real, con corrección y evidencia de no regresión.</td>
+<td>Hallazgo presente, sin evidencia clara de no regresión.</td>
+<td>Bitácora genérica, sin hallazgo real propio.</td>
+<td>No presenta bitácora de estabilización.</td>
+<td style="text-align: right;"></td>
+</tr>
+</tbody>
+</table>
+<p>* Agregado manual.</p>
+<p>Nota final = suma de (<code>Peso</code> / 100 × <code>Puntos del nivel obtenido</code>) = ____ / 20.</p>
+<p>Para usar la rúbrica con IA (inteligencia artificial), solicita:</p>
+<div class="highlight"><pre><span></span><code>Evalúa el PDF usando la rúbrica de la sesión.
+Para cada criterio selecciona el nivel obtenido usando la escala A=20, B=15, C=10, D=5 puntos.
+Justifica brevemente cada nivel asignado.
+Verifica que cada captura muestre reloj del sistema y usuario/perfil visible, y que las fechas sean coherentes con el historial de commits de GitHub. Si falta esta evidencia o hay inconsistencias, indícalo explícitamente antes de calificar.
+Calcula la nota final con la fórmula: suma de (Peso/100 × Puntos del nivel obtenido), directamente sobre 20.
+Indica 2 fortalezas y 2 recomendaciones.
+</code></pre></div>
+<h2 id="5-cierre">5. Cierre<a class="headerlink" href="#5-cierre" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 5 min.</p>
+<p><strong>Resumen breve:</strong> hoy se corrigió un hallazgo real, no inventado: la SPA calculaba sus totales en el navegador, ignorando el agregado correcto que el backend ya calculaba en Oracle desde S9. Pagina el listado, usa el agregado real, y los dos problemas que parecían uno solo (rendimiento y corrección) se resuelven juntos. El checklist de integración funcional confirmó que el sistema completo —login, venta, consulta, anulación— sigue funcionando de punta a punta, no solo módulo por módulo, el mismo criterio que el caso de Knight Capital (1.6) muestra fallando a escala real. La auditoría real y la prueba end-to-end dejan evidencia verificable de quién hizo qué, y de que el sistema completo —no una pieza mockeada— sigue respondiendo correctamente.</p>
+<p><strong>Dinámica participativa:</strong> en una ronda rápida, cada estudiante comparte en una frase qué hallazgo real encontró (o no encontró, y por qué) al diagnosticar su propio proyecto.</p>
+<p><strong>Metacognición:</strong> ¿qué te costó más: encontrar un hallazgo real de integración en tu propio código, o escribir una prueba end-to-end que de verdad ejercite el sistema completo, sin ningún mock escondido?</p>
+<p><strong>Proyección:</strong> S15 integra todo el producto de la Unidad III —optimización, integración, estabilización, sobre el backend y la SPA construidos desde U1-U2— en la sustentación final del curso.</p>
+<h2 id="bibliografia">Bibliografía<a class="headerlink" href="#bibliografia" title="Permanent link">&para;</a></h2>
+<ol>
+<li>U.S. Securities and Exchange Commission. (2013). <em>In the Matter of Knight Capital Americas LLC</em>. Release No. 34-70694. https://www.sec.gov/files/litigation/admin/2013/34-70694.pdf</li>
+<li>Spring Data. (2024). <em>Paging and Sorting</em>. Spring Data Commons Reference Documentation. https://docs.spring.io/spring-data/commons/reference/repositories/core-extensions.html#core.web.pageables</li>
+<li>Spring Security. (2024). <em>Testing OAuth 2.0 Resource Server</em>. Spring Security Reference Documentation. https://docs.spring.io/spring-security/reference/servlet/test/method-security.html</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Angel Sullon @asullom - UPeU 2026
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.top", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -3465,6 +3465,7 @@
 
 
 <h1 id="checklist-operativo-bd2">Checklist Operativo BD2<a class="headerlink" href="#checklist-operativo-bd2" title="Permanent link">&para;</a></h1>
+<p><strong>Ejemplo BomERP, resuelto contra el estado real de <code>bomerp-oracle</code> al cierre de S14.</strong> Cada equipo marca su propio checklist contra su propia instancia.</p>
 <table>
 <thead>
 <tr>
@@ -3476,56 +3477,57 @@
 <tbody>
 <tr>
 <td>La instancia Oracle está disponible.</td>
-<td></td>
-<td></td>
+<td>Sí</td>
+<td><code>SELECT 'ALIVE' FROM DUAL;</code> responde (S13, 3.1).</td>
 </tr>
 <tr>
 <td>El usuario de aplicación tiene privilegios mínimos.</td>
-<td></td>
-<td></td>
+<td>Sí</td>
+<td><code>BOMERP_APP</code> sin privilegios de propietario de esquema (S8).</td>
 </tr>
 <tr>
 <td>Las tablas principales existen y están válidas.</td>
-<td></td>
-<td></td>
+<td>Sí</td>
+<td><code>BOM_CATALOGO.CATEGORIAS/PRODUCTOS</code>, <code>BOM_VENTAS.VENTAS/DETALLE_VENTAS</code> — todas <code>VALID</code> en <code>DBA_OBJECTS</code>.</td>
 </tr>
 <tr>
 <td>Los índices críticos existen.</td>
-<td></td>
-<td></td>
+<td>Sí</td>
+<td>Índices de S5/S10 verificados contra <code>DBA_INDEXES</code>.</td>
 </tr>
 <tr>
 <td>Las estadísticas fueron actualizadas.</td>
-<td></td>
-<td></td>
+<td>Sí</td>
+<td><code>DBMS_STATS</code> ejecutado en S4/S10.</td>
 </tr>
 <tr>
 <td>La auditoría registra acciones críticas.</td>
-<td></td>
-<td></td>
+<td>Sí</td>
+<td>Unified Auditing activo desde S9.</td>
 </tr>
 <tr>
 <td>Existe evidencia de backup.</td>
-<td></td>
-<td></td>
+<td>Sí</td>
+<td><code>LIST BACKUP SUMMARY</code> con L0 + L1 reales (S13).</td>
 </tr>
 <tr>
 <td>Existe escenario de recovery documentado.</td>
-<td></td>
-<td></td>
+<td>Sí</td>
+<td>PITR real, verificado con conteo de filas (S13, <a href="../02_recovery_scenario/"><code>02_recovery_scenario.md</code></a>).</td>
 </tr>
 <tr>
 <td>Se revisaron sesiones, bloqueos y rendimiento.</td>
-<td></td>
-<td></td>
+<td>Sí</td>
+<td>Bloqueo real diagnosticado y resuelto, <em>buffer cache hit ratio</em> medido (S14).</td>
 </tr>
 <tr>
 <td>La aplicación puede conectarse después de la validación.</td>
-<td></td>
-<td></td>
+<td>Sí</td>
+<td><code>BOM_VENTAS.VENTAS</code> responde con 505 filas tras el <code>OPEN RESETLOGS</code> de S13.</td>
 </tr>
 </tbody>
 </table>
+<p><strong>Pendiente, documentado y sin bloquear el resto:</strong> un sinónimo público (<code>SDO_AGGR_POINTAPPEND</code>, Oracle Spatial) quedó <code>INVALID</code> tras el cambio de imagen de S13 — ajeno a los esquemas <code>BOM_*</code>, no afecta a ninguna tabla ni procedimiento del proyecto (ver Anexo de <a href="../../../../bd2/sesiones/S14_Monitoreo_Diagnostico/"><code>S14_Monitoreo_Diagnostico.md</code></a>).</p>
 
 
 

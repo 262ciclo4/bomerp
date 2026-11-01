@@ -1097,10 +1097,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#scripts-y-evidencias" class="md-nav__link">
+  <a href="#1-scripts-y-evidencias" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Scripts y evidencias
+        1. Scripts y evidencias
       
     </span>
   </a>
@@ -1108,10 +1108,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#evidencias-minimas" class="md-nav__link">
+  <a href="#2-evidencias-minimas" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Evidencias mínimas
+        2. Evidencias mínimas
       
     </span>
   </a>
@@ -1119,10 +1119,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#integracion-con-el-producto-final" class="md-nav__link">
+  <a href="#3-integracion-con-el-producto-final" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Integración con el producto final
+        3. Integración con el producto final
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-rubrica-de-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Rúbrica de Evaluación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-trazabilidad-y-procedencia-de-la-rubrica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Trazabilidad y procedencia de la rúbrica
       
     </span>
   </a>
@@ -3579,10 +3601,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#scripts-y-evidencias" class="md-nav__link">
+  <a href="#1-scripts-y-evidencias" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Scripts y evidencias
+        1. Scripts y evidencias
       
     </span>
   </a>
@@ -3590,10 +3612,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#evidencias-minimas" class="md-nav__link">
+  <a href="#2-evidencias-minimas" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Evidencias mínimas
+        2. Evidencias mínimas
       
     </span>
   </a>
@@ -3601,10 +3623,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#integracion-con-el-producto-final" class="md-nav__link">
+  <a href="#3-integracion-con-el-producto-final" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Integración con el producto final
+        3. Integración con el producto final
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-rubrica-de-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Rúbrica de Evaluación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-trazabilidad-y-procedencia-de-la-rubrica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Trazabilidad y procedencia de la rúbrica
       
     </span>
   </a>
@@ -3643,10 +3687,10 @@
 
 
 <h1 id="bd2-producto-de-unidad-3">BD2 - Producto de Unidad 3<a class="headerlink" href="#bd2-producto-de-unidad-3" title="Permanent link">&para;</a></h1>
-<p><strong>Este documento es el ejemplo BomERP del docente, no una plantilla obligatoria.</strong> Cada sede (Lima, Juliaca, Tarapoto) y cada grupo dentro de una misma sede opera su propio esquema Oracle sobre su propio dominio. Los scripts y evidencias concretas de este documento son las del ejemplo BomERP; cada equipo las reemplaza por las de su propio proyecto. Lo exigible a todos es la estructura: backup, recovery, monitoreo, diagnóstico y seguridad/rendimiento final.</p>
+<p><strong>Este documento es el ejemplo BomERP del docente, no una plantilla obligatoria.</strong> Cada sede (Lima, Juliaca, Tarapoto) y cada grupo dentro de una misma sede opera su propio esquema Oracle sobre su propio dominio, continuando el motor administrado y optimizado de su <a href="../../u2/bd2-producto/">Producto U2</a>. Los comandos, resultados y evidencias concretas de este documento son los del ejemplo BomERP, verificados en vivo contra <code>bomerp-oracle</code>; cada equipo los reemplaza por los de su propio proyecto. Lo exigible a todos es la estructura: backup, recovery con PITR, monitoreo, diagnóstico y sustentación final.</p>
 <h2 id="producto">Producto<a class="headerlink" href="#producto" title="Permanent link">&para;</a></h2>
-<p><strong>Base Oracle operativa, administrada, optimizada, auditada y resiliente.</strong></p>
-<h2 id="scripts-y-evidencias">Scripts y evidencias<a class="headerlink" href="#scripts-y-evidencias" title="Permanent link">&para;</a></h2>
+<p><strong>Base de datos empresarial Oracle operativa, administrada, optimizada, auditada y resiliente.</strong></p>
+<h2 id="1-scripts-y-evidencias">1. Scripts y evidencias<a class="headerlink" href="#1-scripts-y-evidencias" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -3657,23 +3701,23 @@
 <tbody>
 <tr>
 <td><a href="../oracle/01_rman_backup/">01_rman_backup.md</a></td>
-<td>Guía de backup completo e incremental con RMAN.</td>
+<td>Backup completo (L0) e incremental (L1) con RMAN, verificado contra <code>bomerp-oracle</code> (S13).</td>
 </tr>
 <tr>
 <td><a href="../oracle/02_recovery_scenario/">02_recovery_scenario.md</a></td>
-<td>Escenario de recuperación y validación posterior.</td>
+<td>Incidente simulado y recuperación con <em>Point-In-Time Recovery</em> (S13).</td>
 </tr>
 <tr>
 <td><a href="../oracle/03_monitoring_queries.sql">03_monitoring_queries.sql</a></td>
-<td>Consultas de monitoreo y diagnóstico.</td>
+<td>Consultas reales de sesiones, bloqueos, objetos y rendimiento (S14).</td>
 </tr>
 <tr>
 <td><a href="../oracle/04_operational_checklist/">04_operational_checklist.md</a></td>
-<td>Checklist operativo de BD2.</td>
+<td>Checklist operativo de BD2, resuelto contra el estado real de <code>bomerp-oracle</code>.</td>
 </tr>
 </tbody>
 </table>
-<h2 id="evidencias-minimas">Evidencias mínimas<a class="headerlink" href="#evidencias-minimas" title="Permanent link">&para;</a></h2>
+<h2 id="2-evidencias-minimas">2. Evidencias mínimas<a class="headerlink" href="#2-evidencias-minimas" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -3684,31 +3728,31 @@
 <tbody>
 <tr>
 <td>Backup</td>
-<td>Comando, captura o log de backup completo/incremental.</td>
+<td><code>ARCHIVELOG</code> activo, <code>LIST BACKUP SUMMARY</code> con el respaldo completo (L0) y el incremental (L1), con al menos un datafile omitido en el L1 por no haber cambiado.</td>
 </tr>
 <tr>
 <td>Recovery</td>
-<td>Escenario simulado y evidencia de recuperación.</td>
+<td>Incidente simulado con dos cambios reales y recuperación con <code>SET UNTIL TIME</code>, verificada con una consulta que distingue el cambio que sobrevivió del descartado.</td>
 </tr>
 <tr>
 <td>Monitoreo</td>
-<td>Consultas <code>V$</code>, <code>DBA_</code>, sesiones, bloqueos o rendimiento.</td>
+<td><code>V$SESSION</code>, <code>DBA_BLOCKERS</code>/<code>DBA_WAITERS</code> sobre un bloqueo real construido y resuelto.</td>
 </tr>
 <tr>
 <td>Diagnóstico</td>
-<td>Hallazgo, causa probable y acción correctiva.</td>
-</tr>
-<tr>
-<td>Seguridad</td>
-<td>Usuarios, roles, privilegios y auditoría final.</td>
+<td>Objeto <code>DBA_OBJECTS</code> inválido encontrado (o búsqueda documentada sin hallazgo), con el resultado real del intento de recompilación.</td>
 </tr>
 <tr>
 <td>Rendimiento</td>
-<td>Explain Plan, estadísticas, índices o AWR.</td>
+<td>Indicador de <code>V$SYSSTAT</code> (ej. <em>buffer cache hit ratio</em>) medido, no estimado.</td>
+</tr>
+<tr>
+<td>Seguridad y auditoría (acumulado de U2)</td>
+<td>Usuarios, roles, privilegios y auditoría vigentes, confirmados antes de iniciar U3 (S13, 3.1).</td>
 </tr>
 </tbody>
 </table>
-<h2 id="integracion-con-el-producto-final">Integración con el producto final<a class="headerlink" href="#integracion-con-el-producto-final" title="Permanent link">&para;</a></h2>
+<h2 id="3-integracion-con-el-producto-final">3. Integración con el producto final<a class="headerlink" href="#3-integracion-con-el-producto-final" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -3719,29 +3763,155 @@
 </thead>
 <tbody>
 <tr>
-<td>Backup y recovery</td>
-<td>Atributo de resiliencia</td>
-<td>La aplicación puede recuperarse ante pérdida de datos.</td>
+<td>Backup y recovery con PITR</td>
+<td>Atributo de resiliencia documentado en ADS (atributos de calidad, U1).</td>
+<td>La aplicación puede recuperarse ante pérdida de datos sin perder más de lo necesario.</td>
 </tr>
 <tr>
-<td>Monitoreo de sesiones</td>
-<td>Operación del sistema</td>
-<td>Diagnóstico de conexiones backend.</td>
+<td>Monitoreo de sesiones y bloqueos</td>
+<td>Decisión de integración/observabilidad.</td>
+<td>Un bloqueo real en la base puede explicar una petición lenta o colgada del backend.</td>
 </tr>
 <tr>
-<td>Auditoría</td>
-<td>Decisión de auditabilidad</td>
-<td>Evidencia de acciones ejecutadas desde la aplicación.</td>
+<td>Objetos inválidos diagnosticados</td>
+<td>Trazabilidad entre diseño y base real.</td>
+<td>Un objeto roto en la base puede manifestarse como un error 500 inesperado en la API.</td>
 </tr>
 <tr>
-<td>Rendimiento</td>
-<td>Atributo de eficiencia</td>
-<td>Respuesta de consultas y filtros del sistema.</td>
+<td>Rendimiento en vivo</td>
+<td>Atributo de eficiencia.</td>
+<td>Respuesta de consultas y filtros del sistema bajo carga real.</td>
 </tr>
 </tbody>
 </table>
+<h2 id="4-rubrica-de-evaluacion">4. Rúbrica de Evaluación<a class="headerlink" href="#4-rubrica-de-evaluacion" title="Permanent link">&para;</a></h2>
+<p><strong>Tabla 1. Rúbrica de evaluación de la Unidad 3</strong></p>
+<table>
+<thead>
+<tr>
+<th>Criterio</th>
+<th style="text-align: right;">Peso</th>
+<th>CE / Nivel</th>
+<th>A (20 pts)</th>
+<th>B (15 pts)</th>
+<th>C (10 pts)</th>
+<th>D (5 pts)</th>
+<th style="text-align: right;">Calificación obtenida</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Implementa estrategias de backup y recovery con RMAN</td>
+<td style="text-align: right;">16%</td>
+<td>CE022-N2 (completa)</td>
+<td>Backup completo e incremental reales, con evidencia de al menos un datafile omitido por no haber cambiado, y <code>ARCHIVELOG</code> verificado.</td>
+<td>Backup completo e incremental presentes, sin evidencia de omisión real.</td>
+<td>Solo backup completo, sin incremental.</td>
+<td>No presenta backup con RMAN.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>2. Usa Data Pump y escenarios de recuperación como PITR</td>
+<td style="text-align: right;">16%</td>
+<td>CE022-N2 (completa)</td>
+<td>PITR verificado con un incidente real (el cambio correcto sobrevive, el incidente no) y Data Pump ejecutado con directorio persistente.</td>
+<td>Uno de los dos completo, el otro parcial o solo documentado.</td>
+<td>Ambos mencionados sin ejecución real.</td>
+<td>No presenta PITR ni Data Pump.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>3. Monitorea sesiones, bloqueos y rendimiento con vistas administrativas y herramientas Oracle</td>
+<td style="text-align: right;">16%</td>
+<td>CE022-N2 (completa)</td>
+<td>Bloqueo real diagnosticado y resuelto con <code>DBA_BLOCKERS</code>/<code>DBA_WAITERS</code>, objetos inválidos revisados, rendimiento medido con <code>V$SYSSTAT</code>, todo confirmado también en Enterprise Manager Express.</td>
+<td>Monitoreo presente, sin confirmar en Enterprise Manager Express o con alguna evidencia incompleta.</td>
+<td>Vistas consultadas sin interpretación ni verificación real.</td>
+<td>No presenta evidencia de monitoreo.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>4. Sustenta evidencias técnicas de programación, administración, seguridad, auditoría, optimización y recuperación</td>
+<td style="text-align: right;">16%</td>
+<td>CE022-N2 (completa) + CE023-N1 (cierre acumulado)</td>
+<td>Sustentación coherente que conecta U1 (PL/SQL), U2 (administración) y U3 (backup/monitoreo) sobre el mismo proyecto real.</td>
+<td>Sustentación completa, con la conexión entre unidades parcialmente explicada.</td>
+<td>Sustentación centrada solo en U3, sin conectar con el trabajo acumulado.</td>
+<td>No sustenta evidencia técnica acumulada.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>5. Presenta el producto final operativo, auditado y resiliente</td>
+<td style="text-align: right;">16%</td>
+<td>CE022-N2 (completa)</td>
+<td><code>bd2-producto.md</code> completo y coherente con los objetos Oracle reales, con las evidencias mínimas de la sección 2 verificables en vivo.</td>
+<td>Producto completo, con alguna evidencia mínima incompleta.</td>
+<td>Producto incompleto o con evidencias no verificables en vivo.</td>
+<td>No presenta producto final.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>6. Sustentación</td>
+<td style="text-align: right;">20%</td>
+<td>CG</td>
+<td>Sustenta con claridad y profesionalismo su aporte individual, respondiendo con precisión las preguntas del jurado.</td>
+<td>Sustenta con solvencia, con detalles menores en claridad, orden o precisión.</td>
+<td>Sustenta con dificultad; claridad, orden o precisión insuficientes.</td>
+<td>No sustenta adecuadamente ni demuestra su aporte individual.</td>
+<td style="text-align: right;"></td>
+</tr>
+</tbody>
+</table>
+<p>Nota final = suma de (<code>Peso</code> × <code>Puntos de la calificación obtenida</code>) / 100 × 20.</p>
+<p><code>CE022-N2 (completa)</code> = cierre del Nivel 2 de CE022 (Ingeniería de la Información): la <a href="../../u2/bd2-producto/#4-rubrica-de-evaluacion">Unidad 2</a> ya cubrió la porción de administración empresarial (usuarios, almacenamiento, auditoría, optimización, particionamiento); esta unidad completa la porción de <strong>continuidad del negocio y operación empresarial</strong> (respaldo, recuperación con PITR, monitoreo y diagnóstico) que esa misma nota de U2 dejó pendiente para aquí. <code>CE023-N1 (cierre acumulado)</code> se menciona en el criterio 4 porque la sustentación integra también el motor transaccional de <a href="../../u1/bd2-producto/#7-rubrica-de-evaluacion">Unidad 1</a> (CE023-N1, ya cerrado desde esa unidad) — no abre ni reabre ese nivel, solo lo integra en el discurso de la sustentación. <code>CG</code> = Competencia General del sílabo de BD2, con la misma inconsistencia de nombre entre secciones III y VIII ya documentada en el <a href="../../u1/bd2-producto/#7-rubrica-de-evaluacion">Producto U1</a>. No es CE022: los criterios 1-5 ya son la evidencia técnica, incluida su verificación en vivo; el criterio 6 verifica aporte individual y comunicación.</p>
+<p><strong>Tabla 2. Subaspectos de la sustentación (Unidad 3)</strong></p>
+<p>El criterio 6 se evalúa con los mismos 6 subaspectos de la sustentación integral del Proyecto Integrador (<a href="../guia-sustentacion/#subaspectos-de-la-sustentacion-integral">Guía de Sustentación Final</a>) — la misma exigencia de Unidad 1 y Unidad 2, ahora en la sustentación final del curso.</p>
+<table>
+<thead>
+<tr>
+<th>Subaspecto</th>
+<th>Qué observa en Unidad 3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Aporte individual</td>
+<td>Cada integrante demuestra al menos un objeto o escenario real que administró: un backup, una recuperación PITR, un bloqueo diagnosticado, o un objeto inválido investigado.</td>
+</tr>
+<tr>
+<td>2. Comunicación y orden</td>
+<td>Claridad, estructura, tiempo y lenguaje técnico durante la presentación.</td>
+</tr>
+<tr>
+<td>3. Presentación personal y actitud</td>
+<td>Puntualidad, vestimenta limpia y adecuada, higiene, cabello ordenado, actitud profesional, respeto, honestidad y coherencia con los valores y principios cristianos de la institución.</td>
+</tr>
+<tr>
+<td>4. Repositorio y estándares</td>
+<td>Organización, commits y reproducibilidad de los scripts y evidencias de respaldo/monitoreo desde S13.</td>
+</tr>
+<tr>
+<td>5. MkDocs o equivalente</td>
+<td>Documentación de Unidad 3 publicada, navegable y alineada con <code>bd2-producto.md</code>.</td>
+</tr>
+<tr>
+<td>6. Pitch/demo ejecutiva</td>
+<td>El producto final operativo (backup, recovery, monitoreo) con apoyo visual (.pptx, Canva o equivalente) — no reemplaza la demo técnica de S15, la precede.</td>
+</tr>
+</tbody>
+</table>
+<p>Para usar la rúbrica con IA, solicita:</p>
+<div class="highlight"><pre><span></span><code>Evalúa la sustentación y el producto (bd2-producto.md o la sección 2 de la guía S15) usando la rúbrica de esta sección.
+Para cada criterio selecciona la calificación obtenida: A=20, B=15, C=10, D=5.
+Justifica brevemente cada nivel con evidencia concreta (backup/recovery con RMAN, PITR, Data Pump, bloqueos diagnosticados, objetos inválidos, rendimiento medido).
+Calcula la nota final con la fórmula: suma de (Peso × Puntos de la calificación obtenida) / 100 × 20.
+Indica 2 fortalezas y 2 recomendaciones para la sustentación final del curso.
+</code></pre></div>
+<h2 id="5-trazabilidad-y-procedencia-de-la-rubrica">5. Trazabilidad y procedencia de la rúbrica<a class="headerlink" href="#5-trazabilidad-y-procedencia-de-la-rubrica" title="Permanent link">&para;</a></h2>
+<p>Los primeros cinco criterios son cita literal de los "Criterios de evaluación del producto" de la Unidad 3 en el sílabo de BD2; el sexto (Sustentación) corresponde a la sustentación exigida por el mismo sílabo (sesión 15, actividad 2).</p>
+<p><strong>Con la malla curricular:</strong> los criterios 1-5 completan el <strong>Nivel 2 de CE022</strong> (Ingeniería de la Información) — la porción de <strong>continuidad del negocio y operación empresarial</strong> (respaldo, recuperación con PITR, monitoreo, diagnóstico) que la <a href="../../u2/bd2-producto/#5-trazabilidad-y-procedencia-de-la-rubrica">Unidad 2</a> dejó pendiente explícitamente para esta unidad. Con esta unidad, CE022-N2 queda completo para BD2. El criterio 6 (Sustentación) es transversal y no forma parte de la definición de la competencia.</p>
 <h2 id="cierre-bd2">Cierre BD2<a class="headerlink" href="#cierre-bd2" title="Permanent link">&para;</a></h2>
-<p>BD2 está completo cuando la base no solo almacena datos, sino que puede ser administrada, auditada, optimizada, respaldada, recuperada y diagnosticada como soporte real del sistema empresarial.</p>
+<p>BD2 está completo cuando la base no solo almacena datos, sino que puede ser administrada, auditada, optimizada, respaldada, recuperada con un punto exacto en el tiempo, y diagnosticada en vivo — verificado contra la instancia real, no solo documentado.</p>
 
 
 

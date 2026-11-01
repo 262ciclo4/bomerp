@@ -1158,6 +1158,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#rubrica-de-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rúbrica de Evaluación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#trazabilidad-y-procedencia-de-la-rubrica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trazabilidad y procedencia de la rúbrica
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#cierre-lp2" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3612,6 +3634,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#rubrica-de-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rúbrica de Evaluación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#trazabilidad-y-procedencia-de-la-rubrica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trazabilidad y procedencia de la rúbrica
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#cierre-lp2" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3669,7 +3713,7 @@
 </tr>
 <tr>
 <td>Seguridad</td>
-<td>Login propio, JWT, roles, rutas protegidas y manejo de 401/403. SSO no es requisito.</td>
+<td>Keycloak (no JWT propio, reemplazado desde S10b): <em>Authorization Code</em> + PKCE, roles reales (<code>realm_access.roles</code>), rutas protegidas, manejo de 401/403 con refresco automático.</td>
 </tr>
 <tr>
 <td>Límites modulares</td>
@@ -3772,6 +3816,7 @@
 </tbody>
 </table>
 <h2 id="bitacora-de-estabilizacion">Bitácora de estabilización<a class="headerlink" href="#bitacora-de-estabilizacion" title="Permanent link">&para;</a></h2>
+<p><strong>Hallazgo real de S14</strong>, verificado contra el código: <code>VentaReporteComponent</code> (frontend) nunca llamaba a <code>GET /api/v1/ventas/resumen</code> (el agregado real, con <code>SUM</code>/<code>COUNT</code> en Oracle, existente desde S9) — recalculaba <code>totalVentas</code>/<code>montoTotal</code>/<code>ticketPromedio</code> en el navegador, con <code>.reduce()</code>, sobre la lista completa sin paginar. Corregido en S14: el listado se paginó (<code>Page&lt;VentaResponse&gt;</code>) y la SPA se reconectó al agregado real del servidor.</p>
 <table>
 <thead>
 <tr>
@@ -3781,6 +3826,11 @@
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>VentaReporteComponent</code> recalculaba sus totales en el navegador en vez de usar el agregado real de <code>/resumen</code> (S9, nunca conectado)</td>
+<td>Listado paginado (<code>Page&lt;VentaResponse&gt;</code>) + SPA reconectada al agregado real del servidor (S14)</td>
+<td><code>VentaEndToEndTest</code> en verde; verificación manual de <code>montoTotal</code> contra una suma real de las filas.</td>
+</tr>
 <tr>
 <td>Error de validación incompleta</td>
 <td>Se agregó validación frontend/backend.</td>
@@ -3813,6 +3863,112 @@
 </tr>
 </tbody>
 </table>
+<h2 id="rubrica-de-evaluacion">Rúbrica de Evaluación<a class="headerlink" href="#rubrica-de-evaluacion" title="Permanent link">&para;</a></h2>
+<p><strong>Tabla 1. Rúbrica de evaluación de la Unidad 3</strong></p>
+<p>A diferencia de las demás unidades (5 criterios técnicos + Sustentación como criterio transversal), el sílabo de LP2 lista exactamente <strong>4</strong> criterios para esta unidad, y la sustentación es, literalmente, uno de ellos (criterio 4) — no un criterio "Agregado manual" aparte. Los 4 son cita literal.</p>
+<table>
+<thead>
+<tr>
+<th>Criterio</th>
+<th style="text-align: right;">Peso</th>
+<th>CE / Nivel</th>
+<th>A (20 pts)</th>
+<th>B (15 pts)</th>
+<th>C (10 pts)</th>
+<th>D (5 pts)</th>
+<th style="text-align: right;">Calificación obtenida</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Aplica Lazy Loading, Code Splitting, caché del navegador y Redis cuando corresponda, logging, monitoreo básico y buenas prácticas de despliegue</td>
+<td style="text-align: right;">25%</td>
+<td>CE023-N2 (cierre)</td>
+<td>Build optimizado medido (antes/después), decisión de caché/Redis justificada con criterio medido, logging y monitoreo básico verificados en vivo.</td>
+<td>Optimización presente, con la decisión de Redis o el monitoreo incompleto.</td>
+<td>Solo una de las piezas (optimización, caché o monitoreo) presente.</td>
+<td>No presenta evidencia de optimización ni monitoreo.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>2. Implementa paginación en listados de alto volumen e integra funcionalmente los módulos de la aplicación</td>
+<td style="text-align: right;">25%</td>
+<td>CE023-N2 (cierre)</td>
+<td>Listado paginado con agregado correcto verificado, e integración funcional completa (checklist end-to-end) entre todos los módulos.</td>
+<td>Uno de los dos presente y verificado; el otro parcial.</td>
+<td>Paginación o integración mencionada sin verificación real.</td>
+<td>No presenta paginación ni integración funcional verificable.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>3. Incorpora auditoría y ejecuta pruebas end-to-end, corrige errores y estabiliza el sistema</td>
+<td style="text-align: right;">25%</td>
+<td>CE023-N2 (cierre)</td>
+<td>Auditoría real sobre al menos 2 acciones, prueba end-to-end en verde contra la base real, y al menos un hallazgo real en la bitácora con su corrección.</td>
+<td>Dos de los tres elementos presentes y verificados.</td>
+<td>Solo uno de los tres elementos presente.</td>
+<td>No presenta auditoría, pruebas end-to-end ni bitácora.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>4. Sustenta exclusivamente el Proyecto Integrador mediante una demostración funcional y defensa técnica</td>
+<td style="text-align: right;">25%</td>
+<td>CG</td>
+<td>Sustenta con claridad y profesionalismo su aporte individual, con demostración funcional en vivo y defensa técnica precisa.</td>
+<td>Sustenta con solvencia, con detalles menores en la demostración o la defensa.</td>
+<td>Sustenta con dificultad; demostración o defensa insuficientes.</td>
+<td>No sustenta adecuadamente ni demuestra su aporte individual.</td>
+<td style="text-align: right;"></td>
+</tr>
+</tbody>
+</table>
+<p>Nota final = suma de (<code>Peso</code> × <code>Puntos de la calificación obtenida</code>) / 100 × 20.</p>
+<p><code>CE023-N2 (cierre)</code> = cierre del Nivel 2 de CE023 (Programación): la <a href="../../u2/lp2-demo/#6-rubrica-de-evaluacion">Unidad 2</a> ya dejó ese nivel "parcial" (SPA, CRUD, seguridad); esta unidad lo completa con optimización, integración funcional, auditoría y pruebas end-to-end sobre el mismo backend y la misma SPA. <code>CG</code> = Competencia General del sílabo de LP2 — el criterio 4 es, en este sílabo, la propia sustentación, a diferencia de otras unidades donde es un criterio transversal aparte.</p>
+<p><strong>Tabla 2. Subaspectos de la sustentación (Unidad 3)</strong></p>
+<p>El criterio 4 se evalúa con los mismos 6 subaspectos de la sustentación integral del Proyecto Integrador (<a href="../guia-sustentacion/#subaspectos-de-la-sustentacion-integral">Guía de Sustentación Final</a>) — la misma exigencia de Unidad 1 y Unidad 2, ahora en la sustentación final del curso.</p>
+<table>
+<thead>
+<tr>
+<th>Subaspecto</th>
+<th>Qué observa en Unidad 3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Aporte individual</td>
+<td>Cada integrante demuestra el hallazgo real que diagnosticó y corrigió (paginación, auditoría o prueba end-to-end).</td>
+</tr>
+<tr>
+<td>2. Comunicación y orden</td>
+<td>Claridad, estructura, tiempo y lenguaje técnico durante la presentación.</td>
+</tr>
+<tr>
+<td>3. Presentación personal y actitud</td>
+<td>Puntualidad, vestimenta limpia y adecuada, higiene, cabello ordenado, actitud profesional, respeto, honestidad y coherencia con los valores y principios cristianos de la institución.</td>
+</tr>
+<tr>
+<td>4. Repositorio y estándares</td>
+<td>Organización, commits y reproducibilidad del código desde S13.</td>
+</tr>
+<tr>
+<td>5. MkDocs o equivalente</td>
+<td>Documentación de Unidad 3 publicada, navegable y alineada con <code>lp2-producto.md</code>.</td>
+</tr>
+<tr>
+<td>6. Pitch/demo ejecutiva</td>
+<td>La aplicación Full-Stack completa, optimizada y estabilizada, con apoyo visual (.pptx, Canva o equivalente) — no reemplaza la demo técnica de S15, la precede.</td>
+</tr>
+</tbody>
+</table>
+<p>Para usar la rúbrica con IA, solicita:</p>
+<div class="highlight"><pre><span></span><code>Evalúa la sustentación y el producto (lp2-producto.md o la sección 2 de la guía S15) usando la rúbrica de esta sección.
+Para cada criterio selecciona la calificación obtenida: A=20, B=15, C=10, D=5.
+Justifica brevemente cada nivel con evidencia concreta (optimización medida, paginación con agregado correcto, auditoría, pruebas end-to-end, demostración y defensa técnica).
+Calcula la nota final con la fórmula: suma de (Peso × Puntos de la calificación obtenida) / 100 × 20.
+Indica 2 fortalezas y 2 recomendaciones.
+</code></pre></div>
+<h2 id="trazabilidad-y-procedencia-de-la-rubrica">Trazabilidad y procedencia de la rúbrica<a class="headerlink" href="#trazabilidad-y-procedencia-de-la-rubrica" title="Permanent link">&para;</a></h2>
+<p>Los cuatro criterios son cita literal de los "Criterios de evaluación del producto" de la Unidad 3 en el sílabo de LP2 — incluida la sustentación (criterio 4), que este sílabo integra como criterio propio en vez de agregarla aparte como las demás unidades.</p>
 <h2 id="cierre-lp2">Cierre LP2<a class="headerlink" href="#cierre-lp2" title="Permanent link">&para;</a></h2>
 <p>LP2 está completo cuando la base de BomERP continúa el dominio de Ciclo 3, mantiene una sola aplicación Spring Boot y una SPA con módulos cohesionados, ejecuta <code>Venta–DetalleVenta</code> de extremo a extremo, aplica seguridad, optimización, caché y observabilidad básica, pagina listados de alto volumen, audita operaciones, supera pruebas end-to-end, queda estabilizada y puede ser sustentada por cada integrante. <code>Compras</code> queda como módulo delimitado o ampliación del equipo, no como segundo flujo obligatorio. La preparación para producción tiene alcance académico y debe demostrarse con evidencias reproducibles.</p>
 

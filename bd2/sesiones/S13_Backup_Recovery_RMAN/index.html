@@ -1,0 +1,4639 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Entorno integrado de desarrollo academico para construir modulos ERP con ADS, BD2 y LP2.">
+      
+      
+        <meta name="author" content="UPeU">
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+  
+    <title>BOM ERP - S13 - Backup y Recovery con RMAN</title>
+  
+
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#s13-backup-y-recovery-con-rman" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../../.." title="BOM ERP" class="md-header__button md-logo" aria-label="BOM ERP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            BOM ERP
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              S13 - Backup y Recovery con RMAN
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/262ciclo4/bomerp" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    262ciclo4/bomerp
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Pestañas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Inicio
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../proyecto-integrador/" class="md-tabs__link">
+          
+  
+  
+  Guía del Proyecto Integrador
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../ads/" class="md-tabs__link">
+          
+  
+  
+  ADS
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../" class="md-tabs__link">
+          
+  
+  
+  BD2
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../lp2/" class="md-tabs__link">
+          
+  
+  
+  LP2
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="BOM ERP" class="md-nav__button md-logo" aria-label="BOM ERP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    BOM ERP
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/262ciclo4/bomerp" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    262ciclo4/bomerp
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guía del Proyecto Integrador
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guía del Proyecto Integrador
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Alineamiento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/brief/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brief técnico (plantilla)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Diseño técnico, motor transaccional y backend inicial
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    1. Diseño técnico, motor transaccional y backend inicial
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/lp2-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Demo U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/ads-matriz-competencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Matriz de competencias
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/lp2-matriz-competencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Matriz de competencias
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/bd2-matriz-competencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Matriz de competencias
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Modelado UML, administración Oracle y SPA segura
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    2. Modelado UML, administración Oracle y SPA segura
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/lp2-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Demo U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Diseño consolidado, operación Oracle y Full-Stack integrado
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    3. Diseño consolidado, operación Oracle y Full-Stack integrado
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/lp2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/checklist-final/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Checklist final
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/guia-sustentacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guía de sustentación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anexos - SPA en otros frameworks
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Anexos - SPA en otros frameworks
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/anexos/S07_Creacion_Arquitectura_SPA_Vue/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S07 con Vue
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/anexos/S07_Creacion_Arquitectura_SPA_React/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S07 con React
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ADS
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/silabo_ads_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/silabo_ads_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Arquitectura y Diseño Estructural
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Arquitectura y Diseño Estructural
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S01_Fundamentos_Arquitectura_Software/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - Fundamentos de arquitectura de software
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S02_Modelo_C4_Vistas_Arquitectonicas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - Modelo C4 y vistas arquitectónicas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S03_Diseno_Estructural_Principios_SOLID/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S3 - Diseño estructural y principios SOLID
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S04_Arquitecturas_Modernas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S4 - Arquitecturas modernas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S05_Evaluacion_Unidad_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S5 - Evaluación de la Unidad I
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    II. Diseño Dinámico, Modelado UML y Patrones
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    II. Diseño Dinámico, Modelado UML y Patrones
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S06_Descubrimiento_Modelado_Dominio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S6 - Descubrimiento y modelado del dominio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S07_Diseno_Clases_Dominio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S7 - Diseño de clases del dominio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S08_Diseno_Clases_Avanzado_Transformacion_Objeto_Relacional/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S8 - Diseño de clases avanzado y transformación objeto-relacional
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S09_Diagramas_Dinamicos_UML/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S9 - Diagramas dinámicos UML
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S10_Patrones_Diseno_GoF_GRASP/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S10 - Patrones de diseño GoF y GRASP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S11_Integracion_Sistemas_Empresariales/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S11 - Integración y sistemas empresariales
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S12_Evaluacion_Unidad_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S12 - Evaluación de la Unidad II
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    BD2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../silabo_bd2_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../silabo_bd2_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Programación y optimización (Oracle XE)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Programación y optimización (Oracle XE)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S01_PLSQL_Aplicado_Negocio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - PL/SQL aplicado al negocio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S02_Triggers_DML_Auditoria/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - Triggers DML y auditoría
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S03_Excepciones_Robustez/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S3 - Manejo de excepciones y robustez
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S04_Optimizacion_Consultas_SQL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S4 - Optimización de consultas SQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S05_Indices_Optimizacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S5 - Índices para optimización
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S06_Evaluacion_Unidad_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S6 - Evaluación de la Unidad I
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    II. Administración, almacenamiento, seguridad y optimización
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    II. Administración, almacenamiento, seguridad y optimización
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S07_Arquitectura_Oracle_Instancia/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S7 - Arquitectura Oracle e instancia
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S08_Usuarios_Roles_Privilegios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S8 - Gestión de usuarios, roles y privilegios
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S09_Almacenamiento_Seguridad_Auditoria/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S9 - Administración del almacenamiento y seguridad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S10_Optimizacion_Rendimiento/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S10 - Optimización del rendimiento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S11_Particionamiento_Escalabilidad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S11 - Particionamiento y escalabilidad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../S12_Evaluacion_Unidad_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S12 - Evaluación de la Unidad II
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    LP2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/silabo_lp2_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/silabo_lp2_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Decisiones de arquitectura
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Decisiones de arquitectura
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/adr/ADR-001-arquitectura-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-001 - Arquitectura del backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/adr/ADR-002-spring-modulith/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-002 - Spring Modulith
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/adr/ADR-003-spring-boot-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-003 - Versión exacta de Spring Boot 4.0.7
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/adr/ADR-004-jwt-diferido/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-004 - JWT diferido a S10
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/adr/ADR-005-seguridad-jwt-propio-listo-para-reemplazo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-005 - Seguridad JWT propia, reemplazada por Keycloak en S10b
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Base backend REST modular de BomERP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Base backend REST modular de BomERP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S01_Arquitectura_Backend_REST_Profesional/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - Arquitectura backend REST profesional
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S02_CRUD_REST_Completo_Producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - CRUD REST completo de Producto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S03_Objetos_Relacionados_Categoria_Producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S3 - Objetos relacionados Categoria-Producto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S04_Operacion_Cabecera_Detalle_Venta_DetalleVenta/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S4 - Operación cabecera-detalle Venta-DetalleVenta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S05_Consultas_Empresariales_Reportes_CORS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S5 - Consultas empresariales, reportes REST y CORS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S06_Evaluacion_Unidad_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S6 - Evaluación de la Unidad I
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    II. SPA modular segura para BomERP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    II. SPA modular segura para BomERP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S07_Creacion_Arquitectura_SPA/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S7 - Creación y arquitectura de la SPA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S08_CRUD_Tablas_Dependientes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S8 - CRUD de tablas dependientes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S09_Formularios_Transaccionales_Cabecera_Detalle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S9 - Formularios transaccionales cabecera-detalle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S10_Seguridad_Backend_JWT_Roles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S10 - Seguridad backend JWT y roles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S10b_Seguridad_Backend_Keycloak/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S10b - Reemplazo de seguridad por Keycloak
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S11_Seguridad_Frontend_Keycloak/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S11 - Seguridad frontend con Keycloak
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lp2/sesiones/S12_Evaluacion_Unidad_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S12 - Evaluación de la Unidad II
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-introduccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Introducción
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Introducción">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-presentacion-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Presentación de la sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-indice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Índice
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-proposito-de-aprendizaje" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Propósito de aprendizaje
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-producto-de-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Producto de sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-metodologia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Metodología
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16-motivacion-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6 Motivación de la sesión
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.6 Motivación de la sesión">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#161-caso-el-incidente-de-base-de-datos-de-gitlab-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6.1 Caso: el incidente de base de datos de GitLab (2017)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#17-ubicacion-en-el-curso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.7 Ubicación en el curso
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-explica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Explica
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Explica">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-arquitectura-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Arquitectura de la sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-rman-frente-a-data-pump" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 RMAN frente a Data Pump
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-respaldo-completo-level-0-frente-a-incremental-level-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Respaldo completo (Level 0) frente a incremental (Level 1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-archivelog-como-condicion-necesaria-del-point-in-time-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 ARCHIVELOG como condición necesaria del Point-In-Time Recovery
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-restore-frente-a-recover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 RESTORE frente a RECOVER
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-rto-y-rpo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 RTO y RPO
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#27-escenarios-reales-de-recuperacion-que-herramienta-corresponde-a-cada-incidente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7 Escenarios reales de recuperación: qué herramienta corresponde a cada incidente
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-aplica-actividad-practica-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Aplica: actividad práctica guiada
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Aplica: actividad práctica guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-verificar-el-punto-de-partida" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Verificar el punto de partida
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-activar-archivelog-y-configurar-el-fra" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Activar ARCHIVELOG y configurar el FRA
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-configurar-rman-y-ejecutar-el-respaldo-completo-level-0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Configurar RMAN y ejecutar el respaldo completo (Level 0)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-generar-un-cambio-real-y-ejecutar-el-respaldo-incremental-level-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Generar un cambio real y ejecutar el respaldo incremental (Level 1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-simular-un-incidente-y-recuperar-hasta-un-punto-exacto-pitr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Simular un incidente y recuperar hasta un punto exacto (PITR)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-verificar-que-la-recuperacion-fue-exacta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Verificar que la recuperación fue exacta
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37-respaldar-bom_ventas-con-data-pump" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 Respaldar BOM_VENTAS con Data Pump
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#38-documentar-la-estrategia-de-respaldo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 Documentar la estrategia de respaldo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-crea-actividad-autonoma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Crea: actividad autónoma
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Crea: actividad autónoma">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-actividad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Actividad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-proposito" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Propósito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-indicaciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Indicaciones
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.3 Indicaciones">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#431-estructura-del-informe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3.1 Estructura del informe
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-criterios-minimos-de-aceptacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Criterios mínimos de aceptación
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-preguntas-de-defensa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Preguntas de defensa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-rubrica-de-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 Rúbrica de evaluación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-cierre" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Cierre
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bibliografia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bibliografía
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anexo-ora-01804-bloquea-data-pump-y-otras-operaciones-en-bomerp-oracle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anexo: ORA-01804 bloquea Data Pump (y otras operaciones) en bomerp-oracle
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="s13-backup-y-recovery-con-rman">S13 - Backup y Recovery con RMAN<a class="headerlink" href="#s13-backup-y-recovery-con-rman" title="Permanent link">&para;</a></h1>
+<h2 id="1-introduccion">1. Introducción<a class="headerlink" href="#1-introduccion" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 20 min.</p>
+<h3 id="11-presentacion-de-la-sesion">1.1 Presentación de la sesión<a class="headerlink" href="#11-presentacion-de-la-sesion" title="Permanent link">&para;</a></h3>
+<p>Doce sesiones construyeron un motor transaccional Oracle real: esquemas por módulo (S1, S4), triggers y excepciones (S2-S3), índices y optimización (S5, S10), arquitectura de instancia (S7), usuarios con mínimo privilegio (S8), almacenamiento y auditoría (S9), particionamiento (S11). Ninguna de esas doce sesiones respondió una pregunta distinta, y la única que de verdad importa el día que algo sale mal: si <code>bomerp-oracle</code> pierde un datafile, o alguien borra una tabla por error, ¿cuánto de ese trabajo se recupera, y cuánto se pierde para siempre?</p>
+<p>S9 (3.9) ya dejó esa pregunta pendiente a propósito: activar <code>ARCHIVELOG</code> interrumpe la instancia, y en ese momento no había ninguna razón real para pagar ese costo — <code>bomerp-oracle</code> seguía, y sigue hoy mismo al empezar esta sesión, en <code>NOARCHIVELOG</code>. Esta sesión es exactamente el momento en que esa razón aparece: sin <code>ARCHIVELOG</code>, un respaldo solo puede restaurar hasta el instante exacto en que se tomó — nunca a un punto intermedio, ni un segundo después. Hoy se activa de verdad, no se vuelve a documentar sin ejecutar.</p>
+<h3 id="12-indice">1.2 Índice<a class="headerlink" href="#12-indice" title="Permanent link">&para;</a></h3>
+<ol>
+<li>RMAN (<em>Recovery Manager</em>) frente a Data Pump: respaldo físico frente a respaldo lógico.</li>
+<li>Respaldo completo (<em>Level 0</em>) frente a incremental (<em>Level 1</em>).</li>
+<li><code>ARCHIVELOG</code> como condición necesaria del <em>Point-In-Time Recovery</em> (PITR).</li>
+<li><code>RESTORE</code> frente a <code>RECOVER</code>: dos pasos, no uno.</li>
+<li>RTO y RPO: el vocabulario para justificar una estrategia de respaldo.</li>
+<li>Escenarios reales de recuperación: qué herramienta corresponde a cada incidente.</li>
+</ol>
+<h3 id="13-proposito-de-aprendizaje">1.3 Propósito de aprendizaje<a class="headerlink" href="#13-proposito-de-aprendizaje" title="Permanent link">&para;</a></h3>
+<p>Al concluir la clase, estarás en condiciones de: <strong>activar</strong> <code>ARCHIVELOG</code> con criterio, <strong>configurar</strong> RMAN y <strong>ejecutar</strong> un respaldo completo y uno incremental reales, <strong>simular</strong> un incidente y <strong>recuperar</strong> la base de datos hasta un punto exacto en el tiempo (PITR), <strong>exportar</strong> un esquema con Data Pump como respaldo lógico complementario, y <strong>documentar</strong> una estrategia de respaldo justificada con RTO/RPO, no solo "hacer backup porque toca".</p>
+<h3 id="14-producto-de-sesion">1.4 Producto de sesión<a class="headerlink" href="#14-producto-de-sesion" title="Permanent link">&para;</a></h3>
+<p><code>bomerp-oracle</code> en <code>ARCHIVELOG</code>, con un respaldo completo (L0) y uno incremental (L1) reales vía RMAN, un incidente simulado (dos cambios reales sobre <code>BOM_VENTAS.VENTAS</code>) recuperado exactamente hasta el punto intermedio correcto con <em>Point-In-Time Recovery</em>, un respaldo lógico del esquema con Data Pump, y el documento de estrategia de respaldo con su RTO/RPO justificado.</p>
+<h3 id="15-metodologia">1.5 Metodología<a class="headerlink" href="#15-metodologia" title="Permanent link">&para;</a></h3>
+<p><strong>Tabla 1. Metodología de la sesión</strong></p>
+<table>
+<thead>
+<tr>
+<th>Actividades a Realizar en el Periodo</th>
+<th>Orientaciones generales (Orientaciones Metodológicas)</th>
+<th>Material de estudio recomendado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Revisión previa individual</td>
+<td>Repasar por qué <code>bomerp-oracle</code> sigue en <code>NOARCHIVELOG</code> (S9, 3.9) y qué procedimiento documentó esa sesión sin ejecutarlo. Confirmar que <code>bomerp-oracle</code> sigue corriendo. Trabajo individual, antes de clase.</td>
+<td>S9 (2.3, 3.9).</td>
+</tr>
+<tr>
+<td>Clase presencial</td>
+<td>Activación guiada de <code>ARCHIVELOG</code>, configuración de RMAN, respaldo completo e incremental reales, simulación de un incidente y recuperación con PITR, respaldo lógico con Data Pump. Trabajo individual en la propia laptop, siguiendo al docente paso a paso.</td>
+<td>Contenedor <code>bomerp-oracle</code> corriendo (S1), pasos 3.1 a 3.8 de esta guía.</td>
+</tr>
+<tr>
+<td>Evaluación formativa</td>
+<td>Revisión en clase de la recuperación lograda (¿el dato correcto sobrevivió, el incidente se descartó?) y del documento de estrategia de respaldo. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4.</td>
+<td>Indicaciones de entrega (4.3), rúbrica de evaluación (4.6).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="16-motivacion-de-la-sesion">1.6 Motivación de la sesión<a class="headerlink" href="#16-motivacion-de-la-sesion" title="Permanent link">&para;</a></h3>
+<h4 id="161-caso-el-incidente-de-base-de-datos-de-gitlab-2017">1.6.1 Caso: el incidente de base de datos de GitLab (2017)<a class="headerlink" href="#161-caso-el-incidente-de-base-de-datos-de-gitlab-2017" title="Permanent link">&para;</a></h4>
+<p>El 31 de enero de 2017, un ingeniero de GitLab, intentando reparar un problema de replicación, ejecutó por error un comando destinado al servidor secundario directamente sobre el servidor primario de producción. En segundos se borraron aproximadamente 300 GB de datos reales. GitLab documentó públicamente, con total transparencia, qué pasó después — y es la parte que de verdad importa para esta sesión: la empresa tenía <strong>cuatro</strong> mecanismos de respaldo o replicación distintos, y cuando llegó el momento de usarlos, solo <strong>uno</strong> funcionó.</p>
+<ol>
+<li><code>pg_dump</code> a Amazon S3, cada 24 horas — fallaba en silencio desde hacía tiempo (una incompatibilidad de versiones entre la herramienta y la base), el bucket de S3 estaba vacío, y los correos de alerta ni siquiera llegaban.</li>
+<li><em>Snapshots</em> de disco (LVM) cada 24 horas — funcionaban, pero no estaban pensados para recuperación ante desastres. Por suerte, uno de esos <em>snapshots</em>, tomado apenas 6 horas antes del incidente, sí estaba disponible.</li>
+<li><em>Snapshots</em> de Azure cada 24 horas — nunca se habilitaron para los servidores de base de datos, solo para los de archivos.</li>
+<li>Replicación en caliente hacia un servidor secundario — ya estaba rota <strong>antes</strong> del incidente: el primario había eliminado segmentos de <em>WAL</em> (<em>Write-Ahead Log</em>, el registro de cambios de PostgreSQL) que el secundario todavía necesitaba, porque el archivado de <em>WAL</em> nunca se activó.</li>
+</ol>
+<p>Fuente: GitLab. (2017). <em>Postmortem of database outage of January 31</em>. GitLab Blog. https://about.gitlab.com/blog/2017/02/10/postmortem-of-database-outage-of-january-31/</p>
+<p>GitLab se recuperó con el único mecanismo que sí funcionó — el <em>snapshot</em> de 6 horas, elegido a propósito sobre el de 24 horas para perder la menor cantidad de datos posible (1.6, RPO) — pero perdió igual cerca de seis horas de proyectos, comentarios y cuentas de usuario reales. El punto 4 es, para esta sesión, el más importante: un mecanismo de replicación en caliente, que parecía la protección más sólida de las cuatro, estaba inutilizado por exactamente el mismo motivo por el que <code>bomerp-oracle</code> no puede hacer PITR hoy — faltaba el archivado del registro de cambios (<em>WAL</em> en PostgreSQL, redo archivado en Oracle).</p>
+<p><strong>Preguntas de análisis</strong></p>
+<p><strong>Activación de conocimientos previos</strong></p>
+<ol>
+<li>Antes de leer la causa técnica, ¿por qué tener <strong>varios</strong> mecanismos de respaldo no garantiza que al menos uno vaya a funcionar cuando de verdad se necesite?</li>
+</ol>
+<p><strong>Comprensión del caso</strong></p>
+<ol>
+<li>De los cuatro mecanismos de GitLab, ¿cuál falló por el mismo motivo técnico por el que <code>bomerp-oracle</code> no puede hacer <em>Point-In-Time Recovery</em> hoy, antes de esta sesión?</li>
+<li>GitLab eligió el <em>snapshot</em> de 6 horas sobre el de 24 horas para la recuperación. ¿Qué habría cambiado si solo hubiera tenido el de 24 horas disponible?</li>
+<li>En tu propio proyecto, ¿alguna vez verificaste que un respaldo tuyo (de cualquier tipo) realmente se podía restaurar, o solo confiaste en que "se estaba generando"?</li>
+</ol>
+<h3 id="17-ubicacion-en-el-curso">1.7 Ubicación en el curso<a class="headerlink" href="#17-ubicacion-en-el-curso" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Producto del curso: Base de datos empresarial Oracle operativa, administrada, optimizada, auditada y resiliente.</li>
+<li>Producto de unidad: Unidad III (esta es su primera sesión).</li>
+<li>Avance del producto en esta sesión: <code>ARCHIVELOG</code> activado, respaldo completo e incremental reales con RMAN, un incidente simulado recuperado con PITR hasta el punto exacto correcto, y un respaldo lógico con Data Pump.</li>
+</ul>
+<p><strong>Figura 1. Roadmap del producto de la unidad</strong></p>
+<pre class="mermaid"><code>flowchart TB
+    S13["`**S13:** Backup y Recovery con RMAN`"]
+    S14["`**S14:** Monitoreo y diagnóstico`"]
+    S15["`**S15:** Evaluación de la Unidad III`"]
+    S16["`**S16:** Continuación de la evaluación`"]
+
+    S13 --&gt; S14 --&gt; S15 --&gt; S16
+
+    classDef today fill:#ffe08a,stroke:#9a6b00,stroke-width:2px,color:#111;
+    class S13 today;</code></pre>
+<h2 id="2-explica">2. Explica<a class="headerlink" href="#2-explica" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 40 min.</p>
+<h3 id="21-arquitectura-de-la-sesion">2.1 Arquitectura de la sesión<a class="headerlink" href="#21-arquitectura-de-la-sesion" title="Permanent link">&para;</a></h3>
+<p><strong>Figura 2. De un motor transaccional sin probar a uno con recuperación verificada</strong></p>
+<pre class="mermaid"><code>flowchart TB
+    DB[("bomerp-oracle&lt;br/&gt;NOARCHIVELOG (S9)")]
+    ARC["ARCHIVELOG activado&lt;br/&gt;+ FRA (3.2)"]
+    L0["Backup completo&lt;br/&gt;RMAN Level 0 (3.3)"]
+    CAMBIO["Cambio real sobre&lt;br/&gt;BOM_VENTAS.VENTAS"]
+    L1["Backup incremental&lt;br/&gt;RMAN Level 1 (3.4)"]
+    INC["Incidente simulado&lt;br/&gt;(segundo cambio real)"]
+    PITR["RESTORE + RECOVER&lt;br/&gt;hasta un punto exacto (3.5)"]
+    DP[("Data Pump&lt;br/&gt;respaldo lógico (3.7)")]
+
+    DB --&gt; ARC --&gt; L0 --&gt; CAMBIO --&gt; L1 --&gt; INC --&gt; PITR
+    DB --&gt; DP</code></pre>
+<p>Lectura del diagrama: RMAN (columna izquierda) y Data Pump (columna derecha) no son pasos de la misma cadena — son dos herramientas distintas, para dos tipos de respaldo distintos (2.2). La cadena de RMAN sí es secuencial: cada paso depende literalmente del anterior, y el final (PITR) es la razón de ser de todos los pasos previos. Cada apartado siguiente desarrolla una pieza, en el mismo orden del Índice (1.2).</p>
+<h3 id="22-rman-frente-a-data-pump">2.2 RMAN frente a Data Pump<a class="headerlink" href="#22-rman-frente-a-data-pump" title="Permanent link">&para;</a></h3>
+<p><strong>RMAN</strong> (<em>Recovery Manager</em>) hace respaldo <strong>físico</strong>: copia los bloques reales de los datafiles, tal como están en disco, consciente de la estructura interna de la base (Oracle Corporation, 2024a). <strong>Data Pump</strong> (<code>expdp</code>/<code>impdp</code>) hace respaldo <strong>lógico</strong>: extrae los objetos (tablas, datos, metadatos) como un conjunto de instrucciones independiente de cómo estén guardados físicamente — el mismo principio que un <code>mysqldump</code> o un <code>pg_dump</code>, adaptado a Oracle (Oracle Corporation, 2024b).</p>
+<p><strong>Tabla 2. RMAN frente a Data Pump</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>RMAN (físico)</th>
+<th>Data Pump (lógico)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Qué copia</td>
+<td>Bloques de datafiles, tal como están en disco.</td>
+<td>Objetos (tablas, filas, metadatos), independientes del disco.</td>
+</tr>
+<tr>
+<td>Unidad mínima</td>
+<td>La base de datos completa (o un tablespace/datafile).</td>
+<td>Un esquema, una tabla, o un subconjunto filtrado.</td>
+</tr>
+<tr>
+<td>Requiere <code>ARCHIVELOG</code></td>
+<td>Para un respaldo en caliente (base abierta) y para PITR, sí (2.4).</td>
+<td>No — funciona igual en cualquier modo.</td>
+</tr>
+<tr>
+<td>Portabilidad</td>
+<td>Atada a la misma versión y plataforma de Oracle.</td>
+<td>Portable entre versiones y, con cuidado, entre plataformas.</td>
+</tr>
+<tr>
+<td>Caso de uso típico de esta sesión</td>
+<td>Recuperar la base completa tras perder un datafile, o volver a un punto exacto en el tiempo (3.3-3.6).</td>
+<td>Mover o respaldar un esquema específico (<code>BOM_VENTAS</code>) sin tocar el resto de la base (3.7).</td>
+</tr>
+</tbody>
+</table>
+<p>Ninguna de las dos reemplaza a la otra: un incidente que destruye el disco completo necesita RMAN; migrar solo <code>BOM_VENTAS</code> a otra instancia, o tener una copia portable de un esquema puntual, es trabajo de Data Pump. 2.7 ordena esta decisión por escenario.</p>
+<h3 id="23-respaldo-completo-level-0-frente-a-incremental-level-1">2.3 Respaldo completo (<em>Level 0</em>) frente a incremental (<em>Level 1</em>)<a class="headerlink" href="#23-respaldo-completo-level-0-frente-a-incremental-level-1" title="Permanent link">&para;</a></h3>
+<p>Un respaldo <strong>completo</strong> (<em>Level 0</em>) copia <strong>todos</strong> los bloques usados de cada datafile, sin importar si cambiaron desde el último respaldo. Un respaldo <strong>incremental</strong> (<em>Level 1</em>) copia <strong>solo</strong> los bloques que cambiaron desde el último respaldo de nivel 0 (o de nivel 1, si la estrategia es diferencial) — RMAN lleva un mapa de bloques modificados exactamente para no tener que leer la base completa cada vez (Oracle Corporation, 2024c).</p>
+<p><strong>Tabla 3. Completo frente a incremental</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><em>Level 0</em> (completo)</th>
+<th><em>Level 1</em> (incremental)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Qué copia</td>
+<td>Todos los bloques usados.</td>
+<td>Solo los bloques modificados desde el respaldo anterior.</td>
+</tr>
+<tr>
+<td>Cuándo</td>
+<td>El primer respaldo de una estrategia, o periódicamente como línea base.</td>
+<td>Entre un <em>Level 0</em> y el siguiente, con mayor frecuencia.</td>
+</tr>
+<tr>
+<td>Tiempo/espacio</td>
+<td>Mayor — proporcional al tamaño total de la base.</td>
+<td>Menor — proporcional solo al volumen de cambios reales.</td>
+</tr>
+<tr>
+<td>Qué pasa si un datafile no cambió</td>
+<td>Se copia igual (es completo).</td>
+<td>RMAN lo <strong>omite por completo</strong> — ver 3.4, evidencia real.</td>
+</tr>
+</tbody>
+</table>
+<p>Un error frecuente es pensar que "incremental" significa "una copia completa más pequeña" — no lo es: si un datafile entero no tuvo ningún cambio, RMAN ni siquiera lo toca. 3.4 muestra ese comportamiento verificado contra <code>bomerp-oracle</code>, no solo enunciado.</p>
+<h3 id="24-archivelog-como-condicion-necesaria-del-point-in-time-recovery">2.4 <code>ARCHIVELOG</code> como condición necesaria del <em>Point-In-Time Recovery</em><a class="headerlink" href="#24-archivelog-como-condicion-necesaria-del-point-in-time-recovery" title="Permanent link">&para;</a></h3>
+<p>En <code>NOARCHIVELOG</code> (el modo real de <code>bomerp-oracle</code> hasta esta sesión, S9 3.9), Oracle sobrescribe los <em>redo logs</em> en línea en cuanto ya no los necesita para la instancia activa — y con ellos desaparece cualquier posibilidad de reconstruir el estado de la base entre dos respaldos. Un respaldo en <code>NOARCHIVELOG</code> solo puede restaurar exactamente al instante en que se tomó: nada antes, nada después, nada intermedio.</p>
+<p>En <code>ARCHIVELOG</code>, cada <em>redo log</em> en línea se copia (se "archiva") antes de poder reutilizarse — esa copia es, literalmente, la cinta continua de todo lo que cambió en la base. RMAN puede restaurar el último respaldo y luego <strong>aplicar</strong> esos archivados hasta el segundo exacto que se le pida: eso es <em>Point-In-Time Recovery</em> (PITR). Es el mismo mecanismo que el <em>WAL</em> de PostgreSQL en el caso de GitLab (1.6) — cuando el archivado de <em>WAL</em> no estaba activo en el secundario, ese secundario perdió exactamente la misma capacidad que <code>bomerp-oracle</code> no tenía hasta 3.2 de esta sesión.</p>
+<p><strong>Error frecuente</strong>: activar <code>ARCHIVELOG</code> y asumir que ya se puede hacer PITR a cualquier punto del pasado. Solo se puede recuperar a un punto <strong>posterior al último respaldo físico disponible</strong> — los archivados por sí solos no bastan sin una base desde la cual aplicarlos (3.5).</p>
+<h3 id="25-restore-frente-a-recover">2.5 <code>RESTORE</code> frente a <code>RECOVER</code><a class="headerlink" href="#25-restore-frente-a-recover" title="Permanent link">&para;</a></h3>
+<p>Son dos comandos de RMAN, con responsabilidades distintas, que casi siempre se usan juntos:</p>
+<p><strong>Tabla 4. <code>RESTORE</code> frente a <code>RECOVER</code></strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><code>RESTORE</code></th>
+<th><code>RECOVER</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Qué hace</td>
+<td>Copia los datafiles desde el respaldo (L0 y, si aplica, L1) de vuelta a disco.</td>
+<td>Aplica los <em>redo</em> archivados sobre esos datafiles ya restaurados, hasta el punto pedido.</td>
+</tr>
+<tr>
+<td>Deja la base en qué estado</td>
+<td>Como estaba en el momento exacto del respaldo usado.</td>
+<td>Como estaba en el momento exacto solicitado (el presente, o un punto intermedio con PITR).</td>
+</tr>
+<tr>
+<td>Sin el otro paso</td>
+<td>Una base consistente, pero vieja — tan vieja como el último respaldo.</td>
+<td>No tiene nada que recuperar sobre si antes no se restauró ningún datafile.</td>
+</tr>
+</tbody>
+</table>
+<p><code>RESTORE</code> sin <code>RECOVER</code> deja la base exactamente como estaba en el respaldo — ninguno de los cambios posteriores (ni los buenos, ni el incidente) existe todavía. <code>RECOVER</code> es el que decide hasta dónde avanzar desde ahí: hasta ahora (recuperación completa) o hasta un punto exacto en el pasado (PITR, 3.5).</p>
+<h3 id="26-rto-y-rpo">2.6 RTO y RPO<a class="headerlink" href="#26-rto-y-rpo" title="Permanent link">&para;</a></h3>
+<p>Dos métricas, no una, justifican cualquier estrategia de respaldo (Oracle Corporation, 2024d):</p>
+<ul>
+<li><strong>RPO</strong> (<em>Recovery Point Objective</em>): cuántos datos es aceptable perder, medido en tiempo. Un RPO de 1 hora significa que, en el peor caso, se pierde hasta una hora de cambios.</li>
+<li><strong>RTO</strong> (<em>Recovery Time Objective</em>): cuánto tiempo es aceptable que el sistema esté caído mientras se recupera.</li>
+</ul>
+<p>GitLab (1.6) tomó una decisión de RPO en vivo: eligió el <em>snapshot</em> de 6 horas sobre el de 24 horas <strong>precisamente</strong> para minimizar cuántos datos perdía, aunque ambos estaban disponibles. Esa misma decisión se repite, a escala de esta sesión, en 3.5: el <em>Level 1</em> (3.4) existe para acortar el RPO frente a depender solo del último <em>Level 0</em> — cuanto más reciente el último respaldo aplicable, menos se pierde si hay que recuperar.</p>
+<h3 id="27-escenarios-reales-de-recuperacion-que-herramienta-corresponde-a-cada-incidente">2.7 Escenarios reales de recuperación: qué herramienta corresponde a cada incidente<a class="headerlink" href="#27-escenarios-reales-de-recuperacion-que-herramienta-corresponde-a-cada-incidente" title="Permanent link">&para;</a></h3>
+<p>No todo incidente de "pérdida de datos" se resuelve con RMAN. Antes de recuperar nada, hay que identificar qué herramienta corresponde:</p>
+<p><strong>Tabla 5. Qué herramienta corresponde a cada escenario</strong></p>
+<table>
+<thead>
+<tr>
+<th>Escenario</th>
+<th>Herramienta correcta</th>
+<th>Por qué</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Se perdió o corrompió un datafile completo</td>
+<td>RMAN: <code>RESTORE</code> + <code>RECOVER</code> (3.3-3.6)</td>
+<td>Es un problema físico — solo un respaldo físico lo resuelve.</td>
+</tr>
+<tr>
+<td>Se necesita volver a un estado anterior a un incidente de negocio (un <code>UPDATE</code> masivo mal filtrado)</td>
+<td>RMAN: PITR (3.5), si el incidente ya pasó el punto de recuperación de la papelera de Oracle</td>
+<td>El dato correcto y el incidente conviven en la misma base; solo un punto exacto en el tiempo los separa.</td>
+</tr>
+<tr>
+<td>Se necesita mover o respaldar un esquema específico, o migrar a otra instancia</td>
+<td>Data Pump (3.7)</td>
+<td>No hace falta recuperar toda la base para mover un esquema puntual.</td>
+</tr>
+<tr>
+<td>Se necesita auditar qué cambió y cuándo, sin recuperar nada</td>
+<td>Vistas de auditoría (S9), no RMAN ni Data Pump</td>
+<td>Ninguna de las dos herramientas de esta sesión está pensada para consultar, solo para respaldar/recuperar.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="3-aplica-actividad-practica-guiada">3. Aplica: actividad práctica guiada<a class="headerlink" href="#3-aplica-actividad-practica-guiada" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 100 min.</p>
+<p><strong>Actividad:</strong> activar <code>ARCHIVELOG</code> en <code>bomerp-oracle</code>, configurar RMAN y ejecutar un respaldo completo e incremental reales, simular un incidente con dos cambios reales sobre <code>BOM_VENTAS.VENTAS</code>, recuperar la base exactamente hasta el punto correcto con PITR, y respaldar <code>BOM_VENTAS</code> con Data Pump.</p>
+<p><strong>Propósito de la actividad:</strong> verificar, contra la instancia real, que una estrategia de respaldo bien configurada permite recuperar exactamente lo que se necesita recuperar — ni más, ni menos — y no solo enunciar los comandos.</p>
+<p><strong>Orientaciones metodológicas:</strong> el docente ejecuta cada paso en vivo contra <code>bomerp-oracle</code>; los estudiantes repiten cada paso sobre su propia instancia (sección 4). Activar <code>ARCHIVELOG</code> interrumpe brevemente la instancia — avisa antes de ejecutarlo si tu backend de LP2 está corriendo.</p>
+<p><strong>Actividades para realizar:</strong></p>
+<ul>
+<li><strong>3.1</strong> Verificar el punto de partida.</li>
+<li><strong>3.2</strong> Activar <code>ARCHIVELOG</code> y configurar el FRA.</li>
+<li><strong>3.3</strong> Configurar RMAN y ejecutar el respaldo completo (<em>Level 0</em>).</li>
+<li><strong>3.4</strong> Generar un cambio real y ejecutar el respaldo incremental (<em>Level 1</em>).</li>
+<li><strong>3.5</strong> Simular un incidente y recuperar hasta un punto exacto (PITR).</li>
+<li><strong>3.6</strong> Verificar que la recuperación fue exacta.</li>
+<li><strong>3.7</strong> Respaldar <code>BOM_VENTAS</code> con Data Pump.</li>
+<li><strong>3.8</strong> Documentar la estrategia de respaldo.</li>
+</ul>
+<h3 id="31-verificar-el-punto-de-partida">3.1 Verificar el punto de partida<a class="headerlink" href="#31-verificar-el-punto-de-partida" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> confirmación de que <code>bomerp-oracle</code> sigue en <code>NOARCHIVELOG</code> (el estado real que S9 dejó pendiente) antes de cambiar nada.</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>bomerp-oracle<span class="w"> </span>sqlplus<span class="w"> </span>/<span class="w"> </span>as<span class="w"> </span>sysdba
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="n">LOG_MODE</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">V$DATABASE</span><span class="p">;</span>
+</code></pre></div>
+<p>Resultado real de esta sesión, antes de 3.2:</p>
+<div class="highlight"><pre><span></span><code>LOG_MODE
+------------
+NOARCHIVELOG
+</code></pre></div>
+<h3 id="32-activar-archivelog-y-configurar-el-fra">3.2 Activar <code>ARCHIVELOG</code> y configurar el FRA<a class="headerlink" href="#32-activar-archivelog-y-configurar-el-fra" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> <code>bomerp-oracle</code> en <code>ARCHIVELOG</code>, con un destino de respaldo (<em>Fast Recovery Area</em>, FRA) configurado <strong>dentro</strong> del volumen persistente — el mismo criterio que corrigió el datafile de <code>TS_BOMERP</code> en S9: cualquier cosa que deba sobrevivir a que el contenedor se recree tiene que vivir bajo <code>/opt/oracle/oradata</code>, el único directorio que <code>compose-dev.yml</code> monta como volumen.</p>
+<div class="highlight"><pre><span></span><code><span class="k">ALTER</span><span class="w"> </span><span class="k">SYSTEM</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">db_recovery_file_dest_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="k">G</span><span class="w"> </span><span class="k">SCOPE</span><span class="o">=</span><span class="k">BOTH</span><span class="p">;</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="k">SYSTEM</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">db_recovery_file_dest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'/opt/oracle/oradata/FRA'</span><span class="w"> </span><span class="k">SCOPE</span><span class="o">=</span><span class="k">BOTH</span><span class="p">;</span>
+<span class="n">SHUTDOWN</span><span class="w"> </span><span class="k">IMMEDIATE</span><span class="p">;</span>
+<span class="n">STARTUP</span><span class="w"> </span><span class="n">MOUNT</span><span class="p">;</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">ARCHIVELOG</span><span class="p">;</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="k">OPEN</span><span class="p">;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">LOG_MODE</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">V$DATABASE</span><span class="p">;</span>
+</code></pre></div>
+<p>Resultado real de esta sesión:</p>
+<div class="highlight"><pre><span></span><code>LOG_MODE
+------------
+ARCHIVELOG
+</code></pre></div>
+<p><strong>Error frecuente</strong>: dejar <code>db_recovery_file_dest</code> apuntando a un directorio que no existe todavía. Oracle no lo crea solo — créalo antes, dentro del contenedor:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>bomerp-oracle<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/opt/oracle/oradata/FRA
+</code></pre></div>
+<h3 id="33-configurar-rman-y-ejecutar-el-respaldo-completo-level-0">3.3 Configurar RMAN y ejecutar el respaldo completo (<em>Level 0</em>)<a class="headerlink" href="#33-configurar-rman-y-ejecutar-el-respaldo-completo-level-0" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> el primer respaldo completo real de <code>bomerp-oracle</code>, con el <em>controlfile</em> respaldándose automáticamente después de cada respaldo.</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>bomerp-oracle<span class="w"> </span>rman<span class="w"> </span>target<span class="w"> </span>/
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>CONFIGURE CONTROLFILE AUTOBACKUP ON;
+BACKUP INCREMENTAL LEVEL 0 DATABASE PLUS ARCHIVELOG;
+LIST BACKUP SUMMARY;
+</code></pre></div>
+<p>Resultado real de esta sesión (resumido):</p>
+<div class="highlight"><pre><span></span><code>channel ORA_DISK_1: starting incremental level 0 datafile backup set
+...
+piece handle=/opt/oracle/oradata/FRA/FREE/backupset/2026_11_01/o1_mf_nnnd0_...bkp
+...
+Finished backup at 01-NOV-26
+
+List of Backups
+===============
+Key  TY LV S Device Type Completion Time  Tag
+---  -- -- - ----------- ---------------  ---
+1    B  A  A DISK        01-NOV-26        TAG...022207   (archivelog)
+2    B  0  A DISK        01-NOV-26        TAG...022211   (CDB$ROOT, Level 0)
+3    B  0  A DISK        01-NOV-26        TAG...022211   (FREEPDB1, Level 0)
+4    B  0  A DISK        01-NOV-26        TAG...022211   (pdbseed, Level 0)
+5    B  A  A DISK        01-NOV-26        TAG...022448   (archivelog)
+6    B  F  A DISK        01-NOV-26        TAG...022450   (controlfile autobackup)
+</code></pre></div>
+<p><code>PLUS ARCHIVELOG</code> respalda también los <em>redo</em> archivados hasta ese momento — sin ellos, el respaldo físico por sí solo no alcanzaría para ningún <code>RECOVER</code> posterior (2.4).</p>
+<h3 id="34-generar-un-cambio-real-y-ejecutar-el-respaldo-incremental-level-1">3.4 Generar un cambio real y ejecutar el respaldo incremental (<em>Level 1</em>)<a class="headerlink" href="#34-generar-un-cambio-real-y-ejecutar-el-respaldo-incremental-level-1" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> un cambio real verificable, y la evidencia de que el <em>Level 1</em> solo respalda lo que de verdad cambió.</p>
+<div class="highlight"><pre><span></span><code><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">VENTAS</span><span class="w"> </span><span class="p">(</span><span class="n">ID</span><span class="p">,</span><span class="w"> </span><span class="n">FECHA</span><span class="p">,</span><span class="w"> </span><span class="n">ESTADO</span><span class="p">,</span><span class="w"> </span><span class="n">TOTAL</span><span class="p">,</span><span class="w"> </span><span class="n">VENDEDOR_ID</span><span class="p">)</span>
+<span class="w">  </span><span class="k">VALUES</span><span class="w"> </span><span class="p">((</span><span class="k">SELECT</span><span class="w"> </span><span class="k">MAX</span><span class="p">(</span><span class="n">ID</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">VENTAS</span><span class="p">),</span><span class="w"> </span><span class="n">SYSTIMESTAMP</span><span class="p">,</span><span class="w"> </span><span class="s1">'REGISTRADA'</span><span class="p">,</span><span class="w"> </span><span class="mi">199</span><span class="p">.</span><span class="mi">90</span><span class="p">,</span>
+<span class="w">          </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">VENDEDOR_ID</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">VENTAS</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ROWNUM</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">));</span>
+<span class="k">COMMIT</span><span class="p">;</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>BACKUP INCREMENTAL LEVEL 1 DATABASE PLUS ARCHIVELOG;
+</code></pre></div>
+<p>Resultado real de esta sesión — la evidencia de 2.3, verificada:</p>
+<div class="highlight"><pre><span></span><code>channel ORA_DISK_1: starting incremental level 1 datafile backup set
+...
+input datafile file number=00004 name=.../pdbseed/sysaux01.dbf
+skipping datafile 00004 because it has not changed
+input datafile file number=00002 name=.../pdbseed/system01.dbf
+skipping datafile 00002 because it has not changed
+input datafile file number=00020 name=.../pdbseed/undotbs01.dbf
+skipping datafile 00020 because it has not changed
+channel ORA_DISK_1: backup cancelled because all files were skipped
+</code></pre></div>
+<p><code>pdbseed</code> (la plantilla interna de Oracle para crear nuevas PDB) no cambió desde el <em>Level 0</em> — RMAN lo detecta solo y ni siquiera abre esos datafiles para copiarlos. Los datafiles de <code>FREEPDB1</code> (donde vive <code>BOM_VENTAS</code>) sí se respaldaron, porque el <code>INSERT</code> de arriba sí los modificó.</p>
+<h3 id="35-simular-un-incidente-y-recuperar-hasta-un-punto-exacto-pitr">3.5 Simular un incidente y recuperar hasta un punto exacto (PITR)<a class="headerlink" href="#35-simular-un-incidente-y-recuperar-hasta-un-punto-exacto-pitr" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> un incidente real (un segundo cambio, deliberadamente posterior al que sí debe sobrevivir) y la recuperación de la base exactamente hasta el instante anterior a ese incidente.</p>
+<div class="highlight"><pre><span></span><code><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">VENTAS</span><span class="w"> </span><span class="p">(</span><span class="n">ID</span><span class="p">,</span><span class="w"> </span><span class="n">FECHA</span><span class="p">,</span><span class="w"> </span><span class="n">ESTADO</span><span class="p">,</span><span class="w"> </span><span class="n">TOTAL</span><span class="p">,</span><span class="w"> </span><span class="n">VENDEDOR_ID</span><span class="p">)</span>
+<span class="w">  </span><span class="k">VALUES</span><span class="w"> </span><span class="p">((</span><span class="k">SELECT</span><span class="w"> </span><span class="k">MAX</span><span class="p">(</span><span class="n">ID</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">VENTAS</span><span class="p">),</span><span class="w"> </span><span class="n">SYSTIMESTAMP</span><span class="p">,</span><span class="w"> </span><span class="s1">'REGISTRADA'</span><span class="p">,</span><span class="w"> </span><span class="mi">350</span><span class="p">.</span><span class="mi">00</span><span class="p">,</span>
+<span class="w">          </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">VENDEDOR_ID</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">VENTAS</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ROWNUM</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">));</span>
+<span class="k">COMMIT</span><span class="p">;</span>
+<span class="c1">-- anota la hora exacta que devuelve SYSTIMESTAMP: este es el "incidente" a descartar</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">SHUTDOWN</span><span class="w"> </span><span class="k">IMMEDIATE</span><span class="p">;</span>
+<span class="n">STARTUP</span><span class="w"> </span><span class="n">MOUNT</span><span class="p">;</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>RUN {
+  SET UNTIL TIME "TO_DATE('2026-11-01 02:26:50','YYYY-MM-DD HH24:MI:SS')";
+  RESTORE DATABASE;
+  RECOVER DATABASE;
+}
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">ALTER</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="k">OPEN</span><span class="w"> </span><span class="n">RESETLOGS</span><span class="p">;</span>
+</code></pre></div>
+<p>El punto elegido (<code>02:26:50</code>) cae <strong>entre</strong> el <code>INSERT</code> de 3.4 (<code>02:25:43</code>, el que debe sobrevivir) y el <code>INSERT</code> de esta sección (<code>02:27:01</code>, el "incidente" que debe descartarse) — exactamente el tipo de decisión que el escenario 2 de la Tabla 5 describe.</p>
+<p><strong>Error frecuente</strong>: elegir un <code>SET UNTIL TIME</code> anterior al último respaldo disponible. RMAN no puede reconstruir un estado para el que no tiene ni respaldo físico ni <em>redo</em> archivado que aplicar — el punto elegido debe estar siempre después del último <em>Level 0</em>/<em>Level 1</em> útil.</p>
+<h3 id="36-verificar-que-la-recuperacion-fue-exacta">3.6 Verificar que la recuperación fue exacta<a class="headerlink" href="#36-verificar-que-la-recuperacion-fue-exacta" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> la prueba de que el <code>INSERT</code> de 3.4 sobrevivió y el de 3.5 no.</p>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">VENTAS</span><span class="p">;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">ID</span><span class="p">,</span><span class="w"> </span><span class="n">TO_CHAR</span><span class="p">(</span><span class="n">FECHA</span><span class="p">,</span><span class="s1">'YYYY-MM-DD HH24:MI:SS'</span><span class="p">)</span><span class="w"> </span><span class="n">FECHA</span><span class="p">,</span><span class="w"> </span><span class="n">TOTAL</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">VENTAS</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">TOTAL</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="mi">199</span><span class="p">.</span><span class="mi">90</span><span class="p">,</span><span class="w"> </span><span class="mi">350</span><span class="p">.</span><span class="mi">00</span><span class="p">);</span>
+</code></pre></div>
+<p>Resultado real de esta sesión:</p>
+<div class="highlight"><pre><span></span><code>COUNT(*)
+--------
+     505
+
+        ID FECHA               TOTAL
+---------- ------------------- ------
+      2262 2026-11-01 02:25:43  199.9
+</code></pre></div>
+<p>La fila de <code>199.90</code> (3.4, antes del punto de recuperación) está. La fila de <code>350.00</code> (3.5, después del punto de recuperación) no aparece — nunca existió, desde el punto de vista de la base ya recuperada. Es la prueba de que el PITR recuperó exactamente lo que debía, ni un cambio más.</p>
+<h3 id="37-respaldar-bom_ventas-con-data-pump">3.7 Respaldar <code>BOM_VENTAS</code> con Data Pump<a class="headerlink" href="#37-respaldar-bom_ventas-con-data-pump" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> un respaldo lógico del esquema <code>BOM_VENTAS</code>, independiente del respaldo físico de RMAN.</p>
+<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="n">DIRECTORY</span><span class="w"> </span><span class="n">BOMERP_DPDUMP</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s1">'/opt/oracle/oradata/dpdump'</span><span class="p">;</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="k">READ</span><span class="p">,</span><span class="w"> </span><span class="k">WRITE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">DIRECTORY</span><span class="w"> </span><span class="n">BOMERP_DPDUMP</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">;</span>
+</code></pre></div>
+<p><strong>Error frecuente</strong>: usar el directorio <code>DATA_PUMP_DIR</code> que Oracle crea por defecto. Verifícalo antes:</p>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="n">DIRECTORY_PATH</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">DBA_DIRECTORIES</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">DIRECTORY_NAME</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'DATA_PUMP_DIR'</span><span class="p">;</span>
+<span class="c1">-- /opt/oracle/admin/FREE/dpdump/... -- fuera de /opt/oracle/oradata, fuera del volumen persistente</span>
+</code></pre></div>
+<p>El mismo riesgo del datafile de <code>TS_BOMERP</code> (S9) y del FRA (3.2): si el destino del respaldo no vive dentro de <code>/opt/oracle/oradata</code>, se pierde al recrear el contenedor — exactamente lo que el respaldo debía evitar.</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>bomerp-oracle<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/opt/oracle/oradata/dpdump
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>bomerp-oracle<span class="w"> </span>expdp<span class="w"> </span>BOM_VENTAS/123456@localhost:1521/FREEPDB1<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="nv">schemas</span><span class="o">=</span>BOM_VENTAS<span class="w"> </span><span class="nv">directory</span><span class="o">=</span>BOMERP_DPDUMP<span class="w"> </span><span class="nv">dumpfile</span><span class="o">=</span>bom_ventas.dmp<span class="w"> </span><span class="nv">logfile</span><span class="o">=</span>bom_ventas_exp.log
+</code></pre></div>
+<p>Para restaurar (verificando contra un esquema vacío, no el original):</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>bomerp-oracle<span class="w"> </span>impdp<span class="w"> </span>BOM_VENTAS/123456@localhost:1521/FREEPDB1<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="nv">directory</span><span class="o">=</span>BOMERP_DPDUMP<span class="w"> </span><span class="nv">dumpfile</span><span class="o">=</span>bom_ventas.dmp<span class="w"> </span><span class="nv">logfile</span><span class="o">=</span>bom_ventas_imp.log<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="nv">remap_schema</span><span class="o">=</span>BOM_VENTAS:BOM_VENTAS_RESTORE
+</code></pre></div>
+<p><strong>Nota real de esta sesión</strong>: al preparar esta guía, <code>bomerp-oracle</code> devolvió <code>ORA-01804: failure to initialize timezone information</code> al ejecutar <code>expdp</code> (y, más adelante, incluso en un <code>DROP USER</code>) — un defecto del contenedor ya diagnosticado (ver Anexo al final de esta sesión) y ajeno a la sintaxis de Data Pump en sí, que sigue siendo correcta. Si tu propio <code>bomerp-oracle</code> no presenta este error, <code>expdp</code>/<code>impdp</code> deben ejecutarse sin problema con los comandos de arriba.</p>
+<h3 id="38-documentar-la-estrategia-de-respaldo">3.8 Documentar la estrategia de respaldo<a class="headerlink" href="#38-documentar-la-estrategia-de-respaldo" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> la tabla de estrategia que 4.1 pide replicar sobre el proyecto propio, con BomERP como ejemplo ya resuelto.</p>
+<p><strong>Tabla 6. Estrategia de respaldo de BomERP (ejemplo resuelto)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Elemento</th>
+<th>Decisión</th>
+<th>Justificación</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Modo de la base</td>
+<td><code>ARCHIVELOG</code></td>
+<td>Condición necesaria para PITR (2.4) — sin él, solo se puede restaurar al instante exacto del último respaldo.</td>
+</tr>
+<tr>
+<td>Respaldo completo (L0)</td>
+<td>Semanal (en producción real; en esta sesión, al inicio de la estrategia)</td>
+<td>Línea base desde la que parten los incrementales.</td>
+</tr>
+<tr>
+<td>Respaldo incremental (L1)</td>
+<td>Diario</td>
+<td>Acorta el RPO (2.6) sin pagar el costo de un L0 completo cada vez.</td>
+</tr>
+<tr>
+<td>RPO objetivo</td>
+<td>Menor al intervalo entre dos L1 (en esta sesión, minutos — el tiempo entre 3.4 y 3.5)</td>
+<td>Cuánto se puede perder en el peor caso, medido, no supuesto.</td>
+</tr>
+<tr>
+<td>RTO objetivo</td>
+<td>El tiempo real que tomó <code>RESTORE</code> + <code>RECOVER</code> en 3.5-3.6</td>
+<td>Cuánto tiempo la base estuvo inaccesible durante la recuperación, medido.</td>
+</tr>
+<tr>
+<td>Respaldo lógico complementario</td>
+<td>Data Pump de <code>BOM_VENTAS</code>, independiente del físico</td>
+<td>Portabilidad y recuperación selectiva de un esquema, sin depender de RMAN (2.2).</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Evidencia de aprendizaje:</strong></p>
+<ul>
+<li><code>ARCHIVELOG</code> activado, verificado con <code>V$DATABASE</code>.</li>
+<li>Respaldo completo (L0) y su <code>LIST BACKUP SUMMARY</code>.</li>
+<li>Respaldo incremental (L1), con la evidencia real de datafiles omitidos por no haber cambiado.</li>
+<li>Incidente simulado (dos cambios reales) y su recuperación con PITR, verificada con una consulta que distingue el cambio que sobrevivió del que no.</li>
+<li>Respaldo lógico con Data Pump, con su directorio dentro del volumen persistente.</li>
+<li>Tabla de estrategia de respaldo (Tabla 6) completa.</li>
+</ul>
+<h2 id="4-crea-actividad-autonoma">4. Crea: actividad autónoma<a class="headerlink" href="#4-crea-actividad-autonoma" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 2h fuera del aula.</p>
+<h3 id="41-actividad">4.1 Actividad<a class="headerlink" href="#41-actividad" title="Permanent link">&para;</a></h3>
+<p>Backup, recuperación y estrategia de continuidad del proyecto propio del equipo, documentada en evidencia individual.</p>
+<p>Completa y evidencia estas tareas:</p>
+<ol>
+<li>Activar <code>ARCHIVELOG</code> en tu propia instancia Oracle, con el FRA configurado dentro de tu volumen persistente.</li>
+<li>Configurar RMAN y ejecutar un respaldo completo (<em>Level 0</em>) real.</li>
+<li>Generar un cambio real sobre una tabla de tu proyecto y ejecutar un respaldo incremental (<em>Level 1</em>), verificando qué datafiles se omitieron por no haber cambiado.</li>
+<li>Simular un incidente con un segundo cambio real, y recuperar tu base exactamente hasta el punto correcto con <em>Point-In-Time Recovery</em> — demostrando que el primer cambio sobrevive y el segundo (el incidente) no.</li>
+<li>Respaldar al menos un esquema de tu proyecto con Data Pump, con su directorio dentro del volumen persistente.</li>
+<li>Documentar tu propia estrategia de respaldo (como la Tabla 6), con RTO/RPO medidos, no supuestos.</li>
+</ol>
+<h3 id="42-proposito">4.2 Propósito<a class="headerlink" href="#42-proposito" title="Permanent link">&para;</a></h3>
+<p>Que cada estudiante demuestre, de forma individual y fuera del aula, que puede activar <code>ARCHIVELOG</code> con criterio, ejecutar un respaldo completo e incremental reales, recuperar su base exactamente hasta un punto correcto tras un incidente simulado, y justificar su estrategia de respaldo con métricas medidas.</p>
+<h3 id="43-indicaciones">4.3 Indicaciones<a class="headerlink" href="#43-indicaciones" title="Permanent link">&para;</a></h3>
+<p>Entrega un PDF con el siguiente nombre:</p>
+<div class="highlight"><pre><span></span><code>S13_BD2_Equipo##_ApellidoNombre.pdf
+</code></pre></div>
+<p>Cada captura de pantalla del informe debe mostrar, sin recortar, el reloj del sistema (fecha y hora) y tu usuario o foto de perfil (Windows, VS Code o navegador) visibles en pantalla — es lo que permite verificar que la evidencia es tuya y que corresponde al momento real de tu trabajo.</p>
+<h4 id="431-estructura-del-informe">4.3.1 Estructura del informe<a class="headerlink" href="#431-estructura-del-informe" title="Permanent link">&para;</a></h4>
+<p><strong>Datos del estudiante</strong></p>
+<ul>
+<li>Nombre:</li>
+<li>Equipo:</li>
+<li>Sesión: S13 - Backup y Recovery con RMAN</li>
+<li>Rol o aporte realizado:</li>
+<li>Link de GitHub:</li>
+</ul>
+<p><strong>Evidencia técnica</strong></p>
+<p>Incluye capturas o salidas con una breve explicación debajo de cada una, organizadas en los mismos 5 bloques de la rúbrica (4.6):</p>
+<ol>
+<li><em><code>ARCHIVELOG</code> activado</em><ul>
+<li><code>V$DATABASE.LOG_MODE</code> antes y después, con el FRA configurado dentro del volumen persistente.</li>
+</ul>
+</li>
+<li><em>Respaldo completo e incremental</em><ul>
+<li><code>LIST BACKUP SUMMARY</code> de ambos, con la evidencia de al menos un datafile omitido en el incremental.</li>
+</ul>
+</li>
+<li><em>Incidente simulado y recuperación PITR</em><ul>
+<li>Los dos cambios reales, la hora exacta elegida para <code>SET UNTIL TIME</code>, y la consulta que distingue cuál sobrevivió.</li>
+</ul>
+</li>
+<li><em>Respaldo lógico con Data Pump</em><ul>
+<li>El <code>expdp</code> ejecutado, con su directorio dentro del volumen persistente.</li>
+</ul>
+</li>
+<li><em>Estrategia de respaldo documentada</em><ul>
+<li>Tu propia tabla de estrategia, con RTO/RPO medidos sobre tu propia recuperación.</li>
+</ul>
+</li>
+</ol>
+<p><strong>Error o hallazgo</strong></p>
+<p>Describe un error real: un <code>SET UNTIL TIME</code> elegido antes del último respaldo útil, un directorio de Data Pump fuera del volumen persistente, o cualquier otro obstáculo real que tuviste que diagnosticar.</p>
+<p><strong>Reflexión técnica breve</strong></p>
+<p>Responde en 5 a 8 líneas:</p>
+<div class="highlight"><pre><span></span><code>¿Por qué tener varios mecanismos de respaldo, como GitLab en 2017,
+no garantiza que al menos uno funcione cuando de verdad se necesita?
+Relaciona tu respuesta con tu propia verificación de la sección 3:
+¿tu respaldo incremental de verdad capturó el cambio correcto?
+</code></pre></div>
+<p><strong>Anexo: Feedback de la sesión</strong></p>
+<p>Pega esta página como la última hoja del PDF, con tus respuestas.</p>
+<ol>
+<li>¿Cuál es el aprendizaje más importante que te llevas de la clase de hoy?</li>
+<li>¿Qué punto de la clase te resultó más confuso o te dejó con dudas?</li>
+<li>¿Tienes alguna pregunta que te gustaría que sea respondida la siguiente clase?</li>
+<li>Sobre tu nivel de comprensión de la clase de hoy, marca una opción:<ul>
+<li>¡Entendido! - Lo domino y podría explicarlo.</li>
+<li>Más o menos. - Entendí la idea general, pero tengo dudas.</li>
+<li>Necesito ayuda. - Me siento perdido/a con este tema.</li>
+</ul>
+</li>
+<li>¿Cómo puedo ayudarte a comprender mejor el tema?</li>
+<li>Pensando en tu participación y esfuerzo en la clase de hoy, ¿cómo te autoevaluarías? Marca una opción:<ul>
+<li>Muy Comprometido/a: Me esforcé al máximo.</li>
+<li>Comprometido/a: Sé que podría haberme esforzado un poco más.</li>
+<li>Poco Comprometido/a: Hoy no di mi mejor esfuerzo.</li>
+</ul>
+</li>
+<li>Mi satisfacción con la clase fue... (califica del 1 al 10, donde 1 es insatisfecho y 10 es muy satisfecho).</li>
+</ol>
+<h3 id="44-criterios-minimos-de-aceptacion">4.4 Criterios mínimos de aceptación<a class="headerlink" href="#44-criterios-minimos-de-aceptacion" title="Permanent link">&para;</a></h3>
+<ul>
+<li>El archivo respeta el nombre solicitado.</li>
+<li><code>ARCHIVELOG</code> está activado, verificado con <code>V$DATABASE</code>, con el FRA dentro del volumen persistente.</li>
+<li>El respaldo completo y el incremental están ejecutados, con evidencia real de al menos un datafile omitido en el incremental.</li>
+<li>El incidente simulado tiene dos cambios reales, y la recuperación PITR demuestra cuál sobrevivió y cuál no, con una consulta de verificación.</li>
+<li>El respaldo con Data Pump está ejecutado, con su directorio dentro del volumen persistente.</li>
+<li>La estrategia de respaldo documentada incluye RTO/RPO medidos sobre la propia recuperación, no estimados a ojo.</li>
+<li>Cada captura de la evidencia técnica muestra el reloj del sistema y el usuario/perfil visible, sin recortar.</li>
+<li>Las fechas y horas de las capturas son coherentes con el historial de commits de su repositorio en GitHub.</li>
+<li>Incluye un error o hallazgo técnico diagnosticado.</li>
+<li>Incluye la reflexión técnica breve solicitada.</li>
+<li>Incluye el Anexo de feedback de la sesión respondido, como última página del PDF.</li>
+</ul>
+<h3 id="45-preguntas-de-defensa">4.5 Preguntas de defensa<a class="headerlink" href="#45-preguntas-de-defensa" title="Permanent link">&para;</a></h3>
+<ol>
+<li>¿Por qué un respaldo tomado en <code>NOARCHIVELOG</code> solo puede restaurar exactamente al instante en que se tomó, y nunca a un punto intermedio?</li>
+<li>¿Qué diferencia de fondo hay entre <code>RESTORE</code> y <code>RECOVER</code>, y por qué casi siempre se usan juntos?</li>
+<li>En tu propio incremental (<em>Level 1</em>), ¿qué datafile se omitió por no haber cambiado, y cómo lo confirmaste?</li>
+<li>¿Por qué el punto elegido para tu <code>SET UNTIL TIME</code> tuvo que estar después de tu último respaldo útil, y qué habría pasado si no lo estaba?</li>
+<li>Relaciona el caso de GitLab (1.6) con tu propia estrategia: ¿cuál de tus mecanismos de respaldo, si fallara en silencio, tardarías más en notar?</li>
+<li>¿Por qué Data Pump no reemplaza a RMAN, aunque los dos "hagan un respaldo"?</li>
+<li>¿Cómo mediste tu RTO y tu RPO, y por qué una estrategia de respaldo sin esas dos métricas no está realmente justificada?</li>
+</ol>
+<h3 id="46-rubrica-de-evaluacion">4.6 Rúbrica de evaluación<a class="headerlink" href="#46-rubrica-de-evaluacion" title="Permanent link">&para;</a></h3>
+<p><strong>Tabla 7. Rúbrica de evaluación</strong></p>
+<table>
+<thead>
+<tr>
+<th>Criterio</th>
+<th style="text-align: right;">Peso (%)</th>
+<th>A (20 pts)</th>
+<th>B (15 pts)</th>
+<th>C (10 pts)</th>
+<th>D (5 pts)</th>
+<th style="text-align: right;">Nivel obtenido</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. <code>ARCHIVELOG</code> y FRA*</td>
+<td style="text-align: right;">20</td>
+<td>Activado y verificado, FRA dentro del volumen persistente.</td>
+<td>Activado, FRA fuera del volumen persistente o sin verificar.</td>
+<td>Documentado sin ejecutar.</td>
+<td>No presenta evidencia de <code>ARCHIVELOG</code>.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>2. Respaldo completo e incremental*</td>
+<td style="text-align: right;">20</td>
+<td>Ambos ejecutados, con evidencia real de al menos un datafile omitido en el incremental.</td>
+<td>Ambos ejecutados, sin evidencia de omisión.</td>
+<td>Solo uno de los dos ejecutado.</td>
+<td>No presenta ningún respaldo con RMAN.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>3. Incidente simulado y PITR*</td>
+<td style="text-align: right;">20</td>
+<td>Recuperación exacta demostrada: el cambio correcto sobrevive, el incidente no, con consulta de verificación.</td>
+<td>Recuperación ejecutada, con la verificación incompleta.</td>
+<td>PITR intentado sin demostrar el resultado exacto.</td>
+<td>No presenta recuperación con PITR.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>4. Respaldo lógico con Data Pump*</td>
+<td style="text-align: right;">20</td>
+<td>Ejecutado, con el directorio dentro del volumen persistente.</td>
+<td>Ejecutado, con el directorio fuera del volumen persistente.</td>
+<td>Comandos documentados sin ejecutar.</td>
+<td>No presenta respaldo con Data Pump.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>5. Estrategia de respaldo documentada*</td>
+<td style="text-align: right;">20</td>
+<td>RTO/RPO medidos sobre la propia recuperación, estrategia completa y justificada.</td>
+<td>Estrategia completa, con RTO/RPO estimados en vez de medidos.</td>
+<td>Estrategia incompleta.</td>
+<td>No presenta estrategia de respaldo.</td>
+<td style="text-align: right;"></td>
+</tr>
+</tbody>
+</table>
+<p>* Agregado manual.</p>
+<p>Nota final = suma de (<code>Peso</code> / 100 × <code>Puntos del nivel obtenido</code>) = ____ / 20.</p>
+<p>Para usar la rúbrica con IA (inteligencia artificial), solicita:</p>
+<div class="highlight"><pre><span></span><code>Evalúa el PDF usando la rúbrica de la sesión.
+Para cada criterio selecciona el nivel obtenido usando la escala A=20, B=15, C=10, D=5 puntos.
+Justifica brevemente cada nivel asignado.
+Verifica que cada captura muestre reloj del sistema y usuario/perfil visible, y que las fechas sean coherentes con el historial de commits de GitHub. Si falta esta evidencia o hay inconsistencias, indícalo explícitamente antes de calificar.
+Calcula la nota final con la fórmula: suma de (Peso/100 × Puntos del nivel obtenido), directamente sobre 20.
+Indica 2 fortalezas y 2 recomendaciones.
+</code></pre></div>
+<h2 id="5-cierre">5. Cierre<a class="headerlink" href="#5-cierre" title="Permanent link">&para;</a></h2>
+<p>Tiempo: 5 min.</p>
+<p><strong>Resumen breve:</strong> hoy <code>bomerp-oracle</code> dejó de estar en <code>NOARCHIVELOG</code> — la decisión que S9 documentó pero no ejecutó, porque hasta hoy no había ninguna razón real para pagar su costo. Con <code>ARCHIVELOG</code> activo, un respaldo completo y uno incremental reales (este último con la evidencia de que de verdad omite lo que no cambió, no solo copia menos) permitieron recuperar un incidente simulado exactamente hasta el punto correcto: el cambio que debía sobrevivir sobrevivió, y el que debía descartarse se descartó — verificado con una consulta, no solo asumido. El caso de GitLab (1.6) deja la lección central: tener varios mecanismos de respaldo no garantiza que alguno funcione cuando de verdad se necesita — solo verificar la recuperación, como hizo esta sesión, lo garantiza.</p>
+<p><strong>Dinámica participativa:</strong> en una ronda rápida, cada estudiante comparte en una frase qué punto exacto eligió para su <code>SET UNTIL TIME</code>, y por qué ese y no otro.</p>
+<p><strong>Metacognición:</strong> ¿qué te costó más entender hoy: por qué <code>ARCHIVELOG</code> es condición necesaria de PITR, o la diferencia entre <code>RESTORE</code> y <code>RECOVER</code>?</p>
+<p><strong>Proyección:</strong> S14 monitorea y diagnostica la instancia en vivo (vistas <code>V$</code>/<code>DBA_</code>, sesiones, bloqueos, rendimiento) — la otra mitad de "continuidad del negocio": no solo recuperarse de un incidente, sino detectarlo antes de que se vuelva uno.</p>
+<h2 id="bibliografia">Bibliografía<a class="headerlink" href="#bibliografia" title="Permanent link">&para;</a></h2>
+<ol>
+<li>GitLab. (2017). <em>Postmortem of database outage of January 31</em>. GitLab Blog. https://about.gitlab.com/blog/2017/02/10/postmortem-of-database-outage-of-january-31/</li>
+<li>Oracle Corporation. (2024a). <em>RMAN Backup Concepts</em>. Oracle Database Backup and Recovery User's Guide. https://docs.oracle.com/en/database/oracle/oracle-database/19/bradv/</li>
+<li>Oracle Corporation. (2024b). <em>Oracle Data Pump</em>. Oracle Database Utilities. https://docs.oracle.com/en/database/oracle/oracle-database/19/sutil/oracle-data-pump.html</li>
+<li>Oracle Corporation. (2024c). <em>Performing Incremental Backups</em>. Oracle Database Backup and Recovery User's Guide. https://docs.oracle.com/en/database/oracle/oracle-database/19/bradv/rman-incremental-backups.html</li>
+<li>Oracle Corporation. (2024d). <em>Performing Point-in-Time Recovery</em>. Oracle Database Backup and Recovery User's Guide. https://docs.oracle.com/en/database/oracle/oracle-database/19/bradv/rman-performing-complete-database-recovery.html</li>
+</ol>
+<h2 id="anexo-ora-01804-bloquea-data-pump-y-otras-operaciones-en-bomerp-oracle">Anexo: <code>ORA-01804</code> bloquea Data Pump (y otras operaciones) en <code>bomerp-oracle</code><a class="headerlink" href="#anexo-ora-01804-bloquea-data-pump-y-otras-operaciones-en-bomerp-oracle" title="Permanent link">&para;</a></h2>
+<p><strong>Síntoma:</strong> <code>expdp</code> falla con <code>ORA-39126</code>/<code>ORA-01804: failure to initialize timezone information</code>, incluso con <code>TZ</code> configurado en el contenedor (<code>compose-dev.yml</code>). El mismo error puede aparecer en operaciones no relacionadas, como <code>DROP USER</code>.</p>
+<p><strong>Diagnóstico real de esta sesión:</strong> <code>V$TIMEZONE_FILE</code> devuelve <code>no rows selected</code> — la instancia no tiene registrado ningún archivo de zonas horarias válido, aunque <code>$ORACLE_HOME/oracore/zoneinfo/timezlrg_43.dat</code> existe en disco. El rastro (<code>alert_FREE.log</code>) ubica el error dentro de procesos internos de Oracle (<code>kwsecProcessSagaTimeout</code>, el monitor de <em>timeout</em> de <em>Advanced Queuing</em>, sin relación con las Sagas de Distribuidas) al intentar preparar una consulta que depende de la zona horaria de sesión.</p>
+<p><strong>Causa probable:</strong> un defecto de inicialización de la base, anterior a esta sesión, no causado por el cambio de imagen (<code>gvenzl/oracle-free:23-slim</code> → <code>:23</code>) ni por activar <code>ARCHIVELOG</code>.</p>
+<p><strong>Estado:</strong> sin resolver dentro del alcance de esta guía — no bloquea RMAN (3.3-3.6, ya verificado de punta a punta), solo a Data Pump y a algunas operaciones de DDL puntuales. Si tu propia instancia presenta el mismo síntoma, documenta el hallazgo (4.1, "Error o hallazgo") en vez de forzar una solución no verificada; la sintaxis de Data Pump de 3.7 es correcta y debe ejecutarse sin problema en una instancia sin este defecto.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Angel Sullon @asullom - UPeU 2026
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.top", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+    
+  </body>
+</html>
