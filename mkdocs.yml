@@ -77,6 +77,11 @@ nav:
           - S10 - Patrones de diseño GoF y GRASP: ads/sesiones/S10_Patrones_Diseno_GoF_GRASP.md
           - S11 - Integración y sistemas empresariales: ads/sesiones/S11_Integracion_Sistemas_Empresariales.md
           - S12 - Evaluación de la Unidad II: ads/sesiones/S12_Evaluacion_Unidad_2.md
+      - III. Proyecto de Diseño Técnico Profesional:
+          - S13 - Integración del diseño técnico: ads/sesiones/S13_Integracion_Diseno_Tecnico.md
+          - S14 - Decisiones arquitectónicas y trazabilidad: ads/sesiones/S14_Decisiones_Arquitectonicas_Trazabilidad.md
+          - S15 - Evaluación de la Unidad III: ads/sesiones/S15_Evaluacion_Unidad_3.md
+          - S16 - Continuación de la evaluación: ads/sesiones/S16_Continuacion_Evaluacion.md
   - BD2:
       - Inicio: bd2/index.md
       - Silabos:
@@ -96,6 +101,11 @@ nav:
           - S10 - Optimización del rendimiento: bd2/sesiones/S10_Optimizacion_Rendimiento.md
           - S11 - Particionamiento y escalabilidad: bd2/sesiones/S11_Particionamiento_Escalabilidad.md
           - S12 - Evaluación de la Unidad II: bd2/sesiones/S12_Evaluacion_Unidad_2.md
+      - III. Continuidad del negocio y operación empresarial:
+          - S13 - Backup y Recovery con RMAN: bd2/sesiones/S13_Backup_Recovery_RMAN.md
+          - S14 - Monitoreo y diagnóstico: bd2/sesiones/S14_Monitoreo_Diagnostico.md
+          - S15 - Evaluación de la Unidad III: bd2/sesiones/S15_Evaluacion_Unidad_3.md
+          - S16 - Continuación de la evaluación: bd2/sesiones/S16_Continuacion_Evaluacion.md
   - LP2:
       - Inicio: lp2/index.md
       - Silabos:
@@ -122,3 +132,8 @@ nav:
           - S10b - Reemplazo de seguridad por Keycloak: lp2/sesiones/S10b_Seguridad_Backend_Keycloak.md
           - S11 - Seguridad frontend con Keycloak: lp2/sesiones/S11_Seguridad_Frontend_Keycloak.md
           - S12 - Evaluación de la Unidad II: lp2/sesiones/S12_Evaluacion_Unidad_2.md
+      - III. Base Full-Stack modular de BomERP:
+          - S13 - Optimización y preparación para producción: lp2/sesiones/S13_Optimizacion_Preparacion_Produccion.md
+          - S14 - Integración y estabilización: lp2/sesiones/S14_Integracion_Estabilizacion.md
+          - S15 - Evaluación de la Unidad III: lp2/sesiones/S15_Evaluacion_Unidad_3.md
+          - S16 - Evaluación final individual: lp2/sesiones/S16_Evaluacion_Final_Individual.md
