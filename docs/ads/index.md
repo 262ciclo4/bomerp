@@ -62,10 +62,10 @@ Artefacto de referencia para el Proyecto Integrador: [ADS - Producto de Unidad 3
 
 | Sesión | Tema (sílabo) | Artefacto | Trabajo principal |
 |---|---|---|---|
-| S13 | Integración del Diseño Técnico: consolidación de arquitectura, modelo de dominio, UML, patrones e integraciones. | Dossier consolidado | Integrar artefactos técnicos en un solo dossier. |
-| S14 | Decisiones Arquitectónicas y Trazabilidad: ADRs, atributos de calidad, justificación técnica de decisiones y trazabilidad entre requerimientos, arquitectura y diseño. | ADRs | Elaborar ADRs formales y matriz de trazabilidad técnica. |
-| S15 | Integración del diseño técnico profesional: arquitectura, modelo de dominio, UML, patrones, ADRs, atributos de calidad, integraciones y trazabilidad. | Dossier técnico | Exposición, defensa técnica y justificación arquitectónica. **Producto U3 = Producto Final del Curso.** |
-| S16 | Integración de arquitectura y diseño de sistemas: vistas arquitectónicas, principios de diseño, modelado UML, patrones, decisiones arquitectónicas y trazabilidad. | — | Evaluación individual, recuperación de sustentaciones pendientes, cierre académico. |
+| [S13](sesiones/S13_Integracion_Diseno_Tecnico.md) | Integración del Diseño Técnico: consolidación de arquitectura, modelo de dominio, UML, patrones e integraciones. | Dossier consolidado | Integrar artefactos técnicos en un solo dossier. |
+| [S14](sesiones/S14_Decisiones_Arquitectonicas_Trazabilidad.md) | Decisiones Arquitectónicas y Trazabilidad: ADRs, atributos de calidad, justificación técnica de decisiones y trazabilidad entre requerimientos, arquitectura y diseño. | ADRs | Elaborar ADRs formales y matriz de trazabilidad técnica. |
+| [S15](sesiones/S15_Evaluacion_Unidad_3.md) | Integración del diseño técnico profesional: arquitectura, modelo de dominio, UML, patrones, ADRs, atributos de calidad, integraciones y trazabilidad. | Dossier técnico | **Producto U3 = Producto Final del Curso:** Diseño Técnico Profesional Documentado. |
+| [S16](sesiones/S16_Continuacion_Evaluacion.md) | Integración de arquitectura y diseño de sistemas: vistas arquitectónicas, principios de diseño, modelado UML, patrones, decisiones arquitectónicas y trazabilidad. | — | Evaluación individual, recuperación de sustentaciones pendientes, cierre académico. |
 
 ## Arquitectura de referencia (trazabilidad con LP2 y BD2)
 

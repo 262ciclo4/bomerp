@@ -93,6 +93,7 @@ flowchart TB
         INV[inventario<br/>sin sesión asignada aún]
         COM[compras<br/>delimitado, no obligatorio]
         SEG[seguridad<br/>S10, ya en U2]
+        CLI[clientes<br/>sin sesión asignada aún]
     end
 
     APP --> CAT
@@ -104,7 +105,7 @@ flowchart TB
     APP -. se agregan cuando su sesión les da contenido .-> FUT
 ```
 
-Al cierre de U1 (S6) solo existen `catalogo` y `ventas` como paquetes reales — `inventario`, `compras` y `seguridad` se dibujan como módulos futuros para no adelantar alcance de sesiones que todavía no llegaron (mismo criterio que [ADR-001](../../lp2/adr/ADR-001-arquitectura-backend.md)).
+Al cierre de U1 (S6) solo existen `catalogo` y `ventas` como paquetes reales — `inventario`, `compras`, `seguridad` y `clientes` se dibujan como módulos futuros para no adelantar alcance de sesiones que todavía no llegaron (mismo criterio que [ADR-001](../../lp2/adr/ADR-001-arquitectura-backend.md)). `clientes` se agregó aquí recién en S13, al auditar esta vista contra el modelo de dominio de U2: `Cliente` (con herencia `ClientePersonaNatural`/`ClienteEmpresa`) ya existe desde S6-S7 sin que esta vista lo hubiera declarado, ni siquiera como módulo futuro — la misma inconsistencia que S13 (2.3) documenta y resuelve.
 
 Reglas de la vista:
 

@@ -66,10 +66,10 @@ Artefacto de referencia para el Proyecto Integrador: [LP2 - Producto de Unidad 3
 
 | Sesión | Tema (sílabo) | Módulo que se toca | Trabajo principal |
 |---|---|---|---|
-| S13 | Optimización y preparación para producción: Lazy Loading, Code Splitting, caché del navegador, caché con Redis, logging, monitoreo básico y buenas prácticas de despliegue. | todos | Aplicación Full-Stack optimizada y preparada para producción básica. |
-| S14 | Integración y estabilización: paginación de listados con alto volumen, integración funcional de módulos, auditoría, pruebas end-to-end, corrección de errores y estabilización. | todos | Base Full-Stack integrada, auditada, probada y estabilizada. Candidata a reincorporar `spring-modulith-starter-jpa` si se adopta comunicación por eventos (ver `lp2/CLAUDE.md`). |
-| S15 | Integración de la aplicación Full-Stack: backend REST, SPA, seguridad, persistencia, módulos funcionales, optimización, monitoreo y pruebas. | — | **Producto final:** base Full-Stack modular de BomERP sustentada técnicamente. |
-| S16 | Integración del desarrollo Full-Stack: servicios REST, persistencia, SPA, seguridad, operaciones empresariales, optimización, monitoreo y pruebas. | — | Evaluación final individual. |
+| [S13](sesiones/S13_Optimizacion_Preparacion_Produccion.md) | Optimización y preparación para producción: Lazy Loading, Code Splitting, caché del navegador, caché con Redis, logging, monitoreo básico y buenas prácticas de despliegue. | todos | Aplicación Full-Stack optimizada y preparada para producción básica. |
+| [S14](sesiones/S14_Integracion_Estabilizacion.md) | Integración y estabilización: paginación de listados con alto volumen, integración funcional de módulos, auditoría, pruebas end-to-end, corrección de errores y estabilización. | todos | Base Full-Stack integrada, auditada, probada y estabilizada. Candidata a reincorporar `spring-modulith-starter-jpa` si se adopta comunicación por eventos (ver `lp2/CLAUDE.md`). |
+| [S15](sesiones/S15_Evaluacion_Unidad_3.md) | Integración de la aplicación Full-Stack: backend REST, SPA, seguridad, persistencia, módulos funcionales, optimización, monitoreo y pruebas. | — | **Producto final:** base Full-Stack modular de BomERP sustentada técnicamente. |
+| [S16](sesiones/S16_Evaluacion_Final_Individual.md) | Integración del desarrollo Full-Stack: servicios REST, persistencia, SPA, seguridad, operaciones empresariales, optimización, monitoreo y pruebas. | — | Evaluación final individual teórico-práctica, cierre de sustentaciones pendientes. |
 
 ## Arquitectura LP2
 

@@ -63,10 +63,10 @@ Artefacto de referencia para el Proyecto Integrador: [BD2 - Producto de Unidad 3
 
 | Sesión | Tema (sílabo) | Objeto Oracle | Trabajo principal |
 |---|---|---|---|
-| S13 | Backup y Recovery con RMAN: respaldo completo e incremental (L0/L1), Data Pump, Point-In-Time Recovery (PITR) y escenarios reales de recuperación. | toda la instancia | Respaldo completo e incremental (L0/L1), Data Pump, Point-In-Time Recovery (PITR) y escenarios reales de recuperación. |
-| S14 | Monitoreo y diagnóstico: vistas V$, DBA_, sesiones, bloqueos, rendimiento, Enterprise Manager Express y Oracle Cloud Control. | toda la instancia | Vistas `V$`/`DBA_`, sesiones, bloqueos, rendimiento, Enterprise Manager Express y Oracle Cloud Control. |
-| S15 | Integración de la operación empresarial en Oracle: programación PL/SQL, administración, almacenamiento, seguridad, auditoría, optimización, respaldo, continuidad y monitoreo. | — | Evidencia técnica de programación PL/SQL, administración, almacenamiento, seguridad, auditoría, optimización, respaldo, recuperación y monitoreo. |
-| S16 | Integración de administración y continuidad de bases de datos: programación, seguridad, auditoría, optimización, respaldo, continuidad, monitoreo y diagnóstico en Oracle. | — | Recuperaciones, levantamiento de observaciones y cierre académico. |
+| [S13](sesiones/S13_Backup_Recovery_RMAN.md) | Backup y Recovery con RMAN: respaldo completo e incremental (L0/L1), Data Pump, Point-In-Time Recovery (PITR) y escenarios reales de recuperación. | toda la instancia | Respaldo completo e incremental (L0/L1), Data Pump, Point-In-Time Recovery (PITR) y escenarios reales de recuperación. |
+| [S14](sesiones/S14_Monitoreo_Diagnostico.md) | Monitoreo y diagnóstico: vistas V$, DBA_, sesiones, bloqueos, rendimiento, Enterprise Manager Express y Oracle Cloud Control. | toda la instancia | Vistas `V$`/`DBA_`, sesiones, bloqueos, rendimiento, Enterprise Manager Express y Oracle Cloud Control. |
+| [S15](sesiones/S15_Evaluacion_Unidad_3.md) | Integración de la operación empresarial en Oracle: programación PL/SQL, administración, almacenamiento, seguridad, auditoría, optimización, respaldo, continuidad y monitoreo. | — | **Producto U3 / producto del curso:** base de datos empresarial Oracle operativa, administrada, optimizada, auditada y resiliente. |
+| [S16](sesiones/S16_Continuacion_Evaluacion.md) | Integración de administración y continuidad de bases de datos: programación, seguridad, auditoría, optimización, respaldo, continuidad, monitoreo y diagnóstico en Oracle. | — | Recuperaciones, levantamiento de observaciones y cierre académico. |
 
 ## Arquitectura BD2 (esquemas por módulo funcional)
 

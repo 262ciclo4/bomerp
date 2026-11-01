@@ -152,9 +152,9 @@ sufijo `-dev`:
 - `compose-dev.yml`: el contenedor Docker de Oracle para DEV.
 
 El ambiente de **producción** (`application-prod.yml` y las decisiones de
-despliegue) se incorpora recién en S13, cuando el sílabo trata
-"buenas prácticas de despliegue" — no se adelanta antes porque todavía no
-hay nada real que desplegar.
+despliegue) se incorpora recién en [S13](S13_Optimizacion_Preparacion_Produccion.md),
+cuando el sílabo trata "buenas prácticas de despliegue" — no se adelanta
+antes porque todavía no hay nada real que desplegar.
 
 ### 2.4 Endpoint de verificación, recurso REST inicial y DTO
 

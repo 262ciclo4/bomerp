@@ -233,7 +233,7 @@ Resultado esperado: `BOMERP_APP` con los roles `ROL_APP_CATALOGO` y `ROL_APP_VEN
 
 ```sql
 CREATE TABLESPACE TS_BOMERP
-  DATAFILE 'ts_bomerp01.dbf' SIZE 100M
+  DATAFILE '/opt/oracle/oradata/FREE/FREEPDB1/ts_bomerp01.dbf' SIZE 100M
   AUTOEXTEND ON NEXT 50M MAXSIZE 1G;
 
 SELECT TABLESPACE_NAME, FILE_NAME, BYTES/1024/1024 AS MB, AUTOEXTENSIBLE
@@ -246,10 +246,10 @@ Resultado real de esta sesión:
 ```text
 TABLESPACE_NAME   FILE_NAME                                                MB  AUT
 ----------------- -------------------------------------------------------- --- ---
-TS_BOMERP         /opt/oracle/product/26ai/dbhomeFree/dbs/ts_bomerp01.dbf  100 YES
+TS_BOMERP         /opt/oracle/oradata/FREE/FREEPDB1/ts_bomerp01.dbf        100 YES
 ```
 
-El nombre de archivo (`ts_bomerp01.dbf`, sin ruta) basta porque Oracle lo crea en el directorio por defecto de datafiles de la instancia (`DB_CREATE_FILE_DEST`, o el `dbs/` del *home* si no está configurado) — en un ambiente real con varios discos, se especifica la ruta completa para controlar en qué disco físico queda cada tablespace.
+La ruta se indica explícita, dentro de `/opt/oracle/oradata` — el único directorio que `compose-dev.yml` monta como volumen persistente (`oracle-data:/opt/oracle/oradata`). Omitir la ruta (solo `'ts_bomerp01.dbf'`) deja que Oracle use el directorio por defecto de la instancia (`DB_CREATE_FILE_DEST`, o el `dbs/` del *home* si no está configurado) — que vive en la capa efímera del contenedor, no en el volumen. Si el contenedor se **recrea** (no solo se reinicia), ese datafile se pierde mientras los demás (`SYSTEM`, `SYSAUX`, `USERS`, ya dentro del volumen) sobreviven — el síntoma exacto que describe el Anexo de esta sesión (`ORA-01109`, `FREEPDB1` atascado en `MOUNTED`). En un ambiente real con varios discos, la misma ruta explícita además controla en qué disco físico queda cada tablespace.
 
 ### 3.3 Mover `VENTAS` a `TS_BOMERP` y reconstruir su índice
 
@@ -576,7 +576,7 @@ Tiempo: 5 min.
 
 **Síntoma:** el backend de LP2 falla al arrancar con `ORA-01109: database not open`, y SQL Developer no puede conectar a ningún servicio de `FREEPDB1` — aunque `docker logs bomerp-oracle` ya haya mostrado `DATABASE IS READY TO USE!`.
 
-**Causa:** el `CREATE TABLESPACE TS_BOMERP` de 3.2 crea el datafile sin ruta absoluta (`DATAFILE 'ts_bomerp01.dbf'`), así que Oracle lo guarda en `$ORACLE_HOME/dbs/` — dentro de la capa efímera del contenedor, no en el volumen persistente (`oracle-data`). Si el contenedor se **recrea** (no solo se reinicia), ese datafile se pierde, mientras que los datafiles del sistema (`SYSTEM`, `SYSAUX`, `USERS`, en el volumen persistente) sobreviven. El PDB `FREEPDB1` se queda en `MOUNTED` porque no puede abrir uno de sus datafiles, y eso bloquea **cualquier** conexión a ese *service name* — no solo a `TS_BOMERP`.
+**Causa (histórica — 3.2 ya usa la ruta absoluta, corregida después de que esto ocurriera por primera vez contra `bomerp-oracle`):** si el `CREATE TABLESPACE TS_BOMERP` crea el datafile sin ruta absoluta (`DATAFILE 'ts_bomerp01.dbf'`), Oracle lo guarda en `$ORACLE_HOME/dbs/` — dentro de la capa efímera del contenedor, no en el volumen persistente (`oracle-data`). Si el contenedor se **recrea** (no solo se reinicia), ese datafile se pierde, mientras que los datafiles del sistema (`SYSTEM`, `SYSAUX`, `USERS`, en el volumen persistente) sobreviven. El PDB `FREEPDB1` se queda en `MOUNTED` porque no puede abrir uno de sus datafiles, y eso bloquea **cualquier** conexión a ese *service name* — no solo a `TS_BOMERP`. Este anexo queda como diagnóstico, por si `TS_BOMERP` se recreó alguna vez antes de este ajuste, o por si el mismo error aparece en cualquier otro datafile creado sin ruta absoluta.
 
 **Diagnóstico** (dentro del contenedor, como `sysdba`):
 
@@ -602,13 +602,7 @@ DROP TABLESPACE TS_BOMERP INCLUDING CONTENTS;
 
 La ruta exacta del `.dbf` puede variar entre instancias — confírmala primero con la consulta de diagnóstico de arriba antes de ejecutar el `OFFLINE DROP`.
 
-**Para que no vuelva a pasar**, al repetir el `CREATE TABLESPACE` de 3.2, usa una ruta dentro del volumen persistente en vez de solo el nombre del archivo:
-
-```sql
-CREATE TABLESPACE TS_BOMERP
-  DATAFILE '/opt/oracle/oradata/FREE/FREEPDB1/ts_bomerp01.dbf' SIZE 100M
-  AUTOEXTEND ON NEXT 50M MAXSIZE 1G;
-```
+**Para que no vuelva a pasar**, 3.2 ya crea `TS_BOMERP` con la ruta absoluta dentro del volumen persistente, no solo el nombre del archivo — la misma ruta que este anexo usa para diagnosticar y corregir el problema si volviera a aparecer.
 
 ## Bibliografía
 

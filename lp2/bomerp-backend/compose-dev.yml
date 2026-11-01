@@ -2,7 +2,7 @@ name: bomerp-backend-dev
 
 services:
   oracle:
-    image: gvenzl/oracle-free:23-slim
+    image: gvenzl/oracle-free:23
     container_name: bomerp-oracle
     restart: unless-stopped
     ports:
@@ -12,6 +12,7 @@ services:
       ORACLE_PASSWORD: 123456
       APP_USER: BOMERP_APP
       APP_USER_PASSWORD: 123456
+      TZ: America/Lima
     volumes:
       - oracle-data:/opt/oracle/oradata
     healthcheck:
