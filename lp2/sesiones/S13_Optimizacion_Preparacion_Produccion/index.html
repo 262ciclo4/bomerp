@@ -5360,28 +5360,78 @@ ng<span class="w"> </span>serve
 <p>Si el arranque de 3.1 falló, o si en cualquier punto posterior de esta sesión aparece este error:</p>
 <div class="highlight"><pre><span></span><code>ORA-01804: failure to initialize timezone information
 </code></pre></div>
-<p>— tanto al conectar como más adelante en <code>hibernate.ddl-auto: validate</code> (3.9) — no es un problema de tu configuración de LP2, y no se arregla ahí. Diagnostica primero, dentro de una sesión de <code>sqlplus</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">exec</span> <span class="n">-it</span> <span class="n">bomerp-oracle</span> <span class="n">sqlplus</span> <span class="p">/</span> <span class="n">as</span> <span class="n">sysdba</span>
+<p>— tanto al conectar como más adelante en <code>hibernate.ddl-auto: validate</code> (3.9) — no es un problema de tu configuración de LP2, y no se arregla ahí. Diagnostica primero — en PowerShell, un <em>here-string</em> evita depender de una sesión interactiva de <code>sqlplus</code> (más fácil de copiar/pegar tal cual, y es justo lo que funcionó en el laboratorio real):</p>
+<p>PowerShell:</p>
+<div class="highlight"><pre><span></span><code><span class="sh">@'</span>
+<span class="sh">SELECT * FROM V$TIMEZONE_FILE;</span>
+<span class="sh">SELECT property_name, property_value FROM database_properties WHERE property_name LIKE '%VERSION%';</span>
+<span class="sh">EXIT;</span>
+<span class="sh">'@</span> <span class="p">|</span> <span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="n">bomerp-oracle</span> <span class="n">bash</span> <span class="n">-c</span> <span class="s1">'sqlplus -s / as sysdba'</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">V$TIMEZONE_FILE</span><span class="p">;</span>
-<span class="k">SELECT</span><span class="w"> </span><span class="n">property_name</span><span class="p">,</span><span class="w"> </span><span class="n">property_value</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">database_properties</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">property_name</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">'%VERSION%'</span><span class="p">;</span>
+<p>macOS/Linux:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>bomerp-oracle<span class="w"> </span>sqlplus<span class="w"> </span>-s<span class="w"> </span>/<span class="w"> </span>as<span class="w"> </span>sysdba<span class="w"> </span><span class="s">&lt;&lt;'EOF'</span>
+<span class="s">SELECT * FROM V$TIMEZONE_FILE;</span>
+<span class="s">SELECT property_name, property_value FROM database_properties WHERE property_name LIKE '%VERSION%';</span>
+<span class="s">EXIT;</span>
+<span class="s">EOF</span>
 </code></pre></div>
-<p>Si <code>V$TIMEZONE_FILE</code> no devuelve filas y <code>DST_PRIMARY_TT_VERSION = 45</code>: la base espera la versión 45 de datos de zonas horarias, pero la imagen de Oracle que BD2 cambió solo trae instalada la versión 43 — una regresión real entre releases de <code>gvenzl/oracle-free</code>, no un defecto de tu proyecto. El arreglo, verificado, sin ningún archivo con licencia de Oracle (la imagen <code>slim</code> anterior, que sí trae la versión correcta, suele seguir cacheada localmente):</p>
+<p>Si <code>V$TIMEZONE_FILE</code> no devuelve filas y <code>DST_PRIMARY_TT_VERSION = 45</code>: la base espera la versión 45 de datos de zonas horarias, pero la imagen de Oracle que BD2 cambió solo trae instalada la versión 43 — una regresión real entre releases de <code>gvenzl/oracle-free</code>, no un defecto de tu proyecto. El arreglo, verificado, sin ningún archivo con licencia de Oracle (la imagen <code>slim</code> anterior, que sí trae la versión correcta, suele seguir cacheada localmente). <strong>Ojo con la ruta de origen dentro de la imagen <code>slim</code>: es <code>26ai</code>, no <code>23ai</code></strong> — verificado; con <code>23ai</code> el <code>docker cp</code> falla con <code>Could not find the file</code>.</p>
+<p>PowerShell:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$cid</span> <span class="p">=</span> <span class="n">docker</span> <span class="n">create</span> <span class="p">-</span><span class="n">-entrypoint</span> <span class="n">bash</span> <span class="n">gvenzl</span><span class="p">/</span><span class="n">oracle-free</span><span class="p">:</span><span class="n">23-slim</span> <span class="n">-c</span> <span class="s2">"true"</span>
+<span class="n">docker</span> <span class="nb">cp </span><span class="s2">"${cid}:/opt/oracle/product/26ai/dbhomeFree/oracore/zoneinfo/timezlrg_45.dat"</span> <span class="p">.\</span><span class="n">timezlrg_45</span><span class="p">.</span><span class="n">dat</span>
+<span class="n">docker</span> <span class="nb">rm </span><span class="nv">$cid</span>
+
+<span class="n">docker</span> <span class="nb">cp </span><span class="p">.\</span><span class="n">timezlrg_45</span><span class="p">.</span><span class="n">dat</span> <span class="n">bomerp-oracle</span><span class="p">:/</span><span class="n">opt</span><span class="p">/</span><span class="n">oracle</span><span class="p">/</span><span class="n">product</span><span class="p">/</span><span class="n">26ai</span><span class="p">/</span><span class="n">dbhomeFree</span><span class="p">/</span><span class="n">oracore</span><span class="p">/</span><span class="n">zoneinfo</span><span class="p">/</span><span class="n">timezlrg_45</span><span class="p">.</span><span class="n">dat</span>
+<span class="n">docker</span> <span class="n">exec</span> <span class="n">-u</span> <span class="n">root</span> <span class="n">bomerp-oracle</span> <span class="n">chown</span> <span class="n">oracle</span><span class="p">:</span><span class="n">oinstall</span> <span class="p">/</span><span class="n">opt</span><span class="p">/</span><span class="n">oracle</span><span class="p">/</span><span class="n">product</span><span class="p">/</span><span class="n">26ai</span><span class="p">/</span><span class="n">dbhomeFree</span><span class="p">/</span><span class="n">oracore</span><span class="p">/</span><span class="n">zoneinfo</span><span class="p">/</span><span class="n">timezlrg_45</span><span class="p">.</span><span class="n">dat</span>
+<span class="n">docker</span> <span class="n">exec</span> <span class="n">-u</span> <span class="n">root</span> <span class="n">bomerp-oracle</span> <span class="n">chmod</span> <span class="n">644</span> <span class="p">/</span><span class="n">opt</span><span class="p">/</span><span class="n">oracle</span><span class="p">/</span><span class="n">product</span><span class="p">/</span><span class="n">26ai</span><span class="p">/</span><span class="n">dbhomeFree</span><span class="p">/</span><span class="n">oracore</span><span class="p">/</span><span class="n">zoneinfo</span><span class="p">/</span><span class="n">timezlrg_45</span><span class="p">.</span><span class="n">dat</span>
+<span class="n">docker</span> <span class="n">exec</span> <span class="n">bomerp-oracle</span> <span class="nb">ls </span><span class="n">-lh</span> <span class="p">/</span><span class="n">opt</span><span class="p">/</span><span class="n">oracle</span><span class="p">/</span><span class="n">product</span><span class="p">/</span><span class="n">26ai</span><span class="p">/</span><span class="n">dbhomeFree</span><span class="p">/</span><span class="n">oracore</span><span class="p">/</span><span class="n">zoneinfo</span><span class="p">/</span><span class="n">timezlrg_45</span><span class="p">.</span><span class="n">dat</span>
+</code></pre></div>
+<p>macOS/Linux:</p>
 <div class="highlight"><pre><span></span><code><span class="nv">cid</span><span class="o">=</span><span class="k">$(</span>docker<span class="w"> </span>create<span class="w"> </span>--entrypoint<span class="w"> </span>bash<span class="w"> </span>gvenzl/oracle-free:23-slim<span class="w"> </span>-c<span class="w"> </span><span class="s2">"true"</span><span class="k">)</span>
-docker<span class="w"> </span>cp<span class="w"> </span><span class="s2">"</span><span class="nv">$cid</span><span class="s2">:/opt/oracle/product/23ai/dbhomeFree/oracore/zoneinfo/timezlrg_45.dat"</span><span class="w"> </span>./timezlrg_45.dat
+docker<span class="w"> </span>cp<span class="w"> </span><span class="s2">"</span><span class="nv">$cid</span><span class="s2">:/opt/oracle/product/26ai/dbhomeFree/oracore/zoneinfo/timezlrg_45.dat"</span><span class="w"> </span>./timezlrg_45.dat
 docker<span class="w"> </span>rm<span class="w"> </span><span class="s2">"</span><span class="nv">$cid</span><span class="s2">"</span>
 
 docker<span class="w"> </span>cp<span class="w"> </span>./timezlrg_45.dat<span class="w"> </span>bomerp-oracle:/opt/oracle/product/26ai/dbhomeFree/oracore/zoneinfo/timezlrg_45.dat
 docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>bomerp-oracle<span class="w"> </span>chown<span class="w"> </span>oracle:oinstall<span class="w"> </span>/opt/oracle/product/26ai/dbhomeFree/oracore/zoneinfo/timezlrg_45.dat
 docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>bomerp-oracle<span class="w"> </span>chmod<span class="w"> </span><span class="m">644</span><span class="w"> </span>/opt/oracle/product/26ai/dbhomeFree/oracore/zoneinfo/timezlrg_45.dat
 </code></pre></div>
-<p>Vuelve a <code>sqlplus</code> (si saliste de la sesión anterior, ábrela de nuevo) y reinicia solo la instancia, no el contenedor:</p>
-<div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">exec</span> <span class="n">-it</span> <span class="n">bomerp-oracle</span> <span class="n">sqlplus</span> <span class="p">/</span> <span class="n">as</span> <span class="n">sysdba</span>
+<p>Reinicia — basta con <code>docker restart</code>, reinicia el mismo contenedor (misma capa escribible, el archivo que acabas de copiar no se pierde; lo que sí lo pierde es recrear el contenedor, por ejemplo con <code>docker compose up -d</code> tras otro cambio) — y espera a que vuelva a estar <code>healthy</code> antes de verificar:</p>
+<p>PowerShell:</p>
+<div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">restart</span> <span class="n">bomerp-oracle</span>
+
+<span class="nv">$attempt</span> <span class="p">=</span> <span class="n">0</span>
+<span class="k">do</span> <span class="p">{</span>
+    <span class="nb">Start-Sleep</span> <span class="n">-Seconds</span> <span class="n">5</span>
+    <span class="nv">$status</span> <span class="p">=</span> <span class="n">docker</span> <span class="n">inspect</span> <span class="p">-</span><span class="n">-format</span> <span class="s1">'{{.State.Health.Status}}'</span> <span class="n">bomerp-oracle</span>
+    <span class="nv">$attempt</span><span class="p">++</span>
+<span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="nv">$status</span> <span class="o">-ne</span> <span class="s2">"healthy"</span> <span class="o">-and</span> <span class="nv">$attempt</span> <span class="o">-lt</span> <span class="n">60</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="nv">$status</span> <span class="o">-ne</span> <span class="s2">"healthy"</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nb">Write-Host</span> <span class="s2">"Oracle todavía no está healthy. Revisa los logs."</span> <span class="n">-ForegroundColor</span> <span class="n">Yellow</span>
+    <span class="n">docker</span> <span class="n">logs</span> <span class="p">-</span><span class="n">-tail</span> <span class="n">60</span> <span class="n">bomerp-oracle</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nb">Write-Host</span> <span class="s2">"bomerp-oracle healthy"</span> <span class="n">-ForegroundColor</span> <span class="n">Green</span>
+<span class="p">}</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="n">SHUTDOWN</span><span class="w"> </span><span class="k">IMMEDIATE</span><span class="p">;</span>
-<span class="n">STARTUP</span><span class="p">;</span>
-<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">V$TIMEZONE_FILE</span><span class="p">;</span><span class="w">          </span><span class="c1">-- debe mostrar timezlrg_45.dat</span>
-<span class="k">SELECT</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">V$TIMEZONE_NAMES</span><span class="p">;</span><span class="w">  </span><span class="c1">-- debe ser &gt; 0 (antes: 0)</span>
+<p>macOS/Linux:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>restart<span class="w"> </span>bomerp-oracle
+<span class="k">until</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">"</span><span class="k">$(</span>docker<span class="w"> </span>inspect<span class="w"> </span>-f<span class="w"> </span><span class="s1">'{{.State.Health.Status}}'</span><span class="w"> </span>bomerp-oracle<span class="k">)</span><span class="s2">"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"healthy"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span>sleep<span class="w"> </span><span class="m">5</span><span class="p">;</span><span class="w"> </span><span class="k">done</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"bomerp-oracle healthy"</span>
+</code></pre></div>
+<p>Verifica — mismo <em>here-string</em>/heredoc de antes:</p>
+<p>PowerShell:</p>
+<div class="highlight"><pre><span></span><code><span class="sh">@'</span>
+<span class="sh">SELECT * FROM V$TIMEZONE_FILE;          -- debe mostrar timezlrg_45.dat</span>
+<span class="sh">SELECT COUNT(*) FROM V$TIMEZONE_NAMES;  -- debe ser &gt; 0 (antes: 0)</span>
+<span class="sh">EXIT;</span>
+<span class="sh">'@</span> <span class="p">|</span> <span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="n">bomerp-oracle</span> <span class="n">bash</span> <span class="n">-c</span> <span class="s1">'sqlplus -s / as sysdba'</span>
+</code></pre></div>
+<p>macOS/Linux:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>bomerp-oracle<span class="w"> </span>sqlplus<span class="w"> </span>-s<span class="w"> </span>/<span class="w"> </span>as<span class="w"> </span>sysdba<span class="w"> </span><span class="s">&lt;&lt;'EOF'</span>
+<span class="s">SELECT * FROM V$TIMEZONE_FILE;          -- debe mostrar timezlrg_45.dat</span>
+<span class="s">SELECT COUNT(*) FROM V$TIMEZONE_NAMES;  -- debe ser &gt; 0 (antes: 0)</span>
+<span class="s">EXIT;</span>
+<span class="s">EOF</span>
 </code></pre></div>
 <p>Resultado real de esta sesión:</p>
 <div class="highlight"><pre><span></span><code>FILENAME                 VERSION     CON_ID
