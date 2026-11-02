@@ -5798,80 +5798,133 @@ docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </spa
 <span class="w">  </span><span class="nt">keycloak-db-data-prod</span><span class="p">:</span>
 </code></pre></div>
 <p>Ya no hace falta <code>extra_hosts</code>/<code>host.docker.internal</code> — ese mecanismo solo era necesario para llegar desde un contenedor hasta un proceso fuera de Docker (como hace <code>obs/prometheus</code>, S4); aquí Oracle, Keycloak y Redis están <strong>dentro</strong> del mismo <code>compose.yml</code> que el backend, así que Docker los resuelve por nombre de servicio solo.</p>
-<p><strong>Poblar el Oracle de <code>prod</code> con el esquema y los datos reales</strong> — un contenedor nuevo arranca con la base vacía; no alcanza con que exista, tiene que tener <code>BOM_CATALOGO</code> y <code>BOM_VENTAS</code>, igual que <code>dev</code>. Primero, levanta el stack (sin el backend todavía, para no competir con Oracle arrancando):</p>
+<p><strong>Poblar el Oracle de <code>prod</code> con el esquema</strong> — un contenedor nuevo arranca con la base vacía; no alcanza con que exista, tiene que tener <code>BOM_CATALOGO</code> y <code>BOM_VENTAS</code>, igual que <code>dev</code>. Primero, levanta el stack (sin el backend todavía, para no competir con Oracle arrancando):</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>lp2/bomerp-backend
 docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>oracle<span class="w"> </span>keycloak-db<span class="w"> </span>keycloak<span class="w"> </span>redis
 </code></pre></div>
-<p>Espera a que <code>bomerp-oracle-prod</code> esté <code>healthy</code> (<code>docker ps</code>, columna <code>STATUS</code>) — igual que en S9, el primer arranque de un Oracle nuevo tarda varios minutos. Mientras tanto, exporta ambos esquemas desde el Oracle de <code>dev</code> (uno solo, con los dos juntos):</p>
-<div class="highlight"><pre><span></span><code><span class="c1">-- dentro de: docker exec -it bomerp-oracle sqlplus system/123456@localhost:1521/FREEPDB1</span>
-<span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="n">DIRECTORY</span><span class="w"> </span><span class="n">BOMERP_DPDUMP</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s1">'/opt/oracle/oradata/dpdump'</span><span class="p">;</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>bomerp-oracle<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/opt/oracle/oradata/dpdump
-docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>bomerp-oracle<span class="w"> </span>expdp<span class="w"> </span>system/123456@localhost:1521/FREEPDB1<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span><span class="nv">schemas</span><span class="o">=</span>BOM_CATALOGO,BOM_VENTAS<span class="w"> </span><span class="nv">directory</span><span class="o">=</span>BOMERP_DPDUMP<span class="w"> </span><span class="nv">dumpfile</span><span class="o">=</span>bomerp_prod_seed.dmp<span class="w"> </span><span class="nv">logfile</span><span class="o">=</span>bomerp_prod_seed_exp.log
-</code></pre></div>
-<p>Copia el dump del contenedor de <code>dev</code> al host, y del host al contenedor de <code>prod</code>:</p>
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>cp<span class="w"> </span>bomerp-oracle:/opt/oracle/oradata/dpdump/bomerp_prod_seed.dmp<span class="w"> </span>./bomerp_prod_seed.dmp
-docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>bomerp-oracle-prod<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/opt/oracle/oradata/dpdump
-docker<span class="w"> </span>cp<span class="w"> </span>./bomerp_prod_seed.dmp<span class="w"> </span>bomerp-oracle-prod:/opt/oracle/oradata/dpdump/bomerp_prod_seed.dmp
-</code></pre></div>
-<p>En el Oracle de <code>prod</code>, crea los esquemas (los mismos scripts reales de BD2 S1/S4 — <code>BOMERP_APP</code> no se vuelve a crear, ya lo creó <code>APP_USER</code> de la imagen) y el <code>DIRECTORY</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1">-- dentro de: docker exec -it bomerp-oracle-prod sqlplus system/123456@localhost:1521/FREEPDB1</span>
-<span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="w"> </span><span class="n">IDENTIFIED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="ss">"123456"</span><span class="w"> </span><span class="n">QUOTA</span><span class="w"> </span><span class="n">UNLIMITED</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">USERS</span><span class="p">;</span>
-<span class="k">GRANT</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">SESSION</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">VIEW</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">PROCEDURE</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">TRIGGER</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">;</span>
+<p>Espera a que <code>bomerp-oracle-prod</code> esté <code>healthy</code> (<code>docker ps</code>, columna <code>STATUS</code>) — igual que en S9, el primer arranque de un Oracle nuevo tarda varios minutos.</p>
+<p><strong>Recrea el esquema desde cero, no copies la data de <code>dev</code>.</strong> Verificado: copiar la data real de <code>dev</code> a <code>prod</code> con Data Pump (<code>expdp</code>/<code>impdp</code>) funciona, pero trae dos problemas reales que no vale la pena cargar aquí — el Oracle de <code>dev</code> ya quedó en una versión más alta de zona horaria que un <code>prod</code> nuevo (por el arreglo de 3.2), así que Data Pump rechaza el import (<code>ORA-39405</code>) hasta corregirlo con <code>DBMS_DST</code> dentro del PDB; y lo que <code>prod</code> necesita de verdad no es la data de prueba de <code>dev</code> (categorías y ventas de ejemplo que cualquier equipo va a pisar igual), es el <strong>esquema correcto</strong> — eso lo da mejor repetir la creación, como en BD2 S1/S4, no copiar.</p>
+<p>Usa los mismos scripts reales de BD2 (<code>docs/proyecto-integrador/u1/oracle/S01_01_esquemas.sql</code>, <code>S01_02_tablas.sql</code>, <code>S04_01_esquemas.sql</code>, <code>S04_02_tablas.sql</code>) como base — pero <strong>no los repliques a ciegas</strong>: son de hace varias sesiones, y el esquema real ya cambió desde entonces. Verificado contra las 4 entidades reales del código (<code>Categoria</code>, <code>Producto</code>, <code>Venta</code>, <code>DetalleVenta</code>): a <code>VENTAS</code> le falta una columna en el script original — <code>VENDEDOR_ID</code>, agregada después (S10/S10b, para asociar cada venta al <code>sub</code> del JWT) y nunca actualizada en el script de S4. Antes de ejecutar esto en tu propio proyecto, compara el script contra tus entidades reales — esta columna es la diferencia real de <em>esta</em> sesión, la tuya puede tener otra.</p>
+<p>PowerShell:</p>
+<div class="highlight"><pre><span></span><code><span class="sh">@'</span>
+<span class="sh">CREATE USER BOM_CATALOGO IDENTIFIED BY "123456" QUOTA UNLIMITED ON USERS;</span>
+<span class="sh">GRANT CREATE SESSION, CREATE TABLE, CREATE VIEW, CREATE PROCEDURE, CREATE TRIGGER TO BOM_CATALOGO;</span>
 
-<span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="w"> </span><span class="n">IDENTIFIED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="ss">"123456"</span><span class="w"> </span><span class="n">QUOTA</span><span class="w"> </span><span class="n">UNLIMITED</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">USERS</span><span class="p">;</span>
-<span class="k">GRANT</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">SESSION</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">VIEW</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">PROCEDURE</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">TRIGGER</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">;</span>
+<span class="sh">CREATE TABLE BOM_CATALOGO.CATEGORIAS (</span>
+<span class="sh">    ID NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,</span>
+<span class="sh">    NOMBRE VARCHAR2(80) NOT NULL UNIQUE,</span>
+<span class="sh">    DESCRIPCION VARCHAR2(200)</span>
+<span class="sh">);</span>
 
-<span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="n">DIRECTORY</span><span class="w"> </span><span class="n">BOMERP_DPDUMP</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s1">'/opt/oracle/oradata/dpdump'</span><span class="p">;</span>
-</code></pre></div>
-<p><strong>Antes de importar, verificado contra <code>bomerp-oracle-prod</code> real: el <code>impdp</code> falla.</strong> No es <code>ORA-01804</code> — es un error distinto, y la causa tampoco es la misma que 3.2:</p>
-<div class="highlight"><pre><span></span><code>ORA-39002: invalid operation
-ORA-39405: Oracle Data Pump does not support importing from a source database
-with TSTZ version 45 into a target database with TSTZ version 43.
-</code></pre></div>
-<p>El Oracle de <code>prod</code> es una base genuinamente <strong>nueva</strong>: su diccionario se creó hoy, consistente con la versión 43 que trae la imagen regular — a diferencia de <code>dev</code> (3.2), aquí no hay ningún archivo que reinstalar, porque no hay ninguna inconsistencia que corregir. El problema es otro: el <code>dev</code> de donde sale el <code>.dmp</code> ya quedó en versión <strong>45</strong> (el arreglo de 3.2), y Data Pump nunca importa de una versión más alta a una más baja — tiene que <strong>subir</strong> la versión del <code>prod</code> nuevo a 45, con el mecanismo que Oracle sí soporta para esto, <code>DBMS_DST</code> (no instalar un archivo a mano, eso es 3.2, un caso distinto). Verificado paso a paso, dentro del PDB <code>FREEPDB1</code> — <strong>no</strong> en <code>CDB$ROOT</code>, donde el diccionario de <code>BOM_CATALOGO</code>/<code>BOM_VENTAS</code> realmente vive:</p>
-<div class="highlight"><pre><span></span><code><span class="c1">-- dentro de: docker exec -it bomerp-oracle-prod sqlplus / as sysdba</span>
-<span class="k">ALTER</span><span class="w"> </span><span class="n">PLUGGABLE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">FREEPDB1</span><span class="w"> </span><span class="k">CLOSE</span><span class="p">;</span>
-<span class="k">ALTER</span><span class="w"> </span><span class="n">PLUGGABLE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">FREEPDB1</span><span class="w"> </span><span class="k">OPEN</span><span class="w"> </span><span class="n">UPGRADE</span><span class="p">;</span>
-<span class="k">ALTER</span><span class="w"> </span><span class="k">SESSION</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">CONTAINER</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FREEPDB1</span><span class="p">;</span>
-<span class="k">EXEC</span><span class="w"> </span><span class="n">DBMS_DST</span><span class="p">.</span><span class="n">BEGIN_UPGRADE</span><span class="p">(</span><span class="mi">45</span><span class="p">);</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="k">ALTER</span><span class="w"> </span><span class="n">PLUGGABLE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">FREEPDB1</span><span class="w"> </span><span class="k">CLOSE</span><span class="p">;</span>
-<span class="k">ALTER</span><span class="w"> </span><span class="n">PLUGGABLE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">FREEPDB1</span><span class="w"> </span><span class="k">OPEN</span><span class="p">;</span>
-<span class="k">ALTER</span><span class="w"> </span><span class="k">SESSION</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">CONTAINER</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FREEPDB1</span><span class="p">;</span>
+<span class="sh">CREATE TABLE BOM_CATALOGO.PRODUCTOS (</span>
+<span class="sh">    ID NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,</span>
+<span class="sh">    ID_CATEGORIA NUMBER,</span>
+<span class="sh">    NOMBRE VARCHAR2(120) NOT NULL,</span>
+<span class="sh">    PRECIO NUMBER(10,2) NOT NULL,</span>
+<span class="sh">    STOCK NUMBER(10) NOT NULL,</span>
+<span class="sh">    CONSTRAINT FK_PRODUCTO_CATEGORIA FOREIGN KEY (ID_CATEGORIA)</span>
+<span class="sh">        REFERENCES BOM_CATALOGO.CATEGORIAS(ID),</span>
+<span class="sh">    CONSTRAINT CK_PRODUCTO_PRECIO CHECK (PRECIO &gt;= 0),</span>
+<span class="sh">    CONSTRAINT CK_PRODUCTO_STOCK CHECK (STOCK &gt;= 0)</span>
+<span class="sh">);</span>
 
-<span class="k">EXEC</span><span class="w"> </span><span class="n">DBMS_DST</span><span class="p">.</span><span class="n">CREATE_ERROR_TABLE</span><span class="p">(</span><span class="s1">'DST_ERR_TABLE'</span><span class="p">);</span>
+<span class="sh">GRANT SELECT, INSERT, UPDATE, DELETE ON BOM_CATALOGO.CATEGORIAS TO BOMERP_APP;</span>
+<span class="sh">GRANT SELECT, INSERT, UPDATE, DELETE ON BOM_CATALOGO.PRODUCTOS TO BOMERP_APP;</span>
 
-<span class="n">VAR</span><span class="w"> </span><span class="n">failures</span><span class="w"> </span><span class="nb">NUMBER</span>
-<span class="k">BEGIN</span>
-<span class="w">  </span><span class="n">DBMS_DST</span><span class="p">.</span><span class="n">UPGRADE_DATABASE</span><span class="p">(:</span><span class="n">failures</span><span class="p">,</span><span class="w"> </span><span class="n">upgrade_data</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">TRUE</span><span class="p">,</span><span class="w"> </span><span class="n">parallel</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">FALSE</span><span class="p">,</span>
-<span class="w">    </span><span class="n">continue_after_errors</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">TRUE</span><span class="p">,</span><span class="w"> </span><span class="n">log_errors</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">TRUE</span><span class="p">,</span><span class="w"> </span><span class="n">log_errors_table</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s1">'SYS.DST_ERR_TABLE'</span><span class="p">);</span>
-<span class="k">END</span><span class="p">;</span>
-<span class="o">/</span>
+<span class="sh">CREATE USER BOM_VENTAS IDENTIFIED BY "123456" QUOTA UNLIMITED ON USERS;</span>
+<span class="sh">GRANT CREATE SESSION, CREATE TABLE, CREATE VIEW, CREATE PROCEDURE, CREATE TRIGGER TO BOM_VENTAS;</span>
 
-<span class="k">BEGIN</span>
-<span class="w">  </span><span class="n">DBMS_DST</span><span class="p">.</span><span class="n">END_UPGRADE</span><span class="p">(:</span><span class="n">failures</span><span class="p">);</span>
-<span class="k">END</span><span class="p">;</span>
-<span class="o">/</span>
-<span class="n">PRINT</span><span class="w"> </span><span class="n">failures</span>
+<span class="sh">CREATE TABLE BOM_VENTAS.VENTAS (</span>
+<span class="sh">    ID          NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,</span>
+<span class="sh">    FECHA       TIMESTAMP NOT NULL,</span>
+<span class="sh">    ESTADO      VARCHAR2(20) NOT NULL,</span>
+<span class="sh">    TOTAL       NUMBER(12,2) NOT NULL,</span>
+<span class="sh">    VENDEDOR_ID VARCHAR2(36),</span>
+<span class="sh">    CONSTRAINT CK_VENTA_TOTAL CHECK (TOTAL &gt;= 0)</span>
+<span class="sh">);</span>
+
+<span class="sh">CREATE TABLE BOM_VENTAS.DETALLE_VENTAS (</span>
+<span class="sh">    ID               NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,</span>
+<span class="sh">    ID_VENTA         NUMBER NOT NULL,</span>
+<span class="sh">    ID_PRODUCTO      NUMBER NOT NULL,</span>
+<span class="sh">    NOMBRE_PRODUCTO  VARCHAR2(120) NOT NULL,</span>
+<span class="sh">    PRECIO_UNITARIO  NUMBER(10,2) NOT NULL,</span>
+<span class="sh">    CANTIDAD         NUMBER(10) NOT NULL,</span>
+<span class="sh">    SUBTOTAL         NUMBER(12,2) NOT NULL,</span>
+<span class="sh">    CONSTRAINT FK_DETALLE_VENTA FOREIGN KEY (ID_VENTA)</span>
+<span class="sh">        REFERENCES BOM_VENTAS.VENTAS(ID),</span>
+<span class="sh">    CONSTRAINT CK_DETALLE_CANTIDAD CHECK (CANTIDAD &gt; 0),</span>
+<span class="sh">    CONSTRAINT CK_DETALLE_SUBTOTAL CHECK (SUBTOTAL &gt;= 0)</span>
+<span class="sh">);</span>
+
+<span class="sh">GRANT SELECT, INSERT, UPDATE, DELETE ON BOM_VENTAS.VENTAS TO BOMERP_APP;</span>
+<span class="sh">GRANT SELECT, INSERT, UPDATE, DELETE ON BOM_VENTAS.DETALLE_VENTAS TO BOMERP_APP;</span>
+<span class="sh">EXIT;</span>
+<span class="sh">'@</span> <span class="p">|</span> <span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="n">bomerp-oracle-prod</span> <span class="n">bash</span> <span class="n">-c</span> <span class="s1">'sqlplus -s system/123456@localhost:1521/FREEPDB1'</span>
 </code></pre></div>
-<p>Resultado real de esta sesión: <code>UPGRADE_DATABASE</code> convirtió 8 tablas internas de Oracle (<code>VECSYS</code>, <code>GSMADMIN_INTERNAL</code>, <code>DBSNMP</code>, <code>DVSYS</code>, <code>CTXSYS</code>, <code>MDSYS</code> — nada de <code>BOM_CATALOGO</code>/<code>BOM_VENTAS</code>, que en este punto todavía no existen) con <code>0</code> fallas; <code>END_UPGRADE</code> terminó la ventana sin error, y <code>V$TIMEZONE_FILE</code>/<code>database_properties</code> confirman <code>DST_PRIMARY_TT_VERSION = 45</code> dentro de <code>FREEPDB1</code>.</p>
-<p><strong>Error frecuente</strong>: llamar <code>DBMS_DST.BEGIN_UPGRADE</code>/<code>END_UPGRADE</code> conectado directo con <code>/ as sysdba</code> sin cambiar de contenedor. Esa conexión aterriza en <code>CDB$ROOT</code> por defecto — subir la versión ahí no cambia nada en <code>FREEPDB1</code>, que tiene su <strong>propio</strong> <code>DST_PRIMARY_TT_VERSION</code>, independiente del de la raíz. El <code>impdp</code> sigue fallando con el mismo <code>ORA-39405</code> hasta que el <code>ALTER SESSION SET CONTAINER = FREEPDB1</code> se ejecuta antes del <code>BEGIN_UPGRADE</code>.</p>
-<p>Ahora sí, importa:</p>
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>bomerp-oracle-prod<span class="w"> </span>impdp<span class="w"> </span>system/123456@localhost:1521/FREEPDB1<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span><span class="nv">schemas</span><span class="o">=</span>BOM_CATALOGO,BOM_VENTAS<span class="w"> </span><span class="nv">directory</span><span class="o">=</span>BOMERP_DPDUMP<span class="w"> </span><span class="nv">dumpfile</span><span class="o">=</span>bomerp_prod_seed.dmp<span class="w"> </span><span class="nv">logfile</span><span class="o">=</span>bomerp_prod_seed_imp.log
+<p>macOS/Linux:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>bomerp-oracle-prod<span class="w"> </span>sqlplus<span class="w"> </span>-s<span class="w"> </span>system/123456@localhost:1521/FREEPDB1<span class="w"> </span><span class="s">&lt;&lt;'EOF'</span>
+<span class="s">CREATE USER BOM_CATALOGO IDENTIFIED BY "123456" QUOTA UNLIMITED ON USERS;</span>
+<span class="s">GRANT CREATE SESSION, CREATE TABLE, CREATE VIEW, CREATE PROCEDURE, CREATE TRIGGER TO BOM_CATALOGO;</span>
+
+<span class="s">CREATE TABLE BOM_CATALOGO.CATEGORIAS (</span>
+<span class="s">    ID NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,</span>
+<span class="s">    NOMBRE VARCHAR2(80) NOT NULL UNIQUE,</span>
+<span class="s">    DESCRIPCION VARCHAR2(200)</span>
+<span class="s">);</span>
+
+<span class="s">CREATE TABLE BOM_CATALOGO.PRODUCTOS (</span>
+<span class="s">    ID NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,</span>
+<span class="s">    ID_CATEGORIA NUMBER,</span>
+<span class="s">    NOMBRE VARCHAR2(120) NOT NULL,</span>
+<span class="s">    PRECIO NUMBER(10,2) NOT NULL,</span>
+<span class="s">    STOCK NUMBER(10) NOT NULL,</span>
+<span class="s">    CONSTRAINT FK_PRODUCTO_CATEGORIA FOREIGN KEY (ID_CATEGORIA)</span>
+<span class="s">        REFERENCES BOM_CATALOGO.CATEGORIAS(ID),</span>
+<span class="s">    CONSTRAINT CK_PRODUCTO_PRECIO CHECK (PRECIO &gt;= 0),</span>
+<span class="s">    CONSTRAINT CK_PRODUCTO_STOCK CHECK (STOCK &gt;= 0)</span>
+<span class="s">);</span>
+
+<span class="s">GRANT SELECT, INSERT, UPDATE, DELETE ON BOM_CATALOGO.CATEGORIAS TO BOMERP_APP;</span>
+<span class="s">GRANT SELECT, INSERT, UPDATE, DELETE ON BOM_CATALOGO.PRODUCTOS TO BOMERP_APP;</span>
+
+<span class="s">CREATE USER BOM_VENTAS IDENTIFIED BY "123456" QUOTA UNLIMITED ON USERS;</span>
+<span class="s">GRANT CREATE SESSION, CREATE TABLE, CREATE VIEW, CREATE PROCEDURE, CREATE TRIGGER TO BOM_VENTAS;</span>
+
+<span class="s">CREATE TABLE BOM_VENTAS.VENTAS (</span>
+<span class="s">    ID          NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,</span>
+<span class="s">    FECHA       TIMESTAMP NOT NULL,</span>
+<span class="s">    ESTADO      VARCHAR2(20) NOT NULL,</span>
+<span class="s">    TOTAL       NUMBER(12,2) NOT NULL,</span>
+<span class="s">    VENDEDOR_ID VARCHAR2(36),</span>
+<span class="s">    CONSTRAINT CK_VENTA_TOTAL CHECK (TOTAL &gt;= 0)</span>
+<span class="s">);</span>
+
+<span class="s">CREATE TABLE BOM_VENTAS.DETALLE_VENTAS (</span>
+<span class="s">    ID               NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,</span>
+<span class="s">    ID_VENTA         NUMBER NOT NULL,</span>
+<span class="s">    ID_PRODUCTO      NUMBER NOT NULL,</span>
+<span class="s">    NOMBRE_PRODUCTO  VARCHAR2(120) NOT NULL,</span>
+<span class="s">    PRECIO_UNITARIO  NUMBER(10,2) NOT NULL,</span>
+<span class="s">    CANTIDAD         NUMBER(10) NOT NULL,</span>
+<span class="s">    SUBTOTAL         NUMBER(12,2) NOT NULL,</span>
+<span class="s">    CONSTRAINT FK_DETALLE_VENTA FOREIGN KEY (ID_VENTA)</span>
+<span class="s">        REFERENCES BOM_VENTAS.VENTAS(ID),</span>
+<span class="s">    CONSTRAINT CK_DETALLE_CANTIDAD CHECK (CANTIDAD &gt; 0),</span>
+<span class="s">    CONSTRAINT CK_DETALLE_SUBTOTAL CHECK (SUBTOTAL &gt;= 0)</span>
+<span class="s">);</span>
+
+<span class="s">GRANT SELECT, INSERT, UPDATE, DELETE ON BOM_VENTAS.VENTAS TO BOMERP_APP;</span>
+<span class="s">GRANT SELECT, INSERT, UPDATE, DELETE ON BOM_VENTAS.DETALLE_VENTAS TO BOMERP_APP;</span>
+<span class="s">EXIT;</span>
+<span class="s">EOF</span>
 </code></pre></div>
-<p>Los permisos de <code>BOMERP_APP</code> sobre <code>BOM_CATALOGO.PRODUCTOS</code>/<code>CATEGORIAS</code> y <code>BOM_VENTAS.VENTAS</code>/<code>DETALLE_VENTAS</code> (S1, S4) deberían viajar con el <code>impdp</code> — Data Pump exporta, por defecto, los <code>GRANT</code> que el dueño del esquema ya hizo sobre sus propios objetos, siempre que el usuario destino (<code>BOMERP_APP</code>) ya exista antes de importar. <strong>Verifica que de verdad llegaron, no lo asumas</strong> — en esta misma sesión, de los cuatro, solo los de <code>VENTAS</code> sobrevivieron el <code>impdp</code>; los de <code>CATEGORIAS</code>, <code>PRODUCTOS</code> y <code>DETALLE_VENTAS</code> no (sin que el log del import marcara error alguno en esas líneas):</p>
-<div class="highlight"><pre><span></span><code><span class="c1">-- dentro de: docker exec -it bomerp-oracle-prod sqlplus system/123456@localhost:1521/FREEPDB1</span>
-<span class="k">SELECT</span><span class="w"> </span><span class="k">table_name</span><span class="p">,</span><span class="w"> </span><span class="n">privilege</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">dba_tab_privs</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">grantee</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'BOMERP_APP'</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">table_name</span><span class="p">;</span>
+<p><code>BOMERP_APP</code> no se vuelve a crear — ya lo creó <code>APP_USER</code> de la imagen al arrancar (3.9, variables de entorno de <code>compose.yml</code>) — y los <code>GRANT</code> van en el mismo script, no dependen de que algo externo (como un <code>impdp</code>) los traiga consigo.</p>
+<p><strong>Esta vía no necesita ningún arreglo de zona horaria.</strong> Verificado: un Oracle creado hoy, desde cero, con la imagen regular, nace con <code>DST_PRIMARY_TT_VERSION = 43</code> — consistente consigo mismo, porque nunca tuvo que importar nada de una versión distinta. El problema de 3.2 (y el de <code>DBMS_DST</code> que casi hace falta aquí) solo aparece si cruzas datos entre dos bases en versiones distintas — si <code>prod</code> nunca recibe nada de <code>dev</code>, ese problema no existe.</p>
+<p>Verifica que el backend conecta sin errores de esquema — arráncalo recién ahora:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>bomerp-backend
 </code></pre></div>
-<p>Deben aparecer <code>SELECT</code>/<code>INSERT</code>/<code>UPDATE</code>/<code>DELETE</code> para las cuatro tablas (<code>CATEGORIAS</code>, <code>PRODUCTOS</code>, <code>VENTAS</code>, <code>DETALLE_VENTAS</code>) — si falta alguna, otórgala a mano, con la misma sentencia de S1/S4:</p>
-<div class="highlight"><pre><span></span><code><span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="p">,</span><span class="w"> </span><span class="k">INSERT</span><span class="p">,</span><span class="w"> </span><span class="k">UPDATE</span><span class="p">,</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">CATEGORIAS</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">BOMERP_APP</span><span class="p">;</span>
-<span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="p">,</span><span class="w"> </span><span class="k">INSERT</span><span class="p">,</span><span class="w"> </span><span class="k">UPDATE</span><span class="p">,</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTOS</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">BOMERP_APP</span><span class="p">;</span>
-<span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="p">,</span><span class="w"> </span><span class="k">INSERT</span><span class="p">,</span><span class="w"> </span><span class="k">UPDATE</span><span class="p">,</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">BOM_VENTAS</span><span class="p">.</span><span class="n">DETALLE_VENTAS</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">BOMERP_APP</span><span class="p">;</span>
-</code></pre></div>
-<p>Sin esto, el backend de <code>prod</code> ni siquiera arranca — verificado: <code>ddl-auto: validate</code> (3.9) usa la conexión real de <code>BOMERP_APP</code>, y sin el <code>GRANT</code> esa tabla es invisible para ese usuario, así que Hibernate falla en el primer intento con <code>SchemaManagementException: Schema validation: missing table [bom_catalogo.categorias]</code> — el mismo síntoma que una tabla que de verdad no existe, aunque sí exista.</p>
+<p>Si <code>ddl-auto: validate</code> (3.9) encuentra una tabla o columna que tu script no creó, el backend falla al arrancar con <code>SchemaManagementException: missing table/column [...]</code> — el mensaje te dice exactamente qué falta; agrégalo al script y reintenta.</p>
 <p><strong>Poblar el Keycloak de <code>prod</code> con el realm real</strong> — el realm <code>bomerp</code> se construyó a mano en S10b, sin ningún archivo de por medio; hay que sacarlo de ahí antes de que <code>prod</code> pueda arrancar con él:</p>
 <ol>
 <li>Entra al Admin Console de <code>dev</code> (<code>http://localhost:38080</code>, realm <code>bomerp</code> activo) → <strong>Realm settings</strong> → botón <strong>Action</strong> (arriba a la derecha) → <strong>Partial export</strong> → activa <strong>Export groups and roles</strong> y <strong>Export clients</strong> → <strong>Export</strong>. Descarga un JSON (ej. <code>realm-export.json</code>) con el realm, sus roles (<code>VENDEDOR</code>/<code>SUPERVISOR</code>/<code>ADMIN</code>) y el cliente de S10b — <strong>no incluye usuarios</strong>, la exportación parcial no los trae.</li>
@@ -5926,7 +5979,7 @@ npx<span class="w"> </span>http-server<span class="w"> </span>dist/bomerp-fronte
 </code></pre></div>
 <p>Abre <code>http://localhost:4300</code>, inicia sesión contra el Keycloak de <code>prod</code> (<code>http://localhost:48080/realms/bomerp</code>, con el usuario que recreaste en 3.9) y registra una venta de punta a punta — el mismo flujo completo de siempre, ahora sobre el build optimizado, el backend en perfil <code>prod</code>, y el stack de infraestructura de <code>prod</code> completo, corriendo en paralelo al de <code>dev</code> sin haber tocado ningún puerto compartido.</p>
 <h3 id="311-relacionar-con-ads-y-bd2">3.11 Relacionar con ADS y BD2<a class="headerlink" href="#311-relacionar-con-ads-y-bd2" title="Permanent link">&para;</a></h3>
-<p>Sesión equivalente en los otros dos cursos, misma semana: ADS cierra su propio Catálogo UML en S12 y entra a Unidad 3 con la integración y consolidación del producto del curso. BD2 ya cerró Unidad 2 (S12) con la base administrada, optimizada y asegurada, y en su propia S13 (misma semana que esta) cambia la imagen de <code>bomerp-oracle</code> para tener <code>rman</code> — el motivo real detrás del paso 3.2 de esta sesión. El Oracle de <code>prod</code> (3.9) es, de hecho, una copia fiel del que BD2 administra: su esquema y sus datos vienen del mismo mecanismo de Data Pump que BD2 S13 construye (<code>expdp</code>/<code>impdp</code>), y <code>ddl-auto: validate</code> en producción (3.9) sigue garantizando que <code>bomerp-backend</code> nunca modifica ese esquema por su cuenta, ni en <code>dev</code> ni en su propia copia de <code>prod</code>.</p>
+<p>Sesión equivalente en los otros dos cursos, misma semana: ADS cierra su propio Catálogo UML en S12 y entra a Unidad 3 con la integración y consolidación del producto del curso. BD2 ya cerró Unidad 2 (S12) con la base administrada, optimizada y asegurada, y en su propia S13 (misma semana que esta) cambia la imagen de <code>bomerp-oracle</code> para tener <code>rman</code> — el motivo real detrás del paso 3.2 de esta sesión. El Oracle de <code>prod</code> (3.9) usa el mismo esquema que BD2 administra en <code>dev</code>, recreado desde los mismos scripts reales de BD2 S1/S4 — no una copia de su data, un esquema propio, verificado contra el código real; <code>ddl-auto: validate</code> en producción (3.9) sigue garantizando que <code>bomerp-backend</code> nunca lo modifica por su cuenta, ni en <code>dev</code> ni en su propio Oracle de <code>prod</code>.</p>
 <h2 id="4-crea-actividad-autonoma">4. Crea: actividad autónoma<a class="headerlink" href="#4-crea-actividad-autonoma" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 2h fuera del aula.</p>
 <h3 id="41-actividad">4.1 Actividad<a class="headerlink" href="#41-actividad" title="Permanent link">&para;</a></h3>
