@@ -414,7 +414,7 @@ docker exec bomerp-oracle impdp BOM_VENTAS/123456@localhost:1521/FREEPDB1 \
   remap_schema=BOM_VENTAS:BOM_VENTAS_RESTORE
 ```
 
-**Nota real de esta sesión**: al preparar esta guía, `bomerp-oracle` devolvió `ORA-01804: failure to initialize timezone information` al ejecutar `expdp` (y, más adelante, incluso en un `DROP USER`) — un defecto del contenedor ya diagnosticado (ver Anexo al final de esta sesión) y ajeno a la sintaxis de Data Pump en sí, que sigue siendo correcta. Si tu propio `bomerp-oracle` no presenta este error, `expdp`/`impdp` deben ejecutarse sin problema con los comandos de arriba.
+**Nota real de esta sesión**: al preparar esta guía, `bomerp-oracle` devolvió `ORA-01804: failure to initialize timezone information` al ejecutar `expdp` — causado por el cambio de imagen de 3.2 (ver Anexo al final de esta sesión) y ya resuelto, sin rodeos, instalando el archivo de zonas horarias correcto. La sintaxis de Data Pump de arriba es la que de verdad se ejecutó, ya corregido el entorno.
 
 ### 3.8 Documentar la estrategia de respaldo
 
@@ -600,12 +600,42 @@ Tiempo: 5 min.
 4. Oracle Corporation. (2024c). *Performing Incremental Backups*. Oracle Database Backup and Recovery User's Guide. https://docs.oracle.com/en/database/oracle/oracle-database/19/bradv/rman-incremental-backups.html
 5. Oracle Corporation. (2024d). *Performing Point-in-Time Recovery*. Oracle Database Backup and Recovery User's Guide. https://docs.oracle.com/en/database/oracle/oracle-database/19/bradv/rman-performing-complete-database-recovery.html
 
-## Anexo: `ORA-01804` bloquea Data Pump (y otras operaciones) en `bomerp-oracle`
+## Anexo: `ORA-01804` en `bomerp-oracle` — causado por el cambio de imagen de este Anexo, y resuelto
 
-**Síntoma:** `expdp` falla con `ORA-39126`/`ORA-01804: failure to initialize timezone information`, incluso con `TZ` configurado en el contenedor (`compose-dev.yml`). El mismo error puede aparecer en operaciones no relacionadas, como `DROP USER`.
+**Síntoma:** `expdp` falla con `ORA-39126`/`ORA-01804: failure to initialize timezone information`; el mismo error puede aparecer en `DROP USER`, y en el backend de LP2, tanto al conectar como al validar su esquema (`hibernate.ddl-auto: validate`).
 
-**Diagnóstico real de esta sesión:** `V$TIMEZONE_FILE` devuelve `no rows selected` — la instancia no tiene registrado ningún archivo de zonas horarias válido, aunque `$ORACLE_HOME/oracore/zoneinfo/timezlrg_43.dat` existe en disco. El rastro (`alert_FREE.log`) ubica el error dentro de procesos internos de Oracle (`kwsecProcessSagaTimeout`, el monitor de *timeout* de *Advanced Queuing*, sin relación con las Sagas de Distribuidas) al intentar preparar una consulta que depende de la zona horaria de sesión.
+**Causa real, confirmada — sí la causó el cambio de imagen de esta sesión (3.2).** El diccionario de `bomerp-oracle` tiene registrado `DST_PRIMARY_TT_VERSION = 45`:
 
-**Causa probable:** un defecto de inicialización de la base, anterior a esta sesión, no causado por el cambio de imagen (`gvenzl/oracle-free:23-slim` → `:23`) ni por activar `ARCHIVELOG`.
+```sql
+SELECT property_name, property_value FROM database_properties WHERE property_name LIKE '%VERSION%';
+-- DST_PRIMARY_TT_VERSION = 45
+```
 
-**Estado:** sin resolver dentro del alcance de esta guía — no bloquea RMAN (3.3-3.6, ya verificado de punta a punta), solo a Data Pump y a algunas operaciones de DDL puntuales. Si tu propia instancia presenta el mismo síntoma, documenta el hallazgo (4.1, "Error o hallazgo") en vez de forzar una solución no verificada; la sintaxis de Data Pump de 3.7 es correcta y debe ejecutarse sin problema en una instancia sin este defecto.
+La imagen `gvenzl/oracle-free:23-slim` que `bomerp-oracle` usaba **antes** de esta sesión (release `23.26.2.0.0`, ya cacheada localmente) sí trae instalado `$ORACLE_HOME/oracore/zoneinfo/timezlrg_45.dat` — la versión exacta que el diccionario espera. La imagen `:23` (regular, release `23.26.3.0.0`) a la que se cambió en 3.2 para tener `rman` es un release **más nuevo que retrocedió el archivo instalado a la versión 43** (`timezlrg_43.dat`) — una regresión real de empaquetado entre dos releases de `gvenzl/oracle-free`, no algo inherente a "slim vs. regular". Por eso `V$TIMEZONE_FILE`/`V$TIMEZONE_NAMES` aparecían vacíos recién después del cambio de imagen: la base nunca tuvo el defecto antes.
+
+**Resuelto, sin archivo de My Oracle Support.** La imagen `slim` con el archivo correcto seguía cacheada localmente (`docker images gvenzl/oracle-free`):
+
+```bash
+# Extraer el archivo correcto de la imagen vieja, cacheada localmente (sin red, sin licencia)
+cid=$(docker create --entrypoint bash gvenzl/oracle-free:23-slim -c "true")
+docker cp "$cid:/opt/oracle/product/23ai/dbhomeFree/oracore/zoneinfo/timezlrg_45.dat" ./timezlrg_45.dat
+docker rm "$cid"
+
+# Instalarlo en el contenedor actual (imagen regular, con rman)
+docker cp ./timezlrg_45.dat bomerp-oracle:/opt/oracle/product/26ai/dbhomeFree/oracore/zoneinfo/timezlrg_45.dat
+docker exec -u root bomerp-oracle chown oracle:oinstall /opt/oracle/product/26ai/dbhomeFree/oracore/zoneinfo/timezlrg_45.dat
+docker exec -u root bomerp-oracle chmod 644 /opt/oracle/product/26ai/dbhomeFree/oracore/zoneinfo/timezlrg_45.dat
+```
+
+```sql
+SHUTDOWN IMMEDIATE;
+STARTUP;
+SELECT * FROM V$TIMEZONE_FILE;      -- timezlrg_45.dat, versión 45
+SELECT COUNT(*) FROM V$TIMEZONE_NAMES;  -- 2475 (antes: 0)
+```
+
+Verificado: `hibernate.ddl-auto: validate` y Data Pump vuelven a funcionar normal, sin ningún rodeo de cliente (ni `timezoneAsRegion=false`, ni `ddl-auto: none`).
+
+**Importante — esta copia no sobrevive a recrear el contenedor.** El archivo quedó en la capa del contenedor (`$ORACLE_HOME`), no en el volumen persistente (`oracle-data`, que solo cubre `/opt/oracle/oradata`). Si `bomerp-oracle` se recrea (`docker compose up -d` después de cambiar `compose-dev.yml`, o un `docker compose pull`), hay que repetir los tres comandos `docker cp`/`chown`/`chmod` de arriba — el archivo extraído puede guardarse una vez y reusarse. Para que esto deje de ser un paso manual, lo más limpio sería construir `bomerp-oracle` desde un `Dockerfile` propio que parta de `gvenzl/oracle-free:23` y copie `timezlrg_45.dat` en la misma capa de imagen — no implementado todavía, pendiente si se quiere una solución permanente.
+
+**Error frecuente**: intentar arreglar esto bajando `DST_PRIMARY_TT_VERSION` a mano o con `ORA_TZFILE` apuntando a la versión 43 — no es soportado por Oracle y, verificado en esta misma instancia, deja el contenedor en *crash loop* al reiniciar. El arreglo real siempre es instalar el archivo que coincide con la versión que el diccionario ya tiene registrada, nunca cambiar la versión registrada.

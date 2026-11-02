@@ -774,6 +774,8 @@ management:
 
 `ddl-auto: validate` (no `none`): Hibernate no crea ni altera nada —el esquema sigue siendo responsabilidad de BD2— pero sí compara las entidades JPA contra las tablas reales de Oracle al arrancar, avisando temprano si algo quedó desalineado. `devtools` habilita reinicio automático y LiveReload al guardar cambios; Spring Boot lo excluye solo del `.jar` empaquetado, no hace falta desactivarlo a mano para producción.
 
+**Nota real, no hipotética.** Si en algún momento `validate` empieza a fallar con `ORA-01804: failure to initialize timezone information` (típicamente justo después de cambiar la imagen de `bomerp-oracle` en `compose-dev.yml`, BD2 S13 3.2), no es un problema de tu configuración ni de tus entidades — es una regresión real entre releases de `gvenzl/oracle-free` (el diccionario espera un archivo de zonas horarias que esa imagen no instala). Diagnóstico y arreglo real, verificado, sin rodeos de cliente: Anexo de [BD2 S13](../../bd2/sesiones/S13_Backup_Recovery_RMAN.md#anexo-ora-01804-en-bomerp-oracle--causado-por-el-cambio-de-imagen-de-este-anexo-y-resuelto).
+
 #### 3.2.4 Ejecutar y comprobar que ya no falla
 
 Con Oracle levantado (3.2.3) y la conexión declarada, ejecuta el proyecto otra vez:

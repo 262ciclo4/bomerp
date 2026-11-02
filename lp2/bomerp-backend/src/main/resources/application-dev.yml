@@ -10,7 +10,7 @@ spring:
           #jwk-set-uri: http://localhost:8080/.well-known/jwks.json
 
   datasource:
-    url: jdbc:oracle:thin:@localhost:1521/FREEPDB1?oracle.jdbc.timezoneAsRegion=false
+    url: jdbc:oracle:thin:@localhost:1521/FREEPDB1
     username: BOMERP_APP
     password: 123456
     driver-class-name: oracle.jdbc.OracleDriver
