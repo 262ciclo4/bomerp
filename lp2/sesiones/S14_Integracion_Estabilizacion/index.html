@@ -4134,10 +4134,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#31-diagnosticar-el-hallazgo-real-confirmar-que-la-spa-nunca-usa-resumen" class="md-nav__link">
+  <a href="#31-confirmar-el-estado-real-la-excepcion-de-s9-310-y-por-que-la-paginacion-la-invalida" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.1 Diagnosticar el hallazgo real: confirmar que la SPA nunca usa /resumen
+        3.1 Confirmar el estado real: la excepción de S9 3.10 y por qué la paginación la invalida
       
     </span>
   </a>
@@ -4672,10 +4672,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#31-diagnosticar-el-hallazgo-real-confirmar-que-la-spa-nunca-usa-resumen" class="md-nav__link">
+  <a href="#31-confirmar-el-estado-real-la-excepcion-de-s9-310-y-por-que-la-paginacion-la-invalida" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.1 Diagnosticar el hallazgo real: confirmar que la SPA nunca usa /resumen
+        3.1 Confirmar el estado real: la excepción de S9 3.10 y por qué la paginación la invalida
       
     </span>
   </a>
@@ -4911,9 +4911,9 @@
 <h2 id="1-introduccion">1. Introducción<a class="headerlink" href="#1-introduccion" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 20 min.</p>
 <h3 id="11-presentacion-de-la-sesion">1.1 Presentación de la sesión<a class="headerlink" href="#11-presentacion-de-la-sesion" title="Permanent link">&para;</a></h3>
-<p>S13 optimizó el <em>build</em> y preparó la configuración de producción. Pero nadie verificó todavía si el sistema completo —backend, SPA, Keycloak, Oracle— sigue funcionando junto, de punta a punta, igual de bien que cada pieza por separado. Esta sesión responde exactamente eso, y lo hace con un hallazgo real, no inventado para la ocasión.</p>
-<p><code>VentaServiceImpl.reporte()</code> existe desde S9: calcula el total, el conteo y el ticket promedio con una consulta agregada real en Oracle (<code>VentaAgregado</code>, <code>SUM</code>/<code>COUNT</code> en SQL, no en Java). Pero <code>VentaReporteComponent</code> (la SPA) nunca lo llama — llama a <code>buscar()</code> (la lista completa, sin agregar) y recalcula los mismos tres números <strong>en el navegador</strong>, con <code>.reduce()</code>, sobre el arreglo completo. Con los pocos datos de una clase, ambos caminos dan el mismo resultado, así que nadie lo notó. Pero el día que esa lista tenga miles de filas, el camino correcto (el agregado de Oracle) seguirá respondiendo igual de rápido — y el camino que la SPA realmente usa hoy va a tener que descargar, en cada carga de pantalla, cada fila que exista para sumar tres números.</p>
-<p>Esta sesión corrige eso: pagina el listado, conecta la SPA al agregado que ya existe, verifica el flujo completo de punta a punta, agrega la auditoría que todavía no existe, y estabiliza el sistema con una prueba real, no con un mock.</p>
+<p>S13 optimizó el <em>build</em> y preparó la configuración de producción. Pero nadie verificó todavía si el sistema completo —backend, SPA, Keycloak, Oracle— sigue funcionando junto, de punta a punta, igual de bien que cada pieza por separado. Esta sesión responde exactamente eso, y empieza corrigiendo una consecuencia real de una decisión que la propia S9 dejó documentada a propósito.</p>
+<p><code>VentaServiceImpl.reporte()</code> existe desde S9: calcula el total, el conteo y el ticket promedio con una consulta agregada real en Oracle (<code>VentaAgregado</code>, <code>SUM</code>/<code>COUNT</code> en SQL, no en Java), y <code>VentaReporteComponent</code> lo consumió así desde S9 3.7. Pero S9 3.10 desconectó esa fuente <strong>a propósito</strong>, no por descuido, para poder mostrar el detalle línea por línea de cada venta —algo que <code>/resumen</code> omite deliberadamente—, y pasó a calcular los mismos tres números <strong>en el navegador</strong>, con <code>.reduce()</code> sobre el arreglo completo. Esa excepción se documentó como segura con una condición explícita: que el navegador siguiera teniendo siempre la lista completa cargada para sumar sobre ella. Esta sesión pagina ese listado (3.2-3.3) — y en cuanto el navegador deja de tener la lista completa, esa condición desaparece: sumar solo una página ya no da el total real.</p>
+<p>Esta sesión corrige eso: pagina el listado sin perder el detalle por venta, reconecta la SPA al agregado real del servidor para los totales, verifica el flujo completo de punta a punta, agrega la auditoría que todavía no existe, y estabiliza el sistema con una prueba real, no con un mock.</p>
 <h3 id="12-indice">1.2 Índice<a class="headerlink" href="#12-indice" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Por qué un listado sin paginar no escala, aunque hoy "funcione".</li>
@@ -4941,7 +4941,7 @@
 <tr>
 <td>Revisión previa individual</td>
 <td>Releer <code>VentaReporteComponent</code> (frontend) y <code>VentaServiceImpl.reporte()</code> (backend, S9) por separado, sin corregir nada todavía — solo confirmar si uno llama al otro. Trabajo individual, antes de clase.</td>
-<td>S9 (3.5-3.6), <code>venta-reporte.ts</code>, <code>VentaServiceImpl.java</code>.</td>
+<td>S9 (3.7, 3.10), <code>venta-reporte.ts</code>, <code>VentaServiceImpl.java</code>.</td>
 </tr>
 <tr>
 <td>Clase presencial</td>
@@ -4960,7 +4960,7 @@
 <p>El 1 de agosto de 2012, un técnico de Knight Capital debía desplegar código nuevo (del <em>Retail Liquidity Program</em>, RLP) en ocho servidores idénticos que enrutaban órdenes de bolsa automáticamente. Copió el código nuevo en siete. El octavo servidor se quedó con el código viejo — incluida una función retirada años antes, "Power Peg", que nunca se borró del todo.</p>
 <p>Fuente: U.S. Securities and Exchange Commission. (2013). <em>In the Matter of Knight Capital Americas LLC</em>. Release No. 34-70694.</p>
 <p>El código nuevo reutilizó, sin saberlo, una bandera que antes activaba "Power Peg". Cuando una orden con esa bandera llegó al octavo servidor —el que nunca recibió la actualización—, activó la función retirada, que empezó a ejecutar órdenes en bloque, una tras otra, sin parar: el código que debía marcar cada orden como "completada" había cambiado después de retirar Power Peg, así que el servidor nunca se enteró de que ya había terminado, y seguía mandando más. En 45 minutos, generó cerca de 4 millones de operaciones por 397 millones de acciones en 154 papeles distintos, movió artificialmente el precio de 148 empresas, y le costó a Knight Capital 440 millones de dólares — la compañía perdió el 75% de su valor en dos días y tuvo que ser rescatada.</p>
-<p>Nadie probó el sistema completo, los ocho servidores juntos, antes de dejarlo en producción — cada servidor, visto por separado, "tenía el código correcto" (siete lo tenían) o "tenía el código anterior, que ya funcionaba antes" (el octavo). El problema solo existía en la combinación de los dos, en producción real, con tráfico real. <code>VentaReporteComponent</code> (1.1) es una versión de bajo riesgo exactamente del mismo patrón: cada pieza, vista sola, "funciona" — el agregado del servidor es correcto, y el cálculo del cliente también da un número correcto hoy. El problema solo aparece cuando se mira el sistema completo, bajo carga real.</p>
+<p>Nadie probó el sistema completo, los ocho servidores juntos, antes de dejarlo en producción — cada servidor, visto por separado, "tenía el código correcto" (siete lo tenían) o "tenía el código anterior, que ya funcionaba antes" (el octavo). El problema solo existía en la combinación de los dos, en producción real, con tráfico real. <code>VentaReporteComponent</code> (1.1) es una versión de bajo riesgo del mismo patrón de fondo: una pieza —el cálculo en el cliente que dejó S9 3.10— era segura bajo un supuesto concreto, documentado en su momento (la lista completa siempre cargada). El problema no es que esa pieza estuviera mal escrita: es que un cambio posterior en el resto del sistema (la paginación de esta sesión) invalida en silencio el supuesto del que dependía, igual que el código nuevo de Knight Capital reactivó, sin saberlo, una función retirada que seguía ahí, segura mientras nadie la disparara.</p>
 <p><strong>Preguntas de análisis</strong></p>
 <p><strong>Activación de conocimientos previos</strong></p>
 <ol>
@@ -4992,17 +4992,19 @@
 <h2 id="2-explica">2. Explica<a class="headerlink" href="#2-explica" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 40 min.</p>
 <h3 id="21-arquitectura-de-la-sesion">2.1 Arquitectura de la sesión<a class="headerlink" href="#21-arquitectura-de-la-sesion" title="Permanent link">&para;</a></h3>
-<p><strong>Figura 2. El camino que la SPA usa hoy, frente al que debería usar</strong></p>
+<p><strong>Figura 2. La excepción de S9 3.10, y por qué la paginación de esta sesión la invalida</strong></p>
 <pre class="mermaid"><code>flowchart TB
-    SPA["VentaReporteComponent"]
-    BUSCAR["GET /api/v1/ventas&lt;br/&gt;(lista completa, sin paginar)"]
-    REDUCE["ventas().reduce(...)&lt;br/&gt;total/promedio en el navegador"]
-    RESUMEN["GET /api/v1/ventas/resumen&lt;br/&gt;(ya existe desde S9)"]
-    AGREGADO[("VentaAgregado&lt;br/&gt;SUM/COUNT reales en Oracle")]
+    S97["S9 3.7: SPA usa /resumen&lt;br/&gt;(agregado real del servidor)"]
+    S910["S9 3.10: excepción documentada&lt;br/&gt;pasa a buscar() + reduce()&lt;br/&gt;— segura solo con la lista completa"]
+    PAG["Esta sesión, 3.2-3.3:&lt;br/&gt;se pagina el listado"]
+    ROTO["reduce() ya solo ve una página:&lt;br/&gt;el supuesto de 3.10 deja de cumplirse"]
+    FIX["Esta sesión, 3.4: se reconecta /resumen&lt;br/&gt;para los totales; buscar() paginado solo trae filas"]
 
-    SPA --&gt;|"camino real usado hoy"| BUSCAR --&gt; REDUCE
-    SPA -.-&gt;|"camino correcto, nunca conectado"| RESUMEN --&gt; AGREGADO</code></pre>
-<p>Lectura del diagrama: el camino correcto ya existe, construido desde S9 — nadie lo borró ni lo rompió, simplemente nunca se conectó. Cada apartado siguiente desarrolla una pieza de la corrección, en el mismo orden del Índice (1.2).</p>
+    S97 --&gt; S910 --&gt; PAG --&gt; ROTO --&gt; FIX
+
+    classDef today fill:#ffe08a,stroke:#9a6b00,stroke-width:2px,color:#111;
+    class ROTO,FIX today;</code></pre>
+<p>Lectura del diagrama: <code>/resumen</code> no se perdió ni se rompió — S9 3.10 lo desconectó a propósito, con una condición explícita de seguridad (la lista completa siempre cargada). Esta sesión no corrige un error de S9: retira esa condición, así que el mismo cambio que mejora el rendimiento (paginar, 3.2-3.3) obliga a reconectar el agregado real (3.4). Cada apartado siguiente desarrolla una pieza de la corrección, en el mismo orden del Índice (1.2).</p>
 <h3 id="22-por-que-un-listado-sin-paginar-no-escala-aunque-hoy-funcione">2.2 Por qué un listado sin paginar no escala, aunque hoy "funcione"<a class="headerlink" href="#22-por-que-un-listado-sin-paginar-no-escala-aunque-hoy-funcione" title="Permanent link">&para;</a></h3>
 <p>Un <em>endpoint</em> que devuelve <code>List&lt;T&gt;</code> completa trae <strong>todas</strong> las filas que cumplen el filtro, sin límite — con 50 ventas de clase, es instantáneo; con 50,000 ventas reales, es una respuesta de varios segundos (o un error de memoria) por una sola carga de pantalla. <strong>Paginación</strong> (<em>pagination</em>) es el patrón que pide, y devuelve, un subconjunto acotado (una "página") más la información necesaria para pedir la siguiente — nunca el total completo de una sola vez (Spring Data, 2024).</p>
 <p><strong>Tabla 2. <code>List&lt;T&gt;</code> frente a <code>Page&lt;T&gt;</code></strong></p>
@@ -5038,7 +5040,7 @@
 </tbody>
 </table>
 <h3 id="23-el-agregado-del-servidor-frente-al-calculo-en-el-cliente">2.3 El agregado del servidor frente al cálculo en el cliente<a class="headerlink" href="#23-el-agregado-del-servidor-frente-al-calculo-en-el-cliente" title="Permanent link">&para;</a></h3>
-<p>Paginar un listado, sin más, rompe cualquier total calculado sobre ese listado en el cliente: si la pantalla solo tiene la página 2 de 50 cargada, <code>ventas().reduce(...)</code> (1.1) solo puede sumar esa página, no el total real. La solución no es "sumar más páginas en el cliente" — es separar las dos responsabilidades: el <strong>total agregado</strong> se calcula una sola vez, en el servidor, con una consulta que nunca trae las filas completas (<code>VentaAgregado</code>, ya existente); el <strong>listado paginado</strong> solo sirve para mostrar filas, nunca para calcular nada agregado.</p>
+<p>S9 3.10 dejó, a propósito, que <code>VentaReporteComponent</code> calculara sus tres totales en el cliente — una excepción documentada, segura <strong>mientras la lista completa siguiera cargada en el navegador</strong>. Paginar un listado, sin más, rompe exactamente esa condición: si la pantalla solo tiene la página 2 de 50 cargada, <code>ventas().reduce(...)</code> (1.1) solo puede sumar esa página, no el total real. La solución no es "sumar más páginas en el cliente" — es volver a separar las dos responsabilidades que S9 2.6 distinguía antes de la excepción de 3.10: el <strong>total agregado</strong> se calcula una sola vez, en el servidor, con una consulta que nunca trae las filas completas (<code>VentaAgregado</code>, S9 3.7); el <strong>listado paginado</strong> solo sirve para mostrar filas, nunca para calcular nada agregado.</p>
 <p><strong>Tabla 3. Dos responsabilidades, dos consultas distintas</strong></p>
 <table>
 <thead>
@@ -5051,7 +5053,7 @@
 <tbody>
 <tr>
 <td>"¿Cuánto es el total, el conteo, el promedio?"</td>
-<td>El servidor, con una consulta <code>SUM</code>/<code>COUNT</code> (<code>VentaAgregado</code>, S9) — nunca viaja una sola fila de detalle.</td>
+<td>El servidor, con una consulta <code>SUM</code>/<code>COUNT</code> (<code>VentaAgregado</code>, S9 3.7) — nunca viaja una sola fila de detalle.</td>
 <td>Constante — el costo no depende de cuántas filas haya, solo de que el índice de fecha (BD2, S5) siga ayudando al filtro.</td>
 </tr>
 <tr>
@@ -5134,14 +5136,14 @@
 <h2 id="3-aplica-actividad-practica-guiada">3. Aplica: actividad práctica guiada<a class="headerlink" href="#3-aplica-actividad-practica-guiada" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 100 min.</p>
 <p><strong>Actividad:</strong> paginar el listado de ventas sin romper sus agregados, verificar la integración funcional completa, construir auditoría real sobre <code>crear</code>/<code>anular</code>, escribir una prueba end-to-end, y cerrar con la bitácora de estabilización.</p>
-<p><strong>Propósito de la actividad:</strong> corregir, con evidencia real, el hallazgo de 1.1 —el agregado correcto del servidor nunca conectado— y aplicar el mismo criterio de verificación de punta a punta sobre el resto del sistema.</p>
+<p><strong>Propósito de la actividad:</strong> corregir, con evidencia real, la causa de 1.1 —la excepción de S9 3.10, invalidada por la paginación de esta sesión— y aplicar el mismo criterio de verificación de punta a punta sobre el resto del sistema.</p>
 <p><strong>Orientaciones metodológicas:</strong> el docente diagnostica y corrige el hallazgo real en vivo, frente a la clase; los estudiantes repiten cada paso sobre su propio proyecto (sección 4), donde el hallazgo concreto puede ser distinto, pero el método de diagnóstico es el mismo.</p>
 <p><strong>Punto de partida común:</strong> todo el equipo debe comenzar exactamente desde donde quedó S13, no desde su propio avance individual. Clona la rama <code>s13-optimizacion-preparacion-produccion</code> (el snapshot de cierre de S13):</p>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>--branch<span class="w"> </span>s13-optimizacion-preparacion-produccion<span class="w"> </span>https://github.com/262ciclo4/bomerp.git
 </code></pre></div>
 <p><strong>Actividades para realizar:</strong></p>
 <ul>
-<li><strong>3.1</strong> Diagnosticar el hallazgo real: confirmar que la SPA nunca usa <code>/resumen</code>.</li>
+<li><strong>3.1</strong> Confirmar el estado real: la excepción de S9 3.10 y por qué la paginación la invalida.</li>
 <li><strong>3.2</strong> Paginar el repositorio y el servicio de ventas.</li>
 <li><strong>3.3</strong> Paginar el controlador de ventas.</li>
 <li><strong>3.4</strong> Reconectar la SPA: paginar la tabla, usar el agregado real para los totales.</li>
@@ -5150,10 +5152,10 @@
 <li><strong>3.7</strong> Escribir y ejecutar una prueba end-to-end real.</li>
 <li><strong>3.8</strong> Registrar y cerrar en la bitácora de estabilización.</li>
 </ul>
-<h3 id="31-diagnosticar-el-hallazgo-real-confirmar-que-la-spa-nunca-usa-resumen">3.1 Diagnosticar el hallazgo real: confirmar que la SPA nunca usa <code>/resumen</code><a class="headerlink" href="#31-diagnosticar-el-hallazgo-real-confirmar-que-la-spa-nunca-usa-resumen" title="Permanent link">&para;</a></h3>
-<p><strong>Producto del paso:</strong> confirmación, leyendo el código real, de que <code>VentaReporteComponent</code> llama a <code>buscar()</code> y calcula sus totales con <code>.reduce()</code>, mientras <code>VentaService</code> (frontend) no tiene ningún método que llame a <code>GET /api/v1/ventas/resumen</code>.</p>
-<p>Revisa <code>venta-reporte.ts</code> (<code>totalVentas</code>, <code>montoTotal</code>, <code>ticketPromedio</code>, calculados con <code>computed()</code> sobre <code>this.ventas()</code>) y <code>venta-service.ts</code> (sin ningún método <code>reporte()</code> o <code>resumen()</code>). El <em>endpoint</em> <code>GET /api/v1/ventas/resumen</code> existe en <code>VentaController</code> desde S9 — solo nunca se llamó desde la SPA.</p>
-<p><strong>Error frecuente</strong>: asumir que, porque el <em>endpoint</em> existe en el backend, "la integración ya está hecha". Un <em>endpoint</em> que nadie llama no integra nada — integrar es que el dato fluya de punta a punta, no que exista en ambos lados por separado.</p>
+<h3 id="31-confirmar-el-estado-real-la-excepcion-de-s9-310-y-por-que-la-paginacion-la-invalida">3.1 Confirmar el estado real: la excepción de S9 3.10 y por qué la paginación la invalida<a class="headerlink" href="#31-confirmar-el-estado-real-la-excepcion-de-s9-310-y-por-que-la-paginacion-la-invalida" title="Permanent link">&para;</a></h3>
+<p><strong>Producto del paso:</strong> confirmación, leyendo el código real, de que <code>VentaReporteComponent</code> sigue exactamente en el estado que dejó S9 3.10 —llama a <code>buscar()</code> y calcula sus totales con <code>.reduce()</code>— y de que, una vez paginado el listado (3.2-3.3), ese cálculo deja de ser correcto.</p>
+<p>Revisa <code>venta-reporte.ts</code> (<code>totalVentas</code>, <code>montoTotal</code>, <code>ticketPromedio</code>, calculados con <code>computed()</code> sobre <code>this.ventas()</code>) y <code>venta-service.ts</code> (sin ningún método <code>reporte()</code> o <code>resumen()</code> — S9 3.10 los quitó a propósito). El <em>endpoint</em> <code>GET /api/v1/ventas/resumen</code> sigue existiendo, intacto, en <code>VentaController</code> desde S9 3.7 — nadie lo borró; el frontend simplemente dejó de llamarlo, con una condición explícita de por medio: que la lista siguiera completa en el navegador.</p>
+<p><strong>Error frecuente</strong>: tratar esto como un bug sin más y "revertir" S9 3.10 a ciegas — <code>buscar()</code> sigue siendo necesario para mostrar el detalle línea por línea que <code>/resumen</code> omite a propósito (S9 2.6). Esta sesión no deshace esa decisión, la combina con el agregado real: <code>buscar()</code> paginado para las filas (3.2-3.3), <code>/resumen</code> reconectado para los totales (3.4).</p>
 <h3 id="32-paginar-el-repositorio-y-el-servicio-de-ventas">3.2 Paginar el repositorio y el servicio de ventas<a class="headerlink" href="#32-paginar-el-repositorio-y-el-servicio-de-ventas" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> <code>VentaRepository.buscar</code> y <code>VentaServiceImpl.buscar</code> aceptando un <code>Pageable</code> y devolviendo un <code>Page&lt;Venta&gt;</code>/<code>Page&lt;VentaResponse&gt;</code>, en vez de una lista completa.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// VentaRepository.java -- firma nueva, misma consulta JPQL de siempre</span>
@@ -5200,7 +5202,7 @@
 <p><strong>Error frecuente</strong>: cambiar la firma del método sin actualizar <code>VentaService</code> (la interfaz) — el proyecto no compila hasta que la interfaz y la implementación coincidan.</p>
 <h3 id="34-reconectar-la-spa-paginar-la-tabla-usar-el-agregado-real-para-los-totales">3.4 Reconectar la SPA: paginar la tabla, usar el agregado real para los totales<a class="headerlink" href="#34-reconectar-la-spa-paginar-la-tabla-usar-el-agregado-real-para-los-totales" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> <code>VentaReporteComponent</code> usando <code>/resumen</code> para sus tres números, y una tabla paginada con <code>mat-paginator</code> para las filas.</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// venta-service.ts -- método nuevo, llama al endpoint que ya existe desde S9</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// venta-service.ts -- reintroduce el método que S9 3.10 quitó a propósito; el endpoint sigue intacto desde S9 3.7</span>
 <span class="nx">reporte</span><span class="p">(</span><span class="nx">estado?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">desde?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">hasta?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nx">Observable</span><span class="o">&lt;</span><span class="nx">VentaReporte</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="kd">let</span><span class="w"> </span><span class="nx">params</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">HttpParams</span><span class="p">();</span>
 <span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">estado</span><span class="p">)</span><span class="w"> </span><span class="nx">params</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">params</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'estado'</span><span class="p">,</span><span class="w"> </span><span class="nx">estado</span><span class="p">);</span>
@@ -5378,15 +5380,15 @@
 </thead>
 <tbody>
 <tr>
-<td><code>VentaReporteComponent</code> recalculaba sus totales en el navegador, sobre la lista completa sin paginar, en vez de usar el agregado real de <code>/resumen</code> (existente desde S9, nunca conectado).</td>
-<td>Se paginó el listado (3.2-3.3) y se conectó la SPA al agregado real del servidor (3.4), separando ambas responsabilidades.</td>
+<td><code>VentaReporteComponent</code> seguía con la excepción documentada de S9 3.10 (<code>.reduce()</code> sobre la lista completa) — segura solo mientras la lista no estuviera paginada; al paginar el listado en esta misma sesión (3.2-3.3), ese cálculo dejó de ser correcto.</td>
+<td>Se mantuvo <code>buscar()</code> paginado para las filas y se reconectó la SPA al agregado real del servidor (3.4) para los totales, separando ambas responsabilidades.</td>
 <td><code>VentaEndToEndTest</code> (3.7) en verde; verificación manual de que <code>montoTotal</code> coincide entre <code>/resumen</code> y una suma manual de las filas reales.</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Evidencia de aprendizaje:</strong></p>
 <ul>
-<li>Hallazgo real diagnosticado (3.1), con el código exacto que lo prueba.</li>
+<li>Causa real diagnosticada (3.1): la excepción de S9 3.10 invalidada por la paginación de esta sesión, con el código exacto que lo prueba.</li>
 <li><code>GET /api/v1/ventas</code> paginado, con <code>Page&lt;VentaResponse&gt;</code> real.</li>
 <li>SPA reconectada: totales desde <code>/resumen</code>, tabla paginada con <code>mat-paginator</code>.</li>
 <li>Checklist de integración funcional (Tabla 6) completo.</li>
@@ -5400,7 +5402,7 @@
 <p>Integración y estabilización del proyecto propio del equipo, documentada en evidencia individual.</p>
 <p>Completa y evidencia estas tareas:</p>
 <ol>
-<li>Diagnosticar, leyendo tu propio código, si existe algún agregado del servidor que tu propia SPA nunca conectó (como el hallazgo de 1.1) — si no encuentras ninguno, documenta explícitamente por qué tu proyecto no tiene ese riesgo.</li>
+<li>Diagnosticar, leyendo tu propio código, si tu propia SPA calcula en el cliente algún total que debería venir de un agregado real del servidor, y si ese cálculo depende de tener siempre la lista completa cargada (como el de 1.1) — si no encuentras ninguno, documenta explícitamente por qué tu proyecto no tiene ese riesgo.</li>
 <li>Paginar al menos un listado de alto volumen de tu propio módulo transaccional, separando el total agregado (servidor) del listado paginado (filas).</li>
 <li>Ejecutar el checklist de integración funcional (Tabla 6) sobre tu propio proyecto, con tu propio flujo transaccional.</li>
 <li>Construir auditoría real sobre al menos dos acciones críticas de tu propio módulo (crear y anular, o su equivalente).</li>
@@ -5554,7 +5556,7 @@ Indica 2 fortalezas y 2 recomendaciones.
 </code></pre></div>
 <h2 id="5-cierre">5. Cierre<a class="headerlink" href="#5-cierre" title="Permanent link">&para;</a></h2>
 <p>Tiempo: 5 min.</p>
-<p><strong>Resumen breve:</strong> hoy se corrigió un hallazgo real, no inventado: la SPA calculaba sus totales en el navegador, ignorando el agregado correcto que el backend ya calculaba en Oracle desde S9. Pagina el listado, usa el agregado real, y los dos problemas que parecían uno solo (rendimiento y corrección) se resuelven juntos. El checklist de integración funcional confirmó que el sistema completo —login, venta, consulta, anulación— sigue funcionando de punta a punta, no solo módulo por módulo, el mismo criterio que el caso de Knight Capital (1.6) muestra fallando a escala real. La auditoría real y la prueba end-to-end dejan evidencia verificable de quién hizo qué, y de que el sistema completo —no una pieza mockeada— sigue respondiendo correctamente.</p>
+<p><strong>Resumen breve:</strong> hoy se corrigió una consecuencia real, no un bug inventado: S9 3.10 había dejado, a propósito, que la SPA calculara sus totales en el navegador, seguro solo mientras la lista completa estuviera cargada — la paginación de hoy retiró esa condición. Se paginó el listado sin perder el detalle, se reconectó el agregado real que el backend ya calculaba en Oracle desde S9 3.7, y los dos problemas que parecían uno solo (rendimiento y corrección) se resolvieron juntos. El checklist de integración funcional confirmó que el sistema completo —login, venta, consulta, anulación— sigue funcionando de punta a punta, no solo módulo por módulo, el mismo criterio que el caso de Knight Capital (1.6) muestra fallando a escala real: una pieza segura bajo un supuesto que un cambio posterior invalidó en silencio. La auditoría real y la prueba end-to-end dejan evidencia verificable de quién hizo qué, y de que el sistema completo —no una pieza mockeada— sigue respondiendo correctamente.</p>
 <p><strong>Dinámica participativa:</strong> en una ronda rápida, cada estudiante comparte en una frase qué hallazgo real encontró (o no encontró, y por qué) al diagnosticar su propio proyecto.</p>
 <p><strong>Metacognición:</strong> ¿qué te costó más: encontrar un hallazgo real de integración en tu propio código, o escribir una prueba end-to-end que de verdad ejercite el sistema completo, sin ningún mock escondido?</p>
 <p><strong>Proyección:</strong> S15 integra todo el producto de la Unidad III —optimización, integración, estabilización, sobre el backend y la SPA construidos desde U1-U2— en la sustentación final del curso.</p>

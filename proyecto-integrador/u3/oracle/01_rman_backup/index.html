@@ -3974,10 +3974,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#activar-archivelog-condicion-previa-s13-32" class="md-nav__link">
+  <a href="#activar-archivelog-condicion-previa-s13-34" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Activar ARCHIVELOG (condición previa, S13 3.2)
+        Activar ARCHIVELOG (condición previa, S13 3.4)
       
     </span>
   </a>
@@ -4041,7 +4041,7 @@
 <p><strong>Ejemplo BomERP, verificado en vivo contra <code>bomerp-oracle</code> (S13).</strong> Cada equipo reemplaza estos resultados por los de su propia instancia.</p>
 <h2 id="objetivo">Objetivo<a class="headerlink" href="#objetivo" title="Permanent link">&para;</a></h2>
 <p>Demostrar que la base Oracle del proyecto puede respaldarse como parte de la continuidad del negocio, con <code>ARCHIVELOG</code> activo y una estrategia completo + incremental real.</p>
-<h2 id="activar-archivelog-condicion-previa-s13-32">Activar <code>ARCHIVELOG</code> (condición previa, S13 3.2)<a class="headerlink" href="#activar-archivelog-condicion-previa-s13-32" title="Permanent link">&para;</a></h2>
+<h2 id="activar-archivelog-condicion-previa-s13-34">Activar <code>ARCHIVELOG</code> (condición previa, S13 3.4)<a class="headerlink" href="#activar-archivelog-condicion-previa-s13-34" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="k">ALTER</span><span class="w"> </span><span class="k">SYSTEM</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">db_recovery_file_dest_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="k">G</span><span class="w"> </span><span class="k">SCOPE</span><span class="o">=</span><span class="k">BOTH</span><span class="p">;</span>
 <span class="k">ALTER</span><span class="w"> </span><span class="k">SYSTEM</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">db_recovery_file_dest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'/opt/oracle/oradata/FRA'</span><span class="w"> </span><span class="k">SCOPE</span><span class="o">=</span><span class="k">BOTH</span><span class="p">;</span>
 <span class="n">SHUTDOWN</span><span class="w"> </span><span class="k">IMMEDIATE</span><span class="p">;</span>
