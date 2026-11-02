@@ -3274,10 +3274,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#anexo-ora-01804-bloquea-data-pump-y-otras-operaciones-en-bomerp-oracle" class="md-nav__link">
+  <a href="#anexo-ora-01804-en-bomerp-oracle-causado-por-el-cambio-de-imagen-de-este-anexo-y-resuelto" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Anexo: ORA-01804 bloquea Data Pump (y otras operaciones) en bomerp-oracle
+        Anexo: ORA-01804 en bomerp-oracle — causado por el cambio de imagen de este Anexo, y resuelto
       
     </span>
   </a>
@@ -4898,10 +4898,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#anexo-ora-01804-bloquea-data-pump-y-otras-operaciones-en-bomerp-oracle" class="md-nav__link">
+  <a href="#anexo-ora-01804-en-bomerp-oracle-causado-por-el-cambio-de-imagen-de-este-anexo-y-resuelto" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Anexo: ORA-01804 bloquea Data Pump (y otras operaciones) en bomerp-oracle
+        Anexo: ORA-01804 en bomerp-oracle — causado por el cambio de imagen de este Anexo, y resuelto
       
     </span>
   </a>
@@ -5331,7 +5331,7 @@ channel ORA_DISK_1: backup cancelled because all files were skipped
 <span class="w">  </span><span class="nv">directory</span><span class="o">=</span>BOMERP_DPDUMP<span class="w"> </span><span class="nv">dumpfile</span><span class="o">=</span>bom_ventas.dmp<span class="w"> </span><span class="nv">logfile</span><span class="o">=</span>bom_ventas_imp.log<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span><span class="nv">remap_schema</span><span class="o">=</span>BOM_VENTAS:BOM_VENTAS_RESTORE
 </code></pre></div>
-<p><strong>Nota real de esta sesión</strong>: al preparar esta guía, <code>bomerp-oracle</code> devolvió <code>ORA-01804: failure to initialize timezone information</code> al ejecutar <code>expdp</code> (y, más adelante, incluso en un <code>DROP USER</code>) — un defecto del contenedor ya diagnosticado (ver Anexo al final de esta sesión) y ajeno a la sintaxis de Data Pump en sí, que sigue siendo correcta. Si tu propio <code>bomerp-oracle</code> no presenta este error, <code>expdp</code>/<code>impdp</code> deben ejecutarse sin problema con los comandos de arriba.</p>
+<p><strong>Nota real de esta sesión</strong>: al preparar esta guía, <code>bomerp-oracle</code> devolvió <code>ORA-01804: failure to initialize timezone information</code> al ejecutar <code>expdp</code> — causado por el cambio de imagen de 3.2 (ver Anexo al final de esta sesión) y ya resuelto, sin rodeos, instalando el archivo de zonas horarias correcto. La sintaxis de Data Pump de arriba es la que de verdad se ejecutó, ya corregido el entorno.</p>
 <h3 id="38-documentar-la-estrategia-de-respaldo">3.8 Documentar la estrategia de respaldo<a class="headerlink" href="#38-documentar-la-estrategia-de-respaldo" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> la tabla de estrategia que 4.1 pide replicar sobre el proyecto propio, con BomERP como ejemplo ya resuelto.</p>
 <p><strong>Tabla 6. Estrategia de respaldo de BomERP (ejemplo resuelto)</strong></p>
@@ -5578,11 +5578,32 @@ Indica 2 fortalezas y 2 recomendaciones.
 <li>Oracle Corporation. (2024c). <em>Performing Incremental Backups</em>. Oracle Database Backup and Recovery User's Guide. https://docs.oracle.com/en/database/oracle/oracle-database/19/bradv/rman-incremental-backups.html</li>
 <li>Oracle Corporation. (2024d). <em>Performing Point-in-Time Recovery</em>. Oracle Database Backup and Recovery User's Guide. https://docs.oracle.com/en/database/oracle/oracle-database/19/bradv/rman-performing-complete-database-recovery.html</li>
 </ol>
-<h2 id="anexo-ora-01804-bloquea-data-pump-y-otras-operaciones-en-bomerp-oracle">Anexo: <code>ORA-01804</code> bloquea Data Pump (y otras operaciones) en <code>bomerp-oracle</code><a class="headerlink" href="#anexo-ora-01804-bloquea-data-pump-y-otras-operaciones-en-bomerp-oracle" title="Permanent link">&para;</a></h2>
-<p><strong>Síntoma:</strong> <code>expdp</code> falla con <code>ORA-39126</code>/<code>ORA-01804: failure to initialize timezone information</code>, incluso con <code>TZ</code> configurado en el contenedor (<code>compose-dev.yml</code>). El mismo error puede aparecer en operaciones no relacionadas, como <code>DROP USER</code>.</p>
-<p><strong>Diagnóstico real de esta sesión:</strong> <code>V$TIMEZONE_FILE</code> devuelve <code>no rows selected</code> — la instancia no tiene registrado ningún archivo de zonas horarias válido, aunque <code>$ORACLE_HOME/oracore/zoneinfo/timezlrg_43.dat</code> existe en disco. El rastro (<code>alert_FREE.log</code>) ubica el error dentro de procesos internos de Oracle (<code>kwsecProcessSagaTimeout</code>, el monitor de <em>timeout</em> de <em>Advanced Queuing</em>, sin relación con las Sagas de Distribuidas) al intentar preparar una consulta que depende de la zona horaria de sesión.</p>
-<p><strong>Causa probable:</strong> un defecto de inicialización de la base, anterior a esta sesión, no causado por el cambio de imagen (<code>gvenzl/oracle-free:23-slim</code> → <code>:23</code>) ni por activar <code>ARCHIVELOG</code>.</p>
-<p><strong>Estado:</strong> sin resolver dentro del alcance de esta guía — no bloquea RMAN (3.3-3.6, ya verificado de punta a punta), solo a Data Pump y a algunas operaciones de DDL puntuales. Si tu propia instancia presenta el mismo síntoma, documenta el hallazgo (4.1, "Error o hallazgo") en vez de forzar una solución no verificada; la sintaxis de Data Pump de 3.7 es correcta y debe ejecutarse sin problema en una instancia sin este defecto.</p>
+<h2 id="anexo-ora-01804-en-bomerp-oracle-causado-por-el-cambio-de-imagen-de-este-anexo-y-resuelto">Anexo: <code>ORA-01804</code> en <code>bomerp-oracle</code> — causado por el cambio de imagen de este Anexo, y resuelto<a class="headerlink" href="#anexo-ora-01804-en-bomerp-oracle-causado-por-el-cambio-de-imagen-de-este-anexo-y-resuelto" title="Permanent link">&para;</a></h2>
+<p><strong>Síntoma:</strong> <code>expdp</code> falla con <code>ORA-39126</code>/<code>ORA-01804: failure to initialize timezone information</code>; el mismo error puede aparecer en <code>DROP USER</code>, y en el backend de LP2, tanto al conectar como al validar su esquema (<code>hibernate.ddl-auto: validate</code>).</p>
+<p><strong>Causa real, confirmada — sí la causó el cambio de imagen de esta sesión (3.2).</strong> El diccionario de <code>bomerp-oracle</code> tiene registrado <code>DST_PRIMARY_TT_VERSION = 45</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="n">property_name</span><span class="p">,</span><span class="w"> </span><span class="n">property_value</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">database_properties</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">property_name</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">'%VERSION%'</span><span class="p">;</span>
+<span class="c1">-- DST_PRIMARY_TT_VERSION = 45</span>
+</code></pre></div>
+<p>La imagen <code>gvenzl/oracle-free:23-slim</code> que <code>bomerp-oracle</code> usaba <strong>antes</strong> de esta sesión (release <code>23.26.2.0.0</code>, ya cacheada localmente) sí trae instalado <code>$ORACLE_HOME/oracore/zoneinfo/timezlrg_45.dat</code> — la versión exacta que el diccionario espera. La imagen <code>:23</code> (regular, release <code>23.26.3.0.0</code>) a la que se cambió en 3.2 para tener <code>rman</code> es un release <strong>más nuevo que retrocedió el archivo instalado a la versión 43</strong> (<code>timezlrg_43.dat</code>) — una regresión real de empaquetado entre dos releases de <code>gvenzl/oracle-free</code>, no algo inherente a "slim vs. regular". Por eso <code>V$TIMEZONE_FILE</code>/<code>V$TIMEZONE_NAMES</code> aparecían vacíos recién después del cambio de imagen: la base nunca tuvo el defecto antes.</p>
+<p><strong>Resuelto, sin archivo de My Oracle Support.</strong> La imagen <code>slim</code> con el archivo correcto seguía cacheada localmente (<code>docker images gvenzl/oracle-free</code>):</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Extraer el archivo correcto de la imagen vieja, cacheada localmente (sin red, sin licencia)</span>
+<span class="nv">cid</span><span class="o">=</span><span class="k">$(</span>docker<span class="w"> </span>create<span class="w"> </span>--entrypoint<span class="w"> </span>bash<span class="w"> </span>gvenzl/oracle-free:23-slim<span class="w"> </span>-c<span class="w"> </span><span class="s2">"true"</span><span class="k">)</span>
+docker<span class="w"> </span>cp<span class="w"> </span><span class="s2">"</span><span class="nv">$cid</span><span class="s2">:/opt/oracle/product/23ai/dbhomeFree/oracore/zoneinfo/timezlrg_45.dat"</span><span class="w"> </span>./timezlrg_45.dat
+docker<span class="w"> </span>rm<span class="w"> </span><span class="s2">"</span><span class="nv">$cid</span><span class="s2">"</span>
+
+<span class="c1"># Instalarlo en el contenedor actual (imagen regular, con rman)</span>
+docker<span class="w"> </span>cp<span class="w"> </span>./timezlrg_45.dat<span class="w"> </span>bomerp-oracle:/opt/oracle/product/26ai/dbhomeFree/oracore/zoneinfo/timezlrg_45.dat
+docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>bomerp-oracle<span class="w"> </span>chown<span class="w"> </span>oracle:oinstall<span class="w"> </span>/opt/oracle/product/26ai/dbhomeFree/oracore/zoneinfo/timezlrg_45.dat
+docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>bomerp-oracle<span class="w"> </span>chmod<span class="w"> </span><span class="m">644</span><span class="w"> </span>/opt/oracle/product/26ai/dbhomeFree/oracore/zoneinfo/timezlrg_45.dat
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">SHUTDOWN</span><span class="w"> </span><span class="k">IMMEDIATE</span><span class="p">;</span>
+<span class="n">STARTUP</span><span class="p">;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">V$TIMEZONE_FILE</span><span class="p">;</span><span class="w">      </span><span class="c1">-- timezlrg_45.dat, versión 45</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">V$TIMEZONE_NAMES</span><span class="p">;</span><span class="w">  </span><span class="c1">-- 2475 (antes: 0)</span>
+</code></pre></div>
+<p>Verificado: <code>hibernate.ddl-auto: validate</code> y Data Pump vuelven a funcionar normal, sin ningún rodeo de cliente (ni <code>timezoneAsRegion=false</code>, ni <code>ddl-auto: none</code>).</p>
+<p><strong>Importante — esta copia no sobrevive a recrear el contenedor.</strong> El archivo quedó en la capa del contenedor (<code>$ORACLE_HOME</code>), no en el volumen persistente (<code>oracle-data</code>, que solo cubre <code>/opt/oracle/oradata</code>). Si <code>bomerp-oracle</code> se recrea (<code>docker compose up -d</code> después de cambiar <code>compose-dev.yml</code>, o un <code>docker compose pull</code>), hay que repetir los tres comandos <code>docker cp</code>/<code>chown</code>/<code>chmod</code> de arriba — el archivo extraído puede guardarse una vez y reusarse. Para que esto deje de ser un paso manual, lo más limpio sería construir <code>bomerp-oracle</code> desde un <code>Dockerfile</code> propio que parta de <code>gvenzl/oracle-free:23</code> y copie <code>timezlrg_45.dat</code> en la misma capa de imagen — no implementado todavía, pendiente si se quiere una solución permanente.</p>
+<p><strong>Error frecuente</strong>: intentar arreglar esto bajando <code>DST_PRIMARY_TT_VERSION</code> a mano o con <code>ORA_TZFILE</code> apuntando a la versión 43 — no es soportado por Oracle y, verificado en esta misma instancia, deja el contenedor en <em>crash loop</em> al reiniciar. El arreglo real siempre es instalar el archivo que coincide con la versión que el diccionario ya tiene registrada, nunca cambiar la versión registrada.</p>
 
 
 
