@@ -10,6 +10,8 @@ Doce sesiones construyeron un motor transaccional Oracle real: esquemas por mód
 
 S9 (3.9) ya dejó esa pregunta pendiente a propósito: activar `ARCHIVELOG` interrumpe la instancia, y en ese momento no había ninguna razón real para pagar ese costo — `bomerp-oracle` seguía, y sigue hoy mismo al empezar esta sesión, en `NOARCHIVELOG`. Esta sesión es exactamente el momento en que esa razón aparece: sin `ARCHIVELOG`, un respaldo solo puede restaurar hasta el instante exacto en que se tomó — nunca a un punto intermedio, ni un segundo después. Hoy se activa de verdad, no se vuelve a documentar sin ejecutar.
 
+Antes de llegar a RMAN hace falta una pieza que `bomerp-oracle` todavía no tiene: la imagen que has usado desde S1 (`gvenzl/oracle-free:23-slim`) no incluye el binario `rman`. 3.2 cambia la imagen; 3.3 corrige, de inmediato, lo que ese cambio rompe — un archivo de zonas horarias que la base necesita y que la nueva imagen no trae en la versión correcta. Ninguna de las dos cosas es un rodeo: son el punto de partida real de todo lo demás.
+
 ### 1.2 Índice
 
 1. RMAN (*Recovery Manager*) frente a Data Pump: respaldo físico frente a respaldo lógico.
@@ -25,7 +27,7 @@ Al concluir la clase, estarás en condiciones de: **activar** `ARCHIVELOG` con c
 
 ### 1.4 Producto de sesión
 
-`bomerp-oracle` en `ARCHIVELOG`, con un respaldo completo (L0) y uno incremental (L1) reales vía RMAN, un incidente simulado (dos cambios reales sobre `BOM_VENTAS.VENTAS`) recuperado exactamente hasta el punto intermedio correcto con *Point-In-Time Recovery*, un respaldo lógico del esquema con Data Pump, y el documento de estrategia de respaldo con su RTO/RPO justificado.
+`bomerp-oracle` con `rman` disponible y su archivo de zonas horarias correcto, en `ARCHIVELOG`, con un respaldo completo (L0) y uno incremental (L1) reales vía RMAN, un incidente simulado (dos cambios reales sobre `BOM_VENTAS.VENTAS`) recuperado exactamente hasta el punto intermedio correcto con *Point-In-Time Recovery*, un respaldo lógico del esquema con Data Pump, y el documento de estrategia de respaldo con su RTO/RPO justificado.
 
 ### 1.5 Metodología
 
@@ -34,7 +36,7 @@ Al concluir la clase, estarás en condiciones de: **activar** `ARCHIVELOG` con c
 | Actividades a Realizar en el Periodo | Orientaciones generales (Orientaciones Metodológicas) | Material de estudio recomendado |
 |---|---|---|
 | Revisión previa individual | Repasar por qué `bomerp-oracle` sigue en `NOARCHIVELOG` (S9, 3.9) y qué procedimiento documentó esa sesión sin ejecutarlo. Confirmar que `bomerp-oracle` sigue corriendo. Trabajo individual, antes de clase. | S9 (2.3, 3.9). |
-| Clase presencial | Activación guiada de `ARCHIVELOG`, configuración de RMAN, respaldo completo e incremental reales, simulación de un incidente y recuperación con PITR, respaldo lógico con Data Pump. Trabajo individual en la propia laptop, siguiendo al docente paso a paso. | Contenedor `bomerp-oracle` corriendo (S1), pasos 3.1 a 3.8 de esta guía. |
+| Clase presencial | Cambio de imagen para tener `rman`, corrección del archivo de zonas horarias, activación de `ARCHIVELOG`, configuración de RMAN, respaldo completo e incremental reales, simulación de un incidente y recuperación con PITR, respaldo lógico con Data Pump. Trabajo individual en la propia laptop, siguiendo al docente paso a paso. | Contenedor `bomerp-oracle` corriendo (S1), pasos 3.1 a 3.10 de esta guía. |
 | Evaluación formativa | Revisión en clase de la recuperación lograda (¿el dato correcto sobrevivió, el incidente se descartó?) y del documento de estrategia de respaldo. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4. | Indicaciones de entrega (4.3), rúbrica de evaluación (4.6). |
 
 ### 1.6 Motivación de la sesión
@@ -68,7 +70,7 @@ GitLab se recuperó con el único mecanismo que sí funcionó — el *snapshot* 
 
 - Producto del curso: Base de datos empresarial Oracle operativa, administrada, optimizada, auditada y resiliente.
 - Producto de unidad: Unidad III (esta es su primera sesión).
-- Avance del producto en esta sesión: `ARCHIVELOG` activado, respaldo completo e incremental reales con RMAN, un incidente simulado recuperado con PITR hasta el punto exacto correcto, y un respaldo lógico con Data Pump.
+- Avance del producto en esta sesión: `bomerp-oracle` con `rman` disponible, `ARCHIVELOG` activado, respaldo completo e incremental reales con RMAN, un incidente simulado recuperado con PITR hasta el punto exacto correcto, y un respaldo lógico con Data Pump.
 
 **Figura 1. Roadmap del producto de la unidad**
 
@@ -95,20 +97,21 @@ Tiempo: 40 min.
 
 ```mermaid
 flowchart TB
-    DB[("bomerp-oracle<br/>NOARCHIVELOG (S9)")]
-    ARC["ARCHIVELOG activado<br/>+ FRA (3.2)"]
-    L0["Backup completo<br/>RMAN Level 0 (3.3)"]
+    DB[("bomerp-oracle<br/>NOARCHIVELOG, sin rman (S9)")]
+    IMG["Imagen con rman<br/>+ zona horaria corregida (3.2-3.3)"]
+    ARC["ARCHIVELOG activado<br/>+ FRA (3.4)"]
+    L0["Backup completo<br/>RMAN Level 0 (3.5)"]
     CAMBIO["Cambio real sobre<br/>BOM_VENTAS.VENTAS"]
-    L1["Backup incremental<br/>RMAN Level 1 (3.4)"]
+    L1["Backup incremental<br/>RMAN Level 1 (3.6)"]
     INC["Incidente simulado<br/>(segundo cambio real)"]
-    PITR["RESTORE + RECOVER<br/>hasta un punto exacto (3.5)"]
-    DP[("Data Pump<br/>respaldo lógico (3.7)")]
+    PITR["RESTORE + RECOVER<br/>hasta un punto exacto (3.7)"]
+    DP[("Data Pump<br/>respaldo lógico (3.9)")]
 
-    DB --> ARC --> L0 --> CAMBIO --> L1 --> INC --> PITR
-    DB --> DP
+    DB --> IMG --> ARC --> L0 --> CAMBIO --> L1 --> INC --> PITR
+    IMG --> DP
 ```
 
-Lectura del diagrama: RMAN (columna izquierda) y Data Pump (columna derecha) no son pasos de la misma cadena — son dos herramientas distintas, para dos tipos de respaldo distintos (2.2). La cadena de RMAN sí es secuencial: cada paso depende literalmente del anterior, y el final (PITR) es la razón de ser de todos los pasos previos. Cada apartado siguiente desarrolla una pieza, en el mismo orden del Índice (1.2).
+Lectura del diagrama: RMAN (columna izquierda) y Data Pump (columna derecha) no son pasos de la misma cadena — son dos herramientas distintas, para dos tipos de respaldo distintos (2.2), pero ambas dependen de la misma base: la imagen con `rman` y la zona horaria corregida (3.2-3.3). La cadena de RMAN sí es secuencial desde ahí: cada paso depende literalmente del anterior, y el final (PITR) es la razón de ser de todos los pasos previos. Cada apartado siguiente desarrolla una pieza, en el mismo orden del Índice (1.2).
 
 ### 2.2 RMAN frente a Data Pump
 
@@ -122,7 +125,7 @@ Lectura del diagrama: RMAN (columna izquierda) y Data Pump (columna derecha) no 
 | Unidad mínima | La base de datos completa (o un tablespace/datafile). | Un esquema, una tabla, o un subconjunto filtrado. |
 | Requiere `ARCHIVELOG` | Para un respaldo en caliente (base abierta) y para PITR, sí (2.4). | No — funciona igual en cualquier modo. |
 | Portabilidad | Atada a la misma versión y plataforma de Oracle. | Portable entre versiones y, con cuidado, entre plataformas. |
-| Caso de uso típico de esta sesión | Recuperar la base completa tras perder un datafile, o volver a un punto exacto en el tiempo (3.3-3.6). | Mover o respaldar un esquema específico (`BOM_VENTAS`) sin tocar el resto de la base (3.7). |
+| Caso de uso típico de esta sesión | Recuperar la base completa tras perder un datafile, o volver a un punto exacto en el tiempo (3.5-3.8). | Mover o respaldar un esquema específico (`BOM_VENTAS`) sin tocar el resto de la base (3.9). |
 
 Ninguna de las dos reemplaza a la otra: un incidente que destruye el disco completo necesita RMAN; migrar solo `BOM_VENTAS` a otra instancia, o tener una copia portable de un esquema puntual, es trabajo de Data Pump. 2.7 ordena esta decisión por escenario.
 
@@ -137,17 +140,17 @@ Un respaldo **completo** (*Level 0*) copia **todos** los bloques usados de cada 
 | Qué copia | Todos los bloques usados. | Solo los bloques modificados desde el respaldo anterior. |
 | Cuándo | El primer respaldo de una estrategia, o periódicamente como línea base. | Entre un *Level 0* y el siguiente, con mayor frecuencia. |
 | Tiempo/espacio | Mayor — proporcional al tamaño total de la base. | Menor — proporcional solo al volumen de cambios reales. |
-| Qué pasa si un datafile no cambió | Se copia igual (es completo). | RMAN lo **omite por completo** — ver 3.4, evidencia real. |
+| Qué pasa si un datafile no cambió | Se copia igual (es completo). | RMAN lo **omite por completo** — ver 3.6, evidencia real. |
 
-Un error frecuente es pensar que "incremental" significa "una copia completa más pequeña" — no lo es: si un datafile entero no tuvo ningún cambio, RMAN ni siquiera lo toca. 3.4 muestra ese comportamiento verificado contra `bomerp-oracle`, no solo enunciado.
+Un error frecuente es pensar que "incremental" significa "una copia completa más pequeña" — no lo es: si un datafile entero no tuvo ningún cambio, RMAN ni siquiera lo toca. 3.6 muestra ese comportamiento verificado contra `bomerp-oracle`, no solo enunciado.
 
 ### 2.4 `ARCHIVELOG` como condición necesaria del *Point-In-Time Recovery*
 
 En `NOARCHIVELOG` (el modo real de `bomerp-oracle` hasta esta sesión, S9 3.9), Oracle sobrescribe los *redo logs* en línea en cuanto ya no los necesita para la instancia activa — y con ellos desaparece cualquier posibilidad de reconstruir el estado de la base entre dos respaldos. Un respaldo en `NOARCHIVELOG` solo puede restaurar exactamente al instante en que se tomó: nada antes, nada después, nada intermedio.
 
-En `ARCHIVELOG`, cada *redo log* en línea se copia (se "archiva") antes de poder reutilizarse — esa copia es, literalmente, la cinta continua de todo lo que cambió en la base. RMAN puede restaurar el último respaldo y luego **aplicar** esos archivados hasta el segundo exacto que se le pida: eso es *Point-In-Time Recovery* (PITR). Es el mismo mecanismo que el *WAL* de PostgreSQL en el caso de GitLab (1.6) — cuando el archivado de *WAL* no estaba activo en el secundario, ese secundario perdió exactamente la misma capacidad que `bomerp-oracle` no tenía hasta 3.2 de esta sesión.
+En `ARCHIVELOG`, cada *redo log* en línea se copia (se "archiva") antes de poder reutilizarse — esa copia es, literalmente, la cinta continua de todo lo que cambió en la base. RMAN puede restaurar el último respaldo y luego **aplicar** esos archivados hasta el segundo exacto que se le pida: eso es *Point-In-Time Recovery* (PITR). Es el mismo mecanismo que el *WAL* de PostgreSQL en el caso de GitLab (1.6) — cuando el archivado de *WAL* no estaba activo en el secundario, ese secundario perdió exactamente la misma capacidad que `bomerp-oracle` no tenía hasta 3.4 de esta sesión.
 
-**Error frecuente**: activar `ARCHIVELOG` y asumir que ya se puede hacer PITR a cualquier punto del pasado. Solo se puede recuperar a un punto **posterior al último respaldo físico disponible** — los archivados por sí solos no bastan sin una base desde la cual aplicarlos (3.5).
+**Error frecuente**: activar `ARCHIVELOG` y asumir que ya se puede hacer PITR a cualquier punto del pasado. Solo se puede recuperar a un punto **posterior al último respaldo físico disponible** — los archivados por sí solos no bastan sin una base desde la cual aplicarlos (3.7).
 
 ### 2.5 `RESTORE` frente a `RECOVER`
 
@@ -161,7 +164,7 @@ Son dos comandos de RMAN, con responsabilidades distintas, que casi siempre se u
 | Deja la base en qué estado | Como estaba en el momento exacto del respaldo usado. | Como estaba en el momento exacto solicitado (el presente, o un punto intermedio con PITR). |
 | Sin el otro paso | Una base consistente, pero vieja — tan vieja como el último respaldo. | No tiene nada que recuperar sobre si antes no se restauró ningún datafile. |
 
-`RESTORE` sin `RECOVER` deja la base exactamente como estaba en el respaldo — ninguno de los cambios posteriores (ni los buenos, ni el incidente) existe todavía. `RECOVER` es el que decide hasta dónde avanzar desde ahí: hasta ahora (recuperación completa) o hasta un punto exacto en el pasado (PITR, 3.5).
+`RESTORE` sin `RECOVER` deja la base exactamente como estaba en el respaldo — ninguno de los cambios posteriores (ni los buenos, ni el incidente) existe todavía. `RECOVER` es el que decide hasta dónde avanzar desde ahí: hasta ahora (recuperación completa) o hasta un punto exacto en el pasado (PITR, 3.7).
 
 ### 2.6 RTO y RPO
 
@@ -170,7 +173,7 @@ Dos métricas, no una, justifican cualquier estrategia de respaldo (Oracle Corpo
 - **RPO** (*Recovery Point Objective*): cuántos datos es aceptable perder, medido en tiempo. Un RPO de 1 hora significa que, en el peor caso, se pierde hasta una hora de cambios.
 - **RTO** (*Recovery Time Objective*): cuánto tiempo es aceptable que el sistema esté caído mientras se recupera.
 
-GitLab (1.6) tomó una decisión de RPO en vivo: eligió el *snapshot* de 6 horas sobre el de 24 horas **precisamente** para minimizar cuántos datos perdía, aunque ambos estaban disponibles. Esa misma decisión se repite, a escala de esta sesión, en 3.5: el *Level 1* (3.4) existe para acortar el RPO frente a depender solo del último *Level 0* — cuanto más reciente el último respaldo aplicable, menos se pierde si hay que recuperar.
+GitLab (1.6) tomó una decisión de RPO en vivo: eligió el *snapshot* de 6 horas sobre el de 24 horas **precisamente** para minimizar cuántos datos perdía, aunque ambos estaban disponibles. Esa misma decisión se repite, a escala de esta sesión, en 3.7: el *Level 1* (3.6) existe para acortar el RPO frente a depender solo del último *Level 0* — cuanto más reciente el último respaldo aplicable, menos se pierde si hay que recuperar.
 
 ### 2.7 Escenarios reales de recuperación: qué herramienta corresponde a cada incidente
 
@@ -180,31 +183,33 @@ No todo incidente de "pérdida de datos" se resuelve con RMAN. Antes de recupera
 
 | Escenario | Herramienta correcta | Por qué |
 |---|---|---|
-| Se perdió o corrompió un datafile completo | RMAN: `RESTORE` + `RECOVER` (3.3-3.6) | Es un problema físico — solo un respaldo físico lo resuelve. |
-| Se necesita volver a un estado anterior a un incidente de negocio (un `UPDATE` masivo mal filtrado) | RMAN: PITR (3.5), si el incidente ya pasó el punto de recuperación de la papelera de Oracle | El dato correcto y el incidente conviven en la misma base; solo un punto exacto en el tiempo los separa. |
-| Se necesita mover o respaldar un esquema específico, o migrar a otra instancia | Data Pump (3.7) | No hace falta recuperar toda la base para mover un esquema puntual. |
+| Se perdió o corrompió un datafile completo | RMAN: `RESTORE` + `RECOVER` (3.5-3.8) | Es un problema físico — solo un respaldo físico lo resuelve. |
+| Se necesita volver a un estado anterior a un incidente de negocio (un `UPDATE` masivo mal filtrado) | RMAN: PITR (3.7), si el incidente ya pasó el punto de recuperación de la papelera de Oracle | El dato correcto y el incidente conviven en la misma base; solo un punto exacto en el tiempo los separa. |
+| Se necesita mover o respaldar un esquema específico, o migrar a otra instancia | Data Pump (3.9) | No hace falta recuperar toda la base para mover un esquema puntual. |
 | Se necesita auditar qué cambió y cuándo, sin recuperar nada | Vistas de auditoría (S9), no RMAN ni Data Pump | Ninguna de las dos herramientas de esta sesión está pensada para consultar, solo para respaldar/recuperar. |
 
 ## 3. Aplica: actividad práctica guiada
 
 Tiempo: 100 min.
 
-**Actividad:** activar `ARCHIVELOG` en `bomerp-oracle`, configurar RMAN y ejecutar un respaldo completo e incremental reales, simular un incidente con dos cambios reales sobre `BOM_VENTAS.VENTAS`, recuperar la base exactamente hasta el punto correcto con PITR, y respaldar `BOM_VENTAS` con Data Pump.
+**Actividad:** cambiar `bomerp-oracle` a una imagen con `rman`, corregir el archivo de zonas horarias que ese cambio rompe, activar `ARCHIVELOG`, configurar RMAN y ejecutar un respaldo completo e incremental reales, simular un incidente con dos cambios reales sobre `BOM_VENTAS.VENTAS`, recuperar la base exactamente hasta el punto correcto con PITR, y respaldar `BOM_VENTAS` con Data Pump.
 
 **Propósito de la actividad:** verificar, contra la instancia real, que una estrategia de respaldo bien configurada permite recuperar exactamente lo que se necesita recuperar — ni más, ni menos — y no solo enunciar los comandos.
 
-**Orientaciones metodológicas:** el docente ejecuta cada paso en vivo contra `bomerp-oracle`; los estudiantes repiten cada paso sobre su propia instancia (sección 4). Activar `ARCHIVELOG` interrumpe brevemente la instancia — avisa antes de ejecutarlo si tu backend de LP2 está corriendo.
+**Orientaciones metodológicas:** el docente ejecuta cada paso en vivo contra `bomerp-oracle`; los estudiantes repiten cada paso sobre su propia instancia (sección 4). Cambiar de imagen y activar `ARCHIVELOG` interrumpen brevemente la instancia — avisa antes de ejecutarlos si tu backend de LP2 está corriendo.
 
 **Actividades para realizar:**
 
 - **3.1** Verificar el punto de partida.
-- **3.2** Activar `ARCHIVELOG` y configurar el FRA.
-- **3.3** Configurar RMAN y ejecutar el respaldo completo (*Level 0*).
-- **3.4** Generar un cambio real y ejecutar el respaldo incremental (*Level 1*).
-- **3.5** Simular un incidente y recuperar hasta un punto exacto (PITR).
-- **3.6** Verificar que la recuperación fue exacta.
-- **3.7** Respaldar `BOM_VENTAS` con Data Pump.
-- **3.8** Documentar la estrategia de respaldo.
+- **3.2** Cambiar a la imagen Oracle con `rman`.
+- **3.3** Instalar el archivo de zona horaria correcto.
+- **3.4** Activar `ARCHIVELOG` y configurar el FRA.
+- **3.5** Configurar RMAN y ejecutar el respaldo completo (*Level 0*).
+- **3.6** Generar un cambio real y ejecutar el respaldo incremental (*Level 1*).
+- **3.7** Simular un incidente y recuperar hasta un punto exacto (PITR).
+- **3.8** Verificar que la recuperación fue exacta.
+- **3.9** Respaldar `BOM_VENTAS` con Data Pump.
+- **3.10** Documentar la estrategia de respaldo.
 
 ### 3.1 Verificar el punto de partida
 
@@ -218,7 +223,7 @@ docker exec -it bomerp-oracle sqlplus / as sysdba
 SELECT LOG_MODE FROM V$DATABASE;
 ```
 
-Resultado real de esta sesión, antes de 3.2:
+Resultado real de esta sesión, antes de 3.4:
 
 ```text
 LOG_MODE
@@ -226,7 +231,100 @@ LOG_MODE
 NOARCHIVELOG
 ```
 
-### 3.2 Activar `ARCHIVELOG` y configurar el FRA
+### 3.2 Cambiar a la imagen Oracle con `rman`
+
+**Producto del paso:** `bomerp-oracle` corriendo sobre `gvenzl/oracle-free:23` (no `-slim`), con el binario `rman` disponible.
+
+```bash
+docker exec bomerp-oracle rman -v
+```
+
+```text
+OCI runtime exec failed: exec: "rman": executable file not found in $PATH
+```
+
+La imagen `slim` que `bomerp-oracle` usa desde S1 remueve explícitamente `rman` para reducir tamaño (confirmado contra `ImageDetails.md` del repositorio oficial `gvenzl/oci-oracle-free`) — `expdp`/`impdp` (Data Pump) sí están presentes en las tres variantes. Edita `lp2/bomerp-backend/compose-dev.yml`:
+
+```yaml
+services:
+  oracle:
+    image: gvenzl/oracle-free:23   # antes: gvenzl/oracle-free:23-slim
+```
+
+```bash
+docker compose -f compose-dev.yml pull oracle
+docker compose -f compose-dev.yml up -d oracle
+```
+
+```bash
+docker exec bomerp-oracle rman -v
+```
+
+Resultado real de esta sesión:
+
+```text
+Recovery Manager: Release 23.26.3.0.0 - Production
+```
+
+**Error frecuente**: esperar que el respaldo de 3.5 en adelante funcione de inmediato después de este cambio. La imagen nueva rompe, de paso, un archivo que la base ya necesitaba — 3.3 lo corrige antes de seguir; saltarse ese paso hace fallar todo lo que viene después, incluida la propia conexión de cualquier backend (LP2) a esta misma base.
+
+### 3.3 Instalar el archivo de zona horaria correcto
+
+**Producto del paso:** `V$TIMEZONE_NAMES` con datos reales — condición para que RMAN, Data Pump y cualquier aplicación conectada a `bomerp-oracle` sigan funcionando después del cambio de imagen de 3.2.
+
+```sql
+SELECT * FROM V$TIMEZONE_FILE;
+SELECT property_name, property_value FROM database_properties WHERE property_name LIKE '%VERSION%';
+```
+
+Resultado real de esta sesión:
+
+```text
+no rows selected
+
+PROPERTY_NAME                PROPERTY_VALUE
+----------------------------- ---------------
+DST_PRIMARY_TT_VERSION        45
+```
+
+El diccionario de `bomerp-oracle` espera la **versión 45** de datos de zonas horarias — la que tenía la imagen `slim` que acabas de dejar de usar. La imagen regular de 3.2 (release más nuevo) solo instala la **versión 43** (`timezlrg_43.dat`): una regresión real de empaquetado entre dos releases de `gvenzl/oracle-free`, no un defecto de "slim contra regular". Sin el archivo correcto, cualquier operación que dependa de resolver una zona horaria —`expdp` (3.9), `hibernate.ddl-auto: validate` del backend de LP2, incluso algo tan simple como `DROP USER`— falla con `ORA-01804: failure to initialize timezone information`.
+
+La imagen `slim` sigue cacheada localmente y sí trae el archivo correcto — se extrae sin red ni licencia:
+
+```bash
+cid=$(docker create --entrypoint bash gvenzl/oracle-free:23-slim -c "true")
+docker cp "$cid:/opt/oracle/product/23ai/dbhomeFree/oracore/zoneinfo/timezlrg_45.dat" ./timezlrg_45.dat
+docker rm "$cid"
+
+docker cp ./timezlrg_45.dat bomerp-oracle:/opt/oracle/product/26ai/dbhomeFree/oracore/zoneinfo/timezlrg_45.dat
+docker exec -u root bomerp-oracle chown oracle:oinstall /opt/oracle/product/26ai/dbhomeFree/oracore/zoneinfo/timezlrg_45.dat
+docker exec -u root bomerp-oracle chmod 644 /opt/oracle/product/26ai/dbhomeFree/oracore/zoneinfo/timezlrg_45.dat
+```
+
+```sql
+SHUTDOWN IMMEDIATE;
+STARTUP;
+SELECT * FROM V$TIMEZONE_FILE;
+SELECT COUNT(*) FROM V$TIMEZONE_NAMES;
+```
+
+Resultado real de esta sesión:
+
+```text
+FILENAME                 VERSION     CON_ID
+----------------------- ---------- ----------
+timezlrg_45.dat                 45          0
+
+  COUNT(*)
+----------
+      2475
+```
+
+**Error frecuente**: intentar arreglar esto bajando `DST_PRIMARY_TT_VERSION` a mano, o apuntando la variable `ORA_TZFILE` a la versión 43 que sí está instalada — ninguna de las dos es soportada por Oracle, y la segunda, verificada en esta misma instancia, deja el contenedor en *crash loop* al reiniciar. El arreglo real siempre es instalar el archivo que coincide con la versión que el diccionario ya tiene registrada, nunca cambiar la versión registrada.
+
+**Importante — esta copia no sobrevive a recrear el contenedor.** El archivo quedó en la capa del contenedor (`$ORACLE_HOME`), no en el volumen persistente (`oracle-data`, que solo cubre `/opt/oracle/oradata`). Si `bomerp-oracle` se recrea por cualquier motivo (otro cambio en `compose-dev.yml`, un `docker compose pull`), hay que repetir los tres comandos `docker cp`/`chown`/`chmod` de arriba — conserva el `timezlrg_45.dat` ya extraído para no repetir la extracción cada vez. Para dejar de depender de este paso manual, lo más limpio sería construir `bomerp-oracle` desde un `Dockerfile` propio que copie `timezlrg_45.dat` en la misma capa de imagen — no implementado todavía, pendiente si se quiere una solución permanente.
+
+### 3.4 Activar `ARCHIVELOG` y configurar el FRA
 
 **Producto del paso:** `bomerp-oracle` en `ARCHIVELOG`, con un destino de respaldo (*Fast Recovery Area*, FRA) configurado **dentro** del volumen persistente — el mismo criterio que corrigió el datafile de `TS_BOMERP` en S9: cualquier cosa que deba sobrevivir a que el contenedor se recree tiene que vivir bajo `/opt/oracle/oradata`, el único directorio que `compose-dev.yml` monta como volumen.
 
@@ -254,7 +352,7 @@ ARCHIVELOG
 docker exec bomerp-oracle mkdir -p /opt/oracle/oradata/FRA
 ```
 
-### 3.3 Configurar RMAN y ejecutar el respaldo completo (*Level 0*)
+### 3.5 Configurar RMAN y ejecutar el respaldo completo (*Level 0*)
 
 **Producto del paso:** el primer respaldo completo real de `bomerp-oracle`, con el *controlfile* respaldándose automáticamente después de cada respaldo.
 
@@ -291,7 +389,7 @@ Key  TY LV S Device Type Completion Time  Tag
 
 `PLUS ARCHIVELOG` respalda también los *redo* archivados hasta ese momento — sin ellos, el respaldo físico por sí solo no alcanzaría para ningún `RECOVER` posterior (2.4).
 
-### 3.4 Generar un cambio real y ejecutar el respaldo incremental (*Level 1*)
+### 3.6 Generar un cambio real y ejecutar el respaldo incremental (*Level 1*)
 
 **Producto del paso:** un cambio real verificable, y la evidencia de que el *Level 1* solo respalda lo que de verdad cambió.
 
@@ -322,7 +420,7 @@ channel ORA_DISK_1: backup cancelled because all files were skipped
 
 `pdbseed` (la plantilla interna de Oracle para crear nuevas PDB) no cambió desde el *Level 0* — RMAN lo detecta solo y ni siquiera abre esos datafiles para copiarlos. Los datafiles de `FREEPDB1` (donde vive `BOM_VENTAS`) sí se respaldaron, porque el `INSERT` de arriba sí los modificó.
 
-### 3.5 Simular un incidente y recuperar hasta un punto exacto (PITR)
+### 3.7 Simular un incidente y recuperar hasta un punto exacto (PITR)
 
 **Producto del paso:** un incidente real (un segundo cambio, deliberadamente posterior al que sí debe sobrevivir) y la recuperación de la base exactamente hasta el instante anterior a ese incidente.
 
@@ -351,13 +449,13 @@ RUN {
 ALTER DATABASE OPEN RESETLOGS;
 ```
 
-El punto elegido (`02:26:50`) cae **entre** el `INSERT` de 3.4 (`02:25:43`, el que debe sobrevivir) y el `INSERT` de esta sección (`02:27:01`, el "incidente" que debe descartarse) — exactamente el tipo de decisión que el escenario 2 de la Tabla 5 describe.
+El punto elegido (`02:26:50`) cae **entre** el `INSERT` de 3.6 (`02:25:43`, el que debe sobrevivir) y el `INSERT` de esta sección (`02:27:01`, el "incidente" que debe descartarse) — exactamente el tipo de decisión que el escenario 2 de la Tabla 5 describe.
 
 **Error frecuente**: elegir un `SET UNTIL TIME` anterior al último respaldo disponible. RMAN no puede reconstruir un estado para el que no tiene ni respaldo físico ni *redo* archivado que aplicar — el punto elegido debe estar siempre después del último *Level 0*/*Level 1* útil.
 
-### 3.6 Verificar que la recuperación fue exacta
+### 3.8 Verificar que la recuperación fue exacta
 
-**Producto del paso:** la prueba de que el `INSERT` de 3.4 sobrevivió y el de 3.5 no.
+**Producto del paso:** la prueba de que el `INSERT` de 3.6 sobrevivió y el de 3.7 no.
 
 ```sql
 SELECT COUNT(*) FROM BOM_VENTAS.VENTAS;
@@ -377,9 +475,9 @@ COUNT(*)
       2262 2026-11-01 02:25:43  199.9
 ```
 
-La fila de `199.90` (3.4, antes del punto de recuperación) está. La fila de `350.00` (3.5, después del punto de recuperación) no aparece — nunca existió, desde el punto de vista de la base ya recuperada. Es la prueba de que el PITR recuperó exactamente lo que debía, ni un cambio más.
+La fila de `199.90` (3.6, antes del punto de recuperación) está. La fila de `350.00` (3.7, después del punto de recuperación) no aparece — nunca existió, desde el punto de vista de la base ya recuperada. Es la prueba de que el PITR recuperó exactamente lo que debía, ni un cambio más.
 
-### 3.7 Respaldar `BOM_VENTAS` con Data Pump
+### 3.9 Respaldar `BOM_VENTAS` con Data Pump
 
 **Producto del paso:** un respaldo lógico del esquema `BOM_VENTAS`, independiente del respaldo físico de RMAN.
 
@@ -395,7 +493,7 @@ SELECT DIRECTORY_PATH FROM DBA_DIRECTORIES WHERE DIRECTORY_NAME = 'DATA_PUMP_DIR
 -- /opt/oracle/admin/FREE/dpdump/... -- fuera de /opt/oracle/oradata, fuera del volumen persistente
 ```
 
-El mismo riesgo del datafile de `TS_BOMERP` (S9) y del FRA (3.2): si el destino del respaldo no vive dentro de `/opt/oracle/oradata`, se pierde al recrear el contenedor — exactamente lo que el respaldo debía evitar.
+El mismo riesgo del datafile de `TS_BOMERP` (S9) y del FRA (3.4): si el destino del respaldo no vive dentro de `/opt/oracle/oradata`, se pierde al recrear el contenedor — exactamente lo que el respaldo debía evitar.
 
 ```bash
 docker exec bomerp-oracle mkdir -p /opt/oracle/oradata/dpdump
@@ -414,9 +512,9 @@ docker exec bomerp-oracle impdp BOM_VENTAS/123456@localhost:1521/FREEPDB1 \
   remap_schema=BOM_VENTAS:BOM_VENTAS_RESTORE
 ```
 
-**Nota real de esta sesión**: al preparar esta guía, `bomerp-oracle` devolvió `ORA-01804: failure to initialize timezone information` al ejecutar `expdp` — causado por el cambio de imagen de 3.2 (ver Anexo al final de esta sesión) y ya resuelto, sin rodeos, instalando el archivo de zonas horarias correcto. La sintaxis de Data Pump de arriba es la que de verdad se ejecutó, ya corregido el entorno.
+Funciona sin ningún error de zona horaria, porque 3.3 ya corrigió el archivo antes de llegar aquí.
 
-### 3.8 Documentar la estrategia de respaldo
+### 3.10 Documentar la estrategia de respaldo
 
 **Producto del paso:** la tabla de estrategia que 4.1 pide replicar sobre el proyecto propio, con BomERP como ejemplo ya resuelto.
 
@@ -427,12 +525,13 @@ docker exec bomerp-oracle impdp BOM_VENTAS/123456@localhost:1521/FREEPDB1 \
 | Modo de la base | `ARCHIVELOG` | Condición necesaria para PITR (2.4) — sin él, solo se puede restaurar al instante exacto del último respaldo. |
 | Respaldo completo (L0) | Semanal (en producción real; en esta sesión, al inicio de la estrategia) | Línea base desde la que parten los incrementales. |
 | Respaldo incremental (L1) | Diario | Acorta el RPO (2.6) sin pagar el costo de un L0 completo cada vez. |
-| RPO objetivo | Menor al intervalo entre dos L1 (en esta sesión, minutos — el tiempo entre 3.4 y 3.5) | Cuánto se puede perder en el peor caso, medido, no supuesto. |
-| RTO objetivo | El tiempo real que tomó `RESTORE` + `RECOVER` en 3.5-3.6 | Cuánto tiempo la base estuvo inaccesible durante la recuperación, medido. |
+| RPO objetivo | Menor al intervalo entre dos L1 (en esta sesión, minutos — el tiempo entre 3.6 y 3.7) | Cuánto se puede perder en el peor caso, medido, no supuesto. |
+| RTO objetivo | El tiempo real que tomó `RESTORE` + `RECOVER` en 3.7-3.8 | Cuánto tiempo la base estuvo inaccesible durante la recuperación, medido. |
 | Respaldo lógico complementario | Data Pump de `BOM_VENTAS`, independiente del físico | Portabilidad y recuperación selectiva de un esquema, sin depender de RMAN (2.2). |
 
 **Evidencia de aprendizaje:**
 
+- Imagen de `bomerp-oracle` con `rman` disponible, y el archivo de zonas horarias corregido (`V$TIMEZONE_NAMES` con filas reales).
 - `ARCHIVELOG` activado, verificado con `V$DATABASE`.
 - Respaldo completo (L0) y su `LIST BACKUP SUMMARY`.
 - Respaldo incremental (L1), con la evidencia real de datafiles omitidos por no haber cambiado.
@@ -450,16 +549,17 @@ Backup, recuperación y estrategia de continuidad del proyecto propio del equipo
 
 Completa y evidencia estas tareas:
 
-1. Activar `ARCHIVELOG` en tu propia instancia Oracle, con el FRA configurado dentro de tu volumen persistente.
-2. Configurar RMAN y ejecutar un respaldo completo (*Level 0*) real.
-3. Generar un cambio real sobre una tabla de tu proyecto y ejecutar un respaldo incremental (*Level 1*), verificando qué datafiles se omitieron por no haber cambiado.
-4. Simular un incidente con un segundo cambio real, y recuperar tu base exactamente hasta el punto correcto con *Point-In-Time Recovery* — demostrando que el primer cambio sobrevive y el segundo (el incidente) no.
-5. Respaldar al menos un esquema de tu proyecto con Data Pump, con su directorio dentro del volumen persistente.
-6. Documentar tu propia estrategia de respaldo (como la Tabla 6), con RTO/RPO medidos, no supuestos.
+1. Confirmar que tu propia instancia Oracle tiene `rman` disponible (o cambiar de imagen/variante si no lo tiene), y verificar que `V$TIMEZONE_NAMES` tiene filas reales antes de continuar.
+2. Activar `ARCHIVELOG` en tu propia instancia Oracle, con el FRA configurado dentro de tu volumen persistente.
+3. Configurar RMAN y ejecutar un respaldo completo (*Level 0*) real.
+4. Generar un cambio real sobre una tabla de tu proyecto y ejecutar un respaldo incremental (*Level 1*), verificando qué datafiles se omitieron por no haber cambiado.
+5. Simular un incidente con un segundo cambio real, y recuperar tu base exactamente hasta el punto correcto con *Point-In-Time Recovery* — demostrando que el primer cambio sobrevive y el segundo (el incidente) no.
+6. Respaldar al menos un esquema de tu proyecto con Data Pump, con su directorio dentro del volumen persistente.
+7. Documentar tu propia estrategia de respaldo (como la Tabla 6), con RTO/RPO medidos, no supuestos.
 
 ### 4.2 Propósito
 
-Que cada estudiante demuestre, de forma individual y fuera del aula, que puede activar `ARCHIVELOG` con criterio, ejecutar un respaldo completo e incremental reales, recuperar su base exactamente hasta un punto correcto tras un incidente simulado, y justificar su estrategia de respaldo con métricas medidas.
+Que cada estudiante demuestre, de forma individual y fuera del aula, que puede preparar su instancia para respaldar de verdad, activar `ARCHIVELOG` con criterio, ejecutar un respaldo completo e incremental reales, recuperar su base exactamente hasta un punto correcto tras un incidente simulado, y justificar su estrategia de respaldo con métricas medidas.
 
 ### 4.3 Indicaciones
 
@@ -498,7 +598,7 @@ Incluye capturas o salidas con una breve explicación debajo de cada una, organi
 
 **Error o hallazgo**
 
-Describe un error real: un `SET UNTIL TIME` elegido antes del último respaldo útil, un directorio de Data Pump fuera del volumen persistente, o cualquier otro obstáculo real que tuviste que diagnosticar.
+Describe un error real: un `SET UNTIL TIME` elegido antes del último respaldo útil, un directorio de Data Pump fuera del volumen persistente, un `ORA-01804` al cambiar de imagen, o cualquier otro obstáculo real que tuviste que diagnosticar.
 
 **Reflexión técnica breve**
 
@@ -584,7 +684,7 @@ Indica 2 fortalezas y 2 recomendaciones.
 
 Tiempo: 5 min.
 
-**Resumen breve:** hoy `bomerp-oracle` dejó de estar en `NOARCHIVELOG` — la decisión que S9 documentó pero no ejecutó, porque hasta hoy no había ninguna razón real para pagar su costo. Con `ARCHIVELOG` activo, un respaldo completo y uno incremental reales (este último con la evidencia de que de verdad omite lo que no cambió, no solo copia menos) permitieron recuperar un incidente simulado exactamente hasta el punto correcto: el cambio que debía sobrevivir sobrevivió, y el que debía descartarse se descartó — verificado con una consulta, no solo asumido. El caso de GitLab (1.6) deja la lección central: tener varios mecanismos de respaldo no garantiza que alguno funcione cuando de verdad se necesita — solo verificar la recuperación, como hizo esta sesión, lo garantiza.
+**Resumen breve:** hoy `bomerp-oracle` dejó de estar en `NOARCHIVELOG` — la decisión que S9 documentó pero no ejecutó, porque hasta hoy no había ninguna razón real para pagar su costo. Antes de eso, hizo falta cambiar de imagen para tener `rman` (3.2) y corregir, de inmediato, el archivo de zonas horarias que ese cambio rompió (3.3) — un recordatorio real de que hasta el paso más básico de preparar el entorno puede tener efectos secundarios que hay que verificar, no asumir. Con `ARCHIVELOG` activo, un respaldo completo y uno incremental reales (este último con la evidencia de que de verdad omite lo que no cambió, no solo copia menos) permitieron recuperar un incidente simulado exactamente hasta el punto correcto: el cambio que debía sobrevivir sobrevivió, y el que debía descartarse se descartó — verificado con una consulta, no solo asumido. El caso de GitLab (1.6) deja la lección central: tener varios mecanismos de respaldo no garantiza que alguno funcione cuando de verdad se necesita — solo verificar la recuperación, como hizo esta sesión, lo garantiza.
 
 **Dinámica participativa:** en una ronda rápida, cada estudiante comparte en una frase qué punto exacto eligió para su `SET UNTIL TIME`, y por qué ese y no otro.
 
@@ -599,43 +699,3 @@ Tiempo: 5 min.
 3. Oracle Corporation. (2024b). *Oracle Data Pump*. Oracle Database Utilities. https://docs.oracle.com/en/database/oracle/oracle-database/19/sutil/oracle-data-pump.html
 4. Oracle Corporation. (2024c). *Performing Incremental Backups*. Oracle Database Backup and Recovery User's Guide. https://docs.oracle.com/en/database/oracle/oracle-database/19/bradv/rman-incremental-backups.html
 5. Oracle Corporation. (2024d). *Performing Point-in-Time Recovery*. Oracle Database Backup and Recovery User's Guide. https://docs.oracle.com/en/database/oracle/oracle-database/19/bradv/rman-performing-complete-database-recovery.html
-
-## Anexo: `ORA-01804` en `bomerp-oracle` — causado por el cambio de imagen de este Anexo, y resuelto
-
-**Síntoma:** `expdp` falla con `ORA-39126`/`ORA-01804: failure to initialize timezone information`; el mismo error puede aparecer en `DROP USER`, y en el backend de LP2, tanto al conectar como al validar su esquema (`hibernate.ddl-auto: validate`).
-
-**Causa real, confirmada — sí la causó el cambio de imagen de esta sesión (3.2).** El diccionario de `bomerp-oracle` tiene registrado `DST_PRIMARY_TT_VERSION = 45`:
-
-```sql
-SELECT property_name, property_value FROM database_properties WHERE property_name LIKE '%VERSION%';
--- DST_PRIMARY_TT_VERSION = 45
-```
-
-La imagen `gvenzl/oracle-free:23-slim` que `bomerp-oracle` usaba **antes** de esta sesión (release `23.26.2.0.0`, ya cacheada localmente) sí trae instalado `$ORACLE_HOME/oracore/zoneinfo/timezlrg_45.dat` — la versión exacta que el diccionario espera. La imagen `:23` (regular, release `23.26.3.0.0`) a la que se cambió en 3.2 para tener `rman` es un release **más nuevo que retrocedió el archivo instalado a la versión 43** (`timezlrg_43.dat`) — una regresión real de empaquetado entre dos releases de `gvenzl/oracle-free`, no algo inherente a "slim vs. regular". Por eso `V$TIMEZONE_FILE`/`V$TIMEZONE_NAMES` aparecían vacíos recién después del cambio de imagen: la base nunca tuvo el defecto antes.
-
-**Resuelto, sin archivo de My Oracle Support.** La imagen `slim` con el archivo correcto seguía cacheada localmente (`docker images gvenzl/oracle-free`):
-
-```bash
-# Extraer el archivo correcto de la imagen vieja, cacheada localmente (sin red, sin licencia)
-cid=$(docker create --entrypoint bash gvenzl/oracle-free:23-slim -c "true")
-docker cp "$cid:/opt/oracle/product/23ai/dbhomeFree/oracore/zoneinfo/timezlrg_45.dat" ./timezlrg_45.dat
-docker rm "$cid"
-
-# Instalarlo en el contenedor actual (imagen regular, con rman)
-docker cp ./timezlrg_45.dat bomerp-oracle:/opt/oracle/product/26ai/dbhomeFree/oracore/zoneinfo/timezlrg_45.dat
-docker exec -u root bomerp-oracle chown oracle:oinstall /opt/oracle/product/26ai/dbhomeFree/oracore/zoneinfo/timezlrg_45.dat
-docker exec -u root bomerp-oracle chmod 644 /opt/oracle/product/26ai/dbhomeFree/oracore/zoneinfo/timezlrg_45.dat
-```
-
-```sql
-SHUTDOWN IMMEDIATE;
-STARTUP;
-SELECT * FROM V$TIMEZONE_FILE;      -- timezlrg_45.dat, versión 45
-SELECT COUNT(*) FROM V$TIMEZONE_NAMES;  -- 2475 (antes: 0)
-```
-
-Verificado: `hibernate.ddl-auto: validate` y Data Pump vuelven a funcionar normal, sin ningún rodeo de cliente (ni `timezoneAsRegion=false`, ni `ddl-auto: none`).
-
-**Importante — esta copia no sobrevive a recrear el contenedor.** El archivo quedó en la capa del contenedor (`$ORACLE_HOME`), no en el volumen persistente (`oracle-data`, que solo cubre `/opt/oracle/oradata`). Si `bomerp-oracle` se recrea (`docker compose up -d` después de cambiar `compose-dev.yml`, o un `docker compose pull`), hay que repetir los tres comandos `docker cp`/`chown`/`chmod` de arriba — el archivo extraído puede guardarse una vez y reusarse. Para que esto deje de ser un paso manual, lo más limpio sería construir `bomerp-oracle` desde un `Dockerfile` propio que parta de `gvenzl/oracle-free:23` y copie `timezlrg_45.dat` en la misma capa de imagen — no implementado todavía, pendiente si se quiere una solución permanente.
-
-**Error frecuente**: intentar arreglar esto bajando `DST_PRIMARY_TT_VERSION` a mano o con `ORA_TZFILE` apuntando a la versión 43 — no es soportado por Oracle y, verificado en esta misma instancia, deja el contenedor en *crash loop* al reiniciar. El arreglo real siempre es instalar el archivo que coincide con la versión que el diccionario ya tiene registrada, nunca cambiar la versión registrada.

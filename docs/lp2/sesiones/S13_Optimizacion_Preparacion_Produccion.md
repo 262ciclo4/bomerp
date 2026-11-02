@@ -36,7 +36,7 @@ Evidencia de Lazy Loading real por ruta (`ng build` con estadísticas de *chunks
 | Actividades a Realizar en el Periodo | Orientaciones generales (Orientaciones Metodológicas) | Material de estudio recomendado |
 |---|---|---|
 | Revisión previa individual | Confirmar que `lp2/bomerp-backend` y `lp2/bomerp-frontend` siguen arrancando en DEV (S1-S11). Revisar `application.yml` (S1, 3.9) y confirmar que `profiles.active: dev` sigue ahí. Trabajo individual, antes de clase. | S1 (3.9), S9 (`environment.ts`), S10b (`compose-dev.yml` de Keycloak). |
-| Clase presencial | Medición guiada del bundle actual, configuración de presupuestos, `Cache-Control` sobre un endpoint real, decisión medida sobre Redis, ajuste de logging y Actuator por perfil, y construcción de `application-prod.yml`/`environment.prod.ts`. Trabajo individual en la propia laptop, siguiendo al docente paso a paso. | Contenedores y servicios de S1-S11 corriendo, Pasos 3.1 a 3.10 de esta guía. |
+| Clase presencial | Medición guiada del bundle actual, configuración de presupuestos, `Cache-Control` sobre un endpoint real, decisión medida sobre Redis, ajuste de logging y Actuator por perfil, y construcción de `application-prod.yml`/`environment.prod.ts`. Trabajo individual en la propia laptop, siguiendo al docente paso a paso. | Contenedores y servicios de S1-S11 corriendo, Pasos 3.1 a 3.11 de esta guía. |
 | Evaluación formativa | Revisión en clase del build de producción corriendo localmente, con `Cache-Control` verificado en el navegador y `/actuator` restringido en el perfil `prod`. La evidencia se completa y sustenta de forma individual, fuera del aula, según los criterios mínimos de la sección 4.4. | Indicaciones de entrega (4.3), rúbrica de evaluación (4.6). |
 
 El cierre real de S12, construido con las respuestas del Anexo de feedback de esa sesión, se entrega al inicio de esta clase.
@@ -210,7 +210,7 @@ Un **ambiente de producción** no es "la misma configuración de DEV en otra má
 | Actuator expuesto | Lista amplia | Lista mínima (2.6) |
 | URL del backend en la SPA (`environment.ts`, S9) | `http://localhost:8080` | La URL real del servidor de producción |
 | Build de Angular | `ng serve` (sin optimizar, recarga en caliente) | `ng build --configuration production` (minificado, *tree-shaking*, sin *source maps* públicos) |
-| Cómo arranca el backend | `mvnw spring-boot:run` (recompila y corre directo desde el código fuente) | Imagen Docker ya construida (`Dockerfile`, 3.8), arrancada con `docker compose -f compose-prod.yml up` |
+| Cómo arranca el backend | `mvnw spring-boot:run` (recompila y corre directo desde el código fuente) | Imagen Docker ya construida (`Dockerfile`, 3.9), arrancada con `docker compose up` (`compose.yml`, sin sufijo — el nombre que Docker Compose toma por defecto, sin pasar `-f`) |
 
 Una variable que sí viaja en el archivo (como `ddl-auto` o el nivel de log) no es un secreto; una contraseña, una clave de API o un *secret* de firma de JWT **nunca** se escribe directo en un archivo `.yml` que vive en el repositorio — se lee desde una variable de entorno del sistema operativo o del contenedor (`${VARIABLE}` en la sintaxis de Spring), siguiendo el mismo principio de mínimo privilegio que BD2 ya aplicó a los usuarios de Oracle.
 
@@ -229,15 +229,16 @@ Tiempo: 120 min.
 **Actividades para realizar:**
 
 - **3.1** Verificar el punto de partida.
-- **3.2** Medir el bundle actual y confirmar Lazy Loading real.
-- **3.3** Configurar presupuestos de bundle.
-- **3.4** Aplicar `Cache-Control` a un endpoint real.
-- **3.5** Medir y decidir sobre Redis.
-- **3.6** Ajustar logging por perfil.
-- **3.7** Asegurar Actuator para producción.
-- **3.8** Construir `application-prod.yml` y `environment.prod.ts`.
-- **3.9** Ejecutar el build de producción y verificar de punta a punta.
-- **3.10** Relacionar con ADS y BD2.
+- **3.2** Verificar y asegurar la conexión a `bomerp-oracle`.
+- **3.3** Medir el bundle actual y confirmar Lazy Loading real.
+- **3.4** Configurar presupuestos de bundle.
+- **3.5** Aplicar `Cache-Control` a un endpoint real.
+- **3.6** Medir y decidir sobre Redis.
+- **3.7** Ajustar logging por perfil.
+- **3.8** Asegurar Actuator para producción.
+- **3.9** Construir la configuración de producción completa: backend, Oracle, Keycloak y Redis.
+- **3.10** Ejecutar el build de producción y verificar de punta a punta.
+- **3.11** Relacionar con ADS y BD2.
 
 ### 3.1 Verificar el punto de partida
 
@@ -272,7 +273,105 @@ ng serve
 
 Confirma `http://localhost:8080/actuator/health` (`UP`) y `http://localhost:4200` (la SPA carga con el login de Keycloak, S11).
 
-### 3.2 Medir el bundle actual y confirmar Lazy Loading real
+### 3.2 Verificar y asegurar la conexión a `bomerp-oracle`
+
+**Producto del paso:** `bomerp-oracle` en la imagen con `rman` que BD2 S13 necesita (objetivo del cambio: BD2 respalda la base con RMAN esa misma semana, algo que la imagen `slim` no soporta) y `bomerp-backend` conectando sin error contra esa imagen — condición para todo lo que sigue, incluido el build de producción de 3.10.
+
+`bomerp-oracle` es un único contenedor compartido entre ADS, BD2 y LP2 — lo que cambie cualquiera de los tres lo sienten los demás. BD2, en su propia S13 (misma semana), cambia la imagen de `bomerp-oracle` (de `gvenzl/oracle-free:23-slim` a `:23`, para tener `rman`), y ese cambio rompe, de entrada, la conexión de *cualquier* backend contra esa misma base, incluido `bomerp-backend` — no todos los integrantes del equipo llevan los dos cursos, así que este paso no puede depender de que alguien haya leído la guía de BD2.
+
+Confirma primero que `lp2/bomerp-backend/compose-dev.yml` ya tiene la imagen que trae `rman` (si tu equipo tiene integrante de BD2, puede que ya la haya cambiado; si no, hazlo tú mismo — es el mismo archivo):
+
+```yaml
+services:
+  oracle:
+    image: gvenzl/oracle-free:23   # antes: gvenzl/oracle-free:23-slim
+    container_name: bomerp-oracle
+    ...
+    environment:
+      ...
+      TZ: America/Lima
+```
+
+Si tuviste que cambiarla, aplícala:
+
+```powershell
+cd lp2/bomerp-backend
+docker compose -f compose-dev.yml pull
+docker compose -f compose-dev.yml up -d
+```
+
+Y confirma que `src/main/resources/application-dev.yml` sigue exactamente como quedó en S1 — **no hay nada que cambiar aquí**, ningún parámetro de cliente arregla lo que viene a continuación:
+
+```yaml
+spring:
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1521/FREEPDB1
+  jpa:
+    hibernate:
+      ddl-auto: validate
+```
+
+Si el arranque de 3.1 falló, o si en cualquier punto posterior de esta sesión aparece este error:
+
+```text
+ORA-01804: failure to initialize timezone information
+```
+
+— tanto al conectar como más adelante en `hibernate.ddl-auto: validate` (3.9) — no es un problema de tu configuración de LP2, y no se arregla ahí. Diagnostica primero, dentro de una sesión de `sqlplus`:
+
+```powershell
+docker exec -it bomerp-oracle sqlplus / as sysdba
+```
+
+```sql
+SELECT * FROM V$TIMEZONE_FILE;
+SELECT property_name, property_value FROM database_properties WHERE property_name LIKE '%VERSION%';
+```
+
+Si `V$TIMEZONE_FILE` no devuelve filas y `DST_PRIMARY_TT_VERSION = 45`: la base espera la versión 45 de datos de zonas horarias, pero la imagen de Oracle que BD2 cambió solo trae instalada la versión 43 — una regresión real entre releases de `gvenzl/oracle-free`, no un defecto de tu proyecto. El arreglo, verificado, sin ningún archivo con licencia de Oracle (la imagen `slim` anterior, que sí trae la versión correcta, suele seguir cacheada localmente):
+
+```bash
+cid=$(docker create --entrypoint bash gvenzl/oracle-free:23-slim -c "true")
+docker cp "$cid:/opt/oracle/product/23ai/dbhomeFree/oracore/zoneinfo/timezlrg_45.dat" ./timezlrg_45.dat
+docker rm "$cid"
+
+docker cp ./timezlrg_45.dat bomerp-oracle:/opt/oracle/product/26ai/dbhomeFree/oracore/zoneinfo/timezlrg_45.dat
+docker exec -u root bomerp-oracle chown oracle:oinstall /opt/oracle/product/26ai/dbhomeFree/oracore/zoneinfo/timezlrg_45.dat
+docker exec -u root bomerp-oracle chmod 644 /opt/oracle/product/26ai/dbhomeFree/oracore/zoneinfo/timezlrg_45.dat
+```
+
+Vuelve a `sqlplus` (si saliste de la sesión anterior, ábrela de nuevo) y reinicia solo la instancia, no el contenedor:
+
+```powershell
+docker exec -it bomerp-oracle sqlplus / as sysdba
+```
+
+```sql
+SHUTDOWN IMMEDIATE;
+STARTUP;
+SELECT * FROM V$TIMEZONE_FILE;          -- debe mostrar timezlrg_45.dat
+SELECT COUNT(*) FROM V$TIMEZONE_NAMES;  -- debe ser > 0 (antes: 0)
+```
+
+Resultado real de esta sesión:
+
+```text
+FILENAME                 VERSION     CON_ID
+----------------------- ---------- ----------
+timezlrg_45.dat                 45          0
+
+  COUNT(*)
+----------
+      2475
+```
+
+Vuelve a intentar 3.1 (o la petición que te falló): debe conectar sin error.
+
+**Error frecuente**: intentar arreglar esto bajando `DST_PRIMARY_TT_VERSION` a mano, o apuntando la variable `ORA_TZFILE` a la versión 43 que sí está instalada — ninguna de las dos es soportada por Oracle, y la segunda deja el contenedor en *crash loop* al reiniciar (verificado). El arreglo real siempre es instalar el archivo que coincide con la versión que el diccionario ya tiene registrada.
+
+**Este arreglo se hace una sola vez por sesión del contenedor, no se repite más adelante.** Una vez verificado aquí, tanto el backend en `dev` (el resto de esta guía) como el contenedor de producción que construyes en 3.9-3.10 se conectan a la misma instancia ya corregida — no hace falta volver a tocar esto al llegar a `prod`. Si el contenedor se recrea en algún momento (otro cambio en `compose-dev.yml`, un `docker compose pull`), repite los tres comandos `docker cp`/`chown`/`chmod` de arriba; el archivo extraído puede guardarse y reusarse, sin tener que extraerlo de la imagen `slim` otra vez. Diagnóstico completo, si lo necesitas: [BD2 S13, pasos 3.2-3.3](../../bd2/sesiones/S13_Backup_Recovery_RMAN.md#32-cambiar-a-la-imagen-oracle-con-rman).
+
+### 3.3 Medir el bundle actual y confirmar Lazy Loading real
 
 **Producto del paso:** evidencia real de que cada *feature* de la SPA se descarga como un *chunk* separado, no todo de una vez.
 
@@ -289,7 +388,7 @@ Ahora confírmalo en vivo, en el navegador: abre `http://localhost:4200` con las
 
 **Error frecuente**: medir el bundle con `ng serve` (modo desarrollo). `ng serve` no aplica las mismas optimizaciones que `ng build --configuration production` (minificación, *tree-shaking*) — el tamaño que ves en DEV no representa el tamaño real que descargaría un usuario en producción.
 
-### 3.3 Configurar presupuestos de bundle
+### 3.4 Configurar presupuestos de bundle
 
 **Producto del paso:** `angular.json` con un límite de tamaño que hace fallar el build si una ruta crece sin control.
 
@@ -312,11 +411,17 @@ En `angular.json`, dentro de la configuración `production` del proyecto, agrega
 
 `initial` mide el *chunk* que se descarga al abrir la aplicación por primera vez (antes de cualquier Lazy Loading) — ese es el que de verdad afecta cuánto espera un usuario nuevo. Vuelve a correr `ng build --configuration production`: si algún *chunk* supera `maximumError`, el build falla con el archivo y el tamaño exacto que lo causó — una alerta temprana, no un descubrimiento tardío en producción.
 
-### 3.4 Aplicar `Cache-Control` a un endpoint real
+### 3.5 Aplicar `Cache-Control` a un endpoint real
 
 **Producto del paso:** `GET /api/v1/categorias` respondiendo con una cabecera `Cache-Control` real, verificada en el navegador.
 
 En `CategoriaController` (S7), agrega la cabecera a la respuesta del listado:
+
+```java
+// imports nuevos
+import org.springframework.http.CacheControl;
+import java.time.Duration;
+```
 
 ```java
 @GetMapping
@@ -328,11 +433,37 @@ public ResponseEntity<List<CategoriaResponse>> listar() {
 }
 ```
 
-`CacheControl.maxAge(...)` (de `org.springframework.http.CacheControl`) arma la cabecera por ti, sin construir el texto a mano. Verifica en el navegador: con las herramientas de desarrollo abiertas, pestaña **Network**, recarga `CategoriaList` y revisa la respuesta de `/api/v1/categorias` — la cabecera `Cache-Control: max-age=300` debe aparecer, y una segunda petición dentro de esos 5 minutos no debería generar una llamada de red nueva (aparece marcada como servida desde caché).
+`CacheControl.maxAge(...)` (de `org.springframework.http.CacheControl`) arma la cabecera por ti, sin construir el texto a mano.
+
+Agrega también un log en `CategoriaServiceImpl.listar()` — evidencia del lado del servidor, más confiable que mirar solo el navegador, porque prueba algo que el navegador no puede probar por sí solo: que el backend **nunca llegó a recibir** la segunda petición.
+
+```java
+// imports nuevos
+import lombok.extern.slf4j.Slf4j;
+```
+
+```java
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class CategoriaServiceImpl implements CategoriaService {
+    ...
+    @Override
+    @Transactional(readOnly = true)
+    public List<CategoriaResponse> listar() {
+        log.info("Listando categorías - consulta real a la base");
+        return categoriaRepository.findAll().stream().map(categoriaMapper::toResponse).toList();
+    }
+```
+
+Verifica con dos fuentes, no solo una:
+
+- **Navegador**: con las herramientas de desarrollo abiertas, pestaña **Network**, haz clic en la petición `categorias` → sub-pestaña **Headers** → **Response Headers**: la cabecera `Cache-Control: max-age=300` debe aparecer ahí. Recarga `CategoriaList` una segunda vez dentro de esos 5 minutos: la fila de la petición sigue apareciendo en la lista, pero su **Size**/**Time** dice `(disk cache)` o `(memory cache)` en vez de un tamaño real — el navegador nunca fue a la red.
+- **Terminal del backend** (`mvnw spring-boot:run`): la primera carga imprime `Listando categorías - consulta real a la base`. La segunda carga, dentro de los 5 minutos, **no imprime nada nuevo** — confirmación directa de que la petición nunca llegó al servidor, no solo una inferencia a partir de lo que muestra el navegador.
 
 **Error frecuente**: aplicar la misma cabecera a `VentaController.crear()` o a cualquier endpoint que escribe datos (`POST`/`PUT`/`DELETE`). `Cache-Control` solo tiene sentido sobre respuestas de lectura (`GET`) — cachear la respuesta de una escritura no tiene ningún efecto útil y puede confundir a quien revise el comportamiento más adelante.
 
-### 3.5 Medir y decidir sobre Redis
+### 3.6 Medir y decidir sobre Redis
 
 **Producto del paso:** una decisión documentada sobre Redis para tu propio proyecto — implementado y justificado, o descartado con la medición que lo sustenta.
 
@@ -355,6 +486,16 @@ Agrega Redis a `lp2/bomerp-backend/compose-dev.yml` (mismo criterio de puertos q
     container_name: bomerp-redis-dev
     ports:
       - "36379:6379"
+```
+
+El backend corre fuera de Docker (`mvnw`, S1), así que se conecta por el puerto publicado en el host, no por el nombre del servicio. En `application-dev.yml`:
+
+```yaml
+spring:
+  data:
+    redis:
+      host: localhost
+      port: 36379
 ```
 
 Habilita el caché y anota el método a cachear:
@@ -381,9 +522,23 @@ public CategoriaResponse crear(CategoriaRequest request) {
 }
 ```
 
-**Si la medición no lo justifica**, documenta la decisión igual (el número medido en 3.5, y por qué no alcanza para justificar una pieza nueva de infraestructura) — es una entrega tan válida como implementarlo (2.4).
+Verifica con dos fuentes, no solo una — el mismo criterio de 3.5:
 
-### 3.6 Ajustar logging por perfil
+- **El log de 3.5, reutilizado sin tocarlo**: `@Cacheable` envuelve `listar()` con un *proxy* — en un *cache hit*, la llamada nunca entra al cuerpo del método, así que `log.info("Listando categorías - consulta real a la base")` tampoco se ejecuta. Primera carga: aparece el log. Segunda carga, antes de cualquier escritura: no aparece nada — la misma evidencia de 3.5, ahora probando algo distinto (que ni siquiera Oracle fue consultada, no solo que el navegador no viajó a la red).
+- **Dentro de Redis directamente**, no solo inferido desde el backend:
+
+```bash
+docker exec -it bomerp-redis-dev redis-cli KEYS "*"
+docker exec -it bomerp-redis-dev redis-cli GET "categorias::SimpleKey []"
+```
+
+La primera confirma que existe una entrada bajo el caché `categorias`; la segunda muestra el valor serializado real que Redis está sirviendo. Después de `crear()` (que dispara `@CacheEvict`), repite `KEYS "*"` — la entrada debe haber desaparecido.
+
+**Error frecuente**: verificar Redis solo con el log o solo con `KEYS`, nunca con los dos. El log prueba que el método no se ejecutó; `KEYS`/`GET` prueba que el dato efectivamente vive en Redis y no en memoria de otra forma (ej. un caché de Hibernate de primer nivel, que no sobrevive entre peticiones HTTP distintas y no es lo que esta sesión mide).
+
+**Si la medición no lo justifica**, documenta la decisión igual (el número medido en 3.6, y por qué no alcanza para justificar una pieza nueva de infraestructura) — es una entrega tan válida como implementarlo (2.4).
+
+### 3.7 Ajustar logging por perfil
 
 **Producto del paso:** `logback-spring.xml` con `DEBUG` en `dev` e `INFO` en `prod`, verificado con el mismo log real en los dos perfiles.
 
@@ -405,9 +560,9 @@ Arranca en `dev` (como siempre, S1) y confirma el volumen del log al ejecutar el
 .\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=dev"
 ```
 
-La comparación contra `prod` se hace en 3.9, sobre el contenedor real — `mvnw spring-boot:run` es una herramienta de desarrollo (recompila y arranca directo desde el código fuente); no es como corre un `prod` real, que arranca desde un JAR ya empaquetado dentro de una imagen Docker.
+La comparación contra `prod` se hace en 3.10, sobre el contenedor real — `mvnw spring-boot:run` es una herramienta de desarrollo (recompila y arranca directo desde el código fuente); no es como corre un `prod` real, que arranca desde un JAR ya empaquetado dentro de una imagen Docker.
 
-### 3.7 Asegurar Actuator para producción
+### 3.8 Asegurar Actuator para producción
 
 **Producto del paso:** `/actuator/env` y `/actuator/heapdump` accesibles en `dev`, bloqueados en `prod`.
 
@@ -421,7 +576,7 @@ management:
         include: "*"
 ```
 
-En `application-prod.yml` (3.8, nuevo hoy):
+En `application-prod.yml` (3.9, nuevo hoy):
 
 ```yaml
 management:
@@ -431,23 +586,45 @@ management:
         include: health,info
 ```
 
-La verificación real (`curl http://localhost:8080/actuator/env` → `404`) se hace en 3.9, sobre el contenedor de `prod` — la misma protección por omisión que el caso de 1.6.1 describe, aplicada explícitamente en tu propio `application-prod.yml`, no heredada por accidente.
+La verificación real (`curl http://localhost:48088/actuator/env` → `404`) se hace en 3.10, sobre el contenedor de `prod` — la misma protección por omisión que el caso de 1.6.1 describe, aplicada explícitamente en tu propio `application-prod.yml`, no heredada por accidente.
 
-### 3.8 Construir `application-prod.yml`, `environment.prod.ts` y el `Dockerfile` del backend
+### 3.9 Construir la configuración de producción completa: backend, Oracle, Keycloak y Redis
 
-**Producto del paso:** la configuración de producción real, con secretos leídos de variables de entorno, y la imagen Docker que empaqueta `bomerp-backend` para correr como correría de verdad — nunca con `mvnw`.
+**Producto del paso:** la configuración de producción real, con secretos leídos de variables de entorno; la imagen Docker que empaqueta `bomerp-backend` para correr como correría de verdad (nunca con `mvnw`); y un stack de infraestructura propio de `prod` — Oracle, Keycloak y Redis separados de los de `dev`, con su propio esquema y su propio realm, corriendo en paralelo sin chocar puertos.
 
-`lp2/bomerp-backend/src/main/resources/application-prod.yml`:
+**Puertos: `dev` y `prod` corren al mismo tiempo, en la misma laptop — ningún puerto se repite.**
+
+**Tabla 8. Puertos de `dev` frente a `prod`**
+
+| Servicio | DEV (ya existe) | PROD (nuevo, prefijo `4` en vez de `3`) |
+|---|---|---|
+| Oracle (listener) | `1521` | `41521` |
+| Oracle (Enterprise Manager Express) | `5500` | `45500` |
+| Keycloak-DB (Postgres interno de Keycloak) | `35432` | `45432` |
+| Keycloak | `38080` | `48080` |
+| Redis | `36379` | `46379` |
+| `bomerp-backend` | `8080` (`mvnw`, sin Docker) | `48088` (no `48080` — chocaría con Keycloak, que también parte de `8080` por defecto) |
+
+`lp2/bomerp-backend/src/main/resources/application-prod.yml` (completo — incluye Redis, si 3.6 lo justificó para tu proyecto; si no, omite el bloque `data.redis`). Ningún dato de conexión va escrito directo en el YAML — todo llega por variable de entorno, el mismo criterio que `pagatu-catalogo-ms-prod.yml` ya aplica en `infra/pagatu-config/config-repo` (ahí hasta `DB_HOST`/`DB_PORT`/`DB_NAME` son `${...}`, no solo usuario/contraseña):
 
 ```yaml
 spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://${KEYCLOAK_HOST}:${KEYCLOAK_PORT}/realms/bomerp
   datasource:
-    url: jdbc:oracle:thin:@${DB_HOST:localhost}:1521/FREEPDB1
+    url: jdbc:oracle:thin:@${DB_HOST}:${DB_PORT}/${DB_NAME}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: validate
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
 management:
   endpoints:
     web:
@@ -455,7 +632,9 @@ management:
         include: health,info
 ```
 
-`lp2/bomerp-backend/Dockerfile` (*multi-stage*: compila en una imagen con Maven, y el contenedor final solo lleva el JAR ya construido y el JRE, sin el código fuente ni Maven):
+Los valores en sí — a dónde apunta cada variable — los define `compose.yml`, no `application-prod.yml`: `DB_HOST`/`DB_PORT`/`DB_NAME`/`REDIS_HOST`/`REDIS_PORT`/`KEYCLOAK_HOST`/`KEYCLOAK_PORT` son estables (nombres de servicio y puertos internos, no secretos), así que van escritos directo en `compose.yml`; solo `DB_USERNAME`/`DB_PASSWORD` siguen viniendo de `.env` — igual que en `pagatu-catalogo-ms`, donde `DB_HOST`/`DB_PORT` están fijos en `compose.yml` pero `DB_NAME`/`DB_USER`/`DB_PASS` sí vienen de `.env`.
+
+`lp2/bomerp-backend/Dockerfile` (*multi-stage*: compila en una imagen con Maven, y el contenedor final solo lleva el JAR ya construido y el JRE, sin el código fuente ni Maven) — sin cambios:
 
 ```dockerfile
 FROM maven:3.9-eclipse-temurin-21 AS build
@@ -470,31 +649,171 @@ EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
 ```
 
-`lp2/bomerp-backend/compose-prod.yml` — el backend corre en su propio contenedor, pero reutiliza el mismo Oracle y el mismo Keycloak que `compose-dev.yml` ya levantó (S1, S10b): `host.docker.internal` es el mismo mecanismo que `obs/prometheus` ya usa, al revés, para llegar desde Docker hasta un proceso que corre fuera de Docker (S4) — aquí lo usa el backend, ya adentro de Docker, para llegar a los contenedores de infraestructura publicados en el host:
+`lp2/bomerp-backend/compose.yml` (sin sufijo — es PROD; solo DEV lleva sufijo, `compose-dev.yml`, el mismo criterio que pagatu ya usa en `pagatu-catalogo-ms`: el nombre sin sufijo es el que Docker Compose toma por defecto, así `prod` arranca con un simple `docker compose up`, sin `-f`). Completo — Oracle, Keycloak-DB, Keycloak, Redis (si tu proyecto lo implementó en 3.6; si no, quita el servicio `redis` y `REDIS_HOST`/`REDIS_PORT` del backend, y el bloque `data.redis` de `application-prod.yml`) y el backend, los cinco en el mismo archivo, con nombres de contenedor, volúmenes y puertos propios de `prod`, ninguno compartido con `dev`:
 
 ```yaml
 services:
+  oracle:
+    image: gvenzl/oracle-free:23
+    container_name: bomerp-oracle-prod
+    restart: unless-stopped
+    ports:
+      - "41521:1521"
+      - "45500:5500"
+    environment:
+      ORACLE_PASSWORD: 123456
+      APP_USER: BOMERP_APP
+      APP_USER_PASSWORD: 123456
+      TZ: America/Lima
+    volumes:
+      - oracle-data-prod:/opt/oracle/oradata
+    healthcheck:
+      test: ["CMD", "healthcheck.sh"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+
+  keycloak-db:
+    image: postgres:17-alpine
+    container_name: bomerp-keycloak-db-prod
+    restart: unless-stopped
+    ports:
+      - "45432:5432"
+    environment:
+      POSTGRES_DB: bomerp_keycloak
+      POSTGRES_USER: bomerp_keycloak
+      POSTGRES_PASSWORD: 123456
+    volumes:
+      - keycloak-db-data-prod:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bomerp_keycloak -d bomerp_keycloak"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.8.0
+    container_name: bomerp-keycloak-prod
+    restart: unless-stopped
+    command: start-dev --import-realm
+    depends_on:
+      keycloak-db:
+        condition: service_healthy
+    ports:
+      - "48080:8080"
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin123
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloak-db:5432/bomerp_keycloak
+      KC_DB_USERNAME: bomerp_keycloak
+      KC_DB_PASSWORD: 123456
+    volumes:
+      - keycloak-data-prod:/opt/keycloak/data
+      - ./keycloak-import:/opt/keycloak/data/import
+
+  redis:
+    image: redis:7.4-alpine
+    container_name: bomerp-redis-prod
+    restart: unless-stopped
+    ports:
+      - "46379:6379"
+
   bomerp-backend:
     build: .
     container_name: bomerp-backend-prod
+    restart: unless-stopped
+    depends_on:
+      oracle:
+        condition: service_healthy
+      keycloak-db:
+        condition: service_healthy
     ports:
-      - "8080:8080"
+      - "48088:8080"
     environment:
       SPRING_PROFILES_ACTIVE: prod
-      DB_HOST: host.docker.internal
+      DB_HOST: oracle
+      DB_PORT: 1521
+      DB_NAME: FREEPDB1
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      KEYCLOAK_HOST: keycloak
+      KEYCLOAK_PORT: 8080
+
+volumes:
+  oracle-data-prod:
+  keycloak-data-prod:
+  keycloak-db-data-prod:
 ```
 
-`extra_hosts` hace que `host.docker.internal` resuelva también en Linux (en Docker Desktop para Windows/macOS ya resuelve solo) — la recomendación oficial de Docker para este mismo caso (Docker Inc., 2024).
+Ya no hace falta `extra_hosts`/`host.docker.internal` — ese mecanismo solo era necesario para llegar desde un contenedor hasta un proceso fuera de Docker (como hace `obs/prometheus`, S4); aquí Oracle, Keycloak y Redis están **dentro** del mismo `compose.yml` que el backend, así que Docker los resuelve por nombre de servicio solo.
+
+**Poblar el Oracle de `prod` con el esquema y los datos reales** — un contenedor nuevo arranca con la base vacía; no alcanza con que exista, tiene que tener `BOM_CATALOGO` y `BOM_VENTAS`, igual que `dev`. Primero, levanta el stack (sin el backend todavía, para no competir con Oracle arrancando):
+
+```bash
+cd lp2/bomerp-backend
+docker compose up -d oracle keycloak-db keycloak redis
+```
+
+Espera a que `bomerp-oracle-prod` esté `healthy` (`docker ps`, columna `STATUS`) — igual que en S9, el primer arranque de un Oracle nuevo tarda varios minutos. Mientras tanto, exporta ambos esquemas desde el Oracle de `dev` (uno solo, con los dos juntos):
+
+```sql
+-- dentro de: docker exec -it bomerp-oracle sqlplus system/123456@localhost:1521/FREEPDB1
+CREATE OR REPLACE DIRECTORY BOMERP_DPDUMP AS '/opt/oracle/oradata/dpdump';
+```
+
+```bash
+docker exec bomerp-oracle mkdir -p /opt/oracle/oradata/dpdump
+docker exec bomerp-oracle expdp system/123456@localhost:1521/FREEPDB1 \
+  schemas=BOM_CATALOGO,BOM_VENTAS directory=BOMERP_DPDUMP dumpfile=bomerp_prod_seed.dmp logfile=bomerp_prod_seed_exp.log
+```
+
+Copia el dump del contenedor de `dev` al host, y del host al contenedor de `prod`:
+
+```bash
+docker cp bomerp-oracle:/opt/oracle/oradata/dpdump/bomerp_prod_seed.dmp ./bomerp_prod_seed.dmp
+docker exec bomerp-oracle-prod mkdir -p /opt/oracle/oradata/dpdump
+docker cp ./bomerp_prod_seed.dmp bomerp-oracle-prod:/opt/oracle/oradata/dpdump/bomerp_prod_seed.dmp
+```
+
+En el Oracle de `prod`, crea los esquemas (los mismos scripts reales de BD2 S1/S4 — `BOMERP_APP` no se vuelve a crear, ya lo creó `APP_USER` de la imagen) y el `DIRECTORY`, luego importa:
+
+```sql
+-- dentro de: docker exec -it bomerp-oracle-prod sqlplus system/123456@localhost:1521/FREEPDB1
+CREATE USER BOM_CATALOGO IDENTIFIED BY "123456" QUOTA UNLIMITED ON USERS;
+GRANT CREATE SESSION, CREATE TABLE, CREATE VIEW, CREATE PROCEDURE, CREATE TRIGGER TO BOM_CATALOGO;
+
+CREATE USER BOM_VENTAS IDENTIFIED BY "123456" QUOTA UNLIMITED ON USERS;
+GRANT CREATE SESSION, CREATE TABLE, CREATE VIEW, CREATE PROCEDURE, CREATE TRIGGER TO BOM_VENTAS;
+
+CREATE OR REPLACE DIRECTORY BOMERP_DPDUMP AS '/opt/oracle/oradata/dpdump';
+```
+
+```bash
+docker exec bomerp-oracle-prod impdp system/123456@localhost:1521/FREEPDB1 \
+  schemas=BOM_CATALOGO,BOM_VENTAS directory=BOMERP_DPDUMP dumpfile=bomerp_prod_seed.dmp logfile=bomerp_prod_seed_imp.log
+```
+
+Los permisos de `BOMERP_APP` sobre `BOM_CATALOGO.PRODUCTOS`/`CATEGORIAS` y `BOM_VENTAS.VENTAS`/`DETALLE_VENTAS` (S1, S4) viajan con el `impdp` — Data Pump exporta, por defecto, los `GRANT` que el dueño del esquema ya hizo sobre sus propios objetos, siempre que el usuario destino (`BOMERP_APP`) ya exista antes de importar — y aquí ya existe, creado por la imagen al arrancar.
+
+**Error frecuente**: asumir que el Oracle de `prod`, por ser una imagen nueva, necesita el arreglo de zona horaria de 3.2. No lo necesita — 3.2 corrige una base que se creó hace meses bajo la imagen `slim` (versión 45) y luego cambió a la regular (versión 43); un Oracle creado hoy, desde cero, con la imagen regular, nunca tuvo esa historia: su diccionario se crea ya consistente con la versión que esa misma imagen trae. Si durante el `impdp` aparece de todas formas `ORA-01804` (señal de que el dump trae una columna `TIMESTAMP WITH TIME ZONE` con una zona que la versión 43 no reconoce), aplica el mismo arreglo de 3.2 sobre `bomerp-oracle-prod` en vez de descartarlo.
+
+**Poblar el Keycloak de `prod` con el realm real** — el realm `bomerp` se construyó a mano en S10b, sin ningún archivo de por medio; hay que sacarlo de ahí antes de que `prod` pueda arrancar con él:
+
+1. Entra al Admin Console de `dev` (`http://localhost:38080`, realm `bomerp` activo) → **Realm settings** → botón **Action** (arriba a la derecha) → **Partial export** → activa **Export groups and roles** y **Export clients** → **Export**. Descarga un JSON (ej. `realm-export.json`) con el realm, sus roles (`VENDEDOR`/`SUPERVISOR`/`ADMIN`) y el cliente de S10b — **no incluye usuarios**, la exportación parcial no los trae.
+2. Guarda ese archivo como `lp2/bomerp-backend/keycloak-import/bomerp-realm.json` — la carpeta que `compose.yml` ya monta en `/opt/keycloak/data/import` del contenedor de `prod`.
+3. Con `keycloak` de `prod` arrancando (`command: start-dev --import-realm`), Keycloak importa ese JSON automáticamente al iniciar — confírmalo en `http://localhost:48080`, realm `bomerp` ya debe existir, con sus tres roles y su cliente, sin que hayas tocado nada a mano.
+4. Como los usuarios no viajan en la exportación parcial, recréalos en `prod` con los mismos pasos de S10b 3.3 (ej. `vendedor1@bomerp.com` / `Bomerp2026!`), ahora contra `http://localhost:48080` en vez de `38080` — es la única parte de Keycloak que no se automatiza.
 
 `lp2/bomerp-frontend/src/environments/environment.prod.ts`:
 
 ```ts
 export const environment = {
-  apiBaseUrl: 'https://api.tu-dominio-real.com',
+  apiBaseUrl: 'http://localhost:48088',
 };
 ```
 
@@ -509,46 +828,55 @@ Confirma en `angular.json` que la configuración `production` ya reemplaza `envi
 ]
 ```
 
+`apiBaseUrl` apunta al puerto de `prod` en tu propia laptop (`48088`, Tabla 8) — así se puede verificar de punta a punta en 3.10 sin depender de ningún dominio todavía inexistente. Antes de un despliegue real, reemplázalo por el dominio real de ese entorno.
+
 **Error frecuente**: escribir `DB_PASSWORD` con un valor real directo en `application-prod.yml`, "para probar más rápido". La sintaxis `${DB_PASSWORD}` sin un valor por defecto obliga a que la variable exista en el entorno donde corre el proceso — si no existe, el arranque falla con un mensaje claro, en vez de arrancar en silencio con una contraseña expuesta en el repositorio.
 
-### 3.9 Ejecutar el build de producción y verificar de punta a punta
+### 3.10 Ejecutar el build de producción y verificar de punta a punta
 
 **Producto del paso:** el sistema completo corriendo con la configuración de producción, de punta a punta.
 
-Define las variables de entorno (una sola vez por sesión de terminal) y construye/levanta el contenedor de `prod` — ya no `mvnw`, la imagen que 3.8 construyó:
+Oracle, Keycloak-DB, Keycloak y Redis de `prod` ya están corriendo (3.9, poblados con el esquema y el realm reales) — falta solo construir y levantar `bomerp-backend`, que `docker compose up` agrega sin tocar los demás (ya están arriba, Compose no los reinicia).
 
-PowerShell:
+Usa un archivo `.env` para `DB_USERNAME`/`DB_PASSWORD` — con 9 variables ya fijas en `compose.yml` (3.9), setear a mano hasta estas dos por terminal cada vez es justo el tipo de fricción que `.env` evita (el mismo criterio que `pagatu-catalogo-ms` ya documenta en su propio README y en DIST S01, 3.6.2): Docker Compose lee automáticamente un `.env` que esté en el mismo directorio que `compose.yml`, sin ningún flag adicional. Crea `lp2/bomerp-backend/.env.example` (se versiona, sin secretos reales) y copia tu propio `.env` a partir de él (nunca se versiona):
 
-```powershell
-cd lp2/bomerp-backend
-$env:DB_USERNAME = "BOMERP_APP"
-$env:DB_PASSWORD = "123456"
-docker compose -f compose-prod.yml up --build -d
+```text
+# .env.example
+DB_USERNAME=BOMERP_APP
+DB_PASSWORD=123456
 ```
 
-macOS/Linux:
+Agrega `.env` (no `.env.example`) a `lp2/bomerp-backend/.gitignore`:
+
+```text
+.env
+```
+
+Con `.env` en el directorio, el comando queda igual en ambos sistemas operativos, sin exportar nada antes:
 
 ```bash
 cd lp2/bomerp-backend
-export DB_USERNAME=BOMERP_APP
-export DB_PASSWORD=123456
-docker compose -f compose-prod.yml up --build -d
+docker compose up --build -d
 ```
 
-Confirma que el contenedor arrancó sano y compara su log contra el de `dev` (3.6) — ahora sí, los dos arrancados de la forma en que cada uno corre de verdad:
+`compose.yml` (sin sufijo) es el nombre que Docker Compose busca por defecto — tanto para el propio archivo como para `.env` — no hace falta `-f` ni `--env-file`, a diferencia de `dev`, que sí necesita `-f` porque su archivo lleva el sufijo `-dev`.
+
+**Opcional, no recomendado**: si prefieres no crear `.env`, `$env:DB_USERNAME`/`$env:DB_PASSWORD` (PowerShell) o `export DB_USERNAME`/`DB_PASSWORD` (macOS/Linux) antes del mismo `docker compose up --build -d` también funciona — pero hay que repetirlo en cada terminal nueva, y preparar `.env` una sola vez cuesta menos que hacer esto cada vez.
+
+Confirma que el contenedor arrancó sano y compara su log contra el de `dev` (3.7) — ahora sí, los dos arrancados de la forma en que cada uno corre de verdad:
 
 ```bash
-docker compose -f compose-prod.yml logs -f bomerp-backend
+docker compose logs -f bomerp-backend
 ```
 
-Y verifica Actuator (3.7) contra el contenedor real:
+Y verifica Actuator (3.8) contra el contenedor real — nota el puerto, `48088`, no `8080`:
 
 ```bash
-curl http://localhost:8080/actuator/health
-curl http://localhost:8080/actuator/env
+curl http://localhost:48088/actuator/health
+curl http://localhost:48088/actuator/env
 ```
 
-Resultado esperado: `health` responde `UP`; `env` responde `404` — la protección de 3.7 ya no es una promesa en el YAML, es el comportamiento real del contenedor que de verdad va a correr.
+Resultado esperado: `health` responde `UP`; `env` responde `404` — la protección de 3.8 ya no es una promesa en el YAML, es el comportamiento real del contenedor que de verdad va a correr. Esta conexión usa el Oracle y el Keycloak **propios de `prod`**, poblados en 3.9 — no el `bomerp-oracle` de `dev` que 3.2 corrigió, así que si algo falla aquí, el diagnóstico es contra `bomerp-oracle-prod` (puerto `41521`), no contra el de `dev`.
 
 Construye el frontend en modo producción y sírvelo con cualquier servidor estático simple (por ejemplo, `http-server`, sin instalar nada nuevo si ya tienes Node.js, S7):
 
@@ -558,11 +886,11 @@ ng build --configuration production
 npx http-server dist/bomerp-frontend/browser -p 4300
 ```
 
-Abre `http://localhost:4300`, inicia sesión contra Keycloak (S11) y registra una venta de punta a punta — el mismo flujo completo de siempre, ahora sobre el build optimizado y con el backend en perfil `prod`.
+Abre `http://localhost:4300`, inicia sesión contra el Keycloak de `prod` (`http://localhost:48080/realms/bomerp`, con el usuario que recreaste en 3.9) y registra una venta de punta a punta — el mismo flujo completo de siempre, ahora sobre el build optimizado, el backend en perfil `prod`, y el stack de infraestructura de `prod` completo, corriendo en paralelo al de `dev` sin haber tocado ningún puerto compartido.
 
-### 3.10 Relacionar con ADS y BD2
+### 3.11 Relacionar con ADS y BD2
 
-Sesión equivalente en los otros dos cursos, misma semana: ADS cierra su propio Catálogo UML en S12 y entra a Unidad 3 con la integración y consolidación del producto del curso. BD2 ya cerró Unidad 2 (S12) con la base administrada, optimizada y asegurada — la decisión de `ddl-auto: validate` en producción (3.8) es, precisamente, la garantía de que `bomerp-backend` nunca modifica sola el esquema que BD2 ya administra.
+Sesión equivalente en los otros dos cursos, misma semana: ADS cierra su propio Catálogo UML en S12 y entra a Unidad 3 con la integración y consolidación del producto del curso. BD2 ya cerró Unidad 2 (S12) con la base administrada, optimizada y asegurada, y en su propia S13 (misma semana que esta) cambia la imagen de `bomerp-oracle` para tener `rman` — el motivo real detrás del paso 3.2 de esta sesión. El Oracle de `prod` (3.9) es, de hecho, una copia fiel del que BD2 administra: su esquema y sus datos vienen del mismo mecanismo de Data Pump que BD2 S13 construye (`expdp`/`impdp`), y `ddl-auto: validate` en producción (3.9) sigue garantizando que `bomerp-backend` nunca modifica ese esquema por su cuenta, ni en `dev` ni en su propia copia de `prod`.
 
 ## 4. Crea: actividad autónoma
 
@@ -680,7 +1008,7 @@ La evidencia individual se considera completa si:
 
 ### 4.6 Rúbrica de evaluación
 
-**Tabla 8. Rúbrica de evaluación**
+**Tabla 9. Rúbrica de evaluación**
 
 | Criterio | Peso (%) | A (20 pts) | B (15 pts) | C (10 pts) | D (5 pts) | Nivel obtenido |
 |---|---:|---|---|---|---|---:|
@@ -726,4 +1054,3 @@ Tiempo: 5 min.
 5. Spring Boot. (2026a). *Logging — Profile-specific Configuration*. Spring Boot Reference Documentation. https://docs.spring.io/spring-boot/reference/features/logging.html
 6. Spring Boot. (2026b). *Production-ready Features — Endpoints*. Spring Boot Reference Documentation. https://docs.spring.io/spring-boot/reference/actuator/endpoints.html
 7. Logback. (2024). *Chapter 4: Loggers, Appenders and Layouts*. https://logback.qos.ch/manual/layouts.html
-8. Docker Inc. (2024). *Networking — Use host.docker.internal*. Docker Docs. https://docs.docker.com/desktop/features/networking/

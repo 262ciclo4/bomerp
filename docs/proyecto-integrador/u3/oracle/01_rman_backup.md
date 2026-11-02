@@ -6,7 +6,7 @@
 
 Demostrar que la base Oracle del proyecto puede respaldarse como parte de la continuidad del negocio, con `ARCHIVELOG` activo y una estrategia completo + incremental real.
 
-## Activar `ARCHIVELOG` (condición previa, S13 3.2)
+## Activar `ARCHIVELOG` (condición previa, S13 3.4)
 
 ```sql
 ALTER SYSTEM SET db_recovery_file_dest_size = 10G SCOPE=BOTH;
