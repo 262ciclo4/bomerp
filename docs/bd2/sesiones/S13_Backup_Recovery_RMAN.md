@@ -289,11 +289,11 @@ DST_PRIMARY_TT_VERSION        45
 
 El diccionario de `bomerp-oracle` espera la **versión 45** de datos de zonas horarias — la que tenía la imagen `slim` que acabas de dejar de usar. La imagen regular de 3.2 (release más nuevo) solo instala la **versión 43** (`timezlrg_43.dat`): una regresión real de empaquetado entre dos releases de `gvenzl/oracle-free`, no un defecto de "slim contra regular". Sin el archivo correcto, cualquier operación que dependa de resolver una zona horaria —`expdp` (3.9), `hibernate.ddl-auto: validate` del backend de LP2, incluso algo tan simple como `DROP USER`— falla con `ORA-01804: failure to initialize timezone information`.
 
-La imagen `slim` sigue cacheada localmente y sí trae el archivo correcto — se extrae sin red ni licencia:
+La imagen `slim` sigue cacheada localmente y sí trae el archivo correcto — se extrae sin red ni licencia. **Ojo con la ruta: es `26ai`, no `23ai`** — verificado; con `23ai` el `docker cp` falla con `Could not find the file`:
 
 ```bash
 cid=$(docker create --entrypoint bash gvenzl/oracle-free:23-slim -c "true")
-docker cp "$cid:/opt/oracle/product/23ai/dbhomeFree/oracore/zoneinfo/timezlrg_45.dat" ./timezlrg_45.dat
+docker cp "$cid:/opt/oracle/product/26ai/dbhomeFree/oracore/zoneinfo/timezlrg_45.dat" ./timezlrg_45.dat
 docker rm "$cid"
 
 docker cp ./timezlrg_45.dat bomerp-oracle:/opt/oracle/product/26ai/dbhomeFree/oracore/zoneinfo/timezlrg_45.dat

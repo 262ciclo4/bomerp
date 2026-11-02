@@ -317,22 +317,48 @@ Si el arranque de 3.1 falló, o si en cualquier punto posterior de esta sesión 
 ORA-01804: failure to initialize timezone information
 ```
 
-— tanto al conectar como más adelante en `hibernate.ddl-auto: validate` (3.9) — no es un problema de tu configuración de LP2, y no se arregla ahí. Diagnostica primero, dentro de una sesión de `sqlplus`:
+— tanto al conectar como más adelante en `hibernate.ddl-auto: validate` (3.9) — no es un problema de tu configuración de LP2, y no se arregla ahí. Diagnostica primero — en PowerShell, un *here-string* evita depender de una sesión interactiva de `sqlplus` (más fácil de copiar/pegar tal cual, y es justo lo que funcionó en el laboratorio real):
+
+PowerShell:
 
 ```powershell
-docker exec -it bomerp-oracle sqlplus / as sysdba
-```
-
-```sql
+@'
 SELECT * FROM V$TIMEZONE_FILE;
 SELECT property_name, property_value FROM database_properties WHERE property_name LIKE '%VERSION%';
+EXIT;
+'@ | docker exec -i bomerp-oracle bash -c 'sqlplus -s / as sysdba'
 ```
 
-Si `V$TIMEZONE_FILE` no devuelve filas y `DST_PRIMARY_TT_VERSION = 45`: la base espera la versión 45 de datos de zonas horarias, pero la imagen de Oracle que BD2 cambió solo trae instalada la versión 43 — una regresión real entre releases de `gvenzl/oracle-free`, no un defecto de tu proyecto. El arreglo, verificado, sin ningún archivo con licencia de Oracle (la imagen `slim` anterior, que sí trae la versión correcta, suele seguir cacheada localmente):
+macOS/Linux:
+
+```bash
+docker exec -i bomerp-oracle sqlplus -s / as sysdba <<'EOF'
+SELECT * FROM V$TIMEZONE_FILE;
+SELECT property_name, property_value FROM database_properties WHERE property_name LIKE '%VERSION%';
+EXIT;
+EOF
+```
+
+Si `V$TIMEZONE_FILE` no devuelve filas y `DST_PRIMARY_TT_VERSION = 45`: la base espera la versión 45 de datos de zonas horarias, pero la imagen de Oracle que BD2 cambió solo trae instalada la versión 43 — una regresión real entre releases de `gvenzl/oracle-free`, no un defecto de tu proyecto. El arreglo, verificado, sin ningún archivo con licencia de Oracle (la imagen `slim` anterior, que sí trae la versión correcta, suele seguir cacheada localmente). **Ojo con la ruta de origen dentro de la imagen `slim`: es `26ai`, no `23ai`** — verificado; con `23ai` el `docker cp` falla con `Could not find the file`.
+
+PowerShell:
+
+```powershell
+$cid = docker create --entrypoint bash gvenzl/oracle-free:23-slim -c "true"
+docker cp "${cid}:/opt/oracle/product/26ai/dbhomeFree/oracore/zoneinfo/timezlrg_45.dat" .\timezlrg_45.dat
+docker rm $cid
+
+docker cp .\timezlrg_45.dat bomerp-oracle:/opt/oracle/product/26ai/dbhomeFree/oracore/zoneinfo/timezlrg_45.dat
+docker exec -u root bomerp-oracle chown oracle:oinstall /opt/oracle/product/26ai/dbhomeFree/oracore/zoneinfo/timezlrg_45.dat
+docker exec -u root bomerp-oracle chmod 644 /opt/oracle/product/26ai/dbhomeFree/oracore/zoneinfo/timezlrg_45.dat
+docker exec bomerp-oracle ls -lh /opt/oracle/product/26ai/dbhomeFree/oracore/zoneinfo/timezlrg_45.dat
+```
+
+macOS/Linux:
 
 ```bash
 cid=$(docker create --entrypoint bash gvenzl/oracle-free:23-slim -c "true")
-docker cp "$cid:/opt/oracle/product/23ai/dbhomeFree/oracore/zoneinfo/timezlrg_45.dat" ./timezlrg_45.dat
+docker cp "$cid:/opt/oracle/product/26ai/dbhomeFree/oracore/zoneinfo/timezlrg_45.dat" ./timezlrg_45.dat
 docker rm "$cid"
 
 docker cp ./timezlrg_45.dat bomerp-oracle:/opt/oracle/product/26ai/dbhomeFree/oracore/zoneinfo/timezlrg_45.dat
@@ -340,17 +366,56 @@ docker exec -u root bomerp-oracle chown oracle:oinstall /opt/oracle/product/26ai
 docker exec -u root bomerp-oracle chmod 644 /opt/oracle/product/26ai/dbhomeFree/oracore/zoneinfo/timezlrg_45.dat
 ```
 
-Vuelve a `sqlplus` (si saliste de la sesión anterior, ábrela de nuevo) y reinicia solo la instancia, no el contenedor:
+Reinicia — basta con `docker restart`, reinicia el mismo contenedor (misma capa escribible, el archivo que acabas de copiar no se pierde; lo que sí lo pierde es recrear el contenedor, por ejemplo con `docker compose up -d` tras otro cambio) — y espera a que vuelva a estar `healthy` antes de verificar:
+
+PowerShell:
 
 ```powershell
-docker exec -it bomerp-oracle sqlplus / as sysdba
+docker restart bomerp-oracle
+
+$attempt = 0
+do {
+    Start-Sleep -Seconds 5
+    $status = docker inspect --format '{{.State.Health.Status}}' bomerp-oracle
+    $attempt++
+} while ($status -ne "healthy" -and $attempt -lt 60)
+
+if ($status -ne "healthy") {
+    Write-Host "Oracle todavía no está healthy. Revisa los logs." -ForegroundColor Yellow
+    docker logs --tail 60 bomerp-oracle
+} else {
+    Write-Host "bomerp-oracle healthy" -ForegroundColor Green
+}
 ```
 
-```sql
-SHUTDOWN IMMEDIATE;
-STARTUP;
+macOS/Linux:
+
+```bash
+docker restart bomerp-oracle
+until [ "$(docker inspect -f '{{.State.Health.Status}}' bomerp-oracle)" = "healthy" ]; do sleep 5; done
+echo "bomerp-oracle healthy"
+```
+
+Verifica — mismo *here-string*/heredoc de antes:
+
+PowerShell:
+
+```powershell
+@'
 SELECT * FROM V$TIMEZONE_FILE;          -- debe mostrar timezlrg_45.dat
 SELECT COUNT(*) FROM V$TIMEZONE_NAMES;  -- debe ser > 0 (antes: 0)
+EXIT;
+'@ | docker exec -i bomerp-oracle bash -c 'sqlplus -s / as sysdba'
+```
+
+macOS/Linux:
+
+```bash
+docker exec -i bomerp-oracle sqlplus -s / as sysdba <<'EOF'
+SELECT * FROM V$TIMEZONE_FILE;          -- debe mostrar timezlrg_45.dat
+SELECT COUNT(*) FROM V$TIMEZONE_NAMES;  -- debe ser > 0 (antes: 0)
+EXIT;
+EOF
 ```
 
 Resultado real de esta sesión:
