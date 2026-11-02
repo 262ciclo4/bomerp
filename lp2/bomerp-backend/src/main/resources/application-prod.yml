@@ -1,0 +1,27 @@
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://${KEYCLOAK_HOST}:${KEYCLOAK_PORT}/realms/bomerp
+  datasource:
+    url: jdbc:oracle:thin:@${DB_HOST}:${DB_PORT}/${DB_NAME}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+
+bomerp:
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:4300}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

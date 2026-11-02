@@ -22,6 +22,13 @@ services:
       retries: 10
       start_period: 60s
 
+  redis:
+    image: redis:7.4-alpine
+    container_name: bomerp-redis-dev
+    restart: unless-stopped
+    ports:
+      - "36379:6379"
+
   keycloak-db:
     image: postgres:17-alpine
     container_name: bomerp-keycloak-db

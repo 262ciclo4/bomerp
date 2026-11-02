@@ -469,12 +469,16 @@ Verifica con dos fuentes, no solo una:
 
 Antes de escribir una sola línea de código, mide: abre el reporte de uso de `CategoriaService.listar()` (o agrega un contador simple, un `AtomicInteger` incrementado en cada llamada) y observa cuántas veces se invoca en una sesión de prueba normal de 5 minutos navegando la SPA. Documenta ese número — es el dato que justifica (o no) el siguiente paso.
 
-**Si la medición justifica Redis**, agrega la dependencia a `pom.xml`:
+**Si la medición justifica Redis**, agrega las dependencias a `pom.xml` — las dos, no solo la primera: `spring-boot-starter-data-redis` conecta con Redis, pero `@EnableCaching` por sí solo no encuentra ningún `CacheManager` sin `spring-boot-starter-cache` (verificado: sin esta segunda dependencia, el backend ni siquiera arranca — `APPLICATION FAILED TO START`, "no CacheManager bean found"):
 
 ```xml
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-redis</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-cache</artifactId>
 </dependency>
 ```
 
@@ -513,12 +517,30 @@ public List<CategoriaResponse> listar() {
 }
 ```
 
-E invalida el caché en cada escritura, en la misma clase:
+E invalida el caché en cada escritura — `crear`, `actualizar` y `eliminar`, no solo la primera:
 
 ```java
 @CacheEvict(value = "categorias", allEntries = true)
 public CategoriaResponse crear(CategoriaRequest request) {
     // igual que antes
+}
+
+@CacheEvict(value = "categorias", allEntries = true)
+public CategoriaResponse actualizar(Long id, CategoriaRequest request) {
+    // igual que antes
+}
+
+@CacheEvict(value = "categorias", allEntries = true)
+public void eliminar(Long id) {
+    // igual que antes
+}
+```
+
+**`CategoriaResponse` (y cualquier DTO que vayas a cachear) debe implementar `Serializable`** — verificado: sin esto, la primera llamada falla en el momento de guardar en Redis con `NotSerializableException`, porque `RedisCacheManager` usa serialización nativa de Java por defecto, que exige que la clase declare `implements Serializable`:
+
+```java
+public class CategoriaResponse implements Serializable {
+    // los mismos campos de siempre
 }
 ```
 
@@ -532,7 +554,9 @@ docker exec -it bomerp-redis-dev redis-cli KEYS "*"
 docker exec -it bomerp-redis-dev redis-cli GET "categorias::SimpleKey []"
 ```
 
-La primera confirma que existe una entrada bajo el caché `categorias`; la segunda muestra el valor serializado real que Redis está sirviendo. Después de `crear()` (que dispara `@CacheEvict`), repite `KEYS "*"` — la entrada debe haber desaparecido.
+La primera confirma que existe una entrada bajo el caché `categorias`. La segunda no va a mostrar texto legible — la serialización nativa de Java produce bytes binarios, no JSON — pero el solo hecho de que `redis-cli` devuelva contenido (no `(nil)`) confirma que el dato vive ahí de verdad. Después de `crear()` (que dispara `@CacheEvict`), repite `KEYS "*"` — la entrada debe haber desaparecido.
+
+**Error frecuente**: llamar al mismo endpoint dos veces seguidas, sin ninguna pausa, y concluir que el caché no sirvió porque el segundo log sí apareció. Verificado contra `bomerp-redis-dev`: el cliente Redis (Lettuce) escribe de forma asíncrona — entre el `log.info` de la primera llamada y que el valor sea *legible* desde Redis pasan unos cientos de milisegundos. Un humano recargando la página en el navegador nunca nota esa ventana; un script o una prueba automatizada que encadene dos llamadas sin pausa sí puede verla.
 
 **Error frecuente**: verificar Redis solo con el log o solo con `KEYS`, nunca con los dos. El log prueba que el método no se ejecutó; `KEYS`/`GET` prueba que el dato efectivamente vive en Redis y no en memoria de otra forma (ej. un caché de Hibernate de primer nivel, que no sobrevive entre peticiones HTTP distintas y no es lo que esta sesión mide).
 
@@ -586,7 +610,7 @@ management:
         include: health,info
 ```
 
-La verificación real (`curl http://localhost:48088/actuator/env` → `404`) se hace en 3.10, sobre el contenedor de `prod` — la misma protección por omisión que el caso de 1.6.1 describe, aplicada explícitamente en tu propio `application-prod.yml`, no heredada por accidente.
+La verificación real (`curl http://localhost:48088/actuator/env`) se hace en 3.10, sobre el contenedor de `prod` — verificado: responde `401`, no `404` — la seguridad JWT de Keycloak (S10/S10b) rechaza la petición sin token antes de que Actuator llegue a decidir si el endpoint existe. Dos capas independientes bloquean `/env` en `prod`: la que exige un token válido, y la que ni siquiera lo expone (`include: health,info`) — la misma protección por omisión que el caso de 1.6.1 describe, aplicada explícitamente en tu propio `application-prod.yml`, no heredada por accidente.
 
 ### 3.9 Construir la configuración de producción completa: backend, Oracle, Keycloak y Redis
 
@@ -625,12 +649,19 @@ spring:
     redis:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT}
+
+bomerp:
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:4300}
+
 management:
   endpoints:
     web:
       exposure:
         include: health,info
 ```
+
+**Error frecuente**: olvidar `bomerp.cors.allowed-origins` en `application-prod.yml` — verificado: el backend arranca, pasa la validación de esquema, y recién al crear el bean `corsConfig` falla con `Could not resolve placeholder 'bomerp.cors.allowed-origins'`. `application-dev.yml` ya lo tiene (S1); `prod` necesita su propio valor, apuntando al puerto real donde sirves el frontend compilado (`4300`, 3.10).
 
 Los valores en sí — a dónde apunta cada variable — los define `compose.yml`, no `application-prod.yml`: `DB_HOST`/`DB_PORT`/`DB_NAME`/`REDIS_HOST`/`REDIS_PORT`/`KEYCLOAK_HOST`/`KEYCLOAK_PORT` son estables (nombres de servicio y puertos internos, no secretos), así que van escritos directo en `compose.yml`; solo `DB_USERNAME`/`DB_PASSWORD` siguen viniendo de `.env` — igual que en `pagatu-catalogo-ms`, donde `DB_HOST`/`DB_PORT` están fijos en `compose.yml` pero `DB_NAME`/`DB_USER`/`DB_PASS` sí vienen de `.env`.
 
@@ -780,7 +811,7 @@ docker exec bomerp-oracle-prod mkdir -p /opt/oracle/oradata/dpdump
 docker cp ./bomerp_prod_seed.dmp bomerp-oracle-prod:/opt/oracle/oradata/dpdump/bomerp_prod_seed.dmp
 ```
 
-En el Oracle de `prod`, crea los esquemas (los mismos scripts reales de BD2 S1/S4 — `BOMERP_APP` no se vuelve a crear, ya lo creó `APP_USER` de la imagen) y el `DIRECTORY`, luego importa:
+En el Oracle de `prod`, crea los esquemas (los mismos scripts reales de BD2 S1/S4 — `BOMERP_APP` no se vuelve a crear, ya lo creó `APP_USER` de la imagen) y el `DIRECTORY`:
 
 ```sql
 -- dentro de: docker exec -it bomerp-oracle-prod sqlplus system/123456@localhost:1521/FREEPDB1
@@ -793,14 +824,72 @@ GRANT CREATE SESSION, CREATE TABLE, CREATE VIEW, CREATE PROCEDURE, CREATE TRIGGE
 CREATE OR REPLACE DIRECTORY BOMERP_DPDUMP AS '/opt/oracle/oradata/dpdump';
 ```
 
+**Antes de importar, verificado contra `bomerp-oracle-prod` real: el `impdp` falla.** No es `ORA-01804` — es un error distinto, y la causa tampoco es la misma que 3.2:
+
+```text
+ORA-39002: invalid operation
+ORA-39405: Oracle Data Pump does not support importing from a source database
+with TSTZ version 45 into a target database with TSTZ version 43.
+```
+
+El Oracle de `prod` es una base genuinamente **nueva**: su diccionario se creó hoy, consistente con la versión 43 que trae la imagen regular — a diferencia de `dev` (3.2), aquí no hay ningún archivo que reinstalar, porque no hay ninguna inconsistencia que corregir. El problema es otro: el `dev` de donde sale el `.dmp` ya quedó en versión **45** (el arreglo de 3.2), y Data Pump nunca importa de una versión más alta a una más baja — tiene que **subir** la versión del `prod` nuevo a 45, con el mecanismo que Oracle sí soporta para esto, `DBMS_DST` (no instalar un archivo a mano, eso es 3.2, un caso distinto). Verificado paso a paso, dentro del PDB `FREEPDB1` — **no** en `CDB$ROOT`, donde el diccionario de `BOM_CATALOGO`/`BOM_VENTAS` realmente vive:
+
+```sql
+-- dentro de: docker exec -it bomerp-oracle-prod sqlplus / as sysdba
+ALTER PLUGGABLE DATABASE FREEPDB1 CLOSE;
+ALTER PLUGGABLE DATABASE FREEPDB1 OPEN UPGRADE;
+ALTER SESSION SET CONTAINER = FREEPDB1;
+EXEC DBMS_DST.BEGIN_UPGRADE(45);
+```
+
+```sql
+ALTER PLUGGABLE DATABASE FREEPDB1 CLOSE;
+ALTER PLUGGABLE DATABASE FREEPDB1 OPEN;
+ALTER SESSION SET CONTAINER = FREEPDB1;
+
+EXEC DBMS_DST.CREATE_ERROR_TABLE('DST_ERR_TABLE');
+
+VAR failures NUMBER
+BEGIN
+  DBMS_DST.UPGRADE_DATABASE(:failures, upgrade_data => TRUE, parallel => FALSE,
+    continue_after_errors => TRUE, log_errors => TRUE, log_errors_table => 'SYS.DST_ERR_TABLE');
+END;
+/
+
+BEGIN
+  DBMS_DST.END_UPGRADE(:failures);
+END;
+/
+PRINT failures
+```
+
+Resultado real de esta sesión: `UPGRADE_DATABASE` convirtió 8 tablas internas de Oracle (`VECSYS`, `GSMADMIN_INTERNAL`, `DBSNMP`, `DVSYS`, `CTXSYS`, `MDSYS` — nada de `BOM_CATALOGO`/`BOM_VENTAS`, que en este punto todavía no existen) con `0` fallas; `END_UPGRADE` terminó la ventana sin error, y `V$TIMEZONE_FILE`/`database_properties` confirman `DST_PRIMARY_TT_VERSION = 45` dentro de `FREEPDB1`.
+
+**Error frecuente**: llamar `DBMS_DST.BEGIN_UPGRADE`/`END_UPGRADE` conectado directo con `/ as sysdba` sin cambiar de contenedor. Esa conexión aterriza en `CDB$ROOT` por defecto — subir la versión ahí no cambia nada en `FREEPDB1`, que tiene su **propio** `DST_PRIMARY_TT_VERSION`, independiente del de la raíz. El `impdp` sigue fallando con el mismo `ORA-39405` hasta que el `ALTER SESSION SET CONTAINER = FREEPDB1` se ejecuta antes del `BEGIN_UPGRADE`.
+
+Ahora sí, importa:
+
 ```bash
 docker exec bomerp-oracle-prod impdp system/123456@localhost:1521/FREEPDB1 \
   schemas=BOM_CATALOGO,BOM_VENTAS directory=BOMERP_DPDUMP dumpfile=bomerp_prod_seed.dmp logfile=bomerp_prod_seed_imp.log
 ```
 
-Los permisos de `BOMERP_APP` sobre `BOM_CATALOGO.PRODUCTOS`/`CATEGORIAS` y `BOM_VENTAS.VENTAS`/`DETALLE_VENTAS` (S1, S4) viajan con el `impdp` — Data Pump exporta, por defecto, los `GRANT` que el dueño del esquema ya hizo sobre sus propios objetos, siempre que el usuario destino (`BOMERP_APP`) ya exista antes de importar — y aquí ya existe, creado por la imagen al arrancar.
+Los permisos de `BOMERP_APP` sobre `BOM_CATALOGO.PRODUCTOS`/`CATEGORIAS` y `BOM_VENTAS.VENTAS`/`DETALLE_VENTAS` (S1, S4) deberían viajar con el `impdp` — Data Pump exporta, por defecto, los `GRANT` que el dueño del esquema ya hizo sobre sus propios objetos, siempre que el usuario destino (`BOMERP_APP`) ya exista antes de importar. **Verifica que de verdad llegaron, no lo asumas** — en esta misma sesión, de los cuatro, solo los de `VENTAS` sobrevivieron el `impdp`; los de `CATEGORIAS`, `PRODUCTOS` y `DETALLE_VENTAS` no (sin que el log del import marcara error alguno en esas líneas):
 
-**Error frecuente**: asumir que el Oracle de `prod`, por ser una imagen nueva, necesita el arreglo de zona horaria de 3.2. No lo necesita — 3.2 corrige una base que se creó hace meses bajo la imagen `slim` (versión 45) y luego cambió a la regular (versión 43); un Oracle creado hoy, desde cero, con la imagen regular, nunca tuvo esa historia: su diccionario se crea ya consistente con la versión que esa misma imagen trae. Si durante el `impdp` aparece de todas formas `ORA-01804` (señal de que el dump trae una columna `TIMESTAMP WITH TIME ZONE` con una zona que la versión 43 no reconoce), aplica el mismo arreglo de 3.2 sobre `bomerp-oracle-prod` en vez de descartarlo.
+```sql
+-- dentro de: docker exec -it bomerp-oracle-prod sqlplus system/123456@localhost:1521/FREEPDB1
+SELECT table_name, privilege FROM dba_tab_privs WHERE grantee = 'BOMERP_APP' ORDER BY table_name;
+```
+
+Deben aparecer `SELECT`/`INSERT`/`UPDATE`/`DELETE` para las cuatro tablas (`CATEGORIAS`, `PRODUCTOS`, `VENTAS`, `DETALLE_VENTAS`) — si falta alguna, otórgala a mano, con la misma sentencia de S1/S4:
+
+```sql
+GRANT SELECT, INSERT, UPDATE, DELETE ON BOM_CATALOGO.CATEGORIAS TO BOMERP_APP;
+GRANT SELECT, INSERT, UPDATE, DELETE ON BOM_CATALOGO.PRODUCTOS TO BOMERP_APP;
+GRANT SELECT, INSERT, UPDATE, DELETE ON BOM_VENTAS.DETALLE_VENTAS TO BOMERP_APP;
+```
+
+Sin esto, el backend de `prod` ni siquiera arranca — verificado: `ddl-auto: validate` (3.9) usa la conexión real de `BOMERP_APP`, y sin el `GRANT` esa tabla es invisible para ese usuario, así que Hibernate falla en el primer intento con `SchemaManagementException: Schema validation: missing table [bom_catalogo.categorias]` — el mismo síntoma que una tabla que de verdad no existe, aunque sí exista.
 
 **Poblar el Keycloak de `prod` con el realm real** — el realm `bomerp` se construyó a mano en S10b, sin ningún archivo de por medio; hay que sacarlo de ahí antes de que `prod` pueda arrancar con él:
 
@@ -876,7 +965,7 @@ curl http://localhost:48088/actuator/health
 curl http://localhost:48088/actuator/env
 ```
 
-Resultado esperado: `health` responde `UP`; `env` responde `404` — la protección de 3.8 ya no es una promesa en el YAML, es el comportamiento real del contenedor que de verdad va a correr. Esta conexión usa el Oracle y el Keycloak **propios de `prod`**, poblados en 3.9 — no el `bomerp-oracle` de `dev` que 3.2 corrigió, así que si algo falla aquí, el diagnóstico es contra `bomerp-oracle-prod` (puerto `41521`), no contra el de `dev`.
+Resultado esperado (verificado): `health` responde `{"status":"UP"}`; `env` responde `401` — la protección de 3.8 ya no es una promesa en el YAML, es el comportamiento real del contenedor que de verdad va a correr. Esta conexión usa el Oracle y el Keycloak **propios de `prod`**, poblados en 3.9 — no el `bomerp-oracle` de `dev` que 3.2 corrigió, así que si algo falla aquí, el diagnóstico es contra `bomerp-oracle-prod` (puerto `41521`), no contra el de `dev`.
 
 Construye el frontend en modo producción y sírvelo con cualquier servidor estático simple (por ejemplo, `http-server`, sin instalar nada nuevo si ya tienes Node.js, S7):
 

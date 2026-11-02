@@ -12,6 +12,8 @@ import pe.edu.upeu.bomerp.catalogo.categoria.service.CategoriaService;
 import pe.edu.upeu.bomerp.exception.ResourceNotFoundException;
 import tools.jackson.databind.ObjectMapper;
 
+import java.util.List;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -63,5 +65,14 @@ class CategoriaControllerTest {
 
         mockMvc.perform(get("/api/v1/categorias/999"))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void listar_respondeConCacheControlDeCincoMinutos() throws Exception {
+        when(categoriaService.listar()).thenReturn(List.of());
+
+        mockMvc.perform(get("/api/v1/categorias"))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Cache-Control", "max-age=300"));
     }
 }

@@ -26,4 +26,12 @@
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE"/>
     </root>
+
+    <springProfile name="dev">
+        <logger name="pe.edu.upeu.bomerp" level="DEBUG"/>
+    </springProfile>
+
+    <springProfile name="prod">
+        <logger name="pe.edu.upeu.bomerp" level="INFO"/>
+    </springProfile>
 </configuration>

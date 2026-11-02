@@ -1,6 +1,9 @@
 package pe.edu.upeu.bomerp.catalogo.categoria.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pe.edu.upeu.bomerp.catalogo.categoria.dto.CategoriaRequest;
@@ -11,6 +14,7 @@ import pe.edu.upeu.bomerp.catalogo.categoria.repository.CategoriaRepository;
 import pe.edu.upeu.bomerp.exception.ResourceNotFoundException;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CategoriaServiceImpl implements CategoriaService {
@@ -18,8 +22,10 @@ public class CategoriaServiceImpl implements CategoriaService {
     private final CategoriaMapper categoriaMapper;
 
     @Override
+    @Cacheable("categorias")
     @Transactional(readOnly = true)
     public List<CategoriaResponse> listar() {
+        log.info("Listando categorías - consulta real a la base");
         return categoriaRepository.findAll().stream().map(categoriaMapper::toResponse).toList();
     }
 
@@ -30,6 +36,7 @@ public class CategoriaServiceImpl implements CategoriaService {
     }
 
     @Override
+    @CacheEvict(value = "categorias", allEntries = true)
     @Transactional
     public CategoriaResponse crear(CategoriaRequest request) {
         Categoria categoria = categoriaMapper.toEntity(request);
@@ -37,6 +44,7 @@ public class CategoriaServiceImpl implements CategoriaService {
     }
 
     @Override
+    @CacheEvict(value = "categorias", allEntries = true)
     @Transactional
     public CategoriaResponse actualizar(Long id, CategoriaRequest request) {
         Categoria categoria = buscarOFallar(id);
@@ -46,6 +54,7 @@ public class CategoriaServiceImpl implements CategoriaService {
     }
 
     @Override
+    @CacheEvict(value = "categorias", allEntries = true)
     @Transactional
     public void eliminar(Long id) {
         categoriaRepository.delete(buscarOFallar(id));

@@ -4,12 +4,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.upeu.bomerp.catalogo.categoria.dto.CategoriaRequest;
 import pe.edu.upeu.bomerp.catalogo.categoria.dto.CategoriaResponse;
 import pe.edu.upeu.bomerp.catalogo.categoria.service.CategoriaService;
+import java.time.Duration;
 import java.util.List;
 
 @Tag(name = "Categorías")
@@ -22,7 +24,10 @@ public class CategoriaController {
     @Operation(summary = "Lista las categorías registradas")
     @GetMapping
     public ResponseEntity<List<CategoriaResponse>> listar() {
-        return ResponseEntity.ok(categoriaService.listar());
+        List<CategoriaResponse> categorias = categoriaService.listar();
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(Duration.ofMinutes(5)))
+                .body(categorias);
     }
 
     @Operation(summary = "Consulta una categoría por id")
