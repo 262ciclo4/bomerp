@@ -878,14 +878,27 @@ bomerp:
   cors:
     allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:4300}
 
+springdoc:
+  swagger-ui:
+    enabled: false
+  api-docs:
+    enabled: false
+
 management:
   endpoints:
     web:
       exposure:
         include: health,info
+  endpoint:
+    health:
+      show-details: never
 ```
 
+**`management.endpoint.health.show-details: never` explícito, no solo por defecto**: es el valor por defecto de Spring Boot, así que no cambia el comportamiento — pero déjalo escrito, el mismo criterio que ya usa `pagatu-catalogo-ms-prod.yml`. No es solo estilo: cuando un estudiante pasa a Distribuidas y lee `pagatu-catalogo-ms-prod.yml`, encuentra el mismo patrón que ya vio aquí, no uno nuevo que aprender — el criterio va de LP2 hacia Distribuidas, no al revés.
+
 **Error frecuente**: olvidar `bomerp.cors.allowed-origins` en `application-prod.yml` — verificado: el backend arranca, pasa la validación de esquema, y recién al crear el bean `corsConfig` falla con `Could not resolve placeholder 'bomerp.cors.allowed-origins'`. `application-dev.yml` ya lo tiene (S1); `prod` necesita su propio valor, apuntando al puerto real donde sirves el frontend compilado (`4300`, 3.10).
+
+**`springdoc` desactivado, no solo protegido**: verificado — sin esto, el propio arranque de `bomerp-backend` imprime el *warning* `SpringDoc /v3/api-docs endpoint is enabled by default. To disable it in production, set the property 'springdoc.api-docs.enabled=false'` (y el mismo para `swagger-ui.html`). `SecurityConfig` (3.8) deja `/swagger-ui/**` y `/v3/api-docs/**` en `permitAll()` — sin este bloque, cualquiera podría navegar la documentación completa de la API en `prod` sin loguearse. El mismo criterio que ya usa `pagatu-catalogo-ms-prod.yml`: no la deja detrás de un login, la apaga del todo.
 
 Los valores en sí — a dónde apunta cada variable — los define `compose.yml`, no `application-prod.yml`: `DB_HOST`/`DB_PORT`/`DB_NAME`/`REDIS_HOST`/`REDIS_PORT`/`KEYCLOAK_HOST`/`KEYCLOAK_PORT` son estables (nombres de servicio y puertos internos, no secretos), así que van escritos directo en `compose.yml`; solo `DB_USERNAME`/`DB_PASSWORD` siguen viniendo de `.env` — igual que en `pagatu-catalogo-ms`, donde `DB_HOST`/`DB_PORT` están fijos en `compose.yml` pero `DB_NAME`/`DB_USER`/`DB_PASS` sí vienen de `.env`.
 
