@@ -339,7 +339,13 @@ EXIT;
 EOF
 ```
 
-Si `V$TIMEZONE_FILE` no devuelve filas y `DST_PRIMARY_TT_VERSION = 45`: la base espera la versión 45 de datos de zonas horarias, pero la imagen de Oracle que BD2 cambió solo trae instalada la versión 43 — una regresión real entre releases de `gvenzl/oracle-free`, no un defecto de tu proyecto. El arreglo, verificado, sin ningún archivo con licencia de Oracle (la imagen `slim` anterior, que sí trae la versión correcta, suele seguir cacheada localmente). **Ojo con la ruta de origen dentro de la imagen `slim`: es `26ai`, no `23ai`** — verificado; con `23ai` el `docker cp` falla con `Could not find the file`.
+Si `V$TIMEZONE_FILE` no devuelve filas y `DST_PRIMARY_TT_VERSION = 45`: la base espera la versión 45 de datos de zonas horarias, pero la imagen de Oracle que BD2 cambió solo trae instalada la versión 43.
+
+**Esto no es porque la imagen regular `gvenzl/oracle-free:23` necesite siempre `timezlrg_45.dat` para arrancar.** Una base creada de cero directamente con la imagen regular se inicializa limpia en su propia versión nativa (43) y no pide nada más — es justo lo que pasa con el Oracle de `prod` en 3.9, que nace sin este problema. Lo que causa el error aquí es específicamente que el volumen `oracle-data` de `bomerp-oracle` **ya existía de antes**, creado originalmente con la imagen `-slim` (que sí trae instalada la versión 45 por defecto) — su diccionario de datos quedó con la versión 45 grabada como la esperada. Al cambiar solo el contenedor a la imagen regular (que únicamente trae hasta la 43) sin recrear ese volumen, Oracle ya no puede abrir una base que espera una versión de zona horaria que el nuevo `ORACLE_HOME` no tiene instalada.
+
+**Alternativa, si no quieres instalar el archivo:** en vez de copiar `timezlrg_45.dat`, podrías borrar el volumen `oracle-data` y recrear los esquemas, usuarios y tablas desde cero directamente sobre la imagen regular (los mismos scripts de BD2 S1/S4 que usa 3.9 para poblar `prod`) — una base así nunca llega a pedir la versión 45, porque nunca existió con ella instalada. **No es la opción recomendada para `bomerp-oracle` de `dev`**: ese volumen es la base compartida de todo el equipo (ADS + BD2 + LP2), y borrarlo se lleva el trabajo de los tres cursos, no solo el tuyo. Esa misma alternativa es justamente la que sí usa esta guía en 3.9, donde `prod` tiene su propio volumen nuevo (`oracle-data-prod`) y nadie más depende de él — por eso ahí no hace falta ningún arreglo de zona horaria.
+
+El arreglo recomendado para `dev`, verificado, sin ningún archivo con licencia de Oracle (la imagen `slim` anterior, que sí trae la versión correcta, suele seguir cacheada localmente). **Ojo con la ruta de origen dentro de la imagen `slim`: es `26ai`, no `23ai`** — verificado; con `23ai` el `docker cp` falla con `Could not find the file`.
 
 PowerShell:
 
