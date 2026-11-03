@@ -5421,8 +5421,10 @@ docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </spa
 <p>Verifica — mismo <em>here-string</em>/heredoc de antes:</p>
 <p>PowerShell:</p>
 <div class="highlight"><pre><span></span><code><span class="sh">@'</span>
-<span class="sh">SELECT * FROM V$TIMEZONE_FILE;          -- debe mostrar timezlrg_45.dat</span>
-<span class="sh">SELECT COUNT(*) FROM V$TIMEZONE_NAMES;  -- debe ser &gt; 0 (antes: 0)</span>
+<span class="sh">-- debe mostrar timezlrg_45.dat</span>
+<span class="sh">SELECT * FROM V$TIMEZONE_FILE;</span>
+<span class="sh">-- debe ser &gt; 0 (antes: 0)</span>
+<span class="sh">SELECT COUNT(*) FROM V$TIMEZONE_NAMES;</span>
 <span class="sh">EXIT;</span>
 <span class="sh">'@</span> <span class="p">|</span> <span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="n">bomerp-oracle</span> <span class="n">bash</span> <span class="n">-c</span> <span class="s1">'sqlplus -s / as sysdba'</span>
 </code></pre></div>
