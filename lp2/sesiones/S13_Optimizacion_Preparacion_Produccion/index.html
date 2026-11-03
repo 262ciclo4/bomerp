@@ -5819,13 +5819,24 @@ docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </spa
 <span class="w">  </span><span class="nt">cors</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">allowed-origins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${CORS_ALLOWED_ORIGINS:http://localhost:4300}</span>
 
+<span class="nt">springdoc</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">swagger-ui</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">api-docs</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+
 <span class="nt">management</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">endpoints</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">web</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">exposure</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">include</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">health,info</span>
+<span class="w">  </span><span class="nt">endpoint</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">health</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">show-details</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">never</span>
 </code></pre></div>
+<p><strong><code>management.endpoint.health.show-details: never</code> explícito, no solo por defecto</strong>: es el valor por defecto de Spring Boot, así que no cambia el comportamiento — pero déjalo escrito, el mismo criterio que ya usa <code>pagatu-catalogo-ms-prod.yml</code>. No es solo estilo: cuando un estudiante pasa a Distribuidas y lee <code>pagatu-catalogo-ms-prod.yml</code>, encuentra el mismo patrón que ya vio aquí, no uno nuevo que aprender — el criterio va de LP2 hacia Distribuidas, no al revés.</p>
 <p><strong>Error frecuente</strong>: olvidar <code>bomerp.cors.allowed-origins</code> en <code>application-prod.yml</code> — verificado: el backend arranca, pasa la validación de esquema, y recién al crear el bean <code>corsConfig</code> falla con <code>Could not resolve placeholder 'bomerp.cors.allowed-origins'</code>. <code>application-dev.yml</code> ya lo tiene (S1); <code>prod</code> necesita su propio valor, apuntando al puerto real donde sirves el frontend compilado (<code>4300</code>, 3.10).</p>
+<p><strong><code>springdoc</code> desactivado, no solo protegido</strong>: verificado — sin esto, el propio arranque de <code>bomerp-backend</code> imprime el <em>warning</em> <code>SpringDoc /v3/api-docs endpoint is enabled by default. To disable it in production, set the property 'springdoc.api-docs.enabled=false'</code> (y el mismo para <code>swagger-ui.html</code>). <code>SecurityConfig</code> (3.8) deja <code>/swagger-ui/**</code> y <code>/v3/api-docs/**</code> en <code>permitAll()</code> — sin este bloque, cualquiera podría navegar la documentación completa de la API en <code>prod</code> sin loguearse. El mismo criterio que ya usa <code>pagatu-catalogo-ms-prod.yml</code>: no la deja detrás de un login, la apaga del todo.</p>
 <p>Los valores en sí — a dónde apunta cada variable — los define <code>compose.yml</code>, no <code>application-prod.yml</code>: <code>DB_HOST</code>/<code>DB_PORT</code>/<code>DB_NAME</code>/<code>REDIS_HOST</code>/<code>REDIS_PORT</code>/<code>KEYCLOAK_HOST</code>/<code>KEYCLOAK_PORT</code> son estables (nombres de servicio y puertos internos, no secretos), así que van escritos directo en <code>compose.yml</code>; solo <code>DB_USERNAME</code>/<code>DB_PASSWORD</code> siguen viniendo de <code>.env</code> — igual que en <code>pagatu-catalogo-ms</code>, donde <code>DB_HOST</code>/<code>DB_PORT</code> están fijos en <code>compose.yml</code> pero <code>DB_NAME</code>/<code>DB_USER</code>/<code>DB_PASS</code> sí vienen de <code>.env</code>.</p>
 <p><code>lp2/bomerp-backend/Dockerfile</code> (<em>multi-stage</em>: compila en una imagen con Maven, y el contenedor final solo lleva el JAR ya construido y el JRE, sin el código fuente ni Maven) — sin cambios:</p>
 <div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">maven:3.9-eclipse-temurin-21</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">build</span>
