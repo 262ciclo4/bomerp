@@ -402,8 +402,10 @@ PowerShell:
 
 ```powershell
 @'
-SELECT * FROM V$TIMEZONE_FILE;          -- debe mostrar timezlrg_45.dat
-SELECT COUNT(*) FROM V$TIMEZONE_NAMES;  -- debe ser > 0 (antes: 0)
+-- debe mostrar timezlrg_45.dat
+SELECT * FROM V$TIMEZONE_FILE;
+-- debe ser > 0 (antes: 0)
+SELECT COUNT(*) FROM V$TIMEZONE_NAMES;
 EXIT;
 '@ | docker exec -i bomerp-oracle bash -c 'sqlplus -s / as sysdba'
 ```
