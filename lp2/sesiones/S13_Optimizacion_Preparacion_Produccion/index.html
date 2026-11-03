@@ -5376,9 +5376,133 @@ ng<span class="w"> </span>serve
 <span class="s">EOF</span>
 </code></pre></div>
 <p>Si <code>V$TIMEZONE_FILE</code> no devuelve filas y <code>DST_PRIMARY_TT_VERSION = 45</code>: la base espera la versión 45 de datos de zonas horarias, pero la imagen de Oracle que BD2 cambió solo trae instalada la versión 43.</p>
-<p><strong>Esto no es porque la imagen regular <code>gvenzl/oracle-free:23</code> necesite siempre <code>timezlrg_45.dat</code> para arrancar.</strong> Una base creada de cero directamente con la imagen regular se inicializa limpia en su propia versión nativa (43) y no pide nada más — es justo lo que pasa con el Oracle de <code>prod</code> en 3.9, que nace sin este problema. Lo que causa el error aquí es específicamente que el volumen <code>oracle-data</code> de <code>bomerp-oracle</code> <strong>ya existía de antes</strong>, creado originalmente con la imagen <code>-slim</code> (que sí trae instalada la versión 45 por defecto) — su diccionario de datos quedó con la versión 45 grabada como la esperada. Al cambiar solo el contenedor a la imagen regular (que únicamente trae hasta la 43) sin recrear ese volumen, Oracle ya no puede abrir una base que espera una versión de zona horaria que el nuevo <code>ORACLE_HOME</code> no tiene instalada.</p>
-<p><strong>Alternativa, si no quieres instalar el archivo:</strong> en vez de copiar <code>timezlrg_45.dat</code>, podrías borrar el volumen <code>oracle-data</code> y recrear los esquemas, usuarios y tablas desde cero directamente sobre la imagen regular (los mismos scripts de BD2 S1/S4 que usa 3.9 para poblar <code>prod</code>) — una base así nunca llega a pedir la versión 45, porque nunca existió con ella instalada. <strong>No es la opción recomendada para <code>bomerp-oracle</code> de <code>dev</code></strong>: ese volumen es la base compartida de todo el equipo (ADS + BD2 + LP2), y borrarlo se lleva el trabajo de los tres cursos, no solo el tuyo. Esa misma alternativa es justamente la que sí usa esta guía en 3.9, donde <code>prod</code> tiene su propio volumen nuevo (<code>oracle-data-prod</code>) y nadie más depende de él — por eso ahí no hace falta ningún arreglo de zona horaria.</p>
-<p>El arreglo recomendado para <code>dev</code>, verificado, sin ningún archivo con licencia de Oracle (la imagen <code>slim</code> anterior, que sí trae la versión correcta, suele seguir cacheada localmente). <strong>Ojo con la ruta de origen dentro de la imagen <code>slim</code>: es <code>26ai</code>, no <code>23ai</code></strong> — verificado; con <code>23ai</code> el <code>docker cp</code> falla con <code>Could not find the file</code>.</p>
+<p><strong>Esto no es porque la imagen regular <code>gvenzl/oracle-free:23</code> necesite siempre <code>timezlrg_45.dat</code> para arrancar.</strong> Una base creada de cero directamente con la imagen regular se inicializa limpia en su propia versión nativa (43) y no pide nada más — es justo lo que pasa con el Oracle de <code>prod</code> en 3.9, que nace sin este problema. Lo que causa el error aquí es específicamente que el volumen <code>oracle-data</code> de <code>bomerp-oracle</code> <strong>ya existía de antes</strong>, creado originalmente con la imagen <code>-slim</code> (que sí trae instalada la versión 45 por defecto) — su diccionario de datos quedó con la versión 45 grabada como la esperada. Al cambiar solo el contenedor a la imagen regular (que únicamente trae hasta la 43) sin recrear ese volumen, Oracle ya no puede abrir una base que espera una versión de zona horaria que el nuevo <code>ORACLE_HOME</code> no tiene instalada. Hay dos formas igualmente válidas de resolverlo:</p>
+<p><strong>Alternativa 1 — recrear los esquemas, usuarios y tablas desde cero.</strong> Borra el volumen <code>oracle-data</code> y vuelve a crear todo directamente sobre la imagen regular, con el mismo script que usa esta guía en 3.9 para poblar el Oracle de <code>prod</code> (ya actualizado contra las entidades reales, con <code>VENDEDOR_ID</code> incluido). Una base así nunca llega a pedir la versión 45, porque nunca existió con ella instalada: no hace falta ningún arreglo de zona horaria. La diferencia frente a <code>prod</code>: <code>oracle-data</code> es la base compartida de todo el equipo (ADS + BD2 + LP2) en <code>dev</code>, así que borrarla se lleva también los datos de los otros dos cursos — coordina con tu equipo antes de hacerlo (o adelante, si de todas formas van a recrear todo desde cero en las tres materias, como en este caso).</p>
+<p>Elimina solo el contenedor y el volumen de Oracle — <code>keycloak</code>, <code>keycloak-db</code> y <code>redis</code> no tienen este problema, no hace falta tocarlos:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>compose-dev.yml<span class="w"> </span>rm<span class="w"> </span>-sf<span class="w"> </span>oracle
+docker<span class="w"> </span>volume<span class="w"> </span>rm<span class="w"> </span>bomerp-backend-dev_oracle-data
+docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>compose-dev.yml<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>oracle
+</code></pre></div>
+<p>Espera a que vuelva a estar <code>healthy</code> (<code>docker ps</code>, columna <code>STATUS</code>) — el primer arranque de un volumen nuevo tarda varios minutos, igual que en S1/S9 — y recrea el esquema. Mismo script que 3.9, cambiando solo el contenedor de destino (<code>bomerp-oracle-prod</code> → <code>bomerp-oracle</code>; el puerto sigue siendo <code>1521</code>, el que expone <code>compose-dev.yml</code>):</p>
+<p>PowerShell:</p>
+<div class="highlight"><pre><span></span><code><span class="sh">@'</span>
+<span class="sh">CREATE USER BOM_CATALOGO IDENTIFIED BY "123456" QUOTA UNLIMITED ON USERS;</span>
+<span class="sh">GRANT CREATE SESSION, CREATE TABLE, CREATE VIEW, CREATE PROCEDURE, CREATE TRIGGER TO BOM_CATALOGO;</span>
+
+<span class="sh">CREATE TABLE BOM_CATALOGO.CATEGORIAS (</span>
+<span class="sh">    ID NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,</span>
+<span class="sh">    NOMBRE VARCHAR2(80) NOT NULL UNIQUE,</span>
+<span class="sh">    DESCRIPCION VARCHAR2(200)</span>
+<span class="sh">);</span>
+
+<span class="sh">CREATE TABLE BOM_CATALOGO.PRODUCTOS (</span>
+<span class="sh">    ID NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,</span>
+<span class="sh">    ID_CATEGORIA NUMBER,</span>
+<span class="sh">    NOMBRE VARCHAR2(120) NOT NULL,</span>
+<span class="sh">    PRECIO NUMBER(10,2) NOT NULL,</span>
+<span class="sh">    STOCK NUMBER(10) NOT NULL,</span>
+<span class="sh">    CONSTRAINT FK_PRODUCTO_CATEGORIA FOREIGN KEY (ID_CATEGORIA)</span>
+<span class="sh">        REFERENCES BOM_CATALOGO.CATEGORIAS(ID),</span>
+<span class="sh">    CONSTRAINT CK_PRODUCTO_PRECIO CHECK (PRECIO &gt;= 0),</span>
+<span class="sh">    CONSTRAINT CK_PRODUCTO_STOCK CHECK (STOCK &gt;= 0)</span>
+<span class="sh">);</span>
+
+<span class="sh">GRANT SELECT, INSERT, UPDATE, DELETE ON BOM_CATALOGO.CATEGORIAS TO BOMERP_APP;</span>
+<span class="sh">GRANT SELECT, INSERT, UPDATE, DELETE ON BOM_CATALOGO.PRODUCTOS TO BOMERP_APP;</span>
+
+<span class="sh">CREATE USER BOM_VENTAS IDENTIFIED BY "123456" QUOTA UNLIMITED ON USERS;</span>
+<span class="sh">GRANT CREATE SESSION, CREATE TABLE, CREATE VIEW, CREATE PROCEDURE, CREATE TRIGGER TO BOM_VENTAS;</span>
+
+<span class="sh">CREATE TABLE BOM_VENTAS.VENTAS (</span>
+<span class="sh">    ID          NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,</span>
+<span class="sh">    FECHA       TIMESTAMP NOT NULL,</span>
+<span class="sh">    ESTADO      VARCHAR2(20) NOT NULL,</span>
+<span class="sh">    TOTAL       NUMBER(12,2) NOT NULL,</span>
+<span class="sh">    VENDEDOR_ID VARCHAR2(36),</span>
+<span class="sh">    CONSTRAINT CK_VENTA_TOTAL CHECK (TOTAL &gt;= 0)</span>
+<span class="sh">);</span>
+
+<span class="sh">CREATE TABLE BOM_VENTAS.DETALLE_VENTAS (</span>
+<span class="sh">    ID               NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,</span>
+<span class="sh">    ID_VENTA         NUMBER NOT NULL,</span>
+<span class="sh">    ID_PRODUCTO      NUMBER NOT NULL,</span>
+<span class="sh">    NOMBRE_PRODUCTO  VARCHAR2(120) NOT NULL,</span>
+<span class="sh">    PRECIO_UNITARIO  NUMBER(10,2) NOT NULL,</span>
+<span class="sh">    CANTIDAD         NUMBER(10) NOT NULL,</span>
+<span class="sh">    SUBTOTAL         NUMBER(12,2) NOT NULL,</span>
+<span class="sh">    CONSTRAINT FK_DETALLE_VENTA FOREIGN KEY (ID_VENTA)</span>
+<span class="sh">        REFERENCES BOM_VENTAS.VENTAS(ID),</span>
+<span class="sh">    CONSTRAINT CK_DETALLE_CANTIDAD CHECK (CANTIDAD &gt; 0),</span>
+<span class="sh">    CONSTRAINT CK_DETALLE_SUBTOTAL CHECK (SUBTOTAL &gt;= 0)</span>
+<span class="sh">);</span>
+
+<span class="sh">GRANT SELECT, INSERT, UPDATE, DELETE ON BOM_VENTAS.VENTAS TO BOMERP_APP;</span>
+<span class="sh">GRANT SELECT, INSERT, UPDATE, DELETE ON BOM_VENTAS.DETALLE_VENTAS TO BOMERP_APP;</span>
+<span class="sh">EXIT;</span>
+<span class="sh">'@</span> <span class="p">|</span> <span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="n">bomerp-oracle</span> <span class="n">bash</span> <span class="n">-c</span> <span class="s1">'sqlplus -s system/123456@localhost:1521/FREEPDB1'</span>
+</code></pre></div>
+<p>macOS/Linux:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>bomerp-oracle<span class="w"> </span>sqlplus<span class="w"> </span>-s<span class="w"> </span>system/123456@localhost:1521/FREEPDB1<span class="w"> </span><span class="s">&lt;&lt;'EOF'</span>
+<span class="s">CREATE USER BOM_CATALOGO IDENTIFIED BY "123456" QUOTA UNLIMITED ON USERS;</span>
+<span class="s">GRANT CREATE SESSION, CREATE TABLE, CREATE VIEW, CREATE PROCEDURE, CREATE TRIGGER TO BOM_CATALOGO;</span>
+
+<span class="s">CREATE TABLE BOM_CATALOGO.CATEGORIAS (</span>
+<span class="s">    ID NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,</span>
+<span class="s">    NOMBRE VARCHAR2(80) NOT NULL UNIQUE,</span>
+<span class="s">    DESCRIPCION VARCHAR2(200)</span>
+<span class="s">);</span>
+
+<span class="s">CREATE TABLE BOM_CATALOGO.PRODUCTOS (</span>
+<span class="s">    ID NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,</span>
+<span class="s">    ID_CATEGORIA NUMBER,</span>
+<span class="s">    NOMBRE VARCHAR2(120) NOT NULL,</span>
+<span class="s">    PRECIO NUMBER(10,2) NOT NULL,</span>
+<span class="s">    STOCK NUMBER(10) NOT NULL,</span>
+<span class="s">    CONSTRAINT FK_PRODUCTO_CATEGORIA FOREIGN KEY (ID_CATEGORIA)</span>
+<span class="s">        REFERENCES BOM_CATALOGO.CATEGORIAS(ID),</span>
+<span class="s">    CONSTRAINT CK_PRODUCTO_PRECIO CHECK (PRECIO &gt;= 0),</span>
+<span class="s">    CONSTRAINT CK_PRODUCTO_STOCK CHECK (STOCK &gt;= 0)</span>
+<span class="s">);</span>
+
+<span class="s">GRANT SELECT, INSERT, UPDATE, DELETE ON BOM_CATALOGO.CATEGORIAS TO BOMERP_APP;</span>
+<span class="s">GRANT SELECT, INSERT, UPDATE, DELETE ON BOM_CATALOGO.PRODUCTOS TO BOMERP_APP;</span>
+
+<span class="s">CREATE USER BOM_VENTAS IDENTIFIED BY "123456" QUOTA UNLIMITED ON USERS;</span>
+<span class="s">GRANT CREATE SESSION, CREATE TABLE, CREATE VIEW, CREATE PROCEDURE, CREATE TRIGGER TO BOM_VENTAS;</span>
+
+<span class="s">CREATE TABLE BOM_VENTAS.VENTAS (</span>
+<span class="s">    ID          NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,</span>
+<span class="s">    FECHA       TIMESTAMP NOT NULL,</span>
+<span class="s">    ESTADO      VARCHAR2(20) NOT NULL,</span>
+<span class="s">    TOTAL       NUMBER(12,2) NOT NULL,</span>
+<span class="s">    VENDEDOR_ID VARCHAR2(36),</span>
+<span class="s">    CONSTRAINT CK_VENTA_TOTAL CHECK (TOTAL &gt;= 0)</span>
+<span class="s">);</span>
+
+<span class="s">CREATE TABLE BOM_VENTAS.DETALLE_VENTAS (</span>
+<span class="s">    ID               NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,</span>
+<span class="s">    ID_VENTA         NUMBER NOT NULL,</span>
+<span class="s">    ID_PRODUCTO      NUMBER NOT NULL,</span>
+<span class="s">    NOMBRE_PRODUCTO  VARCHAR2(120) NOT NULL,</span>
+<span class="s">    PRECIO_UNITARIO  NUMBER(10,2) NOT NULL,</span>
+<span class="s">    CANTIDAD         NUMBER(10) NOT NULL,</span>
+<span class="s">    SUBTOTAL         NUMBER(12,2) NOT NULL,</span>
+<span class="s">    CONSTRAINT FK_DETALLE_VENTA FOREIGN KEY (ID_VENTA)</span>
+<span class="s">        REFERENCES BOM_VENTAS.VENTAS(ID),</span>
+<span class="s">    CONSTRAINT CK_DETALLE_CANTIDAD CHECK (CANTIDAD &gt; 0),</span>
+<span class="s">    CONSTRAINT CK_DETALLE_SUBTOTAL CHECK (SUBTOTAL &gt;= 0)</span>
+<span class="s">);</span>
+
+<span class="s">GRANT SELECT, INSERT, UPDATE, DELETE ON BOM_VENTAS.VENTAS TO BOMERP_APP;</span>
+<span class="s">GRANT SELECT, INSERT, UPDATE, DELETE ON BOM_VENTAS.DETALLE_VENTAS TO BOMERP_APP;</span>
+<span class="s">EXIT;</span>
+<span class="s">EOF</span>
+</code></pre></div>
+<p><code>BOMERP_APP</code> no se vuelve a crear — ya lo creó <code>APP_USER</code> de la imagen al arrancar (mismas variables de entorno de <code>compose-dev.yml</code>, S1) — y los <code>GRANT</code> van en el mismo script. Reinicia el backend después (<code>docker compose -f compose-dev.yml restart</code> o tu propio <code>mvnw</code>) para confirmar que conecta sin errores de esquema.</p>
+<p><strong>Opcional, libera espacio</strong>: con la Alternativa 1 ya no necesitas la imagen <code>gvenzl/oracle-free:23-slim</code> cacheada — solo servía para sacar <code>timezlrg_45.dat</code> en la Alternativa 2. Bórrala una vez que confirmes que todo quedó funcionando (si la necesitas de nuevo, Docker la vuelve a descargar):</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>rmi<span class="w"> </span>gvenzl/oracle-free:23-slim
+</code></pre></div>
+<p><strong>Alternativa 2 — instalar el <code>timezlrg_45.dat</code> que falta.</strong> Mantiene el volumen y los datos tal como están; solo copia el archivo de zona horaria correcto dentro del contenedor. Verificado, sin ningún archivo con licencia de Oracle (la imagen <code>slim</code> anterior, que sí trae la versión correcta, suele seguir cacheada localmente). <strong>Ojo con la ruta de origen dentro de la imagen <code>slim</code>: es <code>26ai</code>, no <code>23ai</code></strong> — verificado; con <code>23ai</code> el <code>docker cp</code> falla con <code>Could not find the file</code>.</p>
 <p>PowerShell:</p>
 <div class="highlight"><pre><span></span><code><span class="nv">$cid</span> <span class="p">=</span> <span class="n">docker</span> <span class="n">create</span> <span class="p">-</span><span class="n">-entrypoint</span> <span class="n">bash</span> <span class="n">gvenzl</span><span class="p">/</span><span class="n">oracle-free</span><span class="p">:</span><span class="n">23-slim</span> <span class="n">-c</span> <span class="s2">"true"</span>
 <span class="n">docker</span> <span class="nb">cp </span><span class="s2">"${cid}:/opt/oracle/product/26ai/dbhomeFree/oracore/zoneinfo/timezlrg_45.dat"</span> <span class="p">.\</span><span class="n">timezlrg_45</span><span class="p">.</span><span class="n">dat</span>
@@ -5456,11 +5580,16 @@ timezlrg_45.dat                 45          0
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>lp2/bomerp-frontend
 ng<span class="w"> </span>build<span class="w"> </span>--configuration<span class="w"> </span>production<span class="w"> </span>--stats-json
 </code></pre></div>
-<p>La terminal imprime una tabla con cada <em>chunk</em> generado y su tamaño — confirma que existen archivos separados para <code>catalogo</code>, <code>ventas</code> y <code>seguridad</code> (o los nombres reales de tus <em>features</em>), no un único archivo gigante con toda la aplicación.</p>
-<p>Ahora confírmalo en vivo, en el navegador: abre <code>http://localhost:4200</code> con las herramientas de desarrollo (<code>F12</code>) en la pestaña <strong>Network</strong>, filtra por <code>JS</code>, limpia la lista y navega directo a <strong>Categorías</strong> sin pasar por <strong>Ventas</strong>. Ningún archivo con <code>ventas</code> en el nombre debería aparecer en la lista — recién aparece cuando haces clic en el enlace de <strong>Ventas</strong> del sidebar.</p>
-<p><strong>Error frecuente</strong>: medir el bundle con <code>ng serve</code> (modo desarrollo). <code>ng serve</code> no aplica las mismas optimizaciones que <code>ng build --configuration production</code> (minificación, <em>tree-shaking</em>) — el tamaño que ves en DEV no representa el tamaño real que descargaría un usuario en producción.</p>
+<p>La terminal imprime una tabla con cada <em>chunk</em> generado y su tamaño — confirma que existen archivos separados para <code>catalogo</code>, <code>ventas</code> y <code>seguridad</code> (o los nombres reales de tus <em>features</em>), no un único archivo gigante con toda la aplicación. <code>ng build</code> solo escribe esos archivos en <code>dist/bomerp-frontend/browser</code> — no levanta ningún servidor, así que ese <code>dist/</code> por sí solo no se puede abrir todavía en el navegador.</p>
+<p><strong>Parte 1 (ahora, contra <code>dev</code>):</strong> la división en <em>chunks</em> por ruta es una característica de cómo está armado el build (<code>loadChildren</code>), no algo exclusivo de la optimización de producción — se puede confirmar en vivo contra el <code>ng serve</code> de 3.1, que ya tiene el backend de <code>dev</code> funcionando detrás. Abre <code>http://localhost:4200</code> con las herramientas de desarrollo (<code>F12</code>) en la pestaña <strong>Network</strong>, filtra por <code>JS</code>, limpia la lista y navega directo a <strong>Categorías</strong> sin pasar por <strong>Ventas</strong>. Ningún archivo con <code>ventas</code> en el nombre debería aparecer en la lista — recién aparece cuando haces clic en el enlace de <strong>Ventas</strong> del sidebar.</p>
+<p><strong>Parte 2 (más adelante, en 3.10, contra <code>prod</code>):</strong> esto solo confirma que el <em>routing</em> separa los <em>chunks</em> — todavía no confirma los tamaños reales optimizados (minificados, sin <em>source maps</em>) de la tabla de arriba, porque <code>dev</code> nunca sirve ese build. No se puede hacer todavía: necesita el backend de <code>prod</code> (3.9), que en este punto de la guía aún no existe. Una vez que lo tengas arriba, sirve el build de producción con la configuración real en el puerto <code>4300</code> (Tabla 8):</p>
+<div class="highlight"><pre><span></span><code>ng<span class="w"> </span>serve<span class="w"> </span>--configuration<span class="w"> </span>production<span class="w"> </span>--port<span class="w"> </span><span class="m">4300</span>
+</code></pre></div>
+<p>Repite el mismo chequeo de Network contra <code>http://localhost:4300</code>. 3.10 hace exactamente esto (con <code>http-server</code> en vez de <code>ng serve</code>, para probar el build tal cual se va a desplegar) como parte de su verificación de punta a punta — si ya llegaste hasta ahí, no hace falta repetir el paso aparte, el chequeo de Network se hace sobre ese mismo servidor.</p>
+<p><strong>Error frecuente</strong>: medir el bundle con <code>ng serve</code> (modo desarrollo) y quedarse solo con eso. Sirve para confirmar que el <em>Lazy Loading</em> existe (Parte 1), pero no mide tamaño real — <code>ng serve</code> no aplica las mismas optimizaciones que <code>ng build --configuration production</code> (minificación, <em>tree-shaking</em>); el tamaño que ves en DEV no representa el tamaño real que descargaría un usuario en producción, por eso hace falta también la Parte 2.</p>
 <h3 id="34-configurar-presupuestos-de-bundle">3.4 Configurar presupuestos de bundle<a class="headerlink" href="#34-configurar-presupuestos-de-bundle" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> <code>angular.json</code> con un límite de tamaño que hace fallar el build si una ruta crece sin control.</p>
+<p>Un <em>budget</em> no limita en tiempo de ejecución lo que puedes escribir, ni hace que el sistema "se caiga" si un <em>chunk</em> crece — es un chequeo que corre solo durante el <strong>build</strong>. Si un <em>chunk</em> supera <code>maximumWarning</code>, <code>ng build</code> sigue terminando bien (código <code>0</code>), solo imprime una advertencia; si supera <code>maximumError</code>, el build <strong>falla</strong> (código distinto de <code>0</code>) — no se genera ningún artefacto, no hay nada que desplegar. El código nunca llega a producción, porque el pipeline se detiene antes, en tu laptop o en CI, no cuando ya hay un usuario esperando que cargue. El beneficio real: sin esto, alguien importa sin querer una librería pesada completa (ejemplo clásico: <code>import * as _ from 'lodash'</code> en vez de solo la función que necesita) y nadie se entera hasta que un usuario se queja de que la app tarda — ya en producción, con gente afectada. Con el presupuesto, te enteras en el momento exacto en que pasó, con el nombre del <em>chunk</em> y el tamaño que lo causó. Si el crecimiento es legítimo (la app de verdad necesita ese peso), el límite no es una pared técnica de Angular — es un número que tú mismo calibras en <code>angular.json</code> y subes cuando haga falta.</p>
 <p>En <code>angular.json</code>, dentro de la configuración <code>production</code> del proyecto, agrega o revisa <code>budgets</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">"budgets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">  </span><span class="p">{</span>
@@ -5659,8 +5788,14 @@ docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </spa
 <td><code>8080</code> (<code>mvnw</code>, sin Docker)</td>
 <td><code>48088</code> (no <code>48080</code> — chocaría con Keycloak, que también parte de <code>8080</code> por defecto)</td>
 </tr>
+<tr>
+<td><code>bomerp-frontend</code></td>
+<td><code>4200</code> (<code>ng serve</code>, sin Docker)</td>
+<td><code>4300</code> (<code>http-server</code> sobre el build estático de 3.10)</td>
+</tr>
 </tbody>
 </table>
+<p><code>bomerp-frontend</code> es la excepción a la columna del prefijo: <code>4200</code> ya es el puerto por defecto de <code>ng serve</code> (Angular CLI, sin relación con <code>3xxxx</code>/<code>4xxxx</code> de este proyecto), así que <code>prod</code> no le antepone un <code>4</code> — solo se eligió <code>4300</code>, libre y fácil de distinguir de <code>4200</code>.</p>
 <p><code>lp2/bomerp-backend/src/main/resources/application-prod.yml</code> (completo — incluye Redis, si 3.6 lo justificó para tu proyecto; si no, omite el bloque <code>data.redis</code>). Ningún dato de conexión va escrito directo en el YAML — todo llega por variable de entorno, el mismo criterio que <code>pagatu-catalogo-ms-prod.yml</code> ya aplica en <code>infra/pagatu-config/config-repo</code> (ahí hasta <code>DB_HOST</code>/<code>DB_PORT</code>/<code>DB_NAME</code> son <code>${...}</code>, no solo usuario/contraseña):</p>
 <div class="highlight"><pre><span></span><code><span class="nt">spring</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">security</span><span class="p">:</span>
@@ -5704,7 +5839,7 @@ docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </spa
 <span class="k">EXPOSE</span><span class="w"> </span><span class="s">8080</span>
 <span class="k">ENTRYPOINT</span><span class="w"> </span><span class="p">[</span><span class="s2">"java"</span><span class="p">,</span><span class="w"> </span><span class="s2">"-jar"</span><span class="p">,</span><span class="w"> </span><span class="s2">"app.jar"</span><span class="p">]</span>
 </code></pre></div>
-<p><code>lp2/bomerp-backend/compose.yml</code> (sin sufijo — es PROD; solo DEV lleva sufijo, <code>compose-dev.yml</code>, el mismo criterio que pagatu ya usa en <code>pagatu-catalogo-ms</code>: el nombre sin sufijo es el que Docker Compose toma por defecto, así <code>prod</code> arranca con un simple <code>docker compose up</code>, sin <code>-f</code>). Completo — Oracle, Keycloak-DB, Keycloak, Redis (si tu proyecto lo implementó en 3.6; si no, quita el servicio <code>redis</code> y <code>REDIS_HOST</code>/<code>REDIS_PORT</code> del backend, y el bloque <code>data.redis</code> de <code>application-prod.yml</code>) y el backend, los cinco en el mismo archivo, con nombres de contenedor, volúmenes y puertos propios de <code>prod</code>, ninguno compartido con <code>dev</code>:</p>
+<p><code>lp2/bomerp-backend/compose.yml</code> (sin sufijo — es PROD; solo DEV lleva sufijo, <code>compose-dev.yml</code>, el mismo criterio que pagatu ya usa en <code>pagatu-catalogo-ms</code>: el nombre sin sufijo es el que Docker Compose toma por defecto, así <code>prod</code> arranca con un simple <code>docker compose up</code>, sin <code>-f</code>). Completo — Oracle, Keycloak-DB, Keycloak, Redis (si tu proyecto lo implementó en 3.6; si no, quita el servicio <code>redis</code> y <code>REDIS_HOST</code>/<code>REDIS_PORT</code> del backend, y el bloque <code>data.redis</code> de <code>application-prod.yml</code>) y el backend, los cinco en el mismo archivo, con nombres de contenedor, volúmenes y puertos propios de <code>prod</code>, ninguno compartido con <code>dev</code>. Ninguna contraseña queda escrita en el archivo — todas salen de <code>.env</code> (3.10), el mismo criterio que ya usa <code>bomerp-backend</code> para <code>DB_USERNAME</code>/<code>DB_PASSWORD</code>; de hecho <code>APP_USER</code>/<code>APP_USER_PASSWORD</code> de Oracle son el mismo usuario, así que reusan esas mismas dos variables en vez de duplicarlas:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">services</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">oracle</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gvenzl/oracle-free:23</span>
@@ -5714,9 +5849,9 @@ docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </spa
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"41521:1521"</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"45500:5500"</span>
 <span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">ORACLE_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">123456</span>
-<span class="w">      </span><span class="nt">APP_USER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BOMERP_APP</span>
-<span class="w">      </span><span class="nt">APP_USER_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">123456</span>
+<span class="w">      </span><span class="nt">ORACLE_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${ORACLE_PASSWORD}</span>
+<span class="w">      </span><span class="nt">APP_USER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${DB_USERNAME}</span>
+<span class="w">      </span><span class="nt">APP_USER_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${DB_PASSWORD}</span>
 <span class="w">      </span><span class="nt">TZ</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">America/Lima</span>
 <span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">oracle-data-prod:/opt/oracle/oradata</span>
@@ -5736,7 +5871,7 @@ docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </spa
 <span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">POSTGRES_DB</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bomerp_keycloak</span>
 <span class="w">      </span><span class="nt">POSTGRES_USER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bomerp_keycloak</span>
-<span class="w">      </span><span class="nt">POSTGRES_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">123456</span>
+<span class="w">      </span><span class="nt">POSTGRES_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${KEYCLOAK_DB_PASSWORD}</span>
 <span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">keycloak-db-data-prod:/var/lib/postgresql/data</span>
 <span class="w">    </span><span class="nt">healthcheck</span><span class="p">:</span>
@@ -5757,12 +5892,12 @@ docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </spa
 <span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"48080:8080"</span>
 <span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">KC_BOOTSTRAP_ADMIN_USERNAME</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin</span>
-<span class="w">      </span><span class="nt">KC_BOOTSTRAP_ADMIN_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin123</span>
+<span class="w">      </span><span class="nt">KC_BOOTSTRAP_ADMIN_USERNAME</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${KEYCLOAK_ADMIN_USERNAME}</span>
+<span class="w">      </span><span class="nt">KC_BOOTSTRAP_ADMIN_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${KEYCLOAK_ADMIN_PASSWORD}</span>
 <span class="w">      </span><span class="nt">KC_DB</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres</span>
 <span class="w">      </span><span class="nt">KC_DB_URL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jdbc:postgresql://keycloak-db:5432/bomerp_keycloak</span>
 <span class="w">      </span><span class="nt">KC_DB_USERNAME</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bomerp_keycloak</span>
-<span class="w">      </span><span class="nt">KC_DB_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">123456</span>
+<span class="w">      </span><span class="nt">KC_DB_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${KEYCLOAK_DB_PASSWORD}</span>
 <span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">keycloak-data-prod:/opt/keycloak/data</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./keycloak-import:/opt/keycloak/data/import</span>
@@ -5955,10 +6090,14 @@ docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> 
 <h3 id="310-ejecutar-el-build-de-produccion-y-verificar-de-punta-a-punta">3.10 Ejecutar el build de producción y verificar de punta a punta<a class="headerlink" href="#310-ejecutar-el-build-de-produccion-y-verificar-de-punta-a-punta" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> el sistema completo corriendo con la configuración de producción, de punta a punta.</p>
 <p>Oracle, Keycloak-DB, Keycloak y Redis de <code>prod</code> ya están corriendo (3.9, poblados con el esquema y el realm reales) — falta solo construir y levantar <code>bomerp-backend</code>, que <code>docker compose up</code> agrega sin tocar los demás (ya están arriba, Compose no los reinicia).</p>
-<p>Usa un archivo <code>.env</code> para <code>DB_USERNAME</code>/<code>DB_PASSWORD</code> — con 9 variables ya fijas en <code>compose.yml</code> (3.9), setear a mano hasta estas dos por terminal cada vez es justo el tipo de fricción que <code>.env</code> evita (el mismo criterio que <code>pagatu-catalogo-ms</code> ya documenta en su propio README y en DIST S01, 3.6.2): Docker Compose lee automáticamente un <code>.env</code> que esté en el mismo directorio que <code>compose.yml</code>, sin ningún flag adicional. Crea <code>lp2/bomerp-backend/.env.example</code> (se versiona, sin secretos reales) y copia tu propio <code>.env</code> a partir de él (nunca se versiona):</p>
+<p>Usa un archivo <code>.env</code> para las 6 contraseñas/usuarios que <code>compose.yml</code> (3.9) ya no trae escritos — setearlas a mano por terminal cada vez es justo el tipo de fricción que <code>.env</code> evita (el mismo criterio que <code>pagatu-catalogo-ms</code> ya documenta en su propio README y en DIST S01, 3.6.2): Docker Compose lee automáticamente un <code>.env</code> que esté en el mismo directorio que <code>compose.yml</code>, sin ningún flag adicional. Crea <code>lp2/bomerp-backend/.env.example</code> (se versiona, sin secretos reales) y copia tu propio <code>.env</code> a partir de él (nunca se versiona):</p>
 <div class="highlight"><pre><span></span><code># .env.example
 DB_USERNAME=BOMERP_APP
 DB_PASSWORD=123456
+ORACLE_PASSWORD=123456
+KEYCLOAK_DB_PASSWORD=123456
+KEYCLOAK_ADMIN_USERNAME=admin
+KEYCLOAK_ADMIN_PASSWORD=admin123
 </code></pre></div>
 <p>Agrega <code>.env</code> (no <code>.env.example</code>) a <code>lp2/bomerp-backend/.gitignore</code>:</p>
 <div class="highlight"><pre><span></span><code>.env
@@ -5968,7 +6107,7 @@ DB_PASSWORD=123456
 docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>--build<span class="w"> </span>-d
 </code></pre></div>
 <p><code>compose.yml</code> (sin sufijo) es el nombre que Docker Compose busca por defecto — tanto para el propio archivo como para <code>.env</code> — no hace falta <code>-f</code> ni <code>--env-file</code>, a diferencia de <code>dev</code>, que sí necesita <code>-f</code> porque su archivo lleva el sufijo <code>-dev</code>.</p>
-<p><strong>Opcional, no recomendado</strong>: si prefieres no crear <code>.env</code>, <code>$env:DB_USERNAME</code>/<code>$env:DB_PASSWORD</code> (PowerShell) o <code>export DB_USERNAME</code>/<code>DB_PASSWORD</code> (macOS/Linux) antes del mismo <code>docker compose up --build -d</code> también funciona — pero hay que repetirlo en cada terminal nueva, y preparar <code>.env</code> una sola vez cuesta menos que hacer esto cada vez.</p>
+<p><strong>Opcional, no recomendado</strong>: si prefieres no crear <code>.env</code>, exportar las 6 variables a mano (<code>$env:DB_USERNAME</code>, etc. en PowerShell; <code>export DB_USERNAME</code>, etc. en macOS/Linux) antes del mismo <code>docker compose up --build -d</code> también funciona — pero hay que repetirlo en cada terminal nueva, y preparar <code>.env</code> una sola vez cuesta menos que hacer esto cada vez.</p>
 <p>Confirma que el contenedor arrancó sano y compara su log contra el de <code>dev</code> (3.7) — ahora sí, los dos arrancados de la forma en que cada uno corre de verdad:</p>
 <div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>logs<span class="w"> </span>-f<span class="w"> </span>bomerp-backend
 </code></pre></div>
@@ -5983,6 +6122,7 @@ ng<span class="w"> </span>build<span class="w"> </span>--configuration<span clas
 npx<span class="w"> </span>http-server<span class="w"> </span>dist/bomerp-frontend/browser<span class="w"> </span>-p<span class="w"> </span><span class="m">4300</span>
 </code></pre></div>
 <p>Abre <code>http://localhost:4300</code>, inicia sesión contra el Keycloak de <code>prod</code> (<code>http://localhost:48080/realms/bomerp</code>, con el usuario que recreaste en 3.9) y registra una venta de punta a punta — el mismo flujo completo de siempre, ahora sobre el build optimizado, el backend en perfil <code>prod</code>, y el stack de infraestructura de <code>prod</code> completo, corriendo en paralelo al de <code>dev</code> sin haber tocado ningún puerto compartido.</p>
+<p><strong>Cierra aquí la Parte 2 de 3.3</strong>: con <code>prod</code> ya arriba, repite el mismo chequeo de Network (<code>F12</code> → <strong>Network</strong> → filtra <code>JS</code> → navega a <strong>Categorías</strong> sin pasar por <strong>Ventas</strong>) pero ahora contra este <code>http://localhost:4300</code> — confirma que el <em>Lazy Loading</em> también se cumple en el build real, optimizado, con el backend de <code>prod</code> detrás, no solo en el <code>ng serve</code> de <code>dev</code> de 3.3.</p>
 <h3 id="311-relacionar-con-ads-y-bd2">3.11 Relacionar con ADS y BD2<a class="headerlink" href="#311-relacionar-con-ads-y-bd2" title="Permanent link">&para;</a></h3>
 <p>Sesión equivalente en los otros dos cursos, misma semana: ADS cierra su propio Catálogo UML en S12 y entra a Unidad 3 con la integración y consolidación del producto del curso. BD2 ya cerró Unidad 2 (S12) con la base administrada, optimizada y asegurada, y en su propia S13 (misma semana que esta) cambia la imagen de <code>bomerp-oracle</code> para tener <code>rman</code> — el motivo real detrás del paso 3.2 de esta sesión. El Oracle de <code>prod</code> (3.9) usa el mismo esquema que BD2 administra en <code>dev</code>, recreado desde los mismos scripts reales de BD2 S1/S4 — no una copia de su data, un esquema propio, verificado contra el código real; <code>ddl-auto: validate</code> en producción (3.9) sigue garantizando que <code>bomerp-backend</code> nunca lo modifica por su cuenta, ni en <code>dev</code> ni en su propio Oracle de <code>prod</code>.</p>
 <h2 id="4-crea-actividad-autonoma">4. Crea: actividad autónoma<a class="headerlink" href="#4-crea-actividad-autonoma" title="Permanent link">&para;</a></h2>
