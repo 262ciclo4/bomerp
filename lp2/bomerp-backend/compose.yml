@@ -9,9 +9,9 @@ services:
       - "41521:1521"
       - "45500:5500"
     environment:
-      ORACLE_PASSWORD: 123456
-      APP_USER: BOMERP_APP
-      APP_USER_PASSWORD: 123456
+      ORACLE_PASSWORD: ${ORACLE_PASSWORD}
+      APP_USER: ${DB_USERNAME}
+      APP_USER_PASSWORD: ${DB_PASSWORD}
       TZ: America/Lima
     volumes:
       - oracle-data-prod:/opt/oracle/oradata
@@ -31,7 +31,7 @@ services:
     environment:
       POSTGRES_DB: bomerp_keycloak
       POSTGRES_USER: bomerp_keycloak
-      POSTGRES_PASSWORD: 123456
+      POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
     volumes:
       - keycloak-db-data-prod:/var/lib/postgresql/data
     healthcheck:
@@ -52,12 +52,12 @@ services:
     ports:
       - "48080:8080"
     environment:
-      KC_BOOTSTRAP_ADMIN_USERNAME: admin
-      KC_BOOTSTRAP_ADMIN_PASSWORD: admin123
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN_USERNAME}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://keycloak-db:5432/bomerp_keycloak
       KC_DB_USERNAME: bomerp_keycloak
-      KC_DB_PASSWORD: 123456
+      KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
     volumes:
       - keycloak-data-prod:/opt/keycloak/data
       - ./keycloak-import:/opt/keycloak/data/import
