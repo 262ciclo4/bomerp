@@ -3104,6 +3104,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#anexo-em-express-no-carga-httpslocalhost5500em-sin-respuesta-o-501" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anexo: EM Express no carga (https://localhost:5500/em sin respuesta o 501)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#bibliografia" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4898,6 +4909,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#anexo-em-express-no-carga-httpslocalhost5500em-sin-respuesta-o-501" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anexo: EM Express no carga (https://localhost:5500/em sin respuesta o 501)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#bibliografia" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5522,6 +5544,41 @@ Indica 2 fortalezas y 2 recomendaciones.
 </code></pre></div>
 <p>La ruta exacta del <code>.dbf</code> puede variar entre instancias — confírmala primero con la consulta de diagnóstico de arriba antes de ejecutar el <code>OFFLINE DROP</code>.</p>
 <p><strong>Para que no vuelva a pasar</strong>, 3.2 ya crea <code>TS_BOMERP</code> con la ruta absoluta dentro del volumen persistente, no solo el nombre del archivo — la misma ruta que este anexo usa para diagnosticar y corregir el problema si volviera a aparecer.</p>
+<h2 id="anexo-em-express-no-carga-httpslocalhost5500em-sin-respuesta-o-501">Anexo: EM Express no carga (<code>https://localhost:5500/em</code> sin respuesta o <code>501</code>)<a class="headerlink" href="#anexo-em-express-no-carga-httpslocalhost5500em-sin-respuesta-o-501" title="Permanent link">&para;</a></h2>
+<p><strong>Síntoma:</strong> el navegador no abre <code>https://localhost:5500/em</code> — ya sea sin responder nada (<code>ERR_CONNECTION_CLOSED</code>) o, tras los pasos de este anexo, con <code>501 Not Implemented</code>. El puerto está publicado (<code>docker ps</code> lo muestra), y <code>DBMS_XDB_CONFIG.GETHTTPSPORT</code> confirma <code>5500</code> configurado — el problema no es el puerto, son dos capas distintas por debajo.</p>
+<p><strong>Causa 1 — sin wallet, el <em>handshake</em> TLS nunca termina.</strong> <code>WALLET_ROOT</code> no estaba configurado (confirmado en el log de alertas: <code>WALLET_ROOT location is not configured.</code>). Sin un certificado que presentar, el <em>listener</em> HTTPS acepta la conexión TCP pero la cierra a medio camino del <code>handshake</code> — el navegador lo reporta como <code>ERR_CONNECTION_CLOSED</code>.</p>
+<p><strong>Causa 2 — la real, la que bloqueaba todo (HTTP y HTTPS por igual): <code>shared_servers = 0</code>.</strong> El <em>dispatcher</em> de XDB (<code>D000</code>) existe y corre, pero sin ningún <em>shared server</em> detrás no tiene ningún <em>handler</em> registrado para el servicio <code>FREEXDB</code> (<code>lsnrctl status</code> lo muestra como <code>has 0 handler(s) for this service</code>) — así que cualquier conexión a <code>5500</code>, con o sin TLS, se cierra sin respuesta. Este era el bloqueo de fondo; el wallet por sí solo no alcanzaba.</p>
+<p><strong>Diagnóstico:</strong></p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>bomerp-oracle<span class="w"> </span>tail<span class="w"> </span>-60<span class="w"> </span>/opt/oracle/diag/rdbms/free/FREE/trace/alert_FREE.log
+docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>bomerp-oracle<span class="w"> </span>lsnrctl<span class="w"> </span>status
+</code></pre></div>
+<p>Busca <code>WALLET_ROOT location is not configured</code> en el log, y en <code>lsnrctl status</code>, el bloque <code>Service "FREEXDB"</code> — si dice <code>0 handler(s)</code>, es la Causa 2.</p>
+<p><strong>Solución — arregla las dos capas:</strong></p>
+<ol>
+<li>Crea el wallet TLS. <code>orapki</code> (la herramienta oficial de Oracle) no sirve en esta imagen — le faltan los <code>.jar</code> de PKI (<code>$ORACLE_HOME/jlib</code> no los trae), ni instalando Java aparte. Constrúyelo con <code>openssl</code> en su lugar:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>bomerp-oracle<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/opt/oracle/oradata/wallet
+docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>bomerp-oracle<span class="w"> </span>chown<span class="w"> </span>-R<span class="w"> </span>oracle:oinstall<span class="w"> </span>/opt/oracle/oradata/wallet
+docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>bomerp-oracle<span class="w"> </span>microdnf<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>openssl
+docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>bomerp-oracle<span class="w"> </span>sh<span class="w"> </span>-c<span class="w"> </span><span class="s1">'</span>
+<span class="s1">  mkdir -p /tmp/wallet-build &amp;&amp; cd /tmp/wallet-build &amp;&amp;</span>
+<span class="s1">  openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 3650 -nodes -subj "/CN=localhost" &amp;&amp;</span>
+<span class="s1">  openssl pkcs12 -export -in cert.pem -inkey key.pem -out ewallet.p12 -name xdbcert -passout pass:WalletPass123</span>
+<span class="s1">'</span>
+docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>bomerp-oracle<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/opt/oracle/oradata/wallet/tls
+docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>bomerp-oracle<span class="w"> </span>sh<span class="w"> </span>-c<span class="w"> </span><span class="s1">'cp /tmp/wallet-build/ewallet.p12 /opt/oracle/oradata/wallet/tls/ewallet.p12 &amp;&amp; chmod 600 /opt/oracle/oradata/wallet/tls/ewallet.p12'</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">ALTER</span><span class="w"> </span><span class="k">SYSTEM</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">WALLET_ROOT</span><span class="o">=</span><span class="s1">'/opt/oracle/oradata/wallet'</span><span class="w"> </span><span class="k">SCOPE</span><span class="o">=</span><span class="n">SPFILE</span><span class="p">;</span>
+<span class="n">SHUTDOWN</span><span class="w"> </span><span class="k">IMMEDIATE</span><span class="p">;</span>
+<span class="n">STARTUP</span><span class="p">;</span>
+</code></pre></div>
+<ol>
+<li>Arregla el <em>dispatcher</em> — esta es la que de verdad destraba la conexión:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="k">ALTER</span><span class="w"> </span><span class="k">SYSTEM</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">SHARED_SERVERS</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
+</code></pre></div>
+<p>Verifica con <code>lsnrctl status</code>: <code>Service "FREEXDB"</code> debe pasar a <code>1 handler(s)</code>.</p>
+<p><strong>Conclusión — esto no es suficiente para ver EM Express, y no hay arreglo posible desde el contenedor.</strong> Con las dos capas corregidas, la conexión funciona de verdad (<em>handshake</em> TLS 1.3 real, confirmado) y hasta aparece el diálogo de login del navegador — pero pedir <code>/em</code> devuelve <code>501 Not Implemented</code>: ese recurso <strong>nunca se instaló</strong>. <code>SELECT any_path FROM resource_view ...</code> confirma que <code>/em</code> no existe en el repositorio de XDB, y <code>dba_registry</code> muestra <code>JServer JAVA Virtual Machine</code> como <code>REMOVED</code> — EM Express depende de la JVM interna de la base de datos, y la edición <em>Oracle Database Free</em> (<code>gvenzl/oracle-free</code>, cualquiera de las dos imágenes) no la incluye. No es un bug de configuración ni algo que <code>orapki</code>, un wallet, o <code>shared_servers</code> puedan arreglar — es una limitación de licencia de esta edición. <strong>EM Express no es alcanzable con esta imagen</strong>, punto final; el login que llegues a ver solo abre el repositorio WebDAV genérico de XDB, no Enterprise Manager.</p>
 <h2 id="bibliografia">Bibliografía<a class="headerlink" href="#bibliografia" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Fortune. (2016, 15 de mayo). <em>SWIFT confirms second cyberattack hit a bank</em>. https://fortune.com/2016/05/15/swift-responsible-bangladesh-heist/</li>
