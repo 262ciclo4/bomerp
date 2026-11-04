@@ -604,6 +604,56 @@ La ruta exacta del `.dbf` puede variar entre instancias — confírmala primero 
 
 **Para que no vuelva a pasar**, 3.2 ya crea `TS_BOMERP` con la ruta absoluta dentro del volumen persistente, no solo el nombre del archivo — la misma ruta que este anexo usa para diagnosticar y corregir el problema si volviera a aparecer.
 
+## Anexo: EM Express no carga (`https://localhost:5500/em` sin respuesta o `501`)
+
+**Síntoma:** el navegador no abre `https://localhost:5500/em` — ya sea sin responder nada (`ERR_CONNECTION_CLOSED`) o, tras los pasos de este anexo, con `501 Not Implemented`. El puerto está publicado (`docker ps` lo muestra), y `DBMS_XDB_CONFIG.GETHTTPSPORT` confirma `5500` configurado — el problema no es el puerto, son dos capas distintas por debajo.
+
+**Causa 1 — sin wallet, el *handshake* TLS nunca termina.** `WALLET_ROOT` no estaba configurado (confirmado en el log de alertas: `WALLET_ROOT location is not configured.`). Sin un certificado que presentar, el *listener* HTTPS acepta la conexión TCP pero la cierra a medio camino del `handshake` — el navegador lo reporta como `ERR_CONNECTION_CLOSED`.
+
+**Causa 2 — la real, la que bloqueaba todo (HTTP y HTTPS por igual): `shared_servers = 0`.** El *dispatcher* de XDB (`D000`) existe y corre, pero sin ningún *shared server* detrás no tiene ningún *handler* registrado para el servicio `FREEXDB` (`lsnrctl status` lo muestra como `has 0 handler(s) for this service`) — así que cualquier conexión a `5500`, con o sin TLS, se cierra sin respuesta. Este era el bloqueo de fondo; el wallet por sí solo no alcanzaba.
+
+**Diagnóstico:**
+
+```bash
+docker exec bomerp-oracle tail -60 /opt/oracle/diag/rdbms/free/FREE/trace/alert_FREE.log
+docker exec bomerp-oracle lsnrctl status
+```
+
+Busca `WALLET_ROOT location is not configured` en el log, y en `lsnrctl status`, el bloque `Service "FREEXDB"` — si dice `0 handler(s)`, es la Causa 2.
+
+**Solución — arregla las dos capas:**
+
+1. Crea el wallet TLS. `orapki` (la herramienta oficial de Oracle) no sirve en esta imagen — le faltan los `.jar` de PKI (`$ORACLE_HOME/jlib` no los trae), ni instalando Java aparte. Constrúyelo con `openssl` en su lugar:
+
+```bash
+docker exec -u root bomerp-oracle mkdir -p /opt/oracle/oradata/wallet
+docker exec -u root bomerp-oracle chown -R oracle:oinstall /opt/oracle/oradata/wallet
+docker exec -u root bomerp-oracle microdnf install -y openssl
+docker exec bomerp-oracle sh -c '
+  mkdir -p /tmp/wallet-build && cd /tmp/wallet-build &&
+  openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 3650 -nodes -subj "/CN=localhost" &&
+  openssl pkcs12 -export -in cert.pem -inkey key.pem -out ewallet.p12 -name xdbcert -passout pass:WalletPass123
+'
+docker exec bomerp-oracle mkdir -p /opt/oracle/oradata/wallet/tls
+docker exec bomerp-oracle sh -c 'cp /tmp/wallet-build/ewallet.p12 /opt/oracle/oradata/wallet/tls/ewallet.p12 && chmod 600 /opt/oracle/oradata/wallet/tls/ewallet.p12'
+```
+
+```sql
+ALTER SYSTEM SET WALLET_ROOT='/opt/oracle/oradata/wallet' SCOPE=SPFILE;
+SHUTDOWN IMMEDIATE;
+STARTUP;
+```
+
+2. Arregla el *dispatcher* — esta es la que de verdad destraba la conexión:
+
+```sql
+ALTER SYSTEM SET SHARED_SERVERS=1;
+```
+
+Verifica con `lsnrctl status`: `Service "FREEXDB"` debe pasar a `1 handler(s)`.
+
+**Conclusión — esto no es suficiente para ver EM Express, y no hay arreglo posible desde el contenedor.** Con las dos capas corregidas, la conexión funciona de verdad (*handshake* TLS 1.3 real, confirmado) y hasta aparece el diálogo de login del navegador — pero pedir `/em` devuelve `501 Not Implemented`: ese recurso **nunca se instaló**. `SELECT any_path FROM resource_view ...` confirma que `/em` no existe en el repositorio de XDB, y `dba_registry` muestra `JServer JAVA Virtual Machine` como `REMOVED` — EM Express depende de la JVM interna de la base de datos, y la edición *Oracle Database Free* (`gvenzl/oracle-free`, cualquiera de las dos imágenes) no la incluye. No es un bug de configuración ni algo que `orapki`, un wallet, o `shared_servers` puedan arreglar — es una limitación de licencia de esta edición. **EM Express no es alcanzable con esta imagen**, punto final; el login que llegues a ver solo abre el repositorio WebDAV genérico de XDB, no Enterprise Manager.
+
 ## Bibliografía
 
 1. Fortune. (2016, 15 de mayo). *SWIFT confirms second cyberattack hit a bank*. https://fortune.com/2016/05/15/swift-responsible-bangladesh-heist/
