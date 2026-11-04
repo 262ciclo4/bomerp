@@ -425,6 +425,14 @@ EOF
 
 `BOMERP_APP` no se vuelve a crear — ya lo creó `APP_USER` de la imagen al arrancar (mismas variables de entorno de `compose-dev.yml`, S1) — y los `GRANT` van en el mismo script.
 
+**Diagnóstico, para saber si el problema es el contenedor o la conexión**: `system/123456@localhost:1521/FREEPDB1` normalmente conecta sin problema — pero si falla alguna vez con `ORA-01017: invalid username/password` (contraseña correcta, sin volver a repetirse en otros intentos), primero descarta que el contenedor esté caído, entrando sin contraseña:
+
+```bash
+docker exec -it bomerp-oracle sqlplus / as sysdba
+```
+
+Esto no pide ninguna contraseña — es autenticación por sistema operativo, nunca pasa por el *listener* TCP del puerto `1521`. Si esto conecta bien, el contenedor y la base están arriba — reintenta la conexión por contraseña (a veces basta con esperar un poco más, o usar el nombre del contenedor en vez de `localhost`: `system/123456@bomerp-oracle:1521/FREEPDB1`).
+
 **Opcional, libera espacio**: con la Alternativa 1 ya no necesitas la imagen `gvenzl/oracle-free:23-slim` cacheada — solo servía para sacar `timezlrg_45.dat` en la Alternativa 2. Bórrala una vez que confirmes que todo quedó funcionando (si la necesitas de nuevo, Docker la vuelve a descargar):
 
 ```bash

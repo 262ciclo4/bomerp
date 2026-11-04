@@ -1,0 +1,9 @@
+name: bomerp-frontend-prod
+
+services:
+  bomerp-frontend:
+    build: .
+    container_name: bomerp-frontend-prod
+    restart: unless-stopped
+    ports:
+      - "4300:80"

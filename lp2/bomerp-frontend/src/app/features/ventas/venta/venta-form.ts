@@ -15,7 +15,6 @@ import { CurrencyPipe } from '@angular/common';
   selector: 'app-venta-form',
   imports: [
     ReactiveFormsModule,
-    RouterLink,
     CurrencyPipe,
     MatAutocompleteModule,
     MatFormFieldModule,

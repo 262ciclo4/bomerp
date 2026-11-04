@@ -477,6 +477,14 @@ EOF
 
 `BOMERP_APP` no se vuelve a crear — ya lo creó `APP_USER` de la imagen al arrancar (mismas variables de entorno de `compose-dev.yml`, S1) — y los `GRANT` van en el mismo script. Reinicia el backend después (`docker compose -f compose-dev.yml restart` o tu propio `mvnw`) para confirmar que conecta sin errores de esquema.
 
+**Diagnóstico, para saber si el problema es el contenedor o la conexión**: si `system/123456@localhost:1521/FREEPDB1` falla con `ORA-01017: invalid username/password` (contraseña correcta, sin razón aparente — pasó una vez en un laboratorio real, sin volver a repetirse en otros intentos con el mismo comando), primero entra sin contraseña para descartar que el contenedor esté caído:
+
+```bash
+docker exec -it bomerp-oracle sqlplus / as sysdba
+```
+
+Esto no pide ninguna contraseña — es autenticación por sistema operativo, nunca pasa por el *listener* TCP del puerto `1521`. Si esto conecta bien, el contenedor y la base están arriba — reintenta la conexión por contraseña (a veces basta con esperar un poco más, o usar el nombre del contenedor en vez de `localhost`: `system/123456@bomerp-oracle:1521/FREEPDB1`).
+
 **Opcional, libera espacio**: con la Alternativa 1 ya no necesitas la imagen `gvenzl/oracle-free:23-slim` cacheada — solo servía para sacar `timezlrg_45.dat` en la Alternativa 2. Bórrala una vez que confirmes que todo quedó funcionando (si la necesitas de nuevo, Docker la vuelve a descargar):
 
 ```bash
@@ -849,7 +857,7 @@ La verificación real (`curl http://localhost:48088/actuator/env`) se hace en 3.
 | Keycloak | `38080` | `48080` |
 | Redis | `36379` | `46379` |
 | `bomerp-backend` | `8080` (`mvnw`, sin Docker) | `48088` (no `48080` — chocaría con Keycloak, que también parte de `8080` por defecto) |
-| `bomerp-frontend` | `4200` (`ng serve`, sin Docker) | `4300` (`http-server` sobre el build estático de 3.10) |
+| `bomerp-frontend` | `4200` (`ng serve`, sin Docker) | `4300` (`http-server` o `nginx` sobre el build estático, 3.10) |
 
 `bomerp-frontend` es la excepción a la columna del prefijo: `4200` ya es el puerto por defecto de `ng serve` (Angular CLI, sin relación con `3xxxx`/`4xxxx` de este proyecto), así que `prod` no le antepone un `4` — solo se eligió `4300`, libre y fácil de distinguir de `4200`.
 
@@ -1033,6 +1041,14 @@ Espera a que `bomerp-oracle-prod` esté `healthy` (`docker ps`, columna `STATUS`
 
 Usa los mismos scripts reales de BD2 (`docs/proyecto-integrador/u1/oracle/S01_01_esquemas.sql`, `S01_02_tablas.sql`, `S04_01_esquemas.sql`, `S04_02_tablas.sql`) como base — pero **no los repliques a ciegas**: son de hace varias sesiones, y el esquema real ya cambió desde entonces. Verificado contra las 4 entidades reales del código (`Categoria`, `Producto`, `Venta`, `DetalleVenta`): a `VENTAS` le falta una columna en el script original — `VENDEDOR_ID`, agregada después (S10/S10b, para asociar cada venta al `sub` del JWT) y nunca actualizada en el script de S4. Antes de ejecutar esto en tu propio proyecto, compara el script contra tus entidades reales — esta columna es la diferencia real de *esta* sesión, la tuya puede tener otra.
 
+**Diagnóstico, para saber si el problema es el contenedor o la conexión**: `@localhost:1521/FREEPDB1` dentro de este `docker exec` normalmente conecta sin problema — pero en un laboratorio real falló una vez con `ORA-01017: invalid username/password` (contraseña correcta, sin volver a repetirse en otros intentos con el mismo comando, así que no es un bug conocido ni algo que debas esperar). Si te pasa, primero descarta que el contenedor esté caído, entrando sin contraseña:
+
+```bash
+docker exec -it bomerp-oracle-prod sqlplus / as sysdba
+```
+
+Esto no pide ninguna contraseña — es autenticación por sistema operativo (confía en que el proceso corre como el usuario `oracle` del contenedor, no en ningún *password* de base de datos) y nunca pasa por el *listener* TCP del puerto `1521`. Si esto conecta bien, el contenedor y la base están arriba — reintenta la conexión por contraseña (a veces basta con esperar un poco más, o usar el nombre del contenedor en vez de `localhost`: `system/123456@bomerp-oracle-prod:1521/FREEPDB1`).
+
 PowerShell:
 
 ```powershell
@@ -1172,23 +1188,33 @@ Si `ddl-auto: validate` (3.9) encuentra una tabla o columna que tu script no cre
 3. Con `keycloak` de `prod` arrancando (`command: start-dev --import-realm`), Keycloak importa ese JSON automáticamente al iniciar — confírmalo en `http://localhost:48080`, realm `bomerp` ya debe existir, con sus tres roles y su cliente, sin que hayas tocado nada a mano.
 4. Como los usuarios no viajan en la exportación parcial, recréalos en `prod` con los mismos pasos de S10b 3.3 (ej. `vendedor1@bomerp.com` / `Bomerp2026!`), ahora contra `http://localhost:48080` en vez de `38080` — es la única parte de Keycloak que no se automatiza.
 
-`lp2/bomerp-frontend/src/environments/environment.prod.ts`:
+`lp2/bomerp-frontend/src/environments/environment.prod.ts` — misma forma que `environment.ts` (S9), con los puertos de `prod` en vez de los de `dev`:
 
 ```ts
 export const environment = {
   apiBaseUrl: 'http://localhost:48088',
+  keycloak: {
+    issuer: 'http://localhost:48080/realms/bomerp',
+    clientId: 'bomerp-frontend',
+    redirectUri: 'http://localhost:4300/auth/callback',
+    postLogoutRedirectUri: 'http://localhost:4300/',
+  },
 };
 ```
 
-Confirma en `angular.json` que la configuración `production` ya reemplaza `environment.ts` por `environment.prod.ts` (`fileReplacements`) — la CLI lo deja así desde `ng new` (S7, 3.3); si tu proyecto no lo tiene, agrégalo:
+Confirma en `angular.json` que la configuración `production` ya reemplaza `environment.ts` por `environment.prod.ts` (`fileReplacements`) — la CLI lo deja así desde `ng new` (S7, 3.3); si tu proyecto no lo tiene, agrégalo. La ruta exacta dentro del archivo: `projects` → `bomerp-frontend` → `architect` → `build` → `configurations` → `production` — ese último objeto es donde ya están `budgets` (3.4) y `outputHashing`; `fileReplacements` va como una clave más, al mismo nivel que esas dos:
 
 ```json
-"fileReplacements": [
-  {
-    "replace": "src/environments/environment.ts",
-    "with": "src/environments/environment.prod.ts"
-  }
-]
+"production": {
+  "budgets": [ /* ... ya existe, de 3.4 ... */ ],
+  "outputHashing": "all",
+  "fileReplacements": [
+    {
+      "replace": "src/environments/environment.ts",
+      "with": "src/environments/environment.prod.ts"
+    }
+  ]
+}
 ```
 
 `apiBaseUrl` apunta al puerto de `prod` en tu propia laptop (`48088`, Tabla 8) — así se puede verificar de punta a punta en 3.10 sin depender de ningún dominio todavía inexistente. Antes de un despliegue real, reemplázalo por el dominio real de ese entorno.
@@ -1245,15 +1271,68 @@ curl http://localhost:48088/actuator/env
 
 Resultado esperado (verificado): `health` responde `{"status":"UP"}`; `env` responde `401` — la protección de 3.8 ya no es una promesa en el YAML, es el comportamiento real del contenedor que de verdad va a correr. Esta conexión usa el Oracle y el Keycloak **propios de `prod`**, poblados en 3.9 — no el `bomerp-oracle` de `dev` que 3.2 corrigió, así que si algo falla aquí, el diagnóstico es contra `bomerp-oracle-prod` (puerto `41521`), no contra el de `dev`.
 
-Construye el frontend en modo producción y sírvelo con cualquier servidor estático simple (por ejemplo, `http-server`, sin instalar nada nuevo si ya tienes Node.js, S7):
+Construye el frontend en modo producción. Lo que falta es solo **cómo servir** ese mismo build ya construido — dos alternativas:
 
 ```bash
 cd lp2/bomerp-frontend
 ng build --configuration production
+```
+
+**Alternativa 1 — `http-server`.** Rápido, sin instalar nada nuevo si ya tienes Node.js (S7), ideal para esta verificación puntual:
+
+```bash
 npx http-server dist/bomerp-frontend/browser -p 4300
 ```
 
-Abre `http://localhost:4300`, inicia sesión contra el Keycloak de `prod` (`http://localhost:48080/realms/bomerp`, con el usuario que recreaste en 3.9) y registra una venta de punta a punta — el mismo flujo completo de siempre, ahora sobre el build optimizado, el backend en perfil `prod`, y el stack de infraestructura de `prod` completo, corriendo en paralelo al de `dev` sin haber tocado ningún puerto compartido.
+**Alternativa 2 — `nginx`, dockerizado.** Más cercano a cómo serviría el build un `prod` real: no depende de Node en el servidor final, maneja el *fallback* de rutas de la SPA (`try_files ... /index.html`) y *gzip* de forma nativa. `lp2/bomerp-frontend/Dockerfile`:
+
+```dockerfile
+FROM nginx:1.27-alpine
+COPY dist/bomerp-frontend/browser /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
+```
+
+`lp2/bomerp-frontend/nginx.conf` — la línea `try_files` es la que importa: sin ella, recargar la página en una ruta como `/ventas` devuelve `404` de Nginx, porque esa ruta no existe como archivo — solo existe dentro del *router* de Angular, que recién corre después de que se carga `index.html`:
+
+```nginx
+server {
+    listen 80;
+    server_name _;
+    root /usr/share/nginx/html;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    gzip on;
+    gzip_types text/plain text/css application/javascript application/json image/svg+xml;
+}
+```
+
+`lp2/bomerp-frontend/compose.yml` — **propio, no el de `bomerp-backend`**: a diferencia de Oracle/Keycloak/Redis/backend, Nginx no necesita resolver ningún otro contenedor por nombre — nunca llama al backend directo, es el navegador el que llama a los dos por sus puertos publicados (`4300` y `48088`). Sin esa dependencia, no hay ninguna razón para compartir red ni archivo con `bomerp-backend/compose.yml`; cada uno es su propio proyecto de Compose, con su propia red aislada (`bomerp-frontend-prod_default`) que Docker crea sola, sin configurarla a mano:
+
+```yaml
+name: bomerp-frontend-prod
+
+services:
+  bomerp-frontend:
+    build: .
+    container_name: bomerp-frontend-prod
+    restart: unless-stopped
+    ports:
+      - "4300:80"
+```
+
+```bash
+cd lp2/bomerp-frontend
+docker compose up -d --build
+```
+
+Verificado: build real, contenedor arriba en su propia red, sin tocar `bomerp-backend-prod_default`, Nginx sirviendo el `index.html` compilado en `4300`.
+
+Elige una de las dos — con cualquiera, abre `http://localhost:4300`, inicia sesión contra el Keycloak de `prod` (`http://localhost:48080/realms/bomerp`, con el usuario que recreaste en 3.9) y registra una venta de punta a punta — el mismo flujo completo de siempre, ahora sobre el build optimizado, el backend en perfil `prod`, y el stack de infraestructura de `prod` completo, corriendo en paralelo al de `dev` sin haber tocado ningún puerto compartido.
 
 **Cierra aquí la Parte 2 de 3.3**: con `prod` ya arriba, repite el mismo chequeo de Network (`F12` → **Network** → filtra `JS` → navega a **Categorías** sin pasar por **Ventas**) pero ahora contra este `http://localhost:4300` — confirma que el *Lazy Loading* también se cumple en el build real, optimizado, con el backend de `prod` detrás, no solo en el `ng serve` de `dev` de 3.3.
 
