@@ -5499,6 +5499,10 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <span class="s">EOF</span>
 </code></pre></div>
 <p><code>BOMERP_APP</code> no se vuelve a crear — ya lo creó <code>APP_USER</code> de la imagen al arrancar (mismas variables de entorno de <code>compose-dev.yml</code>, S1) — y los <code>GRANT</code> van en el mismo script. Reinicia el backend después (<code>docker compose -f compose-dev.yml restart</code> o tu propio <code>mvnw</code>) para confirmar que conecta sin errores de esquema.</p>
+<p><strong>Diagnóstico, para saber si el problema es el contenedor o la conexión</strong>: si <code>system/123456@localhost:1521/FREEPDB1</code> falla con <code>ORA-01017: invalid username/password</code> (contraseña correcta, sin razón aparente — pasó una vez en un laboratorio real, sin volver a repetirse en otros intentos con el mismo comando), primero entra sin contraseña para descartar que el contenedor esté caído:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>bomerp-oracle<span class="w"> </span>sqlplus<span class="w"> </span>/<span class="w"> </span>as<span class="w"> </span>sysdba
+</code></pre></div>
+<p>Esto no pide ninguna contraseña — es autenticación por sistema operativo, nunca pasa por el <em>listener</em> TCP del puerto <code>1521</code>. Si esto conecta bien, el contenedor y la base están arriba — reintenta la conexión por contraseña (a veces basta con esperar un poco más, o usar el nombre del contenedor en vez de <code>localhost</code>: <code>system/123456@bomerp-oracle:1521/FREEPDB1</code>).</p>
 <p><strong>Opcional, libera espacio</strong>: con la Alternativa 1 ya no necesitas la imagen <code>gvenzl/oracle-free:23-slim</code> cacheada — solo servía para sacar <code>timezlrg_45.dat</code> en la Alternativa 2. Bórrala una vez que confirmes que todo quedó funcionando (si la necesitas de nuevo, Docker la vuelve a descargar):</p>
 <div class="highlight"><pre><span></span><code>docker<span class="w"> </span>rmi<span class="w"> </span>gvenzl/oracle-free:23-slim
 </code></pre></div>
@@ -5791,7 +5795,7 @@ docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </spa
 <tr>
 <td><code>bomerp-frontend</code></td>
 <td><code>4200</code> (<code>ng serve</code>, sin Docker)</td>
-<td><code>4300</code> (<code>http-server</code> sobre el build estático de 3.10)</td>
+<td><code>4300</code> (<code>http-server</code> o <code>nginx</code> sobre el build estático, 3.10)</td>
 </tr>
 </tbody>
 </table>
@@ -5956,6 +5960,10 @@ docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> 
 <p>Espera a que <code>bomerp-oracle-prod</code> esté <code>healthy</code> (<code>docker ps</code>, columna <code>STATUS</code>) — igual que en S9, el primer arranque de un Oracle nuevo tarda varios minutos.</p>
 <p><strong>Recrea el esquema desde cero, no copies la data de <code>dev</code>.</strong> Verificado: copiar la data real de <code>dev</code> a <code>prod</code> con Data Pump (<code>expdp</code>/<code>impdp</code>) funciona, pero trae dos problemas reales que no vale la pena cargar aquí — el Oracle de <code>dev</code> ya quedó en una versión más alta de zona horaria que un <code>prod</code> nuevo (por el arreglo de 3.2), así que Data Pump rechaza el import (<code>ORA-39405</code>) hasta corregirlo con <code>DBMS_DST</code> dentro del PDB; y lo que <code>prod</code> necesita de verdad no es la data de prueba de <code>dev</code> (categorías y ventas de ejemplo que cualquier equipo va a pisar igual), es el <strong>esquema correcto</strong> — eso lo da mejor repetir la creación, como en BD2 S1/S4, no copiar.</p>
 <p>Usa los mismos scripts reales de BD2 (<code>docs/proyecto-integrador/u1/oracle/S01_01_esquemas.sql</code>, <code>S01_02_tablas.sql</code>, <code>S04_01_esquemas.sql</code>, <code>S04_02_tablas.sql</code>) como base — pero <strong>no los repliques a ciegas</strong>: son de hace varias sesiones, y el esquema real ya cambió desde entonces. Verificado contra las 4 entidades reales del código (<code>Categoria</code>, <code>Producto</code>, <code>Venta</code>, <code>DetalleVenta</code>): a <code>VENTAS</code> le falta una columna en el script original — <code>VENDEDOR_ID</code>, agregada después (S10/S10b, para asociar cada venta al <code>sub</code> del JWT) y nunca actualizada en el script de S4. Antes de ejecutar esto en tu propio proyecto, compara el script contra tus entidades reales — esta columna es la diferencia real de <em>esta</em> sesión, la tuya puede tener otra.</p>
+<p><strong>Diagnóstico, para saber si el problema es el contenedor o la conexión</strong>: <code>@localhost:1521/FREEPDB1</code> dentro de este <code>docker exec</code> normalmente conecta sin problema — pero en un laboratorio real falló una vez con <code>ORA-01017: invalid username/password</code> (contraseña correcta, sin volver a repetirse en otros intentos con el mismo comando, así que no es un bug conocido ni algo que debas esperar). Si te pasa, primero descarta que el contenedor esté caído, entrando sin contraseña:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>bomerp-oracle-prod<span class="w"> </span>sqlplus<span class="w"> </span>/<span class="w"> </span>as<span class="w"> </span>sysdba
+</code></pre></div>
+<p>Esto no pide ninguna contraseña — es autenticación por sistema operativo (confía en que el proceso corre como el usuario <code>oracle</code> del contenedor, no en ningún <em>password</em> de base de datos) y nunca pasa por el <em>listener</em> TCP del puerto <code>1521</code>. Si esto conecta bien, el contenedor y la base están arriba — reintenta la conexión por contraseña (a veces basta con esperar un poco más, o usar el nombre del contenedor en vez de <code>localhost</code>: <code>system/123456@bomerp-oracle-prod:1521/FREEPDB1</code>).</p>
 <p>PowerShell:</p>
 <div class="highlight"><pre><span></span><code><span class="sh">@'</span>
 <span class="sh">CREATE USER BOM_CATALOGO IDENTIFIED BY "123456" QUOTA UNLIMITED ON USERS;</span>
@@ -6083,18 +6091,28 @@ docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> 
 <li>Con <code>keycloak</code> de <code>prod</code> arrancando (<code>command: start-dev --import-realm</code>), Keycloak importa ese JSON automáticamente al iniciar — confírmalo en <code>http://localhost:48080</code>, realm <code>bomerp</code> ya debe existir, con sus tres roles y su cliente, sin que hayas tocado nada a mano.</li>
 <li>Como los usuarios no viajan en la exportación parcial, recréalos en <code>prod</code> con los mismos pasos de S10b 3.3 (ej. <code>vendedor1@bomerp.com</code> / <code>Bomerp2026!</code>), ahora contra <code>http://localhost:48080</code> en vez de <code>38080</code> — es la única parte de Keycloak que no se automatiza.</li>
 </ol>
-<p><code>lp2/bomerp-frontend/src/environments/environment.prod.ts</code>:</p>
+<p><code>lp2/bomerp-frontend/src/environments/environment.prod.ts</code> — misma forma que <code>environment.ts</code> (S9), con los puertos de <code>prod</code> en vez de los de <code>dev</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">apiBaseUrl</span><span class="o">:</span><span class="w"> </span><span class="s1">'http://localhost:48088'</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">keycloak</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">issuer</span><span class="o">:</span><span class="w"> </span><span class="s1">'http://localhost:48080/realms/bomerp'</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">clientId</span><span class="o">:</span><span class="w"> </span><span class="s1">'bomerp-frontend'</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">redirectUri</span><span class="o">:</span><span class="w"> </span><span class="s1">'http://localhost:4300/auth/callback'</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">postLogoutRedirectUri</span><span class="o">:</span><span class="w"> </span><span class="s1">'http://localhost:4300/'</span><span class="p">,</span>
+<span class="w">  </span><span class="p">},</span>
 <span class="p">};</span>
 </code></pre></div>
-<p>Confirma en <code>angular.json</code> que la configuración <code>production</code> ya reemplaza <code>environment.ts</code> por <code>environment.prod.ts</code> (<code>fileReplacements</code>) — la CLI lo deja así desde <code>ng new</code> (S7, 3.3); si tu proyecto no lo tiene, agrégalo:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">"fileReplacements"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">  </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">"replace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"src/environments/environment.ts"</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"with"</span><span class="p">:</span><span class="w"> </span><span class="s2">"src/environments/environment.prod.ts"</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">]</span>
+<p>Confirma en <code>angular.json</code> que la configuración <code>production</code> ya reemplaza <code>environment.ts</code> por <code>environment.prod.ts</code> (<code>fileReplacements</code>) — la CLI lo deja así desde <code>ng new</code> (S7, 3.3); si tu proyecto no lo tiene, agrégalo. La ruta exacta dentro del archivo: <code>projects</code> → <code>bomerp-frontend</code> → <code>architect</code> → <code>build</code> → <code>configurations</code> → <code>production</code> — ese último objeto es donde ya están <code>budgets</code> (3.4) y <code>outputHashing</code>; <code>fileReplacements</code> va como una clave más, al mismo nivel que esas dos:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">"production"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nt">"budgets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="cm">/* ... ya existe, de 3.4 ... */</span><span class="w"> </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"outputHashing"</span><span class="p">:</span><span class="w"> </span><span class="s2">"all"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"fileReplacements"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"replace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"src/environments/environment.ts"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"with"</span><span class="p">:</span><span class="w"> </span><span class="s2">"src/environments/environment.prod.ts"</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
 </code></pre></div>
 <p><code>apiBaseUrl</code> apunta al puerto de <code>prod</code> en tu propia laptop (<code>48088</code>, Tabla 8) — así se puede verificar de punta a punta en 3.10 sin depender de ningún dominio todavía inexistente. Antes de un despliegue real, reemplázalo por el dominio real de ese entorno.</p>
 <p><strong>Error frecuente</strong>: escribir <code>DB_PASSWORD</code> con un valor real directo en <code>application-prod.yml</code>, "para probar más rápido". La sintaxis <code>${DB_PASSWORD}</code> sin un valor por defecto obliga a que la variable exista en el entorno donde corre el proceso — si no existe, el arranque falla con un mensaje claro, en vez de arrancar en silencio con una contraseña expuesta en el repositorio.</p>
@@ -6127,12 +6145,50 @@ docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> 
 curl<span class="w"> </span>http://localhost:48088/actuator/env
 </code></pre></div>
 <p>Resultado esperado (verificado): <code>health</code> responde <code>{"status":"UP"}</code>; <code>env</code> responde <code>401</code> — la protección de 3.8 ya no es una promesa en el YAML, es el comportamiento real del contenedor que de verdad va a correr. Esta conexión usa el Oracle y el Keycloak <strong>propios de <code>prod</code></strong>, poblados en 3.9 — no el <code>bomerp-oracle</code> de <code>dev</code> que 3.2 corrigió, así que si algo falla aquí, el diagnóstico es contra <code>bomerp-oracle-prod</code> (puerto <code>41521</code>), no contra el de <code>dev</code>.</p>
-<p>Construye el frontend en modo producción y sírvelo con cualquier servidor estático simple (por ejemplo, <code>http-server</code>, sin instalar nada nuevo si ya tienes Node.js, S7):</p>
+<p>Construye el frontend en modo producción. Lo que falta es solo <strong>cómo servir</strong> ese mismo build ya construido — dos alternativas:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>lp2/bomerp-frontend
 ng<span class="w"> </span>build<span class="w"> </span>--configuration<span class="w"> </span>production
-npx<span class="w"> </span>http-server<span class="w"> </span>dist/bomerp-frontend/browser<span class="w"> </span>-p<span class="w"> </span><span class="m">4300</span>
 </code></pre></div>
-<p>Abre <code>http://localhost:4300</code>, inicia sesión contra el Keycloak de <code>prod</code> (<code>http://localhost:48080/realms/bomerp</code>, con el usuario que recreaste en 3.9) y registra una venta de punta a punta — el mismo flujo completo de siempre, ahora sobre el build optimizado, el backend en perfil <code>prod</code>, y el stack de infraestructura de <code>prod</code> completo, corriendo en paralelo al de <code>dev</code> sin haber tocado ningún puerto compartido.</p>
+<p><strong>Alternativa 1 — <code>http-server</code>.</strong> Rápido, sin instalar nada nuevo si ya tienes Node.js (S7), ideal para esta verificación puntual:</p>
+<div class="highlight"><pre><span></span><code>npx<span class="w"> </span>http-server<span class="w"> </span>dist/bomerp-frontend/browser<span class="w"> </span>-p<span class="w"> </span><span class="m">4300</span>
+</code></pre></div>
+<p><strong>Alternativa 2 — <code>nginx</code>, dockerizado.</strong> Más cercano a cómo serviría el build un <code>prod</code> real: no depende de Node en el servidor final, maneja el <em>fallback</em> de rutas de la SPA (<code>try_files ... /index.html</code>) y <em>gzip</em> de forma nativa. <code>lp2/bomerp-frontend/Dockerfile</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">nginx:1.27-alpine</span>
+<span class="k">COPY</span><span class="w"> </span>dist/bomerp-frontend/browser<span class="w"> </span>/usr/share/nginx/html
+<span class="k">COPY</span><span class="w"> </span>nginx.conf<span class="w"> </span>/etc/nginx/conf.d/default.conf
+<span class="k">EXPOSE</span><span class="w"> </span><span class="s">80</span>
+</code></pre></div>
+<p><code>lp2/bomerp-frontend/nginx.conf</code> — la línea <code>try_files</code> es la que importa: sin ella, recargar la página en una ruta como <code>/ventas</code> devuelve <code>404</code> de Nginx, porque esa ruta no existe como archivo — solo existe dentro del <em>router</em> de Angular, que recién corre después de que se carga <code>index.html</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">server</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kn">listen</span><span class="w"> </span><span class="mi">80</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">server_name</span><span class="w"> </span><span class="s">_</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">root</span><span class="w"> </span><span class="s">/usr/share/nginx/html</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">index</span><span class="w"> </span><span class="s">index.html</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="s">/</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kn">try_files</span><span class="w"> </span><span class="nv">$uri</span><span class="w"> </span><span class="nv">$uri/</span><span class="w"> </span><span class="s">/index.html</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kn">gzip</span><span class="w"> </span><span class="no">on</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">gzip_types</span><span class="w"> </span><span class="s">text/plain</span><span class="w"> </span><span class="s">text/css</span><span class="w"> </span><span class="s">application/javascript</span><span class="w"> </span><span class="s">application/json</span><span class="w"> </span><span class="s">image/svg+xml</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>lp2/bomerp-frontend/compose.yml</code> — <strong>propio, no el de <code>bomerp-backend</code></strong>: a diferencia de Oracle/Keycloak/Redis/backend, Nginx no necesita resolver ningún otro contenedor por nombre — nunca llama al backend directo, es el navegador el que llama a los dos por sus puertos publicados (<code>4300</code> y <code>48088</code>). Sin esa dependencia, no hay ninguna razón para compartir red ni archivo con <code>bomerp-backend/compose.yml</code>; cada uno es su propio proyecto de Compose, con su propia red aislada (<code>bomerp-frontend-prod_default</code>) que Docker crea sola, sin configurarla a mano:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bomerp-frontend-prod</span>
+
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">bomerp-frontend</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">build</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bomerp-frontend-prod</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"4300:80"</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>lp2/bomerp-frontend
+docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>--build
+</code></pre></div>
+<p>Verificado: build real, contenedor arriba en su propia red, sin tocar <code>bomerp-backend-prod_default</code>, Nginx sirviendo el <code>index.html</code> compilado en <code>4300</code>.</p>
+<p>Elige una de las dos — con cualquiera, abre <code>http://localhost:4300</code>, inicia sesión contra el Keycloak de <code>prod</code> (<code>http://localhost:48080/realms/bomerp</code>, con el usuario que recreaste en 3.9) y registra una venta de punta a punta — el mismo flujo completo de siempre, ahora sobre el build optimizado, el backend en perfil <code>prod</code>, y el stack de infraestructura de <code>prod</code> completo, corriendo en paralelo al de <code>dev</code> sin haber tocado ningún puerto compartido.</p>
 <p><strong>Cierra aquí la Parte 2 de 3.3</strong>: con <code>prod</code> ya arriba, repite el mismo chequeo de Network (<code>F12</code> → <strong>Network</strong> → filtra <code>JS</code> → navega a <strong>Categorías</strong> sin pasar por <strong>Ventas</strong>) pero ahora contra este <code>http://localhost:4300</code> — confirma que el <em>Lazy Loading</em> también se cumple en el build real, optimizado, con el backend de <code>prod</code> detrás, no solo en el <code>ng serve</code> de <code>dev</code> de 3.3.</p>
 <h3 id="311-relacionar-con-ads-y-bd2">3.11 Relacionar con ADS y BD2<a class="headerlink" href="#311-relacionar-con-ads-y-bd2" title="Permanent link">&para;</a></h3>
 <p>Sesión equivalente en los otros dos cursos, misma semana: ADS cierra su propio Catálogo UML en S12 y entra a Unidad 3 con la integración y consolidación del producto del curso. BD2 ya cerró Unidad 2 (S12) con la base administrada, optimizada y asegurada, y en su propia S13 (misma semana que esta) cambia la imagen de <code>bomerp-oracle</code> para tener <code>rman</code> — el motivo real detrás del paso 3.2 de esta sesión. El Oracle de <code>prod</code> (3.9) usa el mismo esquema que BD2 administra en <code>dev</code>, recreado desde los mismos scripts reales de BD2 S1/S4 — no una copia de su data, un esquema propio, verificado contra el código real; <code>ddl-auto: validate</code> en producción (3.9) sigue garantizando que <code>bomerp-backend</code> nunca lo modifica por su cuenta, ni en <code>dev</code> ni en su propio Oracle de <code>prod</code>.</p>

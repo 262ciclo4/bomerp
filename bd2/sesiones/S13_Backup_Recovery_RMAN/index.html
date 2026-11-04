@@ -5390,6 +5390,10 @@ docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> 
 <span class="s">EOF</span>
 </code></pre></div>
 <p><code>BOMERP_APP</code> no se vuelve a crear — ya lo creó <code>APP_USER</code> de la imagen al arrancar (mismas variables de entorno de <code>compose-dev.yml</code>, S1) — y los <code>GRANT</code> van en el mismo script.</p>
+<p><strong>Diagnóstico, para saber si el problema es el contenedor o la conexión</strong>: <code>system/123456@localhost:1521/FREEPDB1</code> normalmente conecta sin problema — pero si falla alguna vez con <code>ORA-01017: invalid username/password</code> (contraseña correcta, sin volver a repetirse en otros intentos), primero descarta que el contenedor esté caído, entrando sin contraseña:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>bomerp-oracle<span class="w"> </span>sqlplus<span class="w"> </span>/<span class="w"> </span>as<span class="w"> </span>sysdba
+</code></pre></div>
+<p>Esto no pide ninguna contraseña — es autenticación por sistema operativo, nunca pasa por el <em>listener</em> TCP del puerto <code>1521</code>. Si esto conecta bien, el contenedor y la base están arriba — reintenta la conexión por contraseña (a veces basta con esperar un poco más, o usar el nombre del contenedor en vez de <code>localhost</code>: <code>system/123456@bomerp-oracle:1521/FREEPDB1</code>).</p>
 <p><strong>Opcional, libera espacio</strong>: con la Alternativa 1 ya no necesitas la imagen <code>gvenzl/oracle-free:23-slim</code> cacheada — solo servía para sacar <code>timezlrg_45.dat</code> en la Alternativa 2. Bórrala una vez que confirmes que todo quedó funcionando (si la necesitas de nuevo, Docker la vuelve a descargar):</p>
 <div class="highlight"><pre><span></span><code>docker<span class="w"> </span>rmi<span class="w"> </span>gvenzl/oracle-free:23-slim
 </code></pre></div>
