@@ -72,7 +72,7 @@ Los códigos de ADR no se reinventan por unidad: son los mismos a lo largo del c
 | 5. Presenta un dossier técnico profesional listo para BD2 y LP2 | 16% | CE021-N2 (cierre) | Dossier completo y coherente (arquitectura, dominio, UML, patrones, ADR, trazabilidad), verificable en vivo. | Dossier completo, con alguna sección incompleta. | Dossier incompleto o con secciones no verificables. | No presenta dossier técnico. | |
 | 6. Sustentación | 20% | CG | Sustenta con claridad y profesionalismo su aporte individual, respondiendo con precisión las preguntas del jurado. | Sustenta con solvencia, con detalles menores en claridad, orden o precisión. | Sustenta con dificultad; claridad, orden o precisión insuficientes. | No sustenta adecuadamente ni demuestra su aporte individual. | |
 
-Nota final = suma de (`Peso` × `Puntos de la calificación obtenida`) / 100 × 20.
+Nota final = suma de (`Peso` / 100 × `Puntos de la calificación obtenida`) = ____ / 20.
 
 `CE021-N2 (cierre)` = cierre del Nivel 2 de CE021 (Ingeniería de Requerimientos): la arquitectura (U1) y el diseño detallado (U2) ya certificaron trazabilidad real acotada a su propio corte de unidad ([Producto U1](../u1/ads-producto.md#9-rubrica-de-evaluacion), [Producto U2](../u2/ads-producto.md#4-rubrica-de-evaluacion)); esta unidad cierra el nivel con la consolidación entre unidades (criterio 1), los ADR formales (criterio 2), la trazabilidad completa hasta el requerimiento (criterio 4) y el dossier final (criterio 5). `CE024-N1 (cierre)` = cierre del Nivel 1 de CE024 (Calidad de Software): los atributos de calidad se usaron como insumo de diseño desde S1, sin calificarse — el criterio 3 de esta unidad es la primera vez que se califican con evidencia real. `CG` = Competencia General del sílabo de ADS. No es CE021 ni CE024 en los criterios 1-5: ya son la evidencia técnica, incluida su verificación en vivo; el criterio 6 verifica aporte individual y comunicación.
 
@@ -95,7 +95,7 @@ Para usar la rúbrica con IA, solicita:
 Evalúa la sustentación y el producto (ads-producto.md o la sección 2 de la guía S15) usando la rúbrica de esta sección.
 Para cada criterio selecciona la calificación obtenida: A=20, B=15, C=10, D=5.
 Justifica brevemente cada nivel con evidencia concreta (ADR, atributos de calidad, trazabilidad, dossier).
-Calcula la nota final con la fórmula: suma de (Peso × Puntos de la calificación obtenida) / 100 × 20.
+Calcula la nota final con la fórmula: suma de (Peso / 100 × Puntos de la calificación obtenida), directamente sobre 20.
 Indica 2 fortalezas y 2 recomendaciones.
 ```
 

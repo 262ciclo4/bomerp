@@ -111,7 +111,7 @@ classDiagram
 | 5. Aplica patrones de diseño, arquitectura empresarial e integración | 16% | CE021-N2 (parcial) | Al menos tres patrones GoF/GRASP aplicados y justificados sobre código real, más integración empresarial completa (capa anticorrupción, *Circuit Breaker*, evento con *Outbox*, Saga coreografiada con compensación). | Patrones aplicados y justificados, con la integración empresarial incompleta (falta la Saga o algún patrón de protección). | Patrones mencionados sin aplicación real sobre código propio, o integración limitada a una llamada sin ningún patrón de protección. | No presenta patrones aplicados ni diseño de integración. | |
 | 6. Sustentación | 20% | CG | Sustenta con claridad y profesionalismo su aporte individual, respondiendo con precisión las preguntas del jurado. | Sustenta con solvencia, con detalles menores en claridad, orden o precisión. | Sustenta con dificultad; claridad, orden o precisión insuficientes. | No sustenta adecuadamente ni demuestra su aporte individual. | |
 
-Nota final = suma de (`Peso` × `Puntos de la calificación obtenida`) / 100 × 20.
+Nota final = suma de (`Peso` / 100 × `Puntos de la calificación obtenida`) = ____ / 20.
 
 `CE021-N2 (parcial)` = porción de **diseño detallado** del Nivel 2 de CE021 (Ingeniería de Requerimientos) — la otra porción (arquitectura) ya se completó en la [Unidad 1 de ADS](../u1/ads-producto.md#9-rubrica-de-evaluacion). `CG` = Competencia General "Servicio y misión" del sílabo de ADS — no es CE021: los criterios 1-5 ya son la evidencia técnica, incluida su verificación en vivo; el criterio 6 verifica aporte individual y comunicación.
 

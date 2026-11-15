@@ -200,6 +200,15 @@ git clone --branch s13-optimizacion-preparacion-produccion https://github.com/26
 - **3.7** Escribir y ejecutar una prueba end-to-end real.
 - **3.8** Registrar y cerrar en la bitácora de estabilización.
 
+**Presentación de referencia:** el producto final integrado de BomERP está presentado en [bomerp_U3_producto_final_integrado.pptx](../../presentaciones/bomerp_U3_producto_final_integrado.pptx), un ejemplo del docente que reúne ADS, BD2 y LP2. Estas son las láminas que corresponden a esta sesión:
+
+- **3.1 a 3.4:** lámina 14, el hallazgo real de S14 (el reporte calculaba sus totales en el navegador) y su corrección con paginación y el agregado del servidor.
+- **3.5 y 3.7:** lámina 15, plan de pruebas final.
+- **3.6:** lámina 13, qué agrega la Unidad III, incluida la auditoría.
+- **3.8:** lámina 16, bitácora de estabilización.
+
+La integración entre ADS, BD2 y LP2 se evalúa sobre el equipo como conjunto, y cada integrante defiende la parte que construyó. Las presentaciones de las unidades anteriores son [la de la Unidad I](../../presentaciones/bomerp_U1_base_tecnica_empresarial.pptx) y [la de la Unidad II](../../presentaciones/bomerp_U2_full_stack_integrado.pptx).
+
 ### 3.1 Confirmar el estado real: la excepción de S9 3.10 y por qué la paginación la invalida
 
 **Producto del paso:** confirmación, leyendo el código real, de que `VentaReporteComponent` sigue exactamente en el estado que dejó S9 3.10 —llama a `buscar()` y calcula sus totales con `.reduce()`— y de que, una vez paginado el listado (3.2-3.3), ese cálculo deja de ser correcto.

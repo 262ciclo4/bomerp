@@ -181,7 +181,7 @@ Tiempo: 2h.
 
 **Producto del paso:** tabla `PRODUCTO_AUDITORIA` operativa en el esquema `BOM_CATALOGO`.
 
-**Requisito antes de continuar:** conéctate como `BOM_CATALOGO` (misma conexión de S1, 3.2) — la tabla y los triggers de esta sesión son objetos de ese esquema, igual que `CATEGORIAS` y `PRODUCTOS`.
+**Requisito antes de continuar:** conéctate como `system` (la misma conexión con la que ejecutaste los scripts de S1) — la tabla y los triggers de esta sesión son objetos del esquema `BOM_CATALOGO`, igual que `CATEGORIAS` y `PRODUCTOS`, y por eso todos los nombres van calificados. Conectado como `BOM_CATALOGO`, `CREATE TABLE` falla con `ORA-01031`: ese usuario no tiene `CREATE SEQUENCE`, y `ID_AUDITORIA` es una columna `IDENTITY`.
 
 ```sql
 CREATE TABLE BOM_CATALOGO.PRODUCTO_AUDITORIA (

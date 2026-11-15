@@ -178,6 +178,15 @@ Tiempo: 100 min.
 - **3.5** Completar la matriz de trazabilidad final.
 - **3.6** Actualizar el dossier con el ADR y la matriz.
 
+**Presentación de referencia:** el producto final integrado de BomERP está presentado en [bomerp_U3_producto_final_integrado.pptx](../../presentaciones/bomerp_U3_producto_final_integrado.pptx), un ejemplo del docente que reúne ADS, BD2 y LP2. Estas son las láminas que corresponden a esta sesión:
+
+- **3.2:** lámina 9, ADR finales del ciclo (incluye el ADR-008).
+- **3.3:** lámina 8, atributos de calidad con su justificación final.
+- **3.4 y 3.5:** láminas 5 y 6, matriz final de trazabilidad; la lámina 4 es «Qué gana el negocio».
+- **3.6:** lámina 7, arquitectura final del producto.
+
+La integración entre ADS, BD2 y LP2 se evalúa sobre el equipo como conjunto, y cada integrante defiende la parte que construyó. Las presentaciones de las unidades anteriores son [la de la Unidad I](../../presentaciones/bomerp_U1_base_tecnica_empresarial.pptx) y [la de la Unidad II](../../presentaciones/bomerp_U2_full_stack_integrado.pptx).
+
 ### 3.1 Reunir los hallazgos de S13 como insumo
 
 **Producto del paso:** confirmación de que el hallazgo 2 de la Tabla 7 de S13 (`calcularTotal()`) es el insumo directo del ADR de esta sesión — no se redacta un ADR desde cero sin un hallazgo real que lo motive.

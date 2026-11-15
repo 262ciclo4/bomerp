@@ -56,7 +56,7 @@ Pendiente (se agrega cuando BD2 lo dicte, Unidad 3): RMAN, Data Pump y PITR (S13
 | 5. Aplica particionamiento para escalabilidad | 16% | CE022-N2 (parcial) | Tabla particionada (Range, Hash, List o Composite) con *partition pruning* verificado contra `EXPLAIN PLAN`, incluido el caso en que una consulta mal escrita lo desactiva. | Tabla particionada y verificada, sin reproducir el caso que desactiva el *pruning*. | Particionamiento mencionado sin verificación real del *pruning*. | No presenta particionamiento ni justificación técnica de por qué no aplica. | |
 | 6. Sustentación | 20% | CG | Sustenta con claridad y profesionalismo su aporte individual, respondiendo con precisión las preguntas del jurado. | Sustenta con solvencia, con detalles menores en claridad, orden o precisión. | Sustenta con dificultad; claridad, orden o precisión insuficientes. | No sustenta adecuadamente ni demuestra su aporte individual. | |
 
-Nota final = suma de (`Peso` × `Puntos de la calificación obtenida`) / 100 × 20.
+Nota final = suma de (`Peso` / 100 × `Puntos de la calificación obtenida`) = ____ / 20.
 
 `CE022-N2 (parcial)` = porción de **administración, almacenamiento, auditoría, optimización y particionamiento** del Nivel 2 de CE022 (Ingeniería de la Información) — la porción restante de ese mismo Nivel (continuidad del negocio: respaldo y recuperación con RMAN) se completa en la Unidad 3 de BD2. `CG` = Competencia General del sílabo de BD2 (ver la nota sobre la inconsistencia de nombre entre secciones III y VIII del propio sílabo, documentada en [Producto U1](../u1/bd2-producto.md#7-rubrica-de-evaluacion)). No es CE022: los criterios 1-5 ya son la evidencia técnica, incluida su verificación en vivo; el criterio 6 verifica aporte individual y comunicación.
 
@@ -79,7 +79,7 @@ Para usar la rúbrica con IA, solicita:
 Evalúa la sustentación y el producto (bd2-producto.md o la sección 2 de la guía S12) usando la rúbrica de esta sección.
 Para cada criterio selecciona la calificación obtenida: A=20, B=15, C=10, D=5.
 Justifica brevemente cada nivel con evidencia concreta (objetos Oracle, planes de ejecución, AWR, particionamiento).
-Calcula la nota final con la fórmula: suma de (Peso × Puntos de la calificación obtenida) / 100 × 20.
+Calcula la nota final con la fórmula: suma de (Peso / 100 × Puntos de la calificación obtenida), directamente sobre 20.
 Indica 2 fortalezas y 2 recomendaciones para lo que sigue en Unidad III.
 ```
 

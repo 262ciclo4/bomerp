@@ -126,7 +126,7 @@ Todos los módulos se ejecutan en la misma JVM y utilizan un datasource. No exis
 | 5. Implementa consultas, filtros, ordenamiento, agregaciones, reportes y configuración CORS | 16% | CE023-N2 (parcial) | Filtros combinados, reporte agregado y CORS configurado por propiedad, probados en vivo. | La mayoría de estos elementos funciona, con detalles menores. | Consultas o CORS incompletos. | No implementa consultas ni CORS. | |
 | 6. Sustentación | 20% | CG | Sustenta con claridad y profesionalismo su aporte individual, respondiendo con precisión las preguntas del jurado. | Sustenta con solvencia, con detalles menores en claridad, orden o precisión. | Sustenta con dificultad; claridad, orden o precisión insuficientes. | No sustenta adecuadamente ni demuestra su aporte individual. | |
 
-Nota final = suma de (`Peso` × `Puntos de la calificación obtenida`) / 100 × 20.
+Nota final = suma de (`Peso` / 100 × `Puntos de la calificación obtenida`) = ____ / 20.
 
 `CE023-N2 (parcial)` = porción de backend REST del Nivel 2 de CE023 (Programación) — la otra porción (frontend SPA, JWT, integración full-stack) se completa en Unidad 2 de LP2. `CG` = Competencia General "Innovación y solución de problemas" del sílabo de LP2 — no es CE023: los criterios 1-5 ya son la evidencia técnica, incluida su verificación en vivo; el criterio 6 verifica aporte individual y comunicación.
 
@@ -149,7 +149,7 @@ Para usar la rúbrica con IA, solicita:
 Evalúa la sustentación y el producto (lp2-demo.md o la sección 2 de la guía S06) usando la rúbrica de esta sección.
 Para cada criterio selecciona la calificación obtenida: A=20, B=15, C=10, D=5.
 Justifica brevemente cada nivel con evidencia concreta (endpoints, código, pruebas en vivo).
-Calcula la nota final con la fórmula: suma de (Peso × Puntos de la calificación obtenida) / 100 × 20.
+Calcula la nota final con la fórmula: suma de (Peso / 100 × Puntos de la calificación obtenida), directamente sobre 20.
 Indica 2 fortalezas y 2 recomendaciones para lo que sigue en Unidad II.
 ```
 

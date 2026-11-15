@@ -206,6 +206,14 @@ Tiempo: 100 min.
 - **3.7** Confirmar todo en Enterprise Manager Express.
 - **3.8** Documentar el reporte de monitoreo.
 
+**Presentación de referencia:** el producto final integrado de BomERP está presentado en [bomerp_U3_producto_final_integrado.pptx](../../presentaciones/bomerp_U3_producto_final_integrado.pptx), un ejemplo del docente que reúne ADS, BD2 y LP2. Estas son las láminas que corresponden a esta sesión:
+
+- **3.2 a 3.8:** lámina 12, monitoreo y diagnóstico en vivo (`V$SESSION`, bloqueos, objetos inválidos y `V$SYSSTAT`).
+- **Contexto de S13:** láminas 10 y 11, respaldo con RMAN y recuperación a un punto exacto.
+- **Sustentación:** láminas 17 y 18, secuencia de la sustentación y defensa individual.
+
+La integración entre ADS, BD2 y LP2 se evalúa sobre el equipo como conjunto, y cada integrante defiende la parte que construyó. Las presentaciones de las unidades anteriores son [la de la Unidad I](../../presentaciones/bomerp_U1_base_tecnica_empresarial.pptx) y [la de la Unidad II](../../presentaciones/bomerp_U2_full_stack_integrado.pptx).
+
 ### 3.1 Verificar el punto de partida
 
 **Producto del paso:** confirmación de que `bomerp-oracle` sigue corriendo, con `ARCHIVELOG` activo (S13) y los roles de S8 vigentes.

@@ -102,7 +102,7 @@ flowchart LR
 | 5. Implementa login, sesión, almacenamiento y expiración del token, guards, interceptores, menú por permisos, rutas protegidas y manejo de respuestas 401/403 | 16% | CE023-N2 (parcial) | Login real contra Keycloak (*Authorization Code* + PKCE), token en memoria con copia espejo en `sessionStorage` (sobrevive un `F5`), *guards* e interceptor funcionando, con refresco ante `401` y denegación clara ante `403`, verificado con la matriz de accesos completa. | Flujo de login y *guards* funcionando, con el interceptor o el refresco de token incompleto. | Login funcional con un flujo inseguro (ej. token en `localStorage`, o sin PKCE). | No presenta login ni protección de rutas en el frontend. | |
 | 6. Sustentación | 20% | CG | Sustenta con claridad y profesionalismo su aporte individual, respondiendo con precisión las preguntas del jurado. | Sustenta con solvencia, con detalles menores en claridad, orden o precisión. | Sustenta con dificultad; claridad, orden o precisión insuficientes. | No sustenta adecuadamente ni demuestra su aporte individual. | |
 
-Nota final = suma de (`Peso` × `Puntos de la calificación obtenida`) / 100 × 20.
+Nota final = suma de (`Peso` / 100 × `Puntos de la calificación obtenida`) = ____ / 20.
 
 `CE023-N2 (parcial)` = porción de **frontend SPA, seguridad e integración full-stack** del Nivel 2 de CE023 (Programación) — la otra porción (backend REST) ya se completó en la [Unidad 1 de LP2](../u1/lp2-demo.md#8-rubrica-de-evaluacion). Los criterios 4-5 evalúan sobre la implementación real del curso (Keycloak, S10b/S11), no sobre el JWT propio que el sílabo y la ADR-005 originales describían — ver la nota al inicio de este documento. `CG` = Competencia General "Innovación y solución de problemas" del sílabo de LP2 — no es CE023: los criterios 1-5 ya son la evidencia técnica, incluida su verificación en vivo; el criterio 6 verifica aporte individual y comunicación.
 
@@ -125,7 +125,7 @@ Para usar la rúbrica con IA, solicita:
 Evalúa la sustentación y el producto (lp2-demo.md o la sección 2 de la guía S12) usando la rúbrica de esta sección.
 Para cada criterio selecciona la calificación obtenida: A=20, B=15, C=10, D=5.
 Justifica brevemente cada nivel con evidencia concreta (endpoints, código, pruebas en vivo, Keycloak).
-Calcula la nota final con la fórmula: suma de (Peso × Puntos de la calificación obtenida) / 100 × 20.
+Calcula la nota final con la fórmula: suma de (Peso / 100 × Puntos de la calificación obtenida), directamente sobre 20.
 Indica 2 fortalezas y 2 recomendaciones para lo que sigue en Unidad III.
 ```
 

@@ -20,7 +20,7 @@ Los scripts se agregan **por sesión de BD2**, a medida que cada una les da cont
 | [S01_02_tablas.sql](oracle/S01_02_tablas.sql) | [S1](../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio.md) | Tablas `CATEGORIAS`/`PRODUCTOS` y permisos de `BOMERP_APP` sobre ellas. |
 | [S01_03_plsql.sql](oracle/S01_03_plsql.sql) | [S1](../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio.md) | Función y procedimientos PL/SQL del catálogo. |
 | [S02_triggers_dml_auditoria.sql](oracle/S02_triggers_dml_auditoria.sql) | [S2](../../bd2/sesiones/S02_Triggers_DML_Auditoria.md) | Trigger de regla de negocio (`TRG_PRODUCTO_PRECIO_BU`) y trigger + tabla de auditoría de precio/stock (`TRG_PRODUCTO_AUDITORIA`, `PRODUCTO_AUDITORIA`). |
-| (excepciones agregadas directo sobre los procedimientos de S1) | [S3](../../bd2/sesiones/S03_Excepciones_Robustez.md) | Manejo de excepciones personalizadas y tabla de registro de errores (`LOG_ERRORES`). |
+| [S03_excepciones_robustez.sql](oracle/S03_excepciones_robustez.sql) | [S3](../../bd2/sesiones/S03_Excepciones_Robustez.md) | Tabla `LOG_ERRORES`, excepciones en los procedimientos de S1 y `FN_OBTENER_PRECIO_PRODUCTO`. |
 | [S04_01_esquemas.sql](oracle/S04_01_esquemas.sql) | [S4](../../bd2/sesiones/S04_Optimizacion_Consultas_SQL.md) | Usuario `BOM_VENTAS`. |
 | [S04_02_tablas.sql](oracle/S04_02_tablas.sql) | [S4](../../bd2/sesiones/S04_Optimizacion_Consultas_SQL.md) | Tablas `VENTAS`/`DETALLE_VENTAS`. |
 | [S04_optimizacion_consultas.sql](oracle/S04_optimizacion_consultas.sql) | [S4](../../bd2/sesiones/S04_Optimizacion_Consultas_SQL.md) | Volumen de prueba, `EXPLAIN PLAN`, `DBMS_STATS` y reescritura de la consulta representativa. |
@@ -105,7 +105,7 @@ Las FK entre esquemas conservan la integridad porque todos los objetos pertenece
 | 5. Aplica estrategias de indexación según selectividad y necesidades de consulta | 16% | CE023-N1 | Selectividad medida antes de crear cada índice, con al menos un caso de índice correctamente descartado. | Índices creados con selectividad medida, sin caso de descarte. | Índices creados sin medir selectividad. | No presenta índices ni selectividad medida. | |
 | 6. Sustentación | 20% | CG | Sustenta con claridad y profesionalismo su aporte individual, respondiendo con precisión las preguntas del jurado. | Sustenta con solvencia, con detalles menores en claridad, orden o precisión. | Sustenta con dificultad; claridad, orden o precisión insuficientes. | No sustenta adecuadamente ni demuestra su aporte individual. | |
 
-Nota final = suma de (`Peso` × `Puntos de la calificación obtenida`) / 100 × 20.
+Nota final = suma de (`Peso` / 100 × `Puntos de la calificación obtenida`) = ____ / 20.
 
 `CE023-N1` = Nivel 1 de CE023 (Programación) — la rama que se satisface programando el motor transaccional del lado del servidor. `CG` = Competencia General del sílabo de BD2 — con una inconsistencia del propio documento fuente que hay que resolver antes de usar esta etiqueta en un informe formal: la sección III del sílabo la nombra "PENSAMIENTO SUPERIOR" (Firmeza de propósito, ejecución, dominio propio, mantener esfuerzo), pero la tabla de evaluación de la sección VIII la nombra "Servicio y misión" — no son el mismo texto y no está claro cuál es la vigente. No es CE023: los criterios 1-5 ya son la evidencia técnica, incluida su verificación en vivo; el criterio 6 verifica aporte individual y comunicación.
 
@@ -128,7 +128,7 @@ Para usar la rúbrica con IA, solicita:
 Evalúa la sustentación y el producto (bd2-producto.md o la sección 2 de la guía S06) usando la rúbrica de esta sección.
 Para cada criterio selecciona la calificación obtenida: A=20, B=15, C=10, D=5.
 Justifica brevemente cada nivel con evidencia concreta (objetos Oracle, planes de ejecución, selectividad).
-Calcula la nota final con la fórmula: suma de (Peso × Puntos de la calificación obtenida) / 100 × 20.
+Calcula la nota final con la fórmula: suma de (Peso / 100 × Puntos de la calificación obtenida), directamente sobre 20.
 Indica 2 fortalezas y 2 recomendaciones para lo que sigue en Unidad II.
 ```
 

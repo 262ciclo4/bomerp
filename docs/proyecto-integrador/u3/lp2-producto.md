@@ -66,7 +66,7 @@ A diferencia de las demás unidades (5 criterios técnicos + Sustentación como 
 | 3. Incorpora auditoría y ejecuta pruebas end-to-end, corrige errores y estabiliza el sistema | 25% | CE023-N2 (cierre) | Auditoría real sobre al menos 2 acciones, prueba end-to-end en verde contra la base real, y al menos un hallazgo real en la bitácora con su corrección. | Dos de los tres elementos presentes y verificados. | Solo uno de los tres elementos presente. | No presenta auditoría, pruebas end-to-end ni bitácora. | |
 | 4. Sustenta exclusivamente el Proyecto Integrador mediante una demostración funcional y defensa técnica | 25% | CG | Sustenta con claridad y profesionalismo su aporte individual, con demostración funcional en vivo y defensa técnica precisa. | Sustenta con solvencia, con detalles menores en la demostración o la defensa. | Sustenta con dificultad; demostración o defensa insuficientes. | No sustenta adecuadamente ni demuestra su aporte individual. | |
 
-Nota final = suma de (`Peso` × `Puntos de la calificación obtenida`) / 100 × 20.
+Nota final = suma de (`Peso` / 100 × `Puntos de la calificación obtenida`) = ____ / 20.
 
 `CE023-N2 (cierre)` = cierre del Nivel 2 de CE023 (Programación): la [Unidad 2](../u2/lp2-demo.md#6-rubrica-de-evaluacion) ya dejó ese nivel "parcial" (SPA, CRUD, seguridad); esta unidad lo completa con optimización, integración funcional, auditoría y pruebas end-to-end sobre el mismo backend y la misma SPA. `CG` = Competencia General del sílabo de LP2 — el criterio 4 es, en este sílabo, la propia sustentación, a diferencia de otras unidades donde es un criterio transversal aparte.
 
@@ -89,7 +89,7 @@ Para usar la rúbrica con IA, solicita:
 Evalúa la sustentación y el producto (lp2-producto.md o la sección 2 de la guía S15) usando la rúbrica de esta sección.
 Para cada criterio selecciona la calificación obtenida: A=20, B=15, C=10, D=5.
 Justifica brevemente cada nivel con evidencia concreta (optimización medida, paginación con agregado correcto, auditoría, pruebas end-to-end, demostración y defensa técnica).
-Calcula la nota final con la fórmula: suma de (Peso × Puntos de la calificación obtenida) / 100 × 20.
+Calcula la nota final con la fórmula: suma de (Peso / 100 × Puntos de la calificación obtenida), directamente sobre 20.
 Indica 2 fortalezas y 2 recomendaciones.
 ```
 

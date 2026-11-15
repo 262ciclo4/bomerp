@@ -178,7 +178,11 @@ La pregunta de la Figura 3 es la misma que resume la Tabla 3, hecha explícita: 
 
 ### 2.4 Registro de errores y tolerancia a fallos
 
-**Registro de errores**: cada excepción capturada se guarda en una tabla propia (`LOG_ERRORES`), con el mismo criterio de auditoría que `PRODUCTO_AUDITORIA` (S2) — qué objeto falló, qué código de error, qué mensaje, cuándo y con qué usuario. `SQLCODE` y `SQLERRM` (dentro del bloque `EXCEPTION`) dan el código y el mensaje exacto que Oracle generó, disponibles solo ahí.
+**Registro de errores**: cada excepción capturada se guarda en una tabla propia (`LOG_ERRORES`), con el mismo criterio de auditoría que `PRODUCTO_AUDITORIA` (S2) — qué objeto falló, qué código de error, qué mensaje, cuándo y con qué usuario. `SQLCODE` y `SQLERRM` (dentro del bloque `EXCEPTION`) dan el código y el mensaje exacto que Oracle generó, disponibles solo ahí. No se pueden escribir directo dentro de una sentencia SQL (`ORA-00984: column not allowed here`): se copian antes a variables locales.
+
+**Registro y propagación**: el `INSERT` a `LOG_ERRORES` forma parte de la misma transacción de quien llamó. Si el error relanzado llega hasta el cliente sin que ningún bloque lo capture, Oracle deshace toda la sentencia que falló, incluido ese `INSERT`: la tabla queda vacía justo cuando más falta hace. Por eso el patrón se completa en quien llama: el bloque PL/SQL que invoca al procedimiento captura el error relanzado y decide qué hacer, y así el registro permanece en la tabla. Es también la razón de que `FN_OBTENER_PRECIO_PRODUCTO` se invoque desde un bloque y no dentro de un `SELECT`: una función que ejecuta un `INSERT` no puede usarse dentro de una consulta (`ORA-14551`).
+
+**Error frecuente**: ejecutar el caso inválido como un bloque suelto, sin `EXCEPTION`. El procedimiento compila y el error llega con su mensaje claro, pero `LOG_ERRORES` queda vacía: el error sin manejar deshizo también el registro.
 
 **Tolerancia a fallos**: no significa "que el error no pase" — significa que el sistema no se cae en silencio ni deja al que llama sin explicación. El patrón de esta sesión es: **capturar → registrar → relanzar con mensaje claro** (no solo capturar y registrar, ni solo capturar y relanzar sin registrar). Relanzar es importante: si `SP_REGISTRAR_PRODUCTO` traga la excepción sin relanzarla, quien lo invocó (LP2, otro script) cree que el producto se guardó cuando en realidad no.
 
@@ -242,7 +246,7 @@ Tiempo: 2h.
 
 **Producto del paso:** tabla `LOG_ERRORES` operativa en el esquema `BOM_CATALOGO`.
 
-**Requisito antes de continuar:** conéctate como `BOM_CATALOGO` (misma conexión de S1, 3.2) — la tabla y los procedimientos de esta sesión son objetos de ese esquema, igual que `CATEGORIAS`, `PRODUCTOS` y `PRODUCTO_AUDITORIA` (S2).
+**Requisito antes de continuar:** conéctate como `system` (la misma conexión con la que ejecutaste los scripts de S1 y S2) — la tabla y los procedimientos de esta sesión son objetos del esquema `BOM_CATALOGO`, igual que `CATEGORIAS`, `PRODUCTOS` y `PRODUCTO_AUDITORIA` (S2), y por eso todos los nombres van calificados. Conectado como `BOM_CATALOGO`, `CREATE TABLE` falla con `ORA-01031`: ese usuario no tiene `CREATE SEQUENCE`, y `ID_LOG` es una columna `IDENTITY`.
 
 ```sql
 CREATE TABLE BOM_CATALOGO.LOG_ERRORES (
@@ -271,20 +275,24 @@ CREATE OR REPLACE PROCEDURE BOM_CATALOGO.SP_REGISTRAR_PRODUCTO(
 ) IS
     e_categoria_inexistente EXCEPTION;
     PRAGMA EXCEPTION_INIT(e_categoria_inexistente, -2291);
+    v_codigo  NUMBER;
+    v_mensaje VARCHAR2(500);
 BEGIN
     INSERT INTO BOM_CATALOGO.PRODUCTOS (ID_CATEGORIA, NOMBRE, PRECIO, STOCK)
     VALUES (p_id_categoria, p_nombre, p_precio, p_stock)
     RETURNING ID INTO p_id_producto;
 EXCEPTION
     WHEN e_categoria_inexistente THEN
+        v_codigo  := SQLCODE;
+        v_mensaje := SUBSTR(SQLERRM, 1, 500);
         INSERT INTO BOM_CATALOGO.LOG_ERRORES (OBJETO, CODIGO_ERROR, MENSAJE_ERROR)
-        VALUES ('SP_REGISTRAR_PRODUCTO', SQLCODE, SQLERRM);
+        VALUES ('SP_REGISTRAR_PRODUCTO', v_codigo, v_mensaje);
         RAISE_APPLICATION_ERROR(-20010, 'La categoria ' || p_id_categoria || ' no existe. Verifica el id antes de registrar el producto.');
 END;
 /
 ```
 
-`e_categoria_inexistente` captura específicamente `ORA-02291`; cualquier otro error (uno que esta sesión no anticipó) sigue sin capturarse — y eso es intencional: capturar solo lo que sabes manejar, no todo con `WHEN OTHERS` (2.2). El `INSERT` a `LOG_ERRORES` ocurre **antes** del `RAISE_APPLICATION_ERROR`: si se invirtiera el orden, el procedimiento terminaría en el `RAISE` y el registro nunca se ejecutaría.
+`e_categoria_inexistente` captura específicamente `ORA-02291`; cualquier otro error (uno que esta sesión no anticipó) sigue sin capturarse — y eso es intencional: capturar solo lo que sabes manejar, no todo con `WHEN OTHERS` (2.2). El `INSERT` a `LOG_ERRORES` ocurre **antes** del `RAISE_APPLICATION_ERROR`: si se invirtiera el orden, el procedimiento terminaría en el `RAISE` y el registro nunca se ejecutaría. `SQLCODE` y `SQLERRM` se copian antes a `v_codigo` y `v_mensaje` porque no pueden escribirse directo dentro del `INSERT` (2.4).
 
 ### 3.4 Incorporar una excepción personalizada en `SP_APLICAR_DESCUENTO_PRODUCTO`
 
@@ -318,6 +326,7 @@ CREATE OR REPLACE FUNCTION BOM_CATALOGO.FN_OBTENER_PRECIO_PRODUCTO(
     p_id_producto IN NUMBER
 ) RETURN NUMBER IS
     v_precio NUMBER;
+    v_codigo NUMBER;
 BEGIN
     SELECT PRECIO INTO v_precio
     FROM BOM_CATALOGO.PRODUCTOS
@@ -326,14 +335,15 @@ BEGIN
     RETURN v_precio;
 EXCEPTION
     WHEN NO_DATA_FOUND THEN
+        v_codigo := SQLCODE;
         INSERT INTO BOM_CATALOGO.LOG_ERRORES (OBJETO, CODIGO_ERROR, MENSAJE_ERROR)
-        VALUES ('FN_OBTENER_PRECIO_PRODUCTO', SQLCODE, 'Producto no encontrado: ' || p_id_producto);
+        VALUES ('FN_OBTENER_PRECIO_PRODUCTO', v_codigo, 'Producto no encontrado: ' || p_id_producto);
         RAISE_APPLICATION_ERROR(-20012, 'No existe un producto con id ' || p_id_producto);
 END;
 /
 ```
 
-`SELECT ... INTO` es exactamente el tipo de sentencia donde `NO_DATA_FOUND` aparece en la práctica: espera **una** fila, y si la consulta no encuentra ninguna, PL/SQL la lanza automáticamente — no hace falta un `IF` para comprobarlo antes.
+`SELECT ... INTO` es exactamente el tipo de sentencia donde `NO_DATA_FOUND` aparece en la práctica: espera **una** fila, y si la consulta no encuentra ninguna, PL/SQL la lanza automáticamente — no hace falta un `IF` para comprobarlo antes. Como esta función escribe en `LOG_ERRORES`, se invoca desde un bloque PL/SQL (3.6) y no dentro de un `SELECT` (2.4).
 
 ### 3.6 Probar los tres con casos válidos e inválidos
 
@@ -354,13 +364,20 @@ END;
 /
 ```
 
+Cada caso inválido se ejecuta dentro de un bloque que captura el error relanzado: `PRAGMA EXCEPTION_INIT` le pone nombre al código de aplicación (`-20010`, `-20011` o `-20012`), y el bloque muestra el mensaje en vez de dejar que el error llegue sin manejar al cliente (2.4).
+
 Caso inválido 1 — categoría inexistente (debe fallar con `ORA-20010`):
 
 ```sql
 DECLARE
     v_id_producto NUMBER;
+    e_categoria_inexistente EXCEPTION;
+    PRAGMA EXCEPTION_INIT(e_categoria_inexistente, -20010);
 BEGIN
     BOM_CATALOGO.SP_REGISTRAR_PRODUCTO(999999, 'Producto sin categoria', 50.00, 5, v_id_producto);
+EXCEPTION
+    WHEN e_categoria_inexistente THEN
+        DBMS_OUTPUT.PUT_LINE(SQLERRM);
 END;
 /
 ```
@@ -370,8 +387,13 @@ Caso inválido 2 — porcentaje de descuento fuera de rango (debe fallar con `OR
 ```sql
 DECLARE
     v_precio NUMBER := 100.00;
+    e_descuento_invalido EXCEPTION;
+    PRAGMA EXCEPTION_INIT(e_descuento_invalido, -20011);
 BEGIN
     BOM_CATALOGO.SP_APLICAR_DESCUENTO_PRODUCTO(v_precio, 150);
+EXCEPTION
+    WHEN e_descuento_invalido THEN
+        DBMS_OUTPUT.PUT_LINE(SQLERRM);
 END;
 /
 ```
@@ -379,7 +401,17 @@ END;
 Caso inválido 3 — producto inexistente (debe fallar con `ORA-20012`):
 
 ```sql
-SELECT BOM_CATALOGO.FN_OBTENER_PRECIO_PRODUCTO(999999) FROM DUAL;
+DECLARE
+    v_precio NUMBER;
+    e_producto_inexistente EXCEPTION;
+    PRAGMA EXCEPTION_INIT(e_producto_inexistente, -20012);
+BEGIN
+    v_precio := BOM_CATALOGO.FN_OBTENER_PRECIO_PRODUCTO(999999);
+EXCEPTION
+    WHEN e_producto_inexistente THEN
+        DBMS_OUTPUT.PUT_LINE(SQLERRM);
+END;
+/
 ```
 
 Verifica que los tres casos inválidos quedaron registrados:
@@ -399,6 +431,8 @@ FN_OBTENER_PRECIO_PRODUCTO      100            Producto no encontrado: 999999
 SP_APLICAR_DESCUENTO_PRODUCTO   -20011         Porcentaje fuera de rango: 150
 SP_REGISTRAR_PRODUCTO           -2291          ORA-02291: integrity constraint ...
 ```
+
+Si ejecutas un caso inválido como un bloque suelto, sin `EXCEPTION`, el error llega sin manejar al cliente y Oracle deshace toda la sentencia, también el `INSERT` en `LOG_ERRORES`: esa fila no aparece (2.4).
 
 `SQLCODE` de `NO_DATA_FOUND` es `100` (no un número negativo `-20XXX`) — es una de las pocas excepciones predefinidas con código positivo; el resto de errores de Oracle (incluidos los de aplicación con `RAISE_APPLICATION_ERROR`) son negativos.
 
@@ -439,7 +473,7 @@ Completa y evidencia estas tareas:
 2. Crear tu propia tabla de registro de errores.
 3. Incorporar al menos una excepción predefinida (`NO_DATA_FOUND`, `DUP_VAL_ON_INDEX`, u otra).
 4. Incorporar al menos una excepción personalizada (`PRAGMA EXCEPTION_INIT` o `RAISE_APPLICATION_ERROR`).
-5. Ejecutar un caso válido y uno por cada excepción incorporada.
+5. Ejecutar un caso válido y uno por cada excepción incorporada, cada caso inválido dentro de un bloque PL/SQL que capture el error relanzado.
 6. Verificar los registros de tu tabla de errores con una consulta.
 
 ### 4.2 Propósito
@@ -486,7 +520,7 @@ Incluye capturas o salidas con una breve explicación debajo de cada una, organi
 
 **Error o hallazgo**
 
-Describe un error técnico encontrado: excepción no capturada correctamente, `WHEN OTHERS` mal usado, o un caso donde el registro y el relanzamiento quedaron en el orden incorrecto.
+Describe un error técnico encontrado: excepción no capturada correctamente, `WHEN OTHERS` mal usado, un caso donde el registro y el relanzamiento quedaron en el orden incorrecto, o una tabla de errores vacía por haber ejecutado el caso sin capturar el error en el bloque que llama.
 
 **Reflexión técnica breve**
 
@@ -506,6 +540,7 @@ La evidencia individual se considera completa si:
 - Incorpora al menos una excepción predefinida, con caso de prueba.
 - Incorpora al menos una excepción personalizada, con caso de prueba.
 - Cada excepción capturada se registra **antes** de relanzarse (no una sola de las dos acciones).
+- Ejecuta cada caso inválido dentro de un bloque PL/SQL que captura el error relanzado, de modo que su registro permanece en la tabla de errores.
 - No usa `WHEN OTHERS THEN NULL` como manejo de error.
 - Verifica los registros de la tabla de errores con una consulta.
 - Cada captura de la evidencia técnica muestra el reloj del sistema y el usuario/perfil visible, sin recortar.
@@ -519,6 +554,7 @@ La evidencia individual se considera completa si:
 2. ¿Por qué tu excepción personalizada necesitó `PRAGMA EXCEPTION_INIT` o `RAISE_APPLICATION_ERROR` — cuál de los dos, y por qué ese y no el otro?
 3. ¿Qué pasaría si tu procedimiento registrara el error pero no lo relanzara?
 4. ¿Qué diferencia hay entre el código de `SQLCODE` de una excepción predefinida como `NO_DATA_FOUND` y uno generado con `RAISE_APPLICATION_ERROR`?
+5. ¿Por qué tu tabla de errores quedaría vacía si el error llegara sin manejar al cliente?
 
 ### 4.6 Rúbrica de evaluación
 

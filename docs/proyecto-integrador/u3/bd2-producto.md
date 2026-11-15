@@ -48,7 +48,7 @@
 | 5. Presenta el producto final operativo, auditado y resiliente | 16% | CE022-N2 (completa) | `bd2-producto.md` completo y coherente con los objetos Oracle reales, con las evidencias mínimas de la sección 2 verificables en vivo. | Producto completo, con alguna evidencia mínima incompleta. | Producto incompleto o con evidencias no verificables en vivo. | No presenta producto final. | |
 | 6. Sustentación | 20% | CG | Sustenta con claridad y profesionalismo su aporte individual, respondiendo con precisión las preguntas del jurado. | Sustenta con solvencia, con detalles menores en claridad, orden o precisión. | Sustenta con dificultad; claridad, orden o precisión insuficientes. | No sustenta adecuadamente ni demuestra su aporte individual. | |
 
-Nota final = suma de (`Peso` × `Puntos de la calificación obtenida`) / 100 × 20.
+Nota final = suma de (`Peso` / 100 × `Puntos de la calificación obtenida`) = ____ / 20.
 
 `CE022-N2 (completa)` = cierre del Nivel 2 de CE022 (Ingeniería de la Información): la [Unidad 2](../u2/bd2-producto.md#4-rubrica-de-evaluacion) ya cubrió la porción de administración empresarial (usuarios, almacenamiento, auditoría, optimización, particionamiento); esta unidad completa la porción de **continuidad del negocio y operación empresarial** (respaldo, recuperación con PITR, monitoreo y diagnóstico) que esa misma nota de U2 dejó pendiente para aquí. `CE023-N1 (cierre acumulado)` se menciona en el criterio 4 porque la sustentación integra también el motor transaccional de [Unidad 1](../u1/bd2-producto.md#7-rubrica-de-evaluacion) (CE023-N1, ya cerrado desde esa unidad) — no abre ni reabre ese nivel, solo lo integra en el discurso de la sustentación. `CG` = Competencia General del sílabo de BD2, con la misma inconsistencia de nombre entre secciones III y VIII ya documentada en el [Producto U1](../u1/bd2-producto.md#7-rubrica-de-evaluacion). No es CE022: los criterios 1-5 ya son la evidencia técnica, incluida su verificación en vivo; el criterio 6 verifica aporte individual y comunicación.
 
@@ -71,7 +71,7 @@ Para usar la rúbrica con IA, solicita:
 Evalúa la sustentación y el producto (bd2-producto.md o la sección 2 de la guía S15) usando la rúbrica de esta sección.
 Para cada criterio selecciona la calificación obtenida: A=20, B=15, C=10, D=5.
 Justifica brevemente cada nivel con evidencia concreta (backup/recovery con RMAN, PITR, Data Pump, bloqueos diagnosticados, objetos inválidos, rendimiento medido).
-Calcula la nota final con la fórmula: suma de (Peso × Puntos de la calificación obtenida) / 100 × 20.
+Calcula la nota final con la fórmula: suma de (Peso / 100 × Puntos de la calificación obtenida), directamente sobre 20.
 Indica 2 fortalezas y 2 recomendaciones para la sustentación final del curso.
 ```
 
