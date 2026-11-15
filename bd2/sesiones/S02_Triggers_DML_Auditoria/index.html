@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
     
     
   
@@ -4988,7 +4988,7 @@ triggers a nivel de sentencia se dejan fuera de esta sesión.
 </table>
 <h3 id="32-crear-la-tabla-producto_auditoria">3.2 Crear la tabla <code>PRODUCTO_AUDITORIA</code><a class="headerlink" href="#32-crear-la-tabla-producto_auditoria" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> tabla <code>PRODUCTO_AUDITORIA</code> operativa en el esquema <code>BOM_CATALOGO</code>.</p>
-<p><strong>Requisito antes de continuar:</strong> conéctate como <code>BOM_CATALOGO</code> (misma conexión de S1, 3.2) — la tabla y los triggers de esta sesión son objetos de ese esquema, igual que <code>CATEGORIAS</code> y <code>PRODUCTOS</code>.</p>
+<p><strong>Requisito antes de continuar:</strong> conéctate como <code>system</code> (la misma conexión con la que ejecutaste los scripts de S1) — la tabla y los triggers de esta sesión son objetos del esquema <code>BOM_CATALOGO</code>, igual que <code>CATEGORIAS</code> y <code>PRODUCTOS</code>, y por eso todos los nombres van calificados. Conectado como <code>BOM_CATALOGO</code>, <code>CREATE TABLE</code> falla con <code>ORA-01031</code>: ese usuario no tiene <code>CREATE SEQUENCE</code>, y <code>ID_AUDITORIA</code> es una columna <code>IDENTITY</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTO_AUDITORIA</span><span class="w"> </span><span class="p">(</span>
 <span class="w">    </span><span class="n">ID_AUDITORIA</span><span class="w">     </span><span class="nb">NUMBER</span><span class="w"> </span><span class="k">GENERATED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">IDENTITY</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
 <span class="w">    </span><span class="n">ID_PRODUCTO</span><span class="w">      </span><span class="nb">NUMBER</span><span class="p">,</span>
@@ -5327,7 +5327,7 @@ Indica 2 fortalezas y 2 recomendaciones.
       <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.top", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.c21346df.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
     
   </body>

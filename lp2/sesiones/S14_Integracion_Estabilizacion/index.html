@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
     
     
   
@@ -5152,6 +5152,14 @@
 <li><strong>3.7</strong> Escribir y ejecutar una prueba end-to-end real.</li>
 <li><strong>3.8</strong> Registrar y cerrar en la bitácora de estabilización.</li>
 </ul>
+<p><strong>Presentación de referencia:</strong> el producto final integrado de BomERP está presentado en <a href="../../../presentaciones/bomerp_U3_producto_final_integrado.pptx">bomerp_U3_producto_final_integrado.pptx</a>, un ejemplo del docente que reúne ADS, BD2 y LP2. Estas son las láminas que corresponden a esta sesión:</p>
+<ul>
+<li><strong>3.1 a 3.4:</strong> lámina 14, el hallazgo real de S14 (el reporte calculaba sus totales en el navegador) y su corrección con paginación y el agregado del servidor.</li>
+<li><strong>3.5 y 3.7:</strong> lámina 15, plan de pruebas final.</li>
+<li><strong>3.6:</strong> lámina 13, qué agrega la Unidad III, incluida la auditoría.</li>
+<li><strong>3.8:</strong> lámina 16, bitácora de estabilización.</li>
+</ul>
+<p>La integración entre ADS, BD2 y LP2 se evalúa sobre el equipo como conjunto, y cada integrante defiende la parte que construyó. Las presentaciones de las unidades anteriores son <a href="../../../presentaciones/bomerp_U1_base_tecnica_empresarial.pptx">la de la Unidad I</a> y <a href="../../../presentaciones/bomerp_U2_full_stack_integrado.pptx">la de la Unidad II</a>.</p>
 <h3 id="31-confirmar-el-estado-real-la-excepcion-de-s9-310-y-por-que-la-paginacion-la-invalida">3.1 Confirmar el estado real: la excepción de S9 3.10 y por qué la paginación la invalida<a class="headerlink" href="#31-confirmar-el-estado-real-la-excepcion-de-s9-310-y-por-que-la-paginacion-la-invalida" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> confirmación, leyendo el código real, de que <code>VentaReporteComponent</code> sigue exactamente en el estado que dejó S9 3.10 —llama a <code>buscar()</code> y calcula sus totales con <code>.reduce()</code>— y de que, una vez paginado el listado (3.2-3.3), ese cálculo deja de ser correcto.</p>
 <p>Revisa <code>venta-reporte.ts</code> (<code>totalVentas</code>, <code>montoTotal</code>, <code>ticketPromedio</code>, calculados con <code>computed()</code> sobre <code>this.ventas()</code>) y <code>venta-service.ts</code> (sin ningún método <code>reporte()</code> o <code>resumen()</code> — S9 3.10 los quitó a propósito). El <em>endpoint</em> <code>GET /api/v1/ventas/resumen</code> sigue existiendo, intacto, en <code>VentaController</code> desde S9 3.7 — nadie lo borró; el frontend simplemente dejó de llamarlo, con una condición explícita de por medio: que la lista siguiera completa en el navegador.</p>
@@ -5655,7 +5663,7 @@ Indica 2 fortalezas y 2 recomendaciones.
       <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.top", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.c21346df.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
     
   </body>

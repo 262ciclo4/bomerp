@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
     
     
   
@@ -5013,7 +5013,9 @@
     Q1 --&gt;|"no, lo genera tu logica"| Raise</code></pre>
 <p>La pregunta de la Figura 3 es la misma que resume la Tabla 3, hecha explícita: si el error ya lo dispara Oracle (una restricción, una conversión), le pones nombre con <code>PRAGMA EXCEPTION_INIT</code>; si el error no existe hasta que tu propia validación lo detecta, lo generas tú con <code>RAISE_APPLICATION_ERROR</code>. Nunca hace falta usar los dos para el mismo caso.</p>
 <h3 id="24-registro-de-errores-y-tolerancia-a-fallos">2.4 Registro de errores y tolerancia a fallos<a class="headerlink" href="#24-registro-de-errores-y-tolerancia-a-fallos" title="Permanent link">&para;</a></h3>
-<p><strong>Registro de errores</strong>: cada excepción capturada se guarda en una tabla propia (<code>LOG_ERRORES</code>), con el mismo criterio de auditoría que <code>PRODUCTO_AUDITORIA</code> (S2) — qué objeto falló, qué código de error, qué mensaje, cuándo y con qué usuario. <code>SQLCODE</code> y <code>SQLERRM</code> (dentro del bloque <code>EXCEPTION</code>) dan el código y el mensaje exacto que Oracle generó, disponibles solo ahí.</p>
+<p><strong>Registro de errores</strong>: cada excepción capturada se guarda en una tabla propia (<code>LOG_ERRORES</code>), con el mismo criterio de auditoría que <code>PRODUCTO_AUDITORIA</code> (S2) — qué objeto falló, qué código de error, qué mensaje, cuándo y con qué usuario. <code>SQLCODE</code> y <code>SQLERRM</code> (dentro del bloque <code>EXCEPTION</code>) dan el código y el mensaje exacto que Oracle generó, disponibles solo ahí. No se pueden escribir directo dentro de una sentencia SQL (<code>ORA-00984: column not allowed here</code>): se copian antes a variables locales.</p>
+<p><strong>Registro y propagación</strong>: el <code>INSERT</code> a <code>LOG_ERRORES</code> forma parte de la misma transacción de quien llamó. Si el error relanzado llega hasta el cliente sin que ningún bloque lo capture, Oracle deshace toda la sentencia que falló, incluido ese <code>INSERT</code>: la tabla queda vacía justo cuando más falta hace. Por eso el patrón se completa en quien llama: el bloque PL/SQL que invoca al procedimiento captura el error relanzado y decide qué hacer, y así el registro permanece en la tabla. Es también la razón de que <code>FN_OBTENER_PRECIO_PRODUCTO</code> se invoque desde un bloque y no dentro de un <code>SELECT</code>: una función que ejecuta un <code>INSERT</code> no puede usarse dentro de una consulta (<code>ORA-14551</code>).</p>
+<p><strong>Error frecuente</strong>: ejecutar el caso inválido como un bloque suelto, sin <code>EXCEPTION</code>. El procedimiento compila y el error llega con su mensaje claro, pero <code>LOG_ERRORES</code> queda vacía: el error sin manejar deshizo también el registro.</p>
 <p><strong>Tolerancia a fallos</strong>: no significa "que el error no pase" — significa que el sistema no se cae en silencio ni deja al que llama sin explicación. El patrón de esta sesión es: <strong>capturar → registrar → relanzar con mensaje claro</strong> (no solo capturar y registrar, ni solo capturar y relanzar sin registrar). Relanzar es importante: si <code>SP_REGISTRAR_PRODUCTO</code> traga la excepción sin relanzarla, quien lo invocó (LP2, otro script) cree que el producto se guardó cuando en realidad no.</p>
 <p><strong>Figura 4. Tolerancia a fallos: patrón correcto vs. error frecuente</strong></p>
 <pre class="mermaid"><code>flowchart TD
@@ -5047,7 +5049,7 @@
 <li><strong>3.6</strong> Probar los tres con casos válidos e inválidos.</li>
 <li><strong>3.7</strong> Relacionar con ADS y LP2.</li>
 </ul>
-<p><strong>Script completo, listo para ejecutar</strong> (el paso siguiente explica cada bloque): <a href="../../proyecto-integrador/u1/oracle/S03_excepciones_robustez.sql"><code>S03_excepciones_robustez.sql</code></a>.</p>
+<p><strong>Script completo, listo para ejecutar</strong> (el paso siguiente explica cada bloque): <a href="../../../proyecto-integrador/u1/oracle/S03_excepciones_robustez.sql"><code>S03_excepciones_robustez.sql</code></a>.</p>
 <h3 id="31-definir-el-alcance-de-errores-a-manejar">3.1 Definir el alcance de errores a manejar<a class="headerlink" href="#31-definir-el-alcance-de-errores-a-manejar" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> alcance de errores definido.</p>
 <p><strong>Tabla 4. Alcance de errores de esta sesión</strong></p>
@@ -5079,7 +5081,7 @@
 </table>
 <h3 id="32-crear-la-tabla-log_errores">3.2 Crear la tabla <code>LOG_ERRORES</code><a class="headerlink" href="#32-crear-la-tabla-log_errores" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> tabla <code>LOG_ERRORES</code> operativa en el esquema <code>BOM_CATALOGO</code>.</p>
-<p><strong>Requisito antes de continuar:</strong> conéctate como <code>BOM_CATALOGO</code> (misma conexión de S1, 3.2) — la tabla y los procedimientos de esta sesión son objetos de ese esquema, igual que <code>CATEGORIAS</code>, <code>PRODUCTOS</code> y <code>PRODUCTO_AUDITORIA</code> (S2).</p>
+<p><strong>Requisito antes de continuar:</strong> conéctate como <code>system</code> (la misma conexión con la que ejecutaste los scripts de S1 y S2) — la tabla y los procedimientos de esta sesión son objetos del esquema <code>BOM_CATALOGO</code>, igual que <code>CATEGORIAS</code>, <code>PRODUCTOS</code> y <code>PRODUCTO_AUDITORIA</code> (S2), y por eso todos los nombres van calificados. Conectado como <code>BOM_CATALOGO</code>, <code>CREATE TABLE</code> falla con <code>ORA-01031</code>: ese usuario no tiene <code>CREATE SEQUENCE</code>, y <code>ID_LOG</code> es una columna <code>IDENTITY</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">LOG_ERRORES</span><span class="w"> </span><span class="p">(</span>
 <span class="w">    </span><span class="n">ID_LOG</span><span class="w">          </span><span class="nb">NUMBER</span><span class="w"> </span><span class="k">GENERATED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">IDENTITY</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
 <span class="w">    </span><span class="n">OBJETO</span><span class="w">          </span><span class="n">VARCHAR2</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
@@ -5101,19 +5103,23 @@
 <span class="p">)</span><span class="w"> </span><span class="k">IS</span>
 <span class="w">    </span><span class="n">e_categoria_inexistente</span><span class="w"> </span><span class="k">EXCEPTION</span><span class="p">;</span>
 <span class="w">    </span><span class="n">PRAGMA</span><span class="w"> </span><span class="n">EXCEPTION_INIT</span><span class="p">(</span><span class="n">e_categoria_inexistente</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mi">2291</span><span class="p">);</span>
+<span class="w">    </span><span class="n">v_codigo</span><span class="w">  </span><span class="nb">NUMBER</span><span class="p">;</span>
+<span class="w">    </span><span class="n">v_mensaje</span><span class="w"> </span><span class="n">VARCHAR2</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
 <span class="k">BEGIN</span>
 <span class="w">    </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTOS</span><span class="w"> </span><span class="p">(</span><span class="n">ID_CATEGORIA</span><span class="p">,</span><span class="w"> </span><span class="n">NOMBRE</span><span class="p">,</span><span class="w"> </span><span class="n">PRECIO</span><span class="p">,</span><span class="w"> </span><span class="n">STOCK</span><span class="p">)</span>
 <span class="w">    </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="n">p_id_categoria</span><span class="p">,</span><span class="w"> </span><span class="n">p_nombre</span><span class="p">,</span><span class="w"> </span><span class="n">p_precio</span><span class="p">,</span><span class="w"> </span><span class="n">p_stock</span><span class="p">)</span>
 <span class="w">    </span><span class="n">RETURNING</span><span class="w"> </span><span class="n">ID</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">p_id_producto</span><span class="p">;</span>
 <span class="k">EXCEPTION</span>
 <span class="w">    </span><span class="k">WHEN</span><span class="w"> </span><span class="n">e_categoria_inexistente</span><span class="w"> </span><span class="k">THEN</span>
+<span class="w">        </span><span class="n">v_codigo</span><span class="w">  </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="k">SQLCODE</span><span class="p">;</span>
+<span class="w">        </span><span class="n">v_mensaje</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">SUBSTR</span><span class="p">(</span><span class="n">SQLERRM</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">500</span><span class="p">);</span>
 <span class="w">        </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">LOG_ERRORES</span><span class="w"> </span><span class="p">(</span><span class="n">OBJETO</span><span class="p">,</span><span class="w"> </span><span class="n">CODIGO_ERROR</span><span class="p">,</span><span class="w"> </span><span class="n">MENSAJE_ERROR</span><span class="p">)</span>
-<span class="w">        </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">'SP_REGISTRAR_PRODUCTO'</span><span class="p">,</span><span class="w"> </span><span class="k">SQLCODE</span><span class="p">,</span><span class="w"> </span><span class="n">SQLERRM</span><span class="p">);</span>
+<span class="w">        </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">'SP_REGISTRAR_PRODUCTO'</span><span class="p">,</span><span class="w"> </span><span class="n">v_codigo</span><span class="p">,</span><span class="w"> </span><span class="n">v_mensaje</span><span class="p">);</span>
 <span class="w">        </span><span class="n">RAISE_APPLICATION_ERROR</span><span class="p">(</span><span class="o">-</span><span class="mi">20010</span><span class="p">,</span><span class="w"> </span><span class="s1">'La categoria '</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">p_id_categoria</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">' no existe. Verifica el id antes de registrar el producto.'</span><span class="p">);</span>
 <span class="k">END</span><span class="p">;</span>
 <span class="o">/</span>
 </code></pre></div>
-<p><code>e_categoria_inexistente</code> captura específicamente <code>ORA-02291</code>; cualquier otro error (uno que esta sesión no anticipó) sigue sin capturarse — y eso es intencional: capturar solo lo que sabes manejar, no todo con <code>WHEN OTHERS</code> (2.2). El <code>INSERT</code> a <code>LOG_ERRORES</code> ocurre <strong>antes</strong> del <code>RAISE_APPLICATION_ERROR</code>: si se invirtiera el orden, el procedimiento terminaría en el <code>RAISE</code> y el registro nunca se ejecutaría.</p>
+<p><code>e_categoria_inexistente</code> captura específicamente <code>ORA-02291</code>; cualquier otro error (uno que esta sesión no anticipó) sigue sin capturarse — y eso es intencional: capturar solo lo que sabes manejar, no todo con <code>WHEN OTHERS</code> (2.2). El <code>INSERT</code> a <code>LOG_ERRORES</code> ocurre <strong>antes</strong> del <code>RAISE_APPLICATION_ERROR</code>: si se invirtiera el orden, el procedimiento terminaría en el <code>RAISE</code> y el registro nunca se ejecutaría. <code>SQLCODE</code> y <code>SQLERRM</code> se copian antes a <code>v_codigo</code> y <code>v_mensaje</code> porque no pueden escribirse directo dentro del <code>INSERT</code> (2.4).</p>
 <h3 id="34-incorporar-una-excepcion-personalizada-en-sp_aplicar_descuento_producto">3.4 Incorporar una excepción personalizada en <code>SP_APLICAR_DESCUENTO_PRODUCTO</code><a class="headerlink" href="#34-incorporar-una-excepcion-personalizada-en-sp_aplicar_descuento_producto" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> <code>SP_APLICAR_DESCUENTO_PRODUCTO</code> rechaza un porcentaje fuera de rango, con registro y mensaje propio.</p>
 <div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">PROCEDURE</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">SP_APLICAR_DESCUENTO_PRODUCTO</span><span class="p">(</span>
@@ -5138,6 +5144,7 @@
 <span class="w">    </span><span class="n">p_id_producto</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="nb">NUMBER</span>
 <span class="p">)</span><span class="w"> </span><span class="k">RETURN</span><span class="w"> </span><span class="nb">NUMBER</span><span class="w"> </span><span class="k">IS</span>
 <span class="w">    </span><span class="n">v_precio</span><span class="w"> </span><span class="nb">NUMBER</span><span class="p">;</span>
+<span class="w">    </span><span class="n">v_codigo</span><span class="w"> </span><span class="nb">NUMBER</span><span class="p">;</span>
 <span class="k">BEGIN</span>
 <span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">PRECIO</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">v_precio</span>
 <span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">PRODUCTOS</span>
@@ -5146,13 +5153,14 @@
 <span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="n">v_precio</span><span class="p">;</span>
 <span class="k">EXCEPTION</span>
 <span class="w">    </span><span class="k">WHEN</span><span class="w"> </span><span class="n">NO_DATA_FOUND</span><span class="w"> </span><span class="k">THEN</span>
+<span class="w">        </span><span class="n">v_codigo</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="k">SQLCODE</span><span class="p">;</span>
 <span class="w">        </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">LOG_ERRORES</span><span class="w"> </span><span class="p">(</span><span class="n">OBJETO</span><span class="p">,</span><span class="w"> </span><span class="n">CODIGO_ERROR</span><span class="p">,</span><span class="w"> </span><span class="n">MENSAJE_ERROR</span><span class="p">)</span>
-<span class="w">        </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">'FN_OBTENER_PRECIO_PRODUCTO'</span><span class="p">,</span><span class="w"> </span><span class="k">SQLCODE</span><span class="p">,</span><span class="w"> </span><span class="s1">'Producto no encontrado: '</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">p_id_producto</span><span class="p">);</span>
+<span class="w">        </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">'FN_OBTENER_PRECIO_PRODUCTO'</span><span class="p">,</span><span class="w"> </span><span class="n">v_codigo</span><span class="p">,</span><span class="w"> </span><span class="s1">'Producto no encontrado: '</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">p_id_producto</span><span class="p">);</span>
 <span class="w">        </span><span class="n">RAISE_APPLICATION_ERROR</span><span class="p">(</span><span class="o">-</span><span class="mi">20012</span><span class="p">,</span><span class="w"> </span><span class="s1">'No existe un producto con id '</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">p_id_producto</span><span class="p">);</span>
 <span class="k">END</span><span class="p">;</span>
 <span class="o">/</span>
 </code></pre></div>
-<p><code>SELECT ... INTO</code> es exactamente el tipo de sentencia donde <code>NO_DATA_FOUND</code> aparece en la práctica: espera <strong>una</strong> fila, y si la consulta no encuentra ninguna, PL/SQL la lanza automáticamente — no hace falta un <code>IF</code> para comprobarlo antes.</p>
+<p><code>SELECT ... INTO</code> es exactamente el tipo de sentencia donde <code>NO_DATA_FOUND</code> aparece en la práctica: espera <strong>una</strong> fila, y si la consulta no encuentra ninguna, PL/SQL la lanza automáticamente — no hace falta un <code>IF</code> para comprobarlo antes. Como esta función escribe en <code>LOG_ERRORES</code>, se invoca desde un bloque PL/SQL (3.6) y no dentro de un <code>SELECT</code> (2.4).</p>
 <h3 id="36-probar-los-tres-con-casos-validos-e-invalidos">3.6 Probar los tres con casos válidos e inválidos<a class="headerlink" href="#36-probar-los-tres-con-casos-validos-e-invalidos" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> evidencia de ejecución de los tres casos.</p>
 <p>Caso válido — registrar un producto con categoría real, aplicar un descuento razonable, y consultar su precio:</p>
@@ -5167,24 +5175,45 @@
 <span class="k">END</span><span class="p">;</span>
 <span class="o">/</span>
 </code></pre></div>
+<p>Cada caso inválido se ejecuta dentro de un bloque que captura el error relanzado: <code>PRAGMA EXCEPTION_INIT</code> le pone nombre al código de aplicación (<code>-20010</code>, <code>-20011</code> o <code>-20012</code>), y el bloque muestra el mensaje en vez de dejar que el error llegue sin manejar al cliente (2.4).</p>
 <p>Caso inválido 1 — categoría inexistente (debe fallar con <code>ORA-20010</code>):</p>
 <div class="highlight"><pre><span></span><code><span class="k">DECLARE</span>
 <span class="w">    </span><span class="n">v_id_producto</span><span class="w"> </span><span class="nb">NUMBER</span><span class="p">;</span>
+<span class="w">    </span><span class="n">e_categoria_inexistente</span><span class="w"> </span><span class="k">EXCEPTION</span><span class="p">;</span>
+<span class="w">    </span><span class="n">PRAGMA</span><span class="w"> </span><span class="n">EXCEPTION_INIT</span><span class="p">(</span><span class="n">e_categoria_inexistente</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mi">20010</span><span class="p">);</span>
 <span class="k">BEGIN</span>
 <span class="w">    </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">SP_REGISTRAR_PRODUCTO</span><span class="p">(</span><span class="mi">999999</span><span class="p">,</span><span class="w"> </span><span class="s1">'Producto sin categoria'</span><span class="p">,</span><span class="w"> </span><span class="mi">50</span><span class="p">.</span><span class="mi">00</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="n">v_id_producto</span><span class="p">);</span>
+<span class="k">EXCEPTION</span>
+<span class="w">    </span><span class="k">WHEN</span><span class="w"> </span><span class="n">e_categoria_inexistente</span><span class="w"> </span><span class="k">THEN</span>
+<span class="w">        </span><span class="n">DBMS_OUTPUT</span><span class="p">.</span><span class="n">PUT_LINE</span><span class="p">(</span><span class="n">SQLERRM</span><span class="p">);</span>
 <span class="k">END</span><span class="p">;</span>
 <span class="o">/</span>
 </code></pre></div>
 <p>Caso inválido 2 — porcentaje de descuento fuera de rango (debe fallar con <code>ORA-20011</code>):</p>
 <div class="highlight"><pre><span></span><code><span class="k">DECLARE</span>
 <span class="w">    </span><span class="n">v_precio</span><span class="w"> </span><span class="nb">NUMBER</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="p">.</span><span class="mi">00</span><span class="p">;</span>
+<span class="w">    </span><span class="n">e_descuento_invalido</span><span class="w"> </span><span class="k">EXCEPTION</span><span class="p">;</span>
+<span class="w">    </span><span class="n">PRAGMA</span><span class="w"> </span><span class="n">EXCEPTION_INIT</span><span class="p">(</span><span class="n">e_descuento_invalido</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mi">20011</span><span class="p">);</span>
 <span class="k">BEGIN</span>
 <span class="w">    </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">SP_APLICAR_DESCUENTO_PRODUCTO</span><span class="p">(</span><span class="n">v_precio</span><span class="p">,</span><span class="w"> </span><span class="mi">150</span><span class="p">);</span>
+<span class="k">EXCEPTION</span>
+<span class="w">    </span><span class="k">WHEN</span><span class="w"> </span><span class="n">e_descuento_invalido</span><span class="w"> </span><span class="k">THEN</span>
+<span class="w">        </span><span class="n">DBMS_OUTPUT</span><span class="p">.</span><span class="n">PUT_LINE</span><span class="p">(</span><span class="n">SQLERRM</span><span class="p">);</span>
 <span class="k">END</span><span class="p">;</span>
 <span class="o">/</span>
 </code></pre></div>
 <p>Caso inválido 3 — producto inexistente (debe fallar con <code>ORA-20012</code>):</p>
-<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">FN_OBTENER_PRECIO_PRODUCTO</span><span class="p">(</span><span class="mi">999999</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">DUAL</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">DECLARE</span>
+<span class="w">    </span><span class="n">v_precio</span><span class="w"> </span><span class="nb">NUMBER</span><span class="p">;</span>
+<span class="w">    </span><span class="n">e_producto_inexistente</span><span class="w"> </span><span class="k">EXCEPTION</span><span class="p">;</span>
+<span class="w">    </span><span class="n">PRAGMA</span><span class="w"> </span><span class="n">EXCEPTION_INIT</span><span class="p">(</span><span class="n">e_producto_inexistente</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mi">20012</span><span class="p">);</span>
+<span class="k">BEGIN</span>
+<span class="w">    </span><span class="n">v_precio</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">BOM_CATALOGO</span><span class="p">.</span><span class="n">FN_OBTENER_PRECIO_PRODUCTO</span><span class="p">(</span><span class="mi">999999</span><span class="p">);</span>
+<span class="k">EXCEPTION</span>
+<span class="w">    </span><span class="k">WHEN</span><span class="w"> </span><span class="n">e_producto_inexistente</span><span class="w"> </span><span class="k">THEN</span>
+<span class="w">        </span><span class="n">DBMS_OUTPUT</span><span class="p">.</span><span class="n">PUT_LINE</span><span class="p">(</span><span class="n">SQLERRM</span><span class="p">);</span>
+<span class="k">END</span><span class="p">;</span>
+<span class="o">/</span>
 </code></pre></div>
 <p>Verifica que los tres casos inválidos quedaron registrados:</p>
 <div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="n">OBJETO</span><span class="p">,</span><span class="w"> </span><span class="n">CODIGO_ERROR</span><span class="p">,</span><span class="w"> </span><span class="n">MENSAJE_ERROR</span><span class="p">,</span><span class="w"> </span><span class="n">FECHA_EVENTO</span>
@@ -5198,6 +5227,7 @@ FN_OBTENER_PRECIO_PRODUCTO      100            Producto no encontrado: 999999
 SP_APLICAR_DESCUENTO_PRODUCTO   -20011         Porcentaje fuera de rango: 150
 SP_REGISTRAR_PRODUCTO           -2291          ORA-02291: integrity constraint ...
 </code></pre></div>
+<p>Si ejecutas un caso inválido como un bloque suelto, sin <code>EXCEPTION</code>, el error llega sin manejar al cliente y Oracle deshace toda la sentencia, también el <code>INSERT</code> en <code>LOG_ERRORES</code>: esa fila no aparece (2.4).</p>
 <p><code>SQLCODE</code> de <code>NO_DATA_FOUND</code> es <code>100</code> (no un número negativo <code>-20XXX</code>) — es una de las pocas excepciones predefinidas con código positivo; el resto de errores de Oracle (incluidos los de aplicación con <code>RAISE_APPLICATION_ERROR</code>) son negativos.</p>
 <h3 id="37-relacionar-con-ads-y-lp2">3.7 Relacionar con ADS y LP2<a class="headerlink" href="#37-relacionar-con-ads-y-lp2" title="Permanent link">&para;</a></h3>
 <p><strong>Producto del paso:</strong> matriz de integración.</p>
@@ -5248,7 +5278,7 @@ SP_REGISTRAR_PRODUCTO           -2291          ORA-02291: integrity constraint .
 <li>Crear tu propia tabla de registro de errores.</li>
 <li>Incorporar al menos una excepción predefinida (<code>NO_DATA_FOUND</code>, <code>DUP_VAL_ON_INDEX</code>, u otra).</li>
 <li>Incorporar al menos una excepción personalizada (<code>PRAGMA EXCEPTION_INIT</code> o <code>RAISE_APPLICATION_ERROR</code>).</li>
-<li>Ejecutar un caso válido y uno por cada excepción incorporada.</li>
+<li>Ejecutar un caso válido y uno por cada excepción incorporada, cada caso inválido dentro de un bloque PL/SQL que capture el error relanzado.</li>
 <li>Verificar los registros de tu tabla de errores con una consulta.</li>
 </ol>
 <h3 id="42-proposito">4.2 Propósito<a class="headerlink" href="#42-proposito" title="Permanent link">&para;</a></h3>
@@ -5292,7 +5322,7 @@ SP_REGISTRAR_PRODUCTO           -2291          ORA-02291: integrity constraint .
 </li>
 </ol>
 <p><strong>Error o hallazgo</strong></p>
-<p>Describe un error técnico encontrado: excepción no capturada correctamente, <code>WHEN OTHERS</code> mal usado, o un caso donde el registro y el relanzamiento quedaron en el orden incorrecto.</p>
+<p>Describe un error técnico encontrado: excepción no capturada correctamente, <code>WHEN OTHERS</code> mal usado, un caso donde el registro y el relanzamiento quedaron en el orden incorrecto, o una tabla de errores vacía por haber ejecutado el caso sin capturar el error en el bloque que llama.</p>
 <p><strong>Reflexión técnica breve</strong></p>
 <p>Responde en 5 a 8 líneas:</p>
 <div class="highlight"><pre><span></span><code>¿Por qué capturar un error y no volver a lanzarlo puede ser peor que no
@@ -5306,6 +5336,7 @@ manejarlo? Relaciona tu respuesta con el caso de 1.6.1.
 <li>Incorpora al menos una excepción predefinida, con caso de prueba.</li>
 <li>Incorpora al menos una excepción personalizada, con caso de prueba.</li>
 <li>Cada excepción capturada se registra <strong>antes</strong> de relanzarse (no una sola de las dos acciones).</li>
+<li>Ejecuta cada caso inválido dentro de un bloque PL/SQL que captura el error relanzado, de modo que su registro permanece en la tabla de errores.</li>
 <li>No usa <code>WHEN OTHERS THEN NULL</code> como manejo de error.</li>
 <li>Verifica los registros de la tabla de errores con una consulta.</li>
 <li>Cada captura de la evidencia técnica muestra el reloj del sistema y el usuario/perfil visible, sin recortar.</li>
@@ -5319,6 +5350,7 @@ manejarlo? Relaciona tu respuesta con el caso de 1.6.1.
 <li>¿Por qué tu excepción personalizada necesitó <code>PRAGMA EXCEPTION_INIT</code> o <code>RAISE_APPLICATION_ERROR</code> — cuál de los dos, y por qué ese y no el otro?</li>
 <li>¿Qué pasaría si tu procedimiento registrara el error pero no lo relanzara?</li>
 <li>¿Qué diferencia hay entre el código de <code>SQLCODE</code> de una excepción predefinida como <code>NO_DATA_FOUND</code> y uno generado con <code>RAISE_APPLICATION_ERROR</code>?</li>
+<li>¿Por qué tu tabla de errores quedaría vacía si el error llegara sin manejar al cliente?</li>
 </ol>
 <h3 id="46-rubrica-de-evaluacion">4.6 Rúbrica de evaluación<a class="headerlink" href="#46-rubrica-de-evaluacion" title="Permanent link">&para;</a></h3>
 <p><strong>Tabla 6. Rúbrica de evaluación</strong></p>
@@ -5456,7 +5488,7 @@ Indica 2 fortalezas y 2 recomendaciones.
       <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.top", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.c21346df.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
     
   </body>
