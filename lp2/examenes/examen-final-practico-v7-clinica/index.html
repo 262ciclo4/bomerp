@@ -49,6 +49,8 @@
       
     
     
+      <link rel="stylesheet" href="../../../stylesheets/diagramas-texto.css">
+    
     <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -4239,8 +4241,8 @@
 </code></pre></div>
 <p><strong>Figura 3. Clínica: formulario para crear y editar, con los errores visibles</strong></p>
 <div class="highlight"><pre><span></span><code>┌─ Nueva clínica  (la misma pantalla sirve para editar) ─────────────────┐
-│ RUC            [ 2013579 ]          ✗ El RUC debe tener 11 dígitos     │
-│ Razón social   [ ______________ ]   ✗ La razón social es obligatoria   │
+│ RUC            [ 2013579 ]          × El RUC debe tener 11 dígitos     │
+│ Razón social   [ ______________ ]   × La razón social es obligatoria   │
 │ Teléfono       [ ______________ ]                                      │
 │ Activa         [x]                                                     │
 │                                                                        │
