@@ -30,33 +30,38 @@ El esquema `EXA_CLINICA` tiene cuatro tablas (Figura 1). `CONSULTORIO_ESPECIALID
 
 **Figura 1. Diagrama de la base de datos del módulo**
 
-```
-┌─ Esquema EXA_CLINICA ─────────────────────────────────────────┐
-│ ┌────────────────────┐           ┌──────────────────────────┐ │
-│ │ CLINICAS           │           │ ESPECIALIDADES           │ │
-│ ├────────────────────┤           ├──────────────────────────┤ │
-│ │ PK    ID           │           │ PK    ID                 │ │
-│ │ UK    RUC          │           │ UK    CODIGO             │ │
-│ │       RAZON_SOCIAL │           │       NOMBRE             │ │
-│ │       TELEFONO     │           └─────────────┬────────────┘ │
-│ │       ACTIVO       │                         │              │
-│ └──────────┬─────────┘                         │              │
-│            │1                                  │1             │
-│            │                                   │              │
-│            │N                                  │N             │
-│ ┌──────────┴─────────┐           ┌─────────────┴────────────┐ │
-│ │ CONSULTORIOS       │           │ CONSULTORIO_ESPECIALIDAD │ │
-│ ├────────────────────┤ 1       N ├──────────────────────────┤ │
-│ │ PK    ID           ├───────────┤ PK,FK ID_CONSULTORIO     │ │
-│ │ FK    ID_CLINICA   │           │ PK,FK ID_ESPECIALIDAD    │ │
-│ │ UK    CODIGO       │           └──────────────────────────┘ │
-│ │       TARIFA_HORA  │                                        │
-│ │       ESTADO       │                                        │
-│ └────────────────────┘                                        │
-└───────────────────────────────────────────────────────────────┘
+```mermaid
+erDiagram
+    CLINICAS ||--o{ CONSULTORIOS : "tiene"
+    CONSULTORIOS ||--o{ CONSULTORIO_ESPECIALIDAD : "incluye"
+    ESPECIALIDADES ||--o{ CONSULTORIO_ESPECIALIDAD : "se asigna en"
+
+    CLINICAS {
+        NUMBER ID PK
+        CHAR RUC UK
+        VARCHAR2 RAZON_SOCIAL
+        VARCHAR2 TELEFONO
+        NUMBER ACTIVO
+    }
+    CONSULTORIOS {
+        NUMBER ID PK
+        NUMBER ID_CLINICA FK
+        VARCHAR2 CODIGO UK
+        NUMBER TARIFA_HORA
+        VARCHAR2 ESTADO
+    }
+    ESPECIALIDADES {
+        NUMBER ID PK
+        VARCHAR2 CODIGO UK
+        VARCHAR2 NOMBRE
+    }
+    CONSULTORIO_ESPECIALIDAD {
+        NUMBER ID_CONSULTORIO PK, FK
+        NUMBER ID_ESPECIALIDAD PK, FK
+    }
 ```
 
-`PK` es clave primaria, `FK` clave foránea y `UK` valor único. `1` y `N` indican la cardinalidad de la relación.
+`PK` es clave primaria, `FK` clave foránea y `UK` valor único. En cada relación, el extremo con doble barra es el lado «uno» y el extremo con pata de gallo es el lado «muchos».
 
 **Script 1. Esquema**
 
