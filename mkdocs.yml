@@ -17,9 +17,6 @@ theme:
       primary: indigo
       accent: teal
 
-extra_css:
-  - stylesheets/diagramas-texto.css
-
 markdown_extensions:
   - admonition
   - attr_list

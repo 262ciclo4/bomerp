@@ -171,81 +171,81 @@ Las Figuras 2 y 3 corresponden a la pregunta 1. En las Figuras 4, 5 y 6 el consu
 **Figura 2. Clínicas: listado**
 
 ```text
-┌─ Clínicas ───────────────────────────────────────────────────────────────────────────────┐
-│                                                                     [ + Nueva clínica ]  │
-│                                                                                          │
-│ ┌─────────────┬────────────────────────────┬───────────┬────────┬─────────────────────┐  │
-│ │ RUC         │ Razón social               │ Teléfono  │ Activa │ Acciones            │  │
-│ ├─────────────┼────────────────────────────┼───────────┼────────┼─────────────────────┤  │
-│ │ 20135792468 │ Clinica Altiplano SAC      │ 951357924 │ Sí     │ [Editar] [Eliminar] │  │
-│ │ 20246813579 │ Centro Medico del Sur EIRL │ 952468135 │ Sí     │ [Editar] [Eliminar] │  │
-│ │ 20369258147 │ Salud Titicaca SRL         │ 953692581 │ No     │ [Editar] [Eliminar] │  │
-│ └─────────────┴────────────────────────────┴───────────┴────────┴─────────────────────┘  │
-└──────────────────────────────────────────────────────────────────────────────────────────┘
++- Clínicas -------------------------------------------------------------------------------+
+|                                                                     [ + Nueva clínica ]  |
+|                                                                                          |
+| +-------------+----------------------------+-----------+--------+---------------------+  |
+| | RUC         | Razón social               | Teléfono  | Activa | Acciones            |  |
+| +-------------+----------------------------+-----------+--------+---------------------+  |
+| | 20135792468 | Clinica Altiplano SAC      | 951357924 | Sí     | [Editar] [Eliminar] |  |
+| | 20246813579 | Centro Medico del Sur EIRL | 952468135 | Sí     | [Editar] [Eliminar] |  |
+| | 20369258147 | Salud Titicaca SRL         | 953692581 | No     | [Editar] [Eliminar] |  |
+| +-------------+----------------------------+-----------+--------+---------------------+  |
++------------------------------------------------------------------------------------------+
 ```
 
 **Figura 3. Clínica: formulario para crear y editar, con los errores visibles**
 
 ```text
-┌─ Nueva clínica  (la misma pantalla sirve para editar) ─────────────────┐
-│ RUC            [ 2013579 ]          × El RUC debe tener 11 dígitos     │
-│ Razón social   [ ______________ ]   × La razón social es obligatoria   │
-│ Teléfono       [ ______________ ]                                      │
-│ Activa         [x]                                                     │
-│                                                                        │
-│                                           [ Cancelar ]   [ Guardar ]   │
-└────────────────────────────────────────────────────────────────────────┘
++- Nueva clínica  (la misma pantalla sirve para editar) -----------------+
+| RUC            [ 2013579 ]          × El RUC debe tener 11 dígitos     |
+| Razón social   [ ______________ ]   × La razón social es obligatoria   |
+| Teléfono       [ ______________ ]                                      |
+| Activa         [x]                                                     |
+|                                                                        |
+|                                           [ Cancelar ]   [ Guardar ]   |
++------------------------------------------------------------------------+
 ```
 
 **Figura 4. Consultorios: listado**
 
 ```text
-┌─ Consultorios ─────────────────────────────────────────────────────────────────────────┐
-│                                                               [ + Nuevo consultorio ]  │
-│                                                                                        │
-│ ┌─────────┬────────────────────────────┬─────────┬───────────────┬──────────────────┐  │
-│ │ Código  │ Clínica                    │ Tarifa  │ Estado        │ Acciones         │  │
-│ ├─────────┼────────────────────────────┼─────────┼───────────────┼──────────────────┤  │
-│ │ CON-101 │ Clinica Altiplano SAC      │ 80.00   │ DISPONIBLE    │ [Ver] [Eliminar] │  │
-│ │ CON-102 │ Clinica Altiplano SAC      │ 120.00  │ OCUPADO       │ [Ver] [Eliminar] │  │
-│ │ CON-201 │ Centro Medico del Sur EIRL │ 60.00   │ DISPONIBLE    │ [Ver] [Eliminar] │  │
-│ └─────────┴────────────────────────────┴─────────┴───────────────┴──────────────────┘  │
-└────────────────────────────────────────────────────────────────────────────────────────┘
++- Consultorios -------------------------------------------------------------------------+
+|                                                               [ + Nuevo consultorio ]  |
+|                                                                                        |
+| +---------+----------------------------+---------+---------------+------------------+  |
+| | Código  | Clínica                    | Tarifa  | Estado        | Acciones         |  |
+| +---------+----------------------------+---------+---------------+------------------+  |
+| | CON-101 | Clinica Altiplano SAC      | 80.00   | DISPONIBLE    | [Ver] [Eliminar] |  |
+| | CON-102 | Clinica Altiplano SAC      | 120.00  | OCUPADO       | [Ver] [Eliminar] |  |
+| | CON-201 | Centro Medico del Sur EIRL | 60.00   | DISPONIBLE    | [Ver] [Eliminar] |  |
+| +---------+----------------------------+---------+---------------+------------------+  |
++----------------------------------------------------------------------------------------+
 ```
 
 **Figura 5. Nuevo consultorio, con la asignación de especialidades**
 
 ```text
-┌─ Nuevo consultorio ──────────────────────────────────────────────────────────┐
-│ Clínica  [ Clinica Altiplano SAC ▼ ]    Código [ ________ ]                  │
-│ Tarifa por hora (S/) [ ______ ]      Estado [ DISPONIBLE ▼ ]                 │
-│                                                                              │
-│ Especialidades del consultorio   [ Medicina general ▼ ] [ Agregar ]          │
-│                                                                              │
-│ ┌────────┬────────────────────┬──────────┐                                   │
-│ │ E-01   │ Medicina general   │ [Quitar] │                                   │
-│ │ E-03   │ Cardiologia        │ [Quitar] │                                   │
-│ └────────┴────────────────────┴──────────┘                                   │
-│                                                                              │
-│                                               [ Cancelar ]   [ Guardar ]     │
-└──────────────────────────────────────────────────────────────────────────────┘
++- Nuevo consultorio ----------------------------------------------------------+
+| Clínica  [ Clinica Altiplano SAC v ]    Código [ ________ ]                  |
+| Tarifa por hora (S/) [ ______ ]      Estado [ DISPONIBLE v ]                 |
+|                                                                              |
+| Especialidades del consultorio   [ Medicina general v ] [ Agregar ]          |
+|                                                                              |
+| +--------+--------------------+----------+                                   |
+| | E-01   | Medicina general   | [Quitar] |                                   |
+| | E-03   | Cardiologia        | [Quitar] |                                   |
+| +--------+--------------------+----------+                                   |
+|                                                                              |
+|                                               [ Cancelar ]   [ Guardar ]     |
++------------------------------------------------------------------------------+
 ```
 
 **Figura 6. Ver consultorio, con sus especialidades (solo lectura)**
 
 ```text
-┌─ Consultorio CON-101 ────────────────────────────────────────────────────────┐
-│ Clínica: Clinica Altiplano SAC     Tarifa por hora: 80.00                    │
-│ Estado:    DISPONIBLE                                                        │
-│                                                                              │
-│ Especialidades asignadas:                                                    │
-│ ┌────────┬────────────────────┐                                              │
-│ │ E-01   │ Medicina general   │                                              │
-│ │ E-02   │ Pediatria          │                                              │
-│ └────────┴────────────────────┘                                              │
-│                                                                              │
-│                                                               [ Volver ]     │
-└──────────────────────────────────────────────────────────────────────────────┘
++- Consultorio CON-101 --------------------------------------------------------+
+| Clínica: Clinica Altiplano SAC     Tarifa por hora: 80.00                    |
+| Estado:    DISPONIBLE                                                        |
+|                                                                              |
+| Especialidades asignadas:                                                    |
+| +--------+--------------------+                                              |
+| | E-01   | Medicina general   |                                              |
+| | E-02   | Pediatria          |                                              |
+| +--------+--------------------+                                              |
+|                                                                              |
+|                                                               [ Volver ]     |
++------------------------------------------------------------------------------+
 ```
 
 ## 5. Preguntas
