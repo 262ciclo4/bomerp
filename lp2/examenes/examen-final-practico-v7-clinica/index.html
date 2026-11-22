@@ -4102,31 +4102,35 @@
 <p>Cada bloque empieza con <code>$DB = 'bomerp-oracle'</code>: <strong>cambia ese valor por el nombre del contenedor Oracle de tu entorno de desarrollo</strong> (<code>docker ps</code> te lo muestra). Si tu <code>system</code> tiene otra contraseña, ajústala también. Si tu proyecto usa PostgreSQL en lugar de Oracle, usa los scripts del <a href="#anexo-b-scripts-para-postgresql">Anexo B</a>.</p>
 <p>El esquema <code>EXA_CLINICA</code> tiene cuatro tablas (Figura 1). <code>CONSULTORIO_ESPECIALIDAD</code> es la tabla intermedia de la relación muchos a muchos: su clave primaria es compuesta y cada una de sus dos columnas es clave foránea.</p>
 <p><strong>Figura 1. Diagrama de la base de datos del módulo</strong></p>
-<div class="highlight"><pre><span></span><code>┌─ Esquema EXA_CLINICA ─────────────────────────────────────────┐
-│ ┌────────────────────┐           ┌──────────────────────────┐ │
-│ │ CLINICAS           │           │ ESPECIALIDADES           │ │
-│ ├────────────────────┤           ├──────────────────────────┤ │
-│ │ PK    ID           │           │ PK    ID                 │ │
-│ │ UK    RUC          │           │ UK    CODIGO             │ │
-│ │       RAZON_SOCIAL │           │       NOMBRE             │ │
-│ │       TELEFONO     │           └─────────────┬────────────┘ │
-│ │       ACTIVO       │                         │              │
-│ └──────────┬─────────┘                         │              │
-│            │1                                  │1             │
-│            │                                   │              │
-│            │N                                  │N             │
-│ ┌──────────┴─────────┐           ┌─────────────┴────────────┐ │
-│ │ CONSULTORIOS       │           │ CONSULTORIO_ESPECIALIDAD │ │
-│ ├────────────────────┤ 1       N ├──────────────────────────┤ │
-│ │ PK    ID           ├───────────┤ PK,FK ID_CONSULTORIO     │ │
-│ │ FK    ID_CLINICA   │           │ PK,FK ID_ESPECIALIDAD    │ │
-│ │ UK    CODIGO       │           └──────────────────────────┘ │
-│ │       TARIFA_HORA  │                                        │
-│ │       ESTADO       │                                        │
-│ └────────────────────┘                                        │
-└───────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<p><code>PK</code> es clave primaria, <code>FK</code> clave foránea y <code>UK</code> valor único. <code>1</code> y <code>N</code> indican la cardinalidad de la relación.</p>
+<pre class="mermaid"><code>erDiagram
+    CLINICAS ||--o{ CONSULTORIOS : "tiene"
+    CONSULTORIOS ||--o{ CONSULTORIO_ESPECIALIDAD : "incluye"
+    ESPECIALIDADES ||--o{ CONSULTORIO_ESPECIALIDAD : "se asigna en"
+
+    CLINICAS {
+        NUMBER ID PK
+        CHAR RUC UK
+        VARCHAR2 RAZON_SOCIAL
+        VARCHAR2 TELEFONO
+        NUMBER ACTIVO
+    }
+    CONSULTORIOS {
+        NUMBER ID PK
+        NUMBER ID_CLINICA FK
+        VARCHAR2 CODIGO UK
+        NUMBER TARIFA_HORA
+        VARCHAR2 ESTADO
+    }
+    ESPECIALIDADES {
+        NUMBER ID PK
+        VARCHAR2 CODIGO UK
+        VARCHAR2 NOMBRE
+    }
+    CONSULTORIO_ESPECIALIDAD {
+        NUMBER ID_CONSULTORIO PK, FK
+        NUMBER ID_ESPECIALIDAD PK, FK
+    }</code></pre>
+<p><code>PK</code> es clave primaria, <code>FK</code> clave foránea y <code>UK</code> valor único. En cada relación, el extremo con doble barra es el lado «uno» y el extremo con pata de gallo es el lado «muchos».</p>
 <p><strong>Script 1. Esquema</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nv">$DB</span> <span class="p">=</span> <span class="s1">'bomerp-oracle'</span>   <span class="c"># nombre de TU contenedor Oracle en dev (míralo con: docker ps)</span>
 <span class="sh">@'</span>
