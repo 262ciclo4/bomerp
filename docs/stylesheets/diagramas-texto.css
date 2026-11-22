@@ -1,0 +1,16 @@
+/*
+ * Diagramas dibujados con caracteres de caja (┌ ─ │ ┤ ...) en bloques ```text.
+ *
+ * La fuente de código del tema (Roboto Mono, de Google Fonts) no incluye esos caracteres:
+ * el navegador los toma de otra fuente con otro ancho y las columnas se corren.
+ * Se usan fuentes monoespaciadas del sistema, que sí los traen con el ancho de una celda,
+ * y un interlineado menor para que las barras verticales se unan.
+ */
+.md-typeset .language-text pre > code,
+.md-typeset pre > code.language-text {
+  font-family: Consolas, "Cascadia Mono", "SF Mono", Menlo, "DejaVu Sans Mono", "Liberation Mono", "Courier New", monospace;
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0, "calt" 0;
+  letter-spacing: 0;
+  line-height: 1.2;
+}

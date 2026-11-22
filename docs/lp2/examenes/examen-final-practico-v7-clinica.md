@@ -170,7 +170,7 @@ Las Figuras 2 y 3 corresponden a la pregunta 1. En las Figuras 4, 5 y 6 el consu
 
 **Figura 2. Clínicas: listado**
 
-```
+```text
 ┌─ Clínicas ───────────────────────────────────────────────────────────────────────────────┐
 │                                                                     [ + Nueva clínica ]  │
 │                                                                                          │
@@ -186,10 +186,10 @@ Las Figuras 2 y 3 corresponden a la pregunta 1. En las Figuras 4, 5 y 6 el consu
 
 **Figura 3. Clínica: formulario para crear y editar, con los errores visibles**
 
-```
+```text
 ┌─ Nueva clínica  (la misma pantalla sirve para editar) ─────────────────┐
-│ RUC            [ 2013579 ]          ✗ El RUC debe tener 11 dígitos     │
-│ Razón social   [ ______________ ]   ✗ La razón social es obligatoria   │
+│ RUC            [ 2013579 ]          × El RUC debe tener 11 dígitos     │
+│ Razón social   [ ______________ ]   × La razón social es obligatoria   │
 │ Teléfono       [ ______________ ]                                      │
 │ Activa         [x]                                                     │
 │                                                                        │
@@ -199,7 +199,7 @@ Las Figuras 2 y 3 corresponden a la pregunta 1. En las Figuras 4, 5 y 6 el consu
 
 **Figura 4. Consultorios: listado**
 
-```
+```text
 ┌─ Consultorios ─────────────────────────────────────────────────────────────────────────┐
 │                                                               [ + Nuevo consultorio ]  │
 │                                                                                        │
@@ -215,7 +215,7 @@ Las Figuras 2 y 3 corresponden a la pregunta 1. En las Figuras 4, 5 y 6 el consu
 
 **Figura 5. Nuevo consultorio, con la asignación de especialidades**
 
-```
+```text
 ┌─ Nuevo consultorio ──────────────────────────────────────────────────────────┐
 │ Clínica  [ Clinica Altiplano SAC ▼ ]    Código [ ________ ]                  │
 │ Tarifa por hora (S/) [ ______ ]      Estado [ DISPONIBLE ▼ ]                 │
@@ -233,7 +233,7 @@ Las Figuras 2 y 3 corresponden a la pregunta 1. En las Figuras 4, 5 y 6 el consu
 
 **Figura 6. Ver consultorio, con sus especialidades (solo lectura)**
 
-```
+```text
 ┌─ Consultorio CON-101 ────────────────────────────────────────────────────────┐
 │ Clínica: Clinica Altiplano SAC     Tarifa por hora: 80.00                    │
 │ Estado:    DISPONIBLE                                                        │
