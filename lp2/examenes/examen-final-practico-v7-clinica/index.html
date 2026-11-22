@@ -4084,9 +4084,7 @@
 <h1 id="examen-final-practico-individual-de-lp2-variante-7">Examen Final Práctico Individual de LP2 · Variante 7<a class="headerlink" href="#examen-final-practico-individual-de-lp2-variante-7" title="Permanent link">&para;</a></h1>
 <p><em>Por: Angel Sullon Macalupu @asullom - 2026</em></p>
 <h2 id="1-proposito">1. Propósito<a class="headerlink" href="#1-proposito" title="Permanent link">&para;</a></h2>
-<p>Comprobar que sabes <strong>hacer</strong>, de forma autónoma, lo que practicaste durante el curso: construir un módulo nuevo sobre tu propio proyecto, con base de datos, backend y SPA (<em>Single Page Application</em>, aplicación de una sola página). Es la forma práctica de la evaluación final individual descrita en <a href="../../sesiones/S16_Evaluacion_Final_Individual/#2-evaluacion-final-individual-teorico-practica-s1-s14">S16</a>.</p>
-<p><strong>Todo se construye sobre tu proyecto grupal.</strong> El módulo nuevo se agrega dentro de tu backend y de tu SPA existentes (mismo repositorio, misma estructura de paquetes y carpetas, mismo Keycloak). No crees un proyecto aparte: lo que se evalúa es que sepas extender lo que ya tienes.</p>
-<p>El módulo del examen, <code>clinica</code>, no existe todavía en tu proyecto. Por eso no hay nada que memorizar ni copiar: tienes que <strong>aplicar el patrón</strong> que ya dominas (el de la cabecera con sus detalles, como <code>Venta</code> con sus productos en clase) a un dominio nuevo, dentro de tu propio backend y de tu propia SPA.</p>
+<p>Comprueba que sabes <strong>hacer</strong>: construir un módulo nuevo, con base de datos, backend y SPA (<em>Single Page Application</em>, aplicación de una sola página), <strong>dentro de tu proyecto grupal</strong> y con el patrón de cabecera y detalles que practicaste en clase. El módulo <code>clinica</code> no existe todavía en tu proyecto, así que no hay nada que memorizar. Es la forma práctica de la <a href="../../sesiones/S16_Evaluacion_Final_Individual/#2-evaluacion-final-individual-teorico-practica-s1-s14">evaluación final individual</a>.</p>
 <h2 id="2-reglas">2. Reglas<a class="headerlink" href="#2-reglas" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Duración:</strong> 120 minutos. <strong>Puntaje:</strong> 20 puntos.</li>
@@ -4094,8 +4092,8 @@
 <li><strong>Permitido:</strong> la guía de las sesiones, el código de tu proyecto grupal y el código de BomERP.</li>
 <li><strong>No permitido:</strong> IA ni chat de ningún tipo, ni ayuda de otras personas.</li>
 <li><strong>Cada funcionalidad se demuestra desde tu SPA</strong> (Angular, Vue o React, la que usaste en tu proyecto). Si solo funciona desde el backend (Swagger o Postman), vale <strong>la mitad</strong> de sus puntos. El ítem de base de datos no se reduce.</li>
-<li><strong>Revisión en vivo:</strong> al terminar los 120 minutos, el docente pasa por cada puesto y te pide demostrar cada ítem funcionando, en tu navegador o, si es de base de datos, en PowerShell o tu IDE (sección 7). Deja tu backend, Keycloak y tu SPA en ejecución y no modifiques código durante la revisión.</li>
-<li><strong>Antes de empezar:</strong> tu backend, Keycloak y tu SPA deben estar funcionando. El tiempo corre desde que el docente da la señal de inicio.</li>
+<li><strong>Revisión en vivo:</strong> al terminar los 120 minutos, el docente pasa por cada puesto y te pide demostrar cada ítem funcionando, en tu navegador o, si es de base de datos, en PowerShell o tu IDE (sección 7). Deja tu backend y tu SPA en ejecución y no modifiques código durante la revisión.</li>
+<li><strong>Antes de empezar:</strong> tu backend y tu SPA deben estar funcionando. El tiempo corre desde que el docente da la señal de inicio.</li>
 </ul>
 <h2 id="3-preparar-tu-esquema-de-base-de-datos">3. Preparar tu esquema de base de datos<a class="headerlink" href="#3-preparar-tu-esquema-de-base-de-datos" title="Permanent link">&para;</a></h2>
 <p>Ejecuta estos dos bloques en PowerShell, uno tras otro. Si usas un IDE de Oracle, copia solo el SQL de dentro de las comillas y ejecútalo como script, conectado como <code>system</code> al servicio <code>FREEPDB1</code>.</p>
@@ -4476,7 +4474,7 @@
 <span class="nt">volumes</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">postgres-data</span><span class="p">:</span>
 </code></pre></div>
-<p>El puerto <code>35433</code> evita chocar con la base de Keycloak (<code>35432</code>) de tu mismo <code>compose-dev.yml</code>. Si usas otro, ajústalo. Levántalo con:</p>
+<p>El puerto <code>35433</code> es solo un ejemplo: usa cualquiera que esté libre en tu máquina. Levántalo con:</p>
 <div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">compose</span> <span class="o">-f</span> <span class="n">compose-dev</span><span class="p">.</span><span class="n">yml</span> <span class="n">up</span> <span class="n">-d</span> <span class="n">postgres</span>
 </code></pre></div>
 <p><strong>2. <code>pom.xml</code>.</strong> Reemplaza la dependencia <code>ojdbc11</code> por el controlador de PostgreSQL:</p>
