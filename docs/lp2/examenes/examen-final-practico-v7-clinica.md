@@ -8,7 +8,7 @@ Comprobar que sabes **hacer**, de forma autónoma, lo que practicaste durante el
 
 **Todo se construye sobre tu proyecto grupal.** El módulo nuevo se agrega dentro de tu backend y de tu SPA existentes (mismo repositorio, misma estructura de paquetes y carpetas, mismo Keycloak). No crees un proyecto aparte: lo que se evalúa es que sepas extender lo que ya tienes.
 
-El módulo del examen, `clinica`, no existe en BomERP. Por eso no hay nada que memorizar ni copiar: tienes que **aplicar el patrón** que ya dominas (el de `Producto` y `Venta` con sus detalles) a un dominio nuevo.
+El módulo del examen, `clinica`, no existe todavía en tu proyecto. Por eso no hay nada que memorizar ni copiar: tienes que **aplicar el patrón** que ya dominas (el de la cabecera con sus detalles, como `Venta` con sus productos en clase) a un dominio nuevo, dentro de tu propio backend y de tu propia SPA.
 
 ## 2. Reglas
 
@@ -170,7 +170,7 @@ Para repetir desde cero, ejecuta `DROP USER EXA_CLINICA CASCADE;` como `system` 
 
 Tu SPA no tiene que ser idéntica a estas figuras, pero sí debe tener estas pantallas y estas acciones.
 
-Las Figuras 2 y 3 corresponden a la pregunta 1. En las Figuras 4, 5 y 6 el consultorio es la cabecera y las especialidades son sus líneas, igual que una venta con sus productos.
+Las Figuras 2 y 3 corresponden a la pregunta 1. En las Figuras 4, 5 y 6 el consultorio es la cabecera y las especialidades son sus líneas, igual que la cabecera con detalles que practicaste en clase, como una venta con sus productos.
 
 **Figura 2. Clínicas: listado**
 
@@ -260,7 +260,7 @@ Las Figuras 2 y 3 corresponden a la pregunta 1. En las Figuras 4, 5 y 6 el consu
 - CRUD funcionando desde la SPA: listar, crear, editar y eliminar. **(4 pts)**
 - RUC (Registro Único de Contribuyentes) de 11 dígitos y razón social obligatoria, con el error visible en el formulario. **(1 pt)**
 
-**2. (13 pts)** Ahora `CONSULTORIOS` con sus `ESPECIALIDADES`, igual que una venta con sus productos (Figuras 4, 5 y 6). El consultorio es la cabecera y las especialidades son sus líneas.
+**2. (13 pts)** Ahora `CONSULTORIOS` con sus `ESPECIALIDADES`, igual que la cabecera con detalles que practicaste en clase, como una venta con sus productos (Figuras 4, 5 y 6). El consultorio es la cabecera y las especialidades son sus líneas.
 
 - Especialidades: listar (vienen precargadas). **(1 pt)**
 - Crear un consultorio: clínica elegida desde una lista desplegable, código, tarifa por hora y estado como enumerado. **(3 pts)**
