@@ -4,11 +4,7 @@
 
 ## 1. Propósito
 
-Comprobar que sabes **hacer**, de forma autónoma, lo que practicaste durante el curso: construir un módulo nuevo sobre tu propio proyecto, con base de datos, backend y SPA (*Single Page Application*, aplicación de una sola página). Es la forma práctica de la evaluación final individual descrita en [S16](../sesiones/S16_Evaluacion_Final_Individual.md#2-evaluacion-final-individual-teorico-practica-s1-s14).
-
-**Todo se construye sobre tu proyecto grupal.** El módulo nuevo se agrega dentro de tu backend y de tu SPA existentes (mismo repositorio, misma estructura de paquetes y carpetas, mismo Keycloak). No crees un proyecto aparte: lo que se evalúa es que sepas extender lo que ya tienes.
-
-El módulo del examen, `clinica`, no existe todavía en tu proyecto. Por eso no hay nada que memorizar ni copiar: tienes que **aplicar el patrón** que ya dominas (el de la cabecera con sus detalles, como `Venta` con sus productos en clase) a un dominio nuevo, dentro de tu propio backend y de tu propia SPA.
+Comprueba que sabes **hacer**: construir un módulo nuevo, con base de datos, backend y SPA (*Single Page Application*, aplicación de una sola página), **dentro de tu proyecto grupal** y con el patrón de cabecera y detalles que practicaste en clase. El módulo `clinica` no existe todavía en tu proyecto, así que no hay nada que memorizar. Es la forma práctica de la [evaluación final individual](../sesiones/S16_Evaluacion_Final_Individual.md#2-evaluacion-final-individual-teorico-practica-s1-s14).
 
 ## 2. Reglas
 
@@ -17,8 +13,8 @@ El módulo del examen, `clinica`, no existe todavía en tu proyecto. Por eso no 
 - **Permitido:** la guía de las sesiones, el código de tu proyecto grupal y el código de BomERP.
 - **No permitido:** IA ni chat de ningún tipo, ni ayuda de otras personas.
 - **Cada funcionalidad se demuestra desde tu SPA** (Angular, Vue o React, la que usaste en tu proyecto). Si solo funciona desde el backend (Swagger o Postman), vale **la mitad** de sus puntos. El ítem de base de datos no se reduce.
-- **Revisión en vivo:** al terminar los 120 minutos, el docente pasa por cada puesto y te pide demostrar cada ítem funcionando, en tu navegador o, si es de base de datos, en PowerShell o tu IDE (sección 7). Deja tu backend, Keycloak y tu SPA en ejecución y no modifiques código durante la revisión.
-- **Antes de empezar:** tu backend, Keycloak y tu SPA deben estar funcionando. El tiempo corre desde que el docente da la señal de inicio.
+- **Revisión en vivo:** al terminar los 120 minutos, el docente pasa por cada puesto y te pide demostrar cada ítem funcionando, en tu navegador o, si es de base de datos, en PowerShell o tu IDE (sección 7). Deja tu backend y tu SPA en ejecución y no modifiques código durante la revisión.
+- **Antes de empezar:** tu backend y tu SPA deben estar funcionando. El tiempo corre desde que el docente da la señal de inicio.
 
 ## 3. Preparar tu esquema de base de datos
 
@@ -348,7 +344,7 @@ volumes:
   postgres-data:
 ```
 
-El puerto `35433` evita chocar con la base de Keycloak (`35432`) de tu mismo `compose-dev.yml`. Si usas otro, ajústalo. Levántalo con:
+El puerto `35433` es solo un ejemplo: usa cualquiera que esté libre en tu máquina. Levántalo con:
 
 ```powershell
 docker compose -f compose-dev.yml up -d postgres
