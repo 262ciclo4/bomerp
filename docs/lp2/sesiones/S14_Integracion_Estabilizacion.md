@@ -202,10 +202,10 @@ git clone --branch s13-optimizacion-preparacion-produccion https://github.com/26
 
 **Presentación de referencia:** el producto final integrado de BomERP está presentado en [bomerp_U3_producto_final_integrado.pptx](../../presentaciones/bomerp_U3_producto_final_integrado.pptx), un ejemplo del docente que reúne ADS, BD2 y LP2. Estas son las láminas que corresponden a esta sesión:
 
-- **3.1 a 3.4:** lámina 14, el hallazgo real de S14 (el reporte calculaba sus totales en el navegador) y su corrección con paginación y el agregado del servidor.
-- **3.5 y 3.7:** lámina 15, plan de pruebas final.
-- **3.6:** lámina 13, qué agrega la Unidad III, incluida la auditoría.
-- **3.8:** lámina 16, bitácora de estabilización.
+- **3.1 a 3.4:** lámina 15, el hallazgo real de S14 (el reporte calculaba sus totales en el navegador) y su corrección con paginación y el agregado del servidor.
+- **3.5 y 3.7:** lámina 16, plan de pruebas final.
+- **3.6:** lámina 14, qué agrega la Unidad III, incluida la auditoría.
+- **3.8:** lámina 17, bitácora de estabilización.
 
 La integración entre ADS, BD2 y LP2 se evalúa sobre el equipo como conjunto, y cada integrante defiende la parte que construyó. Las presentaciones de las unidades anteriores son [la de la Unidad I](../../presentaciones/bomerp_U1_base_tecnica_empresarial.pptx) y [la de la Unidad II](../../presentaciones/bomerp_U2_full_stack_integrado.pptx).
 

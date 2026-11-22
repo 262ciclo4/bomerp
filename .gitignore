@@ -28,6 +28,10 @@ site/
 # Docker
 *.log
 
+# LP2: variantes 1 a 6 del examen final práctico. No subir hasta nuevo aviso.
+# La variante 7 (clínica, de práctica) sí se versiona.
+docs/lp2/examenes/examen-final-practico-v[1-6]-*.md
+
 # Otros
 .DS_Store
 Thumbs.db

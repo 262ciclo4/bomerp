@@ -208,9 +208,9 @@ Tiempo: 100 min.
 
 **Presentación de referencia:** el producto final integrado de BomERP está presentado en [bomerp_U3_producto_final_integrado.pptx](../../presentaciones/bomerp_U3_producto_final_integrado.pptx), un ejemplo del docente que reúne ADS, BD2 y LP2. Estas son las láminas que corresponden a esta sesión:
 
-- **3.2 a 3.8:** lámina 12, monitoreo y diagnóstico en vivo (`V$SESSION`, bloqueos, objetos inválidos y `V$SYSSTAT`).
-- **Contexto de S13:** láminas 10 y 11, respaldo con RMAN y recuperación a un punto exacto.
-- **Sustentación:** láminas 17 y 18, secuencia de la sustentación y defensa individual.
+- **3.2 a 3.8:** lámina 13, monitoreo y diagnóstico en vivo (`V$SESSION`, bloqueos, objetos inválidos y `V$SYSSTAT`).
+- **Contexto de S13:** láminas 11 y 12, respaldo con RMAN y recuperación a un punto exacto.
+- **Sustentación:** láminas 18 y 19, secuencia de la sustentación y defensa individual.
 
 La integración entre ADS, BD2 y LP2 se evalúa sobre el equipo como conjunto, y cada integrante defiende la parte que construyó. Las presentaciones de las unidades anteriores son [la de la Unidad I](../../presentaciones/bomerp_U1_base_tecnica_empresarial.pptx) y [la de la Unidad II](../../presentaciones/bomerp_U2_full_stack_integrado.pptx).
 

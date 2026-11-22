@@ -13,6 +13,8 @@ No hay un segundo producto que construir hoy: la evaluación individual se resue
 
 Cubre los catorce temas dictados durante todo el curso. El docente puede tomarla escrita, oral o mixta — es individual por diseño, sin trabajo grupal involucrado.
 
+**Práctica del examen práctico:** antes de la evaluación, resuelve la [variante de práctica (clínica)](../examenes/examen-final-practico-v7-clinica.md). Tiene la misma estructura, las mismas reglas y el mismo puntaje que el examen, con otro dominio.
+
 **Tabla 1. Temario acumulado de la evaluación final**
 
 | Sesión | Tema | Qué puede evaluar el docente |
