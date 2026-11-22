@@ -4086,7 +4086,7 @@
 <h2 id="1-proposito">1. Propósito<a class="headerlink" href="#1-proposito" title="Permanent link">&para;</a></h2>
 <p>Comprobar que sabes <strong>hacer</strong>, de forma autónoma, lo que practicaste durante el curso: construir un módulo nuevo sobre tu propio proyecto, con base de datos, backend y SPA (<em>Single Page Application</em>, aplicación de una sola página). Es la forma práctica de la evaluación final individual descrita en <a href="../../sesiones/S16_Evaluacion_Final_Individual/#2-evaluacion-final-individual-teorico-practica-s1-s14">S16</a>.</p>
 <p><strong>Todo se construye sobre tu proyecto grupal.</strong> El módulo nuevo se agrega dentro de tu backend y de tu SPA existentes (mismo repositorio, misma estructura de paquetes y carpetas, mismo Keycloak). No crees un proyecto aparte: lo que se evalúa es que sepas extender lo que ya tienes.</p>
-<p>El módulo del examen, <code>clinica</code>, no existe en BomERP. Por eso no hay nada que memorizar ni copiar: tienes que <strong>aplicar el patrón</strong> que ya dominas (el de <code>Producto</code> y <code>Venta</code> con sus detalles) a un dominio nuevo.</p>
+<p>El módulo del examen, <code>clinica</code>, no existe todavía en tu proyecto. Por eso no hay nada que memorizar ni copiar: tienes que <strong>aplicar el patrón</strong> que ya dominas (el de la cabecera con sus detalles, como <code>Venta</code> con sus productos en clase) a un dominio nuevo, dentro de tu propio backend y de tu propia SPA.</p>
 <h2 id="2-reglas">2. Reglas<a class="headerlink" href="#2-reglas" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Duración:</strong> 120 minutos. <strong>Puntaje:</strong> 20 puntos.</li>
@@ -4225,7 +4225,7 @@
 <p>Para repetir desde cero, ejecuta <code>DROP USER EXA_CLINICA CASCADE;</code> como <code>system</code> y vuelve a correr los scripts 1 y 2.</p>
 <h2 id="4-prototipos-de-las-pantallas">4. Prototipos de las pantallas<a class="headerlink" href="#4-prototipos-de-las-pantallas" title="Permanent link">&para;</a></h2>
 <p>Tu SPA no tiene que ser idéntica a estas figuras, pero sí debe tener estas pantallas y estas acciones.</p>
-<p>Las Figuras 2 y 3 corresponden a la pregunta 1. En las Figuras 4, 5 y 6 el consultorio es la cabecera y las especialidades son sus líneas, igual que una venta con sus productos.</p>
+<p>Las Figuras 2 y 3 corresponden a la pregunta 1. En las Figuras 4, 5 y 6 el consultorio es la cabecera y las especialidades son sus líneas, igual que la cabecera con detalles que practicaste en clase, como una venta con sus productos.</p>
 <p><strong>Figura 2. Clínicas: listado</strong></p>
 <div class="highlight"><pre><span></span><code>┌─ Clínicas ───────────────────────────────────────────────────────────────────────────────┐
 │                                                                     [ + Nueva clínica ]  │
@@ -4298,7 +4298,7 @@
 <li>CRUD funcionando desde la SPA: listar, crear, editar y eliminar. <strong>(4 pts)</strong></li>
 <li>RUC (Registro Único de Contribuyentes) de 11 dígitos y razón social obligatoria, con el error visible en el formulario. <strong>(1 pt)</strong></li>
 </ul>
-<p><strong>2. (13 pts)</strong> Ahora <code>CONSULTORIOS</code> con sus <code>ESPECIALIDADES</code>, igual que una venta con sus productos (Figuras 4, 5 y 6). El consultorio es la cabecera y las especialidades son sus líneas.</p>
+<p><strong>2. (13 pts)</strong> Ahora <code>CONSULTORIOS</code> con sus <code>ESPECIALIDADES</code>, igual que la cabecera con detalles que practicaste en clase, como una venta con sus productos (Figuras 4, 5 y 6). El consultorio es la cabecera y las especialidades son sus líneas.</p>
 <ul>
 <li>Especialidades: listar (vienen precargadas). <strong>(1 pt)</strong></li>
 <li>Crear un consultorio: clínica elegida desde una lista desplegable, código, tarifa por hora y estado como enumerado. <strong>(3 pts)</strong></li>
