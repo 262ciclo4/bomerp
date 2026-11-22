@@ -26,6 +26,38 @@ Ejecuta estos dos bloques en PowerShell, uno tras otro. Si usas un IDE de Oracle
 
 Cada bloque empieza con `$DB = 'bomerp-oracle'`: **cambia ese valor por el nombre del contenedor Oracle de tu entorno de desarrollo** (`docker ps` te lo muestra). Si tu `system` tiene otra contraseña, ajústala también. Si tu proyecto usa PostgreSQL en lugar de Oracle, usa los scripts del [Anexo B](#anexo-b-scripts-para-postgresql).
 
+El esquema `EXA_CLINICA` tiene cuatro tablas (Figura 1). `CONSULTORIO_ESPECIALIDAD` es la tabla intermedia de la relación muchos a muchos: su clave primaria es compuesta y cada una de sus dos columnas es clave foránea.
+
+**Figura 1. Diagrama de la base de datos del módulo**
+
+```
+┌─ Esquema EXA_CLINICA ─────────────────────────────────────────┐
+│ ┌────────────────────┐           ┌──────────────────────────┐ │
+│ │ CLINICAS           │           │ ESPECIALIDADES           │ │
+│ ├────────────────────┤           ├──────────────────────────┤ │
+│ │ PK    ID           │           │ PK    ID                 │ │
+│ │ UK    RUC          │           │ UK    CODIGO             │ │
+│ │       RAZON_SOCIAL │           │       NOMBRE             │ │
+│ │       TELEFONO     │           └─────────────┬────────────┘ │
+│ │       ACTIVO       │                         │              │
+│ └──────────┬─────────┘                         │              │
+│            │1                                  │1             │
+│            │                                   │              │
+│            │N                                  │N             │
+│ ┌──────────┴─────────┐           ┌─────────────┴────────────┐ │
+│ │ CONSULTORIOS       │           │ CONSULTORIO_ESPECIALIDAD │ │
+│ ├────────────────────┤ 1       N ├──────────────────────────┤ │
+│ │ PK    ID           ├───────────┤ PK,FK ID_CONSULTORIO     │ │
+│ │ FK    ID_CLINICA   │           │ PK,FK ID_ESPECIALIDAD    │ │
+│ │ UK    CODIGO       │           └──────────────────────────┘ │
+│ │       TARIFA_HORA  │                                        │
+│ │       ESTADO       │                                        │
+│ └────────────────────┘                                        │
+└───────────────────────────────────────────────────────────────┘
+```
+
+`PK` es clave primaria, `FK` clave foránea y `UK` valor único. `1` y `N` indican la cardinalidad de la relación.
+
 **Script 1. Esquema**
 
 ```powershell
@@ -133,9 +165,9 @@ Para repetir desde cero, ejecuta `DROP USER EXA_CLINICA CASCADE;` como `system` 
 
 Tu SPA no tiene que ser idéntica a estas figuras, pero sí debe tener estas pantallas y estas acciones.
 
-Las Figuras 1 y 2 corresponden a la pregunta 1. En las Figuras 3, 4 y 5 el consultorio es la cabecera y las especialidades son sus líneas, igual que una venta con sus productos.
+Las Figuras 2 y 3 corresponden a la pregunta 1. En las Figuras 4, 5 y 6 el consultorio es la cabecera y las especialidades son sus líneas, igual que una venta con sus productos.
 
-**Figura 1. Clínicas: listado**
+**Figura 2. Clínicas: listado**
 
 ```
 ┌─ Clínicas ───────────────────────────────────────────────────────────────────────────────┐
@@ -151,7 +183,7 @@ Las Figuras 1 y 2 corresponden a la pregunta 1. En las Figuras 3, 4 y 5 el consu
 └──────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-**Figura 2. Clínica: formulario para crear y editar, con los errores visibles**
+**Figura 3. Clínica: formulario para crear y editar, con los errores visibles**
 
 ```
 ┌─ Nueva clínica  (la misma pantalla sirve para editar) ─────────────────┐
@@ -164,7 +196,7 @@ Las Figuras 1 y 2 corresponden a la pregunta 1. En las Figuras 3, 4 y 5 el consu
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
-**Figura 3. Consultorios: listado**
+**Figura 4. Consultorios: listado**
 
 ```
 ┌─ Consultorios ─────────────────────────────────────────────────────────────────────────┐
@@ -180,7 +212,7 @@ Las Figuras 1 y 2 corresponden a la pregunta 1. En las Figuras 3, 4 y 5 el consu
 └────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-**Figura 4. Nuevo consultorio, con la asignación de especialidades**
+**Figura 5. Nuevo consultorio, con la asignación de especialidades**
 
 ```
 ┌─ Nuevo consultorio ──────────────────────────────────────────────────────────┐
@@ -198,7 +230,7 @@ Las Figuras 1 y 2 corresponden a la pregunta 1. En las Figuras 3, 4 y 5 el consu
 └──────────────────────────────────────────────────────────────────────────────┘
 ```
 
-**Figura 5. Ver consultorio, con sus especialidades (solo lectura)**
+**Figura 6. Ver consultorio, con sus especialidades (solo lectura)**
 
 ```
 ┌─ Consultorio CON-101 ────────────────────────────────────────────────────────┐
@@ -217,13 +249,13 @@ Las Figuras 1 y 2 corresponden a la pregunta 1. En las Figuras 3, 4 y 5 el consu
 
 ## 5. Preguntas
 
-**1. (7 pts)** Crea el módulo `clinica` en tu backend y el CRUD (*Create, Read, Update, Delete*) de `CLINICAS` (Figuras 1 y 2).
+**1. (7 pts)** Crea el módulo `clinica` en tu backend y el CRUD (*Create, Read, Update, Delete*) de `CLINICAS` (Figuras 2 y 3).
 
 - DB: crea el esquema de tu nuevo módulo ejecutando los scripts de la sección 3 y lista las tablas del esquema mediante PowerShell o tu IDE. **(2 pts)**
 - CRUD funcionando desde la SPA: listar, crear, editar y eliminar. **(4 pts)**
 - RUC (Registro Único de Contribuyentes) de 11 dígitos y razón social obligatoria, con el error visible en el formulario. **(1 pt)**
 
-**2. (13 pts)** Ahora `CONSULTORIOS` con sus `ESPECIALIDADES`, igual que una venta con sus productos (Figuras 3, 4 y 5). El consultorio es la cabecera y las especialidades son sus líneas.
+**2. (13 pts)** Ahora `CONSULTORIOS` con sus `ESPECIALIDADES`, igual que una venta con sus productos (Figuras 4, 5 y 6). El consultorio es la cabecera y las especialidades son sus líneas.
 
 - Especialidades: listar (vienen precargadas). **(1 pt)**
 - Crear un consultorio: clínica elegida desde una lista desplegable, código, tarifa por hora y estado como enumerado. **(3 pts)**
