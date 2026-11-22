@@ -4100,6 +4100,33 @@
 <h2 id="3-preparar-tu-esquema-de-base-de-datos">3. Preparar tu esquema de base de datos<a class="headerlink" href="#3-preparar-tu-esquema-de-base-de-datos" title="Permanent link">&para;</a></h2>
 <p>Ejecuta estos dos bloques en PowerShell, uno tras otro. Si usas un IDE de Oracle, copia solo el SQL de dentro de las comillas y ejecútalo como script, conectado como <code>system</code> al servicio <code>FREEPDB1</code>.</p>
 <p>Cada bloque empieza con <code>$DB = 'bomerp-oracle'</code>: <strong>cambia ese valor por el nombre del contenedor Oracle de tu entorno de desarrollo</strong> (<code>docker ps</code> te lo muestra). Si tu <code>system</code> tiene otra contraseña, ajústala también. Si tu proyecto usa PostgreSQL en lugar de Oracle, usa los scripts del <a href="#anexo-b-scripts-para-postgresql">Anexo B</a>.</p>
+<p>El esquema <code>EXA_CLINICA</code> tiene cuatro tablas (Figura 1). <code>CONSULTORIO_ESPECIALIDAD</code> es la tabla intermedia de la relación muchos a muchos: su clave primaria es compuesta y cada una de sus dos columnas es clave foránea.</p>
+<p><strong>Figura 1. Diagrama de la base de datos del módulo</strong></p>
+<div class="highlight"><pre><span></span><code>┌─ Esquema EXA_CLINICA ─────────────────────────────────────────┐
+│ ┌────────────────────┐           ┌──────────────────────────┐ │
+│ │ CLINICAS           │           │ ESPECIALIDADES           │ │
+│ ├────────────────────┤           ├──────────────────────────┤ │
+│ │ PK    ID           │           │ PK    ID                 │ │
+│ │ UK    RUC          │           │ UK    CODIGO             │ │
+│ │       RAZON_SOCIAL │           │       NOMBRE             │ │
+│ │       TELEFONO     │           └─────────────┬────────────┘ │
+│ │       ACTIVO       │                         │              │
+│ └──────────┬─────────┘                         │              │
+│            │1                                  │1             │
+│            │                                   │              │
+│            │N                                  │N             │
+│ ┌──────────┴─────────┐           ┌─────────────┴────────────┐ │
+│ │ CONSULTORIOS       │           │ CONSULTORIO_ESPECIALIDAD │ │
+│ ├────────────────────┤ 1       N ├──────────────────────────┤ │
+│ │ PK    ID           ├───────────┤ PK,FK ID_CONSULTORIO     │ │
+│ │ FK    ID_CLINICA   │           │ PK,FK ID_ESPECIALIDAD    │ │
+│ │ UK    CODIGO       │           └──────────────────────────┘ │
+│ │       TARIFA_HORA  │                                        │
+│ │       ESTADO       │                                        │
+│ └────────────────────┘                                        │
+└───────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<p><code>PK</code> es clave primaria, <code>FK</code> clave foránea y <code>UK</code> valor único. <code>1</code> y <code>N</code> indican la cardinalidad de la relación.</p>
 <p><strong>Script 1. Esquema</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nv">$DB</span> <span class="p">=</span> <span class="s1">'bomerp-oracle'</span>   <span class="c"># nombre de TU contenedor Oracle en dev (míralo con: docker ps)</span>
 <span class="sh">@'</span>
@@ -4194,8 +4221,8 @@
 <p>Para repetir desde cero, ejecuta <code>DROP USER EXA_CLINICA CASCADE;</code> como <code>system</code> y vuelve a correr los scripts 1 y 2.</p>
 <h2 id="4-prototipos-de-las-pantallas">4. Prototipos de las pantallas<a class="headerlink" href="#4-prototipos-de-las-pantallas" title="Permanent link">&para;</a></h2>
 <p>Tu SPA no tiene que ser idéntica a estas figuras, pero sí debe tener estas pantallas y estas acciones.</p>
-<p>Las Figuras 1 y 2 corresponden a la pregunta 1. En las Figuras 3, 4 y 5 el consultorio es la cabecera y las especialidades son sus líneas, igual que una venta con sus productos.</p>
-<p><strong>Figura 1. Clínicas: listado</strong></p>
+<p>Las Figuras 2 y 3 corresponden a la pregunta 1. En las Figuras 4, 5 y 6 el consultorio es la cabecera y las especialidades son sus líneas, igual que una venta con sus productos.</p>
+<p><strong>Figura 2. Clínicas: listado</strong></p>
 <div class="highlight"><pre><span></span><code>┌─ Clínicas ───────────────────────────────────────────────────────────────────────────────┐
 │                                                                     [ + Nueva clínica ]  │
 │                                                                                          │
@@ -4208,7 +4235,7 @@
 │ └─────────────┴────────────────────────────┴───────────┴────────┴─────────────────────┘  │
 └──────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<p><strong>Figura 2. Clínica: formulario para crear y editar, con los errores visibles</strong></p>
+<p><strong>Figura 3. Clínica: formulario para crear y editar, con los errores visibles</strong></p>
 <div class="highlight"><pre><span></span><code>┌─ Nueva clínica  (la misma pantalla sirve para editar) ─────────────────┐
 │ RUC            [ 2013579 ]          ✗ El RUC debe tener 11 dígitos     │
 │ Razón social   [ ______________ ]   ✗ La razón social es obligatoria   │
@@ -4218,7 +4245,7 @@
 │                                           [ Cancelar ]   [ Guardar ]   │
 └────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<p><strong>Figura 3. Consultorios: listado</strong></p>
+<p><strong>Figura 4. Consultorios: listado</strong></p>
 <div class="highlight"><pre><span></span><code>┌─ Consultorios ─────────────────────────────────────────────────────────────────────────┐
 │                                                               [ + Nuevo consultorio ]  │
 │                                                                                        │
@@ -4231,7 +4258,7 @@
 │ └─────────┴────────────────────────────┴─────────┴───────────────┴──────────────────┘  │
 └────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<p><strong>Figura 4. Nuevo consultorio, con la asignación de especialidades</strong></p>
+<p><strong>Figura 5. Nuevo consultorio, con la asignación de especialidades</strong></p>
 <div class="highlight"><pre><span></span><code>┌─ Nuevo consultorio ──────────────────────────────────────────────────────────┐
 │ Clínica  [ Clinica Altiplano SAC ▼ ]    Código [ ________ ]                  │
 │ Tarifa por hora (S/) [ ______ ]      Estado [ DISPONIBLE ▼ ]                 │
@@ -4246,7 +4273,7 @@
 │                                               [ Cancelar ]   [ Guardar ]     │
 └──────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<p><strong>Figura 5. Ver consultorio, con sus especialidades (solo lectura)</strong></p>
+<p><strong>Figura 6. Ver consultorio, con sus especialidades (solo lectura)</strong></p>
 <div class="highlight"><pre><span></span><code>┌─ Consultorio CON-101 ────────────────────────────────────────────────────────┐
 │ Clínica: Clinica Altiplano SAC     Tarifa por hora: 80.00                    │
 │ Estado:    DISPONIBLE                                                        │
@@ -4261,13 +4288,13 @@
 └──────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 <h2 id="5-preguntas">5. Preguntas<a class="headerlink" href="#5-preguntas" title="Permanent link">&para;</a></h2>
-<p><strong>1. (7 pts)</strong> Crea el módulo <code>clinica</code> en tu backend y el CRUD (<em>Create, Read, Update, Delete</em>) de <code>CLINICAS</code> (Figuras 1 y 2).</p>
+<p><strong>1. (7 pts)</strong> Crea el módulo <code>clinica</code> en tu backend y el CRUD (<em>Create, Read, Update, Delete</em>) de <code>CLINICAS</code> (Figuras 2 y 3).</p>
 <ul>
 <li>DB: crea el esquema de tu nuevo módulo ejecutando los scripts de la sección 3 y lista las tablas del esquema mediante PowerShell o tu IDE. <strong>(2 pts)</strong></li>
 <li>CRUD funcionando desde la SPA: listar, crear, editar y eliminar. <strong>(4 pts)</strong></li>
 <li>RUC (Registro Único de Contribuyentes) de 11 dígitos y razón social obligatoria, con el error visible en el formulario. <strong>(1 pt)</strong></li>
 </ul>
-<p><strong>2. (13 pts)</strong> Ahora <code>CONSULTORIOS</code> con sus <code>ESPECIALIDADES</code>, igual que una venta con sus productos (Figuras 3, 4 y 5). El consultorio es la cabecera y las especialidades son sus líneas.</p>
+<p><strong>2. (13 pts)</strong> Ahora <code>CONSULTORIOS</code> con sus <code>ESPECIALIDADES</code>, igual que una venta con sus productos (Figuras 4, 5 y 6). El consultorio es la cabecera y las especialidades son sus líneas.</p>
 <ul>
 <li>Especialidades: listar (vienen precargadas). <strong>(1 pt)</strong></li>
 <li>Crear un consultorio: clínica elegida desde una lista desplegable, código, tarifa por hora y estado como enumerado. <strong>(3 pts)</strong></li>
