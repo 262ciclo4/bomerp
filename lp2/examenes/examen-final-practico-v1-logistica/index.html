@@ -1,0 +1,4644 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Entorno integrado de desarrollo academico para construir modulos ERP con ADS, BD2 y LP2.">
+      
+      
+        <meta name="author" content="UPeU">
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
+    
+    
+  
+    <title>BOM ERP - Examen Final Práctico Individual de LP2 · Variante 1</title>
+  
+
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#examen-final-practico-individual-de-lp2-variante-1" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../../.." title="BOM ERP" class="md-header__button md-logo" aria-label="BOM ERP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            BOM ERP
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Examen Final Práctico Individual de LP2 · Variante 1
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/262ciclo4/bomerp" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    262ciclo4/bomerp
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Pestañas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Inicio
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../proyecto-integrador/" class="md-tabs__link">
+          
+  
+  
+  Guía del Proyecto Integrador
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../ads/" class="md-tabs__link">
+          
+  
+  
+  ADS
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../bd2/" class="md-tabs__link">
+          
+  
+  
+  BD2
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../" class="md-tabs__link">
+          
+  
+  
+  LP2
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="BOM ERP" class="md-nav__button md-logo" aria-label="BOM ERP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    BOM ERP
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/262ciclo4/bomerp" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    262ciclo4/bomerp
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guía del Proyecto Integrador
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guía del Proyecto Integrador
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Alineamiento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/brief/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brief técnico (plantilla)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Diseño técnico, motor transaccional y backend inicial
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    1. Diseño técnico, motor transaccional y backend inicial
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/lp2-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Demo U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/ads-matriz-competencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Matriz de competencias
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/lp2-matriz-competencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Matriz de competencias
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u1/bd2-matriz-competencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Matriz de competencias
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Modelado UML, administración Oracle y SPA segura
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    2. Modelado UML, administración Oracle y SPA segura
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u2/lp2-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Demo U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Diseño consolidado, operación Oracle y Full-Stack integrado
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    3. Diseño consolidado, operación Oracle y Full-Stack integrado
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto integrado U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/ads-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/bd2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2 Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/lp2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2 Producto U3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/checklist-final/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Checklist final
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/u3/guia-sustentacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guía de sustentación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anexos - SPA en otros frameworks
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Anexos - SPA en otros frameworks
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/anexos/S07_Creacion_Arquitectura_SPA_Vue/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S07 con Vue
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto-integrador/anexos/S07_Creacion_Arquitectura_SPA_React/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S07 con React
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADS
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ADS
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/silabo_ads_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/silabo_ads_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Arquitectura y Diseño Estructural
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Arquitectura y Diseño Estructural
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S01_Fundamentos_Arquitectura_Software/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - Fundamentos de arquitectura de software
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S02_Modelo_C4_Vistas_Arquitectonicas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - Modelo C4 y vistas arquitectónicas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S03_Diseno_Estructural_Principios_SOLID/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S3 - Diseño estructural y principios SOLID
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S04_Arquitecturas_Modernas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S4 - Arquitecturas modernas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S05_Evaluacion_Unidad_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S5 - Evaluación de la Unidad I
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    II. Diseño Dinámico, Modelado UML y Patrones
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    II. Diseño Dinámico, Modelado UML y Patrones
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S06_Descubrimiento_Modelado_Dominio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S6 - Descubrimiento y modelado del dominio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S07_Diseno_Clases_Dominio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S7 - Diseño de clases del dominio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S08_Diseno_Clases_Avanzado_Transformacion_Objeto_Relacional/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S8 - Diseño de clases avanzado y transformación objeto-relacional
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S09_Diagramas_Dinamicos_UML/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S9 - Diagramas dinámicos UML
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S10_Patrones_Diseno_GoF_GRASP/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S10 - Patrones de diseño GoF y GRASP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S11_Integracion_Sistemas_Empresariales/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S11 - Integración y sistemas empresariales
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S12_Evaluacion_Unidad_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S12 - Evaluación de la Unidad II
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    III. Proyecto de Diseño Técnico Profesional
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    III. Proyecto de Diseño Técnico Profesional
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S13_Integracion_Diseno_Tecnico/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S13 - Integración del diseño técnico
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S14_Decisiones_Arquitectonicas_Trazabilidad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S14 - Decisiones arquitectónicas y trazabilidad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S15_Evaluacion_Unidad_3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S15 - Evaluación de la Unidad III
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ads/sesiones/S16_Continuacion_Evaluacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S16 - Continuación de la evaluación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BD2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    BD2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/silabo_bd2_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/silabo_bd2_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Programación y optimización (Oracle XE)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Programación y optimización (Oracle XE)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S01_PLSQL_Aplicado_Negocio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - PL/SQL aplicado al negocio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S02_Triggers_DML_Auditoria/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - Triggers DML y auditoría
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S03_Excepciones_Robustez/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S3 - Manejo de excepciones y robustez
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S04_Optimizacion_Consultas_SQL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S4 - Optimización de consultas SQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S05_Indices_Optimizacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S5 - Índices para optimización
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S06_Evaluacion_Unidad_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S6 - Evaluación de la Unidad I
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    II. Administración, almacenamiento, seguridad y optimización
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    II. Administración, almacenamiento, seguridad y optimización
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S07_Arquitectura_Oracle_Instancia/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S7 - Arquitectura Oracle e instancia
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S08_Usuarios_Roles_Privilegios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S8 - Gestión de usuarios, roles y privilegios
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S09_Almacenamiento_Seguridad_Auditoria/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S9 - Administración del almacenamiento y seguridad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S10_Optimizacion_Rendimiento/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S10 - Optimización del rendimiento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S11_Particionamiento_Escalabilidad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S11 - Particionamiento y escalabilidad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S12_Evaluacion_Unidad_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S12 - Evaluación de la Unidad II
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    III. Continuidad del negocio y operación empresarial
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    III. Continuidad del negocio y operación empresarial
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S13_Backup_Recovery_RMAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S13 - Backup y Recovery con RMAN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S14_Monitoreo_Diagnostico/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S14 - Monitoreo y diagnóstico
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S15_Evaluacion_Unidad_3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S15 - Evaluación de la Unidad III
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bd2/sesiones/S16_Continuacion_Evaluacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S16 - Continuación de la evaluación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LP2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    LP2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../silabo_lp2_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../silabo_lp2_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Decisiones de arquitectura
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Decisiones de arquitectura
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/ADR-001-arquitectura-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-001 - Arquitectura del backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/ADR-002-spring-modulith/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-002 - Spring Modulith
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/ADR-003-spring-boot-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-003 - Versión exacta de Spring Boot 4.0.7
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/ADR-004-jwt-diferido/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-004 - JWT diferido a S10
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/ADR-005-seguridad-jwt-propio-listo-para-reemplazo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-005 - Seguridad JWT propia, reemplazada por Keycloak en S10b
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Base backend REST modular de BomERP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Base backend REST modular de BomERP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sesiones/S01_Arquitectura_Backend_REST_Profesional/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - Arquitectura backend REST profesional
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sesiones/S02_CRUD_REST_Completo_Producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - CRUD REST completo de Producto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sesiones/S03_Objetos_Relacionados_Categoria_Producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S3 - Objetos relacionados Categoria-Producto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sesiones/S04_Operacion_Cabecera_Detalle_Venta_DetalleVenta/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S4 - Operación cabecera-detalle Venta-DetalleVenta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sesiones/S05_Consultas_Empresariales_Reportes_CORS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S5 - Consultas empresariales, reportes REST y CORS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sesiones/S06_Evaluacion_Unidad_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S6 - Evaluación de la Unidad I
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    II. SPA modular segura para BomERP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    II. SPA modular segura para BomERP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sesiones/S07_Creacion_Arquitectura_SPA/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S7 - Creación y arquitectura de la SPA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sesiones/S08_CRUD_Tablas_Dependientes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S8 - CRUD de tablas dependientes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sesiones/S09_Formularios_Transaccionales_Cabecera_Detalle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S9 - Formularios transaccionales cabecera-detalle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sesiones/S10_Seguridad_Backend_JWT_Roles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S10 - Seguridad backend JWT y roles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sesiones/S10b_Seguridad_Backend_Keycloak/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S10b - Reemplazo de seguridad por Keycloak
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sesiones/S11_Seguridad_Frontend_Keycloak/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S11 - Seguridad frontend con Keycloak
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sesiones/S12_Evaluacion_Unidad_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S12 - Evaluación de la Unidad II
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_6" id="__nav_5_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    III. Base Full-Stack modular de BomERP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    III. Base Full-Stack modular de BomERP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sesiones/S13_Optimizacion_Preparacion_Produccion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S13 - Optimización y preparación para producción
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sesiones/S14_Integracion_Estabilizacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S14 - Integración y estabilización
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sesiones/S15_Evaluacion_Unidad_3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S15 - Evaluación de la Unidad III
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sesiones/S16_Evaluacion_Final_Individual/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S16 - Evaluación final individual
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-proposito" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Propósito
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-reglas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Reglas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-preparar-tu-esquema-de-base-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Preparar tu esquema de base de datos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-prototipos-de-las-pantallas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Prototipos de las pantallas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-preguntas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Preguntas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-calificacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Calificación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-revision-en-vivo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Revisión en vivo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anexo-a-opcional-usar-postgresql-en-lugar-de-oracle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anexo A. Opcional: usar PostgreSQL en lugar de Oracle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anexo-b-scripts-para-postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anexo B. Scripts para PostgreSQL
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="examen-final-practico-individual-de-lp2-variante-1">Examen Final Práctico Individual de LP2 · Variante 1<a class="headerlink" href="#examen-final-practico-individual-de-lp2-variante-1" title="Permanent link">&para;</a></h1>
+<p><em>Por: Angel Sullon Macalupu @asullom - 2026</em></p>
+<h2 id="1-proposito">1. Propósito<a class="headerlink" href="#1-proposito" title="Permanent link">&para;</a></h2>
+<p>Comprueba que sabes <strong>hacer</strong>: construir un módulo nuevo, con base de datos, backend y SPA (<em>Single Page Application</em>, aplicación de una sola página), <strong>dentro de tu proyecto grupal</strong> y con el patrón de cabecera y detalles que practicaste en clase. El módulo <code>logistica</code> no existe todavía en tu proyecto, así que no hay nada que memorizar. Es la forma práctica de la <a href="../../sesiones/S16_Evaluacion_Final_Individual/#2-evaluacion-final-individual-teorico-practica-s1-s14">evaluación final individual</a>.</p>
+<h2 id="2-reglas">2. Reglas<a class="headerlink" href="#2-reglas" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Duración:</strong> 120 minutos. <strong>Puntaje:</strong> 20 puntos.</li>
+<li><strong>Construye sobre tu proyecto:</strong> abre tu proyecto grupal (backend y SPA) y agrega el módulo <code>logistica</code> dentro de él. No se acepta un proyecto nuevo ni una copia vacía.</li>
+<li><strong>Permitido:</strong> la guía de las sesiones, el código de tu proyecto grupal y el código de BomERP.</li>
+<li><strong>No permitido:</strong> IA ni chat de ningún tipo, ni ayuda de otras personas.</li>
+<li><strong>Cada funcionalidad se demuestra desde tu SPA</strong> (Angular, Vue o React, la que usaste en tu proyecto). Si solo funciona desde el backend (Swagger o Postman), vale <strong>la mitad</strong> de sus puntos. El ítem de base de datos no se reduce.</li>
+<li><strong>Revisión en vivo:</strong> al terminar los 120 minutos, el docente pasa por cada puesto y te pide demostrar cada ítem funcionando, en tu navegador o, si es de base de datos, en PowerShell o tu IDE (sección 7). Deja tu backend y tu SPA en ejecución y no modifiques código durante la revisión.</li>
+<li><strong>Antes de empezar:</strong> tu backend y tu SPA deben estar funcionando. El tiempo corre desde que el docente da la señal de inicio.</li>
+</ul>
+<h2 id="3-preparar-tu-esquema-de-base-de-datos">3. Preparar tu esquema de base de datos<a class="headerlink" href="#3-preparar-tu-esquema-de-base-de-datos" title="Permanent link">&para;</a></h2>
+<p>Ejecuta estos dos bloques en PowerShell, uno tras otro. Si usas un IDE de Oracle, copia solo el SQL de dentro de las comillas y ejecútalo como script, conectado como <code>system</code> al servicio <code>FREEPDB1</code>.</p>
+<p>Cada bloque empieza con <code>$DB = 'bomerp-oracle'</code>: <strong>cambia ese valor por el nombre del contenedor Oracle de tu entorno de desarrollo</strong> (<code>docker ps</code> te lo muestra). Si tu <code>system</code> tiene otra contraseña, ajústala también. Si tu proyecto usa PostgreSQL en lugar de Oracle, usa los scripts del <a href="#anexo-b-scripts-para-postgresql">Anexo B</a>.</p>
+<p>El esquema <code>EXA_LOGISTICA</code> tiene cuatro tablas (Figura 1). <code>VEHICULO_ZONA</code> es la tabla intermedia de la relación muchos a muchos: su clave primaria es compuesta y cada una de sus dos columnas es clave foránea.</p>
+<p><strong>Figura 1. Diagrama de la base de datos del módulo</strong></p>
+<pre class="mermaid"><code>erDiagram
+    EMPRESAS_TRANSPORTE ||--o{ VEHICULOS : "tiene"
+    VEHICULOS ||--o{ VEHICULO_ZONA : "incluye"
+    ZONAS_REPARTO ||--o{ VEHICULO_ZONA : "se asigna en"
+
+    EMPRESAS_TRANSPORTE {
+        NUMBER ID PK
+        CHAR RUC UK
+        VARCHAR2 RAZON_SOCIAL
+        VARCHAR2 TELEFONO
+        NUMBER ACTIVO
+    }
+    VEHICULOS {
+        NUMBER ID PK
+        NUMBER ID_EMPRESA FK
+        VARCHAR2 PLACA UK
+        NUMBER CAPACIDAD_KG
+        VARCHAR2 ESTADO
+    }
+    ZONAS_REPARTO {
+        NUMBER ID PK
+        VARCHAR2 CODIGO UK
+        VARCHAR2 NOMBRE
+    }
+    VEHICULO_ZONA {
+        NUMBER ID_VEHICULO PK, FK
+        NUMBER ID_ZONA PK, FK
+    }</code></pre>
+<p><code>PK</code> es clave primaria, <code>FK</code> clave foránea y <code>UK</code> valor único. En cada relación, el extremo con doble barra es el lado «uno» y el extremo con pata de gallo es el lado «muchos».</p>
+<p><strong>Script 1. Esquema</strong></p>
+<div class="highlight"><pre><span></span><code><span class="nv">$DB</span> <span class="p">=</span> <span class="s1">'bomerp-oracle'</span>   <span class="c"># nombre de TU contenedor Oracle en dev (míralo con: docker ps)</span>
+<span class="sh">@'</span>
+<span class="sh">CREATE USER EXA_LOGISTICA IDENTIFIED BY "123456" QUOTA UNLIMITED ON USERS;</span>
+<span class="sh">GRANT CREATE SESSION, CREATE TABLE, CREATE VIEW, CREATE PROCEDURE, CREATE TRIGGER TO EXA_LOGISTICA;</span>
+<span class="sh">EXIT</span>
+<span class="sh">'@</span> <span class="p">|</span> <span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="nv">$DB</span> <span class="n">sqlplus</span> <span class="n">-s</span> <span class="n">system</span><span class="p">/</span><span class="n">123456</span><span class="p">@//</span><span class="n">localhost</span><span class="p">:</span><span class="n">1521</span><span class="p">/</span><span class="n">FREEPDB1</span>
+</code></pre></div>
+<p><strong>Script 2. Tablas, semillas y permisos</strong></p>
+<p>Incluye las cuatro tablas, la tabla intermedia <code>VEHICULO_ZONA</code>, los datos de ejemplo y los permisos para el usuario de la aplicación. No tienes que modificarlo.</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$DB</span> <span class="p">=</span> <span class="s1">'bomerp-oracle'</span>   <span class="c"># nombre de TU contenedor Oracle en dev (míralo con: docker ps)</span>
+<span class="sh">@'</span>
+<span class="sh">CREATE TABLE EXA_LOGISTICA.EMPRESAS_TRANSPORTE (</span>
+<span class="sh">    ID            NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,</span>
+<span class="sh">    RUC           CHAR(11)      NOT NULL,</span>
+<span class="sh">    RAZON_SOCIAL  VARCHAR2(150) NOT NULL,</span>
+<span class="sh">    TELEFONO      VARCHAR2(20),</span>
+<span class="sh">    ACTIVO        NUMBER(1)     DEFAULT 1 NOT NULL,</span>
+<span class="sh">    CONSTRAINT UQ_EMPRESA_RUC UNIQUE (RUC),</span>
+<span class="sh">    CONSTRAINT CK_EMPRESA_ACTIVO CHECK (ACTIVO IN (0, 1))</span>
+<span class="sh">);</span>
+
+<span class="sh">CREATE TABLE EXA_LOGISTICA.VEHICULOS (</span>
+<span class="sh">    ID            NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,</span>
+<span class="sh">    ID_EMPRESA    NUMBER        NOT NULL,</span>
+<span class="sh">    PLACA         VARCHAR2(10)  NOT NULL,</span>
+<span class="sh">    CAPACIDAD_KG  NUMBER(8,2)   NOT NULL,</span>
+<span class="sh">    ESTADO        VARCHAR2(20)  DEFAULT 'DISPONIBLE' NOT NULL,</span>
+<span class="sh">    CONSTRAINT FK_VEHICULO_EMPRESA FOREIGN KEY (ID_EMPRESA)</span>
+<span class="sh">        REFERENCES EXA_LOGISTICA.EMPRESAS_TRANSPORTE(ID),</span>
+<span class="sh">    CONSTRAINT UQ_VEHICULO_PLACA UNIQUE (PLACA),</span>
+<span class="sh">    CONSTRAINT CK_VEHICULO_CAPACIDAD CHECK (CAPACIDAD_KG &gt; 0),</span>
+<span class="sh">    CONSTRAINT CK_VEHICULO_ESTADO CHECK (ESTADO IN ('DISPONIBLE', 'EN_RUTA', 'MANTENIMIENTO'))</span>
+<span class="sh">);</span>
+
+<span class="sh">CREATE TABLE EXA_LOGISTICA.ZONAS_REPARTO (</span>
+<span class="sh">    ID      NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,</span>
+<span class="sh">    CODIGO  VARCHAR2(10)  NOT NULL,</span>
+<span class="sh">    NOMBRE  VARCHAR2(100) NOT NULL,</span>
+<span class="sh">    CONSTRAINT UQ_ZONA_CODIGO UNIQUE (CODIGO)</span>
+<span class="sh">);</span>
+
+<span class="sh">INSERT INTO EXA_LOGISTICA.EMPRESAS_TRANSPORTE (RUC, RAZON_SOCIAL, TELEFONO, ACTIVO) VALUES ('20123456789', 'Transportes Andinos SAC', '951234567', 1);</span>
+<span class="sh">INSERT INTO EXA_LOGISTICA.EMPRESAS_TRANSPORTE (RUC, RAZON_SOCIAL, TELEFONO, ACTIVO) VALUES ('20456789012', 'Logistica del Sur EIRL', '952345678', 1);</span>
+<span class="sh">INSERT INTO EXA_LOGISTICA.EMPRESAS_TRANSPORTE (RUC, RAZON_SOCIAL, TELEFONO, ACTIVO) VALUES ('20987654321', 'Cargas Titicaca SRL', '953456789', 0);</span>
+
+<span class="sh">INSERT INTO EXA_LOGISTICA.VEHICULOS (ID_EMPRESA, PLACA, CAPACIDAD_KG, ESTADO)</span>
+<span class="sh">    SELECT ID, 'ABC-123', 3500, 'DISPONIBLE' FROM EXA_LOGISTICA.EMPRESAS_TRANSPORTE WHERE RUC = '20123456789';</span>
+<span class="sh">INSERT INTO EXA_LOGISTICA.VEHICULOS (ID_EMPRESA, PLACA, CAPACIDAD_KG, ESTADO)</span>
+<span class="sh">    SELECT ID, 'DEF-456', 8000, 'EN_RUTA' FROM EXA_LOGISTICA.EMPRESAS_TRANSPORTE WHERE RUC = '20123456789';</span>
+<span class="sh">INSERT INTO EXA_LOGISTICA.VEHICULOS (ID_EMPRESA, PLACA, CAPACIDAD_KG, ESTADO)</span>
+<span class="sh">    SELECT ID, 'GHI-789', 1500, 'DISPONIBLE' FROM EXA_LOGISTICA.EMPRESAS_TRANSPORTE WHERE RUC = '20456789012';</span>
+<span class="sh">INSERT INTO EXA_LOGISTICA.VEHICULOS (ID_EMPRESA, PLACA, CAPACIDAD_KG, ESTADO)</span>
+<span class="sh">    SELECT ID, 'JKL-012', 12000, 'MANTENIMIENTO' FROM EXA_LOGISTICA.EMPRESAS_TRANSPORTE WHERE RUC = '20456789012';</span>
+
+<span class="sh">INSERT INTO EXA_LOGISTICA.ZONAS_REPARTO (CODIGO, NOMBRE) VALUES ('Z-01', 'Juliaca Centro');</span>
+<span class="sh">INSERT INTO EXA_LOGISTICA.ZONAS_REPARTO (CODIGO, NOMBRE) VALUES ('Z-02', 'Juliaca Norte');</span>
+<span class="sh">INSERT INTO EXA_LOGISTICA.ZONAS_REPARTO (CODIGO, NOMBRE) VALUES ('Z-03', 'Juliaca Sur');</span>
+<span class="sh">INSERT INTO EXA_LOGISTICA.ZONAS_REPARTO (CODIGO, NOMBRE) VALUES ('Z-04', 'Puno Ciudad');</span>
+<span class="sh">INSERT INTO EXA_LOGISTICA.ZONAS_REPARTO (CODIGO, NOMBRE) VALUES ('Z-05', 'Lampa');</span>
+<span class="sh">COMMIT;</span>
+
+<span class="sh">CREATE TABLE EXA_LOGISTICA.VEHICULO_ZONA (</span>
+<span class="sh">    ID_VEHICULO  NUMBER NOT NULL,</span>
+<span class="sh">    ID_ZONA      NUMBER NOT NULL,</span>
+<span class="sh">    CONSTRAINT PK_VEHICULO_ZONA PRIMARY KEY (ID_VEHICULO, ID_ZONA),</span>
+<span class="sh">    CONSTRAINT FK_VZ_VEHICULO FOREIGN KEY (ID_VEHICULO) REFERENCES EXA_LOGISTICA.VEHICULOS(ID),</span>
+<span class="sh">    CONSTRAINT FK_VZ_ZONA     FOREIGN KEY (ID_ZONA)     REFERENCES EXA_LOGISTICA.ZONAS_REPARTO(ID)</span>
+<span class="sh">);</span>
+
+<span class="sh">INSERT INTO EXA_LOGISTICA.VEHICULO_ZONA (ID_VEHICULO, ID_ZONA)</span>
+<span class="sh">    SELECT v.ID, z.ID FROM EXA_LOGISTICA.VEHICULOS v, EXA_LOGISTICA.ZONAS_REPARTO z</span>
+<span class="sh">    WHERE (v.PLACA, z.CODIGO) IN (('ABC-123', 'Z-01'), ('ABC-123', 'Z-02'), ('DEF-456', 'Z-03'));</span>
+<span class="sh">COMMIT;</span>
+
+<span class="sh">CREATE INDEX EXA_LOGISTICA.IDX_VEHICULO_EMPRESA ON EXA_LOGISTICA.VEHICULOS(ID_EMPRESA);</span>
+
+<span class="sh">GRANT SELECT, INSERT, UPDATE, DELETE ON EXA_LOGISTICA.EMPRESAS_TRANSPORTE TO BOMERP_APP;</span>
+<span class="sh">GRANT SELECT, INSERT, UPDATE, DELETE ON EXA_LOGISTICA.VEHICULOS           TO BOMERP_APP;</span>
+<span class="sh">GRANT SELECT, INSERT, UPDATE, DELETE ON EXA_LOGISTICA.ZONAS_REPARTO       TO BOMERP_APP;</span>
+<span class="sh">GRANT SELECT, INSERT, UPDATE, DELETE ON EXA_LOGISTICA.VEHICULO_ZONA       TO BOMERP_APP;</span>
+<span class="sh">EXIT</span>
+<span class="sh">'@</span> <span class="p">|</span> <span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="nv">$DB</span> <span class="n">sqlplus</span> <span class="n">-s</span> <span class="n">system</span><span class="p">/</span><span class="n">123456</span><span class="p">@//</span><span class="n">localhost</span><span class="p">:</span><span class="n">1521</span><span class="p">/</span><span class="n">FREEPDB1</span>
+</code></pre></div>
+<p><strong>Script 3. Verificar</strong> (debe listar 4 tablas: <code>EMPRESAS_TRANSPORTE</code>, <code>VEHICULOS</code>, <code>VEHICULO_ZONA</code> y <code>ZONAS_REPARTO</code>)</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$DB</span> <span class="p">=</span> <span class="s1">'bomerp-oracle'</span>   <span class="c"># nombre de TU contenedor Oracle en dev (míralo con: docker ps)</span>
+<span class="sh">@'</span>
+<span class="sh">SELECT table_name FROM dba_tables WHERE owner='EXA_LOGISTICA' ORDER BY 1;</span>
+<span class="sh">EXIT</span>
+<span class="sh">'@</span> <span class="p">|</span> <span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="nv">$DB</span> <span class="n">sqlplus</span> <span class="n">-s</span> <span class="n">system</span><span class="p">/</span><span class="n">123456</span><span class="p">@//</span><span class="n">localhost</span><span class="p">:</span><span class="n">1521</span><span class="p">/</span><span class="n">FREEPDB1</span>
+</code></pre></div>
+<p>Para repetir desde cero, ejecuta <code>DROP USER EXA_LOGISTICA CASCADE;</code> como <code>system</code> y vuelve a correr los scripts 1 y 2.</p>
+<h2 id="4-prototipos-de-las-pantallas">4. Prototipos de las pantallas<a class="headerlink" href="#4-prototipos-de-las-pantallas" title="Permanent link">&para;</a></h2>
+<p>Tu SPA no tiene que ser idéntica a estas figuras, pero sí debe tener estas pantallas y estas acciones.</p>
+<p>Las Figuras 2 y 3 corresponden a la pregunta 1. En las Figuras 4, 5 y 6 el vehículo es la cabecera y las zonas son sus líneas, igual que la cabecera con detalles que practicaste en clase, como una venta con sus productos.</p>
+<p><strong>Figura 2. Empresas de transporte: listado</strong></p>
+<div class="highlight"><pre><span></span><code>+- Logística · Empresas de transporte --------------------------------------------------+
+|                                                                  [ + Nueva empresa ]  |
+|                                                                                       |
+| +-------------+-------------------------+-----------+--------+---------------------+  |
+| | RUC         | Razón social            | Teléfono  | Activa | Acciones            |  |
+| +-------------+-------------------------+-----------+--------+---------------------+  |
+| | 20123456789 | Transportes Andinos SAC | 951234567 | Sí     | [Editar] [Eliminar] |  |
+| | 20456789012 | Logistica del Sur EIRL  | 952345678 | Sí     | [Editar] [Eliminar] |  |
+| | 20987654321 | Cargas Titicaca SRL     | 953456789 | No     | [Editar] [Eliminar] |  |
+| +-------------+-------------------------+-----------+--------+---------------------+  |
++---------------------------------------------------------------------------------------+
+</code></pre></div>
+<p><strong>Figura 3. Empresa: formulario para crear y editar, con los errores visibles</strong></p>
+<div class="highlight"><pre><span></span><code>+- Nueva empresa  (la misma pantalla sirve para editar) -----------------+
+| RUC            [ 2012345 ]          × El RUC debe tener 11 dígitos     |
+| Razón social   [ ______________ ]   × La razón social es obligatoria   |
+| Teléfono       [ ______________ ]                                      |
+| Activa         [x]                                                     |
+|                                                                        |
+|                                           [ Cancelar ]   [ Guardar ]   |
++------------------------------------------------------------------------+
+</code></pre></div>
+<p><strong>Figura 4. Vehículos: listado</strong></p>
+<div class="highlight"><pre><span></span><code>+- Logística · Vehículos ---------------------------------------------------------------+
+|                                                                 [ + Nuevo vehículo ]  |
+|                                                                                       |
+| +---------+-------------------------+-----------+---------------+------------------+  |
+| | Placa   | Empresa                 | Capac. kg | Estado        | Acciones         |  |
+| +---------+-------------------------+-----------+---------------+------------------+  |
+| | ABC-123 | Transportes Andinos SAC | 3500.00   | DISPONIBLE    | [Ver] [Eliminar] |  |
+| | DEF-456 | Transportes Andinos SAC | 8000.00   | EN_RUTA       | [Ver] [Eliminar] |  |
+| | GHI-789 | Logistica del Sur EIRL  | 1500.00   | DISPONIBLE    | [Ver] [Eliminar] |  |
+| +---------+-------------------------+-----------+---------------+------------------+  |
++---------------------------------------------------------------------------------------+
+</code></pre></div>
+<p><strong>Figura 5. Nuevo vehículo, con la asignación de zonas</strong></p>
+<div class="highlight"><pre><span></span><code>+- Nuevo vehículo -----------------------------------------------------+
+| Empresa  [ Transportes Andinos SAC v ]     Placa [ ________ ]        |
+| Capacidad (kg) [ ______ ]                  Estado [ DISPONIBLE v ]   |
+|                                                                      |
+| Zonas de reparto   [ Juliaca Centro v ] [ Agregar ]                  |
+|                                                                      |
+| +--------+------------------+----------+                             |
+| | Z-01   | Juliaca Centro   | [Quitar] |                             |
+| | Z-03   | Juliaca Sur      | [Quitar] |                             |
+| +--------+------------------+----------+                             |
+|                                                                      |
+|                                         [ Cancelar ]   [ Guardar ]   |
++----------------------------------------------------------------------+
+</code></pre></div>
+<p><strong>Figura 6. Ver vehículo, con sus zonas (solo lectura)</strong></p>
+<div class="highlight"><pre><span></span><code>+- Vehículo ABC-123 ---------------------------------------------------+
+| Empresa: Transportes Andinos SAC     Capacidad: 3500.00 kg           |
+| Estado:  DISPONIBLE                                                  |
+|                                                                      |
+| Zonas asignadas:                                                     |
+| +--------+------------------+                                        |
+| | Z-01   | Juliaca Centro   |                                        |
+| | Z-02   | Juliaca Norte    |                                        |
+| +--------+------------------+                                        |
+|                                                                      |
+|                                                         [ Volver ]   |
++----------------------------------------------------------------------+
+</code></pre></div>
+<h2 id="5-preguntas">5. Preguntas<a class="headerlink" href="#5-preguntas" title="Permanent link">&para;</a></h2>
+<p><strong>1. (7 pts)</strong> Crea el módulo <code>logistica</code> en tu backend y el CRUD (<em>Create, Read, Update, Delete</em>) de <code>EMPRESAS_TRANSPORTE</code> (Figuras 2 y 3).</p>
+<ul>
+<li>DB: crea el esquema de tu nuevo módulo ejecutando los scripts de la sección 3 y lista las tablas del esquema mediante PowerShell o tu IDE. <strong>(2 pts)</strong></li>
+<li>CRUD funcionando desde la SPA: listar, crear, editar y eliminar. <strong>(4 pts)</strong></li>
+<li>RUC (Registro Único de Contribuyentes) de 11 dígitos y razón social obligatoria, con el error visible en el formulario. <strong>(1 pt)</strong></li>
+</ul>
+<p><strong>2. (13 pts)</strong> Ahora <code>VEHICULOS</code> con sus <code>ZONAS_REPARTO</code>, igual que la cabecera con detalles que practicaste en clase, como una venta con sus productos (Figuras 4, 5 y 6). El vehículo es la cabecera y las zonas son sus líneas.</p>
+<ul>
+<li>Zonas: listar (vienen precargadas). <strong>(1 pt)</strong></li>
+<li>Crear un vehículo: empresa elegida desde una lista desplegable, placa, capacidad y estado como enumerado. <strong>(3 pts)</strong></li>
+<li>Asignar zonas al crear el vehículo: eliges una zona de la lista, la agregas a la tabla de zonas asignadas, puedes quitarla y, al guardar, queda registrada. <strong>(4 pts)</strong></li>
+<li>Listar los vehículos y ver el detalle de uno, con su tabla de zonas asignadas. <strong>(3 pts)</strong></li>
+<li>Eliminar un vehículo desde el listado. <strong>(2 pts)</strong></li>
+</ul>
+<h2 id="6-calificacion">6. Calificación<a class="headerlink" href="#6-calificacion" title="Permanent link">&para;</a></h2>
+<p><strong>Tabla 1. Puntaje por ítem según dónde funciona</strong></p>
+<table>
+<thead>
+<tr>
+<th>Ítem</th>
+<th>Pregunta</th>
+<th style="text-align: right;">Desde la SPA</th>
+<th style="text-align: right;">Solo desde el backend</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Esquema creado y tablas listadas</td>
+<td>1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr>
+<td>CRUD de empresas</td>
+<td>1</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr>
+<td>Validaciones de empresa</td>
+<td>1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.5</td>
+</tr>
+<tr>
+<td>Zonas: listar</td>
+<td>2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.5</td>
+</tr>
+<tr>
+<td>Crear un vehículo</td>
+<td>2</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1.5</td>
+</tr>
+<tr>
+<td>Asignar zonas al crear el vehículo</td>
+<td>2</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr>
+<td>Listar y ver el detalle del vehículo con sus zonas</td>
+<td>2</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1.5</td>
+</tr>
+<tr>
+<td>Eliminar un vehículo</td>
+<td>2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td></td>
+<td style="text-align: right;"><strong>20</strong></td>
+<td style="text-align: right;"></td>
+</tr>
+</tbody>
+</table>
+<p>Un ítem vale su puntaje completo solo si lo muestras funcionando. Si el código existe pero falla, vale 0.</p>
+<p><strong>Tabla 2. Distribución sugerida del tiempo</strong></p>
+<table>
+<thead>
+<tr>
+<th>Bloque</th>
+<th style="text-align: right;">Minutos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pregunta 1</td>
+<td style="text-align: right;">50</td>
+</tr>
+<tr>
+<td>Pregunta 2</td>
+<td style="text-align: right;">65</td>
+</tr>
+<tr>
+<td>Cierre: dejar todo en ejecución para la revisión</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td style="text-align: right;"><strong>120</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Los ítems se califican por separado: si te atascas en uno, pasa al siguiente.</p>
+<h2 id="7-revision-en-vivo">7. Revisión en vivo<a class="headerlink" href="#7-revision-en-vivo" title="Permanent link">&para;</a></h2>
+<p>Al terminar los 120 minutos, el docente revisa tu puesto en unos 5 minutos. Para cada ítem te pedirá hacer esto, en vivo y sin ayuda:</p>
+<p><strong>Tabla 3. Qué demuestras en la revisión</strong></p>
+<table>
+<thead>
+<tr>
+<th>Ítem</th>
+<th>Qué te pide el docente</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Esquema creado y tablas listadas</td>
+<td>Ejecutar el script 3 y mostrar las 4 tablas.</td>
+</tr>
+<tr>
+<td>CRUD de empresas</td>
+<td>Crear una empresa, editarla y eliminarla desde la SPA.</td>
+</tr>
+<tr>
+<td>Validaciones de empresa</td>
+<td>Guardar una empresa con un RUC de menos de 11 dígitos y con la razón social vacía: los errores deben verse en el formulario.</td>
+</tr>
+<tr>
+<td>Zonas: listar</td>
+<td>Mostrar las 5 zonas precargadas.</td>
+</tr>
+<tr>
+<td>Crear un vehículo</td>
+<td>Crear un vehículo eligiendo la empresa de la lista desplegable, con placa, capacidad y estado.</td>
+</tr>
+<tr>
+<td>Asignar zonas al crear el vehículo</td>
+<td>En un vehículo nuevo, agregar 2 zonas, quitar 1 y guardar.</td>
+</tr>
+<tr>
+<td>Listar y ver el detalle del vehículo con sus zonas</td>
+<td>Encontrar ese vehículo en el listado, abrirlo y ver la zona que quedó asignada.</td>
+</tr>
+<tr>
+<td>Eliminar un vehículo</td>
+<td>Eliminar ese vehículo desde el listado.</td>
+</tr>
+</tbody>
+</table>
+<p>Lo que falla durante la revisión se califica como no logrado: no se corrige en ese momento.</p>
+<h2 id="anexo-a-opcional-usar-postgresql-en-lugar-de-oracle">Anexo A. Opcional: usar PostgreSQL en lugar de Oracle<a class="headerlink" href="#anexo-a-opcional-usar-postgresql-en-lugar-de-oracle" title="Permanent link">&para;</a></h2>
+<p>Si tu proyecto en desarrollo usa PostgreSQL, o prefieres usarlo en el examen, haz estos tres cambios. Con Oracle no tienes que tocar nada.</p>
+<p><strong>1. <code>compose-dev.yml</code>.</strong> Reemplaza el servicio <code>oracle</code> y el volumen <code>oracle-data</code> por esto:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">postgres</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres:17-alpine</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bomerp-postgres</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"35433:5432"</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">POSTGRES_DB</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bomerp</span>
+<span class="w">      </span><span class="nt">POSTGRES_USER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bomerp_app</span>
+<span class="w">      </span><span class="nt">POSTGRES_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">123456</span>
+<span class="w">      </span><span class="nt">TZ</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">America/Lima</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres-data:/var/lib/postgresql/data</span>
+<span class="w">    </span><span class="nt">healthcheck</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"CMD-SHELL"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"pg_isready</span><span class="nv"> </span><span class="s">-U</span><span class="nv"> </span><span class="s">bomerp_app</span><span class="nv"> </span><span class="s">-d</span><span class="nv"> </span><span class="s">bomerp"</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10s</span>
+<span class="w">      </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5s</span>
+<span class="w">      </span><span class="nt">retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">      </span><span class="nt">start_period</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15s</span>
+
+<span class="nt">volumes</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">postgres-data</span><span class="p">:</span>
+</code></pre></div>
+<p>El puerto <code>35433</code> es solo un ejemplo: usa cualquiera que esté libre en tu máquina. Levántalo con:</p>
+<div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">compose</span> <span class="o">-f</span> <span class="n">compose-dev</span><span class="p">.</span><span class="n">yml</span> <span class="n">up</span> <span class="n">-d</span> <span class="n">postgres</span>
+</code></pre></div>
+<p><strong>2. <code>pom.xml</code>.</strong> Reemplaza la dependencia <code>ojdbc11</code> por el controlador de PostgreSQL:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.postgresql<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>postgresql<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;scope&gt;</span>runtime<span class="nt">&lt;/scope&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div>
+<p><strong>3. <code>application-dev.yml</code>.</strong> Reemplaza el bloque <code>datasource</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">spring</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">datasource</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jdbc:postgresql://localhost:35433/bomerp</span>
+<span class="w">    </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bomerp_app</span>
+<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">123456</span>
+<span class="w">    </span><span class="nt">driver-class-name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">org.postgresql.Driver</span>
+</code></pre></div>
+<p>Tus entidades siguen usando <code>@Table(schema = "EXA_LOGISTICA")</code>: PostgreSQL lee ese nombre sin distinguir mayúsculas.</p>
+<h2 id="anexo-b-scripts-para-postgresql">Anexo B. Scripts para PostgreSQL<a class="headerlink" href="#anexo-b-scripts-para-postgresql" title="Permanent link">&para;</a></h2>
+<p>Son los mismos scripts de la sección 3, con la sintaxis de PostgreSQL y los mismos datos. En PostgreSQL el esquema es el equivalente al usuario de Oracle, y <code>bomerp_app</code> es el mismo usuario con el que corre tu backend, por lo que no hacen falta permisos adicionales. Cambia <code>$DB</code> por el nombre del contenedor PostgreSQL de tu entorno de desarrollo (<code>docker ps</code>), y ajusta el usuario (<code>-U</code>) y la base (<code>-d</code>) si tu entorno usa otros.</p>
+<p><strong>Script 1 (PostgreSQL). Esquema</strong></p>
+<div class="highlight"><pre><span></span><code><span class="nv">$DB</span> <span class="p">=</span> <span class="s1">'bomerp-postgres'</span>   <span class="c"># nombre de TU contenedor PostgreSQL en dev (míralo con: docker ps)</span>
+<span class="sh">@'</span>
+<span class="sh">CREATE SCHEMA EXA_LOGISTICA;</span>
+<span class="sh">'@</span> <span class="p">|</span> <span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="nv">$DB</span> <span class="n">psql</span> <span class="n">-U</span> <span class="n">bomerp_app</span> <span class="n">-d</span> <span class="n">bomerp</span> <span class="n">-v</span> <span class="n">ON_ERROR_STOP</span><span class="p">=</span><span class="n">1</span>
+</code></pre></div>
+<p><strong>Script 2 (PostgreSQL). Tablas y semillas</strong></p>
+<div class="highlight"><pre><span></span><code><span class="nv">$DB</span> <span class="p">=</span> <span class="s1">'bomerp-postgres'</span>   <span class="c"># nombre de TU contenedor PostgreSQL en dev (míralo con: docker ps)</span>
+<span class="sh">@'</span>
+<span class="sh">CREATE TABLE EXA_LOGISTICA.EMPRESAS_TRANSPORTE (</span>
+<span class="sh">    ID            BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,</span>
+<span class="sh">    RUC           CHAR(11)      NOT NULL,</span>
+<span class="sh">    RAZON_SOCIAL  VARCHAR(150) NOT NULL,</span>
+<span class="sh">    TELEFONO      VARCHAR(20),</span>
+<span class="sh">    ACTIVO        SMALLINT     DEFAULT 1 NOT NULL,</span>
+<span class="sh">    CONSTRAINT UQ_EMPRESA_RUC UNIQUE (RUC),</span>
+<span class="sh">    CONSTRAINT CK_EMPRESA_ACTIVO CHECK (ACTIVO IN (0, 1))</span>
+<span class="sh">);</span>
+
+<span class="sh">CREATE TABLE EXA_LOGISTICA.VEHICULOS (</span>
+<span class="sh">    ID            BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,</span>
+<span class="sh">    ID_EMPRESA    BIGINT        NOT NULL,</span>
+<span class="sh">    PLACA         VARCHAR(10)  NOT NULL,</span>
+<span class="sh">    CAPACIDAD_KG  NUMERIC(8,2)   NOT NULL,</span>
+<span class="sh">    ESTADO        VARCHAR(20)  DEFAULT 'DISPONIBLE' NOT NULL,</span>
+<span class="sh">    CONSTRAINT FK_VEHICULO_EMPRESA FOREIGN KEY (ID_EMPRESA)</span>
+<span class="sh">        REFERENCES EXA_LOGISTICA.EMPRESAS_TRANSPORTE(ID),</span>
+<span class="sh">    CONSTRAINT UQ_VEHICULO_PLACA UNIQUE (PLACA),</span>
+<span class="sh">    CONSTRAINT CK_VEHICULO_CAPACIDAD CHECK (CAPACIDAD_KG &gt; 0),</span>
+<span class="sh">    CONSTRAINT CK_VEHICULO_ESTADO CHECK (ESTADO IN ('DISPONIBLE', 'EN_RUTA', 'MANTENIMIENTO'))</span>
+<span class="sh">);</span>
+
+<span class="sh">CREATE TABLE EXA_LOGISTICA.ZONAS_REPARTO (</span>
+<span class="sh">    ID      BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,</span>
+<span class="sh">    CODIGO  VARCHAR(10)  NOT NULL,</span>
+<span class="sh">    NOMBRE  VARCHAR(100) NOT NULL,</span>
+<span class="sh">    CONSTRAINT UQ_ZONA_CODIGO UNIQUE (CODIGO)</span>
+<span class="sh">);</span>
+
+<span class="sh">INSERT INTO EXA_LOGISTICA.EMPRESAS_TRANSPORTE (RUC, RAZON_SOCIAL, TELEFONO, ACTIVO) VALUES ('20123456789', 'Transportes Andinos SAC', '951234567', 1);</span>
+<span class="sh">INSERT INTO EXA_LOGISTICA.EMPRESAS_TRANSPORTE (RUC, RAZON_SOCIAL, TELEFONO, ACTIVO) VALUES ('20456789012', 'Logistica del Sur EIRL', '952345678', 1);</span>
+<span class="sh">INSERT INTO EXA_LOGISTICA.EMPRESAS_TRANSPORTE (RUC, RAZON_SOCIAL, TELEFONO, ACTIVO) VALUES ('20987654321', 'Cargas Titicaca SRL', '953456789', 0);</span>
+
+<span class="sh">INSERT INTO EXA_LOGISTICA.VEHICULOS (ID_EMPRESA, PLACA, CAPACIDAD_KG, ESTADO)</span>
+<span class="sh">    SELECT ID, 'ABC-123', 3500, 'DISPONIBLE' FROM EXA_LOGISTICA.EMPRESAS_TRANSPORTE WHERE RUC = '20123456789';</span>
+<span class="sh">INSERT INTO EXA_LOGISTICA.VEHICULOS (ID_EMPRESA, PLACA, CAPACIDAD_KG, ESTADO)</span>
+<span class="sh">    SELECT ID, 'DEF-456', 8000, 'EN_RUTA' FROM EXA_LOGISTICA.EMPRESAS_TRANSPORTE WHERE RUC = '20123456789';</span>
+<span class="sh">INSERT INTO EXA_LOGISTICA.VEHICULOS (ID_EMPRESA, PLACA, CAPACIDAD_KG, ESTADO)</span>
+<span class="sh">    SELECT ID, 'GHI-789', 1500, 'DISPONIBLE' FROM EXA_LOGISTICA.EMPRESAS_TRANSPORTE WHERE RUC = '20456789012';</span>
+<span class="sh">INSERT INTO EXA_LOGISTICA.VEHICULOS (ID_EMPRESA, PLACA, CAPACIDAD_KG, ESTADO)</span>
+<span class="sh">    SELECT ID, 'JKL-012', 12000, 'MANTENIMIENTO' FROM EXA_LOGISTICA.EMPRESAS_TRANSPORTE WHERE RUC = '20456789012';</span>
+
+<span class="sh">INSERT INTO EXA_LOGISTICA.ZONAS_REPARTO (CODIGO, NOMBRE) VALUES ('Z-01', 'Juliaca Centro');</span>
+<span class="sh">INSERT INTO EXA_LOGISTICA.ZONAS_REPARTO (CODIGO, NOMBRE) VALUES ('Z-02', 'Juliaca Norte');</span>
+<span class="sh">INSERT INTO EXA_LOGISTICA.ZONAS_REPARTO (CODIGO, NOMBRE) VALUES ('Z-03', 'Juliaca Sur');</span>
+<span class="sh">INSERT INTO EXA_LOGISTICA.ZONAS_REPARTO (CODIGO, NOMBRE) VALUES ('Z-04', 'Puno Ciudad');</span>
+<span class="sh">INSERT INTO EXA_LOGISTICA.ZONAS_REPARTO (CODIGO, NOMBRE) VALUES ('Z-05', 'Lampa');</span>
+
+<span class="sh">CREATE TABLE EXA_LOGISTICA.VEHICULO_ZONA (</span>
+<span class="sh">    ID_VEHICULO  BIGINT NOT NULL,</span>
+<span class="sh">    ID_ZONA      BIGINT NOT NULL,</span>
+<span class="sh">    CONSTRAINT PK_VEHICULO_ZONA PRIMARY KEY (ID_VEHICULO, ID_ZONA),</span>
+<span class="sh">    CONSTRAINT FK_VZ_VEHICULO FOREIGN KEY (ID_VEHICULO) REFERENCES EXA_LOGISTICA.VEHICULOS(ID),</span>
+<span class="sh">    CONSTRAINT FK_VZ_ZONA     FOREIGN KEY (ID_ZONA)     REFERENCES EXA_LOGISTICA.ZONAS_REPARTO(ID)</span>
+<span class="sh">);</span>
+
+<span class="sh">INSERT INTO EXA_LOGISTICA.VEHICULO_ZONA (ID_VEHICULO, ID_ZONA)</span>
+<span class="sh">    SELECT v.ID, z.ID FROM EXA_LOGISTICA.VEHICULOS v, EXA_LOGISTICA.ZONAS_REPARTO z</span>
+<span class="sh">    WHERE (v.PLACA, z.CODIGO) IN (('ABC-123', 'Z-01'), ('ABC-123', 'Z-02'), ('DEF-456', 'Z-03'));</span>
+
+<span class="sh">CREATE INDEX IDX_VEHICULO_EMPRESA ON EXA_LOGISTICA.VEHICULOS(ID_EMPRESA);</span>
+<span class="sh">'@</span> <span class="p">|</span> <span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="nv">$DB</span> <span class="n">psql</span> <span class="n">-U</span> <span class="n">bomerp_app</span> <span class="n">-d</span> <span class="n">bomerp</span> <span class="n">-v</span> <span class="n">ON_ERROR_STOP</span><span class="p">=</span><span class="n">1</span>
+</code></pre></div>
+<p><strong>Script 3 (PostgreSQL). Verificar</strong> (debe listar 4 tablas)</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$DB</span> <span class="p">=</span> <span class="s1">'bomerp-postgres'</span>   <span class="c"># nombre de TU contenedor PostgreSQL en dev (míralo con: docker ps)</span>
+<span class="sh">@'</span>
+<span class="sh">SELECT table_name FROM information_schema.tables WHERE table_schema = 'exa_logistica' ORDER BY 1;</span>
+<span class="sh">'@</span> <span class="p">|</span> <span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="nv">$DB</span> <span class="n">psql</span> <span class="n">-U</span> <span class="n">bomerp_app</span> <span class="n">-d</span> <span class="n">bomerp</span>
+</code></pre></div>
+<p>Para repetir desde cero, ejecuta <code>DROP SCHEMA EXA_LOGISTICA CASCADE;</code> y vuelve a correr los scripts 1 y 2.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Angel Sullon @asullom - UPeU 2026
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.top", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>
